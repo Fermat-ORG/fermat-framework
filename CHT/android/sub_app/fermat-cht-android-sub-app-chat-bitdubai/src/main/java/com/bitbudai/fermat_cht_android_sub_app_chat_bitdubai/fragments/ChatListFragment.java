@@ -193,13 +193,15 @@ public class ChatListFragment extends AbstractFermatFragment{
                 name=chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getRemoteName();
                 sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
                 message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
-                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()))))
-                {
-                    datemessage=  new SimpleDateFormat("hh:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
-                }else if(Validate.isDateBeforeNow(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate())))){
-                    datemessage="YESTERDAY";
+                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate())))){
+                    datemessage= new SimpleDateFormat("hh:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
                 }else{
-                    datemessage= new SimpleDateFormat("dd/mm/YY").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
+                    Date old=new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()));
+                    int numDates=old.compareTo(new Date());
+                    if(numDates==1) {
+                        datemessage = "YESTERDAY";
+                    }else
+                        datemessage= new SimpleDateFormat("dd/mm/YY").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 }
                 //datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
