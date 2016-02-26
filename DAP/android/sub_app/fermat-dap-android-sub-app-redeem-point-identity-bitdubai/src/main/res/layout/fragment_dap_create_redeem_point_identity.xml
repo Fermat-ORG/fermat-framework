@@ -531,7 +531,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
+
         android:background="#0072bc"
         android:text="@string/create"
         android:textSize="16sp"

@@ -37,7 +37,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @param assetRedeemPointActorprofileImage             Referred to the Identity profileImage
      * @throws CantCreateActorRedeemPointException
      */
-    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException;
+    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
