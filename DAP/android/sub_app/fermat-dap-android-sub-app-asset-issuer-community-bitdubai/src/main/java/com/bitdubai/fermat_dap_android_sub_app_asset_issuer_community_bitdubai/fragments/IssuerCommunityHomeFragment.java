@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -385,6 +386,12 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                             toConnect.add(actorIssuer.getRecord());
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
+//                                    manager.askActorAssetIssuerForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+
                                     manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
