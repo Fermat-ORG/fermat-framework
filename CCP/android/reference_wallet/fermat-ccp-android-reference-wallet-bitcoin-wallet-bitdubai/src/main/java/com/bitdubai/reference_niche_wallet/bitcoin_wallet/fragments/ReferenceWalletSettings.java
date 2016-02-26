@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -86,7 +88,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return list;
     }
 
@@ -105,6 +110,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             case "MainNet":
                 blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
                 break;
 
             case "TestNet":
@@ -119,6 +125,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                 break;
 
         }
+
+        preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
 
         System.out.println("SETTING SELECTED IS "+ preferenceSettingsTextPlusRadioItem.getText());
         System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
@@ -145,8 +153,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
+    }
 
 
+    @Override
+    public Drawable getBackground() {
+        return null;
     }
 
 
