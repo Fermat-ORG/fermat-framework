@@ -111,48 +111,6 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table incoming messages columns.
-         */
-        List<String> incomingmessagesColumns = new ArrayList<String>();
-
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SENDER_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_RECEIVER_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TEXT_CONTENT_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TYPE_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_STATUS_COLUMN_NAME);
-        incomingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME);
-
-        /**
-         * Table incoming messages addition.
-         */
-        DeveloperDatabaseTable incomingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TABLE_NAME, incomingmessagesColumns);
-        tables.add(incomingmessagesTable);
-
-        /**
-         * Table outgoing messages columns.
-         */
-        List<String> outgoingmessagesColumns = new ArrayList<String>();
-
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SENDER_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_RECEIVER_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TEXT_CONTENT_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TYPE_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_STATUS_COLUMN_NAME);
-        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME);
-
-        /**
-         * Table outgoing messages addition.
-         */
-        DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TABLE_NAME, outgoingmessagesColumns);
-        tables.add(outgoingmessagesTable);
-
-        /**
          * Table DAP_Message columns.
          */
         List<String> dapMessageColumns = new ArrayList<String>();
