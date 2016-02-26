@@ -30,7 +30,6 @@ public class AssetUserWalletDatabaseConstant {
 
 
     // tabla nueva movimientos del resumen de los Assets - balance y book balance, id
-
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_NAME = "AssetUserWalletTotalBalances";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME = "assetPublicKey";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_NAME_COLUMN_NAME = "name";
@@ -39,5 +38,11 @@ public class AssetUserWalletDatabaseConstant {
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME = "bookBalance";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME = "quantityAvailableBalance";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME = "QuantityBookBalance";
+
+
+    public static final String ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME = "MetadataLock";
+    public static final String ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME = "metadataId";
+    public static final String ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME = "genesisTx";
+    public static final String ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME = "status";
 
 }

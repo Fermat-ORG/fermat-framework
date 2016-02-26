@@ -18,41 +18,6 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 public class CommunicationNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "TransmissionServiceDataBase";
-
-    /**
-     * incoming messages database table definition.
-     */
-    public static final String INCOMING_MESSAGE_TABLE_NAME = "incoming_message";
-
-    public static final String INCOMING_MESSAGE_ID_COLUMN_NAME = "incoming_id";
-    public static final String INCOMING_MESSAGE_SENDER_ID_COLUMN_NAME = "sender_id";
-    public static final String INCOMING_MESSAGE_RECEIVER_ID_COLUMN_NAME = "receiver_id";
-    public static final String INCOMING_MESSAGE_TEXT_CONTENT_COLUMN_NAME = "text_content";
-    public static final String INCOMING_MESSAGE_TYPE_COLUMN_NAME = "type";
-    public static final String INCOMING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME = "shipping_timestamp";
-    public static final String INCOMING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
-    public static final String INCOMING_MESSAGE_STATUS_COLUMN_NAME = "status";
-    public static final String INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME = "id_dap_message";
-
-    public static final String INCOMING_MESSAGE_FIRST_KEY_COLUMN = INCOMING_MESSAGE_ID_COLUMN_NAME;
-
-    /**
-     * outgoing messages database table definition.
-     */
-    public static final String OUTGOING_MESSAGE_TABLE_NAME = "outgoing_message";
-
-    public static final String OUTGOING_MESSAGE_ID_COLUMN_NAME = "outgoing_id";
-    public static final String OUTGOING_MESSAGE_SENDER_ID_COLUMN_NAME = "sender_id";
-    public static final String OUTGOING_MESSAGE_RECEIVER_ID_COLUMN_NAME = "receiver_id";
-    public static final String OUTGOING_MESSAGE_TEXT_CONTENT_COLUMN_NAME = "text_content";
-    public static final String OUTGOING_MESSAGE_TYPE_COLUMN_NAME = "type";
-    public static final String OUTGOING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME = "shipping_timestamp";
-    public static final String OUTGOING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
-    public static final String OUTGOING_MESSAGE_STATUS_COLUMN_NAME = "status";
-    public static final String OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME = "id_dap_message";
-
-    public static final String OUTGOING_MESSAGE_FIRST_KEY_COLUMN = OUTGOING_MESSAGE_ID_COLUMN_NAME;
-
     /**
      * DAPMessage database table definition.
      */

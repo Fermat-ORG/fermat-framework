@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
@@ -21,6 +21,7 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
     private final long runningAvailableBalance;
     private final long timeStamp;
     private final String memo;
+    private final boolean locked;
 
     public AssetUserWalletTransactionWrapper(final String transactionId,
                                              final String transactionHash,
@@ -33,7 +34,8 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
                                              final long runningBookBalance,
                                              final long runningAvailableBalance,
                                              final long timeStamp,
-                                             final String memo) {
+                                             final String memo,
+                                             final boolean locked) {
         this.transactionId = transactionId;
         this.assetPublicKey = assetPublicKey;
         this.transactionHash = transactionHash;
@@ -46,6 +48,7 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;
         this.memo = memo;
+        this.locked = locked;
     }
 
     @Override
@@ -129,6 +132,11 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public boolean isLocked() {
+        return locked;
     }
 
 }

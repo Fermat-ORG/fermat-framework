@@ -21,7 +21,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
@@ -128,25 +127,23 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             while (agentRunning) {
                 try {
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
-                    agentRunning = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } finally {
+                    try {
+                        Thread.sleep(WAIT_TIME);
+                    } catch (InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        agentRunning = false;
+                    }
                 }
             }
         }
 
-        private void doTheMainTask() {
-            try {
-                checkUnreadMessages();
-                checkPendingSells();
-            } catch (CantLoadTableToMemoryException | CantUpdateRecordException | DAPException | CantLoadWalletException | CantSignTransactionException | CantCreateDraftTransactionException | CantDeleteRecordException | CantBroadcastTransactionException | CantCreateBitcoinTransactionException | CantGetTransactionsException | CantRegisterDebitException | CantGetBroadcastStatusException | CantGetCryptoTransactionException e) {
-                //TODO EXCEPTION HANDLING.
-                e.printStackTrace();
-            }
+        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException {
+            checkUnreadMessages();
+            checkPendingSells();
         }
 
         private void checkUnreadMessages() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException {
