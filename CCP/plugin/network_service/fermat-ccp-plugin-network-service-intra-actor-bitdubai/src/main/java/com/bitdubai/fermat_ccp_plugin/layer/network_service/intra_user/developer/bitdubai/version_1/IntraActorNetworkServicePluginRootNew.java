@@ -229,6 +229,10 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
 
+                    //notify android view
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW,"ACCEPTED_CONEXION");
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONACCEPT_" + actorNetworkServiceRecord.getActorSenderPublicKey());
+
                     break;
 
 
@@ -411,6 +415,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     }
                 });
             }
+
+            System.out.println(" -----INTRA ACTOR NS REPROCESANDO MENSAJES ----");
 
         }
         catch(CantListIntraWalletUsersException e)
