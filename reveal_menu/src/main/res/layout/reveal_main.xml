@@ -25,7 +25,6 @@
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/icon_settings_menu"
                     android:paddingTop="3dp"
                     android:id="@+id/img_fermat_setting"
                     android:visibility="visible"/>
@@ -46,7 +45,6 @@
                     android:layout_height="48dp"
                     android:paddingTop="3dp"
                     android:layout_marginLeft="7dp"
-                    android:src="@drawable/icon_settings_menu"
                     android:id="@+id/img_fermat_setting_1"
                     android:layout_marginBottom="3dp"
                     android:visibility="visible"/>
@@ -54,13 +52,13 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@drawable/splitter_line"/>
+                    />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/horizontal_container"
-                    android:visibility="gone">
+                    >
 
 
                 </RelativeLayout>
@@ -77,18 +75,17 @@
                 android:layout_marginTop="3dp"
                 android:visibility="gone"
                 android:layout_alignParentEnd="true">
-            <ImageButton
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/ic_drawable_settings"
-                />
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:text="Settings"
-                android:textColor="#000"
-                android:id="@+id/txt_settings"/>
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="Settings"
+                    android:textColor="#000"
+                    android:id="@+id/txt_settings"/>
 
             </LinearLayout>
 
