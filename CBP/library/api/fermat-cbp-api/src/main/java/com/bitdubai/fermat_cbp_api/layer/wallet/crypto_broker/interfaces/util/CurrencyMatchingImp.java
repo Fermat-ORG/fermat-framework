@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created by franklin on 15/02/16.
  */
 public class CurrencyMatchingImp implements CurrencyMatching {
-    private UUID   originTransactionId;
+    private String   originTransactionId;
     private Currency currencyGiving;
     private Currency currencyReceiving;
     private float    amountGiving;
@@ -17,7 +17,7 @@ public class CurrencyMatchingImp implements CurrencyMatching {
 
     public CurrencyMatchingImp(){}
 
-    public CurrencyMatchingImp(UUID   originTransactionId,
+    public CurrencyMatchingImp(String   originTransactionId,
                                Currency currencyGiving,
                                Currency currencyReceiving,
                                float    amountGiving,
@@ -31,7 +31,7 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     }
 
     @Override
-    public UUID getOriginTransactionId() {
+    public String getOriginTransactionId() {
         return originTransactionId;
     }
 
