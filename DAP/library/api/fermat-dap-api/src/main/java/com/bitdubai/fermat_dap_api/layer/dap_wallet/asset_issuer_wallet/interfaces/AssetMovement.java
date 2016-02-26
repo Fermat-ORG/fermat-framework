@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 import java.util.Date;
@@ -13,4 +14,6 @@ public interface AssetMovement {
     DAPActor actorTo();
 
     Date when();
+
+    AssetMovementType getType();
 }
