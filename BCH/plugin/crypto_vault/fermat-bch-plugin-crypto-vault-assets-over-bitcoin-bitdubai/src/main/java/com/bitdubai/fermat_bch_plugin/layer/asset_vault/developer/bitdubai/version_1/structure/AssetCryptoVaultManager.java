@@ -1034,19 +1034,22 @@ public class AssetCryptoVaultManager  {
          * I will create the Bitcoin transaction
          */
         Transaction transaction = new Transaction(networkParameters);
-        TransactionOutPoint transactionOutPoint = new TransactionOutPoint(networkParameters, 0, genesisTransaction);
-        byte[] script = genesisTransaction.getOutput(0).getScriptBytes();
+        TransactionOutput output = genesisTransaction.getOutput(0);
+        TransactionOutPoint transactionOutPoint = new TransactionOutPoint(networkParameters, output);
+        byte[] script = output.getScriptBytes();
+        Coin inputValue = output.getValue();
+        TransactionInput transactionInput = new TransactionInput(networkParameters, genesisTransaction, script, transactionOutPoint, inputValue);
 
-        TransactionInput transactionInput = new TransactionInput(networkParameters, genesisTransaction, script, transactionOutPoint);
+
         transaction.addInput(transactionInput);
         transaction.addOutput(coinToSend, address);
 
         DraftTransaction draftTransaction = new DraftTransaction(transaction);
 
-        StringBuilder output = new StringBuilder("***AssetVault*** Draft Transaction created.");
-        output.append(System.lineSeparator());
-        output.append(draftTransaction.toString());
-        System.out.println(output.toString());
+        draftTransaction.addValue(inputValue.value);
+
+        System.out.println("***CryptoVault*** Draft Transaction created");
+        System.out.println(draftTransaction.toString());
 
         return draftTransaction;
     }
