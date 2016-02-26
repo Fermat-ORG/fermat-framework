@@ -240,7 +240,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName, this.context);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
@@ -710,6 +710,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             return null;
         }
+
+        /**
+         * gets the wallet from the monitor
+         * @return
+         */
+        public Wallet getWallet() {
+            return wallet;
+        }
     }
 
     /**
@@ -739,6 +747,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException{
         return this.monitorAgent.loadTransactionFromDisk(txHash);
+    }
+
+    public Wallet getWallet(){
+        return this.monitorAgent.getWallet();
     }
 
 }

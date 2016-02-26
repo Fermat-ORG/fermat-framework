@@ -206,7 +206,7 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             System.out.println("ASSET TRANSFER Sender Actor name: " + actorAssetUserManager.getActorAssetUser().getName());
             System.out.println("ASSET TRANSFER Before deliver - remote asset user ");
             assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
-            assetTransmissionNetworkServiceManager.sendMessage(new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUserManager.getActorAssetUser(), remoteActorAssetUser, DAPMessageSubject.ASSET_TRANSFER));
+            assetTransmissionNetworkServiceManager.sendMessage(new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUserManager.getActorAssetUser(), remoteActorAssetUser, DAPMessageSubject.ASSET_RECEPTION));
         } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {

@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -41,7 +40,7 @@ import java.util.concurrent.Executors;
 public class MarketRateStatisticsFragment extends AbstractFermatFragment {
     private final String TAG = "MarketRateStatistics";
 
-    private String buy, sell, currencyPair;
+    private String buy, sell, currencyPair, providerName;
     private IndexInfoSummary indexInfo;
     private CryptoBrokerWalletSession session;
     private Activity activity;
@@ -55,19 +54,36 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.cbw_fragment_header_market_rate, container, false);
 
-        FermatTextView buyPrice = (FermatTextView) rootView.findViewById(R.id.cbw_buy_price);
-        FermatTextView sellPrice = (FermatTextView) rootView.findViewById(R.id.cbw_sell_price);
-        FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.cbw_currencies);
+        final FermatTextView buyPrice = (FermatTextView) rootView.findViewById(R.id.cbw_buy_price);
+        final FermatTextView sellPrice = (FermatTextView) rootView.findViewById(R.id.cbw_sell_price);
+        final FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.cbw_currencies);
+        final FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.cbw_provider_name);
 
+        providerName.setText(this.providerName);
         currencies.setText(currencyPair);
-        String buyText = rootView.getResources().getString(R.string.buy_text_and_price, buy);
-        buyPrice.setText(buyText);
-        String sellText = rootView.getResources().getString(R.string.sell_text_and_price, sell);
-        sellPrice.setText(sellText);
+        buyPrice.setText(buy);
+        sellPrice.setText(sell);
 
         configChart(rootView);
 
         return rootView;
+    }
+
+    /**
+     * Set the necessary data to the fragment
+     *
+     * @param indexInfo info for the chart
+     * @param session   the app session
+     */
+    public void bind(IndexInfoSummary indexInfo, CryptoBrokerWalletSession session, Activity activity) {
+        this.indexInfo = indexInfo;
+        this.session = session;
+        this.activity = activity;
+
+        sell = indexInfo.getSalePriceAndCurrency();
+        currencyPair = indexInfo.getCurrencyAndReferenceCurrency();
+        buy = indexInfo.getPurchasePriceAndCurrency();
+        providerName = indexInfo.getProviderName();
     }
 
     /**
@@ -152,6 +168,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
      * Get the LineData for the chart based on the ExchangeRate list
      *
      * @param exchangeRates the exchange rate list
+     *
      * @return the ListData object
      */
     private LineData getData(List<ExchangeRate> exchangeRates) {
@@ -174,19 +191,5 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         return new LineData(xValues, dataSet);
     }
 
-    /**
-     * Set the necessary data to the fragment
-     *
-     * @param indexInfo info for the chart
-     * @param session   the app session
-     */
-    public void bind(IndexInfoSummary indexInfo, CryptoBrokerWalletSession session, Activity activity) {
-        this.indexInfo = indexInfo;
-        this.session = session;
-        this.activity = activity;
 
-        sell = indexInfo.getSalePriceAndCurrency();
-        currencyPair = indexInfo.getCurrencyAndReferenceCurrency();
-        buy = indexInfo.getPurchasePriceAndCurrency();
-    }
 }

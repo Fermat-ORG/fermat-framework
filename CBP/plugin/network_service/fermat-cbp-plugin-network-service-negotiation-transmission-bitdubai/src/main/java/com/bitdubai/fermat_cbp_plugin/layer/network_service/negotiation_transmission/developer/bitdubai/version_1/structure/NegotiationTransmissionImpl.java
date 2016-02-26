@@ -32,7 +32,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final PlatformComponentType actorReceiveType;
     private NegotiationTransmissionType transmissionType;
     private NegotiationTransmissionState transmissionState;
-    private final NegotiationType negotiationType;
+    private NegotiationType negotiationType;
     private final String negotiationXML;
     private final long timestamp;
     private boolean pendingFlag;
@@ -188,6 +188,11 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     @Override
     public NegotiationType getNegotiationType() {
         return negotiationType;
+    }
+
+    @Override
+    public void setNegotiationType(NegotiationType negotiationType){
+        this.negotiationType = negotiationType;
     }
 
     @Override

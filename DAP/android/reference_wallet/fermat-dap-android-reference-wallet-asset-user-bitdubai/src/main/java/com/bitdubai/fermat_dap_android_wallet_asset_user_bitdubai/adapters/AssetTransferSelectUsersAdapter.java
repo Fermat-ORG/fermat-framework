@@ -20,8 +20,8 @@ public class AssetTransferSelectUsersAdapter extends FermatAdapter<User, AssetTr
 
     private AssetUserWalletSubAppModuleManager manager;
 
-    public AssetTransferSelectUsersAdapter(Context context, List<User> redeemPoints, AssetUserWalletSubAppModuleManager manager) {
-        super(context, redeemPoints);
+    public AssetTransferSelectUsersAdapter(Context context, List<User> users, AssetUserWalletSubAppModuleManager manager) {
+        super(context, users);
         this.manager = manager;
     }
 
@@ -32,7 +32,7 @@ public class AssetTransferSelectUsersAdapter extends FermatAdapter<User, AssetTr
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.dap_wallet_asset_user_asset_redeem_select_redeempoints_item;
+        return R.layout.dap_wallet_asset_user_asset_user_to_transfer_item;
     }
 
     @Override
