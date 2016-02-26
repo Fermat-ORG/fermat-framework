@@ -16,11 +16,13 @@ public class ContractDetail {
     int contractStep;
     ContractStatus contractStatus;
     UUID contractId;
+    UUID negotiationId;
 
-    public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId) {
+    public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
+        this.negotiationId = negotiationId;
     }
 
     public int getContractStep() {return contractStep;}
@@ -29,12 +31,10 @@ public class ContractDetail {
     public ContractStatus getContractStatus() {return contractStatus;}
     public void setContractStatus(ContractStatus contractStatus) {this.contractStatus = contractStatus;}
 
-
     public UUID getContractId() {return contractId;}
     public void setContractId(UUID contractId) {this.contractId = contractId;}
 
-
-
-
+    public UUID getNegotiationId() {return negotiationId;}
+    public void setNegotiationId(UUID negotiationId) {this.negotiationId = negotiationId;}
 
 }
