@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -192,7 +193,15 @@ public class ChatListFragment extends AbstractFermatFragment{
                 name=chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getRemoteName();
                 sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
                 message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
-                datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
+                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()))))
+                {
+                    datemessage=  new SimpleDateFormat("hh:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
+                }else if(Validate.isDateBeforeNow(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate())))){
+                    datemessage="YESTERDAY";
+                }else{
+                    datemessage= new SimpleDateFormat("dd/mm/YY").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
+                }
+                //datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
                 imgid.add(R.drawable.ic_contact_picture_holo_light);//R.drawable.ken

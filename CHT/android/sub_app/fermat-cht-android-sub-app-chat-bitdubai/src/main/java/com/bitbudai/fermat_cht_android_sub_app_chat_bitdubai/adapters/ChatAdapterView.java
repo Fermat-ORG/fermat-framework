@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -182,24 +183,19 @@ public class ChatAdapterView extends LinearLayout {
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
                     msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
-                    java.util.Date date= new java.util.Date();
-                    Timestamp ts_now = new Timestamp(date.getTime());
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                    SimpleDateFormat formatter2 = new SimpleDateFormat("hh:mm");
-                    Date today = formatter.parse(DateFormat.getDateTimeInstance().format(ts_now));
-                    Date dbDate = formatter.parse(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
-                    if (dbDate.compareTo(today)==0)
+                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()))))
                     {
-                        msg.setDate(formatter2.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+                        String S = new SimpleDateFormat("hh:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
+                        msg.setDate(S);
                     }else
-                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
-
-
-                    if (ts_now.before(chatManager.getMessageByChatId(chatId).get(i).getMessageDate())) {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
-                    }else {
+                    {
                         msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
                     }
+//                    if (ts_now.before(chatManager.getMessageByChatId(chatId).get(i).getMessageDate())) {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+//                    }else {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+//                    }
                     msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
@@ -287,7 +283,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 70));//in the future, this image should come from chatmanager
+                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIcon);
             }
         }
