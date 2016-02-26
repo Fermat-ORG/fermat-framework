@@ -1,14 +1,16 @@
-package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
  * Created by Franklin Marcano on 21/11/2015.
  */
-public interface CryptoTransaction {
+public interface CryptoUnholdTransactionParameters {
+
     /**
      * Returns the transaction's UUID
      * @return      The transaction's unique identifier
@@ -41,8 +43,8 @@ public interface CryptoTransaction {
      * Returns the amount of the transaction
      * @return      Amount of the transaction
      */
-    float getAmount();
-    void  setAmount(float amount);
+    BigDecimal getAmount();
+    void  setAmount(BigDecimal amount);
 
     /**
      * Returns the currency of the transaction
@@ -57,6 +59,8 @@ public interface CryptoTransaction {
      */
     String getMemo();
     void   setMemo(String memo);
+
+
     /**
      * Returns the BlockchainNetworkType of the transaction
      * @return   BlockchainNetworkType of the transaction

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
