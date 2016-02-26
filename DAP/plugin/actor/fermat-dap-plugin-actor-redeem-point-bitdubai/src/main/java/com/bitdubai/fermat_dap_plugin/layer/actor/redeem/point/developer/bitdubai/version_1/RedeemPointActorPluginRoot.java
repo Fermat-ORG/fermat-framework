@@ -48,6 +48,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
@@ -63,6 +64,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.RedeemPointNotFoundException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorAddress;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -163,7 +165,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException {
+    public void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage,
+                    String contactInformation, String countryName, String cityName) throws CantCreateActorRedeemPointException {
         try {
             ActorAssetRedeemPoint actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
 
@@ -183,17 +186,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage);
 
-//                RedeemPointActorAddress address = new RedeemPointActorAddress();
-//                address.setCountryName("Venezuela");
-//                address.setProvinceName("Zulia");
-//                address.setPostalCode("4019");
-//                address.setCityName("Ciudad Ojeda");
-//                address.setStreetName("Avenida 8");
-//                address.setHouseNumber("#712");
-//                record.setAddress(address);
+                RedeemPointActorAddress address = new RedeemPointActorAddress();
+                address.setCountryName(countryName);
+                address.setCityName(cityName);
+                record.setAddress(address);
+                record.setContactInformation(contactInformation);
+
 //                record.setCryptoAddress(cryptoAddress);
 //                record.setHoursOfOperation("08:00 am a 05:30pm");
-//                record.setContactInformation("marsvicam@gmail.com");
+
                 redeemPointActorDao.createNewRedeemPoint(record);
 
                 actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
@@ -214,6 +215,12 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         assetRedeemPointActorprofileImage,
                         actorAssetRedeemPoint.getRegisteredIssuers());
+
+                RedeemPointActorAddress address = new RedeemPointActorAddress();
+                address.setCountryName(countryName);
+                address.setCityName(cityName);
+                record.setAddress(address);
+                record.setContactInformation(contactInformation);
 
 //                RedeemPointActorAddress address = new RedeemPointActorAddress();
 //                address.setCountryName("Venezuela");

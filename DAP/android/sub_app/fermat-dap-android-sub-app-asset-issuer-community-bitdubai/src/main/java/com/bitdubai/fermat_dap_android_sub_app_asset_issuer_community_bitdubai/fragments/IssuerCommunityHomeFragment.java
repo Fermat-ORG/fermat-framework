@@ -71,6 +71,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+    private Menu menu;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -112,6 +113,23 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
                 actors = dataSet;
+
+                boolean someSelected = false;
+                for (ActorIssuer actor : actors) {
+                    if (actor.selected) {
+                        someSelected = true;
+                        break;
+                    }
+                }
+
+                if (someSelected) {
+                    menu.getItem(2).setVisible(true);
+                }
+                else
+                {
+                    menu.getItem(2).setVisible(false);
+                }
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -286,16 +304,47 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        this.menu = menu;
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.ic_sub_menu_connect)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.getItem(2).setVisible(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
+
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL){
+
+            for (ActorIssuer actorIssuer : actors)
+            {
+                actorIssuer.selected = true;
+            }
+            adapter.changeDataSet(actors);
+            menu.getItem(2).setVisible(true);
+
+        }
+
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL){
+
+            for (ActorIssuer actorIssuer : actors)
+            {
+                actorIssuer.selected = false;
+            }
+            adapter.changeDataSet(actors);
+            menu.getItem(2).setVisible(false);
+        }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
             List<ActorAssetIssuer> toConnect = new ArrayList<>();
