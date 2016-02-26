@@ -169,28 +169,28 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
-            Toast.makeText(getActivity(), "Fixing for your convenience.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Fixing for your convenience.", Toast.LENGTH_SHORT).show();
 
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
-//            ConnectDialog connectDialog;
-////            try {
-//                connectDialog = new ConnectDialog(getActivity(),
-//                        (AssetIssuerCommunitySubAppSession) appSession,
-//                        null,
-//                        actorIssuer,
-//                        null);
-////                        manager.getActiveAssetIssuerIdentity());
-//                connectDialog.setTitle("Connection Request");
-//                connectDialog.setDescription("Do you want to send ");
-//                connectDialog.setUsername(actorIssuer.getRecord().getName());
-//                connectDialog.setSecondDescription("a connection request");
-//                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialog) {
-//                        updateButton();
-//                    }
-//                });
-//                connectDialog.show();
+            ConnectDialog connectDialog;
+//            try {
+                connectDialog = new ConnectDialog(getActivity(),
+                        (AssetIssuerCommunitySubAppSession) appSession,
+                        null,
+                        actorIssuer,
+                        null);
+//                        manager.getActiveAssetIssuerIdentity());
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(actorIssuer.getRecord().getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
 //            } catch (CantGetIdentityAssetIssuerException e) {
 //                e.printStackTrace();
 //

@@ -132,20 +132,20 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
                     List<ActorAssetIssuer> actorConnect = new ArrayList<>();
 
                     actorConnect.add(actorIssuer.getRecord());
-//TODO ACTIVAR EL METODO CORRECTO
-//                    getSession().getModuleManager().askActorAssetIssuerForConnection(actorConnect);
-                    getSession().getModuleManager().connectToActorAssetIssuer(null, actorConnect);
+
+                    getSession().getModuleManager().askActorAssetIssuerForConnection(actorConnect);
+//                    getSession().getModuleManager().connectToActorAssetIssuer(null, actorConnect);
 
                     Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-//                } catch (CantAskConnectionActorAssetException e) {
-//                    e.printStackTrace();
-//                } catch (CantRequestAlreadySendActorAssetException e) {
-//                    e.printStackTrace();
-                } catch (CantConnectToActorAssetRedeemPointException e) {
+                } catch (CantAskConnectionActorAssetException e) {
                     e.printStackTrace();
+                } catch (CantRequestAlreadySendActorAssetException e) {
+                    e.printStackTrace();
+//                } catch (CantConnectToActorAssetRedeemPointException e) {
+//                    e.printStackTrace();
                 }
             } else {
                 super.toastDefaultError();
