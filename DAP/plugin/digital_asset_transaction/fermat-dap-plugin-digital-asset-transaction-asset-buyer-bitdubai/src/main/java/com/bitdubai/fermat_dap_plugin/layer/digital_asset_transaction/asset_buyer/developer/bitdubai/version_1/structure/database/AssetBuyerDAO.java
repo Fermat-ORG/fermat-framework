@@ -4,8 +4,10 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
@@ -98,16 +101,18 @@ public class AssetBuyerDAO {
         }
     }
 
-    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
+    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey, CryptoAddress cryptoAddress) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
         assetBuyingVault.persistDigitalAssetMetadataInLocalStorage(assetSellContentMessage.getAssetMetadata(), assetSellContentMessage.getSellingId().toString());
         DatabaseTable databaseTable = getBuyerTable();
         DatabaseTableRecord buyingRecord = databaseTable.getEmptyRecord();
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME, assetSellContentMessage.getSellingId().toString());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME, assetSellContentMessage.getAssetMetadata().getNetworkType().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, assetSellContentMessage.getNegotiationId().toString());
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, assetSellContentMessage.getSellStatus().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME, senderPublicKey);
-        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(assetSellContentMessage.getSerializedTransaction(), Base64.DEFAULT));
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(assetSellContentMessage.getSerializedTransaction(), Base64.DEFAULT));
+        buyingRecord.setLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME, assetSellContentMessage.getTransactionValue());
         databaseTable.insertRecord(buyingRecord);
     }
 
@@ -141,12 +146,23 @@ public class AssetBuyerDAO {
         updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
-    public void updateBuyerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+    public void updateBuyerTransaction(UUID transactionId, DraftTransaction draftTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(draftTransaction.serialize(), Base64.DEFAULT), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_VALUE_COLUMN_NAME, draftTransaction.getValue(), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateTransactionHash(UUID transactionId, String transactionHash) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME, transactionHash, AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+    }
+
+    public void notifyEvent(String eventId) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        DatabaseTable table = getEventsTable();
+        table.addStringFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        if (table.getRecords().isEmpty()) throw new RecordsNotFoundException();
+        DatabaseTableRecord record = table.getRecords().get(0);
+        record.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.getCode());
+        table.updateRecord(record);
     }
 
     //DELETE
@@ -166,6 +182,15 @@ public class AssetBuyerDAO {
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Reception Transaction Database", "Error in database plugin.");
         }
+    }
+
+    private void updateRecordForTableByKey(DatabaseTable table, String recordName, long recordValue, String filterColumn, String filterValue) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        table.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        if (table.getRecords().isEmpty()) throw new RecordsNotFoundException();
+        DatabaseTableRecord record = table.getRecords().get(0);
+        record.setLongValue(recordName, recordValue);
+        table.updateRecord(record);
     }
 
     private void updateRecordForTableByKey(DatabaseTable table, String recordName, String recordValue, String filterColumn, String filterValue) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
@@ -202,13 +227,18 @@ public class AssetBuyerDAO {
         UUID entryId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME));
         DigitalAssetMetadata metadata = assetBuyingVault.getDigitalAssetMetadataFromLocalStorage(entryId.toString());
         ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME), metadata.getNetworkType());
-        String encodeUnsignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
+        String encodeUnsignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME);
         String encodeSignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
         DraftTransaction signedTransaction = !Validate.isValidString(encodeSignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(signedTransaction))
+            signedTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_VALUE_COLUMN_NAME));
         DraftTransaction unsignedTransaction = !Validate.isValidString(encodeUnsignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(unsignedTransaction))
+            unsignedTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME));
         String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME));
-        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId);
+        CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
+        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId, cryptoAddress);
     }
 
     private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
@@ -299,6 +329,24 @@ public class AssetBuyerDAO {
         }
     }
 
+    public List<BuyingRecord> getPartiallySignedBuying() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.PARTIALLY_SIGNED.getCode());
+        try {
+            return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
+        } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new DAPException(e);
+        }
+    }
+
+    public List<BuyingRecord> getCompletedSignedBuying() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.COMPLETE_SIGNATURE.getCode());
+        try {
+            return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
+        } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new DAPException(e);
+        }
+    }
+
     public List<NegotiationRecord> getNewNegotiations(BlockchainNetworkType networkType) throws DAPException {
         DatabaseTableFilter statusFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
         DatabaseTableFilter networkFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME, networkType.getCode());
@@ -318,6 +366,27 @@ public class AssetBuyerDAO {
             throw new DAPException(e);
         }
     }
+
+    public List<String> getPendingEvents() throws CantLoadTableToMemoryException {
+        DatabaseTable table = getEventsTable();
+        table.addStringFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        List<String> toReturn = new ArrayList<>();
+        for (DatabaseTableRecord record : table.getRecords()) {
+            toReturn.add(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_ID_COLUMN_NAME));
+        }
+        return toReturn;
+    }
+
+    public EventType getEventType(String eventId) throws InvalidParameterException, RecordsNotFoundException, CantLoadTableToMemoryException {
+        DatabaseTable table = getEventsTable();
+        table.addStringFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        if (table.getRecords().isEmpty()) throw new RecordsNotFoundException();
+        DatabaseTableRecord record = table.getRecords().get(0);
+        return EventType.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_EVENT_COLUMN_NAME));
+    }
+
 
     public NegotiationRecord getNegotiationRecord(UUID recordId) throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME, recordId.toString());
