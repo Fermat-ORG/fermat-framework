@@ -329,10 +329,13 @@ public class ChatAdapterView extends LinearLayout {
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
                         Contact newContact=chatManager.getContactByContactId(
                                 contactId);
-                        PlatformComponentType localActorType=newContact.getRemoteActorType();
-                        chat.setLocalActorType(localActorType);
-                        chat.setRemoteActorPublicKey(remotePk);
-                        chat.setRemoteActorType(remotePCT);
+                        PlatformComponentType remoteActorType=newContact.getRemoteActorType();
+                        String remotePublicKey=newContact.getRemoteActorPublicKey();
+                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        //chat.setRemoteActorPublicKey(remotePk);
+                        //chat.setRemoteActorType(remotePCT);
+                        chat.setRemoteActorType(remoteActorType);
+                        chat.setRemoteActorPublicKey(remotePublicKey);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
