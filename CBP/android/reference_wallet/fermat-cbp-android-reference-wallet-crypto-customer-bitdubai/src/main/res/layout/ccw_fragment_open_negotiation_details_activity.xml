@@ -69,7 +69,41 @@
             android:textColor="#fff"
             android:textSize="12sp"
             tools:text="03 Feb 2015"/>
+
     </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_expiration_date"
+        android:layout_width="match_parent"
+        android:background="#730b58"
+        android:layout_height="22dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        tools:text="Expiration Date. 03 Feb 2015"/>
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="#730b58"
+        android:paddingBottom="3dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="3dp"
+        tools:visibility="visible">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_expiration_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            tools:text="Expiration Date. 03 Feb 2015"/>
+
+    </RelativeLayout>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ccw_open_negotiation_details_recycler_view"

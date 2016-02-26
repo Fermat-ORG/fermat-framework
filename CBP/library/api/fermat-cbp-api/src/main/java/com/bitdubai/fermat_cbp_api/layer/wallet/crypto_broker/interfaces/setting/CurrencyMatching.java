@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public interface CurrencyMatching {
 
-    UUID getOriginTransactionId();
+    String getOriginTransactionId();
 
     Currency getCurrencyGiving();
 

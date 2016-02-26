@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
 /**
  * Contact Adapter
@@ -35,44 +36,41 @@ public class ContactAdapter extends ArrayAdapter<String> {
     ArrayList<String> contactName;
     ArrayList<UUID> contactUUID;
     String action;
-    public ContactAdapter(Context context, ArrayList contactName, ArrayList contactAlias,ArrayList contactUUID, String action) {
+    private ErrorManager errorManager;
+
+    public ContactAdapter(Context context, ArrayList contactName, ArrayList contactAlias,ArrayList contactUUID, String action, ErrorManager errorManager) {
         super(context, R.layout.contact_detail_item, contactName);
-//        switch (action)
-//        {
-//            case "detail":
-//                super(context, R.layout.contact_detail_item, contactName);
-//                break;
-//            case "edit":
-//                super(context, R.layout.contact_edit_item, contactName);
-//                break;
-//        }
         this.contactAlias = contactAlias;
         this.contactName = contactName;
         this.contactUUID = contactUUID;
         this.action = action;
+        this.errorManager = errorManager;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.contact_detail_item, null, true);
-        switch (action)
+        try {
+            switch (action)
+            {
+                case "edit":
+                    item = inflater.inflate(R.layout.contact_edit_item, null, true);
+                    //FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_edit_header);
+                    //name.setText(contactName.get(0));
+                    break;
+                case "detail":
+                    item = inflater.inflate(R.layout.contact_detail_item, null, true);
+
+                    TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
+                    name2.setText(" ");//name2.setText(contactName.get(0));
+
+                    TextView alias2 = (TextView) item.findViewById(R.id.alias);
+                    alias2.setText(contactName.get(0));
+                    break;
+            }
+        }catch (Exception e)
         {
-            case "edit":
-                item = inflater.inflate(R.layout.contact_edit_item, null, true);
-
-                //FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_edit_header);
-                //name.setText(contactName.get(0));
-
-                break;
-            case "detail":
-                item = inflater.inflate(R.layout.contact_detail_item, null, true);
-
-                FermatTextView name2 = (FermatTextView) item.findViewById(R.id.contact_detail_header);
-                name2.setText("Alias");//name2.setText(contactName.get(0));
-
-                FermatTextView alias2 = (FermatTextView) item.findViewById(R.id.alias);
-                alias2.setText(contactAlias.get(0));
-                break;
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         return item;
     }

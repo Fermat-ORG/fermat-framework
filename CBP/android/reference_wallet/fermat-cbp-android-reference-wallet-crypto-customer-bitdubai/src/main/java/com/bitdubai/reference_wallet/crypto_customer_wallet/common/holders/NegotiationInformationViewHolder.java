@@ -29,6 +29,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     public FermatTextView exchangeRateAmount;
     public FermatTextView paymentCurrency;
     public FermatTextView lastUpdateDate;
+//    public FermatTextView expirationDate;
     public FermatTextView status;
     private Resources res;
     private View itemView;
@@ -53,6 +54,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount);
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date);
+//        expirationDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date_exp);
         status = (FermatTextView) itemView.findViewById(R.id.ccw_negotiation_status);
     }
 
@@ -60,6 +62,11 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastNegotiationUpdateDate());
         lastUpdateDate.setText(date);
+
+        /*CharSequence dateExp = "";
+        if(itemInfo.getNegotiationExpirationDate() != 0)
+            dateExp = "Exp: "+DateFormat.format("dd MMM yyyy", itemInfo.getNegotiationExpirationDate());
+        expirationDate.setText(dateExp);*/
 
         ActorIdentity broker = itemInfo.getBroker();
         brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));

@@ -17,10 +17,12 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChainListener;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.GetDataMessage;
 import org.bitcoinj.core.Message;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
@@ -57,6 +59,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     BitcoinCryptoNetworkDatabaseDao dao;
     File walletFilename;
     final BlockchainNetworkType NETWORK_TYPE;
+    final Context context;
+    final NetworkParameters NETWORK_PARAMETERS;
 
     /**
      * Platform variables
@@ -68,11 +72,13 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename) {
+    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context) {
         this.NETWORK_TYPE = blockchainNetworkType;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.walletFilename = walletFilename;
+        this.context = context;
+        this.NETWORK_PARAMETERS = context.getParams();
     }
 
     @Override
@@ -125,6 +131,15 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        /**
+         * I will save the wallet after a change.
+         */
+        try {
+            wallet.saveToFile(walletFilename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         /**
          * Register the new incoming transaction into the database
          */
@@ -324,7 +339,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * get the address from the output
              */
-            address = output.getScriptPubKey().getToAddress(wallet.getNetworkParameters());
+            address = output.getScriptPubKey().getToAddress(NETWORK_PARAMETERS);
         }
         CryptoAddress cryptoAddress;
         if (address != null)
@@ -380,7 +395,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         try{
             for (TransactionOutput output : tx.getOutputs()){
                 if (output.getScriptPubKey().isSentToAddress()){
-                    address = output.getScriptPubKey().getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType()));
+                    address = output.getScriptPubKey().getToAddress(NETWORK_PARAMETERS);
                     cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
                     return cryptoAddress;
                 }

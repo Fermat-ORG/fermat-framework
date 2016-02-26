@@ -17,4 +17,8 @@ public class CantGetAssetRedeemPointActorsException extends DAPException {
     public CantGetAssetRedeemPointActorsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantGetAssetRedeemPointActorsException(Exception exception) {
+        super(exception);
+    }
 }
