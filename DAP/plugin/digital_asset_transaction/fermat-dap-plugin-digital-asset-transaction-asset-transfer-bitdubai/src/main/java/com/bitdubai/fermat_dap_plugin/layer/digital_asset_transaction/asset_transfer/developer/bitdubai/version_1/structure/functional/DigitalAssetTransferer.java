@@ -169,7 +169,7 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             digitalAssetMetadata = digitalAssetTransferVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, digitalAssetMetadata.getNetworkType());
             System.out.println("ASSET TRANSFER set debit in asset issuer wallet:" + genesisTransaction);
             cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
-            digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
+            digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             System.out.println("ASSET TRANSFER Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser, cryptoTransaction.getBlockchainNetworkType());
         } catch (CantPersistDigitalAssetException exception) {
