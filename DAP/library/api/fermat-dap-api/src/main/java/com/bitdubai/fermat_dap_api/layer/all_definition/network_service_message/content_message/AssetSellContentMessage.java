@@ -13,6 +13,7 @@ public class AssetSellContentMessage implements DAPContentMessage {
     //VARIABLE DECLARATION
     private UUID sellingId;
     private byte[] serializedTransaction;
+    private long transactionValue;
     private AssetSellStatus sellStatus;
     private DigitalAssetMetadata assetMetadata;
     private UUID negotiationId;
@@ -21,12 +22,13 @@ public class AssetSellContentMessage implements DAPContentMessage {
     public AssetSellContentMessage() {
     }
 
-    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId) {
+    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId, long transactionValue) {
         this.sellingId = sellingId;
         this.serializedTransaction = serializedTransaction;
         this.sellStatus = sellStatus;
         this.assetMetadata = assetMetadata;
         this.negotiationId = negotiationId;
+        this.transactionValue = transactionValue;
     }
 
     //PUBLIC METHODS
@@ -63,6 +65,10 @@ public class AssetSellContentMessage implements DAPContentMessage {
 
     public UUID getNegotiationId() {
         return negotiationId;
+    }
+
+    public long getTransactionValue() {
+        return transactionValue;
     }
 
     //INNER CLASSES

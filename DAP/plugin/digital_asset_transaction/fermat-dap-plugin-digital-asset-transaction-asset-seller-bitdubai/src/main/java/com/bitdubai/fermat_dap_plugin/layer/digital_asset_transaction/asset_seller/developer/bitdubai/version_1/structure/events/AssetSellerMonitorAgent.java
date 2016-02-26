@@ -168,7 +168,9 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.TRANSACTION_SIGNED)) {
                 AssetSellContentMessage content = (AssetSellContentMessage) message.getMessageContent();
                 dao.updateSellingStatus(content.getSellingId(), content.getSellStatus());
-                dao.updateBuyerTransaction(content.getSellingId(), content.getSerializedTransaction());
+                DraftTransaction draftTransaction = DraftTransaction.deserialize(content.getAssetMetadata().getNetworkType(), content.getSerializedTransaction());
+                draftTransaction.addValue(content.getTransactionValue());
+                dao.updateBuyerTransaction(content.getSellingId(), draftTransaction);
                 assetTransmission.confirmReception(message);
             }
         }
@@ -179,7 +181,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     case NEGOTIATION_CONFIRMED: {
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
-                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId());
+                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue());
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
@@ -187,7 +189,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
-                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId());
+                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue());
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                             DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer());
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
@@ -195,7 +197,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
                         }
                         DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
-                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction.serialize());
+                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                         String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
                         dao.updateTransactionHash(record.getRecordId(), txHash);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
