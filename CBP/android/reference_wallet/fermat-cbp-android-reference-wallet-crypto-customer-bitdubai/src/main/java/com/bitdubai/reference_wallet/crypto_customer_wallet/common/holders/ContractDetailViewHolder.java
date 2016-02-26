@@ -220,17 +220,19 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             case 3:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_03);
                 stepTitle.setText("Merchandise Delivery");
+                textButton.setText("99 USD");
+                textDescription2.setText("using Cash Delivery.");
                 confirmButton.setVisibility(View.INVISIBLE);
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
                     case PENDING_MERCHANDISE:
-                        textDescription.setText("Broker sends: blabla");
+                        textDescription.setText("Broker sends:");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         break;
 
                     default:
-                        textDescription.setText("Broker sent: blabla");
+                        textDescription.setText("Broker sent:");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
                 break;
@@ -238,18 +240,20 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             case 4:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_04);
                 stepTitle.setText("Merchandise reception");
+                textButton.setText("99 USD");
+                textDescription2.setText("using Cash Delivery.");
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
                     case PENDING_MERCHANDISE:
                     case MERCHANDISE_SUBMIT:
-                        textDescription.setText("You receive: blabla");
+                        textDescription.setText("You receive:");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         confirmButton.setText("Confirm");
                         break;
 
                     default:
-                        textDescription.setText("You received: blabla");
+                        textDescription.setText("You received:");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         confirmButton.setVisibility(View.INVISIBLE);
                 }
