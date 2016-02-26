@@ -50,6 +50,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -104,18 +105,12 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
-    private boolean register;
 
-    //public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
 
-    /**
-     * cacha identities to register
-     */
-    private List<PlatformComponentProfile> actorsToRegisterCache;
     //CONSTRUCTORS
-
     /**
-     * Constructor with parameters
+     * Constructor without parameters
      */
     public AssetTransmissionNetworkServicePluginRootv2() {
         super(new PluginVersionReference(new Version()),
@@ -124,10 +119,7 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
                 NetworkServiceType.ASSET_TRANSMISSION,
                 "Asset Transmission Network Service",
                 null);
-        this.actorsToRegisterCache = new ArrayList<>();
     }
-
-
 
     //PUBLIC METHODS
 
@@ -152,7 +144,6 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
              * Set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-            this.register=Boolean.TRUE;
 
         } catch (CantInitializeDAPMessageNetworkServiceDatabaseException exception) {
 
@@ -181,7 +172,7 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) { //Logica tomada del handler NewReceiveMessagesNotificationEventHandler
         System.out.println("NEW MESSAGE RECEIVED!!!");
         FermatEvent event = getEventManager().getNewEvent(EventType.RECEIVE_NEW_DAP_MESSAGE);
-        event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+        event.setSource(AssetTransmissionNetworkServicePluginRootv2.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
 
         try {
