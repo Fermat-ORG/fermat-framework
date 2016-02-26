@@ -11,11 +11,26 @@ public class Asset {
     private byte[] image;
     private String name;
 
+    public enum Status {
+        PENDING("PENDING"),
+        CONFIRMED("CONFIRMED");
+
+        private String desc;
+
+        Status(String desc) {
+            this.desc = desc;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+    }
+
     public Asset(String name) {
         this.name = name;
     }
 
-    public Asset(DigitalAsset digitalAsset) {
+    public Asset(DigitalAsset digitalAsset, Status status) {
         this.digitalAsset = digitalAsset;
         setImage(digitalAsset.getResources().get(0).getResourceBinayData());
         setName(digitalAsset.getName());
