@@ -19,6 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
@@ -91,6 +92,11 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     //INNER CLASSES
 
     private class BuyerAgent implements Runnable {
+
+        public BuyerAgent() {
+            startAgent();
+        }
+
         private boolean agentRunning;
         private static final int WAIT_TIME = 5 * 1000; //SECONDS
 
@@ -132,20 +138,23 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException {
+        private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_NEGOTIATION_STARTED)) {
                 AssetNegotiationContentMessage contentMessage = (AssetNegotiationContentMessage) message.getMessageContent();
                 dao.saveAssetNegotiation(contentMessage.getAssetNegotiation(), message.getActorSender().getActorPublicKey());
+                assetTransmission.confirmReception(message);
             }
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_SELL_STARTED)) {
                 AssetSellContentMessage contentMessage = (AssetSellContentMessage) message.getMessageContent();
                 dao.saveNewBuying(contentMessage, message.getActorSender().getActorPublicKey());
+                assetTransmission.confirmReception(message);
             }
         }
 
-        private void checkNegotiationStatus() throws DAPException {
-            for (NegotiationRecord record : dao.getActionRequiredNegotiations()) {
+        private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
+            for (NegotiationRecord record : dao.getNegotiationAnswer()) {
                 assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
+                dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), AssetSellStatus.NO_ACTION_REQUIRED);
             }
         }
 
