@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -702,6 +704,19 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "Unexpected exception");
         }
 
+    }
+
+    /**
+     * This method return a HashMap with the possible self identities.
+     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
+     * If there no identities created in any platform, this hashMaps contains the public chat Network
+     * Service.
+     * @return
+     */
+    @Override
+    public HashMap<PlatformComponentType, String> getSelfIdentities() {
+        //TODO to implement from ChatMiddlewareContactFactory
+        return null;
     }
 
     private String getSourceString(EventSource eventSource){
