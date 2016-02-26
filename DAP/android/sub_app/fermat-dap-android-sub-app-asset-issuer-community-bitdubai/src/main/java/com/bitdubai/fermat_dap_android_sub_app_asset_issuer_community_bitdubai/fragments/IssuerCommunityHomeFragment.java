@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.m
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -61,7 +63,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager manager;
-    private List<ActorIssuer> actors;
+    private int IssuerNotificationsCount = 0;
+
     ErrorManager errorManager;
 
     // recycler
@@ -71,6 +74,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+
+    private List<ActorIssuer> actors;
+    private ActorIssuer actor;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -90,8 +96,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         try {
             manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
+            actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
+
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            IssuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            new FetchCountTask().execute();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -386,6 +397,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateNotificationsBadge(int count) {
+        IssuerNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -403,6 +419,21 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetIdentityAssetIssuerException {
 
+    }
+
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return IssuerNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 
     @Override
@@ -474,7 +505,17 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onItemClickListener(ActorIssuer data, int position) {
         appSession.setData(ISSUER_SELECTED, data);
         changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+    }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 
     @Override

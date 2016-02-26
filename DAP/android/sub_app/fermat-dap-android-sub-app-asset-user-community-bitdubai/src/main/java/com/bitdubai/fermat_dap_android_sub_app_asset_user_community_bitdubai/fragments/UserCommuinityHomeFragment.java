@@ -64,9 +64,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager manager;
-    private int mNotificationsCount = 0;
+    private int userNotificationsCount = 0;
 
-    private List<Actor> actors;
     ErrorManager errorManager;
 
     // recycler
@@ -76,6 +75,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+
+    private List<Actor> actors;
     private Actor actor;
     private int MAX = 1;
     private int offset = 0;
@@ -103,7 +104,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            mNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            userNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -127,8 +128,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 actors = dataSet;
             }
         });
-
-
         recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -332,23 +331,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                         int i = v.getId();
                         if (i == R.id.positive_button) {
 
-//                            if (actor != null && identity != null) {
-//                                getSession().getModuleManager().askActorAssetUserForConnection(
-//                                        actor.getActorPublicKey(),
-//                                        actor.getName(),
-//                                        identity.getPublicKey(),
-//                                        identity.getAlias(),
-//                                        actor.getProfileImage());
-////                            identity.getImage(),
-////                            identity.getPublicKey());
-//                                Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                sendLocalBroadcast(broadcast);
-//                                Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                super.toastDefaultError();
-//                            }
-
                             final ProgressDialog dialog = new ProgressDialog(getActivity());
                             dialog.setMessage("Connecting please wait...");
                             dialog.setCancelable(false);
@@ -478,7 +460,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     }
 
     private void updateNotificationsBadge(int count) {
-        mNotificationsCount = count;
+        userNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
     }
 
@@ -510,7 +492,7 @@ Sample AsyncTask to fetch the notifications count
         protected Integer doInBackground(Void... params) {
             // example count. This is where you'd
             // query your data store for the actual count.
-            return mNotificationsCount;
+            return userNotificationsCount;
         }
 
         @Override
@@ -518,6 +500,7 @@ Sample AsyncTask to fetch the notifications count
             updateNotificationsBadge(count);
         }
     }
+
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
@@ -583,10 +566,8 @@ Sample AsyncTask to fetch the notifications count
 
     @Override
     public void onItemClickListener(Actor data, int position) {
-
         appSession.setData(USER_SELECTED, data);
         changeActivity(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
     }
 
     @Override
