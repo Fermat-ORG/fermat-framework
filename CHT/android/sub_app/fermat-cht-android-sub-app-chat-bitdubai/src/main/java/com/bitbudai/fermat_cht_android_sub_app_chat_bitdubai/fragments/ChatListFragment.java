@@ -194,11 +194,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                 sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
                 message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
                 if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate())))){
-                    datemessage= new SimpleDateFormat("hh:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
+                    datemessage= new SimpleDateFormat("HH:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
                 }else{
                     Date old=new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()));
-                    int numDates=old.compareTo(new Date());
-                    if(numDates==1) {
+                    Date today = new Date();
+                    long dias = today.getTime() - old.getTime() / (1000 * 60 * 60 * 24);
+                    //int numDates=old.compareTo(new Date());
+                    if(dias==1) {
                         datemessage = "YESTERDAY";
                     }else
                         datemessage= new SimpleDateFormat("dd/MM/yy").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
