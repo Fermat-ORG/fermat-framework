@@ -106,6 +106,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
                     //createNewIdentityInBackDevice();
                     actualizable = false;

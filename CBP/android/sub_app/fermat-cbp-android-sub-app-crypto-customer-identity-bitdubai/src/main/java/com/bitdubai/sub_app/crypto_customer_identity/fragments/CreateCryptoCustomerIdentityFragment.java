@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -94,28 +95,30 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void initViews(View layout) {
         actualizable = true;
+        Button botonG = (Button) layout.findViewById(R.id.create_crypto_customer_button);
+
+        botonG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewIdentityInBackDevice();
+            }
+        });
+
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
         mCustomerName.requestFocus();
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
-                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    createNewIdentityInBackDevice();
-                    actualizable = false;
+                    //createNewIdentityInBackDevice();
+                    //actualizable = false;
                 }
             }
         });
 
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerImage.setImageResource(R.drawable.img_new_user_camera);
-        mCustomerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerForContextMenu(mCustomerImage);
-                getActivity().openContextMenu(mCustomerImage);
-            }
-        });
 
         camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
@@ -195,14 +198,19 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void createNewIdentityInBackDevice() {
         String customerNameText = mCustomerName.getText().toString();
-        if (!customerNameText.trim().equals("")) {
-            if (cryptoCustomerBitmap != null) {
+        if(customerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+        }else{
+            if (cryptoCustomerBitmap == null) {
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
                 final CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
                         new Thread() {
                             @Override
                             public void run() {
