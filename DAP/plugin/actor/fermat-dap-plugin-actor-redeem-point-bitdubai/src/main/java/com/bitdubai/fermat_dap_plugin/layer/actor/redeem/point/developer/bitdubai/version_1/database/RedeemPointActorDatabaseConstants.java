@@ -18,6 +18,7 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME = "redeem_point_connection_state";
     public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
+    public static final String REDEEM_POINT_ACTOR_TYPE_COLUMN_NAME = "actor_type";
     public static final String REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
     public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
@@ -44,6 +45,7 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME = "register_redeem_point_connection_state";
     public static final String REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
     public static final String REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME = "register_last_connection_date";
+    public static final String REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME = "register_actor_type";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME = "register_location_latitude";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME = "register_location_longitude";
     public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
@@ -65,46 +67,14 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REGISTERED_ASSET_ISSUERS_FIRST_KEY_COLUMN = REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN;
 
     /**
-     * Redeem Point Relation Issuer database table definition.
+     * Redeem Point Actor database table CRYPTO ADDRESS definition.
      */
-//    public static final String REDEEM_POINT_RELATION_ISSUER_TABLE_NAME = "redeem_point_relation_issuer_actor";
-//
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "redeem_point_publicKey_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME = "redeem_point_asset_issuer_publicKey_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_NAME_COLUMN_NAME = "redeem_point_asset_issuer_name_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_STATUS_COLUMN_NAME = "redeem_point_issuer_status_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_ASSETS_COUNT_COLUMN_NAME = "redeem_point_issuer_assets_count_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "redeem_point_registration_date_issuer_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_NAME_COLUMN_NAME = "redeem_point_name_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_STATUS_COLUMN_NAME = "redeem_point_status_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "redeem_point_registration_date_actor";
-//    public static final String REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "redeem_point_modified_date_actor";
-//
-//    public static final String REDEEM_POINT_RELATION_ISSUER_ASSET_FIRST_KEY_COLUMN = "redeem_point_asset_issuer_publicKey_actor";
+    public static final String REDEEM_POINT_CRYPTO_TABLE_NAME = "redeem_point_crypto_member";
 
-    /**
-     * Redeem Point Relation Aseet User database table definition.
-     */
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_TABLE_NAME = "redeem_point_relation_asset_user_actor";
-//
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "asset_user_publicKey";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME = "asset_issuer_name_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ISSUER_IDENTITY_COLUMN_NAME = "asset_issuer_identity_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_USER_NAME_COLUMN_NAME = "asset_user_name_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_USER_SEX_COLUMN_NAME = "asset_user_sex_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_USER_UBICACION_COLUMN_NAME = "asset_user_ubicacion_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_USER_AGE_COLUMN_NAME = "asset_user_age_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME = "asset_user_description_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_NAME_COLUMN_NAME = "asset_user_asset_name_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_ID_COLUMN_NAME = "asset_user_asset_id_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_HASH_COLUMN_NAME = "asset_user_asset_hash_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME = "asset_user_asset_status_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_RESOURCES_COLUMN_NAME = "asset_user_asset_resources_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_AMOUNT_COLUMN_NAME = "asset_user_asset_amount_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_CURRENCY_COLUMN_NAME = "asset_user_asset_currency_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME = "asset_expiration_date_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME = "asset_user_redeemption_timestamp_actor";
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME = "asset_user_redeemption_date_actor";
-//
-//    public static final String REDEEM_POINT_RELATION_ASSET_USER_FIRST_KEY_COLUMN = "asset_user_publicKey_actor";
+    public static final String REDEEM_POINT_CRYPTO_PUBLIC_KEY_COLUMN_NAME = "redeem_point_crypto_public_key";
+    public static final String REDEEM_POINT_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME = "redeem_point_crypto_address";
+    public static final String REDEEM_POINT_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME = "redeem_point_crypto_currency";
+    public static final String REDEEM_POINT_CRYPTO_NETWORK_TYPE_COLUMN_NAME = "redeem_point_crypto_network_type";
+
+    public static final String REDEEM_POINT_CRYPTO_FIRST_KEY_COLUMN = REDEEM_POINT_CRYPTO_PUBLIC_KEY_COLUMN_NAME;
 }

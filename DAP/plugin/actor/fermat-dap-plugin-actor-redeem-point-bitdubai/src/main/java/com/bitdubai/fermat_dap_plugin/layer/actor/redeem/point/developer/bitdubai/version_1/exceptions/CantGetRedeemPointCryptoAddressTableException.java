@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 12/08/15.
+ * Created by Penelope Quintero on 08/02/16.
  */
-public class CantAddPendingAssetUserException extends FermatException {
+public class CantGetRedeemPointCryptoAddressTableException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,17 @@ public class CantAddPendingAssetUserException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantAddPendingAssetUserException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetRedeemPointCryptoAddressTableException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    /**
+     *
+     * @param message
+     * @param context
+     * @param possibleReason
+     */
+    public CantGetRedeemPointCryptoAddressTableException(String message, String context, String possibleReason) {
+        super(message, null, context, possibleReason);
     }
 }

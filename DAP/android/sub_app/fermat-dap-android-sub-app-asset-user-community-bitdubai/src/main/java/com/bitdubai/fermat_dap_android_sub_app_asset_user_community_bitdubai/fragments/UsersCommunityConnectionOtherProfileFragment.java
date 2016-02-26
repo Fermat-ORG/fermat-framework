@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,46 +21,38 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
-//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.Date;
-
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
-//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-//import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String USER_SELECTED = "user";
+    private List<Actor> actors;
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
@@ -84,7 +77,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
-    private ConnectionState connectionState;
+    private DAPConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
 
     /**
@@ -139,30 +132,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
 
-        switch (actor.getDapConnectionState()) {
-            case BLOCKED_LOCALLY:
-            case BLOCKED_REMOTELY:
-            case CANCELLED_LOCALLY:
-            case CANCELLED_REMOTELY:
-                connectionRejected();
-                break;
-            case CONNECTED:
-                disconnectRequest();
-                break;
-            case DISCONNECTED_LOCALLY:
-            case DISCONNECTED_REMOTELY:
-            case DENIED_LOCALLY:
-            case DENIED_REMOTELY:
-                connectRequest();
-                break;
-            case PENDING_LOCALLY:
-                conectionAccept();
-                break;
-            case PENDING_REMOTELY:
-                connectionSend();
-                break;
-        }
-
+        updateButton();
 
         try {
             userName.setText(actor.getName());
@@ -187,7 +157,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             }
 
             //userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
-            userLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
+            userLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getLastConnectionDate())));
 
             if (actor.getProfileImage() != null) {
                 Bitmap bitmap;
@@ -218,59 +188,70 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (i == R.id.btn_conect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
             ConnectDialog connectDialog;
-            try {
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
-                connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(actor.getName());
-                connectDialog.setSecondDescription("a connection request");
-                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        //TODO Implementar aca que va a pasar con los estados de los botones
-                        //updateButton();
-                    }
-                });
-                connectDialog.show();
-            } catch (CantGetIdentityAssetUserException e) {
-                e.printStackTrace();
-
-            }
+//            try {
+            connectDialog = new ConnectDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
+            connectDialog.setTitle("Connection Request");
+            connectDialog.setDescription("Do you want to send ");
+            connectDialog.setUsername(actor.getName());
+            connectDialog.setSecondDescription("a connection request");
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            connectDialog.show();
+//            } catch (CantGetIdentityAssetUserException e) {
+//                e.printStackTrace();
+//
+//            }
         }
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
             final DisconectDialog disconectDialog;
-            try {
-                disconectDialog = new DisconectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
-                disconectDialog.setTitle("Disconnect");
-                disconectDialog.setDescription("Want to disconnect from");
-                disconectDialog.setUsername(actor.getName());
-                disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                       updateButton();
-                    }
-                });
-                disconectDialog.show();
-            } catch (CantGetIdentityAssetUserException e) {
-                e.printStackTrace();
-            }
+//            try {
+            disconectDialog = new DisconectDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
+
+            disconectDialog.setTitle("Disconnect");
+            disconectDialog.setDescription("Want to disconnect from");
+            disconectDialog.setUsername(actor.getName());
+            disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            disconectDialog.show();
+//            } catch (CantGetIdentityAssetUserException e) {
+//                e.printStackTrace();
+//            }
         }
         if (i == R.id.btn_connection_accept) {
-            try {
+//            try {
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
+            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            notificationAcceptDialog.show();
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
-                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                notificationAcceptDialog.show();
-
-            } catch (CantGetIdentityAssetUserException e) {
-                e.printStackTrace();
-            }
+//            } catch (CantGetIdentityAssetUserException e) {
+//                e.printStackTrace();
+//            }
         }
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
@@ -283,66 +264,46 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void updateButton() {
-        /*try {
-            connectionState = manager.getIntraUsersConnectionStatus(this.actor.getPublicKey());
-        } catch (CantGetIntraUserConnectionStatusException e) {
-            e.printStackTrace();
-        }*/
-        ActorAssetUser tempActor = null;
         try {
-            tempActor = manager.getActorUser(actor.getActorPublicKey());
-
-            if(tempActor.getCryptoAddress() != null){
-                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
-                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
-                disconnectRequest();
-            } else{
-                userCryptoAddres.setText("No");
-                userCryptoCurrency.setText("None");
-                connectRequest();
-            }
-
-            if(tempActor.getBlockchainNetworkType() != null) {
-                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_"," "));
-            }else {
-                userBlockchainNetworkType.setText("None");
-            }
+            connectionState = manager.getActorRegisteredDAPConnectionState(this.actor.getActorPublicKey());
         } catch (CantGetAssetUserActorsException e) {
-            e.printStackTrace();
-        } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         }
 
+        updateStateConnection(connectionState);
+        onRefresh();
+    }
 
-        /*switch (connectionState) {
+    private void updateStateConnection(DAPConnectionState dapConnectionState) {
+
+        switch (dapConnectionState) {
             case BLOCKED_LOCALLY:
             case BLOCKED_REMOTELY:
             case CANCELLED_LOCALLY:
             case CANCELLED_REMOTELY:
                 connectionRejected();
                 break;
-            case CONNECTED:
+            case CONNECTED_ONLINE:
+            case CONNECTED_OFFLINE:
                 disconnectRequest();
                 break;
-            case NO_CONNECTED:
             case DISCONNECTED_LOCALLY:
             case DISCONNECTED_REMOTELY:
-            case ERROR:
             case DENIED_LOCALLY:
             case DENIED_REMOTELY:
+            case REGISTERED_ONLINE:
+            case REGISTERED_OFFLINE:
                 connectRequest();
                 break;
-            case PENDING_REMOTELY_ACCEPTANCE:
+            case PENDING_LOCALLY:
+                connectionAccept();
+                break;
+            case PENDING_REMOTELY:
+            case CONNECTING:
                 connectionSend();
                 break;
-
-            case PENDING_LOCALLY_ACCEPTANCE:
-                conectionAccept();
-                break;
-        }*/
-        //disconnectRequest();
+        }
     }
-
 
     private void connectionSend() {
         connectionRequestSend.setVisibility(View.VISIBLE);
@@ -351,13 +312,12 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connectionRequestRejected.setVisibility(View.GONE);
     }
 
-    private void conectionAccept() {
+    private void connectionAccept() {
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         accept.setVisibility(View.VISIBLE);
-
     }
 
     private void connectRequest() {
@@ -395,5 +355,92 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                updateButton();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
+    }
+
+    private synchronized List<Actor> getProfileData() {
+        List<AssetUserActorRecord> tempActor = new ArrayList<>();
+        ActorAssetUser actorAssetUser;
+        actors = new ArrayList<>();
+
+        try {
+            actorAssetUser = manager.getActorUser(actor.getActorPublicKey());
+
+            tempActor.add(new AssetUserActorRecord(actorAssetUser.getActorPublicKey(),
+                    actorAssetUser.getName(),
+                    actorAssetUser.getAge(),
+                    actorAssetUser.getGenders(),
+                    actorAssetUser.getDapConnectionState(),
+                    actorAssetUser.getLocationLatitude(),
+                    actorAssetUser.getLocationLongitude(),
+                    actorAssetUser.getCryptoAddress(),
+                    actorAssetUser.getRegistrationDate(),
+                    actorAssetUser.getLastConnectionDate(),
+                    actorAssetUser.getBlockchainNetworkType(),
+                    actorAssetUser.getType(),
+                    actorAssetUser.getProfileImage()));
+
+            if (tempActor.size() > 0) {
+                for (AssetUserActorRecord record : tempActor) {
+                        actors.add((new Actor(record)));
+                }
+            }
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        } catch (CantAssetUserActorNotFoundException e) {
+            e.printStackTrace();
+        }
+        return actors;
+    }
+
+    @Override
+    public void onRefresh() {
+        FermatWorker worker = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return getProfileData();
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onPostExecute(Object... result) {
+                actors = (ArrayList<Actor>) result[0];
+                if (actors.get(0).getCryptoAddress() != null) {
+                    userCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
+                    userCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                    disconnectRequest();
+                } else {
+                    userCryptoAddres.setText("No");
+                    userCryptoCurrency.setText("None");
+//                connectRequest();
+                }
+                if (actors.get(0).getBlockchainNetworkType() != null) {
+                    userBlockchainNetworkType.setText(actors.get(0).getBlockchainNetworkType().toString().replace("_", " "));
+                } else {
+                    userBlockchainNetworkType.setText("None");
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                ex.printStackTrace();
+            }
+        });
+        worker.execute();
     }
 }
