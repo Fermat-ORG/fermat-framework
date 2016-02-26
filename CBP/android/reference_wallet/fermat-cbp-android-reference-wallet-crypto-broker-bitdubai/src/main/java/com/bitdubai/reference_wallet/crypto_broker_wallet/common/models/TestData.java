@@ -391,7 +391,7 @@ public class TestData {
 
     public static List<EarningsPair> getEarningsPairs() {
         ArrayList<EarningsPair> earningsPairs = new ArrayList<>();
-        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR));
         earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
         earningsPairs.add(new EarningsPairTestData(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
 
@@ -446,6 +446,17 @@ public class TestData {
 
 
         } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(0.02, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(0.122, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
+
+            calendar.add(timeFilter, -1);
+            earningTestData = new EarningTestData(0.5465482, calendar.getTimeInMillis());
+            dataArrayList.add(earningTestData);
 
         } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
 
@@ -459,19 +470,5 @@ public class TestData {
         }
 
         return dataArrayList;
-    }
-
-    public static double getCurrentEarning(Currency currency) {
-        if (currency.equals(CryptoCurrency.BITCOIN)) {
-            return 2.25;
-
-        } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
-            return 6598.25;
-
-        } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
-            return 6598.25;
-        }
-
-        return 0.0;
     }
 }

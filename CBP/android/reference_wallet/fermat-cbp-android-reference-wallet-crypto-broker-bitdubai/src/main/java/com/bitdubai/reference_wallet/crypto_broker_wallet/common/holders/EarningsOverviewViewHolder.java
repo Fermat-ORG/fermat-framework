@@ -56,7 +56,7 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
                 formattedDate = DateFormat.format("yyyy", data.getToTimestamp());
                 break;
             default:
-                formattedDate = DateFormat.format("MMM yyyy", data.getToTimestamp());
+                formattedDate = DateFormat.format("dd MMM yyyy", data.getToTimestamp());
                 break;
         }
 

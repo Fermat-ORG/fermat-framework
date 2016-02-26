@@ -2,12 +2,9 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings;
 
 
 import android.app.Fragment;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +14,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsDetailsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
@@ -34,7 +30,6 @@ import java.util.List;
 
 import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
 import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 
 
 /**
@@ -50,35 +45,17 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
     private TimeFrequency frequency;
     private List<EarningsPairDetail> data;
 
-    // Fermat Managers
-    private ErrorManager errorManager;
+    public static EarningsDetailsFragment newInstance(CryptoBrokerWalletSession session) {
+        final EarningsDetailsFragment earningsDetailsFragment = new EarningsDetailsFragment();
+        earningsDetailsFragment.appSession = session;
 
-
-    public static EarningsDetailsFragment newInstance() {
-        return new EarningsDetailsFragment();
+        return earningsDetailsFragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        try {
-            errorManager = appSession.getErrorManager();
-
-        } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, ex);
-            else
-                Log.e(TAG, ex.getMessage(), ex);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.cbw_fragment_earnings_details, container, false);
-
-        configureToolbar();
 
         final NumberFormat instance = DecimalFormat.getInstance();
         final EarningsPairDetail currentEarning = data.isEmpty() ? null : data.get(0);
@@ -100,6 +77,7 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
         timeFieldTextView.setText(frequency.getFriendlyName());
 
         final EarningsOverviewAdapter earningsOverviewAdapter = new EarningsOverviewAdapter(getActivity(), data, earningsPair.getEarningCurrency());
+        earningsOverviewAdapter.setTimeFrecuency(frequency);
         final RecyclerView earningsOverviewRecyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
         earningsOverviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         earningsOverviewRecyclerView.setAdapter(earningsOverviewAdapter);
@@ -107,36 +85,25 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
         return layout;
     }
 
-    private void bindData(EarningsPair earningsPair, TimeFrequency frequency) {
+    public void bindData(EarningsPair earningsPair, TimeFrequency frequency) {
         this.earningsPair = earningsPair;
         this.frequency = frequency;
 
-        final Currency earningCurrency = earningsPair.getEarningCurrency();
+        final Currency earningCurrency = this.earningsPair.getEarningCurrency();
 
-        final EarningsSearch search = earningsPair.getSearch();
-        search.setTimeFrequency(frequency);
-
+        final ErrorManager errorManager = appSession.getErrorManager();
         try {
+            final EarningsSearch search = this.earningsPair.getSearch();
+            search.setTimeFrequency(frequency);
             data = search.listResults();
-        } catch (CantListEarningsDetailsException e) {
-            //TODO: just for test purposes
-            data = TestData.getEarnings(earningCurrency, frequency);
+
+        } catch (Exception e) {
+            data = TestData.getEarnings(earningCurrency, frequency);  //TODO: just for test purposes
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             else
                 Log.e(TAG, e.getMessage(), e);
         }
-    }
-
-    private void configureToolbar() {
-        Toolbar toolbar = getToolbar();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
-        else
-            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     private String getCurrentEarningText(TimeFrequency frequency) {

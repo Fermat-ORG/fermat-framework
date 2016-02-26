@@ -7,6 +7,9 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings.EarningsDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+
+import java.util.HashMap;
 
 
 /**
@@ -14,41 +17,61 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings.Ear
  */
 public class EarningsDetailsPageAdapter extends FragmentStatePagerAdapter {
 
+    private HashMap<Integer, EarningsDetailsFragment> map;
     private EarningsPair earningsPair;
+    private CryptoBrokerWalletSession session;
+    private boolean earningsPairChanged;
 
-    public EarningsDetailsPageAdapter(FragmentManager fragmentManager, EarningsPair earningsPair) {
+    public EarningsDetailsPageAdapter(FragmentManager fragmentManager, EarningsPair earningsPair, CryptoBrokerWalletSession session) {
         super(fragmentManager);
 
         this.earningsPair = earningsPair;
+        this.session = session;
+        map = new HashMap<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        final EarningsDetailsFragment earningsActivityFragment = EarningsDetailsFragment.newInstance();
+        EarningsDetailsFragment earningsDetailsFragment = map.get(position);
+        if (earningsDetailsFragment == null) {
+            earningsDetailsFragment = EarningsDetailsFragment.newInstance(session);
+            map.put(position, earningsDetailsFragment);
+        }
 
         switch (position) {
             case 0:
-                earningsActivityFragment.bindData(earningsPair, TimeFrequency.DAILY);
+                earningsDetailsFragment.bindData(earningsPair, TimeFrequency.DAILY);
                 break;
             case 1:
-                earningsActivityFragment.bindData(earningsPair, TimeFrequency.WEEKLY);
+                earningsDetailsFragment.bindData(earningsPair, TimeFrequency.WEEKLY);
                 break;
             case 2:
-                earningsActivityFragment.bindData(earningsPair, TimeFrequency.MONTHLY);
+                earningsDetailsFragment.bindData(earningsPair, TimeFrequency.MONTHLY);
                 break;
             case 3:
-                earningsActivityFragment.bindData(earningsPair, TimeFrequency.YEARLY);
+                earningsDetailsFragment.bindData(earningsPair, TimeFrequency.YEARLY);
+                earningsPairChanged = false;
                 break;
             default:
                 throw new IndexOutOfBoundsException();
         }
 
-        return earningsActivityFragment;
+        return earningsDetailsFragment;
     }
 
-    public void changeDataSet(EarningsPair earningsPair){
+    public void changeDataSet(EarningsPair earningsPair) {
         this.earningsPair = earningsPair;
+        earningsPairChanged = true;
+
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        if (earningsPairChanged)
+            return POSITION_NONE;
+
+        return super.getItemPosition(object);
     }
 
     @Override

@@ -8,7 +8,7 @@
               android:paddingTop="16dp">
 
     <LinearLayout
-        android:id="@+id/cbw_no_earnings_contianer"
+        android:id="@+id/cbw_no_earnings_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sad_face"
+            android:layout_gravity="center"
             tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -31,6 +32,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/cbw_earnings_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
