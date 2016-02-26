@@ -112,6 +112,13 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
+    public DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException {
+        blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+
+        return actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetPublicKey, blockchainNetworkType);
+    }
+
+    @Override
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list = null;
         List<AssetUserActorRecord> assetUserActorRecords = null;
@@ -343,7 +350,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                             actorAssetUser.getProfileImage(),
                             blockchainNetworkType);
 
-                    if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                    if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                         System.out.println("The User you are trying to connect with is not connected" +
                                 "so we send the message to the assetUserActorNetworkService");
                         this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
@@ -373,7 +380,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                                 actorAssetUser.getProfileImage(),
                                 blockchainNetworkType);
 
-                        if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                        if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                             System.out.println("The User you are trying to connect with is not connected" +
                                     "so we send the message to the assetUserActorNetworkService");
                             this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
@@ -397,7 +404,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         } catch (CantAskConnectionActorAssetException e) {
             throw new CantAskConnectionActorAssetException("", e, "", "");
         } catch (CantRequestAlreadySendActorAssetException e) {
-            throw new CantAskConnectionActorAssetException("", e, "", "Intra user request already send");
+            throw new CantAskConnectionActorAssetException("", e, "", "actor asset user request already send");
         } catch (Exception e) {
             throw new CantAskConnectionActorAssetException("CAN'T ASK INTRA USER CONNECTION", FermatException.wrapException(e), "", "unknown exception");
         }
@@ -457,9 +464,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(intraUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
 
         } catch (CantDisconnectAssetUserActorException e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToDisconnectPublicKey, e, "", "");
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, e, "", "");
         } catch (Exception e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -476,9 +483,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
              */
             this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
         } catch (CantCancelConnectionActorAssetException e) {
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToCancelPublicKey, e, "", "");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToCancelPublicKey, e, "", "");
         } catch (Exception e) {
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -510,7 +517,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 //            }
             return this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
         } catch (CantGetActorAssetWaitingException e) {
-            throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on IntraUserActor Manager");
+            throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR ASSET USER MANAGER");
         } catch (Exception e) {
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", FermatException.wrapException(e), "", "unknown exception");
         }
@@ -522,7 +529,6 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             return this.actorAssetUserManager.getLastNotificationActorAssetUser(actorAssetUserInPublicKey);
         } catch (CantGetActorAssetNotificationException e) {
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "", "Error on ACTOR ASSET Manager");
-
         }
     }
 

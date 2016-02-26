@@ -5,10 +5,9 @@
     android:layout_height="wrap_content"
     android:fillViewport="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_other_profile"
         android:orientation="vertical">
 
@@ -183,7 +182,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="Last Connection"
+                android:text="@string/dap_other_profile_last_connection_date"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -192,7 +191,7 @@
                 android:id="@+id/issuerLastConnectionDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Last Connection"
+                android:hint="Last Connection Date"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:textColor="#292929"
@@ -206,6 +205,5 @@
                 android:background="#b5b5b7" />
 
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

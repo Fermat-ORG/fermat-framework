@@ -19,9 +19,10 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
     public static final String ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME = "publicKey_extended";
+    public static final String ASSET_ISSUER_TYPE_COLUMN_NAME = "issuer_type";
+    public static final String ASSET_ISSUER_DESCRIPTION_COLUMN_NAME = "description";
     public static final String ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
-    public static final String ASSET_ISSUER_DESCRIPTION_COLUMN_NAME = "description";
 
     public static final String ASSET_ISSUER_FIRST_KEY_COLUMN = ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME;
 
@@ -37,9 +38,10 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
     public static final String ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME = "register_last_connection_date";
     public static final String ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME = "register_publicKey_extended";
+    public static final String ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME = "issuer_registered_type";
+    public static final String ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME = "register_description";
     public static final String ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME = "register_location_latitude";
     public static final String ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME = "register_location_longitude";
-    public static final String ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME = "register_description";
 
     public static final String ASSET_ISSUER_REGISTERED_FIRST_KEY_COLUMN = ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
 
