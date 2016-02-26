@@ -7,11 +7,18 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -22,23 +29,33 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.DAPMessageDAO;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInitializeDAPMessageNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -49,7 +66,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16. - Jose Briceño josebricenor@gmail.com (22/02/16)
  */
-public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetworkServiceBase implements DAPNetworkService {
+public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetworkServiceBase implements AssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers {
 
     //VARIABLE DECLARATION
 
@@ -78,29 +95,22 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     /**
      * Represent the dataBase
      */
-    private Database dataBaseCommunication;
-
     private Database dataBase;
 
     /**
      * DAO
      */
-    private IncomingMessageDao incomingMessageDao;
-    private OutgoingMessageDao outgoingMessageDao;
     private DAPMessageDAO dapMessageDAO;
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
-    /**
-     * cacha identities to register
-     */
-    private List<PlatformComponentProfile> actorsToRegisterCache;
-    //CONSTRUCTORS
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
 
+    //CONSTRUCTORS
     /**
-     * Constructor with parameters
+     * Constructor without parameters
      */
     public AssetTransmissionNetworkServicePluginRootv2() {
         super(new PluginVersionReference(new Version()),
@@ -109,7 +119,6 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
                 NetworkServiceType.ASSET_TRANSMISSION,
                 "Asset Transmission Network Service",
                 null);
-        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     //PUBLIC METHODS
@@ -120,12 +129,36 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      */
     @Override
     protected void onStart() throws CantStartPluginException {
-        createDatabase();
+        System.out.println("AssetTransmissionNetworkService - Starting");
 
         try {
-            super.start();
-        } catch (CantStartPluginException e) {
-            throw new CantStartPluginException(FermatException.wrapException(e));
+
+            /*
+             * Initialize Developer Database Factory
+             */
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            dataBase = communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            dapMessageDAO = new DAPMessageDAO(dataBase);
+
+            /*
+             * Set the new status
+            */
+            this.serviceStatus = ServiceStatus.STARTED;
+
+        } catch (CantInitializeDAPMessageNetworkServiceDatabaseException exception) {
+
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The Asset User Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
         }
     }
 
@@ -136,8 +169,17 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      * @param newFermatMessageReceive
      */
     @Override
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
+    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) { //Logica tomada del handler NewReceiveMessagesNotificationEventHandler
+        System.out.println("NEW MESSAGE RECEIVED!!!");
+        FermatEvent event = getEventManager().getNewEvent(EventType.RECEIVE_NEW_DAP_MESSAGE);
+        event.setSource(AssetTransmissionNetworkServicePluginRootv2.EVENT_SOURCE);
+        getEventManager().raiseEvent(event);
 
+        try {
+            dapMessageDAO.create(DAPMessage.fromXML(newFermatMessageReceive.getContent()), MessageStatus.NEW_RECEIVED);
+        } catch (CantInsertRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -148,12 +190,13 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      */
     @Override
     public void onSentMessage(FermatMessage messageSent) {
-
+        System.out.print("ASSET TRANSMISSION - NOTIFICACION EVENTO MENSAJE ENVIADO!!!!");
     }
 
     /**
      * This method is automatically called when the network service is registered
      */
+
     @Override
     protected void onNetworkServiceRegistered() {
 
@@ -237,9 +280,60 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
 
         try {
+            DAPActor actorSender = dapMessage.getActorSender();
+            DAPActor actorReceiver = dapMessage.getActorReceiver();
+            PlatformComponentType senderType = ActorUtils.getPlatformComponentType(actorSender);
+            PlatformComponentType receiverType = ActorUtils.getPlatformComponentType(actorReceiver);
+
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Sender: PK : " + actorSender.getActorPublicKey() + " - Type: " + senderType.getCode());
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Receiver: PK : " + actorReceiver.getActorPublicKey() + " - Type: " + receiverType.getCode());
+            /*
+             * If not null
+             */
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Sending message.....");
+
+            FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorSender.getActorPublicKey(),  //Sender NetworkService
+                    actorReceiver.getActorPublicKey(),   //Receiver
+                    dapMessage.toXML(),                //Message Content
+                    FermatMessageContentType.TEXT);//Type
+
+            /*
+             * Configure the correct status
+             */
+            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+
+            /*
+             * Save to the data base table
+             */
             dapMessageDAO.create(dapMessage, MessageStatus.PENDING_TO_SEND);
-        } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendMessageException();
+            getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().create(fermatMessage);
+            PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, senderType);
+            PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorReceiver.getActorPublicKey(), NetworkServiceType.UNDEFINED, receiverType);
+            getCommunicationNetworkServiceConnectionManager().connectTo(sender, getNetworkServiceProfile(), receiver);
+
+
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
+        } catch (Exception e) {
+
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantSendMessageException cantSendMessage = new CantSendMessageException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantSendMessage);
+
+            throw cantSendMessage;
         }
     }
 
@@ -281,19 +375,18 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
 
     }
 
-    //PRIVATE METHODS
-
-    private void createDatabase() {
-        CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem,pluginId);
-
-        try {
-            dataBase = databaseFactory.createDatabase();
-        } catch (CantCreateDatabaseException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
-    //GETTER AND SETTERS
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
 
-    //INNER CLASSES
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
 }

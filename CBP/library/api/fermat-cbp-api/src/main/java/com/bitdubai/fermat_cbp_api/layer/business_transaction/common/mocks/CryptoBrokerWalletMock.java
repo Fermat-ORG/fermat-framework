@@ -59,7 +59,7 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
      * @throws CantMarkAsSeenException if something goes wrong.
      */
     @Override
-    public void markAsSeen(List<UUID> transactionIds) throws CantMarkAsSeenException {
+    public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
 
     }
 

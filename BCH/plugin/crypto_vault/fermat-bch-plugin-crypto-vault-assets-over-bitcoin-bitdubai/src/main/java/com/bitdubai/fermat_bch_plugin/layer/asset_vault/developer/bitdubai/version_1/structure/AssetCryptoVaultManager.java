@@ -45,6 +45,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -1033,10 +1034,20 @@ public class AssetCryptoVaultManager  {
          * I will create the Bitcoin transaction
          */
         Transaction transaction = new Transaction(networkParameters);
-        transaction.addInput(genesisTransaction.getOutput(0));
+        TransactionOutPoint transactionOutPoint = new TransactionOutPoint(networkParameters, 0, genesisTransaction);
+        byte[] script = genesisTransaction.getOutput(0).getScriptBytes();
+
+        TransactionInput transactionInput = new TransactionInput(networkParameters, genesisTransaction, script, transactionOutPoint);
+        transaction.addInput(transactionInput);
         transaction.addOutput(coinToSend, address);
 
         DraftTransaction draftTransaction = new DraftTransaction(transaction);
+
+        StringBuilder output = new StringBuilder("***AssetVault*** Draft Transaction created.");
+        output.append(System.lineSeparator());
+        output.append(draftTransaction.toString());
+        System.out.println(output.toString());
+
         return draftTransaction;
     }
 
