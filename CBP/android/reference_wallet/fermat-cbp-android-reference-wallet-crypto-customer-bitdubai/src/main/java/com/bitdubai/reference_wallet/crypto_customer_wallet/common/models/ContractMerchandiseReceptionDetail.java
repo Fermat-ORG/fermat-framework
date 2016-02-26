@@ -22,9 +22,9 @@ public class ContractMerchandiseReceptionDetail extends ContractDetail {
 
     public ContractMerchandiseReceptionDetail(int contractStep, ContractStatus contractStatus, ContractDetailType contractDetailType,
                                               String currencyType, String currencyCode, float currencyAmount, String cryptoCustomerAlias,
-                                              byte[] cryptoCustomerImage, long lastUpdate, float exchangeRateAmount, UUID contractId) {
+                                              byte[] cryptoCustomerImage, long lastUpdate, float exchangeRateAmount, UUID contractId, UUID negotiationId) {
 
-        super(contractStep, contractStatus, contractId);
+        super(contractStep, contractStatus, contractId, negotiationId);
 
         this.contractDetailType = contractDetailType;
         this.currencyTypeCode = currencyType;

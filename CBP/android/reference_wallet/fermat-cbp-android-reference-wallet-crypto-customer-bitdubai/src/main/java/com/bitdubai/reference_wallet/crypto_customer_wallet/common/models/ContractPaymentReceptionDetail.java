@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 
 import java.util.UUID;
@@ -10,78 +9,30 @@ import java.util.UUID;
  */
 public class ContractPaymentReceptionDetail extends ContractDetail {
 
+    float paymentAmount;
+    String paymentCurrencyCode;
+    long paymentDate;
 
-    ContractDetailType contractDetailType;
-    String currencyTypeCode;
-    String currencyCode;
-    float currencyAmount;
-    String cryptoCustomerAlias;
-    byte[] cryptoCustomerImage;
-    long lastUpdate;
-    float exchangeRateAmount;
+    public ContractPaymentReceptionDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId,
+                                         float paymentAmount, String paymentCurrencyCode, long paymentDeliveryDate) {
 
-    public ContractPaymentReceptionDetail(int contractStep, ContractStatus contractStatus, ContractDetailType contractDetailType,
-                                          String currencyType, String currencyCode, float currencyAmount, String cryptoCustomerAlias,
-                                          byte[] cryptoCustomerImage, long lastUpdate, float exchangeRateAmount, UUID contractId) {
+        super(contractStep, contractStatus, contractId, negotiationId);
 
-        super(contractStep, contractStatus, contractId);
-
-        this.contractDetailType = contractDetailType;
-        this.currencyTypeCode = currencyType;
-        this.currencyCode = currencyCode;
-        this.currencyAmount = currencyAmount;
-        this.cryptoCustomerAlias = cryptoCustomerAlias;
-        this.cryptoCustomerImage = cryptoCustomerImage;
-        this.lastUpdate = lastUpdate;
-        this.exchangeRateAmount = exchangeRateAmount;
+        this.paymentAmount = paymentAmount;
+        this.paymentCurrencyCode = paymentCurrencyCode;
+        this.paymentDate = paymentDeliveryDate;
     }
 
 
-    public String getCurrencyTypeCode() {return currencyTypeCode;}
-    public void setCurrencyTypeCode(String currencyTypeCode) {this.currencyTypeCode = currencyTypeCode;}
+    public float getPaymentAmount() {return paymentAmount;}
+    public void setPaymentAmount(float paymentAmount) {this.paymentAmount = paymentAmount;}
 
 
-
-    public float getExchangeRateAmount() {return exchangeRateAmount;}
-    public void setExchangeRateAmount(float exchangeRateAmount) {this.exchangeRateAmount = exchangeRateAmount;}
-
-
-    public ContractDetailType getContractDetailType() {return contractDetailType;}
-    public void setContractDetailType(ContractDetailType contractDetailType) {this.contractDetailType = contractDetailType;}
+    public String getPaymentCurrencyCode() {return paymentCurrencyCode;}
+    public void setPaymentCurrencyCode(String paymentCurrencyCode) {this.paymentCurrencyCode = paymentCurrencyCode;}
 
 
-    public String getCurrencyType() {
-        return currencyTypeCode;
-    }
-    public void setCurrencyType(String currencyType) {
-        this.currencyTypeCode = currencyType;
-    }
-
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
-
-
-    public float getCurrencyAmount() {return currencyAmount;}
-    public void setCurrencyAmount(float currencyAmount) {this.currencyAmount = currencyAmount;}
-
-
-    public String getCryptoCustomerAlias() {return cryptoCustomerAlias;}
-    public void setCryptoCustomerAlias(String cryptoCustomerAlias) {this.cryptoCustomerAlias = cryptoCustomerAlias;}
-
-
-    public byte[] getCryptoCustomerImage() {return cryptoCustomerImage;}
-    public void setCryptoCustomerImage(byte[] cryptoCustomerImage) {this.cryptoCustomerImage = cryptoCustomerImage;}
-
-
-    public long getLastUpdate() {
-        return lastUpdate;
-    }
-    public void setLastUpdate(long lastUpdate) {this.lastUpdate = lastUpdate;}
-
+    public long getPaymentDate() {return paymentDate;}
+    public void setPaymentDate(long paymentDate) {this.paymentDate = paymentDate;}
 
 }
