@@ -221,37 +221,29 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Payment Delivery step
                 contractDetail = new ContractPaymentDeliveryDetail(
                         1,
-                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
-                        ContractDetailType.CUSTOMER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
                         data.getAmount(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
                 contractDetail = new ContractPaymentReceptionDetail(
                         2,
-                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
-                        ContractDetailType.CUSTOMER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
                         data.getAmount(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
                 contractDetail = new ContractMerchandiseDeliveryDetail(
                         3,
-                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
@@ -260,13 +252,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
                         data.getExchangeRateAmount(),
+                        data.getContractId(),
                         data.getContractId());
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
                 contractDetail = new ContractMerchandiseReceptionDetail(
                         4,
-                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
@@ -275,6 +268,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
                         data.getExchangeRateAmount(),
+                        data.getContractId(),
                         data.getContractId());
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
