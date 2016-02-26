@@ -105,7 +105,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
             case TYPE_EXCHANGE_RATE:
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
-                exchangeRateViewHolder.setSuggestedRate(quote);
+                //exchangeRateViewHolder.setSuggestedRate(quote); //TODO: Daba error al compilar Revisar Nelson
                 return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_SELL:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);
