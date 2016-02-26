@@ -1046,6 +1046,8 @@ public class AssetCryptoVaultManager  {
 
         DraftTransaction draftTransaction = new DraftTransaction(transaction);
 
+        draftTransaction.addValue(inputValue.value);
+
         System.out.println("***CryptoVault*** Draft Transaction created");
         System.out.println(draftTransaction.toString());
 
