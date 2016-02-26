@@ -81,7 +81,7 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             );
 
             //CREATE NEGOTIATION
-//            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
