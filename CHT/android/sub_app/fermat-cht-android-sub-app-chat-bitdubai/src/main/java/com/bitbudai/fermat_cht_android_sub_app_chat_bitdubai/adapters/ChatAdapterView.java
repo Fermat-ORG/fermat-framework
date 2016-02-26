@@ -187,7 +187,7 @@ public class ChatAdapterView extends LinearLayout {
                     msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
                     if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()))))
                     {
-                        String S = new SimpleDateFormat("hh:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
+                        String S = new SimpleDateFormat("HH:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
                         msg.setDate(S);
                     }else
                     {
@@ -396,7 +396,7 @@ public class ChatAdapterView extends LinearLayout {
                     chatMessage.setId(UUID.randomUUID());//dummy
                     chatMessage.setMessage(messageText);
                     //chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                    String S = new SimpleDateFormat("hh:mm").format(new Date());
+                    String S = new SimpleDateFormat("HH:mm").format(new Date());
                     chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
