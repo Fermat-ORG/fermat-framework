@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings.dialog;
+package com.mati.fermat_preference_settings.drawer.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,8 +10,8 @@ import android.view.Window;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.List;
 

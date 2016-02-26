@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings;
+package com.mati.fermat_preference_settings.drawer;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,14 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

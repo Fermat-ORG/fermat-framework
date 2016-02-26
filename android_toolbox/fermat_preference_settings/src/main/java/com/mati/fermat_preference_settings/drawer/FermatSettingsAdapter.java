@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings;
+package com.mati.fermat_preference_settings.drawer;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,17 +6,17 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.dialog.SettingsDialog;
-import com.mati.fermat_preference_settings.settings.holders.SettingEditTextViewHolder;
-import com.mati.fermat_preference_settings.settings.holders.SettingSwitchViewHolder;
-import com.mati.fermat_preference_settings.settings.holders.SettingTextOpenDialogViewHolder;
-import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.settings.listeners.OnClickListenerSettings;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsEditText;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
+import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
+import com.mati.fermat_preference_settings.drawer.holders.SettingSwitchViewHolder;
+import com.mati.fermat_preference_settings.drawer.holders.SettingTextOpenDialogViewHolder;
+import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.listeners.OnClickListenerSettings;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

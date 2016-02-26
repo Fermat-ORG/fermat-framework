@@ -5,9 +5,9 @@ import android.graphics.drawable.Drawable;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsEditText;
+import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
 
 import java.util.ArrayList;
 import java.util.List;

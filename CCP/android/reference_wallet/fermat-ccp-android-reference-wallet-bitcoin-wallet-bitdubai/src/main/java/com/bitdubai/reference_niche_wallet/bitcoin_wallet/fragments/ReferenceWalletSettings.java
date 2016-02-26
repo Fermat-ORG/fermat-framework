@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -18,11 +17,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
 
 import java.util.ArrayList;
 import java.util.List;
