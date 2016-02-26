@@ -674,6 +674,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
             }
         }
 
+
         /**
          * sets the fee and value to send
          */
