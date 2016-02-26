@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,8 +17,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
-
-import com.customviews.fermat.currency_selector.R;
 import com.customviews.fermat.currency_selector.custom.CaviarEditText;
 import com.customviews.fermat.currency_selector.custom.CaviarRadioButton;
 import com.customviews.fermat.currency_selector.custom.CaviarTextView;
@@ -205,8 +203,12 @@ public class CurrencySelector
                 currency.setGravity(Gravity.CENTER);
             }
         } else {
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); //TODO
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            int width =  (int)(dpWidth / currencies.size());
             for(Currency currency : currencies) {
                 currency.setPadding(0, 0, 0, 0);
+                currency.setLayoutWidth(width + 5);
                 currency.setLayoutHeight(60);
                 currency.setGravity(Gravity.CENTER);
             }
@@ -309,7 +311,7 @@ public class CurrencySelector
         nameLabelTextView.setText(text);
     }
 
-    public void setNameLabelTextSiz(int size) {
+    public void setNameLabelTextSize(int size) {
         nameLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
 
@@ -366,7 +368,7 @@ public class CurrencySelector
             this.code = code;
             this.name = name;
             this.id = generateViewId();
-            this.drawable = R.drawable.bg_currency_type_button;
+            this.drawable = R.drawable.currency_type_button;
             HorizontalScrollView scrollView = (HorizontalScrollView) findViewById(R.id.selector_currency_horizontal_scroll_view);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.radioButton = (CaviarRadioButton) inflater.inflate(R.layout.currency_button, scrollView, false);
@@ -376,7 +378,7 @@ public class CurrencySelector
             setText(code);
             setPadding(10, 0, 0, 0);
             setTypeFace(TypefaceEnumType.CAVIAR_DREAMS_BOLD);
-            setOnClick(new View.OnClickListener() { @Override public void onClick(View view) { handleClick(view); }});
+            setOnClick(new OnClickListener() { @Override public void onClick(View view) { handleClick(view); }});
         }
 
         /**
@@ -437,7 +439,7 @@ public class CurrencySelector
          *  Set onClick method for view component
          *  @param listener     View.OnClickListener object
          */
-        private void setOnClick(View.OnClickListener listener) {
+        private void setOnClick(OnClickListener listener) {
             radioButton.setOnClickListener(listener);
         }
 
@@ -603,7 +605,7 @@ public class CurrencySelector
                 selector.setNameLabelDefault(nameDefault);
 
             if(nameTextSize != -1)
-                selector.setNameLabelTextSiz(nameTextSize);
+                selector.setNameLabelTextSize(nameTextSize);
 
             if(nameTextColor!= -1)
                 selector.setNameLabelTextColor(nameTextColor);

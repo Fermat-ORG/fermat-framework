@@ -165,10 +165,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private void showProvidersDialog() {
 
         try {
+
+            List<String> temp = new ArrayList<>();
+            String tempS = "";
+
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
-
             Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
-
 
             for (Map.Entry<String, CurrencyPair> e : map.entrySet()) {
 
@@ -176,9 +178,21 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 Currency currencyTo = e.getValue().getTo();
 
                 Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-                if (providerManagers != null)
-                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
-                        providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
+                if (providerManagers != null){
+                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers) {
+
+                        tempS = currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName();
+
+                        if (!temp.contains(tempS)) {
+
+                            temp.add(currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName());
+
+                            CurrencyPairAndProvider CPAP = new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager);
+                            providers.add(CPAP);
+                        }
+                    }
+                }
+
             }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();

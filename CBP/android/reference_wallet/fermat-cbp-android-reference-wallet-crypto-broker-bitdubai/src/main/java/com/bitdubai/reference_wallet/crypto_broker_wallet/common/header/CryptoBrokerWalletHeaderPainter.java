@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -80,6 +78,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
+                    session.setActualExchangeRates(summaries);
 
                     progressBar.setVisibility(View.GONE);
 

@@ -138,6 +138,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.print("***** Init User Level Bussines Customer Broker Purchase *****");
         } catch (CantStartAgentException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }

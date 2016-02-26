@@ -60,21 +60,12 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-            /*
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-            fermatEventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
-            ((IncomingCryptoOnCryptoNetworkEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-            */
-
-        /*fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
         fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
         ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);*/
+        listenersAdded.add(fermatEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
 
