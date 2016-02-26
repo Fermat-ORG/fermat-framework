@@ -198,7 +198,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 }else{
                     Date old=new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()));
                     Date today = new Date();
-                    long dias = today.getTime() - old.getTime() / (1000 * 60 * 60 * 24);
+                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
                     //int numDates=old.compareTo(new Date());
                     if(dias==1) {
                         datemessage = "YESTERDAY";
