@@ -4,8 +4,10 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -99,13 +101,14 @@ public class AssetBuyerDAO {
         }
     }
 
-    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
+    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey, CryptoAddress cryptoAddress) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
         assetBuyingVault.persistDigitalAssetMetadataInLocalStorage(assetSellContentMessage.getAssetMetadata(), assetSellContentMessage.getSellingId().toString());
         DatabaseTable databaseTable = getBuyerTable();
         DatabaseTableRecord buyingRecord = databaseTable.getEmptyRecord();
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME, assetSellContentMessage.getSellingId().toString());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME, assetSellContentMessage.getAssetMetadata().getNetworkType().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, assetSellContentMessage.getNegotiationId().toString());
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, assetSellContentMessage.getSellStatus().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME, senderPublicKey);
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(assetSellContentMessage.getSerializedTransaction(), Base64.DEFAULT));
@@ -234,7 +237,8 @@ public class AssetBuyerDAO {
             unsignedTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME));
         String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME));
-        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId);
+        CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
+        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId, cryptoAddress);
     }
 
     private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {

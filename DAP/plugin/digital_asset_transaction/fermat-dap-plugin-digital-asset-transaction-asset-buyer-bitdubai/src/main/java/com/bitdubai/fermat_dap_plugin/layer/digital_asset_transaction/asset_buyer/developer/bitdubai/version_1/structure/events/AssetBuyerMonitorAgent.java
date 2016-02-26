@@ -159,7 +159,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_SELL_STARTED)) {
                 AssetSellContentMessage contentMessage = (AssetSellContentMessage) message.getMessageContent();
-                dao.saveNewBuying(contentMessage, message.getActorSender().getActorPublicKey());
+                dao.saveNewBuying(contentMessage, message.getActorSender().getActorPublicKey(), contentMessage.getCryptoVaultAddress());
                 assetTransmission.confirmReception(message);
             }
         }
@@ -177,7 +177,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         //TODO USE CCP OUTGOING DRAFT PLUGIN
-                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getSeller().getCryptoAddress());
+                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
                         buyerTx = cryptoVaultManager.signTransaction(buyerTx);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
