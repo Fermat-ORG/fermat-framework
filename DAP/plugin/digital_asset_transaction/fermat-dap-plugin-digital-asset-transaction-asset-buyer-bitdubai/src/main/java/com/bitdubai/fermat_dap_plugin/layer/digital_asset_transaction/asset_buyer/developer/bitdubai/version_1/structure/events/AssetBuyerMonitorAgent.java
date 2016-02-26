@@ -5,9 +5,12 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
@@ -20,10 +23,20 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.AssetBuyerTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.BuyingRecord;
@@ -130,10 +143,11 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException {
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException {
             checkPendingMessages();
             checkNegotiationStatus();
             checkBuyingStatus();
+            checkPendingEvents();
         }
 
         private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException {
@@ -162,18 +176,47 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         if (negotiationRecord.getNegotiation().getTotalAmount() == buyingRecord.getSellerTransaction().getValue()) {
+                            //TODO USE CCP OUTGOING DRAFT PLUGIN
                             DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getSellerTransaction());
-                            dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx.serialize());
+                            dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
                             dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
                             assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED));
                         }
                         break;
                     }
-                    case PARTIALLY_SIGNED: {
+                }
+            }
+        }
+
+        private void checkPendingEvents() throws CantLoadTableToMemoryException, DAPException, InvalidParameterException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantGetCryptoTransactionException, CantUpdateRecordException {
+            for (String eventId : dao.getPendingEvents()) {
+                switch (dao.getEventType(eventId)) {
+                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
+                        for (BuyingRecord record : dao.getPartiallySignedBuying()) {
+                            creditUserWallet(record, BalanceType.BOOK);
+                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
+                        }
+                        break;
+                    }
+                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER: {
+                        for (BuyingRecord record : dao.getCompletedSignedBuying()) {
+                            creditUserWallet(record, BalanceType.AVAILABLE);
+                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
+                        }
                         break;
                     }
                 }
+                dao.notifyEvent(eventId);
             }
+        }
+
+
+        private void creditUserWallet(BuyingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterCreditException {
+            ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+            AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
+            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
+            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller());
+            userWallet.getBalance().credit(transactionRecord, balance);
         }
 
         public boolean isAgentRunning() {
