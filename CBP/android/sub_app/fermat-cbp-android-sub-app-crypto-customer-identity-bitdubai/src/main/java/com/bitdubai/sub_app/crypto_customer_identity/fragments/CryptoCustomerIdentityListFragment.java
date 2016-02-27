@@ -60,6 +60,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     private IdentityCustomerPreferenceSettings subappSettings;
 
+    private View layout;
+
     public static CryptoCustomerIdentityListFragment newInstance() {
         return new CryptoCustomerIdentityListFragment();
     }
@@ -81,6 +83,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        this.layout = layout;
 
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
@@ -209,7 +213,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     @Override
     public void onLongItemClickListener(CryptoCustomerIdentityInformation data, int position) {
-
+        onRefresh();
     }
 
     @Override
@@ -253,5 +257,25 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         }
         filter.filter(text);
         return true;
+    }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_customer_creado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_customer_editado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 }
