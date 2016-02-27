@@ -76,7 +76,7 @@ public class CloseContractRecorderService implements CBPService {
     public void incomingConfirmBusinessTransactionContractEventHandler(IncomingConfirmBusinessTransactionContract event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        if(event.getRemoteBusinessTransaction()== Plugins.CLOSE_CONTRACT){
+        if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CLOSE_CONTRACT.getCode())){
             this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         }
         //LOG.info("CHECK THE DATABASE");
@@ -85,7 +85,7 @@ public class CloseContractRecorderService implements CBPService {
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        if(event.getRemoteBusinessTransaction()== Plugins.CLOSE_CONTRACT){
+        if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CLOSE_CONTRACT.getCode())){
         this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         }
         //LOG.info("CHECK THE DATABASE");

@@ -76,7 +76,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ONLINE_PAYMENT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ONLINE_PAYMENT.getCode())) {
                 this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -99,7 +99,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ONLINE_PAYMENT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ONLINE_PAYMENT.getCode())) {
                 this.customerOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
