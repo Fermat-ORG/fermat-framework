@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -107,7 +108,7 @@ public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAp
                 //image null
                 if (actor != null) {
 
-                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(null,actor);
+                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(null,actor.getActorPublicKey());
 
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
                 } else {
@@ -115,14 +116,10 @@ public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAp
                 }
                 dismiss();
 
-            } catch (CantAssetRedeemPointActorNotFoundException e) {
-
+            } catch (CantDisconnectAssetUserActorException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
-            } catch (CantUpdateRedeemPointException e) {
-
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
+                e.printStackTrace();
             }
 
             dismiss();

@@ -131,7 +131,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
 
-        updateStateConnection(actorRedeem.getDapConnectionState());
+        updateButton();
 
         try {
             redeemName.setText(actorRedeem.getName());
@@ -142,11 +142,9 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             if (actorRedeem.getCryptoAddress() != null) {
                 redeemCryptoAddres.setText(actorRedeem.getCryptoAddress().getAddress());
                 redeemCryptoCurrency.setText(actorRedeem.getCryptoAddress().getCryptoCurrency().getFriendlyName());
-                disconnectRequest();
             } else {
                 redeemCryptoAddres.setText("No");
                 redeemCryptoCurrency.setText("None");
-                connectRequest();
             }
 
             if(actorRedeem.getBlockchainNetworkType() != null) {
@@ -179,7 +177,6 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         }
         return rootView;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -362,7 +359,6 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
-                onRefresh();
                 updateButton();
                 break;
             default:
@@ -419,11 +415,9 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 if (actors.get(0).getCryptoAddress() != null) {
                     redeemCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
                     redeemCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());
-                    disconnectRequest();
                 } else {
                     redeemCryptoAddres.setText("No");
                     redeemCryptoCurrency.setText("None");
-//                connectRequest();
                 }
                 if (actors.get(0).getBlockchainNetworkType() != null) {
                     redeemBlockchainNetworkType.setText(actors.get(0).getBlockchainNetworkType().toString().replace("_", " "));

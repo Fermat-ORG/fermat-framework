@@ -50,7 +50,7 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
     private final Actor actor;
     private final IdentityAssetUser identity;
 
-    List<ActorAssetUser> toConnect;
+    List<ActorAssetUser> userConnect;
 
     public ConnectDialog(final Activity a,
                          final AssetUserCommunitySubAppSession actorUserSubAppSession,
@@ -127,12 +127,12 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if (actor != null) { // && identity != null) {
-                    toConnect = new ArrayList<>();
+                if (actor != null) {
+                    userConnect = new ArrayList<>();
 
-                    toConnect.add(actor);
+                    userConnect.add(actor);
 
-                    getSession().getModuleManager().askActorAssetUserForConnection(toConnect);
+                    getSession().getModuleManager().askActorAssetUserForConnection(userConnect);
 
                     Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);

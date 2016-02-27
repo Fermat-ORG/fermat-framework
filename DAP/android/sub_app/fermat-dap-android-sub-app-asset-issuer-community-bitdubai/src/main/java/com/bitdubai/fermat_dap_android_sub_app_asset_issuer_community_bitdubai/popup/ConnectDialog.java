@@ -47,7 +47,7 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     private CharSequence title;
 
     private final ActorIssuer actorIssuer;
-    List<ActorIssuer> toConnect;
+    List<ActorAssetIssuer> issuerConnect;
     private final IdentityAssetIssuer identity;
 
 
@@ -126,15 +126,14 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
         if (i == R.id.positive_button) {
             //image null
 
-            if (actorIssuer != null) { // && identity != null) {
+            if (actorIssuer != null) {
 
                 try {
-                    List<ActorAssetIssuer> actorConnect = new ArrayList<>();
+                    issuerConnect = new ArrayList<>();
 
-                    actorConnect.add(actorIssuer.getRecord());
+                    issuerConnect.add(actorIssuer.getRecord());
 
-                    getSession().getModuleManager().askActorAssetIssuerForConnection(actorConnect);
-//                    getSession().getModuleManager().connectToActorAssetIssuer(null, actorConnect);
+                    getSession().getModuleManager().askActorAssetIssuerForConnection(issuerConnect);
 
                     Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);

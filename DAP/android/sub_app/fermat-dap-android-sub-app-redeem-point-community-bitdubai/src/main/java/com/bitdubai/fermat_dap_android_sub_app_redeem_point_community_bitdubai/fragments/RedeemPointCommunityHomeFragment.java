@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,6 +40,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.m
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.SessionConstantRedeemPointCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -53,15 +56,19 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Home Fragment
  * changed by jinmy Bohorquez on 11/02/16
  */
-public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener,
-                                                                                        AdapterView.OnItemClickListener,
-                                                                                        FermatListItemListeners<Actor> {
+public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener,
+        FermatListItemListeners<Actor> {
+
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private static RedeemPointCommunitySubAppModuleManager manager;
+    private int redeemNotificationsCount = 0;
+
     private List<Actor> actors;
+    private Actor actor;
     ErrorManager errorManager;
 
     // recycler
@@ -92,8 +99,14 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 
         try {
             manager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
+            actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
+
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+//            redeemNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            new FetchCountTask().execute();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -383,6 +396,12 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
                                           toConnect.add(actor);
                                   }
                                   //// TODO: 28/10/15 get Actor asset Redeem Point
+//                                  manager.askActorAssetUserForConnection(toConnect);
+//
+//                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                  sendLocalBroadcast(broadcast);
+
                                   manager.connectToActorAssetRedeemPoint(null, toConnect);
                                   return true;
                               }
@@ -447,6 +466,11 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateNotificationsBadge(int count) {
+        redeemNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -464,6 +488,24 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetIdentityRedeemPointException {
 
+    }
+
+    /*
+     *Sample AsyncTask to fetch the notifications count
+     */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return redeemNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 
     @Override
@@ -535,6 +577,17 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
         appSession.setData(REDEEM_POINT_SELECTED, data);
         changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
 
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 
     @Override

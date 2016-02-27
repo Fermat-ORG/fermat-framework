@@ -52,8 +52,11 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String USER_SELECTED = "user";
-    private List<Actor> actors;
     private String TAG = "ConnectionOtherProfileFragment";
+
+    private Actor actor;
+    private List<Actor> actors;
+
     private Resources res;
     private View rootView;
     private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
@@ -68,7 +71,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     //private IntraUserModuleManager manager;
     private static AssetUserCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
-    private Actor actor;
     private Button connect;
     private Button disconnect;
     private int MAX = 1;
@@ -143,11 +145,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             if (actor.getCryptoAddress() != null) {
                 userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
                 userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
-                disconnectRequest();
             } else {
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
-                connectRequest();
             }
 
             if (actor.getBlockchainNetworkType() != null) {
@@ -180,7 +180,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         }
         return rootView;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -269,7 +268,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
         }
-
         updateStateConnection(connectionState);
         onRefresh();
     }
@@ -361,7 +359,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
-                onRefresh();
                 updateButton();
                 break;
             default:
@@ -421,11 +418,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 if (actors.get(0).getCryptoAddress() != null) {
                     userCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
                     userCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());
-                    disconnectRequest();
                 } else {
                     userCryptoAddres.setText("No");
                     userCryptoCurrency.setText("None");
-//                connectRequest();
                 }
                 if (actors.get(0).getBlockchainNetworkType() != null) {
                     userBlockchainNetworkType.setText(actors.get(0).getBlockchainNetworkType().toString().replace("_", " "));
