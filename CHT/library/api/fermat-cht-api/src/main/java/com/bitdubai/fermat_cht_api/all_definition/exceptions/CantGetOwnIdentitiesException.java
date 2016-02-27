@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 
 /**
- * Created by Franklin Marcano on 09/01/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/02/16.
  */
-public class CantGetContactException extends CHTException {
+public class CantGetOwnIdentitiesException extends CHTException {
 
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT GET A CONTACT";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET THE OWN IDENTITIES HASH MAP";
 
     /**
      * Constructor with parameters
@@ -18,7 +18,11 @@ public class CantGetContactException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetContactException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetOwnIdentitiesException(
+            final String message,
+            final Exception cause,
+            final String context,
+            final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -29,7 +33,10 @@ public class CantGetContactException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public CantGetContactException(Exception cause, String context, String possibleReason) {
+    public CantGetOwnIdentitiesException(
+            Exception cause,
+            String context,
+            String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -39,7 +46,9 @@ public class CantGetContactException extends CHTException {
      * @param message
      * @param cause
      */
-    public CantGetContactException(final String message, final Exception cause) {
+    public CantGetOwnIdentitiesException(
+            final String message,
+            final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -48,7 +57,7 @@ public class CantGetContactException extends CHTException {
      *
      * @param message
      */
-    public CantGetContactException(final String message) {
+    public CantGetOwnIdentitiesException(final String message) {
         this(message, null);
     }
 
@@ -57,7 +66,7 @@ public class CantGetContactException extends CHTException {
      *
      * @param exception
      */
-    public CantGetContactException(final Exception exception) {
+    public CantGetOwnIdentitiesException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -65,7 +74,7 @@ public class CantGetContactException extends CHTException {
     /**
      * Constructor
      */
-    public CantGetContactException() {
+    public CantGetOwnIdentitiesException() {
         this(DEFAULT_MESSAGE);
     }
 }
