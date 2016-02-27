@@ -18,18 +18,18 @@ public class ContractDetail {
     private UUID negotiationId;
 
     private float paymentOrMerchandiseAmount;
-    private MoneyType paymentOrMerchandiseMoneyType;
+    private String paymentOrMerchandiseTypeOfPayment;
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
 
     public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId,
-                          float amount, MoneyType moneyType, String currencyCode, long deliveryDate) {
+                          float amount, String typeOfPayment, String currencyCode, long deliveryDate) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
         this.negotiationId = negotiationId;
         this.paymentOrMerchandiseAmount = amount;
-        this.paymentOrMerchandiseMoneyType = moneyType;
+        this.paymentOrMerchandiseTypeOfPayment = typeOfPayment;
         this.paymentOrMerchandiseCurrencyCode = currencyCode;
         this.paymentOrMerchandiseDeliveryDate = deliveryDate;
     }
@@ -51,8 +51,8 @@ public class ContractDetail {
     //public void setPaymentOrMerchandiseAmount(float paymentOrMerchandiseAmount) {this.paymentOrMerchandiseAmount = paymentOrMerchandiseAmount;}
 
 
-    public MoneyType getPaymentOrMerchandiseMoneyType() {return paymentOrMerchandiseMoneyType;}
-    //public void setPaymentOrMerchandiseMoneyType(MoneyType paymentOrMerchandiseMoneyType) {this.paymentOrMerchandiseMoneyType = paymentOrMerchandiseMoneyType;}
+    public String getPaymentOrMerchandiseTypeOfPayment() {return paymentOrMerchandiseTypeOfPayment;}
+    //public void setPaymentOrMerchandiseMoneyType(MoneyType paymentOrMerchandiseTypeOfPayment) {this.paymentOrMerchandiseTypeOfPayment = paymentOrMerchandiseTypeOfPayment;}
 
 
     public String getPaymentOrMerchandiseCurrencyCode() {return paymentOrMerchandiseCurrencyCode;}
