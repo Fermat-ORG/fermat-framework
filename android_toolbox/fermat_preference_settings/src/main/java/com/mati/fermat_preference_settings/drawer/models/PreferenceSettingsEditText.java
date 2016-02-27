@@ -6,14 +6,15 @@ import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsI
 /**
  * Created by mati on 2016.02.08..
  */
-public class PreferenceSettingsEditText implements PreferenceSettingsItem {
+public class PreferenceSettingsEditText extends PreferenceSettingsItem {
 
     private String TextViewtitle;
     private String editTextHint;
     private String editTextTitle;
 
 
-    public PreferenceSettingsEditText(String textViewtitle,String editTextHint) {
+    public PreferenceSettingsEditText(int id,String textViewtitle,String editTextHint) {
+        super(id);
         this.editTextHint = editTextHint;
         this.TextViewtitle = textViewtitle;
     }
