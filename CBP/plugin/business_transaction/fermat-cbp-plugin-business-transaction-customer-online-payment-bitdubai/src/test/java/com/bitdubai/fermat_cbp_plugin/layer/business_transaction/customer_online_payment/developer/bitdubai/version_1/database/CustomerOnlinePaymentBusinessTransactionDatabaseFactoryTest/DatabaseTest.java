@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -46,8 +47,8 @@ public class DatabaseTest {
     }
 
     public void setUpGeneralMockitoRules() throws Exception{
-        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
     }
 
@@ -58,9 +59,10 @@ public class DatabaseTest {
     }
 
     @Test
-    public void TestCreateDatabase_Should_Return_Not_Null() throws Exception{
-        customerOnlinePaymentBusinessTransactionDatabaseFactory = new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(mockPluginDatabaseSystem);
+    public void TestCreateDatabase_Should_Equal_Class() throws Exception{
+        customerOnlinePaymentBusinessTransactionDatabaseFactory =
+                new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(testId, testDataBaseName);
-        assertNotNull(checkDatabase);
+        assertEquals(mockDatabase.getClass(),checkDatabase.getClass());
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 /**
@@ -43,23 +44,30 @@ public class getContractTransactionStatusTest {
     public void setup() throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
         setupGeneralMockitoRules();
     }
-    public void setupGeneralMockitoRules(){
-        when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
+    public void setupGeneralMockitoRules()throws Exception{
+        doNothing().when(databaseTable).loadToMemory();
+        when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)
+        ).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
     }
     @Test
     public void getContractTransactionStatusTest_Should_Return_AFM_Code() throws Exception{
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
-        when(databaseTableRecord.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("AFM");
-        assertEquals(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus("Test"), ContractTransactionStatus.getByCode("AFM"));
+        when(databaseTableRecord.getStringValue(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)
+        ).thenReturn("AFM");
+        assertEquals(ContractTransactionStatus.getByCode("AFM"),
+                customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus("Test"));
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void getContractTransactionStatusTest_Should_Throw_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
     }
 }
