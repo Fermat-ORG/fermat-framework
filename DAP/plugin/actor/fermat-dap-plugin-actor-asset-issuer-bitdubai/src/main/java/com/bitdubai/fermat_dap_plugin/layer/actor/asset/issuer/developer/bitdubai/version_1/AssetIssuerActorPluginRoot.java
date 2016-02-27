@@ -394,6 +394,31 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                                                  String actorAssetIssuerToAddPublicKey,
                                                  byte[] profileImage) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
 
+        try {
+            if (assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.CONNECTING)) {
+                throw new CantRequestAlreadySendActorAssetException("CAN'T INSERT ACTOR ASSET USER", null, "", "The request already sent to actor.");
+            } else if (assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.PENDING_LOCALLY)){
+                this.assetIssuerActorDao.updateRegisteredConnectionState(
+                        actorAssetIssuerToLinkPublicKey,
+                        actorAssetIssuerToAddPublicKey,
+                        DAPConnectionState.REGISTERED_ONLINE);
+            }else{
+                //TODO ANALIZAR PROBLEMAS QUE PUEDA OCASIONAR USAR CONNECTING O PENDING_REMOTELY
+//                this.assetIssuerActorDao.createNewAssetIssuerRequestRegistered(
+//                        actorAssetIssuerToLinkPublicKey,
+//                        actorAssetIssuerToAddPublicKey,
+//                        actorAssetIssuerToAddName,
+//                        profileImage,
+//                        DAPConnectionState.CONNECTING);
+                this.updateIssuerRegisteredDAPConnectionState(actorAssetIssuerToAddPublicKey, DAPConnectionState.CONNECTING);
+            }
+
+        } catch (CantUpdateActorAssetIssuerException e) {
+            e.printStackTrace();
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -591,7 +616,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
 
-            System.out.println("*****Actor Asset Issuer ****: extended Public KEy generada");
+            System.out.println("*****Actor Asset Issuer ****: extended Public key generated");
             /**
              * and send it using the redeem point network service.
              */

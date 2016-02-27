@@ -440,7 +440,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
 
-                actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
+                actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworkService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
@@ -574,32 +574,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         actorAssetUserToAddPublicKey,
                         DAPConnectionState.REGISTERED_ONLINE);
             }else{
-
-//                this.assetUserActorDao.updateRegisteredConnectionState(
-//                        actorAssetUserLoggedInPublicKey,
-//                        actorAssetUserToAddPublicKey,
-//                        DAPConnectionState.PENDING_REMOTELY);
-
                 //TODO ANALIZAR PROBLEMAS QUE PUEDA OCASIONAR USAR CONNECTING O PENDING_REMOTELY
                 this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(
                         actorAssetUserToAddPublicKey,
                         DAPConnectionState.CONNECTING,
                         null,
                         blockchainNetworkType);
-
-//                this.assetUserActorDao.createNewAssetUserRequestRegistered(
-//                        actorAssetUserLoggedInPublicKey,
-//                        actorAssetUserToAddPublicKey,
-//                        actorAssetUserToAddName,
-//                        profileImage,
-//                        DAPConnectionState.PENDING_REMOTELY);
-
-//                this.assetUserActorDao.createNewIntraWalletUser(
-//                        actorAssetUserIdentityToLinkPublicKey,
-//                        actorAssetUserToAddName,
-//                        actorAssetUserToAddPublicKey,
-//                        profileImage,
-//                        DAPConnectionState.PENDING_REMOTELY);
             }
         } catch (CantRequestAlreadySendActorAssetException e) {
             throw new CantRequestAlreadySendActorAssetException("CAN'T ADD NEW ACTOR ASSET USER CONNECTION", e, "", "The request already send.");

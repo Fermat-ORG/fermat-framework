@@ -1739,9 +1739,6 @@ public class AssetUserActorDao implements Serializable {
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
-            //} catch (CantGetIntraWalletUserActorProfileImageException e) {
-            // Failure unknown.
-            //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant get ACTOR ASSET USER list, unknown failure.");
         }

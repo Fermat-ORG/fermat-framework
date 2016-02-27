@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDe
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
@@ -171,8 +173,8 @@ public class RedeemPointActorDao implements Serializable {
              * if Redeem Point exist on table
              * change status
              */
-            if (redeemPointExists(redeemPoint.getActorPublicKey())) {
-                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getActorPublicKey(), null);
+            if (redeemPointRegisteredExists(redeemPoint.getActorPublicKey())) {
+                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getActorPublicKey(), redeemPoint.getDapConnectionState());
             } else {
 
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
@@ -242,7 +244,7 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public void deleteCryptoCurrencyFromRedeemPointRegistered(ActorAssetRedeemPoint redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
+    public void deleteCryptoCurrencyFromRedeemPointRegistered(String redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
 
         DatabaseTable table;
 
@@ -260,12 +262,12 @@ public class RedeemPointActorDao implements Serializable {
             }
 
             // 2) Find the Redeem Point , filter by keys.
-            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             if (table.getRecords().isEmpty()) {
-                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint.getActorPublicKey());
+                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint);
             }
 
             // 3) Get Redeem Point record and update state.
@@ -1017,6 +1019,171 @@ public class RedeemPointActorDao implements Serializable {
         }
         // Return the list values.
         return list;
+    }
+
+    public void createNewAssetRedeemRequestRegistered(String actorAssetRedeemLogged,
+                                                    String actorAssetRedeemPublicKey,
+                                                    String actorAssetRedeemName,
+                                                    byte[] profileImage,
+                                                    DAPConnectionState  dapConnectionState) throws CantAddPendingActorAssetException {
+        try {
+            /**
+             * if Asset User exist on table
+             * change status
+             */
+            if (redeemPointRegisteredExists(actorAssetRedeemPublicKey)) {
+                this.updateRegisteredConnectionState(actorAssetRedeemLogged, actorAssetRedeemPublicKey, dapConnectionState);
+            } else {
+
+                DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+                DatabaseTableRecord record = table.getEmptyRecord();
+
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
+
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetRedeemPublicKey);
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, actorAssetRedeemName);
+
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
+
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_ISSUER.getCode());
+
+                table.insertRecord(record);
+                /**
+                 * Persist profile image on a file
+                 */
+                persistNewRedeemPointProfileImage(actorAssetRedeemPublicKey, profileImage);
+            }
+
+        } catch (CantInsertRecordException e) {
+            throw new CantAddPendingActorAssetException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET USER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantAddPendingActorAssetException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "Cant update exist ASSET USER REGISTERED IN ACTOR NETWORK SERVICE state, unknown failure.");
+        } catch (Exception e) {
+            throw new CantAddPendingActorAssetException("CAN'T INSERT ASSET USER", FermatException.wrapException(e), "", "Cant create new ASSET USER, unknown failure.");
+        }
+    }
+
+    public boolean actorAssetRegisteredRequestExists(final String actorRedeemToAddPublicKey, DAPConnectionState dapConnectionState) throws CantGetAssetRedeemPointActorsException {
+        try {
+
+            final DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (actorRedeemToAddPublicKey == null) {
+                throw new CantGetUserDeveloperIdentitiesException("actorAssetRedeemToAddPublicKey null", "actorAssetRedeemToAddPublicKey must not be null.");
+            }
+
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorRedeemToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode(), DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantGetAssetRedeemPointActorsException(em.getMessage(), em, "ACTOR ASSET USER", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant check if actor public key exists, unknown failure.");
+        }
+    }
+
+    public void updateRegisteredConnectionState(final String             actorRedeemLoggedInPublicKey,
+                                                final String             actorRedeemToAddPublicKey,
+                                                final DAPConnectionState dapConnectionState       ) throws CantUpdateRedeemPointException {
+
+        try {
+            /**
+             * 1) Get the table.
+             */
+            final DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "Intra User Actor", "");
+
+            // 2) Find the Intra User , filter by keys.
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorRedeemToAddPublicKey, DatabaseFilterType.EQUAL);
+//            table.addStringFilter(AssetUserActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorAssetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            // 3) Get Intra user record and update state.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                table.updateRecord(record);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "ACTOR ASSET REDEEM POINT", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "ACTOR ASSET REDEEM POINT", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET REDEEM POINT", "Cant get developer identity list, unknown failure.");
+        }
+    }
+
+    public List<ActorAssetRedeemPoint> getAllWaitingActorAssetUser(final String actorRedeemSelectedPublicKey,
+                                                                   final DAPConnectionState dapConnectionState,
+                                                                   final int max,
+                                                                   final int offset) throws CantGetAssetRedeemPointActorsException {
+
+        // Setup method.
+        List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Actor Redeem.
+        DatabaseTable table;
+
+        try {
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get actor asset user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+
+            // 2) Find  Intra Users by state.
+//            table.addStringFilter(AssetUserActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, actorRedeemSelectedPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode(), DatabaseFilterType.EQUAL);
+
+            table.setFilterOffSet(String.valueOf(offset));
+            table.setFilterTop(String.valueOf(max));
+
+            table.loadToMemory();
+
+            this.addRecordsTableRegisteredToList(list, table.getRecords());
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant get ACTOR ASSET USER list, unknown failure.");
+        }
+        return list;
+    }
+
+    public ActorAssetRedeemPoint getLastNotification(String  actorRedeemConnectedPublicKey ) throws CantGetAssetRedeemPointActorsException {
+        try {
+            ActorAssetRedeemPoint assetUserActorRecord = null;
+            /**
+             * 1) Get the table.
+             */
+            final DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get actor aset user identity list, table not found.", "Plugin Identity", "Cant get actor asset User, table not found.");
+
+            // 2) Find all Intra Users.
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorRedeemConnectedPublicKey, DatabaseFilterType.EQUAL);
+            table.setFilterTop("1");
+            table.addFilterOrder(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            table.loadToMemory();
+
+            assetUserActorRecord = this.addRecords(table.getRecords());
+
+            return assetUserActorRecord;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant get Instra User Actor list, unknown failure.");
+        }
     }
 
     private void getCryptoAddressNetwork(RedeemPointActorRecord redeemPointActorRecord, BlockchainNetworkType blockchainNetworkType) throws CantGetRedeemPointCryptoAddressTableException {

@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
@@ -48,6 +49,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantU
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
@@ -56,6 +58,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.agent.ActorAssetRedeemPointMonitorAgent;
@@ -78,6 +88,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -279,6 +290,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     @Override
     public void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException {
         try {
+            System.out.println("REDEEM: "+redeemPoint.getActorPublicKey());
+            System.out.println("REDEEM: "+redeemPoint.getName());
+            System.out.println("REDEEM: "+redeemPoint.getType());
+            System.out.println("REDEEM: "+redeemPoint.getDapConnectionState());
+            System.out.println("REDEEM: "+redeemPoint.getBlockchainNetworkType());
+            System.out.println("REDEEM: "+redeemPoint.getLastConnectionDate());
+            System.out.println("REDEEM: "+redeemPoint.getRegistrationDate());
+            System.out.println("REDEEM: "+ Arrays.toString(redeemPoint.getProfileImage()));
+            System.out.println("REDEEM: "+redeemPoint.getRegisteredIssuers().size());
+
             redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(redeemPoint);
         } catch (CantAddPendingRedeemPointException e) {
             throw new CantCreateActorRedeemPointException();
@@ -399,22 +420,124 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException, com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException {
-        try {
-            this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(redeemPoint);
-        } catch (CantUpdateRedeemPointException e) {
-            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
-        } catch (RedeemPointNotFoundException e) {
-            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException("REDEEM POINT NOT FOUND", e, "", "");
-        }
-    }
-
-    @Override
-    public void updateRedeemPointDAPConnectionStateActorNetworService(String actorPublicKey, DAPConnectionState state) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException{
+    public void updateRedeemPointDAPConnectionStateActorNetworkService(String actorPublicKey, DAPConnectionState state) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException{
         try {
             this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorPublicKey,state);
         } catch (CantUpdateRedeemPointException e) {
             throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
+        }
+    }
+
+    @Override
+    public void askActorAssetRedeemForConnection(String actorAssetUserIdentityToLinkPublicKey, String actorAssetUserToAddName, String actorAssetUserToAddPublicKey, byte[] profileImage, BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
+
+    }
+
+    @Override
+    public void acceptActorAssetRedeem(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException {
+        try {//TODO Probar el estado REGISTERED_LOCALLY
+            this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_ONLINE);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void denyConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException {
+        try {
+            this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey, DAPConnectionState.DENIED_LOCALLY);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
+        try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
+            this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(actorUserToDisconnectPublicKey);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey, String actorAssetUserToAddName, String actorAssetUserToAddPublicKey, byte[] profileImage) throws CantCreateActorAssetReceiveException {
+        try {
+            if (redeemPointActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
+
+                this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_REMOTELY);
+//                this.assetRedeemPointActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToAddPublicKey);
+            }
+            else{
+                if (!redeemPointActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_LOCALLY) ||
+                        !redeemPointActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_LOCALLY))
+//                    this.assetUserActorDao.updateConnectionState(
+//                            actorAssetUserLoggedInPublicKey,
+//                            actorAssetUserToAddPublicKey,
+//                            DAPConnectionState.PENDING_LOCALLY);
+
+                    this.redeemPointActorDao.createNewAssetRedeemRequestRegistered(
+                            actorAssetUserLoggedInPublicKey,
+                            actorAssetUserToAddPublicKey,
+                            actorAssetUserToAddName,
+                            profileImage,
+                            DAPConnectionState.PENDING_LOCALLY);
+
+            }
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REQUEST CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REQUEST CONNECTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+        try {
+            this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public List<ActorAssetRedeemPoint> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
+        try {
+            return this.redeemPointActorDao.getAllWaitingActorAssetUser(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public List<ActorAssetRedeemPoint> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
+        try {
+            return this.redeemPointActorDao.getAllWaitingActorAssetUser(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public ActorAssetRedeemPoint getLastNotificationActorAssetRedeem(String actorAssetUserConnectedPublicKey) throws CantGetActorAssetNotificationException {
+        try {
+            return redeemPointActorDao.getLastNotification(actorAssetUserConnectedPublicKey);
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "Error get database info", "");
+        } catch (Exception e) {
+            throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -424,7 +547,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.redeemPointActorDao.updateRedeemPointDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(),
-                    DAPConnectionState.CONNECTED_ONLINE);
+                    DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateRedeemPointException e) {
             e.printStackTrace();
         }
