@@ -32,6 +32,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
@@ -426,6 +427,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @return
          */
         public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+            if (StringUtils.isBlank(txHash))
+                throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.DEFAULT_MESSAGE, null, "txHash is not correct: " + txHash, "invalid parameter");
+
             try {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 String transactionContent = pluginTextFile.getContent();
