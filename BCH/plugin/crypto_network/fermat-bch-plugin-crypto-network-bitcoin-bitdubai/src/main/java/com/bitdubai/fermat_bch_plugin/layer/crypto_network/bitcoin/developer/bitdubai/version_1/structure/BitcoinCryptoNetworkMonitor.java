@@ -522,6 +522,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException{
             try {
                 /**
+                 * Verify transaction is not already stored
+                 */
+                if (isTransactionAlreadyStored(tx.getHashAsString()))
+                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "The Transaction " + tx.getHashAsString() + " is already stored.", "duplicate transaction request.");
+
+                /**
                  * I store it in the database
                  */
                 getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
@@ -566,6 +572,58 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
+            }
+        }
+
+        /**
+         * Verifies if the transaction is already stored on the database, wallet and disk
+         * @param txHash
+         * @return
+         */
+        private boolean isTransactionAlreadyStored(String txHash) {
+            if (isTransactionStoredInDB(txHash))
+                return true;
+
+            if (isTransactionStoredInWallet(txHash))
+                return true;
+
+            if (isTransactionStoredOnDisk(txHash))
+                return true;
+
+            return false;
+        }
+
+        private boolean isTransactionStoredOnDisk(String txHash) {
+            try {
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                if (pluginTextFile == null)
+                    return false;
+                else
+                    return true;
+            } catch (Exception e) {
+                return false;
+            }
+
+        }
+
+        private boolean isTransactionStoredInWallet(String txHash) {
+            Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+            Transaction transaction = this.wallet.getTransaction(sha256Hash);
+            if (transaction == null)
+                return false;
+            else
+                return true;
+        }
+
+        private boolean isTransactionStoredInDB(String txHash) {
+            try {
+                UUID uuid = getDao().getBroadcastedTransactionId(this.BLOCKCHAIN_NETWORKTYPE, txHash);
+                if (uuid == null)
+                    return false;
+                else
+                    return true;
+            } catch (CantExecuteDatabaseOperationException e) {
+                return false;
             }
         }
 
