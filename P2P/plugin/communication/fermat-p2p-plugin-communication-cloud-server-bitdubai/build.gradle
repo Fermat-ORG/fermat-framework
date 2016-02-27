@@ -83,11 +83,11 @@ dependencies {
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
-    compile files('src/main/libs/cling-core-2.1.0.jar')
-    compile files('src/main/libs/cling-support-2.1.0.jar')
-    compile files('src/main/libs/seamless-http-1.1.1.jar')
-    compile files('src/main/libs/seamless-util-1.1.1.jar')
-    compile files('src/main/libs/seamless-xml-1.1.1.jar')
+//    compile files('src/main/libs/cling-core-2.1.0.jar')
+//    compile files('src/main/libs/cling-support-2.1.0.jar')
+//    compile files('src/main/libs/seamless-http-1.1.1.jar')
+//    compile files('src/main/libs/seamless-util-1.1.1.jar')
+//    compile files('src/main/libs/seamless-xml-1.1.1.jar')
 }
 
 pmd {
