@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -40,7 +42,7 @@ public class updateEventStatusTest {
     List<DatabaseTableRecord> databaseTableRecordList;
     private UUID testId;
     @Before
-    public void setup(){
+    public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
@@ -53,6 +55,7 @@ public class updateEventStatusTest {
         doNothing().when(databaseTableRecord).setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                 EventStatus.PENDING.getCode());
+        doNothing().when(databaseTable).updateRecord(databaseTableRecord);
     }
 
     @Test
@@ -61,6 +64,7 @@ public class updateEventStatusTest {
                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
         )).thenReturn(databaseTable);
         customerOnlinePaymentBusinessTransactionDao.updateEventStatus("EventID", EventStatus.PENDING);
+        verify(databaseTable,times(1)).updateRecord(databaseTableRecord);
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void updateEventStatusTest_Should_Throw_Exception()throws Exception{

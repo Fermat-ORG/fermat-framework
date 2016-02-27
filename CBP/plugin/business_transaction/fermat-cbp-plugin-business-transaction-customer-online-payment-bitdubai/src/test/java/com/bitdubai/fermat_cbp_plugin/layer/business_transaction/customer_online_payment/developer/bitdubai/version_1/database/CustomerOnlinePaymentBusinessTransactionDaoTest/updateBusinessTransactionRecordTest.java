@@ -21,6 +21,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,17 +49,20 @@ public class updateBusinessTransactionRecordTest {
     CryptoAddress cryptoAddress;
     private UUID testId;
     @Before
-    public void setup() {
+    public void setup() throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem, testId, mockDatabase, errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem, testId, mockDatabase, errorManager);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
         when(businessTransactionRecord.getBrokerPublicKey()).thenReturn("publicKey");
         when(businessTransactionRecord.getContractHash()).thenReturn("ContractHash");
-        when(businessTransactionRecord.getContractTransactionStatus()).thenReturn(ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
+        when(businessTransactionRecord.getContractTransactionStatus()).thenReturn(
+                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
         when(businessTransactionRecord.getCryptoAddress()).thenReturn(cryptoAddress);
         when(businessTransactionRecord.getCryptoStatus()).thenReturn(CryptoStatus.PENDING_SUBMIT);
+        doNothing().when(databaseTable).updateRecord(databaseTableRecord);
     }
 
     @Test
@@ -65,6 +71,7 @@ public class updateBusinessTransactionRecordTest {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME
          )).thenReturn(databaseTable);
         customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
+        verify(databaseTable,times(1)).updateRecord(databaseTableRecord);
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void updateBusinessTransactionRecordTest_Should_Throw_Exception()throws Exception{
