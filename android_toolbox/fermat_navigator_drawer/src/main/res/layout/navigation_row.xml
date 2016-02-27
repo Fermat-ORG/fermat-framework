@@ -19,7 +19,6 @@
             android:paddingLeft="24dp"
             android:paddingRight="14dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/btn_drawer_home_normal"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -30,7 +29,6 @@
             android:paddingLeft="8dip"
             android:paddingRight="8dip"
             android:paddingTop="14dip"
-            android:text="@string/home_text"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:layout_weight="1"
@@ -46,7 +44,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/cbw_divider_shape"
         android:id="@+id/navigation_row_divider"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

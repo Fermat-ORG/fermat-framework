@@ -1253,7 +1253,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
-            final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.reveal_items);
+            final io.codetail.widget.RevealFrameLayout mRevealView = (io.codetail.widget.RevealFrameLayout) findViewById(R.id.reveal);
             if(mRevealView!=null){
                 mRevealView.removeAllViews();
                 mRevealView.setVisibility(View.GONE);
@@ -1712,7 +1712,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     private void navigate(final int itemId) {
         // perform the actual navigation logic, updating the main content fragment etc
-        Toast.makeText(this,"holas",LENGTH_SHORT).show();
+        //Toast.makeText(this,"holas",LENGTH_SHORT).show();
     }
 
 //    @Override

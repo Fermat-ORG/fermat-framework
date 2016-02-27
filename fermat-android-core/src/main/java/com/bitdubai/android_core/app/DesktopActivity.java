@@ -339,7 +339,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     try {
                         resetThisActivity();
 
-                        getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
+                        getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
                         loadUI();
 

@@ -10,6 +10,7 @@ import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
 import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingSwitchViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingTextOpenDialogViewHolder;
+import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadio;
 import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.listeners.OnClickListenerSettings;
@@ -116,6 +117,12 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingEditTextViewHolder.getSettingsEditText().setHint(preferenceSettingsEditText.getEditHint());
                 settingEditTextViewHolder.getSettingsEditText().setText(preferenceSettingsEditText.getEditText());
                 settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsEditText,position));
+                break;
+            case TEXT_PLUS_RADIO_TYPE:
+                SettingsTextPlusRadio settingsTextPlusRadio = (SettingsTextPlusRadio) holder;
+                final PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) data;
+                settingsTextPlusRadio.getRadio().setChecked(preferenceSettingsTextPlusRadioItem.isRadioTouched());
+                settingsTextPlusRadio.getRadio().setText(preferenceSettingsTextPlusRadioItem.getText());
                 break;
         }
 
