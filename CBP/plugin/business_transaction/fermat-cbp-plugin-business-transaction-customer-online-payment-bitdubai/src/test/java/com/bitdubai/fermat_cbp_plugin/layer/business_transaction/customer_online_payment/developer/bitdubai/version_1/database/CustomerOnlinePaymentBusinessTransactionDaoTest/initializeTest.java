@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Test;
@@ -33,14 +33,14 @@ public class initializeTest {
 
 
     @Test
-    public void TestInitialize_Should_Run_Once() throws Exception{
+    public void TestInitialize() throws Exception{
         testId = UUID.randomUUID();
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.initialize();
     }
-
-    @Test(expected = Exception.class)
-    public void TestCreateDatabase_Should_Return_Exception() throws Exception{
+    //Generic Exception
+    @Test(expected = CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.class)
+    public void TestCreateDatabase_Should_Throw_Exception() throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,testId,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.initialize();
     }

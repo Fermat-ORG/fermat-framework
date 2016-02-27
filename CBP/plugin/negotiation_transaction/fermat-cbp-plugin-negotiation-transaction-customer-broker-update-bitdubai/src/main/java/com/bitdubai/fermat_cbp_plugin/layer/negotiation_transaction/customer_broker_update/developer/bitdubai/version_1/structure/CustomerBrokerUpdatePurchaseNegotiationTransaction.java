@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantUpdatePurchaseNegotiationTransactionException;
 
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -59,8 +61,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                     NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
-//        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-//            throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR UPDATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+            throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR UPDATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
@@ -81,6 +83,20 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
                             "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
             );
+
+            if(customerBrokerPurchaseNegotiation.getClauses() != null) {
+                System.out.print("\n\n --- Negotiation Mock XML Clause:");
+                Collection<Clause> clauses = customerBrokerPurchaseNegotiation.getClauses();
+                for (Clause item: clauses) {
+                    System.out.print("\n - Id: " +item.getClauseId()
+                                    +"\n - Type: " +item.getType().getCode()
+                                    +"\n - Value: " +item.getValue()
+                                    +"\n - Status: " +item.getStatus().getCode()
+                                    +"\n - Proposed: " +item.getProposedBy()
+                                    +"\n - IndexOrder: "+String.valueOf(item.getIndexOrder())
+                    );
+                }
+            }
 
             //UPDATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
