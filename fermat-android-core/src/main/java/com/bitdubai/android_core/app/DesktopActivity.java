@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
+
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
@@ -106,7 +107,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null
-            //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
