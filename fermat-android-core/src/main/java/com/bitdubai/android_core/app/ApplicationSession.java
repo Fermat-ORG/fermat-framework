@@ -4,8 +4,8 @@ package com.bitdubai.android_core.app;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
-import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
@@ -41,7 +41,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
 
     private static ApplicationSession instance;
-
     /**
      * Application states
      */
@@ -56,16 +55,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     private FermatSystem fermatSystem;
 
     /**
-     * Sub App session Manager
+     * Apps manager
      */
-
-    private SubAppSessionManager subAppSessionManager;
-
-    /**
-     * Wallet session manager
-     */
-
-    private WalletSessionManager walletSessionManager;
+    private FermatAppsManager fermatAppsManager;
 
     /**
      *  Application state
@@ -90,8 +82,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public ApplicationSession() {
         super();
         fermatSystem = FermatSystem.getInstance();
-        subAppSessionManager=new SubAppSessionManager();
-        walletSessionManager = new WalletSessionManager();
+        fermatAppsManager = new FermatAppsManager(this);
 
     }
 
@@ -101,25 +92,31 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      * @return FermatSystem
      */
     public FermatSystem getFermatSystem() {
+        if(fermatSystem==null){
+            fermatSystem = FermatSystem.getInstance();
+        }
         return fermatSystem;
     }
 
     /**
-     * Method to get subAppSessionManager which can manipulate the active session of subApps
-     * @return SubAppSessionManager
+     * Method to get FermatSessionManager which can manipulate the active session of apps
+     * @return WalletSessionManager
      */
-
-    public SubAppSessionManager getSubAppSessionManager(){
-        return subAppSessionManager;
+    @Deprecated
+    public FermatSessionManager getFermatSessionManager() {
+        if(fermatAppsManager==null){
+            fermatAppsManager = new FermatAppsManager(this);
+        }
+        return fermatAppsManager.getFermatSessionManager();
     }
 
     /**
-     * Method to get subWalletSessionManager which can manipulate the active session of wallets
-     * @return WalletSessionManager
+     * Fermat app manager
+     *
+     * @return FermatAppsManager
      */
-
-    public WalletSessionManager getWalletSessionManager(){
-        return walletSessionManager;
+    public FermatAppsManager getFermatAppsManager() {
+        return fermatAppsManager;
     }
 
     /**
@@ -129,7 +126,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
 
     public void changeApplicationState(int applicationState){
-        this.applicationState=applicationState;
+        ApplicationSession.applicationState =applicationState;
     }
 
     /**
@@ -142,12 +139,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return applicationState;
     }
 
-    /**
-     *  Add supApp fragment factory
-     */
-    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
-        subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
-    }
 
     @Override
     public void onTerminate(){

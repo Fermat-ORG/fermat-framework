@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransaction;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransaction;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
 
     public UnHoldCryptoMoneyTransactionImpl(){
 
-    };
+    }
 
     @Override
     public CryptoTransactionStatus getStatus() {

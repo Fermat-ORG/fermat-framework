@@ -47,6 +47,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 
 import java.util.List;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+
 
 /**
  * Created by Matias Furszyfer
@@ -266,7 +269,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
             Activity activity = walletNavigationStructure.getLastActivity();
 //            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getWalletSessionManager().getWalletSession(walletNavigationStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getFermatSessionManager().getAppsSession(walletNavigationStructure.getPublicKey()));
 
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             loadBasicUI(activity,fermatAppConnection);
@@ -450,9 +453,10 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
     @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
         return null;
     }
+
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {

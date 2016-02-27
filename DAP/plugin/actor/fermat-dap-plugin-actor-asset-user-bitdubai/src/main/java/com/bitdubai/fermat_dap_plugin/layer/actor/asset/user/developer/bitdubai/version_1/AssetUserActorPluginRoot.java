@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -36,7 +38,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -56,7 +60,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
@@ -114,11 +121,17 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
     private CryptoAddressesManager cryptoAddressesNetworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     private AssetUserActorDao assetUserActorDao;
 
@@ -217,6 +230,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         null,
+                        Actors.DAP_ASSET_USER,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.createNewAssetUser(record);
@@ -245,6 +259,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         actorAssetUser.getRegistrationDate(),
                         System.currentTimeMillis(),
                         null,
+                        actorAssetUser.getType(),
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.updateAssetUser(record);
@@ -372,6 +387,34 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    public void connectToActorAssetUser(String destinationActorPublicKey,
+                                        Actors destinationActorType,
+                                        String senderActorPublicKey,
+                                        Actors senderActorType,
+                                        BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException {
+        try {
+//            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+//                try {
+                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+                            null,
+                            CryptoCurrency.BITCOIN,
+                            senderActorType,
+                            destinationActorType,
+                            senderActorPublicKey,
+                            destinationActorPublicKey,
+                            CryptoAddressDealers.DAP_ASSET,
+                            blockchainNetworkType);
+
+//                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, null, blockchainNetworkType);
+//                } catch (CantUpdateAssetUserConnectionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void disconnectToActorAssetUser(ActorAssetUser user, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetUserActorException, CantDeleteRecordException {
         try {
@@ -398,12 +441,18 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         CryptoAddressDealers.DAP_WATCH_ONLY,
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
+
+                actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
 //                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRedeemPointException e) {
+            e.printStackTrace();
+        } catch (RedeemPointNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -517,9 +566,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public void askActorAssetUserForConnection(String actorAssetUserLoggedInPublicKey,
                                                String actorAssetUserToAddName,
                                                String actorAssetUserToAddPublicKey,
-                                               byte[] profileImage) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
+                                               byte[] profileImage,
+                                               BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
         try {
-            if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
+            if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.CONNECTING)) {
                 throw new CantRequestAlreadySendActorAssetException("CAN'T INSERT ACTOR ASSET USER", null, "", "The request already sent to actor.");
             } else if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_LOCALLY)){
                 this.assetUserActorDao.updateRegisteredConnectionState(
@@ -528,10 +578,18 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         DAPConnectionState.REGISTERED_ONLINE);
             }else{
 
-                this.assetUserActorDao.updateRegisteredConnectionState(
-                        actorAssetUserLoggedInPublicKey,
+//                this.assetUserActorDao.updateRegisteredConnectionState(
+//                        actorAssetUserLoggedInPublicKey,
+//                        actorAssetUserToAddPublicKey,
+//                        DAPConnectionState.PENDING_REMOTELY);
+
+                //TODO ANALIZAR PROBLEMAS QUE PUEDA OCASIONAR USAR CONNECTING O PENDING_REMOTELY
+                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(
                         actorAssetUserToAddPublicKey,
-                        DAPConnectionState.PENDING_REMOTELY);
+                        DAPConnectionState.CONNECTING,
+                        null,
+                        blockchainNetworkType);
+
 //                this.assetUserActorDao.createNewAssetUserRequestRegistered(
 //                        actorAssetUserLoggedInPublicKey,
 //                        actorAssetUserToAddPublicKey,
@@ -553,7 +611,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    //TODO apply for user local (user)
+    //TODO apply for user local (issuer)
     @Override
     public void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException {
         try {
@@ -580,8 +638,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     //TODO apply for user (issuer)
     @Override
     public void disconnectActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.DISCONNECTED_REMOTELY);
+        try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetUserConnectionException e) {
             throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -596,10 +654,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                                                          String actorAssetUserToAddPublicKey,
                                                          byte[] profileImage) throws CantCreateActorAssetReceiveException {
         try {
-            /**
-             * if intra user exist on table
-             * return error
-             */
             if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
 
                 this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_REMOTELY);
@@ -761,6 +815,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getCryptoCurrency());
                             System.out.println("Actor Asset User: " + actorAssetUser1.getBlockchainNetworkType());
                             System.out.println("Actor Asset User: " + actorAssetUser1.getDapConnectionState());
+
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_USER.getCode(), "CRYPTO-REQUEST_" + actorAssetUser1.getName());
+
                         } else {
                             System.out.println("Actor Asset User FALLO Recepcion CryptoAddress para User: " + actorAssetUser1.getName());
                         }
@@ -896,6 +954,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case ACCEPTED:
                         this.acceptActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+
+                        this.connectToActorAssetUser(notification.getActorSenderPublicKey(),
+                                                     notification.getActorSenderType(),
+                                                     notification.getActorDestinationPublicKey(),
+                                                     notification.getActorDestinationType(),
+                                                     notification.getBlockchainNetworkType());
 //                        /**
 //                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
 //                         */

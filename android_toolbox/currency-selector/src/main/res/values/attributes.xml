@@ -17,7 +17,7 @@
         <attr name="typeface"/>
     </declare-styleable>
 
-    <declare-styleable name="CaviarButton">
+    <declare-styleable name="custom.CaviarButton">
         <attr name="typeface"/>
     </declare-styleable>
 

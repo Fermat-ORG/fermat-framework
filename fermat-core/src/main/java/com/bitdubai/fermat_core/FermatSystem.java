@@ -93,7 +93,7 @@ public final class FermatSystem {
             this.start(osContext, osaPlatform);
         } catch (FermatException e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -443,7 +443,7 @@ public final class FermatSystem {
             try {
                 fermatPluginManager.startPluginAndReferences(plugin.getKey());
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.err.println(e.toString());
             }
         }
 

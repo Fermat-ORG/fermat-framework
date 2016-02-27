@@ -9,7 +9,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Cli
 import  com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
 /**
  * Created by Matias Furszyfer on 2015.08.18..

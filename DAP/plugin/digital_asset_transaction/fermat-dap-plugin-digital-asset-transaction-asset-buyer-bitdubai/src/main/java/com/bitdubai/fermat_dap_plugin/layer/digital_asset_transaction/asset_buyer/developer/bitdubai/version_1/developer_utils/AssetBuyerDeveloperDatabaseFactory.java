@@ -116,7 +116,9 @@ public class AssetBuyerDeveloperDatabaseFactory {
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_OBJECT_XML_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ASSET_PUBLICKEY_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);

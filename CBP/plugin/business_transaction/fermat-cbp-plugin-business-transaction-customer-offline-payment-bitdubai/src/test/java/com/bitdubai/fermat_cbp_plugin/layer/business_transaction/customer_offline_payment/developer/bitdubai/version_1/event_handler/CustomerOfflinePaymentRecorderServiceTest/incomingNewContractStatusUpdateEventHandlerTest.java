@@ -44,12 +44,13 @@ public class incomingNewContractStatusUpdateEventHandlerTest {
         MockitoAnnotations.initMocks(this);
         setUpGeneralMockitoRules();
     }
+    /*
     @Test
     public void incomingNewContractStatusUpdateEventHandlerTest_Should_Return_() throws Exception {
         when(incomingNewContractStatusUpdate.getRemoteBusinessTransaction()).thenReturn(Plugins.CUSTOMER_OFFLINE_PAYMENT);
         customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         //customerOfflinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler(incomingNewContractStatusUpdate);
-    }
+    }*/
 
     @Test(expected = Exception.class)
     public void incomingNewContractStatusUpdateEventHandlerTest_Should_Throw_Exception() throws Exception {

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionTy
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
@@ -40,6 +42,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.CustomerBrokerNewMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.events.NewNegotiationTransactionUpdateEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants;
@@ -69,6 +74,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -100,6 +106,9 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
     private NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl;
 
     NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+
+    //Represent the newLoggingLevel
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
 //
@@ -143,7 +152,7 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, pluginFileSystem, pluginId);
 
             //Initialize Manager
-            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao, this);
+            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -176,28 +185,19 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
         try {
 
-            Gson gson = new Gson();
-//            NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
             NegotiationTransmission negotiationTransmission = NegotiationTransmissionImpl.fronJson(fermatMessage.getContent());
-//            System.out.println("**12345 after gson");
-//            System.out.println(negotiationTransmission);
             switch (negotiationTransmission.getTransmissionType()) {
                 case TRANSMISSION_NEGOTIATION:
-//                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
-//                    NegotiationMessage negotiationMessage = gson.fromJson(fermatMessage.getContent(), NegotiationMessage.class);
-//                    receiveNegotiation(negotiationMessage);
+                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
                     receiveNegotiation(negotiationTransmission);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-//                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
-//                    ConfirmMessage confirmMessage = gson.fromJson(fermatMessage.getContent(), ConfirmMessage.class);
-//                    receiveConfirm(confirmMessage);
+                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
                     receiveConfirm(negotiationTransmission);
                     break;
 
                 default:
-//                    throw new CantHandleNewMessagesException("message type: " + negotiationTransmissionMessage.getMessageType().name(), "Message type not handled.");
                     throw new CantHandleNewMessagesException("Transmission Type: " + negotiationTransmission.getTransmissionType(), "Transmission type not handled.");
             }
 
@@ -283,6 +283,31 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                         "");
     }
 
+    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
+                                                                           Actors actorType) {
+
+
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                .constructBasicPlatformComponentProfileFactory(
+                        identityPublicKey,
+                        NetworkServiceType.UNDEFINED,
+                        platformComponentTypeSelectorByActorType(actorType)
+                );
+    }
+
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) {
+
+        switch (type) {
+
+            case CBP_CRYPTO_BROKER:
+                return PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            case CBP_CRYPTO_CUSTOMER:
+                return PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            default:
+                return null;
+        }
+    }
+
     @Override
     protected void reprocessMessages() {
 
@@ -295,11 +320,6 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
     @Override
     public ErrorManager getErrorManager() {
-        return null;
-    }
-
-    @Override
-    public EventManager getEventManager() {
         return null;
     }
 
@@ -351,52 +371,6 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
         }
     }
 
-    private void receiveNegotiation(NegotiationMessage negotiationMessage) throws CantHandleNewMessagesException {
-
-        try {
-
-            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
-
-            NegotiationType negotiationType;
-
-            if (negotiationMessage.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
-                negotiationType = NegotiationType.SALE;
-            } else {
-                negotiationType = NegotiationType.PURCHASE;
-            }
-
-            NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
-                    negotiationMessage.getTransmissionId(),
-                    negotiationMessage.getTransactionId(),
-                    negotiationMessage.getNegotiationId(),
-                    negotiationMessage.getNegotiationTransactionType(),
-                    negotiationMessage.getPublicKeyActorSend(),
-                    negotiationMessage.getActorSendType(),
-                    negotiationMessage.getPublicKeyActorReceive(),
-                    negotiationMessage.getActorReceiveType(),
-                    negotiationMessage.getTransmissionType(),
-                    negotiationMessage.getTransmissionState(),
-                    negotiationType,
-                    negotiationMessage.getNegotiationXML(),
-                    negotiationMessage.getTimestamp()
-            );
-
-            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" +
-                            "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() +
-                            "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
-            );
-
-            incomingNotificationDao.createNotification(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
-//            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
-
-//        } catch (CantRegisterSendNegotiationTransmissionException e) {
-//            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
-        } catch (Exception e) {
-            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
-        }
-
-    }
-
     private void receiveNegotiation(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException {
 
         try {
@@ -408,7 +382,38 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                             "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
             );
 
+            if (negotiationTransmission.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
+                negotiationTransmission.setNegotiationType(NegotiationType.SALE);
+            }else {
+                negotiationTransmission.setNegotiationType(NegotiationType.PURCHASE);
+            }
+
             incomingNotificationDao.createNotification(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
+
+            switch (negotiationTransmission.getNegotiationTransactionType()) {
+                case CUSTOMER_BROKER_NEW: {
+                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                    getEventManager().raiseEvent(event);
+                }
+                break;
+                case CUSTOMER_BROKER_UPDATE: {
+                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                    getEventManager().raiseEvent(event);
+                }
+                break;
+                case CUSTOMER_BROKER_CLOSE: {
+                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                    getEventManager().raiseEvent(event);
+                }
+                break;
+            }
+
 //            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
 //        } catch (CantRegisterSendNegotiationTransmissionException e) {
@@ -419,68 +424,11 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
     }
 
-    private void receiveConfirm(ConfirmMessage confirmMessage) throws CantHandleNewMessagesException {
-
-        UUID transmissionId = confirmMessage.getTransmissionId();
-        incomingNotificationDao.confirmReception(transmissionId);
-
-    }
-
     private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException {
 
         UUID transmissionId = negotiationTransmission.getTransmissionId();
         incomingNotificationDao.confirmReception(transmissionId);
 
-    }
-
-    private void receiveNegotiationTransmissionTest(
-            NegotiationTransactionType negotiationTransactionType,
-            NegotiationTransmissionType negotiationTransmissionType,
-            NegotiationType negotiationType
-    ) {
-        try {
-            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST ****\n");
-
-            Negotiation negotiation = null;
-            PlatformComponentType actorSendType = null;
-
-            if (negotiationType.getCode().equals(NegotiationType.PURCHASE.getCode())) {
-                negotiation = purchaseNegotiationMockTest();
-                actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            } else {
-                negotiation = saleNegotiationMockTest();
-                actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            }
-
-            NegotiationMessage negotiationMessage = negotiationMessageTest(
-                    negotiation,
-                    actorSendType,
-                    negotiationTransactionType,
-                    negotiationTransmissionType,
-                    NegotiationTransmissionState.PENDING_ACTION,
-                    negotiationType
-            );
-
-            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST DATE: ****\n" +
-                            "- ActorReceive = " + negotiationMessage.getPublicKeyActorReceive() +
-                            "- ActorSend = " + negotiationMessage.getPublicKeyActorSend()
-            );
-
-            receiveNegotiation(negotiationMessage);
-
-        } catch (CantHandleNewMessagesException e) {
-            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
-        }
-
-    }
-
-    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-        try {
-            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().update(fermatMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest() {
@@ -647,11 +595,11 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
         //I will check the current values and update the LogLevel in those which is different
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             //if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-            if (NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (NetworkServiceNegotiationTransmissionNew.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.remove(pluginPair.getKey());
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }

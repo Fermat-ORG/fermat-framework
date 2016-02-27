@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
@@ -28,8 +27,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegi
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
@@ -39,26 +38,19 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.NetworkBroadcastWorker;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.NetworkExecutorPool;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.RejectBroadcastHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.RejectedBroadcastExecutionHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraRollbackNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -302,7 +294,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 //                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
 
 
-
                         System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
@@ -332,6 +323,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                         transaction.getMemo());
                             }
                         }
+
 
 
                     } catch (InsufficientCryptoFundsException e) {
@@ -463,13 +455,10 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     case BASIC_WALLET_BITCOIN_WALLET:
                         //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
                         BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                       if(credit)
-                            bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        else
-                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(transaction);
 
+                        //change transaction state to reversed and update balance to revert
+                        bitcoinWalletWallet.revertTransaction(transaction,credit);
 
-                        bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
                         //if the transaction is a payment request, rollback it state too
                         notificateRollbackToGUI(transaction);
                         if (transaction.getRequestId() != null)
@@ -482,8 +471,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 e.printStackTrace();
             } catch (OutgoingIntraActorWalletNotSupportedException e) {
                 e.printStackTrace();
-            } catch (CantRegisterCreditException e) {
-                e.printStackTrace();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -499,7 +487,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             try
             {
                 //Hay que disparar un evento para que escuche el Crypto Payment y revierta el accepted
-                FermatEvent platformEvent  = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
+                FermatEvent platformEvent  = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
                 OutgoingIntraUserTransactionRollbackNotificationEvent outgoingIntraUserTransactionRollbackNotificationEvent = (OutgoingIntraUserTransactionRollbackNotificationEvent) platformEvent;
                 outgoingIntraUserTransactionRollbackNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
                 outgoingIntraUserTransactionRollbackNotificationEvent.setRequestId(requestId);
@@ -524,7 +512,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
             eventManager.raiseEvent(platformEvent);*/
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
 
         }
 

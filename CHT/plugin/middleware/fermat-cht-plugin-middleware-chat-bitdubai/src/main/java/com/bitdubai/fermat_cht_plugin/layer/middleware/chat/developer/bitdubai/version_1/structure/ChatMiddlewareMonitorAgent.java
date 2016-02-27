@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -115,11 +117,11 @@ public class ChatMiddlewareMonitorAgent implements
         //LOG.info("Open contract monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCHTAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -172,6 +174,7 @@ public class ChatMiddlewareMonitorAgent implements
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
+        public final String BROADCAST_CODE="13";
         int discoverIteration = 0;
         int iterationNumber = 0;
         ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
@@ -254,6 +257,15 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantInitializeCHTAgent(exception,
                         "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
+            } catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        FermatException.wrapException(exception));
+                throw new CantInitializeCHTAgent(
+                        FermatException.wrapException(exception),
+                        "Initialize Monitor Agent - trying to open the plugin database",
+                        "Unexpected exception");
             }
         }
 
@@ -327,24 +339,40 @@ public class ChatMiddlewareMonitorAgent implements
 
                 }
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Unexpected result in database"
                 );
             } catch (CantGetPendingEventListException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot get the Pending event list"
                 );
             }  catch (CantGetMessageException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot get the message"
                 );
             } catch (CantGetPendingTransactionException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
@@ -352,13 +380,31 @@ public class ChatMiddlewareMonitorAgent implements
                 );
             } catch (CantGetContactException e) {
                 //For now, I'm gonna handle this print the exception and continue the thread
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 e.printStackTrace();
             } catch (CantSaveContactException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot save a new contact"
                 );
+            } catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        FermatException.wrapException(exception));
+                throw new DatabaseOperationException(
+                        DatabaseOperationException.DEFAULT_MESSAGE,
+                        FermatException.wrapException(exception),
+                        "Executing Monitor Agent",
+                        "Unexpected exception");
             }
 
 
@@ -428,11 +474,11 @@ public class ChatMiddlewareMonitorAgent implements
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         saveChat(incomingChatMetadata);
                         //If message exists in database, this message will be update
-                   //     saveChat(incomingChatMetadata);
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, "13");
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here
@@ -678,8 +724,6 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
-<<<<<<< HEAD
-=======
          * This method add a new contact to the incoming chat
          * @param chat
          * @param contact
@@ -704,7 +748,6 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
->>>>>>> 7d89e61ca780089e7397f21cdc9b68bb6b1a68bf
          * This method creates a new Message from incoming metadata
          * @param chatMetadata
          * @return
@@ -771,7 +814,8 @@ public class ChatMiddlewareMonitorAgent implements
                     UUID.randomUUID(),
                     "Not registered contact",
                     "Not registered contact",
-                    chatMetadata.getLocalActorType(),
+                    //chatMetadata.getLocalActorType(),
+                    PlatformComponentType.NETWORK_SERVICE,
                     chatMetadata.getLocalActorPublicKey(),
                     date.getTime()
             );

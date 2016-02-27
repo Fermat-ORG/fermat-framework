@@ -3,17 +3,22 @@ package com.bitdubai.android_core.app;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -27,11 +32,18 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
+
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
  * Created by mati on 2015.11.19..
@@ -95,7 +107,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null
-            //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
@@ -112,15 +124,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public FermatStructure getAppInUse() {
-        //TODO por ahora en null va esto
-        return null;
+        return getDesktopRuntimeManager().getLastDesktopObject();
     }
 
     @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
-        //TODO : por ahora va null esto
-        return null;
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
+        return getDesktopRuntimeManager().getDesktopObject(publicKey);
     }
+
 
     private void unbindDrawables(View view) {
         if(view!=null) {
@@ -191,8 +202,40 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public void onBackPressed() {
-        finish();
-        super.onBackPressed();
+        try {
+
+            // get actual fragment on execute
+
+            // Check if no view has focus:
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+
+            String frgBackType = null;
+
+            RuntimeManager runtimeManager = getDesktopRuntimeManager();
+
+            FermatStructure structure = runtimeManager.getLastApp();
+
+            Activity activity = structure.getLastActivity();
+
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
+
+            if (fragment != null) frgBackType = fragment.getBack();
+
+            if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
+                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            } else {
+                finish();
+                super.onBackPressed();
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -273,8 +316,13 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             }else{
 
+
                 if(activities.equals(Activities.DESKTOP_SETTING_FERMAT_NETWORK)){
                     Toast.makeText(this, "toca", Toast.LENGTH_SHORT).show();
+
+                    getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
+                    resetThisActivity();
+                    loadUI();
 //                    List<AbstractFermatFragment> list = new ArrayList<>();
 //                    list.add(new FermatNetworkSettings());
 //                    getScreenAdapter().removeAllFragments();
@@ -290,9 +338,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 }else {
                     try {
-                        //resetThisActivity();
+                        resetThisActivity();
 
-                        Activity a = getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
+                        getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
                         loadUI();
 
@@ -368,32 +416,59 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
      */
 
     protected void loadUI() {
-
         try {
+
             /**
              * Get current activity to paint
              */
             Activity activity = getActivityUsedType();
 
-            //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
-            loadBasicUI(activity,null);
+            try {
 
-            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
-                initialisePaging();
+
+                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
+                //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+                loadBasicUI(activity, fermatAppConnection);
+
+                if (activity.getType() == Activities.CCP_DESKTOP) {
+                    initialisePaging();
+                } else {
+
+                    hideBottonIcons();
+
+                    paintScreen(activity);
+
+                    if (activity.getFragments().size() == 1) {
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                    }
+                }
+            } catch (Exception e) {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                        Toast.LENGTH_LONG).show();
             }
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+
+            try {
+                if (activity.getBottomNavigationMenu() != null) {
+                    bottomNavigationEnabled(true);
+                }
+            } catch (Exception e) {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                        Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void paintScreen(Activity activity) {
+        String backgroundColor = activity.getBackgroundColor();
+        if(backgroundColor!=null){
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
+            getWindow().setBackgroundDrawable(colorDrawable);
         }
 
-        try {
-            bottomNavigationEnabled(true);
-        }catch (Exception e){
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
 

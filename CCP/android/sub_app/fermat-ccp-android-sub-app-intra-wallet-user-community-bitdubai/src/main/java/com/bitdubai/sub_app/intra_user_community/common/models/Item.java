@@ -5,6 +5,6 @@ package com.bitdubai.sub_app.intra_user_community.common.models;
  */
 public interface Item {
 
-    public boolean isSection();
-    public boolean isConnection();
+    boolean isSection();
+    boolean isConnection();
 }

@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 /**
  * @author Penelope Quintero

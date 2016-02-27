@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransaction;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.MissingUnHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.utils.UnHoldCryptoMoneyTransactionImpl;
@@ -89,10 +89,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getHoldCryptoData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {

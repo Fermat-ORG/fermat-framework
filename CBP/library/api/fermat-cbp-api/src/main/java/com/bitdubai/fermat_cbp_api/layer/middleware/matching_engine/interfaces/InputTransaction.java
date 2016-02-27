@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public interface InputTransaction {
 
-    UUID getId();
+    String getId();
 
     Currency getCurrencyGiving();
 

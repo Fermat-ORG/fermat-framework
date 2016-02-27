@@ -73,7 +73,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance;
+    private boolean showNoBalance = true;
 
     public static RedeemPointMainActivityFragment newInstance() {
         return new RedeemPointMainActivityFragment();
@@ -141,12 +141,14 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 }
             }
         }, 500);
+
+        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setImageLeft(R.drawable.redeem_point_identity)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
@@ -208,8 +210,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 return false;
             }
         });
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 2, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

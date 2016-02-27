@@ -1,31 +1,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_activity">
-
+    android:background="@color/background_activity"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="100">
-
+        android:layout_above="@+id/inputContainer"
+        >
         <ImageView
             android:id="@+id/contact_image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_photo_percent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_contact_picture_180_holo_light"
-            android:contentDescription="@string/imageview_description"/>
-
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:scaleType="fitXY"
+            />
         <RelativeLayout
             android:id="@+id/containere"
             android:layout_width="match_parent"
             android:padding="20dp"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_info_percent"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/contact_name"
                 android:layout_width="match_parent"
@@ -34,28 +33,38 @@
                 android:paddingRight="@dimen/padding"
                 android:paddingTop="@dimen/padding"
                 android:textColor="@color/black"
-                style="@style/contactNameTitle"/>
-
-            <EditText
-                android:id="@+id/aliasEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:autoText="true"
-                android:textColor="@color/black"
-                android:hint="User Alias" />
-
-            <Button
-                android:id="@+id/saveContactButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@color/background_floating_material_dark"
-                android:text="Send"
-                android:textColor="@color/background_material_light"/>
-
+                style="@style/contactNameTitle"
+                />
         </RelativeLayout>
-
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/inputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|fill_horizontal"
+        >
+        <EditText
+            android:id="@+id/aliasEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_alignParentBottom="true"
+            android:autoText="true"
+            android:textColor="@color/black"
+            android:hint="User Alias"
+            android:layout_alignBottom="@+id/saveContactButton"
+            android:layout_alignParentLeft="true"
+            android:layout_toStartOf="@+id/saveContactButton"
+            />
+        <Button
+            android:id="@+id/saveContactButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/cht_buttom_ok"
+            />
+    </RelativeLayout>
 </FrameLayout>

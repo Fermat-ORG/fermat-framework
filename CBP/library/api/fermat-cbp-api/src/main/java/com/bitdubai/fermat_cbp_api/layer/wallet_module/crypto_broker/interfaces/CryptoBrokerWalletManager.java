@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -39,7 +40,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
@@ -156,6 +156,15 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     void sendNegotiation(CustomerBrokerNegotiationInformation negotiationInfo) throws CantSendNegotiationToCryptoCustomerException;
 
     CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet);
+
+    /**
+     *
+     * @param brokerPublicKey
+     * @param customerPublicKey
+     * @return The basic information of the customer whose publickey equals the parameter passed as publickey.
+     * @throws CantListActorConnectionsException
+     */
+    ActorIdentity getCustomerInfoByPublicKey(String brokerPublicKey, String customerPublicKey) throws CantListActorConnectionsException;
 
     /**
      * This method list all wallet installed in device, start the transaction
@@ -360,7 +369,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             String memo,
             BigDecimal priceReference,
             OriginTransaction originTransaction,
-            String originTransactionId
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType
     ) throws CantCreateCryptoMoneyRestockException;
 
 
@@ -526,7 +536,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      *
      * @return A BigDecimal, containing the balance.
      */
-    public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
+    long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
 
     /**
      * This method returns the CustomerBrokerContractSale associated to a negotiationId

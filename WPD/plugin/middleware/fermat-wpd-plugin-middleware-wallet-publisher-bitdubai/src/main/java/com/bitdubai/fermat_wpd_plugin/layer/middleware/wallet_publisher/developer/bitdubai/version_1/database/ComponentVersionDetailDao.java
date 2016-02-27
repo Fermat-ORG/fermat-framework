@@ -171,8 +171,6 @@ public class ComponentVersionDetailDao {
         return walletPublishedMiddlewareInformation;
     }
 
-    ;
-
     /**
      * Method that list the all entities on the data base.
      *
@@ -275,8 +273,6 @@ public class ComponentVersionDetailDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -393,8 +389,6 @@ public class ComponentVersionDetailDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -522,8 +516,6 @@ public class ComponentVersionDetailDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that update an entity in the data base.

@@ -163,7 +163,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_issuer)
+                .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
@@ -202,63 +202,63 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 //        }
     }
 
-    protected void initViews(View layout) {
-
-        // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Connecting please wait...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        List<ActorAssetIssuer> toConnect = new ArrayList<>();
-                        for (ActorIssuer actorIssuer : actors) {
-                            if (actorIssuer.selected)
-                                toConnect.add(actorIssuer.getRecord());
-                        }
-                        //// TODO: 20/11/15 get Actor asset issuer
-                        manager.connectToActorAssetIssuer(null, toConnect);
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        if (swipeRefreshLayout != null)
-                            swipeRefreshLayout.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onRefresh();
-                                }
-                            });
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-
-//                return true;
-                /* create new asset factory project */
-//                selectedAsset = null;
-//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-    }
+//    protected void initViews(View layout) {
+//
+//        // fab action button create
+//        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+//        create.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                dialog.setMessage("Connecting please wait...");
+//                dialog.setCancelable(false);
+//                dialog.show();
+//                FermatWorker worker = new FermatWorker() {
+//                    @Override
+//                    protected Object doInBackground() throws Exception {
+//                        List<ActorAssetIssuer> toConnect = new ArrayList<>();
+//                        for (ActorIssuer actorIssuer : actors) {
+//                            if (actorIssuer.selected)
+//                                toConnect.add(actorIssuer.getRecord());
+//                        }
+//                        //// TODO: 20/11/15 get Actor asset issuer
+//                        manager.connectToActorAssetIssuer(null, toConnect);
+//                        return true;
+//                    }
+//                };
+//                worker.setContext(getActivity());
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        dialog.dismiss();
+//                        if (swipeRefreshLayout != null)
+//                            swipeRefreshLayout.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onRefresh();
+//                                }
+//                            });
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
+//                        ex.printStackTrace();
+//                    }
+//                });
+//                worker.execute();
+//
+////                return true;
+//                /* create new asset factory project */
+////                selectedAsset = null;
+////                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+//            }
+//        });
+//        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+//        create.setVisibility(View.VISIBLE);
+//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
