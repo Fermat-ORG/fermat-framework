@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 18/02/16.
@@ -31,7 +33,8 @@ public class incomingNewContractStatusUpdateEventHandlerTest {
     @Mock
     FermatEventListener mockFermatEventListener;
 
-    IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = new IncomingNewContractStatusUpdate(EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED);
+    IncomingNewContractStatusUpdate incomingNewContractStatusUpdate =
+            new IncomingNewContractStatusUpdate(EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED);
     CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService;
     @Mock
     FermatEventEnum fermatEventEnum;
@@ -41,7 +44,6 @@ public class incomingNewContractStatusUpdateEventHandlerTest {
         doNothing().when(customerOnlinePaymentBusinessTransactionDao).saveNewEvent(
                 EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED.getCode(),
                 eventSource.getCode());
-
     }
     @Before
     public void setup()throws Exception{
@@ -52,7 +54,10 @@ public class incomingNewContractStatusUpdateEventHandlerTest {
     public void incomingNewContractStatusUpdateEventHandlerTest_Should_Return_() throws Exception {
         incomingNewContractStatusUpdate.setRemoteBusinessTransaction(Plugins.CUSTOMER_ONLINE_PAYMENT);
         incomingNewContractStatusUpdate.setSource(eventSource);
-        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(
+                customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOnlinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler(incomingNewContractStatusUpdate);
+        verify(customerOnlinePaymentBusinessTransactionDao,times(1)).saveNewEvent(
+                EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED.getCode(),eventSource.getCode());
     }
 }

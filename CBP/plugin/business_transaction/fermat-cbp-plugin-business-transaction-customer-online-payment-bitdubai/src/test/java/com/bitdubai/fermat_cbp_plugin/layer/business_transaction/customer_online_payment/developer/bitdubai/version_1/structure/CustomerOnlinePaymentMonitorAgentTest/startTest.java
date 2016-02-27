@@ -80,7 +80,8 @@ public class startTest {
     //private void setIntraActorCryptoTransactionManager
     @Test(expected = CantSetObjectException.class)
     public void testSetIntraActorCryptoTransactionManager() throws Exception {
-        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,null,errorManager,null,null,null,null,null,null);
+        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(
+                null,null,errorManager,null,null,null,null,null,null);
     }
 
 }

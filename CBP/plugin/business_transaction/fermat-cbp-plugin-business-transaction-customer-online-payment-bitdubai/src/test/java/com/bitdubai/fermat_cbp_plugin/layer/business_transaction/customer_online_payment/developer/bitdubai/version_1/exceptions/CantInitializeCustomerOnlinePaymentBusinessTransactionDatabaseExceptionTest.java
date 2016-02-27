@@ -32,11 +32,13 @@ public class CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseExcep
     public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao =
+                new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
     }
     @Test(expected = CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.class)
     public void CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseExceptionTest()throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao =
+                new CustomerOnlinePaymentBusinessTransactionDao(null,null,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.initialize();
 
     }

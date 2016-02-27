@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -37,7 +38,8 @@ public class getContractTransactionStatusTest {
     @Before
     public void setup() throws Exception{
         MockitoAnnotations.initMocks(this);
-        when(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(anyString())).thenReturn(ContractTransactionStatus.ACK_OFFLINE_PAYMENT);
+        when(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(anyString())).
+                thenReturn(ContractTransactionStatus.ACK_OFFLINE_PAYMENT);
     }
 
     @Test
@@ -47,12 +49,14 @@ public class getContractTransactionStatusTest {
                 transactionTransmissionManager,
                 customerBrokerPurchaseNegotiationManager,
                 errorManager);
-        assertNotNull(customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test"));
+        assertEquals(ContractTransactionStatus.ACK_OFFLINE_PAYMENT,
+                customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test"));
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void getContractTransactionStatusTest_Should_Throw_UnexpectedResultReturnedFromDatabaseException() throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(
+                customerBrokerContractPurchaseManager,
                 customerOnlinePaymentBusinessTransactionDao,
                 transactionTransmissionManager,
                 customerBrokerPurchaseNegotiationManager,
@@ -62,7 +66,8 @@ public class getContractTransactionStatusTest {
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void getContractTransactionStatusTest_Should_Throw_Generic_UnexpectedResultReturnedFromDatabaseException() throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,null,null,null,errorManager);
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(
+                null,null,null,null,errorManager);
         customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test");
     }
 }

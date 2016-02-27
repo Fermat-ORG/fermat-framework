@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 /**
@@ -39,13 +40,15 @@ public class getEventTypeTest {
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
     @Before
-    public void setup(){
+    public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,mockDatabase,errorManager);
         setupGeneralMockitoRules();
     }
-    public void setupGeneralMockitoRules(){
+    public void setupGeneralMockitoRules()throws Exception{
+        doNothing().when(databaseTable).loadToMemory();
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
         when(databaseTableRecord.getStringValue(
