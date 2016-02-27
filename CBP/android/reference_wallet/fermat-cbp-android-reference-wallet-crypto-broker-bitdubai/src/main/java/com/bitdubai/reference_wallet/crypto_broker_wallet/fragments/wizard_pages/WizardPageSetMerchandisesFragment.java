@@ -23,10 +23,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
@@ -46,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 
 /**
  * Created by nelson on 22/12/15.
@@ -163,10 +162,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                        showWalletsDialog(Platforms.CASH_PLATFORM);
-
-
+                showWalletsDialog(Platforms.CASH_PLATFORM);
             }
         });
 
@@ -247,49 +243,54 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             dialogFragment.configure("Select a Wallet", filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
-                public void onItemSelected(InstalledWallet selectedItem) {
-                    if (!platform.equals(Platforms.BANKING_PLATFORM)) {
-                        if (Platforms.CRYPTO_BROKER_PLATFORM.getCode().equals(platform.getCode())) {
-
-                        }
-                        if (Platforms.CASH_PLATFORM.getCode().equals(platform.getCode())) {
-                            if (walletManager.cashMoneyWalletExists("cash_wallet") == false) {
+                public void onItemSelected(final InstalledWallet selectedItem) {
+                    switch (platform) {
+                        case BANKING_PLATFORM:
+                            showBankAccountsDialog(selectedItem);
+                            break;
+                        case CASH_PLATFORM:
+                            if (!walletManager.cashMoneyWalletExists("cash_wallet")) {
                                 final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
                                 inputDialogCBP.DialogType(2);
                                 inputDialogCBP.show();
                                 inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
-
+                                        if (!containWallet(selectedItem)) {
+                                            stockWallets.add(selectedItem);
+                                            adapter.changeDataSet(stockWallets);
+                                            showOrHideNoSelectedWalletsView();
+                                        }
                                     }
                                 });
-                            }
 
+                            } else if (!containWallet(selectedItem)) {
+                                stockWallets.add(selectedItem);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
+                            break;
+                        case CRYPTO_CURRENCY_PLATFORM:
                             if (!containWallet(selectedItem)) {
                                 stockWallets.add(selectedItem);
                                 adapter.changeDataSet(stockWallets);
                                 showOrHideNoSelectedWalletsView();
                             }
-                        }
-                    } else {
-                        showBankAccountsDialog(selectedItem);
+                            break;
                     }
                 }
-
-        });
+            });
 
             dialogFragment.show(getFragmentManager(), "WalletsDialog");
 
         } catch (CantListWalletsException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
-            }
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
         }
     }
 
@@ -306,38 +307,37 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                     @Override
                     public void onItemSelected(BankAccountNumber selectedAccount) {
                         FiatCurrency currency = selectedAccount.getCurrencyType();
-                    String account = selectedAccount.getAccount();
-                    bankCurrencies.put(selectedWallet.getWalletPublicKey(),currency);
-                    bankAccounts.put(selectedWallet.getWalletPublicKey(),account);
-                    if(!containWallet(selectedWallet))
-                    {
-                        stockWallets.add(selectedWallet);
-                        adapter.changeDataSet(stockWallets);
-                        showOrHideNoSelectedWalletsView();
+                        String account = selectedAccount.getAccount();
+                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+                        if (!containWallet(selectedWallet)) {
+                            stockWallets.add(selectedWallet);
+                            adapter.changeDataSet(stockWallets);
+                            showOrHideNoSelectedWalletsView();
+                        }
                     }
-                }
 
-            });
+                });
                 accountsDialog.show(getFragmentManager(), "accountsDialog");
             } else {
-                     final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                    inputDialogCBP.DialogType(1);
-                    inputDialogCBP.show();
-                    inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            String account_dialog = inputDialogCBP.getAccountnumber().getAccount();
-                            FiatCurrency currency_dialog = inputDialogCBP.getAccountnumber().getCurrencyType();
-                            bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
-                            bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
-                            if (!containWallet(selectedWallet)) {
-                                stockWallets.add(selectedWallet);
-                                adapter.changeDataSet(stockWallets);
-                                showOrHideNoSelectedWalletsView();
-                            }
+                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                inputDialogCBP.DialogType(1);
+                inputDialogCBP.show();
+                inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        String account_dialog = inputDialogCBP.getAccountnumber().getAccount();
+                        FiatCurrency currency_dialog = inputDialogCBP.getAccountnumber().getCurrencyType();
+                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
+                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
+                        if (!containWallet(selectedWallet)) {
+                            stockWallets.add(selectedWallet);
+                            adapter.changeDataSet(stockWallets);
+                            showOrHideNoSelectedWalletsView();
                         }
+                    }
 
-                    });
+                });
             }
 
         } catch (FermatException ex) {

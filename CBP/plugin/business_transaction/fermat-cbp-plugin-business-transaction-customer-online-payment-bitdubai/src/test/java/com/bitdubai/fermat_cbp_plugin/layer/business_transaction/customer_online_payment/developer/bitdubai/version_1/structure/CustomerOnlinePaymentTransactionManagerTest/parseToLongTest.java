@@ -37,13 +37,13 @@ public class parseToLongTest {
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao,transactionTransmissionManager,customerBrokerPurchaseNegotiationManager,errorManager);
     }
-    @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws  Exception{
-        customerOnlinePaymentTransactionManager.parseToLong(null);
-    }
     @Test
     public void parseToLongTest_Should_Return_Long() throws  Exception{
         assertEquals(customerOnlinePaymentTransactionManager.parseToLong("1"),1);
+    }
+    @Test(expected = InvalidParameterException.class)
+    public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws  Exception{
+        customerOnlinePaymentTransactionManager.parseToLong(null);
     }
     @Test(expected = InvalidParameterException.class)
     public void parseToLongTest_Should_Return_Exception() throws  Exception{

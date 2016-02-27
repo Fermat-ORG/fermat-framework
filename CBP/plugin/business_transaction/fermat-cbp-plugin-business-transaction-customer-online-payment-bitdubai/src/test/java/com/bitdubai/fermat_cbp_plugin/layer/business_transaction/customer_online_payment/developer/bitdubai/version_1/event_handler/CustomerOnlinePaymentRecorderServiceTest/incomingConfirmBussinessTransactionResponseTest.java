@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -44,25 +46,31 @@ public class incomingConfirmBussinessTransactionResponseTest {
         setUpGeneralMockitoRules();
     }
     public void setUpGeneralMockitoRules() throws Exception{
-        when(mockIncomingConfirmBusinessTransactionResponse.getRemoteBusinessTransaction()).thenReturn(Plugins.CUSTOMER_ONLINE_PAYMENT);
+        when(mockIncomingConfirmBusinessTransactionResponse.getRemoteBusinessTransaction()).
+                thenReturn(Plugins.CUSTOMER_ONLINE_PAYMENT);
         when(mockIncomingConfirmBusinessTransactionResponse.getSource()).thenReturn(eventSource);
         doNothing().when(customerOnlinePaymentBusinessTransactionDao).saveNewEvent(
-                "1",
+                "Test",
                 eventSource.getCode());
 
     }
     @Test
     public void incomingConfirmBusinessTransactionResponseTest_Should_Return_() throws Exception {
         when(mockIncomingConfirmBusinessTransactionResponse.getEventType()).thenReturn(fermatEventEnum);
-        when(fermatEventEnum.getCode()).thenReturn("1");
-        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
-        customerOnlinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(mockIncomingConfirmBusinessTransactionResponse);
+        when(fermatEventEnum.getCode()).thenReturn("Test");
+        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(
+                customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOnlinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(
+                mockIncomingConfirmBusinessTransactionResponse);
+        verify(customerOnlinePaymentBusinessTransactionDao,times(1)).saveNewEvent("Test",eventSource.getCode());
     }
     //generic Exception
     @Test(expected = CantSaveEventException.class)
     public void incomingConfirmBusinessTransactionResponseTest_Should_Throw_() throws Exception {
-        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
-        customerOnlinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(mockIncomingConfirmBusinessTransactionResponse);
+        customerOnlinePaymentRecorderService = new CustomerOnlinePaymentRecorderService(
+                customerOnlinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOnlinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(
+                mockIncomingConfirmBusinessTransactionResponse);
     }
 
 

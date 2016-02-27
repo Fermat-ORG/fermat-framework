@@ -19,6 +19,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -43,12 +46,17 @@ public class persistContractInDatabaseTest {
     BlockchainNetworkType blockchainNetworkType;
     private UUID testId;
     @Before
-    public void setup(){
+    public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        setupMockitoGeneraRules();
+    }
+    public void setupMockitoGeneraRules()throws Exception{
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
+        doNothing().when(databaseTable).insertRecord(databaseTableRecord);
     }
     //Test First persistContractInDatabaseTest method in Dao
     @Test
@@ -56,11 +64,16 @@ public class persistContractInDatabaseTest {
         when(mockDatabase.getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME
         )).thenReturn(databaseTable);
-        customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, "brokerCryptoAddess", "walletPublicKey", 1, blockchainNetworkType);
+        customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                customerBrokerContractPurchase, "brokerCryptoAddess",
+                "walletPublicKey", 1, blockchainNetworkType);
+        verify(databaseTable,times(1)).insertRecord(databaseTableRecord);
     }
     @Test(expected = CantInsertRecordException.class)
     public void persistContractInDatabaseTest_Should_Throw_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase,"brokerCryptoAddess","walletPublicKey",1,blockchainNetworkType);
+        customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                customerBrokerContractPurchase,"brokerCryptoAddess",
+                "walletPublicKey",1,blockchainNetworkType);
     }
     //Test Second persistContractInDatabaseTest method in Dao
     @Test
