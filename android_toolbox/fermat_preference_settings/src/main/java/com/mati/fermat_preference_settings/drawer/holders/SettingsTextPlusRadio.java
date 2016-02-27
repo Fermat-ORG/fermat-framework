@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings.holders;
+package com.mati.fermat_preference_settings.drawer.holders;
 
 import android.view.View;
 import android.widget.RadioButton;

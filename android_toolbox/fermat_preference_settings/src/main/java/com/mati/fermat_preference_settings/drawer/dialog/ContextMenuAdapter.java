@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings.dialog;
+package com.mati.fermat_preference_settings.drawer.dialog;
 
 import android.content.Context;
 import android.view.View;
@@ -6,8 +6,9 @@ import android.widget.CompoundButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.holders.SettingsTextPlusRadio;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadio;
+import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.List;
 
@@ -16,14 +17,15 @@ import java.util.List;
  */
 public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlusRadioItem,SettingsTextPlusRadio> {
 
-
+    private DialogCallback callBack;
 
     protected ContextMenuAdapter(Context context) {
         super(context);
     }
 
-    protected ContextMenuAdapter(Context context, List<PreferenceSettingsTextPlusRadioItem> dataSet) {
+    protected ContextMenuAdapter(Context context,DialogCallback dialogCallback, List<PreferenceSettingsTextPlusRadioItem> dataSet) {
         super(context, dataSet);
+        this.callBack = dialogCallback;
     }
 
     @Override
@@ -37,15 +39,16 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
     }
 
     @Override
-    protected void bindHolder(SettingsTextPlusRadio holder, PreferenceSettingsTextPlusRadioItem data, final int position) {
+    protected void bindHolder(SettingsTextPlusRadio holder, final PreferenceSettingsTextPlusRadioItem data, final int position) {
         holder.getRadio().setText(data.getText());
         holder.getRadio().setChecked(data.isRadioTouched());
-        holder.getRadio().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        holder.getRadio().setOnClickListener(new CompoundButton.OnClickListener() {
+
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    clearNotSelectedRadioButton(position);
-                }
+            public void onClick(View view) {
+                clearNotSelectedRadioButton(position);
+                 callBack.optionSelected(data,position);
             }
         });
     }

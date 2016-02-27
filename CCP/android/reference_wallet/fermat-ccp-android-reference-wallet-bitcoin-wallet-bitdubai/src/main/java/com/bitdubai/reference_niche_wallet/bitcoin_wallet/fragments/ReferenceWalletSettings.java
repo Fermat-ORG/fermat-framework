@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -16,11 +17,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     private ReferenceWalletSession referenceWalletSession;
     private CryptoWallet cryptoWallet;
     SettingsManager<BitcoinWalletSettings> settingsManager;
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     public static ReferenceWalletSettings newInstance() {
         return new ReferenceWalletSettings();
@@ -63,18 +65,33 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
+        BlockchainNetworkType blockchainNetworkType= null;
         List<PreferenceSettingsItem> list = new ArrayList<>();
+        try{
+
         list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",false));
 
 
+        bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
+        if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
+            blockchainNetworkType =  bitcoinWalletSettings.getBlockchainNetworkType();
 
         List<PreferenceSettingsTextPlusRadioItem> strings = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
-        strings.add(new PreferenceSettingsTextPlusRadioItem(2,"MainNet",false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem(3,"TestNet",false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem(4,"RegTest",false));
+
+        strings.add(new PreferenceSettingsTextPlusRadioItem(6,"MainNet",(blockchainNetworkType.equals(BlockchainNetworkType.PRODUCTION)) ? true : false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem(7,"TestNet",(blockchainNetworkType.equals(BlockchainNetworkType.TEST_NET)) ? true : false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem(8,"RegTest",(blockchainNetworkType.equals(BlockchainNetworkType.REG_TEST)) ? true : false));
 
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
+
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return list;
     }
@@ -90,12 +107,11 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem =   (PreferenceSettingsTextPlusRadioItem)preferenceSettingsItem;
         BlockchainNetworkType blockchainNetworkType = null;
 
-
-
         switch (preferenceSettingsTextPlusRadioItem.getText()){
 
             case "MainNet":
                 blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
                 break;
 
             case "TestNet":
@@ -111,10 +127,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         }
 
+        preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
         System.out.println("SETTING SELECTED IS "+ preferenceSettingsTextPlusRadioItem.getText());
         System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
 
-        BitcoinWalletSettings bitcoinWalletSettings = null;
+
         try {
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
         } catch (CantGetSettingsException e) {
@@ -136,8 +154,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
+    }
 
 
+    @Override
+    public Drawable getBackground() {
+        return null;
     }
 
 

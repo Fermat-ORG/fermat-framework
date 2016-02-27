@@ -1,4 +1,4 @@
-package com.mati.fermat_preference_settings.settings.dialog;
+package com.mati.fermat_preference_settings.drawer.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,8 +10,8 @@ import android.view.Window;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
         recyclerView = (RecyclerView) findViewById(R.id.conext_menu_recicler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        contextMenuAdapter = new ContextMenuAdapter(getContext(),options);
+        contextMenuAdapter = new ContextMenuAdapter(getContext(),this.callBack,options);
         contextMenuAdapter.setFermatListEventListener(this);
         recyclerView.setAdapter(contextMenuAdapter);
         recyclerView.getLayoutParams().height = getDps(options.size());
@@ -60,6 +60,8 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
     @Override
     public void onItemClickListener(PreferenceSettingsTextPlusRadioItem data, int position) {
         callBack.optionSelected(data,position);
+
+
     }
 
     @Override

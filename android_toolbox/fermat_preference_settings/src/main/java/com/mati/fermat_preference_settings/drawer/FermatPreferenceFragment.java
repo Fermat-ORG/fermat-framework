@@ -1,5 +1,6 @@
-package com.mati.fermat_preference_settings.settings;
+package com.mati.fermat_preference_settings.drawer;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,13 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.mati.fermat_preference_settings.R;
-import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -55,6 +57,7 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.settings_fragment_base_main, container,false);
         initViews(rootView);
+
         return rootView;
     }
 
@@ -95,6 +98,9 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
             recyclerView.setLayoutManager(layoutManager);
             adapter = new FermatSettingsAdapter(getActivity(),this,setSettingsItems());
             recyclerView.setAdapter(adapter);
+
+            LinearLayout rl = (LinearLayout)layout.findViewById(R.id.linearLayout);
+           // rl.setBackgroundColor(getBackgroundColor());
         }
     }
 
@@ -115,6 +121,8 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
 
     public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
 
+
+    public abstract Drawable getBackground();
 
     @Override
     public void onDestroyView() {
