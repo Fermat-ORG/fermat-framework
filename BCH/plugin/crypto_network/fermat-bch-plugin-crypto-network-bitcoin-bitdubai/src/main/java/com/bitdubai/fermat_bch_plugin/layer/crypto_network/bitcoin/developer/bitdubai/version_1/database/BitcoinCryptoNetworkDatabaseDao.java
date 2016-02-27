@@ -1340,8 +1340,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
             record = uuidRecord;
         }
 
-
-        return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+        if (record != null)
+            return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+        else
+            return null;
     }
 
     /**
