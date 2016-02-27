@@ -4,11 +4,19 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
@@ -16,6 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
@@ -58,11 +67,12 @@ public class AssetSellerMonitorAgent extends FermatAgent {
     private final ErrorManager errorManager;
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final AssetVaultManager assetVaultManager;
+    private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
-
+    private final CryptoAddressBookManager cryptoAddressBookManager;
     //CONSTRUCTORS
 
-    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager) {
+    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager, CryptoAddressBookManager cryptoAddressBookManager) {
         this.userWalletManager = userWalletManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.dao = dao;
@@ -70,6 +80,8 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         this.assetTransmission = assetTransmission;
         this.assetVaultManager = assetVaultManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.cryptoVaultManager = cryptoVaultManager;
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     //PUBLIC METHODS
@@ -141,7 +153,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException {
+        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException {
             checkUnreadMessages();
             checkPendingSells();
         }
@@ -175,13 +187,15 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException {
+        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException, CantRegisterCryptoAddressBookRecordException {
             for (SellingRecord record : dao.getActionRequiredSellings()) {
                 switch (record.getStatus()) {
                     case NEGOTIATION_CONFIRMED: {
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+                        CryptoAddress cryptoVaultAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
+                        cryptoAddressBookManager.registerCryptoAddress(cryptoVaultAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, record.getBuyer().getActorPublicKey(), Actors.DAP_ASSET_USER, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
-                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue());
+                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue(), cryptoVaultAddress);
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
@@ -189,7 +203,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
-                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue());
+                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                             DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer());
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
