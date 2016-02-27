@@ -1,9 +1,11 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,7 +24,9 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -72,6 +76,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
 
     private ExecutorService executor;
 
+    private FermatListItemListeners<CryptoCustomerIdentityInformation> mCallback;
+
 
     public static EditCryptoCustomerIdentityFragment newInstance() {
         return new EditCryptoCustomerIdentityFragment();
@@ -99,6 +105,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
         botonU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actualizable = false;
                 editIdentityInfoInBackDevice();
             }
         });
@@ -122,11 +129,19 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            if (actualizable) {
-                editIdentityInfoInBackDevice();
-                actualizable = false;
-            }
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                if (actualizable) {
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Save Changes?")
+                            .setMessage("You want to save changes?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    editIdentityInfoInBackDevice();
+                                }
+                            }).create().show();
+                    actualizable = false;
+                }
             }
         });
         camara.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +189,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-
     private void editIdentityInfoInBackDevice() {
         String brokerNameText = mBrokerName.getText().toString();
         byte[] imgInBytes;
@@ -184,7 +198,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             imgInBytes = profileImage;
         }
         if(brokerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
         }else{
             if(imgInBytes == null){
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();

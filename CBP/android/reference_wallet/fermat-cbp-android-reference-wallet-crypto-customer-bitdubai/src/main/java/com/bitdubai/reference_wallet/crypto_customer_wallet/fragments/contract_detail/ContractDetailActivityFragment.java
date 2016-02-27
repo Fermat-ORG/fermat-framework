@@ -25,10 +25,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -46,8 +50,10 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -214,52 +220,73 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             try {
                 CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
+//                CustomerBrokerNegotiationInformation negotiationInformation = walletManager.getNegotiationInformation(data.getNegotiationId());
+//
+//                Map<ClauseType, String> negotiationSummary = negotiationInformation.getNegotiationSummary();
+//
+//                String merchandiseAmount=negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+//                String exchangeRateAmount=negotiationSummary.get(ClauseType.EXCHANGE_RATE);
+//                String merchandise=negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY);
+//                String merchandiseUnit=negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY);
+//                String paymentMethod=negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD);
+//                String paymentCurrency=negotiationSummary.get(ClauseType.BROKER_CURRENCY);
+
+
+                ContractStatus mockedStatus = ContractStatus.PENDING_PAYMENT;
+                //ContractStatus mockedStatus = ContractStatus.PAYMENT_SUBMIT;
+                //ContractStatus mockedStatus = ContractStatus.PENDING_MERCHANDISE;
+                //ContractStatus mockedStatus = ContractStatus.MERCHANDISE_SUBMIT;
+                //ContractStatus mockedStatus = ContractStatus.READY_TO_CLOSE;
+                //ContractStatus mockedStatus = ContractStatus.COMPLETED;
+                //ContractStatus mockedStatus = ContractStatus.CANCELLED;
+                //ContractStatus mockedStatus = ContractStatus.PAUSED;
+
                 //Payment Delivery step
                 contractDetail = new ContractDetail(
                         1,
-                        ContractStatus.PENDING_PAYMENT, //customerBrokerContractPurchase.getStatus(),
+                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         data.getAmount(),
-                        MoneyType.CASH_ON_HAND,        //TODO: data.getTypeOfPayment(),
+                        data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
-                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
+                        data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
                 contractDetail = new ContractDetail(
                         2,
-                        ContractStatus.PENDING_PAYMENT, //customerBrokerContractPurchase.getStatus(),
+                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         data.getAmount(),
-                        MoneyType.CASH_ON_HAND,        //TODO: data.getTypeOfPayment(),
+                        data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
-                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
+                        data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
                 contractDetail = new ContractDetail(
                         3,
-                        ContractStatus.PENDING_PAYMENT, //customerBrokerContractPurchase.getStatus(),
+                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
-                        data.getAmount(),
-                        MoneyType.CASH_ON_HAND,        //TODO: data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
-                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
+                        0.0f,                               //TODO: getMerchandiseAmount() missing
+                        "Missing type of merchandise",      //TODO: getTypeOfMerchandise() missing
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
                 contractDetail = new ContractDetail(
                         4,
-                        ContractStatus.PENDING_PAYMENT, //customerBrokerContractPurchase.getStatus(),
+                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
-                        data.getAmount(),
-                        MoneyType.CASH_ON_HAND,        //TODO: data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
-                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
+                        0.0f,                               //TODO: get merchandise amount?
+                        "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

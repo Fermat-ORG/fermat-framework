@@ -1,9 +1,11 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -105,6 +107,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         botonU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actualizable = false;
                 editIdentityInfoInBackDevice();
             }
         });
@@ -134,10 +137,18 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            if (actualizable) {
-                editIdentityInfoInBackDevice();
-                actualizable = false;
-            }
+                if (actualizable) {
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Save Changes?")
+                            .setMessage("You want to save changes?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    editIdentityInfoInBackDevice();
+                                }
+                            }).create().show();
+                    actualizable = false;
+                }
             }
         });
         if(publishIdentityCheckBox.isChecked()){
