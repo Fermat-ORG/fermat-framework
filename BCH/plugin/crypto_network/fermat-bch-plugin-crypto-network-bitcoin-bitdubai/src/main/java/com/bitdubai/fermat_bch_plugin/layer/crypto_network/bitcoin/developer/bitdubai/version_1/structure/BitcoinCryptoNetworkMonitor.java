@@ -522,10 +522,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException{
             try {
                 /**
-                 * Verify transaction is not already stored
+                 * Verify transaction is not already stored. Delete if it exists.
                  */
-                if (isTransactionAlreadyStored(tx.getHashAsString()))
-                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "The Transaction " + tx.getHashAsString() + " is already stored.", "duplicate transaction request.");
+                String txHash = tx.getHashAsString();
+                if (isTransactionAlreadyStored(txHash)){
+                    deleteStoredTransaction(txHash);
+                }
+
+                if (isTransactionAlreadyStored(txHash)){
+                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction is already stored and could not be deleted. " + txHash, "storeBitcoinTransaction on CryptoNetwork.");
+                }
+
 
                 /**
                  * I store it in the database
@@ -573,6 +580,25 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
+        }
+
+        private void deleteStoredTransaction(String txHash) {
+            if (isTransactionStoredInDB(txHash)){
+                try {
+                    this.getDao().deleteStoredBitcoinTransaction(txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (isTransactionStoredInWallet(txHash)){
+                //not much I can do now
+            }
+
+            if (isTransactionStoredOnDisk(txHash)){
+                deleteTransactionFromFile(txHash);
+            }
+
         }
 
         /**
