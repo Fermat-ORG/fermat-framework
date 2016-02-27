@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -92,6 +95,13 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
+        Button botonU = (Button) layout.findViewById(R.id.update_crypto_customer_button);
+        botonU.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editIdentityInfoInBackDevice();
+            }
+        });
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
@@ -173,10 +183,18 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
         }else{
             imgInBytes = profileImage;
         }
-        if(mBrokerName != null && imgInBytes != null && cryptoCustomerPublicKey != null) {
-            CryptoCustomerIdentityInformation identity = new CryptoCustomerIdentityInformationImpl(brokerNameText, cryptoCustomerPublicKey, imgInBytes, ExposureLevel.PUBLISH);
-            EditCustomerIdentityWorker EditIdentityWorker = new EditCustomerIdentityWorker(getActivity(), appSession, identity, this);
-            executor = EditIdentityWorker.execute();
+        if(brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+        }else{
+            if(imgInBytes == null){
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
+                if(cryptoCustomerPublicKey != null) {
+                    CryptoCustomerIdentityInformationImpl identity = new CryptoCustomerIdentityInformationImpl(brokerNameText, cryptoCustomerPublicKey, imgInBytes, ExposureLevel.PUBLISH);
+                    EditCustomerIdentityWorker EditIdentityWorker = new EditCustomerIdentityWorker(getActivity(), appSession, identity, this);
+                    executor = EditIdentityWorker.execute();
+                }
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -91,13 +92,23 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+
+        botonG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewIdentityInBackDevice();
+            }
+        });
+
         mBrokerName.requestFocus();
         mBrokerName.performClick();
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
-                    createNewIdentityInBackDevice();
+                    //createNewIdentityInBackDevice();
                     actualizable = false;
                 }
             }
@@ -125,7 +136,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     public void onDestroy() {
         super.onDestroy();
         if(actualizable) {
-            createNewIdentityInBackDevice();
+            //createNewIdentityInBackDevice();
             actualizable = false;
         }
     }
@@ -162,14 +173,19 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     private void createNewIdentityInBackDevice(){
         String brokerNameText = mBrokerName.getText().toString();
-        if(!brokerNameText.trim().equals("")) {
-            if (cryptoBrokerBitmap != null){
+        if(brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+        }else{
+            if (cryptoBrokerBitmap == null) {
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
                     break;
                 }
             }

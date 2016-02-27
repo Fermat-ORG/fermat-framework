@@ -406,7 +406,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     }
 
     @Override
-    public synchronized void onRefresh() {
+    public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
             if (swipeRefreshLayout != null)

@@ -158,10 +158,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-//    @Override
-//    public FermatManager getManager() {
-//        return customerBrokerPurchaseManager;
-//    }
+    @Override
+    public FermatManager getManager() {
+        return customerBrokerPurchaseManager;
+    }
 
     public static LogLevel getLogLevelByClass(String className) {
         try {
