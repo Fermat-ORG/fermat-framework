@@ -3,8 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 
 import java.util.ArrayList;

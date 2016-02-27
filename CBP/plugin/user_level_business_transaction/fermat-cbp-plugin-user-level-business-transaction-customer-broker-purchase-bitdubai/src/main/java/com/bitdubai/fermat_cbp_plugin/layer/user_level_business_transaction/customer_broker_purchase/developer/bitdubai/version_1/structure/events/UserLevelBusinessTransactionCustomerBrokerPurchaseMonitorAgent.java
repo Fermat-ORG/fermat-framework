@@ -255,7 +255,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     if (Objects.equals(customerBrokerPurchase.getTransactionId(), customerBrokerContractPurchase.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
                         Date date = null;
-                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - date.getTime()) / 60) / 60;
+                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
                             userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");

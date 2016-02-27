@@ -6,6 +6,7 @@ import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.incoming_extra_acto
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.incoming_intra_user.IncomingIntraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_intra_actor.OutgoingIntraActorPluginSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.unhold.UnHoldCryptoMoneyTransactionPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -32,7 +33,7 @@ public class TransactionLayer extends AbstractLayer {
             registerPlugin(new OutgoingIntraActorPluginSubsystem());
            // registerPlugin(new OutgoingDraftTransactionPluginSubsystem());
             registerPlugin(new HoldCryptoMoneyTransactionPluginSubsystem());
-            //registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
+            registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
             //registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {

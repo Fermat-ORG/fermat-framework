@@ -4,19 +4,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +21,7 @@ import java.util.Map;
  */
 public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
+    private View markerRateReferenceContainer;
     private TextView markerRateReference;
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
@@ -39,6 +34,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_left_side);
         yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_value_right_side);
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.ccw_exchange_rate_value);
+        markerRateReferenceContainer = itemView.findViewById(R.id.ccw_market_rate_container);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         yourExchangeRateValue.setOnClickListener(this);
 
@@ -71,6 +67,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
         clauseNumberImageView.setImageResource(positionImgRes);
+    }
+
+    public View getMarkerRateReferenceContainer() {
+        return markerRateReferenceContainer;
     }
 
     public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
