@@ -54,6 +54,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
 | Fermat ORG Charlie | | | |
+| | Fsociety | | |
 | Fermat ORG Sierra | | | |
 
 ## Compensation
@@ -452,7 +453,7 @@ Developers of dev.fermat.org on the client-side. We are responsible to show to t
     Github:  https://github.com/miguelcldn
     
     
-* **Ricardo Delgado [ORG Veteran Developer]**<br/>
+* **Ricardo Delgado [ORG New Team Leader]**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
       Skype:   ricardodelgado460
@@ -465,6 +466,28 @@ Developers of dev.fermat.org on the client-side. We are responsible to show to t
     Github:  https://github.com/emmanuelcolina
 
 We welcome everyone who would like to join us. JavaScript is a hard language when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
+
+<br/>
+
+### Fsociety:
+-----------------------------------
+Here, in Fsociety, we are a team of developers who gets along well with programming and technology that surround us. We work in a diversity of enviroment and language of programming. Always looking for a better way to improve our code. We're a pasionate developers team in what we do and that counts with a diverse number of different abilities to support each other.
+
+#### Team Members:
+
+* **Ricardo Delgado [ORG New Team Leader]**<br/>
+---
+      Email:   ricardodelgado460@hotmail.com
+      Skype:   ricardodelgado460
+      Github:  https://github.com/ricardo460
+
+* **Daril Rodriguez [ORG Developer]**<br/>
+---
+    Email:   darilrodriguez.2@gmail.com
+    Skype:   mdmine90
+    Github:  https://github.com/DarilRodriguez
+
+About the group: We like anime, TV shows, movies and videogames. We always find a good moment to talk about what we like. If you're interested to form part of the group you'll be always welcome.
 
 <br/>
 
