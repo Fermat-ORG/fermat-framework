@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_res
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionParameters;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionParameters;
 
 import java.math.BigDecimal;
 import java.util.UUID;

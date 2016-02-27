@@ -240,10 +240,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                 Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
             }
         } catch (CantGetMessageException e) {
-            CommonLogger.exception(TAG+"updatevalues()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
-         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -267,7 +265,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 String values = infochat.get(position);
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
-                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
                 try{
                     appSession.setData("whocallme", "chatlist");
                     appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat

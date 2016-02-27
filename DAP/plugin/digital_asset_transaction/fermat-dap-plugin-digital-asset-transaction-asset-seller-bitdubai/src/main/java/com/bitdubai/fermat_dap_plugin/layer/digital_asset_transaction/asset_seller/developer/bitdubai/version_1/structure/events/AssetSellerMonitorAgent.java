@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
@@ -150,7 +151,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
 
         private void checkUnreadMessages() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException {
             //NEGOTIATION
-            for (DAPMessage message : assetTransmission.getUnreadDAPMessagesByType(DAPMessageType.ASSET_NEGOTIATION)) {
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEGOTIATION_ANSWER)) {
                 AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
                 SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
                 switch (content.getSellStatus()) {
@@ -167,7 +168,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                 assetTransmission.confirmReception(message);
             }
             //SIGNED TRANSACTIONS
-            for (DAPMessage message : assetTransmission.getUnreadDAPMessagesByType(DAPMessageType.ASSET_SELL)) {
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.TRANSACTION_SIGNED)) {
                 AssetSellContentMessage content = (AssetSellContentMessage) message.getMessageContent();
                 dao.updateSellingStatus(content.getSellingId(), content.getSellStatus());
                 dao.updateBuyerTransaction(content.getSellingId(), content.getSerializedTransaction());
@@ -182,7 +183,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
                         AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId());
-                        DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer());
+                        DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
                         break;

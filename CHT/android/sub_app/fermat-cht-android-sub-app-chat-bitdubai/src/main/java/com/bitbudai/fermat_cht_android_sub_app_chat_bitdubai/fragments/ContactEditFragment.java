@@ -128,7 +128,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
            // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
             if(errorManager != null)
@@ -193,7 +193,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_holo_light);
+            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
             //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             //name.setText(contactname.get(0));

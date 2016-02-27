@@ -44,9 +44,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="34dp"
             android:background="@color/note_card_separator_background"/>
-
 
     </LinearLayout>
 

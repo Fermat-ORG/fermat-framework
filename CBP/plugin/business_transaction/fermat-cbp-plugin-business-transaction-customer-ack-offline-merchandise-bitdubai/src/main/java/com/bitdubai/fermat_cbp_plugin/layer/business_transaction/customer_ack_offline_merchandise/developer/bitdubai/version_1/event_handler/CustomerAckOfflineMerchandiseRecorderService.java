@@ -79,7 +79,7 @@ public class CustomerAckOfflineMerchandiseRecorderService implements CBPService 
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE.getCode())) {
                 this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -102,7 +102,7 @@ public class CustomerAckOfflineMerchandiseRecorderService implements CBPService 
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE.getCode())) {
                 this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
