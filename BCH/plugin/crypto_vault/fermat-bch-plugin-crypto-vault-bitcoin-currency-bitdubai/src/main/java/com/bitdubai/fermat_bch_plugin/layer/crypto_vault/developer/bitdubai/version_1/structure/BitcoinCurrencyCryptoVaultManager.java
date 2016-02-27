@@ -747,6 +747,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
             throw exception;
         }
 
+        System.out.println("***BitcoinVault*** Draft Transaction completed.");
+        System.out.println(draftTransaction.toString());
+
         return draftTransaction;
     }
 

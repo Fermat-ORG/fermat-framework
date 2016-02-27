@@ -330,7 +330,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
-                    "Getting value from PendingTosSubmitNotificationList", "");
+                    "Getting value from PendingToSubmitNotificationList", "");
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
@@ -1017,7 +1017,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,exception,"Cant Update Record","Check the cause");
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,
+                    exception,"Cant Update Record",
+                    "Check the cause");
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
