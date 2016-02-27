@@ -29,7 +29,7 @@ public class getCustomerOnlinePaymentRecordTest {
 
     @Test(expected = Exception.class)
     public void getCustomerOnlinePaymentRecord_Should_Return_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null,null);
         customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(null);
     }
 }

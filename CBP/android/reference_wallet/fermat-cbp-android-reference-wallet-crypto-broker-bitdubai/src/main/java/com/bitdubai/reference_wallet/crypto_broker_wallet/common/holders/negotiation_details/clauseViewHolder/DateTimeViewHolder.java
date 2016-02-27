@@ -6,14 +6,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
+
 /**
- * Created by Yordin Alayn on 22.01.16.
- * Based in DateTimeViewHolder of Star_negotiation by nelson
+ * Created by Nelson Ramirez
  */
 public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
@@ -40,8 +38,7 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
 
-        long timeInMillis = getHolderType() == NewOpenNegotiationDetailsAdapter.TYPE_DATE_EXPIRATION_TIME ?
-                negotiationInformation.getNegotiationExpirationDate() : Long.valueOf(clause.getValue());
+        long timeInMillis = Long.valueOf(clause.getValue());
 
         buttonTime.setText(timeFormat.format(timeInMillis));
         buttonDate.setText(dateFormat.format(timeInMillis));
