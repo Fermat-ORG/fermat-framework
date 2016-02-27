@@ -5,13 +5,14 @@ import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSetting
 /**
  * Created by mati on 2016.02.10..
  */
-public class PreferenceSettingsTextPlusRadioItem implements PreferenceSettingsItem {
+public class PreferenceSettingsTextPlusRadioItem extends PreferenceSettingsItem {
 
     private String text;
     private boolean isRadioTouched;
 
 
-    public PreferenceSettingsTextPlusRadioItem(String text, boolean isRadioTouched) {
+    public PreferenceSettingsTextPlusRadioItem(int id,String text, boolean isRadioTouched) {
+        super(id);
         this.text = text;
         this.isRadioTouched = isRadioTouched;
     }

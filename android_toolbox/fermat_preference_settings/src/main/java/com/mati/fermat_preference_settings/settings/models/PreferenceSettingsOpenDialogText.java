@@ -8,14 +8,15 @@ import java.util.List;
 /**
  * Created by mati on 2016.02.08..
  */
-public class PreferenceSettingsOpenDialogText implements PreferenceSettingsItem {
+public class PreferenceSettingsOpenDialogText extends PreferenceSettingsItem {
 
 
     private String text;
     private List<PreferenceSettingsTextPlusRadioItem> lstItems;
 
 
-    public PreferenceSettingsOpenDialogText(String text, List<PreferenceSettingsTextPlusRadioItem> lstItems) {
+    public PreferenceSettingsOpenDialogText(int id,String text, List<PreferenceSettingsTextPlusRadioItem> lstItems) {
+        super(id);
         this.text = text;
         this.lstItems = lstItems;
     }
