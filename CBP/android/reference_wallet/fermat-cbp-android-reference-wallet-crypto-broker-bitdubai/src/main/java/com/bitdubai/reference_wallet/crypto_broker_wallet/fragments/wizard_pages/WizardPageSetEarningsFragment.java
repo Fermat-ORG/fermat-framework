@@ -153,7 +153,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
 
-            Currency earningCurrency = data.getEarningCurrency();
+            final Currency earningCurrency = data.getEarningCurrency();
+            final Currency linkedCurrency = data.getLinkedCurrency();
+
             for (InstalledWallet wallet : installedWallets) {
                 Platforms platform = wallet.getPlatform();
                 switch (platform) {
@@ -161,7 +163,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         List<BankAccountNumber> accounts = walletManager.getAccounts(wallet.getWalletPublicKey());
                         for (BankAccountNumber account : accounts) {
                             FiatCurrency currencyType = account.getCurrencyType();
-                            if (currencyType.getCode().equals(earningCurrency.getCode())) {
+                            if (currencyType.equals(earningCurrency) || currencyType.equals(linkedCurrency)) {
                                 filteredList.add(wallet);
                                 break;
                             }
@@ -169,12 +171,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         break;
                     case CASH_PLATFORM:
                         FiatCurrency cashCurrency = walletManager.getCashCurrency(wallet.getWalletPublicKey());
-                        if (cashCurrency.getCode().equals(earningCurrency.getCode()))
+                        if (cashCurrency.equals(earningCurrency) || cashCurrency.equals(linkedCurrency))
                             filteredList.add(wallet);
                         break;
                     case CRYPTO_CURRENCY_PLATFORM:
                         CryptoCurrency cryptoCurrency = wallet.getCryptoCurrency();
-                        if (cryptoCurrency.getCode().equals(earningCurrency.getCode()))
+                        if (cryptoCurrency.equals(earningCurrency) || cryptoCurrency.equals(linkedCurrency))
                             filteredList.add(wallet);
                         break;
                 }
