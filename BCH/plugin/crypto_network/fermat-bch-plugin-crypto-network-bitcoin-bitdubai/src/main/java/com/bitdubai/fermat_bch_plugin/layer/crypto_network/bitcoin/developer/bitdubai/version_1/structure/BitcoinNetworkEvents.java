@@ -30,6 +30,7 @@ import org.bitcoinj.core.ScriptException;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.VerificationException;
@@ -310,8 +311,11 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     private CryptoStatus getTransactionCryptoStatus(Transaction tx){
         try{
             int depth = tx.getConfidence().getDepthInBlocks();
+            TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
 
-            if (depth == 0)
+            if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.UNKNOWN)
+                return CryptoStatus.PENDING_SUBMIT;
+            else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
             else if(depth > 0 && depth < BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
                 return CryptoStatus.ON_BLOCKCHAIN;

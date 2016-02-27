@@ -540,6 +540,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  * I store it in the database
                  */
                 Peer downloadPeer = peerGroup.getDownloadPeer();
+
                 String peerAddress = "";
                 if (downloadPeer != null)
                     peerAddress = downloadPeer.getAddress().toString();
