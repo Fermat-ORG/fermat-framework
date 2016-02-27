@@ -24,5 +24,14 @@ project(':currency-selector').projectDir = new File('android_toolbox/currency-se
 include ':horizontalscrollview'
 project(':horizontalscrollview').projectDir = new File('android_toolbox/horizontalscrollview')
 
+include  ':expandable_recycler_view'
+project(':expandable_recycler_view').projectDir = new File('android_toolbox/expandable_recycler_view')
+
+include ':reveal_menu'
+project(':reveal_menu').projectDir = new File('android_toolbox/reveal_menu')
+
+
+
+
 
 
