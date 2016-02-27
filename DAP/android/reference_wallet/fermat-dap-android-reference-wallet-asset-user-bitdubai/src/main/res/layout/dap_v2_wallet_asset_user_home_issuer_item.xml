@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@color/fab_material_blue_grey_900">
+
+    <RelativeLayout
+        android:id="@+id/homeIssuerImageLayout"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        android:background="@drawable/bg_circular_home_issuer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/homeIssuerImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/homeIssuerNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frank Contreras Issuer"
+        android:textColor="@color/fab_material_white"
+        android:textSize="16sp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/homeIssuerImageLayout"
+        android:layout_marginLeft="5dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/homeIssuerNumAssets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 assets"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/homeIssuerArrow"/>
+
+    <ImageView
+        android:id="@+id/homeIssuerArrow"
+        android:layout_width="24dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_arrow_down_grey"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/fab_material_white"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
