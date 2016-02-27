@@ -64,17 +64,17 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
         List<PreferenceSettingsItem> list = new ArrayList<>();
-        list.add(new PreferenceSettingsSwithItem("Enabled Notifications",false));
+        list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",false));
 
 
 
 
         List<PreferenceSettingsTextPlusRadioItem> strings = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
-        strings.add(new PreferenceSettingsTextPlusRadioItem("MainNet",false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem("TestNet",false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem("RegTest",false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem(2,"MainNet",false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem(3,"TestNet",false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem(4,"RegTest",false));
 
-        list.add(new PreferenceSettingsOpenDialogText("Select Network",strings));
+        list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
 
         return list;
     }
