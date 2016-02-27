@@ -128,7 +128,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             scanImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentIntegrator integrator = new IntentIntegrator(activity, (EditText) findViewById(R.id.contact_address));
+                    IntentIntegrator integrator = new IntentIntegrator(activity, (EditText) findViewById(R.id.contact_address_fermat));
                     integrator.initiateScan();
                 }
             });
@@ -165,7 +165,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      * create contact and save it into database
      */
     private void saveContact() {
-
+        //TODO: add saving contact logic here.
     }
 
     /**

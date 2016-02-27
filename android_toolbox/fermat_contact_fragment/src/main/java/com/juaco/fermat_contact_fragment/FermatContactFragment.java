@@ -50,12 +50,12 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+import com.juaco.fermat_contact_fragment.dialog.CreateContactFragmentDialog;
+import com.juaco.fermat_contact_fragment.interfaces.CreateContactDialogCallback;
 import com.juaco.fermat_contact_fragment.interfaces.FermatListViewFragment;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.IndexBarView;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.PinnedHeaderAdapter;
@@ -487,7 +487,7 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
                 walletContact,
                 user_id,
                 ((withImage) ? contactImageBitmap : null),
-                this);
+                createContactDialogCallback);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
