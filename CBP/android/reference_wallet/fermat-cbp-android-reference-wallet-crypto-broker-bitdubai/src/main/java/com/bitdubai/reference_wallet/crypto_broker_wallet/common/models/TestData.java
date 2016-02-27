@@ -14,7 +14,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ClauseInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ContractBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.CustomerBrokerNegotiationInformationImpl;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsData;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -24,27 +23,17 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by nelson on 07/01/16.
+ * Created by Nelson Ramirez
+ * @since 07/01/16.
  */
 public class TestData {
-    public static final String CASH_IN_HAND = "Cash on Hand";
-    public static final String CASH_DELIVERY = "Cash Delivery";
-    public static final String BANK_TRANSFER = "Bank Transfer";
-    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
 
-    private static final List<String> BROKER_BANK_ACCOUNTS = new ArrayList<>();
     public static final String BROKER_BANK_ACCOUNT_1 = "Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados";
-    public static final String BROKER_BANK_ACCOUNT_2 = "Banco: Provincial\nTipo de cuenta: Ahorro\nNro: 0114-3154-268548735\nCliente: Brokers Asociados";
-    public static final String BROKER_BANK_ACCOUNT_3 = "Banco: Banesco\nTipo de cuenta: Corriente\nNro: 1124-0235-9981548701\nCliente: Brokers Asociados";
 
     public static final String CUSTOMER_BANK_ACCOUNT_1 = "Banco: Venezuela\nTipo de cuenta: Ahorro\nNro: 0001-2051-2221548714\nCliente: Angel Lacret";
 
-    private static final List<String> BROKER_LOCATIONS = new ArrayList<>();
     public static final String BROKER_LOCATION_1 = "C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo";
-    public static final String BROKER_LOCATION_2 = "C.C. Galerias, Piso 3, Local 5A, cerca de la feria de la comida";
-    public static final String BROKER_LOCATION_3 = "Av. Padilla, Residencias San Martin, Casa #4-5";
 
-    public static final String CUSTOMER_LOCATION_1 = "Centro Empresarial Totuma, Piso 2, Local 5A";
     public static final String CUSTOMER_LOCATION_2 = "Instituto de Calculo Aplicado, LUZ Facultad de Ingenieria";
 
     private static final String BROKER_CRYPTO_ADDRESS = "jn384jfnqirfjqn4834232039dj";

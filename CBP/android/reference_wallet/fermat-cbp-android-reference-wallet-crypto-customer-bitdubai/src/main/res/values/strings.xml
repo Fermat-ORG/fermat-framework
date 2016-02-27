@@ -117,8 +117,8 @@
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
     <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
 
-    <string name="delivery_date_title">Date To Delivery:</string>
-    <string name="delivery_date_text">Delivery Date </string>
+    <string name="delivery_date_title">Delivery Date</string>
+    <string name="delivery_date_text">Date To Deliver:</string>
 
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>
