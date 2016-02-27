@@ -16,6 +16,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
@@ -72,7 +73,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetCryptoVaultManager  {
+public class AssetCryptoVaultManager  extends CryptoVault{
     /**
      * AssetVaultManager variables
      */
@@ -109,6 +110,8 @@ public class AssetCryptoVaultManager  {
                                    BitcoinNetworkManager bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
 
+        super (pluginFileSystem, pluginId, "AssetVaultSeed", seedFileName);
+
         this.pluginId = pluginId;
         ASSET_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
@@ -119,38 +122,8 @@ public class AssetCryptoVaultManager  {
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId, errorManager);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId, errorManager);
         new Thread(vaultKeyHierarchyGenerator).start();
-    }
-
-    /**
-     * Creates a new Seed or loads and existing one for the user logged.
-     * @return
-     * @throws CantCreateAssetVaultSeed
-     * @throws CantLoadExistingVaultSeed
-     */
-    private DeterministicSeed getAssetVaultSeed()  throws InvalidSeedException{
-        try{
-            VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILENAME);
-            if (!vaultSeedGenerator.seedExists()){
-                vaultSeedGenerator.create();
-                /**
-                 * I realod it to make sure I'm using the seed I will start using from now on. Issue #3330
-                 */
-                vaultSeedGenerator.load();
-            } else
-                vaultSeedGenerator.load();
-
-            DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
-            seed.check();
-            return seed;
-        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, "there was an error trying to load an existing seed.", null);
-        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantCreateAssetVaultSeed, "there was an error trying to create a new seed.", null);
-        } catch (MnemonicException e) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
-        }
     }
 
 
@@ -232,7 +205,7 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
         } catch (InvalidSeedException e) {
             CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -841,7 +814,7 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
         } catch (InvalidSeedException e) {
             CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -1094,7 +1067,7 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getAssetVaultSeed());
+            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getVaultSeed());
         } catch (InvalidSeedException e) {
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
         }

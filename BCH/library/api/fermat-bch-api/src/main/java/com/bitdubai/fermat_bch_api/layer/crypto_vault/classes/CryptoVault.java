@@ -55,7 +55,7 @@ public abstract class CryptoVault {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getBitcoinVaultSeed());
+            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getVaultSeed());
         } catch (InvalidSeedException e) {
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
         }
@@ -69,7 +69,7 @@ public abstract class CryptoVault {
      * @throws CantCreateAssetVaultSeed
      * @throws CantLoadExistingVaultSeed
      */
-    public DeterministicSeed getBitcoinVaultSeed()  throws InvalidSeedException{
+    public DeterministicSeed getVaultSeed()  throws InvalidSeedException{
         try{
             VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
             if (!vaultSeedGenerator.seedExists()){
