@@ -490,6 +490,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I get a signed transaction from the abstract class CryptoVault.
          */
         transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        System.out.println("***CryptoVault*** Transaction signed.");
+        System.out.println(transaction.toString());
 
         /**
          * add it to the draft transaction and return it.
