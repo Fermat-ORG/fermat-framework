@@ -37,6 +37,8 @@ import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -537,7 +539,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * I store it in the database
                  */
-                getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+                Peer downloadPeer = peerGroup.getDownloadPeer();
+                String peerAddress = "";
+                if (downloadPeer != null)
+                    peerAddress = downloadPeer.getAddress().toString();
+
+                getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
 
                 if (commit){
                     // commit and save the transaction
