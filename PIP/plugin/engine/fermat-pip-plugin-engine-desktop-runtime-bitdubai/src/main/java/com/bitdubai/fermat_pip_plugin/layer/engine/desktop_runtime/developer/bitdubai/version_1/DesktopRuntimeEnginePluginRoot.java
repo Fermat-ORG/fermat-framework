@@ -32,7 +32,9 @@ import com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bit
 import com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.structure.RuntimeDesktopObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -54,7 +56,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
      * MAp of desktop identifier + runtimeDesktopObject
      */
 
-    List<DesktopObject> lstDesktops = new ArrayList<DesktopObject>();
+    Map<String,DesktopObject> lstDesktops = new HashMap<>();
 
     /**
      * Last desktop-object
@@ -113,10 +115,10 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     @Override
     public DesktopObject getLastDesktopObject() {
         if (lastDesktopObject != null) {
-            return lstDesktops.get(0);
+            return lstDesktops.get(lastDesktopObject);
+        }else{
+            return lstDesktops.get("main_desktop");
         }
-        return  null;
-        //return mapDesktops.get(startDesktopObject);
     }
 
     @Override
@@ -126,12 +128,11 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //            lastDesktopObject = desktopObjectType;
 //            return desktopObject;
 //        }
-        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        return null;
+        return lstDesktops.get(desktopObjectType);
     }
 
     @Override
-    public List<DesktopObject> listDesktops() {
+    public Map<String,DesktopObject> listDesktops() {
         return lstDesktops;
     }
 
@@ -168,10 +169,12 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * Desktop CCP
              */
 
+            String publicKey = "main_desktop";
+
             runtimeDesktopObject = new RuntimeDesktopObject();
-            runtimeDesktopObject.setAppPublicKey("main_desktop");
+            runtimeDesktopObject.setAppPublicKey(publicKey);
             runtimeDesktopObject.setType("DCCP");
-            lastDesktopObject = runtimeDesktopObject.getType();
+            lastDesktopObject = publicKey;
 
             runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
 
@@ -195,11 +198,22 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
 
             activity = new Activity();
-            activity.setFullScreen(true);
+            activity.setBackgroundColor("#000000");
             activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
             activity.setType(Activities.DESKTOP_SETTING_FERMAT_NETWORK);
             activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
             activity.setBackActivity(Activities.CCP_DESKTOP);
+            activity.setBackPublicKey(publicKey);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setColor("#000000");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setLabel("Network Settings");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setTitleColor("#ffffff");
+            activity.setTitleBar(runtimeTitleBar);
+
+
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
             runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
@@ -207,7 +221,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             runtimeDesktopObject.addActivity(activity);
 
 
-            lstDesktops.add(runtimeDesktopObject);
+            lstDesktops.put(publicKey,runtimeDesktopObject);
 
 
 
@@ -247,7 +261,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("WPD");
-            lstDesktops.add(runtimeDesktopObject);
+            lstDesktops.put("sub_desktop", runtimeDesktopObject);
             runtimeDesktopObject.setStartActivity(Activities.WPD_DESKTOP);
 
             activity = new Activity();
@@ -281,7 +295,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("DDAP");
-            lstDesktops.add(runtimeDesktopObject);
+//            lstDesktops.add(runtimeDesktopObject);
             runtimeDesktopObject.setStartActivity(Activities.DAP_DESKTOP);
 
             activity = new Activity();
@@ -322,7 +336,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("DCBP");
-            lstDesktops.add(runtimeDesktopObject);
+//            lstDesktops.add(runtimeDesktopObject);
             runtimeDesktopObject.setStartActivity(Activities.CBP_DESKTOP);
 
             activity = new Activity();
@@ -378,6 +392,12 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
     @Override
     public FermatStructure getLastApp() {
-        return null;
+        FermatStructure fermatStructure = null;
+        if(lastDesktopObject!=null)
+            fermatStructure = lstDesktops.get(lastDesktopObject);
+        else{
+            fermatStructure = lstDesktops.get("main_desktop");
+        }
+        return fermatStructure;
     }
 }
