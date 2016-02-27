@@ -29,13 +29,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsWizardAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleCheckableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by nelson on 22/12/15.
@@ -69,13 +69,13 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             errorManager = appSession.getErrorManager();
 
             List<String> temp = new ArrayList<>();
-            String tempS = "";
+            String tempS;
 
             List<EarningsWizardData> _earningDataList = createEarningDataList();
             earningDataList = new ArrayList<>();
 
-            for(EarningsWizardData EP : _earningDataList){
-                tempS = EP.getEarningCurrency().getCode()+" - "+EP.getLinkedCurrency().getCode();
+            for (EarningsWizardData EP : _earningDataList) {
+                tempS = EP.getEarningCurrency().getCode() + " - " + EP.getLinkedCurrency().getCode();
                 if (!temp.contains(tempS)) {
                     temp.add(tempS);
                     earningDataList.add(EP);
@@ -85,9 +85,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         } catch (Exception ex) {
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(
-                    Wallets.CBP_CRYPTO_BROKER_WALLET,
-                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
-                    ex
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                        ex
                 );
             }
         }
@@ -274,8 +274,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     Currency merchandise1 = associatedWallet1.getMerchandise();
                     Currency merchandise2 = associatedWallet2.getMerchandise();
 
-                    if (!merchandise1.equals(merchandise2))
-                        list.add(new EarningsWizardData(merchandise1, merchandise2));
+                    if (!merchandise1.equals(merchandise2)) {
+                        final EarningsWizardData data = new EarningsWizardData(merchandise1, merchandise2);
+                        if (!list.contains(data))
+                            list.add(data);
+                    }
+
                 }
             }
 
