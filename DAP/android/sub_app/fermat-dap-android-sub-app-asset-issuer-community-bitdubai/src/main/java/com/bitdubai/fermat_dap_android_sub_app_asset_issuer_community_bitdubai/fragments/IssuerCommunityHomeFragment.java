@@ -75,7 +75,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private Menu menu;
+    private MenuItem menuItem;
 
     private List<ActorIssuer> actors;
     private ActorIssuer actor;
@@ -135,11 +135,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
 
                 if (someSelected) {
-                    menu.getItem(2).setVisible(true);
+                    menuItem.setVisible(true);
                 }
                 else
                 {
-                    menu.getItem(2).setVisible(false);
+                    menuItem.setVisible(false);
                 }
 
             }
@@ -316,7 +316,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        this.menu = menu;
+
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -329,7 +329,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.getItem(2).setVisible(false);
+        menuItem = menu.getItem(2);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(true);
+            menuItem.setVisible(true);
 
         }
 
@@ -355,7 +355,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(false);
+            menuItem.setVisible(false);
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {

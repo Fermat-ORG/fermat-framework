@@ -425,7 +425,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetRedeemPointException {
         try {
             for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
 //                try {
@@ -437,7 +437,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         requester.getActorPublicKey(),
                         actorAssetRedeemPoint.getActorPublicKey(),
                         CryptoAddressDealers.DAP_WATCH_ONLY,
-                        BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        blockchainNetworkType);
 
 
                 actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworkService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);

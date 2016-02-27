@@ -347,10 +347,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered() throws CantGetAssetRedeemPointActorsException {
+    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException {
         List<ActorAssetRedeemPoint> list; // Asset User Actor list.
         try {
-            list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered();
+            list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered(blockchainNetworkType);
         } catch (CantGetRedeemPointsListException e) {
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR REGISTERED", e, "", "");
         }
@@ -371,10 +371,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException {
+    public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException {
         List<ActorAssetRedeemPoint> list; // Asset User Actor list.
         try {
-            list = this.redeemPointActorDao.getRedeemPointsConnectedForIssuer(issuerPublicKey);
+            list = this.redeemPointActorDao.getRedeemPointsConnectedForIssuer(issuerPublicKey, blockchainNetworkType);
         } catch (CantGetRedeemPointsListException e) {
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
         }
@@ -593,9 +593,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Redeem Point Recibiendo Crypto Localmente*****");
 
-                this.redeemPointActorDao.updateAssetRedeemPointPConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
+                this.redeemPointActorDao.updateAssetRedeemPointPConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(), request.getBlockchainNetworkType());
 
-                List<ActorAssetRedeemPoint> actorAssetRedeemPoints = this.redeemPointActorDao.getAssetRedeemPointRegistered(request.getIdentityPublicKeyResponding());
+                List<ActorAssetRedeemPoint> actorAssetRedeemPoints = this.redeemPointActorDao.getAssetRedeemPointRegistered(request.getIdentityPublicKeyResponding(),request.getBlockchainNetworkType());
 
                 if (!actorAssetRedeemPoints.isEmpty()) {
                     for (ActorAssetRedeemPoint ActorAssetRedeemPoint1 : actorAssetRedeemPoints) {
@@ -604,6 +604,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         if (ActorAssetRedeemPoint1.getCryptoAddress() != null) {
                             System.out.println("Actor Redeem Point: " + ActorAssetRedeemPoint1.getCryptoAddress().getAddress());
                             System.out.println("Actor Redeem Point: " + ActorAssetRedeemPoint1.getCryptoAddress().getCryptoCurrency());
+                            System.out.println("Actor Redeem Point: " + ActorAssetRedeemPoint1.getBlockchainNetworkType());
                             System.out.println("Actor Redeem Point: " + ActorAssetRedeemPoint1.getDapConnectionState());
                         } else {
                             System.out.println("Actor Redeem Point FALLO Recepcion CryptoAddress: " + ActorAssetRedeemPoint1.getName());

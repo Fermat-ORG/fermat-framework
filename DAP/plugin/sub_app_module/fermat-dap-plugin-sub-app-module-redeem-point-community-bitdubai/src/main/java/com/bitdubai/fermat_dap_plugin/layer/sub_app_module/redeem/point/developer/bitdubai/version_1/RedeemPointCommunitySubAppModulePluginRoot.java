@@ -115,7 +115,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
             actorAssetRedeemPoints = new ArrayList<>();
 
             try {
-                for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered()) {
+                for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered(assetUserWalletSubAppModuleManager.getSelectedNetwork())) {
                     RedeemPointActorRecord redeemPointActorRecord = (RedeemPointActorRecord) actorAssetRedeemPoint;
                     actorAssetRedeemPoints.add(redeemPointActorRecord);
                 }
@@ -144,7 +144,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
             actorAssetUser = actorAssetUserManager.getActorAssetUser();
 
             if (actorAssetUser != null)
-                actorAssetUserManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoint);
+                actorAssetUserManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoint, blockchainNetworkType);
             else
                 throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "THERE WAS AN ERROR GET ACTOR ASSET USER.", null);
 

@@ -85,7 +85,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      *
      * @throws CantGetAssetRedeemPointActorsException
      */
-    List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered() throws CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
@@ -94,7 +94,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
-    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>sendMessage</code> Stablish Connection
