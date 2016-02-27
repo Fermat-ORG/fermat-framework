@@ -110,7 +110,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
                                    BitcoinNetworkManager bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
 
-        super (pluginFileSystem, pluginId, "AssetVaultSeed", seedFileName);
+        super (pluginFileSystem, pluginId, bitcoinNetworkManager, "AssetVaultSeed", seedFileName);
 
         this.pluginId = pluginId;
         ASSET_VAULT_SEED_FILENAME = seedFileName;
