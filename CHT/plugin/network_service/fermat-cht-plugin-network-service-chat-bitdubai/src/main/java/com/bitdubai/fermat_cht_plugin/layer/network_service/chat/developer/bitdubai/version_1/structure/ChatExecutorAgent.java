@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetadataRecordDAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -44,8 +45,7 @@ public final class ChatExecutorAgent extends FermatAgent {
     private Map<String, String> poolConnectionsWaitingForResponse;
 
     private final ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
-    private final ErrorManager                              errorManager                             ;
-    private final EventManager                              eventManager                             ;
+    private final ErrorManager                              errorManager                             ;     ;
     private final ChatMetadataRecordDAO chatMetadataRecordDAO;
 
     public ChatExecutorAgent(final ChatNetworkServicePluginRoot chatNetworkServicePluginRoot,
@@ -55,7 +55,6 @@ public final class ChatExecutorAgent extends FermatAgent {
 
         this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
         this.errorManager                              = errorManager                             ;
-        this.eventManager                              = eventManager                             ;
         this.chatMetadataRecordDAO = chatMetadataRecordDAO;
 
         this.status                                    = AgentStatus.CREATED                      ;
@@ -147,17 +146,14 @@ public final class ChatExecutorAgent extends FermatAgent {
 
             for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecords) {
 
-                if (sendMessageToRemote(
-                        chatMetadataRecord.getMsgXML(),
-                        chatMetadataRecord.getLocalActorPublicKey(),
-                        chatMetadataRecord.getLocalActorType(),
-                        chatMetadataRecord.getRemoteActorPublicKey(),
-                        chatMetadataRecord.getRemoteActorType()
-                )) {
-                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.WAITING_RESPONSE);
-                }
+
+                PlatformComponentProfile sender = chatNetworkServicePluginRoot.constructBasicPlatformComponentProfile(chatMetadataRecord.getLocalActorPublicKey(),chatMetadataRecord.getLocalActorType());
+                PlatformComponentProfile remote = chatNetworkServicePluginRoot.constructBasicPlatformComponentProfile(chatMetadataRecord.getRemoteActorPublicKey(),chatMetadataRecord.getRemoteActorType());
+                chatNetworkServicePluginRoot.sendNewMessage(sender,remote,chatMetadataRecord.getMsgXML());
+                changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.WAITING_RESPONSE);
 
             }
+
             chatMetadataRecords = chatMetadataRecordDAO.listRequestsByChatProtocolStateAndDistributionStatus(
                     ChatProtocolState.PROCESSING_RECEIVE,
                     DistributionStatus.DELIVERED
@@ -165,15 +161,10 @@ public final class ChatExecutorAgent extends FermatAgent {
 
             for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecords) {
 
-                if (sendMessageToRemote(
-                        chatMetadataRecord.getMsgXML(),
-                        chatMetadataRecord.getLocalActorPublicKey(),
-                        chatMetadataRecord.getLocalActorType(),
-                        chatMetadataRecord.getRemoteActorPublicKey(),
-                        chatMetadataRecord.getRemoteActorType()
-                )) {
-                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.DONE);
-                }
+                PlatformComponentProfile sender = chatNetworkServicePluginRoot.constructBasicPlatformComponentProfile(chatMetadataRecord.getLocalActorPublicKey(),chatMetadataRecord.getLocalActorType());
+                PlatformComponentProfile remote = chatNetworkServicePluginRoot.constructBasicPlatformComponentProfile(chatMetadataRecord.getRemoteActorPublicKey(),chatMetadataRecord.getRemoteActorType());
+                chatNetworkServicePluginRoot.sendNewMessage(sender,remote,chatMetadataRecord.getMsgXML());
+                changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.DONE);
 
             }
         } catch(CantReadRecordDataBaseException |
@@ -186,6 +177,8 @@ public final class ChatExecutorAgent extends FermatAgent {
         } catch (CHTException e) {
             reportUnexpectedError(e);
         } catch (CantGetNotificationException e) {
+            reportUnexpectedError(e);
+        } catch (CantSendMessageException e) {
             reportUnexpectedError(e);
         }
     }

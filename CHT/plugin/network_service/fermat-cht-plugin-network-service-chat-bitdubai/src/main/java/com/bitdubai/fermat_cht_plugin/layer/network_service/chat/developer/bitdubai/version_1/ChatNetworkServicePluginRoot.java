@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -186,6 +187,18 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         }
 
 
+    }
+    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
+                                                                           PlatformComponentType platformComponentType) {
+
+
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                .constructBasicPlatformComponentProfileFactory(
+                        identityPublicKey,
+                        NetworkServiceType.UNDEFINED,
+                        platformComponentType
+
+                );
     }
 
     @Override
