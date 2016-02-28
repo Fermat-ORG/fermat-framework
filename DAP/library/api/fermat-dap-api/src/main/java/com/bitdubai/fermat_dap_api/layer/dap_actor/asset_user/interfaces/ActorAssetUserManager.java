@@ -17,9 +17,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
@@ -118,19 +118,12 @@ public interface ActorAssetUserManager extends FermatManager {
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException;
 
     /**
-     * The method <code>connectToActorAssetUser</code> Enable Connection
-     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
-     *
-     * @throws CantConnectToActorAssetUserException
-     */
-    void disconnectToActorAssetUser(ActorAssetUser user, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetUserActorException;
-    /**
      * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
      * with Requester and Deliver Redeem Point to Reddem Asset
      *
      * @throws CantConnectToActorAssetRedeemPointException
      */
-    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException;
+    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetRedeemPointException;
 
     /**
      * The method <code>createAssetUserGroup</code> Register a group in database Actor Asset User
@@ -241,12 +234,20 @@ public interface ActorAssetUserManager extends FermatManager {
     void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
 
     /**
-     * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry
-     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
-     * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
-     * @throws CantDisconnectAssetUserActorException
+     * The method <code>connectToActorAssetUser</code> Enable Connection
+     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+     *
+     * @throws CantConnectToActorAssetUserException
      */
-    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
+    void disconnectToActorAssetUser(String userPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetUserActorException;
+
+//    /**
+//     * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry
+//     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+//     * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
+//     * @throws CantDisconnectAssetUserActorException
+//     */
+//    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 
 
     void receivingActorAssetUserRequestConnection(String actorAssetUserLoggedInPublicKey,
