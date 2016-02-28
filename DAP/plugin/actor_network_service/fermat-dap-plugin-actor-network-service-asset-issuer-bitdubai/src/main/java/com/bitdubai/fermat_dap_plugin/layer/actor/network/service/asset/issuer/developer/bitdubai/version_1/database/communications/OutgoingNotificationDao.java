@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications;
+package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetNotificationException;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetPendingRequestException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class OutgoingNotificationDao {
 
     private Database database;
 
-    private static final String PROFILE_IMAGE_DIRECTORY_NAME = DeviceDirectory.LOCAL_USERS.getName() + "/DAP/ActorAssetUserNSOutgoing";
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME = DeviceDirectory.LOCAL_USERS.getName() + "/DAP/ActorAssetIssuerNSOutgoing";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;

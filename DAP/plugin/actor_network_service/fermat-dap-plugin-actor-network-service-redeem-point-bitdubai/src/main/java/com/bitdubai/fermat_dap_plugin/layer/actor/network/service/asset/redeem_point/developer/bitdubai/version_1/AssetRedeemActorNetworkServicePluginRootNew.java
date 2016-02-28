@@ -4,15 +4,20 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -20,67 +25,116 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageRequest;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantConfirmActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDisconnectConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.agents.AssetRedeemPointActorNetworkServiceAgent;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
+import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -88,18 +142,20 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot</code> is
- * throw when error occurred updating new record in a table of the data base
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.AssetRedeemPointActorNetworkServicePluginRoot</code> is
+ * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
+ * Created by Roberto Requena - (rrequena) on 21/07/15.
+ * Modified by franklin on 17/10/2015
  *
  * @version 1.0
- * @since Java JDK 1.7
  */
-public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements
-        AssetUserActorNetworkServiceManager,
+public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements
+        AssetRedeemPointActorNetworkServiceManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -108,18 +164,36 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
      */
     private Database dataBase;
 
-    /**
-     * Represent the EVENT_SOURCE
-     */
-//    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
+    protected final static String DAP_IMG_REDEEM_POINT = "DAP_IMG_REDEEM_POINT";
+    protected final static String DAP_REGISTERED_ISSUERS = "DAP_REGISTERED_ISSUERS";
 
-    protected final static String DAP_IMG_USER = "DAP_IMG_USER";
+//    List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    /**
+     * Represent the communicationNetworkServiceConnectionManager
+     */
+//    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+
+    /**
+     * Represent the remoteNetworkServicesRegisteredList
+     */
+//    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
      * Represent the actorAssetUserPendingToRegistration
      */
-    private List<PlatformComponentProfile> actorAssetUserPendingToRegistration;
+    private List<PlatformComponentProfile> actorAssetRedeemPointPendingToRegistration;
 
+    /**
+     * DAO
+     */
+    private IncomingNotificationDao incomingNotificationsDao;
+    private OutgoingNotificationDao outgoingNotificationDao;
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
@@ -133,13 +207,15 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     /**
      * Represent the actorAssetUserRegisteredList
      */
-    private List<ActorAssetUser> actorAssetUserRegisteredList;
+    private List<ActorAssetRedeemPoint> actorAssetRedeemPointRegisteredList;
 
+//    private AssetRedeemPointActorNetworkServiceAgent assetRedeemPointActorNetworkServiceAgent;
+
+//    private int createactorAgentnum = 0;
     /**
-     * DAO
+     * Represent the flag to start only once
      */
-    private IncomingNotificationDao incomingNotificationsDao;
-    private OutgoingNotificationDao outgoingNotificationDao;
+//    private AtomicBoolean flag = new AtomicBoolean(false);
 
     private long reprocessTimer = 300000; //five minutes
 
@@ -152,17 +228,17 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     /**
      * Constructor
      */
-    public AssetUserActorNetworkServicePluginRootNew() {
+    public AssetRedeemActorNetworkServicePluginRootNew() {
         super(
                 new PluginVersionReference(new Version()),
-                EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER,
+                EventSource.NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT,
                 PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.ASSET_USER_ACTOR,
-                "Actor Network Service Asset User",
-                null);
-
-        this.actorAssetUserRegisteredList = new ArrayList<>();
-        this.actorAssetUserPendingToRegistration = new ArrayList<>();
+                NetworkServiceType.ASSET_REDEEM_POINT_ACTOR,
+                "Actor Network Service Asset RedeemPoint",
+                null
+        );
+        this.actorAssetRedeemPointRegisteredList = new ArrayList<>();
+        this.actorAssetRedeemPointPendingToRegistration = new ArrayList<>();
     }
 
     @Override
@@ -205,22 +281,22 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     @Override
     public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
         try {
-            System.out.println("ACTOR ASSET USER MENSAJE ENTRANTE A JSON: " + newFermatMessageReceive.toJson());
+            System.out.println("ACTOR ASSET REDEEM MENSAJE ENTRANTE A JSON: " + newFermatMessageReceive.toJson());
 
             ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = ActorAssetNetworkServiceRecord.fronJson(newFermatMessageReceive.getContent());
 
             switch (assetUserNetworkServiceRecord.getAssetNotificationDescriptor()) {
                 case ASKFORCONNECTION:
-                    System.out.println("ACTOR ASSET USER MENSAJE LLEGO: " + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM MENSAJE LLEGO: " + assetUserNetworkServiceRecord.getActorSenderAlias());
                     assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_RECEIVE);
-                    System.out.println("ACTOR ASSET USER REGISTRANDO EN INCOMING NOTIFICATION DAO");
+                    System.out.println("ACTOR ASSET REDEEM REGISTRANDO EN INCOMING NOTIFICATION DAO");
                     assetUserNetworkServiceRecord.setFlagRead(false);
                     incomingNotificationsDao.createNotification(assetUserNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
 //                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_USER.getCode(), "CONNECTION-REQUEST_" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_REDEEM.getCode(), "CONNECTION-REQUEST_" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(assetUserNetworkServiceRecord);
                     break;
@@ -235,7 +311,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_RECEIVE);
                     assetUserNetworkServiceRecord.setFlagRead(false);
                     incomingNotificationsDao.createNotification(assetUserNetworkServiceRecord);
-                    System.out.println("ACTOR ASSET USER MENSAJE ACCEPTED LLEGÓ: " + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM MENSAJE ACCEPTED LLEGÓ: " + assetUserNetworkServiceRecord.getActorSenderAlias());
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
@@ -244,15 +320,15 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
                 case RECEIVED:
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
-                    System.out.println("ACTOR ASSET USER THE RECORD WAS CHANGE TO THE STATE OF DELIVERY: " + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM THE RECORD WAS CHANGE TO THE STATE OF DELIVERY: " + assetUserNetworkServiceRecord.getActorSenderAlias());
                     if (assetUserNetworkServiceRecord.getResponseToNotificationId() != null)
                         outgoingNotificationDao.changeProtocolState(assetUserNetworkServiceRecord.getResponseToNotificationId(), ActorAssetProtocolState.DONE);
 
                     // close connection, sender is the destination
-                    System.out.println("ACTOR ASSET USER THE CONNECTION WAS CHANGE TO DONE" + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM THE CONNECTION WAS CHANGE TO DONE" + assetUserNetworkServiceRecord.getActorSenderAlias());
 
                     getCommunicationNetworkServiceConnectionManager().closeConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey());
-                    System.out.println("ACTOR ASSET USER THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + assetUserNetworkServiceRecord.getActorSenderAlias());
                     break;
 
                 case DENIED:
@@ -263,7 +339,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_RECEIVE);
                     assetUserNetworkServiceRecord.setFlagRead(false);
                     incomingNotificationsDao.createNotification(assetUserNetworkServiceRecord);
-                    System.out.println("ACTOR ASSET USER MENSAJE DENIED LLEGÓ: " + assetUserNetworkServiceRecord.getActorDestinationPublicKey());
+                    System.out.println("ACTOR ASSET REDEEM MENSAJE DENIED LLEGÓ: " + assetUserNetworkServiceRecord.getActorDestinationPublicKey());
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
@@ -278,7 +354,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_RECEIVE);
                     assetUserNetworkServiceRecord.setFlagRead(false);
                     incomingNotificationsDao.createNotification(assetUserNetworkServiceRecord);
-                    System.out.println("ACTOR ASSET USER MENSAJE DISCONNECTED LLEGÓ: " + assetUserNetworkServiceRecord.getActorSenderAlias());
+                    System.out.println("ACTOR ASSET REDEEM MENSAJE DISCONNECTED LLEGÓ: " + assetUserNetworkServiceRecord.getActorSenderAlias());
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
@@ -289,16 +365,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             }
 
         } catch (Exception e) {
+            reportUnexpectedError(e);
             //quiere decir que no estoy reciviendo metadata si no una respuesta
             e.printStackTrace();
 
         }
 
-        System.out.println("Actor Asset User Llegaron mensajes!!!!");
+        System.out.println("Actor Asset Redeem Llegaron mensajes!!!!");
 
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(newFermatMessageReceive);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
     }
@@ -310,7 +388,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
             if (assetUserNetworkServiceRecord.getActorAssetProtocolState() == ActorAssetProtocolState.DONE) {
                 // close connection, sender is the destination
-                System.out.println("ACTOR ASSET USER CERRANDO LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
+                System.out.println("ACTOR ASSET REDEEM CERRANDO LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
                 //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
 //                assetUserActorNetworkServiceAgent.getPoolConnectionsWaitingForResponse().remove(assetUserNetworkServiceRecord.getActorDestinationPublicKey());
             }
@@ -321,11 +399,12 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 outgoingNotificationDao.update(assetUserNetworkServiceRecord);
 //                assetUserActorNetworkServiceAgent.getPoolConnectionsWaitingForResponse().remove(assetUserNetworkServiceRecord.getActorDestinationPublicKey());
             }
-            System.out.println("SALIENDO DEL HANDLE ACTOR ASSET USER NEW SENT MESSAGE NOTIFICATION");
+            System.out.println("SALIENDO DEL HANDLE ACTOR ASSET REDEEM NEW SENT MESSAGE NOTIFICATION");
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
-            System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT IN ACTOR ASSET USER NS");
+            System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT IN ACTOR ASSET REDEEM");
+            reportUnexpectedError(e);
             e.printStackTrace();
 
         }
@@ -335,11 +414,12 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     protected void onNetworkServiceRegistered() {
         try {
             //TODO Test this functionality
-            for (PlatformComponentProfile platformComponentProfile : actorAssetUserPendingToRegistration) {
+            for (PlatformComponentProfile platformComponentProfile : actorAssetRedeemPointPendingToRegistration) {
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("AssetUserActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+                System.out.println("AssetRedeemActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         } catch (Exception e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
     }
@@ -364,6 +444,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             platformComponentTypeSelectorByActorType(actors),
                             "");
         } catch (Exception e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
         return null;
@@ -383,6 +464,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             platformComponentTypeSelectorByActorType(actors),
                             "");
         } catch (Exception e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
         return null;
@@ -415,9 +497,11 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             }
         } catch (CantGetActorAssetNotificationException e) {
             System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            reportUnexpectedError(e);
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
     }
@@ -465,7 +549,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 );
         }
     }
-//TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
+    //TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
     private void launchNotificationActorAsset() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
@@ -512,6 +596,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     assetUserNetworkServiceRecord.getId()
             );
         } catch (CantCreateActorAssetNotificationException e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
     }
@@ -534,7 +619,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -557,7 +642,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                reportUnexpectedError(e);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -607,7 +692,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 }
             }
         } catch (Exception e) {
-            System.out.println("ACTOR ASSET NS EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.println("ACTOR ASSET REDEEM NS EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
@@ -627,50 +712,49 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     }
 
     @Override
-    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
-
+    public void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
         try {
             if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
                 /*
                  * Construct the profile
                  */
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
-                String extraData = gson.toJson(jsonObject);
 
-                final PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        actorAssetUserToRegister.getActorPublicKey(),
-                        actorAssetUserToRegister.getName().toLowerCase().trim(),
-                        actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_USER,
-                        extraData);
+                final PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(actorAssetRedeemPointToRegister, communicationsClientConnection);
                 /*
                  * ask to the communication cloud client to register
                  */
                 /**
                  * I need to add this in a new thread other than the main android thread
                  */
-                if (!actorAssetUserPendingToRegistration.contains(platformComponentProfileAssetUser)) {
-                    actorAssetUserPendingToRegistration.add(platformComponentProfileAssetUser);
-                }
-
-                Thread thread = new Thread(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetUser);
-                            onComponentRegistered(platformComponentProfileAssetUser);
+                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
                     }
-                }, "ACTOR ASSET USER REGISTER-ACTOR");
-                thread.start();
+                }).start();
+
             }
+//            else {
+//                /*
+//                 * Construct the profile
+//                 */
+//                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(
+//                        actorAssetRedeemPointToRegister,
+//                        communicationsClientConnection);
+//                /*
+//                 * Add to the list of pending to register
+//                 */
+//
+//                actorAssetRedeemPointPendingToRegistration.add(platformComponentProfileAssetRedeemPoint);
+//            }
         } catch (Exception e) {
+
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -685,48 +769,48 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantRegisterActorAssetUserException pluginStartException = new CantRegisterActorAssetUserException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            CantRegisterActorAssetRedeemPointException pluginStartException = new CantRegisterActorAssetRedeemPointException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
     }
 
     @Override
-    public void updateActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
-
+    public void updateActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
         try {
             if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(DAP_IMG_USER, Base64.encodeToString(actorAssetUserToRegister.getProfileImage(), Base64.DEFAULT));
-                String extraData = gson.toJson(jsonObject);
-
-                final PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        actorAssetUserToRegister.getActorPublicKey(),
-                        actorAssetUserToRegister.getName().toLowerCase().trim(),
-                        actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_USER,
-                        extraData);
-
-                Thread thread = new Thread(new Runnable() {
+            final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                /*
+                 * Construct the profile
+                 */
+                final PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(actorAssetRedeemPointToRegister, communicationsClientConnection);
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetUser);
-                            onComponentRegistered(platformComponentProfileAssetUser);
+                            communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
                     }
-                }, "ACTOR ASSET USER UPDATE-ACTOR");
-                thread.start();
+                }).start();
             }
-
+//            else {
+//                /*
+//                 * Construct the profile
+//                 */
+//                PlatformComponentProfile platformComponentProfileAssetRedeemPoint = constructPlatformComponentProfile(actorAssetRedeemPointToRegister, communicationsClientConnection);
+//                /*
+//                 * Add to the list of pending to register
+//                 */
+//                actorAssetRedeemPointPendingToRegistration.add(platformComponentProfileAssetRedeemPoint);
+//            }
         } catch (Exception e) {
+
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -741,23 +825,24 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantRegisterActorAssetUserException pluginStartException = new CantRegisterActorAssetUserException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            CantRegisterActorAssetRedeemPointException pluginStartException = new CantRegisterActorAssetRedeemPointException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
+    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException {
 
         try {
-            if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
-                actorAssetUserRegisteredList.clear();
+//            if (true) {
+            if (actorAssetRedeemPointRegisteredList != null && !actorAssetRedeemPointRegisteredList.isEmpty()) {
+                actorAssetRedeemPointRegisteredList.clear();
             }
 
             DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_REDEEM_POINT, //applicant = who made the request
                             NetworkServiceType.UNDEFINED,
                             null,                     // alias
                             null,                     // identityPublicKey
@@ -777,12 +862,16 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
                     String profileImage = "";
+                    List<String> registeredIssuers = new ArrayList<>();
                     if (!platformComponentProfile.getExtraData().equals("")) {
                         try {
                             JsonParser jParser = new JsonParser();
                             JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
 
-                            profileImage = jsonObject.get(DAP_IMG_USER).getAsString();
+                            profileImage = jsonObject.get(DAP_IMG_REDEEM_POINT).getAsString();
+                            Type type = new TypeToken<List<String>>() {
+                            }.getType();
+                            registeredIssuers = new Gson().fromJson(jsonObject.get(DAP_REGISTERED_ISSUERS).getAsString(), type);
                         } catch (Exception e) {
                             profileImage = platformComponentProfile.getExtraData();
                         }
@@ -790,16 +879,17 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
                     byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
 
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(
+                    ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
                             platformComponentProfile.getIdentityPublicKey(),
                             platformComponentProfile.getName(),
                             imageByte,
-                            platformComponentProfile.getLocation());
+                            platformComponentProfile.getLocation(),
+                            registeredIssuers);
 
-                    actorAssetUserRegisteredList.add(actorAssetUserNew);
+                    actorAssetRedeemPointRegisteredList.add(actorAssetRedeemPoint);
                 }
             } else {
-                return actorAssetUserRegisteredList;
+                return actorAssetRedeemPointRegisteredList;
             }
 
         } catch (CantRequestListException e) {
@@ -816,94 +906,17 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             contextBuffer.append("eventManager: " + eventManager);
 
             String context = contextBuffer.toString();
-            String possibleCause = "Cant Request List Actor Asset User Registered";
+            String possibleCause = "Cant Request List Actor Asset Redeem Point Registered";
 
-            CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantRequestListActorAssetRedeemPointRegisteredException pluginStartException = new CantRequestListActorAssetRedeemPointRegisteredException(CantRequestListActorAssetRedeemPointRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
-        return actorAssetUserRegisteredList;
-    }
-
-    @Override
-    public List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException {
-        try {
-//            if (actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()) {
-//                actorAssetUserRegisteredList.clear();
-//            }
-
-            DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
-                            NetworkServiceType.UNDEFINED,
-                            null,                     // alias
-                            actorAssetUserPublicKey,  // identityPublicKey
-                            null,                     // location
-                            null,                     // distance
-                            null,                     // name
-                            null,                     // extraData
-                            null,                     // offset
-                            null,                     // max
-                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                            null);
-
-            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
-
-            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
-
-                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
-
-                    String profileImage = "";
-                    if (!platformComponentProfile.getExtraData().equals("")) {
-                        try {
-                            JsonParser jParser = new JsonParser();
-                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-
-                            profileImage = jsonObject.get(DAP_IMG_USER).getAsString();
-                        } catch (Exception e) {
-                            profileImage = platformComponentProfile.getExtraData();
-                        }
-                    }
-
-                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
-
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(
-                            platformComponentProfile.getIdentityPublicKey(),
-                            platformComponentProfile.getName(),
-                            imageByte,
-                            platformComponentProfile.getLocation());
-
-                    actorAssetUserRegisteredList.add(actorAssetUserNew);
-                }
-            } else {
-                return actorAssetUserRegisteredList;
-            }
-
-        } catch (CantRequestListException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Request List Actor Asset User Registered";
-
-            CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
-        return actorAssetUserRegisteredList;
+        return actorAssetRedeemPointRegisteredList;
     }
+
 
     @Override
     public void askConnectionActorAsset(String actorAssetLoggedInPublicKey,
@@ -915,13 +928,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                                         byte[] profileImage,
                                         BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException {
 
+
         try {
             UUID newNotificationID = UUID.randomUUID();
             AssetNotificationDescriptor assetNotificationDescriptor = AssetNotificationDescriptor.ASKFORCONNECTION;
             long currentTime = System.currentTimeMillis();
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.PROCESSING_SEND;
 
-            final ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = outgoingNotificationDao.createNotification(
+            final ActorAssetNetworkServiceRecord assetRedeemNetworkServiceRecord = outgoingNotificationDao.createNotification(
                     newNotificationID,
                     actorAssetLoggedInPublicKey,
                     senderType,
@@ -944,9 +958,9 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(assetUserNetworkServiceRecord.getActorDestinationPublicKey()),
-                                assetUserNetworkServiceRecord.toJson());
+                                getProfileSenderToRequestConnection(assetRedeemNetworkServiceRecord.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(assetRedeemNetworkServiceRecord.getActorDestinationPublicKey()),
+                                assetRedeemNetworkServiceRecord.toJson());
                     } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
                         reportUnexpectedError(e);
                     }
@@ -955,10 +969,10 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             // Sending message to the destination
         } catch (final CantCreateActorAssetNotificationException e) {
             reportUnexpectedError(e);
-            throw new CantAskConnectionActorAssetException(e, "actor asset user network service", "database corrupted");
+            throw new CantAskConnectionActorAssetException(e, "actor asset redeem network service", "database corrupted");
         } catch (final Exception e) {
             reportUnexpectedError(e);
-            throw new CantAskConnectionActorAssetException(e, "actor asset user network service", "Unhandled error.");
+            throw new CantAskConnectionActorAssetException(e, "actor asset redeem network service", "Unhandled error.");
         }
     }
 
@@ -967,42 +981,42 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             throws CantAcceptConnectionActorAssetException {
 
         try {
-            ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = incomingNotificationsDao.
+            ActorAssetNetworkServiceRecord assetRedeemNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
                             ActorAssetToAddPublicKey,
                             AssetNotificationDescriptor.ACCEPTED,
                             ActorAssetProtocolState.DONE);
 //TODO Evaluar diferencias en ActorAssetProtocolState.DONE y ActorAssetProtocolState.PEDNING_ACTION para conocer diferencias
 
-            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
+            Actors actorSwap = assetRedeemNetworkServiceRecord.getActorSenderType();
 
-            assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
-            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+            assetRedeemNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetRedeemNetworkServiceRecord.setActorSenderType(assetRedeemNetworkServiceRecord.getActorDestinationType());
 
-            assetUserNetworkServiceRecord.setActorDestinationPublicKey(ActorAssetToAddPublicKey);
-            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
+            assetRedeemNetworkServiceRecord.setActorDestinationPublicKey(ActorAssetToAddPublicKey);
+            assetRedeemNetworkServiceRecord.setActorDestinationType(actorSwap);
 
-            assetUserNetworkServiceRecord.setActorSenderAlias(null);
+            assetRedeemNetworkServiceRecord.setActorSenderAlias(null);
 
-            assetUserNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.ACCEPTED);
+            assetRedeemNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.ACCEPTED);
 
-            assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
+            assetRedeemNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
 
             final ActorAssetNetworkServiceRecord messageToSend = outgoingNotificationDao.createNotification(
                     UUID.randomUUID(),
-                    assetUserNetworkServiceRecord.getActorSenderPublicKey(),
-                    assetUserNetworkServiceRecord.getActorSenderType(),
-                    assetUserNetworkServiceRecord.getActorDestinationPublicKey(),
-                    assetUserNetworkServiceRecord.getActorSenderAlias(),
-                    assetUserNetworkServiceRecord.getActorSenderProfileImage(),
-                    assetUserNetworkServiceRecord.getActorDestinationType(),
-                    assetUserNetworkServiceRecord.getAssetNotificationDescriptor(),
+                    assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetRedeemNetworkServiceRecord.getActorSenderType(),
+                    assetRedeemNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetRedeemNetworkServiceRecord.getActorSenderAlias(),
+                    assetRedeemNetworkServiceRecord.getActorSenderProfileImage(),
+                    assetRedeemNetworkServiceRecord.getActorDestinationType(),
+                    assetRedeemNetworkServiceRecord.getAssetNotificationDescriptor(),
                     System.currentTimeMillis(),
-                    assetUserNetworkServiceRecord.getActorAssetProtocolState(),
+                    assetRedeemNetworkServiceRecord.getActorAssetProtocolState(),
                     false,
                     1,
-                    assetUserNetworkServiceRecord.getBlockchainNetworkType(),
-                    assetUserNetworkServiceRecord.getResponseToNotificationId()
+                    assetRedeemNetworkServiceRecord.getBlockchainNetworkType(),
+                    assetRedeemNetworkServiceRecord.getResponseToNotificationId()
             );
 
             executorService.submit(new Runnable() {
@@ -1015,12 +1029,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                                 getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
                                 messageToSend.toJson());
                     } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        reportUnexpectedError(e);
                         e.printStackTrace();
                     }
                 }
             });
         } catch (Exception e) {
-            throw new CantAcceptConnectionActorAssetException("ERROR ACTOR ASSET USER NS WHEN ACCEPTING CONNECTION", e, "", "Generic Exception");
+            reportUnexpectedError(e);
+            throw new CantAcceptConnectionActorAssetException("ERROR ACTOR ASSET REDEEM NS WHEN ACCEPTING CONNECTION", e, "", "Generic Exception");
         }
     }
 
@@ -1060,12 +1076,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                                 getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
                                 actorNetworkServiceRecord.toJson());
                     } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        reportUnexpectedError(e);
                         e.printStackTrace();
                     }
                 }
             });
         } catch (Exception e) {
-            throw new CantDenyConnectionActorAssetException("ERROR DENY CONNECTION TO ACTOR ASSET USER", e, "", "Generic Exception");
+            reportUnexpectedError(e);
+            throw new CantDenyConnectionActorAssetException("ERROR DENY CONNECTION TO ACTOR ASSET REDEEM", e, "", "Generic Exception");
         }
     }
 
@@ -1074,25 +1092,25 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             throws CantDisconnectConnectionActorAssetException {
 
         try {
-            ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = incomingNotificationsDao.
+            ActorAssetNetworkServiceRecord assetRedeemNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
                             actorAssetToDisconnectPublicKey,
                             AssetNotificationDescriptor.DISCONNECTED,
                             ActorAssetProtocolState.PROCESSING_SEND);
 
-            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
+            Actors actorSwap = assetRedeemNetworkServiceRecord.getActorSenderType();
 
-            assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
-            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+            assetRedeemNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetRedeemNetworkServiceRecord.setActorSenderType(assetRedeemNetworkServiceRecord.getActorDestinationType());
 
-            assetUserNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToDisconnectPublicKey);
-            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
+            assetRedeemNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToDisconnectPublicKey);
+            assetRedeemNetworkServiceRecord.setActorDestinationType(actorSwap);
 
-            assetUserNetworkServiceRecord.setActorSenderAlias(null);
+            assetRedeemNetworkServiceRecord.setActorSenderAlias(null);
 
-            assetUserNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.DISCONNECTED);
+            assetRedeemNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.DISCONNECTED);
 
-            assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
+            assetRedeemNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
 
             //make message to actor
 //            UUID newNotificationID = UUID.randomUUID();
@@ -1102,37 +1120,20 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
             final ActorAssetNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
                     UUID.randomUUID(),
-                    assetUserNetworkServiceRecord.getActorSenderPublicKey(),
-                    assetUserNetworkServiceRecord.getActorSenderType(),
-                    assetUserNetworkServiceRecord.getActorDestinationPublicKey(),
-                    assetUserNetworkServiceRecord.getActorSenderAlias(),
-                    assetUserNetworkServiceRecord.getActorSenderProfileImage(),
-                    assetUserNetworkServiceRecord.getActorDestinationType(),
-                    assetUserNetworkServiceRecord.getAssetNotificationDescriptor(),
+                    assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetRedeemNetworkServiceRecord.getActorSenderType(),
+                    assetRedeemNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetRedeemNetworkServiceRecord.getActorSenderAlias(),
+                    assetRedeemNetworkServiceRecord.getActorSenderProfileImage(),
+                    assetRedeemNetworkServiceRecord.getActorDestinationType(),
+                    assetRedeemNetworkServiceRecord.getAssetNotificationDescriptor(),
                     System.currentTimeMillis(),
-                    assetUserNetworkServiceRecord.getActorAssetProtocolState(),
+                    assetRedeemNetworkServiceRecord.getActorAssetProtocolState(),
                     false,
                     1,
-                    assetUserNetworkServiceRecord.getBlockchainNetworkType(),
+                    assetRedeemNetworkServiceRecord.getBlockchainNetworkType(),
                     null
             );
-
-//            final AssetUserNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
-//                    UUID.randomUUID(),
-//                    actorAssetLoggedInPublicKey,
-//                    Actors.DAP_ASSET_ISSUER,
-//                    actorAssetToDisconnectPublicKey,
-//                    "",
-////                    "",
-//                    new byte[0],
-//                    Actors.DAP_ASSET_USER,
-//                    assetNotificationDescriptor,
-//                    System.currentTimeMillis(),
-//                    actorAssetProtocolState,
-//                    false,
-//                    1,
-//                    null
-//            );
 
             executorService.submit(new Runnable() {
                 @Override
@@ -1144,12 +1145,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                                 getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
                                 actorNetworkServiceRecord.toJson());
                     } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        reportUnexpectedError(e);
                         e.printStackTrace();
                     }
                 }
             });
         } catch (Exception e) {
-            throw new CantDisconnectConnectionActorAssetException("ERROR DISCONNECTING ACTOR ASSET USER ", e, "", "Generic Exception");
+            reportUnexpectedError(e);
+            throw new CantDisconnectConnectionActorAssetException("ERROR DISCONNECTING ACTOR ASSET REDEEM ", e, "", "Generic Exception");
         }
     }
 
@@ -1158,25 +1161,25 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
             throws CantCancelConnectionActorAssetException {
 
         try {
-            final ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = incomingNotificationsDao.
+            final ActorAssetNetworkServiceRecord assetRedeemNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
                             actorAssetLoggedInPublicKey,
                             AssetNotificationDescriptor.CANCEL,
                             ActorAssetProtocolState.DONE);
 
-            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
+            Actors actorSwap = assetRedeemNetworkServiceRecord.getActorSenderType();
 
-            assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
-            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+            assetRedeemNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetRedeemNetworkServiceRecord.setActorSenderType(assetRedeemNetworkServiceRecord.getActorDestinationType());
 
-            assetUserNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancelPublicKey);
-            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
+            assetRedeemNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancelPublicKey);
+            assetRedeemNetworkServiceRecord.setActorDestinationType(actorSwap);
 
-            assetUserNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.CANCEL);
+            assetRedeemNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.CANCEL);
 
-            assetUserNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
+            assetRedeemNetworkServiceRecord.changeState(ActorAssetProtocolState.PROCESSING_SEND);
 
-            outgoingNotificationDao.createNotification(assetUserNetworkServiceRecord);
+            outgoingNotificationDao.createNotification(assetRedeemNetworkServiceRecord);
 
             executorService.submit(new Runnable() {
                 @Override
@@ -1184,16 +1187,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(assetUserNetworkServiceRecord.getActorDestinationPublicKey()),
-                                assetUserNetworkServiceRecord.toJson());
+                                getProfileSenderToRequestConnection(assetRedeemNetworkServiceRecord.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(assetRedeemNetworkServiceRecord.getActorDestinationPublicKey()),
+                                assetRedeemNetworkServiceRecord.toJson());
                     } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        reportUnexpectedError(e);
                         e.printStackTrace();
                     }
                 }
             });
         } catch (Exception e) {
-            throw new CantCancelConnectionActorAssetException("ERROR CANCEL CONNECTION TO ACTOR ASSET USER ", e, "", "Generic Exception");
+            reportUnexpectedError(e);
+            throw new CantCancelConnectionActorAssetException("ERROR CANCEL CONNECTION TO ACTOR ASSET REDEEM ", e, "", "Generic Exception");
         }
     }
 
@@ -1205,18 +1210,21 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
         } catch (CantGetActorAssetNotificationException e) {
             reportUnexpectedError(e);
-            throw new CantGetActorAssetNotificationException(e, "ACTOR ASSET USER network service", "database corrupted");
+            throw new CantGetActorAssetNotificationException(e, "ACTOR ASSET REDEEM network service", "database corrupted");
         } catch (Exception e) {
             reportUnexpectedError(e);
-            throw new CantGetActorAssetNotificationException(e, "ACTOR ASSET USER network service", "Unhandled error.");
+            throw new CantGetActorAssetNotificationException(e, "ACTOR ASSET REDEEM network service", "Unhandled error.");
         }
     }
 
     @Override
     public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException {
         try {
+
             incomingNotificationsDao.markNotificationAsRead(notificationID);
+
         } catch (final Exception e) {
+            reportUnexpectedError(e);
             throw new CantConfirmActorAssetNotificationException(e, "notificationID: " + notificationID, "Unhandled error.");
         }
     }
@@ -1224,31 +1232,32 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     @Override
     public void onComponentRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER) {
-            System.out.print("ACTOR ASSET USER REGISTRADO: " + platformComponentProfileRegistered.getAlias());
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
+            System.out.print("ACTOR ASSET REDEEM REGISTRADO: " + platformComponentProfileRegistered.getAlias());
         }
 
         /*
          * If is a actor registered
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER &&
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT &&
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
 
             Location loca = null;
 
-            ActorAssetUser actorAssetUserNewRegistered = new AssetUserActorRecord(
+            ActorAssetRedeemPoint actorAssetUserNewRegistered = new RedeemPointActorRecord(
                     platformComponentProfileRegistered.getIdentityPublicKey(),
                     platformComponentProfileRegistered.getName(),
                     new byte[0],
 //                    convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),
-                    loca);
+                    loca,
+                    new ArrayList<String>());
 
-            System.out.println("ACTOR ASSET USER REGISTRADO en A.N.S - Enviando Evento de Notificacion");
+            System.out.println("ACTOR ASSET REDEEM REGISTRADO en A.N.S - Enviando Evento de Notificacion");
 
-            FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-            event.setSource(EventSource.ACTOR_ASSET_USER);
+            FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION);
+            event.setSource(EventSource.ACTOR_ASSET_REDEEM_POINT);
 
-            ((ActorAssetUserCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegistered);
+            ((ActorAssetRedeemPointCompleteRegistrationNotificationEvent) event).setActorAssetRedeemPoint(actorAssetUserNewRegistered);
 
             eventManager.raiseEvent(event);
         }
@@ -1290,20 +1299,15 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     }
 
     private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    //TODO HANDLE DAP MESSAGES!!!
-
-    /**
-     * @param dapMessage the message to be sent, this message has to contain both the actor
-     *                   that sent the message and the actor that will receive the message.
-     * @throws CantSendMessageException
-     */
     @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
-
+        receivePublicKeyExtended(dapMessage);
     }
+
+    //TODO HANDLE THESE!!!!
 
     /**
      * This method retrieves the list of new incoming and unread DAP Messages for a specific type.
@@ -1314,24 +1318,190 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
      */
     @Override
     public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
-    /**
-     * This method returns the list of new unread DAPMessages for a specific subject, these messages can be
-     * from the same or different types.
-     *
-     * @param subject
-     * @return
-     * @throws CantGetDAPMessagesException
-     */
     @Override
     public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
     public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
 
     }
+
+    private void receivePublicKeyExtended(DAPMessage dapMessage) {
+        final DAPActor  actorAssetIssuerSender      = dapMessage.getActorSender();
+        final DAPActor  actorRedeemPointDestination = dapMessage.getActorReceiver();
+        final String    messageContentIntoJson      = dapMessage.toXML();
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                // Sending message to the destination
+                try {
+                    sendNewMessage(
+                            //TODO estos profile se sacaran de la tabla outgoing
+                            getProfileSenderToRequestConnection(actorAssetIssuerSender.getActorPublicKey()),
+                            getProfileDestinationToRequestConnection(actorRedeemPointDestination.getActorPublicKey()),
+                            messageContentIntoJson);
+                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    reportUnexpectedError(e);
+                    e.printStackTrace();
+                }
+            }
+        });
+
+//        try {
+//
+//            if (true) {
+//
+//                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorRedeemPointDestination.getActorPublicKey());
+//
+//                String messageContentIntoJson = XMLParser.parseObject(dapMessage);
+//
+//                if (communicationNetworkServiceLocal != null) {
+//
+//                    //Send the message
+//                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorRedeemPointDestination.getActorPublicKey(), messageContentIntoJson);
+//
+//                } else {
+//
+//                    /*
+//                     * Created the message
+//                     */
+//                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(
+//                            actorAssetIssuerSender.getActorPublicKey(),//Sender
+//                            actorRedeemPointDestination.getActorPublicKey(), //Receiver
+//                            messageContentIntoJson,                //Message Content
+//                            FermatMessageContentType.TEXT);//Type
+//
+//                    /*
+//                     * Configure the correct status
+//                     */
+//                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//                    /*
+//                     * Save to the data base table
+//                     */
+//                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+//                    outgoingMessageDao.create(fermatMessage);
+//
+//                    /*
+//                     * Create the sender basic profile
+//                     */
+//                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+//                            constructBasicPlatformComponentProfileFactory(
+//                                    actorAssetIssuerSender.getActorPublicKey(),
+//                                    NetworkServiceType.UNDEFINED,
+//                                    PlatformComponentType.ACTOR_ASSET_ISSUER);
+//
+//                    /*
+//                     * Create the receiver basic profile
+//                     */
+//                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+//                            constructBasicPlatformComponentProfileFactory(
+//                                    actorRedeemPointDestination.getActorPublicKey(),
+//                                    NetworkServiceType.UNDEFINED,
+//                                    PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
+//
+//                    /*
+//                     * Ask the client to connect
+//                     */
+//                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
+//                }
+//
+//
+//            } else {
+//
+//                StringBuffer contextBuffer = new StringBuffer();
+//                contextBuffer.append("Plugin ID: " + pluginId);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("errorManager: " + errorManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("eventManager: " + eventManager);
+//
+//                String context = contextBuffer.toString();
+//                String possibleCause = "Asset Redeem Point Actor Network Service Not Registered";
+////
+////                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+////
+////                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+////
+////                throw pluginStartException;
+//
+//            }
+//
+//        } catch (Exception e) {
+//
+//            StringBuffer contextBuffer = new StringBuffer();
+//            contextBuffer.append("Plugin ID: " + pluginId);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("errorManager: " + errorManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("eventManager: " + eventManager);
+//
+//            String context = contextBuffer.toString();
+//            String possibleCause = "Cant Request Crypto Address";
+//
+////            CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+////            throw pluginStartException;
+//        }
+    }
+
+    private PlatformComponentProfile constructPlatformComponentProfile(ActorAssetRedeemPoint redeemPoint, CommunicationsClientConnection communicationsClientConnection) {
+   /*
+    * Construct the profile
+    */
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(DAP_IMG_REDEEM_POINT, Base64.encodeToString(redeemPoint.getProfileImage(), Base64.DEFAULT));
+        jsonObject.addProperty(DAP_REGISTERED_ISSUERS, gson.toJson(redeemPoint.getRegisteredIssuers()));
+
+        String extraData = gson.toJson(jsonObject);
+
+        return communicationsClientConnection.constructPlatformComponentProfileFactory(
+                redeemPoint.getActorPublicKey(),
+                redeemPoint.getName().toLowerCase().trim(),
+                redeemPoint.getName(),
+                NetworkServiceType.UNDEFINED,
+                PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                extraData);
+    }
+
+    /**
+     * Initialize the event listener and configure
+     */
+//    private void initializeListener() {
+//        /*
+//         * Listen and handle new message sent
+//         */
+//        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+//
+//        /*
+//         * Listen and handle New Message Receive Notification Event
+//         */
+//        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+//        if (communicationNetworkServiceConnectionManager == null)
+//            initializeCommunicationNetworkServiceConnectionManager();
+//        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(communicationNetworkServiceConnectionManager, eventManager));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+//    }
 }
