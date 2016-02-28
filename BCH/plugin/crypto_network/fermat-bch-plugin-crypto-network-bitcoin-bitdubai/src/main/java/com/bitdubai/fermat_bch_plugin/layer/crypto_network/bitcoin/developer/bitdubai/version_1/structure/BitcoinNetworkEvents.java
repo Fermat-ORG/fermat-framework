@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -185,13 +186,13 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * If the transaction is already under blocks, I will save it.
              */
-            if (getTransactionCryptoStatus(tx) != CryptoStatus.ON_CRYPTO_NETWORK){
-                if (getTransactionCryptoStatus(tx) == CryptoStatus.IRREVERSIBLE){
+            if (CryptoTransaction.getTransactionCryptoStatus(tx) != CryptoStatus.ON_CRYPTO_NETWORK){
+                if (CryptoTransaction.getTransactionCryptoStatus(tx) == CryptoStatus.IRREVERSIBLE){
                     saveMissingOutgoingTransaction(wallet, tx, CryptoStatus.ON_BLOCKCHAIN);
-                    saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
+                    saveMissingOutgoingTransaction(wallet, tx, CryptoTransaction.getTransactionCryptoStatus(tx));
                 }
-                if (getTransactionCryptoStatus(tx) == CryptoStatus.ON_BLOCKCHAIN)
-                    saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
+                if (CryptoTransaction.getTransactionCryptoStatus(tx) == CryptoStatus.ON_BLOCKCHAIN)
+                    saveMissingOutgoingTransaction(wallet, tx, CryptoTransaction.getTransactionCryptoStatus(tx));
             }
         } catch (Exception e) {
             /**
@@ -206,7 +207,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         tx.getHashAsString(),
                         getBlockHash(tx),
                         NETWORK_TYPE,
-                        getTransactionCryptoStatus(tx),
+                        CryptoTransaction.getTransactionCryptoStatus(tx),
                         0,
                         errorAddress,
                         errorAddress,
@@ -258,7 +259,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
          */
-        CryptoStatus cryptoStatus = getTransactionCryptoStatus(tx);
+        CryptoStatus cryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
         try {
             if (isIncomingTransaction(tx.getHashAsString()))
                 addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.INCOMING);
@@ -299,33 +300,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (dao == null)
             dao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return dao;
-    }
-
-    /**
-     * Gets the Crypto Status of the transaction by calculating the transaction depth
-     * I need to check if the transaction had another Crypto Status to verify if this is a reversion.
-     * Example, if it was under 1 block (ON_BLOCKCHAIN) and now is 0 (ON_CRYPTO_NETWORK), is a Reversion on Blockchain.
-     * @param tx
-     * @return
-     */
-    private CryptoStatus getTransactionCryptoStatus(Transaction tx){
-        try{
-            int depth = tx.getConfidence().getDepthInBlocks();
-            TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
-
-            if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.UNKNOWN)
-                return CryptoStatus.PENDING_SUBMIT;
-            else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
-                return CryptoStatus.ON_CRYPTO_NETWORK;
-            else if(depth > 0 && depth < BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
-                return CryptoStatus.ON_BLOCKCHAIN;
-            else if (depth >= BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
-                return CryptoStatus.IRREVERSIBLE;
-            else
-                return CryptoStatus.PENDING_SUBMIT;
-        } catch (Exception e){
-            return CryptoStatus.ON_CRYPTO_NETWORK;
-        }
     }
 
     /**
@@ -439,7 +413,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * Also get the current CryptoStatus that triggered the event.
          */
-        CryptoStatus currentCryptoStatus = getTransactionCryptoStatus(tx);
+        CryptoStatus currentCryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
 
 
         /**
@@ -513,7 +487,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param tx
      */
     private void saveIncomingTransaction(Wallet wallet, Transaction tx) {
-        CryptoStatus cryptoStatus = getTransactionCryptoStatus(tx);
+        CryptoStatus cryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
 
         /**
          * I will insert any missing previous state for this transaction
@@ -547,7 +521,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getDao().saveNewIncomingTransaction(tx.getHashAsString(),
                             getBlockHash(tx),
                             NETWORK_TYPE,
-                            getTransactionCryptoStatus(tx),
+                            CryptoTransaction.getTransactionCryptoStatus(tx),
                             0,
                             errorAddress,
                             errorAddress,

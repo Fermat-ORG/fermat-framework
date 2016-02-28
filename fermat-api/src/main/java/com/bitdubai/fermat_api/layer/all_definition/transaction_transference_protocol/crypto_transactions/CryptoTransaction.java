@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.params.RegTestParams;
@@ -145,13 +146,16 @@ public class CryptoTransaction{
      * @param transaction
      * @return
      */
-    private static CryptoStatus getTransactionCryptoStatus(Transaction transaction) {
+    public static CryptoStatus getTransactionCryptoStatus(Transaction transaction) {
         try{
             int depth = transaction.getConfidence().getDepthInBlocks();
+            TransactionConfidence.ConfidenceType confidenceType = transaction.getConfidence().getConfidenceType();
 
-            if (depth == 0)
+            if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.UNKNOWN)
+                return CryptoStatus.PENDING_SUBMIT;
+            else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
-            else if(depth == 1)
+            else if(depth > 0 && depth < 3)
                 return CryptoStatus.ON_BLOCKCHAIN;
             else if (depth >= 3)
                 return CryptoStatus.IRREVERSIBLE;
