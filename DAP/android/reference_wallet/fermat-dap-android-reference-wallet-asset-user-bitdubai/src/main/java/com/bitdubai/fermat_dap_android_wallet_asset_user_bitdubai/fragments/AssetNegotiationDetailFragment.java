@@ -47,6 +47,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.SellInf
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -84,11 +85,9 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     private FermatTextView assetNegotiationUnitPrice;
     private FermatEditText assetNegotiationAssetsToBuy;
     private FermatTextView assetNegotiationDetailBtcText;
+    private FermatTextView bitcoinBalanceText;
     private View acceptNegotiationButton;
     private View rejectNegotiationButton;
-
-
-
     private FermatTextView bitcoinsTotalText;
 
     private AssetNegotiation assetNegotiation;
@@ -98,6 +97,8 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     SettingsManager<AssetUserSettings> settingsManager;
 
     private User user;
+
+    private long bitcoinWalletBalanceSatoshis;
 
     public AssetNegotiationDetailFragment() {
 
@@ -189,6 +190,8 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         assetNegotiationUnitPrice = (FermatTextView) rootView.findViewById(R.id.assetNegotiationUnitPrice);
         assetNegotiationAssetsToBuy = (FermatEditText) rootView.findViewById(R.id.assetNegotiationAssetsToBuy);
         assetNegotiationDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetNegotiationDetailBtcText);
+        bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
+
         acceptNegotiationButton = rootView.findViewById(R.id.acceptNegotiationButton);
         rejectNegotiationButton = rootView.findViewById(R.id.rejectNegotiationButton);
 
@@ -300,6 +303,14 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             bitcoins.setText(digitalAsset.getAmount());
         }
         updateBitcoins();*/
+
+        try {
+            bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
+            double bitcoinWalletBalance = BitcoinConverter.convert(bitcoinWalletBalanceSatoshis, SATOSHI, BITCOIN);
+            bitcoinBalanceText.setText(DAPStandardFormats.BITCOIN_FORMAT.format(bitcoinWalletBalance));
+        } catch (Exception e) {
+            bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
+        }
     }
 
     private boolean isValidBuy() {
@@ -322,6 +333,11 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             return false;
         }*/
 
+        if (digitalAsset.getUserAssetNegotiation().getAmmountPerUnit() > bitcoinWalletBalanceSatoshis) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_buy_available),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

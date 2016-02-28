@@ -3,6 +3,9 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
+
+import java.util.UUID;
 
 /**
  * Created by natalia on 12/02/16.
@@ -47,4 +50,6 @@ public class BitcoinWalletNotificationPainter implements NotificationPainter {
     public int getIcon() {
         return 0;
     }
+
+
 }
