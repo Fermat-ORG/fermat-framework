@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -26,21 +26,21 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityNotificationAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.adapters.IssuerCommunityNotificationAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.AcceptDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +50,10 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class UserCommunityNotificationsFragment extends AbstractFermatFragment implements
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
+public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment implements
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
-    public static final String USER_SELECTED = "user";
+    public static final String ISSUER_SELECTED = "issuer";
     private static final int MAX = 20;
     //    protected final String TAG = "UserCommunityNotificationsFragment";
     private RecyclerView recyclerView;
@@ -61,31 +61,32 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
-    private UserCommunityNotificationAdapter adapter;
+    private IssuerCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private Actor actorInformation;
-    private List<Actor> listActorInformation;
+    private ActorIssuer actorInformation;
+    private List<ActorIssuer> listActorInformation;
     //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+    SettingsManager<AssetIssuerSettings> settingsManager;
+
     /**
      * Create a new instance of this fragment
      *
      * @return InstalledFragment instance object
      */
-    public static UserCommunityNotificationsFragment newInstance() {
-        return new UserCommunityNotificationsFragment();
+    public static IssuerCommunityNotificationsFragment newInstance() {
+        return new IssuerCommunityNotificationsFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+        manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
@@ -104,13 +105,13 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.dap_user_community_connections_notifications, container, false);
+            rootView = inflater.inflate(R.layout.dap_issuer_community_connections_notifications, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new UserCommunityNotificationAdapter(getActivity(), listActorInformation);
+            adapter = new IssuerCommunityNotificationAdapter(getActivity(), listActorInformation);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
@@ -132,19 +133,21 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         return rootView;
     }
 
-    private synchronized ArrayList<Actor> getMoreData() {
-        ArrayList<Actor> dataSet = new ArrayList<>();
-        List<ActorAssetUser> result;
+    private synchronized List<ActorIssuer> getMoreData() throws Exception {
+        List<ActorIssuer> dataSet = new ArrayList<>();
+        List<ActorAssetIssuer> result = null;
 
         try {
             if (manager == null)
-                throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+                throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 
-            if(manager.getActiveAssetUserIdentity() != null) {
-                result = manager.getWaitingYourConnectionActorAssetUser(manager.getActiveAssetUserIdentity().getPublicKey(), MAX, offset);
+            if (manager.getActiveAssetIssuerIdentity() != null) {
+                result = manager.getWaitingYourConnectionActorAssetIssuer(manager.getActiveAssetIssuerIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
-                    for (ActorAssetUser record : result) {
-                        dataSet.add((new Actor((AssetUserActorRecord) record)));
+                    for (ActorAssetIssuer record : result) {
+//                dataSet.add((new ActorIssuer(record)));
+                        dataSet.add((new ActorIssuer((AssetIssuerActorRecord) record)));
+
                     }
                 }
             }
@@ -162,10 +165,8 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Notifications");
-            notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -177,14 +178,13 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            listActorInformation = (ArrayList<Actor>) result[0];
+                            listActorInformation = (ArrayList<ActorIssuer>) result[0];
                             adapter.changeDataSet(listActorInformation);
                             if (listActorInformation.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -193,22 +193,19 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
                             }
                         }
                     } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
+                        showEmpty(true, emptyView);
+//                    if (actors == null || actors.isEmpty() && getActivity() != null) // for test purpose only
+//                        Toast.makeText(getActivity(), "There are no registered actors...", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
-                    try {
-                        isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
                 }
             });
             worker.execute();
@@ -234,18 +231,18 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_NOTIFICATIONS, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpPresentation(boolean checkButton) {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user_community)
-                .setIconRes(R.drawable.asset_user_comunity)
-                .setVIewColor(R.color.dap_community_user_view_color)
-                .setTitleTextColor(R.color.dap_community_user_view_color)
-                .setSubTitle(R.string.dap_user_community_welcome_subTitle)
-                .setBody(R.string.dap_user_community_welcome_body)
+                .setBannerRes(R.drawable.banner_asset_issuer_community)
+                .setIconRes(R.drawable.asset_issuer_comunity)
+                .setVIewColor(R.color.dap_community_issuer_view_color)
+                .setTitleTextColor(R.color.dap_community_issuer_view_color)
+                .setSubTitle(R.string.dap_issuer_community_welcome_subTitle)
+                .setBody(R.string.dap_issuer_community_welcome_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
@@ -258,7 +255,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_NOTIFICATIONS) {
+            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_NOTIFICATIONS) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -270,6 +267,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
 
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * onItem click listener event
      *
@@ -277,7 +275,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
      * @param position
      */
     @Override
-    public void onItemClickListener(Actor data, int position) {
+    public void onItemClickListener(ActorIssuer data, int position) {
         try {
 //            ConnectDialog notificationAcceptDialog = new ConnectDialog(
 //                    getActivity(),
@@ -288,19 +286,19 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
 
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    (AssetUserCommunitySubAppSession) appSession,
+                    (AssetIssuerCommunitySubAppSession) appSession,
                     null,
                     data,
-                    manager.getActiveAssetUserIdentity());
+                    manager.getActiveAssetIssuerIdentity());
 
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_ACCEPTED);
+                    Object o = appSession.getData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED);
                     try {
                         if ((Boolean) o) {
                             onRefresh();
-                            appSession.removeData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED);
+                            appSession.removeData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -310,7 +308,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
             });
             notificationAcceptDialog.show();
 
-        } catch (CantGetIdentityAssetUserException e) {
+        } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         }
     }
@@ -322,7 +320,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
      * @param position
      */
     @Override
-    public void onLongItemClickListener(Actor data, int position) {
+    public void onLongItemClickListener(ActorIssuer data, int position) {
 
     }
 

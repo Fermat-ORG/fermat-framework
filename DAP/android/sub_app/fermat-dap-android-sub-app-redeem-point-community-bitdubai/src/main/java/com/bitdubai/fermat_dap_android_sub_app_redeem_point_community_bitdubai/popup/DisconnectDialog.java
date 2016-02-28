@@ -1,11 +1,8 @@
-package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup;
+package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -14,48 +11,46 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 
 /**
- * Added by Jinmy Bohorquez 09/02/2016
+ * Added by Jinmy Bohorquez 11/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconectDialog extends FermatDialog<AssetUserCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
      */
-    private FermatButton   positiveBtn ;
-    private FermatButton   negativeBtn ;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
     private FermatTextView mDescription;
-    private FermatTextView mUsername   ;
-    private FermatTextView mTitle      ;
-    private CharSequence   description ;
-    private CharSequence   username    ;
-    private CharSequence   title       ;
+    private FermatTextView mUsername;
+    private FermatTextView mTitle;
+    private CharSequence description;
+    private CharSequence username;
+    private CharSequence title;
 
-    private final Actor actor;
-    private final IdentityAssetUser identity            ;
+    private final Actor actorRedeem;
+    private final RedeemPointIdentity identity;
 
-    public DisconectDialog(final Activity                       activity              ,
-                           final AssetUserCommunitySubAppSession         intraUserSubAppSession,
-                           final SubAppResourcesProviderManager subAppResources       ,
-                           final Actor           actor  ,
-                           final IdentityAssetUser         identity              ) {
+    public DisconnectDialog(final Activity activity,
+                            final AssetRedeemPointCommunitySubAppSession intraUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources,
+                            final Actor actorRedeem,
+                            final RedeemPointIdentity identity) {
 
         super(activity, intraUserSubAppSession, subAppResources);
 
-        this.actor = actor;
-        this.identity             = identity            ;
+        this.actorRedeem = actorRedeem;
+        this.identity = identity;
     }
 
 
@@ -93,7 +88,7 @@ public class DisconectDialog extends FermatDialog<AssetUserCommunitySubAppSessio
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.dap_redeempoint_dialog_builder;
     }
 
     @Override
@@ -103,29 +98,24 @@ public class DisconectDialog extends FermatDialog<AssetUserCommunitySubAppSessio
 
     @Override
     public void onClick(View v) {
-
         int i = v.getId();
 
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if (actor != null) {
-                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
+                if (actorRedeem != null) {
+                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(actorRedeem);
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
 
                 } else {
                     super.toastDefaultError();
                 }
-                dismiss();
-
-            }  catch (CantDisconnectAssetUserActorException e) {
-                e.printStackTrace();
-            } catch (CantConnectToActorAssetUserException e) {
-                e.printStackTrace();
+            } catch (CantDisconnectAssetUserActorException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
             }
-
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }

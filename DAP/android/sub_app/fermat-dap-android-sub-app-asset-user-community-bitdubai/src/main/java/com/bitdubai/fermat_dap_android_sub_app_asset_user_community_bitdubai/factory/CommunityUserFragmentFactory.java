@@ -31,7 +31,7 @@ public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUse
                 return UserCommuinityGroupUsersFragment.newInstance();
             case DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS:
                 return UserCommuinityUsersFragment.newInstance();
-            case DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT:
+            case DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT:
                 return UsersCommunityConnectionOtherProfileFragment.newInstance();
             case DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT:
                 return UserCommunityConnectionsListFragment.newInstance();

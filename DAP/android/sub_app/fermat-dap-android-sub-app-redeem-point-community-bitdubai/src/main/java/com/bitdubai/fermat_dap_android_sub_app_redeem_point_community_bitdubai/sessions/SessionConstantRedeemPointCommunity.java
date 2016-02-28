@@ -15,6 +15,9 @@ public class SessionConstantRedeemPointCommunity {
     public static final String BROADCAST_DISCONNECTED_UPDATE = "sub.app.actor.redeem.community.broadcast.disconnected";
     public static final String BROADCAST_CLOSE_APP = "sub.app.actor.redeem.community.broadcast.close.app";
 
+    public static final String IC_ACTION_REDEEM_NOTIFICATIONS_ACCEPTED = "asset_redeem_notification_accepted";
+    public static final String IC_ACTION_REDEEM_NOTIFICATIONS_DENIED = "asset_redemm_notification_denied";
+
     /*Numeracion Aleatoria, escogencia personal*/
     public static int IC_ACTION_REDEEM_COMMUNITY_CONNECT = 600;
 
@@ -22,5 +25,5 @@ public class SessionConstantRedeemPointCommunity {
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL = 602;
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL= 603;
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 604;
-
+    public static final int IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS = 605;
 }

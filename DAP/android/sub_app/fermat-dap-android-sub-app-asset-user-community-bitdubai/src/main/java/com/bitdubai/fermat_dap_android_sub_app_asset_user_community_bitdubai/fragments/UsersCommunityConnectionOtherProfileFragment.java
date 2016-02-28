@@ -27,7 +27,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconectDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -42,7 +42,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Creado por Jinmy Bohorquez on 09/02/16.
@@ -211,9 +210,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         }
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
-            final DisconectDialog disconectDialog;
+            final DisconnectDialog disconectDialog;
 //            try {
-            disconectDialog = new DisconectDialog(getActivity(),
+            disconectDialog = new DisconnectDialog(getActivity(),
                     (AssetUserCommunitySubAppSession) appSession,
                     null,
                     actor,
@@ -390,7 +389,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 
             if (tempActor.size() > 0) {
                 for (AssetUserActorRecord record : tempActor) {
-                        actors.add((new Actor(record)));
+                    actors.add((new Actor(record)));
                 }
             }
         } catch (CantGetAssetUserActorsException e) {

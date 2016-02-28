@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -48,7 +45,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.Re
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +100,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-//            redeemNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            redeemNotificationsCount = manager.getWaitingYourConnectionActorAssetRedeemCount();
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -137,9 +133,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                 if (someSelected) {
                     menu.getItem(2).setVisible(true);
-                }
-                else
-                {
+                } else {
                     menu.getItem(2).setVisible(false);
                 }
 
@@ -320,7 +314,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater);
         this.menu = menu;
         menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -342,10 +336,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
         int id = item.getItemId();
 
-        if(id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL){
+        if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL) {
 
-            for (Actor actorIssuer : actors)
-            {
+            for (Actor actorIssuer : actors) {
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
@@ -353,16 +346,14 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
         }
 
-        if(id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL){
+        if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL) {
 
-            for (Actor actorIssuer : actors)
-            {
+            for (Actor actorIssuer : actors) {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
             menu.getItem(2).setVisible(false);
         }
-
 
 
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT) {
@@ -371,85 +362,82 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 if (actor.selected)
                     actorsSelected.add(actor);
             }
-          if(actorsSelected.size() > 0) {
+            if (actorsSelected.size() > 0) {
+                ConnectDialog connectDialog;
+
+                connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+                        if (i == R.id.positive_button) {//
 
 
-              ConnectDialog connectDialog;
-
-              connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null){
-                  @Override
-                  public void onClick(View v) {
-                      int i = v.getId();
-                      if (i == R.id.positive_button) {//
-
-
-                          final ProgressDialog dialog = new ProgressDialog(getActivity());
-                          dialog.setMessage("Connecting please wait...");
-                          dialog.setCancelable(false);
-                          dialog.show();
-                          FermatWorker worker = new FermatWorker() {
-                              @Override
-                              protected Object doInBackground() throws Exception {
-                                  List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
-                                  for (Actor actor : actors) {
-                                      if (actor.selected)
-                                          toConnect.add(actor);
-                                  }
-                                  //// TODO: 28/10/15 get Actor asset Redeem Point
+                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Connecting please wait...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            FermatWorker worker = new FermatWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+                                    List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
+                                    for (Actor actor : actors) {
+                                        if (actor.selected)
+                                            toConnect.add(actor);
+                                    }
+                                    //// TODO: 28/10/15 get Actor asset Redeem Point
 //                                  manager.askActorAssetUserForConnection(toConnect);
 //
 //                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
 //                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
 //                                  sendLocalBroadcast(broadcast);
 
-                                  manager.connectToActorAssetRedeemPoint(null, toConnect);
-                                  return true;
-                              }
-                          };
-                          worker.setContext(getActivity());
-                          worker.setCallBack(new FermatWorkerCallBack() {
-                              @Override
-                              public void onPostExecute(Object... result) {
-                                  dialog.dismiss();
-                                  Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-                                  if (swipeRefreshLayout != null)
-                                      swipeRefreshLayout.post(new Runnable() {
-                                          @Override
-                                          public void run() {
-                                              onRefresh();
-                                          }
-                                      });
-                              }
+                                    manager.connectToActorAssetRedeemPoint(null, toConnect);
+                                    return true;
+                                }
+                            };
+                            worker.setContext(getActivity());
+                            worker.setCallBack(new FermatWorkerCallBack() {
+                                @Override
+                                public void onPostExecute(Object... result) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    if (swipeRefreshLayout != null)
+                                        swipeRefreshLayout.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                onRefresh();
+                                            }
+                                        });
+                                }
 
-                              @Override
-                              public void onErrorOccurred(Exception ex) {
-                                  dialog.dismiss();
+                                @Override
+                                public void onErrorOccurred(Exception ex) {
+                                    dialog.dismiss();
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                  Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
-                              }
-                          });
-                          worker.execute();
+                                }
+                            });
+                            worker.execute();
 //
 
-                          dismiss();
-                      } else if (i == R.id.negative_button) {
-                          dismiss();
-                      }
-                  }
-              };
-              connectDialog.setTitle("Connection Request");
-              connectDialog.setDescription("Do you want to send to ");
-              connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
-                      " Redeem Points" : actorsSelected.get(0).getName());
-              connectDialog.setSecondDescription("a connection request");
-              connectDialog.show();
-              return true;
-          }else {
-              Toast.makeText(getActivity(), "No Redeem Point selected to connect.", Toast.LENGTH_LONG).show();
-              return false;
-          }
-
+                            dismiss();
+                        } else if (i == R.id.negative_button) {
+                            dismiss();
+                        }
+                    }
+                };
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send to ");
+                connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
+                        " Redeem Points" : actorsSelected.get(0).getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.show();
+                return true;
+            } else {
+                Toast.makeText(getActivity(), "No Redeem Point selected to connect.", Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
 
         try {
@@ -573,10 +561,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     @Override
     public void onItemClickListener(Actor data, int position) {
-
         appSession.setData(REDEEM_POINT_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
+        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

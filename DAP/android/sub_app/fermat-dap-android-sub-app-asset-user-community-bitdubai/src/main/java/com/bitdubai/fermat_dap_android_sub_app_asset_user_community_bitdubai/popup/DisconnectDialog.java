@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup;
+package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,48 +11,46 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
- * Added by Jinmy Bohorquez 11/02/2016
+ * Added by Jinmy Bohorquez 09/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
      */
-    private FermatButton   positiveBtn ;
-    private FermatButton   negativeBtn ;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
     private FermatTextView mDescription;
-    private FermatTextView mUsername   ;
-    private FermatTextView mTitle      ;
-    private CharSequence   description ;
-    private CharSequence   username    ;
-    private CharSequence   title       ;
+    private FermatTextView mUsername;
+    private FermatTextView mTitle;
+    private CharSequence description;
+    private CharSequence username;
+    private CharSequence title;
 
     private final Actor actor;
-    private final RedeemPointIdentity identity            ;
+    private final IdentityAssetUser identity;
 
-    public DisconectDialog(final Activity                       activity              ,
-                           final AssetRedeemPointCommunitySubAppSession         intraUserSubAppSession,
-                           final SubAppResourcesProviderManager subAppResources       ,
-                           final Actor           actor  ,
-                           final RedeemPointIdentity         identity              ) {
+    public DisconnectDialog(final Activity activity,
+                            final AssetUserCommunitySubAppSession intraUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources,
+                            final Actor actor,
+                            final IdentityAssetUser identity) {
 
         super(activity, intraUserSubAppSession, subAppResources);
 
         this.actor = actor;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
 
 
@@ -90,7 +88,7 @@ public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAp
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dap_redeempoint_dialog_builder;
+        return R.layout.dialog_builder;
     }
 
     @Override
@@ -100,30 +98,24 @@ public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAp
 
     @Override
     public void onClick(View v) {
-
         int i = v.getId();
 
         if (i == R.id.positive_button) {
             try {
                 //image null
                 if (actor != null) {
-
-                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(null,actor.getActorPublicKey());
-
+                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+
                 } else {
                     super.toastDefaultError();
                 }
-                dismiss();
-
             } catch (CantDisconnectAssetUserActorException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
-                e.printStackTrace();
             }
-
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }
