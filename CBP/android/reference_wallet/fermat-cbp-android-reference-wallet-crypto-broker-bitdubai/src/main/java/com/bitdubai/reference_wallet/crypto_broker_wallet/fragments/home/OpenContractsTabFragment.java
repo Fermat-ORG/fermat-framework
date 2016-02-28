@@ -156,14 +156,17 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
             try {
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                // waitingForCustomer.addAll(walletManager.getContractsWaitingForCustomer(10, 0));
+                waitingForCustomer.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForCustomer(10, 0));
                 waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
-                // TODO waitingForCustomer.addAll(walletManager.getContractsWaitingForCustomer(10, 0));
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(grouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
+
+                //  waitingForBroker.addAll(walletManager.getContractsWaitingForBroker(10, 0));
+                waitingForBroker.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForBroker(10,0));
                 waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
-                // TODO waitingForBroker.addAll(walletManager.getContractsWaitingForBroker(10, 0));
                 grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
