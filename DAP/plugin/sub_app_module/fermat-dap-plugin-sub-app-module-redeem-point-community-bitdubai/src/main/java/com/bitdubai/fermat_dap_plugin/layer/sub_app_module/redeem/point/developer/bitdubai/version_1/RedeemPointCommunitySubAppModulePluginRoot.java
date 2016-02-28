@@ -30,12 +30,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
@@ -128,6 +127,16 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
+    public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException {
+        try {
+            return actorAssetRedeemPointManager.getAllRedeemPointActorConnected(assetUserWalletSubAppModuleManager.getSelectedNetwork());
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
     public DAPConnectionState getActorRedeemRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetRedeemPointActorsException {
         blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
 
@@ -170,7 +179,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     @Override
     public ActorAssetRedeemPoint getActorRedeemPoint(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException {
         try {
-            return actorAssetRedeemPointManager.getActorByPublicKey(actorPublicKey);
+            return actorAssetRedeemPointManager.getActorByPublicKey(actorPublicKey, assetUserWalletSubAppModuleManager.getSelectedNetwork());
         } catch (CantGetAssetRedeemPointActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException(CantGetAssetRedeemPointActorsException.DEFAULT_MESSAGE,e,"THERE WAS AN ERROR GETTING ACTOR REDEEM POINT",null);
@@ -221,19 +230,19 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void disconnectToActorAssetRedeemPoint(String requester, String redeemPoint) throws CantDisconnectAssetUserActorException {
+    public void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantDisconnectAssetUserActorException {
         try {
 
-            actorAssetRedeemPointManager.disconnectToActorAssetRedeemPoint(requester, redeemPoint);
+            actorAssetRedeemPointManager.disconnectToActorAssetRedeemPoint(redeemPoint, assetUserWalletSubAppModuleManager.getSelectedNetwork());
 
-//            this.assetRedeemPointActorNetworkServiceManager.disconnectConnectionActorAsset(requester, redeemPoint);
+            this.assetRedeemPointActorNetworkServiceManager.disconnectConnectionActorAsset(redeemPoint.getActorPublicKey(), redeemPoint.getActorPublicKey());
 
         } catch (CantDisconnectAssetUserActorException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDisconnectAssetUserActorException(CantUpdateRedeemPointException.DEFAULT_MESSAGE,e,"ACTOR REDEEM POINT CANT BE UPDATED",null);
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR REDEEM POINT CONNECTION - KEY:" + redeemPoint.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR REDEEM POINT CONNECTION - KEY:" + redeemPoint, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR REDEEM POINT CONNECTION - KEY:" + redeemPoint.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
