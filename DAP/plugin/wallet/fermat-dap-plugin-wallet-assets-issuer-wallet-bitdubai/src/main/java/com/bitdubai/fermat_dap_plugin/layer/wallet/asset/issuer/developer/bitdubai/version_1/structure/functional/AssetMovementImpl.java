@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
 
@@ -14,12 +15,14 @@ public class AssetMovementImpl implements AssetMovement {
     private DAPActor actorFrom;
     private DAPActor actorTo;
     private Date timestamp;
+    private AssetMovementType type;
 
     //CONSTRUCTORS
-    public AssetMovementImpl(DAPActor actorFrom, DAPActor actorTo, Date timestamp) {
+    public AssetMovementImpl(DAPActor actorFrom, DAPActor actorTo, Date timestamp, AssetMovementType type) {
         this.actorFrom = actorFrom;
         this.actorTo = actorTo;
         this.timestamp = timestamp;
+        this.type=type;
     }
 
     public AssetMovementImpl() {
@@ -40,6 +43,11 @@ public class AssetMovementImpl implements AssetMovement {
     public Date when() {
         return timestamp;
     }
+
+    @Override
+    public AssetMovementType getType() {
+        return type;
+    }
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
@@ -55,6 +63,8 @@ public class AssetMovementImpl implements AssetMovement {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
+
+    public void setType(AssetMovementType type) { this.type = type; }
 
     //INNER CLASSES
 }

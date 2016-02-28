@@ -70,52 +70,7 @@ public class CommunicationNetworkServiceDatabaseFactory {
         try {
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
-
             /**
-             * Create incoming messages table.
-             */
-            table = databaseFactory.newTableFactory(pluginId, CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TABLE_NAME);
-
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 1000, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(pluginId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create outgoing messages table.
-             */
-            table = databaseFactory.newTableFactory(pluginId, CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TABLE_NAME);
-
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 1000, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
-            table.addIndex(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(pluginId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
              * Create DAP_Message table.
              */
             table = databaseFactory.newTableFactory(pluginId, CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TABLE_NAME);

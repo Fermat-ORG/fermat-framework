@@ -1,5 +1,6 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -7,6 +8,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,5 +130,18 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
         return middlewareChatManager.getNetworkServicePublicKey();
+    }
+
+    /**
+     * This method return a HashMap with the possible self identities.
+     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
+     * If there no identities created in any platform, this hashMaps contains the public chat Network
+     * Service.
+     * @return
+     */
+    @Override
+    public HashMap<PlatformComponentType, String> getSelfIdentities()
+            throws CantGetOwnIdentitiesException {
+        return middlewareChatManager.getSelfIdentities();
     }
 }
