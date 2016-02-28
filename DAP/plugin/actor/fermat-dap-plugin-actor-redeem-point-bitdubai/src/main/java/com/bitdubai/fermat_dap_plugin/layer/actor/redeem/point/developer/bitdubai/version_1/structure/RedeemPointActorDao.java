@@ -851,6 +851,48 @@ public class RedeemPointActorDao implements Serializable {
         return actorAssetRedeemPoint;
     }
 
+    public ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException {
+
+        ActorAssetRedeemPoint actorAssetRedeemPoint = null;
+        List<ActorAssetRedeemPoint> list = new ArrayList<>();
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant get actor asset redeem point identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+//            actorAssetRedeemPoint = this.addRecords(table.getRecords());
+
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
+
+            actorAssetRedeemPoint = list.get(0);
+//            if (blockchainNetworkType != null) {
+//                getCryptoAddressNetwork(actorAssetRedeemPoint, blockchainNetworkType);
+//            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "actor asset redeem point", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+        } catch (CantGetRedeemPointActorProfileImageException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "actor asset redeem point", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "actor asset redeem point", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
+
+        }
+        // Return the values.
+        return actorAssetRedeemPoint;
+    }
+
     public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException {
 
         ActorAssetRedeemPoint actorAssetRedeemPoint = null;//new RedeemPointActorRecord();
@@ -1067,9 +1109,9 @@ public class RedeemPointActorDao implements Serializable {
         return listAux;
     }
 
-    //Method unused - 26 / 02 / 2016
-    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorConnected() throws CantGetRedeemPointsListException {
+    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetRedeemPointsListException {
         List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Asset Issuer Actor list.
+        List<ActorAssetRedeemPoint> auxList = new ArrayList<>();
 
         DatabaseTable table;
 
@@ -1088,19 +1130,22 @@ public class RedeemPointActorDao implements Serializable {
             }
             table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
 
-
             table.loadToMemory();
 
-            this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
-        } catch (CantLoadTableToMemoryException e) {
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
+//            for (ActorAssetRedeemPoint record : list)
+//            {
+//                if (record.getCryptoAddress() != null)
+//                    auxList.add(record);
+//            }
+
+        } catch (CantLoadTableToMemoryException e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
-
             // Failure unknown.
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
         }
         // Return the list values.
@@ -1233,7 +1278,7 @@ public class RedeemPointActorDao implements Serializable {
 
             table.loadToMemory();
 
-            this.addRecordsTableRegisteredToList(list, table.getRecords());
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");

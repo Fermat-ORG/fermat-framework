@@ -731,17 +731,16 @@ public class AssetUserActorDao implements Serializable {
                 }
             }
 
-            this.updateAssetUserDAPConnectionStateActorNetworkService(getActorAssetUserRegisteredByPublicKey(actorAssetPublicKey), DAPConnectionState.REGISTERED_ONLINE,null);
+//            this.updateAssetUserDAPConnectionStateActorNetworkService(getActorAssetUserRegisteredByPublicKey(actorAssetPublicKey), DAPConnectionState.REGISTERED_ONLINE,null);
 
         } catch (CantLoadTableToMemoryException em) {
             throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
         } catch (CantDeleteRecordException em) {
             throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table.");
-        } catch (CantUpdateAssetUserConnectionException em) {
-            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Connection State couldnt be updated");
-        } catch (CantGetAssetUserActorsException em) {
-            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Asset User Not Found");
-
+//        } catch (CantUpdateAssetUserConnectionException em) {
+//            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Connection State couldnt be updated");
+//        } catch (CantGetAssetUserActorsException em) {
+//            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Asset User Not Found");
         }
     }
 
@@ -983,12 +982,11 @@ public class AssetUserActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
-
-            for (ActorAssetUser record : list)
-            {
-                if (record.getCryptoAddress()!=null)
-                    auxList.add(record);
-            }
+//            for (ActorAssetUser record : list)
+//            {
+//                if (record.getCryptoAddress() != null)
+//                    auxList.add(record);
+//            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -998,7 +996,7 @@ public class AssetUserActorDao implements Serializable {
             throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         }
         // Return the list values.
-        return auxList;
+        return list;
     }
 
     /**
