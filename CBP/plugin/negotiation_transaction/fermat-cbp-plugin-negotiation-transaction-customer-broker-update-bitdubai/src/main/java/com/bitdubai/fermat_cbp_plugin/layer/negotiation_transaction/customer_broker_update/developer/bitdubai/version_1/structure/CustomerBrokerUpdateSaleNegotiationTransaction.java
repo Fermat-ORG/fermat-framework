@@ -44,7 +44,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                             "\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //UPDATE NEGOTIATION
@@ -77,7 +78,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION
@@ -112,7 +114,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
@@ -145,7 +148,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
