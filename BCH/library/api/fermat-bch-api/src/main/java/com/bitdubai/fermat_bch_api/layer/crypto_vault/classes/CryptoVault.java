@@ -151,8 +151,10 @@ public abstract class CryptoVault {
                     /**
                      * If they are mine, I will add them to the list with the input that we are evaluating
                      */
-                    if (output.isMine(wallet))
+                    if (output.isMine(wallet)){
                         inputOutputMap.put(transactionInput, output);
+                    }
+
                 }
             }
         }

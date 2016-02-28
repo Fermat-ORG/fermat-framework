@@ -47,6 +47,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 
 import java.util.List;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+
 
 /**
  * Created by Matias Furszyfer
@@ -446,6 +449,11 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     @Override
     public FermatStructure getAppInUse() {
+        return null;
+    }
+
+    @Override
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
         return null;
     }
 

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
     private final long timeStamp;
     private final String memo;
     private final BlockchainNetworkType blockchainNetworkType;
+    private final TransactionState transactionState;
     
     public BitcoinWalletTransactionWrapper(final UUID transactionId,
                                            final String transactionHash,
@@ -46,7 +48,7 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
                                            final long runningAvailableBalance,
                                            final long timeStamp,
                                            final String memo,
-                                           BlockchainNetworkType blockchainNetworkType) {
+                                           BlockchainNetworkType blockchainNetworkType,final TransactionState transactionState) {
         this.transactionId = transactionId;
         this.transactionHash = transactionHash;
         this.transactionType = transactionType;
@@ -63,6 +65,7 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.transactionState = transactionState;
     }
 
     @Override
@@ -136,6 +139,11 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public TransactionState getTransactionState() {
+        return transactionState;
     }
 
     @Override

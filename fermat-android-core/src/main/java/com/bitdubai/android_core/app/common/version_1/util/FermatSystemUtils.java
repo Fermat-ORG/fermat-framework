@@ -1,7 +1,5 @@
 package com.bitdubai.android_core.app.common.version_1.util;
 
-import android.app.Application;
-
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
@@ -47,7 +45,7 @@ public class FermatSystemUtils {
      * @return reference of ErrorManager
      */
 
-    public static ErrorManager getErrorManager(Application application) {
+    public static ErrorManager getErrorManager() {
         try {
             return ApplicationSession.getInstance().getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
         } catch (ErrorManagerNotFoundException |

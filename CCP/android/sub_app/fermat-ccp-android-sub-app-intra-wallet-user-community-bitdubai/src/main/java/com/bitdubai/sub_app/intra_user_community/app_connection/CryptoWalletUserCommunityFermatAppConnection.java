@@ -73,40 +73,18 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
-
-
-        NotificationPainter notification = null;
         try
         {
             this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
             if(intraUserSubAppSession!=  null)
                moduleManager = intraUserSubAppSession.getModuleManager();
-            String[] params = code.split("_");
-            String notificationType = params[0];
-            String senderActorPublicKey = params[1];
-
-            switch (notificationType){
-                case "CONNECTIONREQUEST":
-
-                        if(moduleManager != null) {
-                            //find last notification by sender actor public key
-                            IntraWalletUserActor senderActor = moduleManager.getLastNotification(senderActorPublicKey);
-                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
-                            break;
-                        }else
-                        {
-                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
-                        }
-
-            }
+            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-
-
-        return notification;
+        return null;
     }
 }

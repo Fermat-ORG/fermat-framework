@@ -177,6 +177,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         //TODO USE CCP OUTGOING DRAFT PLUGIN
+                        // todo creo que deberias manejar un estado más por si hay un error, no volver a llamar al addInputsToDraftTransaction una vez que ya pasó esa etapa.
                         DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
                         buyerTx = cryptoVaultManager.signTransaction(buyerTx);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
