@@ -160,7 +160,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         try {
             return assetUserWalletModule.getAssetUserWalletBalances(publicKey, selectedNetwork);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadWalletException(e);
         }
     }
@@ -168,7 +168,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException {
         try {
-            return actorAssetRedeemPointManager.getAllRedeemPointActorConnected();
+            return actorAssetRedeemPointManager.getAllRedeemPointActorConnected(getSelectedNetwork());
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.REDEEM_POINT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException(e);
@@ -213,7 +213,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         try {
             return identityAssetUserManager.getIdentityAssetUser();
         } catch (CantGetAssetUserIdentitiesException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetIdentityAssetUserException(e);
         }
     }
@@ -276,7 +276,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         try {
             return actorAssetUserManager.getAllAssetUserActorConnected(getSelectedNetwork());
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException(e);
         }
     }
@@ -286,7 +286,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         try {
             return actorAssetUserManager.getAssetUserGroupsList();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserGroupException(e);
         }
     }
@@ -296,7 +296,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         try {
             return actorAssetUserManager.getListActorAssetUserByGroups(groupName, selectedNetwork);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException(e);
         }
     }
