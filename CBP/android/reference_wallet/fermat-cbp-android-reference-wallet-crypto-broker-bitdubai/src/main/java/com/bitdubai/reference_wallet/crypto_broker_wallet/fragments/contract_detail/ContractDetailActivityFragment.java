@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -181,11 +182,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
         //Create adapter
-        adapter = new ContractDetailAdapter(
-                getActivity(),
-                contractInformation,
-                appSession,
-                walletManager);
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
         //adapter.setFooterListener(this);
         //adapter.setClauseListener(this);
 
@@ -236,13 +233,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
          * Get the wallet module manager
          */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        CryptoBrokerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager=
                 appSession.getModuleManager();
-        if(cryptoCustomerWalletModuleManager!=null){
+        if(walletManager!=null){
 
             try{
                 CryptoBrokerWalletManager cryptoCustomerWalletManager=
-                        cryptoCustomerWalletModuleManager.getCryptoBrokerWallet(
+                        cryptoBrokerWalletModuleManager.getCryptoBrokerWallet(
                                 appSession.getAppPublicKey()
                         );
                 //ContractDetail contractDetail;
@@ -292,6 +289,31 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
                     Toast.LENGTH_SHORT)
                     .show();
+        }
+
+        try{
+
+            CustomerBrokerContractSale contract= walletManager.getCustomerBrokerContractSaleForContractId(data.getContractId().toString());
+            for (ContractClause clause:contract.getContractClause()){
+                contractDetail=new ContractDetail(
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        contract.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+            }
+        }catch (Exception e){
+            CommonLogger.exception(TAG, e.getMessage(), e);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
         }
 
         return contractDetails;
