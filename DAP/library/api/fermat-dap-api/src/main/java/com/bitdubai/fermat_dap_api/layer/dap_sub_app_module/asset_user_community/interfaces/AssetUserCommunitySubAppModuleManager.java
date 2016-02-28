@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -18,11 +17,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpd
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
@@ -50,7 +48,6 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
 
-    void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException, CantConnectToActorAssetUserException;
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
     /**
      * The method <code>createGroup</code> Register a group in database Actor Asset User
@@ -127,7 +124,9 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
 
-    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
+    void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException;
+
+//    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 
     void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
