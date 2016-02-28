@@ -117,7 +117,7 @@ public class CloseContractTransactionManager implements CloseContractManager {
                     this.customerBrokerContractPurchaseManager.
                             getCustomerBrokerContractPurchaseForContractId(contractHash);
             ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
-            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT)) {
+            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode())) {
                 this.closeContractBusinessTransactionDao.persistContractRecord(
                         customerBrokerContractPurchase,
                         ContractType.PURCHASE);

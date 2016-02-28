@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
@@ -76,6 +78,9 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER         )
     private CryptoCustomerManager cryptoCustomerANSManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
 
     public CryptoCustomerIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -124,6 +129,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
             CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true);
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser);
 
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_creado");
+
             return cryptoCustomer;
 
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -139,6 +146,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
     @Override
     public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException {
         cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile);
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_editado");
     }
 
     @Override

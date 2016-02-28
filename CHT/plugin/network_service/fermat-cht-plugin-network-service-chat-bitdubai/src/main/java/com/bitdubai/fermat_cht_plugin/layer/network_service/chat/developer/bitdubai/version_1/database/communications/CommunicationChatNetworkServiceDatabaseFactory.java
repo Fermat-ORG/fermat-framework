@@ -157,7 +157,7 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
             table.addColumn(CommunicationChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationChatNetworkServiceDatabaseConstants.CHAT_PROCCES_STATUS_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_CHAT_FIRST_KEY_COLUMN);
+            table.addIndex(CommunicationChatNetworkServiceDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

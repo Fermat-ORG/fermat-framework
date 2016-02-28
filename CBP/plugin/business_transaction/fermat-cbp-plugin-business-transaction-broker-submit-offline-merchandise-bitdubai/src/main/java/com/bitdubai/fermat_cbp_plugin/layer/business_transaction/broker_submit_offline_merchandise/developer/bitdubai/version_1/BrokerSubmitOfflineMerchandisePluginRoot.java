@@ -332,7 +332,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
         try{
             this.serviceStatus = ServiceStatus.PAUSED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 
@@ -342,7 +342,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
         try{
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 
@@ -351,7 +351,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
         try{
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 

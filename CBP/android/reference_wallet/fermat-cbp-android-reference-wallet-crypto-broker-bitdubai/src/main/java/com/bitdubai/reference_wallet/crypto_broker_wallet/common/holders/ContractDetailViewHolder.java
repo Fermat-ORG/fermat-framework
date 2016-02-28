@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
     private View itemView;
+    private CardView containerCardView;
     /**
      * Contract item
      */
@@ -56,30 +58,33 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     protected int itemPosition;
 
     ErrorManager errorManager;
-    /**
-     * Constructor
-     *
-     * @param itemView
-     */
-    public ContractDetailViewHolder(View itemView) {
-        super(itemView);
 
+    public ContractDetailViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
         this.itemView = itemView;
         res = itemView.getResources();
-
+        containerCardView = (CardView) this.itemView;
+        containerCardView.setRadius(16);
         stepNumber = (ImageView) itemView.findViewById(R.id.cbw_contract_detail_step);
         stepTitle = (FermatTextView) itemView.findViewById(R.id.cbw_contract_detail_card_view_title);
         textDescription = (FermatTextView) itemView.findViewById(R.id.cbw_contract_detail_description_text);
         textButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_confirm_button);
         configButton();
+    }
+
+
+    /*public ContractDetailViewHolder(View itemView) {
+        super(itemView);
+
+
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
         exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount_and_currency);
-        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);*/
+        lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);
 
-    }
+    }*/
 
     private void configButton(){
         confirmButton.setOnClickListener(new View.OnClickListener() {

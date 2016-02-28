@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -52,9 +53,9 @@ public class testStart {
         assertEquals(ServiceStatus.STARTED, customerOfflinePaymentRecorderService.getStatus());
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = CantStartServiceException.class)
     public void testStart_Should_Return_Exception() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(null,null,null);
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(null,null,errorManager);
         customerOfflinePaymentRecorderService.start();
     }
 

@@ -80,7 +80,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE){
+        if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE.getCode())){
             this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
         }
@@ -90,7 +90,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE.getCode())) {
                 this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
