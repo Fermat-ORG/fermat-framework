@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service;
 
 import android.util.Base64;
 
@@ -11,13 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
  * Created by Nerio on 11/02/16.
  */
-public class AssetUserNetworkServiceRecord implements ActorNotification {
+public class ActorAssetNetworkServiceRecord implements ActorNotification {
     private UUID id;
     private Actors actorDestinationType;
     private Actors actorSenderType;
@@ -34,21 +33,21 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
     private BlockchainNetworkType blockchainNetworkType;
     private UUID responseToNotificationId;
 
-    public AssetUserNetworkServiceRecord(UUID id,
-                                         String actorSenderAlias,
+    public ActorAssetNetworkServiceRecord(UUID id,
+                                          String actorSenderAlias,
 //                                         String actorSenderPhrase,
-                                         byte[] actorSenderProfileImage,
-                                         AssetNotificationDescriptor assetNotificationDescriptor,
-                                         Actors actorDestinationType,
-                                         Actors actorSenderType,
-                                         String actorSenderPublicKey,
-                                         String actorDestinationPublicKey,
-                                         long sentDate,
-                                         ActorAssetProtocolState actorAssetProtocolState,
-                                         boolean flagRead,
-                                         int sendCount,
-                                         BlockchainNetworkType blockchainNetworkType,
-                                         UUID responseToNotificationId) {
+                                          byte[] actorSenderProfileImage,
+                                          AssetNotificationDescriptor assetNotificationDescriptor,
+                                          Actors actorDestinationType,
+                                          Actors actorSenderType,
+                                          String actorSenderPublicKey,
+                                          String actorDestinationPublicKey,
+                                          long sentDate,
+                                          ActorAssetProtocolState actorAssetProtocolState,
+                                          boolean flagRead,
+                                          int sendCount,
+                                          BlockchainNetworkType blockchainNetworkType,
+                                          UUID responseToNotificationId) {
 
         this.id                             = id;
         this.actorSenderAlias               = actorSenderAlias;
@@ -67,7 +66,7 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
     }
 
 
-    private AssetUserNetworkServiceRecord(JsonObject jsonObject, Gson gson) {
+    private ActorAssetNetworkServiceRecord(JsonObject jsonObject, Gson gson) {
 
         this.id =                           UUID.fromString(jsonObject.get("id").getAsString());
         this.actorSenderAlias =             (jsonObject.get("actorSenderAlias") != null) ? jsonObject.get("actorSenderAlias").getAsString() : null;
@@ -227,12 +226,12 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
     }
 
 
-    public static AssetUserNetworkServiceRecord fronJson(String jsonString) {
+    public static ActorAssetNetworkServiceRecord fronJson(String jsonString) {
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
-        return new AssetUserNetworkServiceRecord(jsonObject, gson);
+        return new ActorAssetNetworkServiceRecord(jsonObject, gson);
     }
 
     @Override

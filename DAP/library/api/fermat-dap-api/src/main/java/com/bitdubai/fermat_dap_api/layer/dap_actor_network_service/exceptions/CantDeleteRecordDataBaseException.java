@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions;
 
 
 import com.bitdubai.fermat_api.FermatException;

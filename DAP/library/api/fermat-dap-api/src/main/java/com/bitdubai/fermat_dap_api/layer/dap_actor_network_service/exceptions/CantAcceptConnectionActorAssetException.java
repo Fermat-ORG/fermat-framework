@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.08.01..
+ * Created by natalia on 04/09/15.
  */
-public class CantCancelConnectionActorAssetException extends FermatException {
+public class CantAcceptConnectionActorAssetException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantCancelConnectionActorAssetException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCancelConnectionActorAssetException(String message, Exception cause, String context, String possibleReason) {
+    public CantAcceptConnectionActorAssetException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

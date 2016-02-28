@@ -6,15 +6,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
@@ -38,6 +37,16 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantAssetRedeemPointActorNotFoundException
      */
     ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
+
+    /**
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
+     *
+     * @param actorPublicKey                    The public key of the Asset Actor Redeem Point
+     * @return                                  The information associated with the actorPublicKey.
+     * @throws CantGetAssetRedeemPointActorsException
+     * @throws CantAssetRedeemPointActorNotFoundException
+     */
+    ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity
@@ -92,7 +101,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      *
      * @throws CantGetAssetRedeemPointActorsException
      */
-    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
@@ -146,11 +155,12 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
      * The method <code>disconnectToActorAssetRedeemPoint</code> disconnect an intra user from the connections registry
-     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+//     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
      * @throws CantDisconnectAssetUserActorException
      */
-    void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
+//    void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
+    void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetUserActorException;
 
 
     void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,
