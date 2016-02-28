@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -7,6 +8,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -17,6 +19,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,4 +64,13 @@ public interface ChatManager {
     List<Contact> discoverActorsRegistered() throws CantGetContactException;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
+
+    /**
+     * This method return a HashMap with the possible self identities.
+     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
+     * If there no identities created in any platform, this hashMaps contains the public chat Network
+     * Service.
+     * @return
+     */
+    HashMap<PlatformComponentType, String> getSelfIdentities() throws CantGetOwnIdentitiesException;
 }

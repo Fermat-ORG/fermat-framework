@@ -134,10 +134,12 @@ public class AssetIssuerWalletDatabaseFactory {
     private DatabaseTableFactory createAssetMovementTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, DatabaseDataType.STRING, 255, true);
-        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_METADATA_ID, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, DatabaseDataType.STRING, 255, false);
+
         return table;
     }
 }
