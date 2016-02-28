@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
@@ -148,10 +149,12 @@ public class CryptoTransaction{
      */
     public static CryptoStatus getTransactionCryptoStatus(Transaction transaction) {
         try{
-            int depth = transaction.getConfidence().getDepthInBlocks();
-            TransactionConfidence.ConfidenceType confidenceType = transaction.getConfidence().getConfidenceType();
+            TransactionConfidence transactionConfidence = transaction.getConfidence();
+            int depth = transactionConfidence.getDepthInBlocks();
+            TransactionConfidence.ConfidenceType confidenceType = transactionConfidence.getConfidenceType();
+            int broadcasters = transactionConfidence.getBroadcastBy().size();
 
-            if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.UNKNOWN)
+            if (broadcasters == 0 && transactionConfidence.getSource() == TransactionConfidence.Source.SELF)
                 return CryptoStatus.PENDING_SUBMIT;
             else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
