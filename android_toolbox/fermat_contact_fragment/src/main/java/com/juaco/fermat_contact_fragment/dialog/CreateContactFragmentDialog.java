@@ -17,9 +17,9 @@ import android.widget.*;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.juaco.fermat_contact_fragment.R;
+import com.juaco.fermat_contact_fragment.adapters.WalletContact;
 import com.juaco.fermat_contact_fragment.bar_code_scanner.IntentIntegrator;
 import com.juaco.fermat_contact_fragment.interfaces.CreateContactDialogCallback;
 
