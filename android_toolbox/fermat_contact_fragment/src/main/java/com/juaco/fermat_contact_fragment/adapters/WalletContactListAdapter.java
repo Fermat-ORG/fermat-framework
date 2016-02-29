@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.juaco.fermat_contact_fragment.R;
 import com.squareup.picasso.Picasso;
 
@@ -23,14 +22,14 @@ import java.util.List;
  * Created by lnacosta on 2015.07.07..
  * modified by Joaquin Carrasquero on 2016.02.29
  */
-public class WalletContactListAdapter extends ArrayAdapter<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> {
+public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
 
-    private List<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> originalData = null;
-    private List<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> filteredData = null;
+    private List<WalletContact> originalData = null;
+    private List<WalletContact> filteredData = null;
 
     Typeface tf ;
 
-    public WalletContactListAdapter(Context context, int resource, List<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> items) {
+    public WalletContactListAdapter(Context context, int resource, List<WalletContact> items) {
         super(context, resource, items);
         tf=Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         this.filteredData = items;
@@ -51,7 +50,7 @@ public class WalletContactListAdapter extends ArrayAdapter<com.bitdubai.referenc
             v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
         }
 
-        com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact contact = getItem(position);
+            WalletContact contact = getItem(position);
 
         if (contact != null) {
             TextView contact_name = (TextView) v.findViewById(R.id.contact_name);
@@ -79,7 +78,7 @@ public class WalletContactListAdapter extends ArrayAdapter<com.bitdubai.referenc
         return filteredData.size();
     }
 
-    public com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact getItem(int position) {
+    public WalletContact getItem(int position) {
         return filteredData.get(position);
     }
 
@@ -100,12 +99,12 @@ public class WalletContactListAdapter extends ArrayAdapter<com.bitdubai.referenc
 
                 FilterResults results = new FilterResults();
 
-                final List<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> list = originalData;
+                final List<WalletContact> list = originalData;
 
                 int count = list.size();
-                final ArrayList<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> nlist = new ArrayList<>(count);
+                final ArrayList<WalletContact> nlist = new ArrayList<>(count);
 
-                com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact filterableString ;
+                WalletContact filterableString ;
 
                 for (int i = 0; i < count; i++) {
                     filterableString = list.get(i);
