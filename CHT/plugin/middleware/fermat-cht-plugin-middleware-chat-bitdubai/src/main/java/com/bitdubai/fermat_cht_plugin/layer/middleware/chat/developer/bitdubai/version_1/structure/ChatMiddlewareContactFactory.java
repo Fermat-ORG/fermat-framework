@@ -17,11 +17,15 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitie
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -116,23 +120,48 @@ public class ChatMiddlewareContactFactory {
                                 "CHAT Middleware: The actor network service from "+platform+" is null");
                     }
                 }
-                //DAP USERS
+                //DAP PLATFORM
                 if(platform==Platforms.DIGITAL_ASSET_PLATFORM){
                     platformEnumCode=platform.getCode();
                     objectFromHashMap=this.actorNetworkServiceMap.get(platformEnumCode);
                     if(objectFromHashMap!=null){
-
-                        if(objectFromHashMap instanceof AssetUserActorNetworkServiceManager){
-                            compatiblesActorNetworkServiceList.put(
-                                    Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
-                                    objectFromHashMap);
-                        } else {
-                            //Please, not throw an exception, in this version, make a logcat report.
-                            System.out.println(
-                                    "CHAT Middleware: For "+platform+" we need " +
-                                            ""+IntraUserManager.class+" and we get from PluginRoot " +
-                                            ""+objectFromHashMap.getClass());
+                        List dapManagers= (List) objectFromHashMap;
+                        List dapCompatiblesManagers = new ArrayList();
+                        for(Object manager : dapManagers){
+                            if(manager instanceof AssetUserActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            } else {
+                                //Please, not throw an exception, in this version, make a logcat report.
+                                System.out.println(
+                                        "CHAT Middleware: For "+platform+" we need " +
+                                                ""+AssetUserActorNetworkServiceManager.class+" and we get from PluginRoot " +
+                                                ""+manager.getClass());
+                            }
+                            if(manager instanceof AssetIssuerActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            } else {
+                                //Please, not throw an exception, in this version, make a logcat report.
+                                System.out.println(
+                                        "CHAT Middleware: For "+platform+" we need " +
+                                                ""+AssetIssuerActorNetworkServiceManager.class+" and we get from PluginRoot " +
+                                                ""+manager.getClass());
+                            }
+                            if(manager instanceof AssetRedeemPointActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            } else {
+                                //Please, not throw an exception, in this version, make a logcat report.
+                                System.out.println(
+                                        "CHAT Middleware: For "+platform+" we need " +
+                                                ""+AssetRedeemPointActorNetworkServiceManager.class+" and we get from PluginRoot " +
+                                                ""+manager.getClass());
+                            }
                         }
+                        compatiblesActorNetworkServiceList.put(
+                                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
+                                dapCompatiblesManagers);
 
                     }else{
                         //Please, not throw an exception, this means that the actorNetworkService is not set in this plugin.
@@ -212,7 +241,7 @@ public class ChatMiddlewareContactFactory {
                         contactList.add(contact);
                     }
                     //With this we can get the possible CCP contacts
-                    ccpActorList=intraActorManager.getSuggestionsToContact(20,0);
+                    ccpActorList=intraActorManager.getSuggestionsToContact(20, 0);
                     for(IntraUserInformation intraUserInformation : ccpActorList){
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();
@@ -228,25 +257,73 @@ public class ChatMiddlewareContactFactory {
                         contactList.add(contact);
                     }
                 }
-                //DAP USERS
+                //DAP PLATFORM
                 if(key.equals(Platforms.DIGITAL_ASSET_PLATFORM.getCode())){
-                    AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager =
-                            (AssetUserActorNetworkServiceManager) value;
-                    List<ActorAssetUser> dapActorList=
-                            assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-                    for(ActorAssetUser actorAssetUser : dapActorList){
-                        remoteName=actorAssetUser.getName();
-                        alias=actorAssetUser.getName();
-                        actorPublicKey=actorAssetUser.getActorPublicKey();
-                        contact=new ContactImpl(
-                                UUID.randomUUID(),
-                                remoteName,
-                                alias,
-                                PlatformComponentType.ACTOR_ASSET_USER,
-                                actorPublicKey,
-                                date.getTime()
-                        );
-                        contactList.add(contact);
+                    List dapContacts= (List) value;
+                    for(Object manager : dapContacts){
+                        //DAP USERS
+                        if(manager instanceof AssetUserActorNetworkServiceManager){
+                            AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager =
+                                    (AssetUserActorNetworkServiceManager) manager;
+                            List<ActorAssetUser> dapActorList=
+                                    assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+                            for(ActorAssetUser actorAssetUser : dapActorList){
+                                remoteName=actorAssetUser.getName();
+                                alias=actorAssetUser.getName();
+                                actorPublicKey=actorAssetUser.getActorPublicKey();
+                                contact=new ContactImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_USER,
+                                        actorPublicKey,
+                                        date.getTime()
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //DAP ISSUERS
+                        if(manager instanceof AssetIssuerActorNetworkServiceManager){
+                            AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager =
+                                    (AssetIssuerActorNetworkServiceManager) manager;
+                            List<ActorAssetIssuer> dapIssuerList=
+                                    assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+                            for(ActorAssetIssuer actorAssetIssuer : dapIssuerList){
+                                remoteName=actorAssetIssuer.getName();
+                                alias=actorAssetIssuer.getName();
+                                actorPublicKey=actorAssetIssuer.getActorPublicKey();
+                                contact=new ContactImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                                        actorPublicKey,
+                                        date.getTime()
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //DAP REDEEM POINT
+                        if(manager instanceof AssetRedeemPointActorNetworkServiceManager){
+                            AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager =
+                                    (AssetRedeemPointActorNetworkServiceManager) manager;
+                            List<ActorAssetRedeemPoint> dapRedeemPointList=
+                                    assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
+                            for(ActorAssetRedeemPoint actorAssetRedeemPoint : dapRedeemPointList){
+                                remoteName=actorAssetRedeemPoint.getName();
+                                alias=actorAssetRedeemPoint.getName();
+                                actorPublicKey=actorAssetRedeemPoint.getActorPublicKey();
+                                contact=new ContactImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                                        actorPublicKey,
+                                        date.getTime()
+                                );
+                                contactList.add(contact);
+                            }
+                        }
                     }
 
                 }
