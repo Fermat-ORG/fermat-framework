@@ -189,7 +189,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
                     contacticon.add(R.drawable.cht_profile_list_icon);
                 }
                 text.setVisibility(View.GONE);
-                layout.setBackgroundResource(0);
             }else{
                 //Comentar, solo para pruebas
 //                ContactImpl cadded=new ContactImpl();
@@ -207,7 +206,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 //Fin Comentar
                 text.setVisibility(View.VISIBLE);
                 text.setText("No Contacts");
-                layout.setBackgroundResource(R.drawable.cht_empty_contats_icon);
+                text.setBackgroundResource(R.drawable.cht_empty_contats_icon);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -306,12 +305,11 @@ public class ContactsListFragment extends AbstractFermatFragment {
                         list.invalidateViews();
                         list.requestLayout();
                         text.setVisibility(View.GONE);
-                        layout.setBackgroundResource(0);
                     }else{
                         Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                         text.setVisibility(View.VISIBLE);
                         text.setText("No Contacts");
-                        layout.setBackgroundResource(R.drawable.cht_empty_contats_icon);
+                        text.setBackgroundResource(R.drawable.cht_empty_contats_icon);
                     }
                 } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
