@@ -1,47 +1,41 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 
-import java.math.BigDecimal;
+import java.util.List;
+
 
 /**
  * Created by nelson on 27/01/16.
  */
-public class EarningTestData {
+public class EarningTestData implements EarningsPairDetail {
 
-    private double earningValue;
-    private double previousEarningValue;
-    private long timestamp;
-    private Currency currency;
+    private final long timestamp;
+    private final double earningValue;
 
-    public EarningTestData(Currency currency, double earningValue, double previousEarningValue, long timestamp) {
-        this.currency = currency;
+    public EarningTestData(double earningValue,  long timestamp) {
         this.earningValue = earningValue;
         this.timestamp = timestamp;
-        this.previousEarningValue = previousEarningValue;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    @Override
+    public List<EarningTransaction> listEarningTransactions() {
+        return null;
     }
 
-    public double getDifference() {
-        BigDecimal earningValueBigDec = BigDecimal.valueOf(earningValue);
-        BigDecimal previousEarningValueBigDec = BigDecimal.valueOf(previousEarningValue);
-
-        return earningValueBigDec.subtract(previousEarningValueBigDec).doubleValue();
-    }
-
-    public double getDifferencePercent() {
-        double difference = getDifference();
-        return difference != 0 ? Math.abs(difference / previousEarningValue) * 100 : 0;
-    }
-
-    public double getEarningValue() {
+    @Override
+    public double getAmount() {
         return earningValue;
     }
 
-    public long getTimestamp() {
+    @Override
+    public long getFromTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public long getToTimestamp() {
         return timestamp;
     }
 }
