@@ -240,7 +240,6 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                         }
                         break;
                     case REJECTED:
-
                         WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
                                 cryptoMoneyTransaction.getTransactionId(),
                                 cryptoMoneyTransaction.getCryptoCurrency(),
@@ -261,6 +260,8 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                         cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
                         break;
                 }
             }
