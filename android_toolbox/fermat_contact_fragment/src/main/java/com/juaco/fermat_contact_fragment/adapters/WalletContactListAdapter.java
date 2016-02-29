@@ -10,10 +10,10 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.juaco.fermat_contact_fragment.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by lnacosta on 2015.07.07..
+ * modified by Joaquin Carrasquero on 2016.02.29
  */
 public class WalletContactListAdapter extends ArrayAdapter<com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact> {
 
