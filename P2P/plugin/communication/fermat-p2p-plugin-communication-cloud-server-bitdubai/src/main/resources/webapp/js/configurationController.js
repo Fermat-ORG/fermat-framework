@@ -3,11 +3,11 @@ angular.module("serverApp").controller('ConfigurationCtrl', ['$scope', '$http', 
   $scope.configuration = {
        port: '',
        user: '',
-       password: '',
-       monit:''
+       password: ''
   };
 
   $scope.save = function () {
+    $scope.configuration.password = new String(CryptoJS.SHA256($scope.configuration.password))
     $http.post('/fermat/api/admin/configuration/save', angular.toJson($scope.configuration))
       .then(function successCallback(response) {
              $scope.message = response.data;

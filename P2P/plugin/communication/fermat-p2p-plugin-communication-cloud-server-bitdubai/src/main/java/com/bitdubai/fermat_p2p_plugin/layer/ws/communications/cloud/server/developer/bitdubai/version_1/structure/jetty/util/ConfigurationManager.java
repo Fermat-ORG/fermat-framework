@@ -12,9 +12,12 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.bouncycastle.util.encoders.Base64;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager</code> implements
@@ -111,7 +114,7 @@ public class ConfigurationManager {
 
         newConfigurationFile.getLayout().setComment(USER, "\n# * MONITORIG USER");
         newConfigurationFile.addProperty(USER, "fermat");
-        newConfigurationFile.addProperty(PASSWORD, "fermat");
+        newConfigurationFile.addProperty(PASSWORD, "5e494e695571ede182fb62299373678158c752fb8d3c04104a46b7de139dab5e"); //fermat
         newConfigurationFile.save();
 
         LOG.info("Setup configuration file is complete!");
