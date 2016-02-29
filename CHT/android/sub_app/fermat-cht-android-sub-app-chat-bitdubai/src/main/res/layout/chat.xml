@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         >
+
         <RelativeLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
@@ -18,6 +19,14 @@
             android:background="@drawable/cht_background"
             android:layout_above="@+id/inputContainer"
             >
+                <TextView android:id="@+id/text"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="sans-serif-light"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/messagesContainer"
                     android:layout_width="match_parent"

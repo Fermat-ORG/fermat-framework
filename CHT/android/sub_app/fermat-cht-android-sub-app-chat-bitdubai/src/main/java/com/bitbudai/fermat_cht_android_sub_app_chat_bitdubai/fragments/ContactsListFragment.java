@@ -98,6 +98,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
+    TextView text;
+    View layout;
     //public ContactsListFragment() {}
     static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
@@ -129,7 +131,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
 
         // Create the main contacts adapter
         //adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
@@ -174,8 +176,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
-        TextView text=(TextView) layout.findViewById(R.id.text);
+        layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        text=(TextView) layout.findViewById(R.id.text);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
             List <Contact> con=  chatManager.getContacts();
@@ -184,9 +186,10 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 for (int i=0;i<size;i++){
                     contactname.add(con.get(i).getAlias());
                     contactid.add(con.get(i).getContactId());
-                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                    contacticon.add(R.drawable.cht_profile_list_icon);
                 }
                 text.setVisibility(View.GONE);
+                layout.setBackgroundResource(0);
             }else{
                 //Comentar, solo para pruebas
 //                ContactImpl cadded=new ContactImpl();
@@ -202,8 +205,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
 //                cadded.setRemoteName("No hay nadie conectado");
 //                chatManager.saveContact(cadded);
                 //Fin Comentar
-                //text.setVisibility(View.VISIBLE);
-                //text.setText("No Contacts");
+                text.setVisibility(View.VISIBLE);
+                text.setText("No Contacts");
+                layout.setBackgroundResource(R.drawable.cht_empty_contats_icon);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -301,8 +305,13 @@ public class ContactsListFragment extends AbstractFermatFragment {
                         //adaptador.notifyDataSetChanged();
                         list.invalidateViews();
                         list.requestLayout();
+                        text.setVisibility(View.GONE);
+                        layout.setBackgroundResource(0);
                     }else{
                         Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                        text.setVisibility(View.VISIBLE);
+                        text.setText("No Contacts");
+                        layout.setBackgroundResource(R.drawable.cht_empty_contats_icon);
                     }
                 } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -448,7 +457,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
-        inflater.inflate(R.menu.contact_list_menu, menu);
+        //inflater.inflate(R.menu.contact_list_menu, menu);
         // Locate the search item
         //MenuItem searchItem = menu.findItem(R.id.menu_search);
 

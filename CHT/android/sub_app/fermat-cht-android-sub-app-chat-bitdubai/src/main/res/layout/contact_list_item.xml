@@ -16,7 +16,7 @@
 
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
          consistency. This is secondary text and not always visible so by default is has its
-         visibility set to gone
+         visibility set to gone-->
     <TextView android:id="@android:id/text2"
         android:paddingLeft="@dimen/listview_item_padding"
         android:paddingRight="@dimen/listview_item_padding"
@@ -31,7 +31,7 @@
         android:visibility="gone"
         android:textColor="@android:color/black"
         android:text="@string/search_match_other"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>-->
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <!-- Use standard android.R class text1 id instead of app specific id. This is just useful for
          consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
