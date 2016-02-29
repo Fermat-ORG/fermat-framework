@@ -282,8 +282,10 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordBook, BalanceType.BOOK);
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        break;
                     }
-                    break;
                 }
             }
         } catch (CryptoBrokerWalletNotFoundException e) {
