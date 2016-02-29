@@ -4,6 +4,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySearch;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -48,7 +52,9 @@ public class ChatMiddlewareContactFactory {
      */
     Platforms[] compatiblePlatforms={
             Platforms.CRYPTO_CURRENCY_PLATFORM,
-            Platforms.DIGITAL_ASSET_PLATFORM};
+            Platforms.DIGITAL_ASSET_PLATFORM,
+            Platforms.CRYPTO_BROKER_PLATFORM
+    };
 
     /**
      * This object contains all the compatible actor network service in this version.
@@ -131,32 +137,14 @@ public class ChatMiddlewareContactFactory {
                             if(manager instanceof AssetUserActorNetworkServiceManager){
                                 dapCompatiblesManagers.add(manager);
                                 continue;
-                            } else {
-                                //Please, not throw an exception, in this version, make a logcat report.
-                                System.out.println(
-                                        "CHAT Middleware: For "+platform+" we need " +
-                                                ""+AssetUserActorNetworkServiceManager.class+" and we get from PluginRoot " +
-                                                ""+manager.getClass());
                             }
                             if(manager instanceof AssetIssuerActorNetworkServiceManager){
                                 dapCompatiblesManagers.add(manager);
                                 continue;
-                            } else {
-                                //Please, not throw an exception, in this version, make a logcat report.
-                                System.out.println(
-                                        "CHAT Middleware: For "+platform+" we need " +
-                                                ""+AssetIssuerActorNetworkServiceManager.class+" and we get from PluginRoot " +
-                                                ""+manager.getClass());
                             }
                             if(manager instanceof AssetRedeemPointActorNetworkServiceManager){
                                 dapCompatiblesManagers.add(manager);
                                 continue;
-                            } else {
-                                //Please, not throw an exception, in this version, make a logcat report.
-                                System.out.println(
-                                        "CHAT Middleware: For "+platform+" we need " +
-                                                ""+AssetRedeemPointActorNetworkServiceManager.class+" and we get from PluginRoot " +
-                                                ""+manager.getClass());
                             }
                         }
                         compatiblesActorNetworkServiceList.put(
@@ -169,6 +157,34 @@ public class ChatMiddlewareContactFactory {
                                 "CHAT Middleware: The actor network service from "+platform+" is null");
                     }
                 }
+                //CBP
+                if(platform==Platforms.CRYPTO_BROKER_PLATFORM){
+                    platformEnumCode=platform.getCode();
+                    objectFromHashMap=this.actorNetworkServiceMap.get(platformEnumCode);
+                    if(objectFromHashMap!=null){
+                        List cbpManagers= (List) objectFromHashMap;
+                        List cbpCompatiblesManagers = new ArrayList();
+                        for(Object manager : cbpManagers){
+                            if(manager instanceof CryptoBrokerCommunitySearch){
+                                cbpCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                            if(manager instanceof CryptoCustomerCommunitySearch){
+                                cbpCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                        }
+                        compatiblesActorNetworkServiceList.put(
+                                Platforms.CRYPTO_BROKER_PLATFORM.getCode(),
+                                cbpCompatiblesManagers);
+
+                    }else{
+                        //Please, not throw an exception, this means that the actorNetworkService is not set in this plugin.
+                        System.out.println(
+                                "CHAT Middleware: The actor network service from "+platform+" is null");
+                    }
+                }
+
             }
             if(compatiblesActorNetworkServiceList.isEmpty()){
                 throw new CantGetCompatiblesActorNetworkServiceListException(
@@ -318,6 +334,55 @@ public class ChatMiddlewareContactFactory {
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                                        actorPublicKey,
+                                        date.getTime()
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                    }
+
+                }
+                //CBP PLATFORM
+                if(key.equals(Platforms.CRYPTO_BROKER_PLATFORM.getCode())){
+                    List cbpContacts= (List) value;
+                    for(Object manager : cbpContacts){
+                        //CBP Brokers
+                        if(manager instanceof CryptoBrokerCommunitySearch){
+                            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch =
+                                    (CryptoBrokerCommunitySearch) manager;
+                            List<CryptoBrokerCommunityInformation> cbpActorList=
+                                    cryptoBrokerCommunitySearch.getResult();
+                            for(CryptoBrokerCommunityInformation actorBroker : cbpActorList){
+                                remoteName=actorBroker.getAlias();
+                                alias=actorBroker.getAlias();
+                                actorPublicKey=actorBroker.getPublicKey();
+                                contact=new ContactImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        actorPublicKey,
+                                        date.getTime()
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //CBP Customer
+                        if(manager instanceof CryptoCustomerCommunitySearch){
+                            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch =
+                                    (CryptoCustomerCommunitySearch) manager;
+                            List<CryptoCustomerCommunityInformation> cbpActorList=
+                                    cryptoCustomerCommunitySearch.getResult();
+                            for(CryptoCustomerCommunityInformation actorCustomer : cbpActorList){
+                                remoteName=actorCustomer.getAlias();
+                                alias=actorCustomer.getAlias();
+                                actorPublicKey=actorCustomer.getPublicKey();
+                                contact=new ContactImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                         actorPublicKey,
                                         date.getTime()
                                 );

@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
@@ -100,6 +102,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
     AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_COMMUNITY)
+    CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunitySubAppModuleManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_CUSTOMER_COMMUNITY)
+    CryptoCustomerCommunitySubAppModuleManager cryptoCustomerCommunitySubAppModuleManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     ActorAssetUserManager actorAssetUserManager;
@@ -257,6 +265,13 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         actorNetworkServiceMap.put(
                 Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
                 intraUserModuleManager);
+        //Include CBP Platform
+        List cbpPlatformManagers=new ArrayList();
+        cbpPlatformManagers.add(cryptoBrokerCommunitySubAppModuleManager.getCryptoBrokerSearch());
+        cbpPlatformManagers.add(cryptoCustomerCommunitySubAppModuleManager.getCryptoCustomerSearch());
+        actorNetworkServiceMap.put(
+                Platforms.CRYPTO_BROKER_PLATFORM.getCode(),
+                cbpPlatformManagers);
         this.chatMiddlewareContactFactory =
                 new ChatMiddlewareContactFactory(
                         actorNetworkServiceMap,
