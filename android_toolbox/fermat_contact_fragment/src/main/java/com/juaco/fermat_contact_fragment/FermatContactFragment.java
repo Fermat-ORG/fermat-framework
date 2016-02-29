@@ -1,6 +1,7 @@
 package com.juaco.fermat_contact_fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,7 +74,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by Joaquin Carrasquero on 26/02/16.
@@ -399,6 +399,19 @@ public abstract class FermatContactFragment <S extends FermatSession,RE extends 
 
             }
         });
+    }
+
+    public  void showMessage(Context context,String text) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+        // alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
 
 
