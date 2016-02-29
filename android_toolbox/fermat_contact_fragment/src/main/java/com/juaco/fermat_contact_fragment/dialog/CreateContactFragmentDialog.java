@@ -14,10 +14,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.*;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.juaco.fermat_contact_fragment.R;
 import com.juaco.fermat_contact_fragment.adapters.WalletContact;
 import com.juaco.fermat_contact_fragment.bar_code_scanner.IntentIntegrator;
@@ -44,7 +45,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     /**
      * Resources
      */
-    private ReferenceWalletSession referenceWalletSession;
+    private FermatSession appSession;
 
     /**
      * Contact member
@@ -75,11 +76,11 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, ReferenceWalletSession referenceWalletSession, WalletContact walletContact, String userId, Bitmap contactImageBitmap, CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a, FermatSession appSession, WalletContact walletContact, String userId, Bitmap contactImageBitmap, CreateContactDialogCallback createContactDialogCallback) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.referenceWalletSession = referenceWalletSession;
+        this.appSession = appSession;
         this.walletContact = walletContact;
         this.userId = userId;
         this.contactImageBitmap = contactImageBitmap;
@@ -191,7 +192,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(false);
             }
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
