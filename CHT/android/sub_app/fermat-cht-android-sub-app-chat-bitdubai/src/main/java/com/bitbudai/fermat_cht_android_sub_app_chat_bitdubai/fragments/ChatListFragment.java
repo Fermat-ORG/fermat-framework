@@ -123,6 +123,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList imgid=new ArrayList();
     TextView text;
     View layout;
+    PresentationDialog presentationDialog;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
@@ -236,22 +237,22 @@ public class ChatListFragment extends AbstractFermatFragment{
             errorManager = appSession.getErrorManager();
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
-//            chatSettings = null;
-//            try {
-//                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-//            } catch (Exception e) {
-//                chatSettings = null;
-//            }
-//
-//            if (chatSettings == null) {
-//                chatSettings = new ChatPreferenceSettings();
-//                chatSettings.setIsPresentationHelpEnabled(true);
-//                try {
-//                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
-//                } catch (Exception e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                }
-//            }
+            chatSettings = null;
+            try {
+                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatSettings = null;
+            }
+
+            if (chatSettings == null) {
+                chatSettings = new ChatPreferenceSettings();
+                chatSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
       //      filldatabase();
         } catch (Exception e) {
             if (errorManager != null)
@@ -293,22 +294,25 @@ public class ChatListFragment extends AbstractFermatFragment{
 
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
-        text=(TextView) layout.findViewById(R.id.text);
+        text = (TextView) layout.findViewById(R.id.text);
         updatevalues();
-//        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-//            .setBannerRes(R.drawable.cht_banner)
-//            .setIconRes(R.drawable.chat_subapp)
-//            .setSubTitle(R.string.cht_chat_subtitle)
-//            .setBody(R.string.cht_chat_body)
-//            .setTextFooter(R.string.cht_chat_footer)
-//            .build();
-//        try {
-//            presentationDialog.show();
-//        } catch(Exception e)
-//        {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
+        if (chatSettings.isHomeTutorialDialogEnabled() == true)
+        {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setSubTitle(R.string.cht_chat_subtitle)
+                    .setBody(R.string.cht_chat_body)
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .build();
+            try {
+                presentationDialog.show();
+            } catch (Exception e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
+
 
         adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
