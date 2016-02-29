@@ -15,10 +15,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+
+import org.glassfish.grizzly.http.util.TimeStamp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by frank on 12/9/15.
@@ -127,4 +131,93 @@ public class Data {
         }
         return transactions;
     }
+
+    public static List<DigitalAsset> getAllPendingNegotiations(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
+        List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
+        List<DigitalAsset> digitalAssets = new ArrayList<>();
+        DigitalAsset digitalAsset;
+
+        for (AssetNegotiation asset : assetNegotiations){
+            digitalAsset = new DigitalAsset();
+            digitalAsset.setAssetPublicKey(asset.getAssetToOffer().getPublicKey());
+            digitalAsset.setName(asset.getAssetToOffer().getName());
+
+            UserAssetNegotiation userAssetNegotiation = new UserAssetNegotiation();
+            userAssetNegotiation.setNegotiationId(asset.getNegotiationId());
+            userAssetNegotiation.setTotalAmmount(asset.getTotalAmount());
+            userAssetNegotiation.setAmmountPerUnit(asset.getAmountPerUnity());
+            userAssetNegotiation.setQuantityToBuy(asset.getQuantityToBuy());
+
+            digitalAsset.setUserAssetNegotiation(userAssetNegotiation);
+            digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+
+            digitalAssets.add(digitalAsset);
+
+            List<Resource> resources = asset.getAssetToOffer().getResources();
+            if(resources != null && !resources.isEmpty()){
+                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+            }
+        }
+
+        return digitalAssets;
+    }
+
+    /*public static List<DigitalAsset> getAllPendingNegotiations(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
+        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
+        List<DigitalAsset> digitalAssets = new ArrayList<>();
+        DigitalAsset digitalAsset;
+
+        for (AssetUserWalletList asset : assets) {
+            digitalAsset = new DigitalAsset();
+            digitalAsset.setAssetPublicKey(asset.getDigitalAsset().getPublicKey());
+            digitalAsset.setName(asset.getDigitalAsset().getName());
+            digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
+            digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
+            digitalAsset.setAvailableBalance(asset.getAvailableBalance());
+            digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+
+
+            UserAssetNegotiation userAssetNegotiation = new UserAssetNegotiation();
+            userAssetNegotiation.setNegotiationId(UUID.randomUUID());
+            userAssetNegotiation.setTotalAmmount(30);
+            userAssetNegotiation.setAmmountPerUnit(70000);
+            userAssetNegotiation.setQuantityToBuy(20);
+
+            digitalAsset.setUserAssetNegotiation(userAssetNegotiation);
+            digitalAssets.add(digitalAsset);
+
+            List<Resource> resources = asset.getDigitalAsset().getResources();
+            if (resources != null && !resources.isEmpty()) {
+                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+            }
+        }
+
+//        List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
+//        List<DigitalAsset> digitalAssets = new ArrayList<>();
+//        DigitalAsset digitalAsset;
+//
+//        for (AssetNegotiation asset : assetNegotiations){
+//            digitalAsset = new DigitalAsset();
+//            digitalAsset.setAssetPublicKey(asset.getAssetToOffer().getPublicKey());
+//            digitalAsset.setName(asset.getAssetToOffer().getName());
+//
+//            UserAssetNegotiation userAssetNegotiation = new UserAssetNegotiation();
+//            userAssetNegotiation.setNegotiationId(asset.getNegotiationId());
+//            userAssetNegotiation.setTotalAmmount(asset.getTotalAmount());
+//            userAssetNegotiation.setAmmountPerUnit(asset.getAmountPerUnity());
+//            userAssetNegotiation.setQuantityToBuy(asset.getQuantityToBuy());
+//
+//            digitalAsset.setUserAssetNegotiation(userAssetNegotiation);
+//            digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+//
+//            digitalAssets.add(digitalAsset);
+//
+//            List<Resource> resources = asset.getAssetToOffer().getResources();
+//            if(resources != null && !resources.isEmpty()){
+//                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+//            }
+//        }
+
+        return digitalAssets;
+    }*/
 }

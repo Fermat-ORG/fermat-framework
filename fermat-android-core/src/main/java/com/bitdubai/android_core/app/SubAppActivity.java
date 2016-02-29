@@ -40,6 +40,11 @@ import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+
 
 /**
  * Created by Matias Furszyfer
@@ -235,6 +240,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     Intent intent = new Intent(this, DesktopActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                     startActivity(intent);
 
 
@@ -545,7 +551,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         return getSubAppRuntimeMiddleware().getLastApp();
     }
 
-
+    @Override
+    public FermatStructure getAppInUse(String publicKey)throws Exception {
+        return getSubAppRuntimeMiddleware().getSubAppByPublicKey(publicKey);
+    }
 
 
     private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){

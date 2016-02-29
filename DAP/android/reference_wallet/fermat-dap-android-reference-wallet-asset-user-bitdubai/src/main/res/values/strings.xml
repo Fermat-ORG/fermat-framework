@@ -9,8 +9,8 @@
     <string name="help">Help</string>
     <string name="dap_user_wallet_search">Search</string>
     <string name="dap_user_wallet_search_hint">Asset name</string>
-    <string name="dap_user_wallet_show_no_balance">Show no balance assets</string>
-    <string name="dap_user_wallet_show_all">Show all assets</string>
+    <string name="dap_user_wallet_show_no_balance">Hide empty assets</string>
+    <string name="dap_user_wallet_show_all">Show empty assets</string>
     <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
     <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
     <string name="dap_user_wallet_action_transfer">Transfer Asset</string>
@@ -48,11 +48,16 @@
     <string name="dap_user_wallet_validate_sell_quantity">Value can\'t be greater than assets remaining</string>
     <string name="dap_user_wallet_validate_sell_total_zero">Must be enter a total value</string>
     <string name="dap_user_wallet_validate_sell_user">Must be select an user</string>
+    <string name="dap_user_wallet_validate_buy_quantity_zero">Must be entered a number of assets to buy</string>
+    <string name="dap_user_wallet_validate_buy_quantity">Assets to buy can\'t be greater than assets remaining</string>
+    <string name="dap_user_wallet_validate_buy_available">Not enought available balance in bitcoin wallet</string>
+
     <!-- -->
 
     <!-- confirm messages -->
     <string name="dap_user_wallet_confirm_title">Confirm</string>
     <string name="dap_user_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_asset_buy">Are you sure that you want to buy this asset?</string>
     <string name="dap_user_wallet_confirm_sure">Are you sure you want to do this? This action is irreversible</string>
     <!-- -->
 
@@ -69,6 +74,7 @@
     <string name="dap_user_wallet_sell_total_value">Total Value</string>
     <string name="dap_user_wallet_sell_to">Sell to</string>
     <string name="dap_user_wallet_sell_button">Sell Assets</string>
+    <string name="dap_user_wallet_buy_no_available">No Available</string>
     <!-- -->
 
     <!-- app strings -->

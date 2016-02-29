@@ -46,6 +46,8 @@ public class BusinessTransactionRecord {
 
     private UUID externalTransactionId;
 
+    private String customerAlias;
+
     //Offline fields
     private FiatCurrency currencyType;
 
@@ -366,7 +368,20 @@ public class BusinessTransactionRecord {
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;
     }
-
+    /**
+     * This method returns the customerAlias.
+     * @param
+     */
+    public String getCustomerAlias() {
+        return customerAlias;
+    }
+    /**
+     * This method sets the customerAlias.
+     * @param customerAlias
+     */
+    public void setCustomerAlias(String customerAlias) {
+        this.customerAlias = customerAlias;
+    }
     @Override
     public String toString() {
         return "BusinessTransactionRecord{" +
@@ -385,6 +400,7 @@ public class BusinessTransactionRecord {
                 ", priceReference=" + priceReference +
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 ", externalTransactionId=" + externalTransactionId +
+                ", customerAlias=" + customerAlias +
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +

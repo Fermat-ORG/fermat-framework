@@ -60,6 +60,10 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import java.util.List;
 import java.util.Objects;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
  * Created by Matias Furszyfer
@@ -226,6 +230,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         } else {
             Intent intent = new Intent(this, DesktopActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
@@ -580,6 +585,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         return getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems();
     }
 
+    @Override
+    public FermatStructure getAppInUse(String publicKey) throws Exception{
+        return getWalletRuntimeManager().getWallet(publicKey);
+    }
 
     @Override
     protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {

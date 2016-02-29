@@ -3,11 +3,11 @@ package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interface
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> {
     /**
      * (non-Javadoc)
      *
@@ -123,5 +125,16 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
      * @throws CantProcessBuyingTransactionException
      */
     void declineAsset(UUID negotiationId) throws CantProcessBuyingTransactionException;
+
+    /**
+     * This method get the available balance of bitcoin wallet
+     * @param walletPublicKey
+     * @return
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException
+     * @throws CantCalculateBalanceException
+     */
+    long getBitcoinWalletBalance(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException, CantCalculateBalanceException;
+
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
 }

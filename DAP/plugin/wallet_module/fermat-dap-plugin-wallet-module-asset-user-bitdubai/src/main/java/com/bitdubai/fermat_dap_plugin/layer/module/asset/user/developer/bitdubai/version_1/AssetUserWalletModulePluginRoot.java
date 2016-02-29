@@ -21,6 +21,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
@@ -60,6 +63,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -115,6 +119,9 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_BUYER)
     private AssetBuyerManager assetBuyerManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
+    BitcoinWalletManager bitcoinWalletManager;
 
     private AssetUserWallet wallet;
 
@@ -372,7 +379,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<AssetUserSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 
@@ -488,5 +495,15 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessBuyingTransactionException(e);
         }
+    }
+
+    @Override
+    public long getBitcoinWalletBalance(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException, CantCalculateBalanceException {
+        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+    }
+
+    @Override
+    public List<InstalledWallet> getInstallWallets() throws CantListWalletsException {
+        return walletMiddlewareManager.getInstalledWallets();
     }
 }

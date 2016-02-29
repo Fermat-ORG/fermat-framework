@@ -21,7 +21,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
@@ -59,7 +58,7 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
      * @throws CantMarkAsSeenException if something goes wrong.
      */
     @Override
-    public void markAsSeen(List<UUID> transactionIds) throws CantMarkAsSeenException {
+    public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
 
     }
 
