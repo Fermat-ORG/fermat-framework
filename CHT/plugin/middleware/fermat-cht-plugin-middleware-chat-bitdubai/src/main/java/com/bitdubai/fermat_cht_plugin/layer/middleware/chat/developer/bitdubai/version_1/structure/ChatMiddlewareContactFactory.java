@@ -193,9 +193,26 @@ public class ChatMiddlewareContactFactory {
                     if(appPublicKey==null){
                         continue;
                     }
+                    //With this we can discover the intra users registered
                     List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(
                             appPublicKey
                             , 20, 0);
+                    for(IntraUserInformation intraUserInformation : ccpActorList){
+                        remoteName=intraUserInformation.getName();
+                        alias=intraUserInformation.getName();
+                        actorPublicKey=intraUserInformation.getPublicKey();
+                        contact=new ContactImpl(
+                                UUID.randomUUID(),
+                                remoteName,
+                                alias,
+                                PlatformComponentType.ACTOR_INTRA_USER,
+                                actorPublicKey,
+                                date.getTime()
+                        );
+                        contactList.add(contact);
+                    }
+                    //With this we can get the possible CCP contacts
+                    ccpActorList=intraActorManager.getSuggestionsToContact(20,0);
                     for(IntraUserInformation intraUserInformation : ccpActorList){
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();
