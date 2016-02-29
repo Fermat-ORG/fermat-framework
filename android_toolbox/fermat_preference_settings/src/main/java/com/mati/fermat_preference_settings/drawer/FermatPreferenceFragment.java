@@ -130,7 +130,6 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
 
     }
 
-
     public abstract Drawable getBackground();
 
     @Override

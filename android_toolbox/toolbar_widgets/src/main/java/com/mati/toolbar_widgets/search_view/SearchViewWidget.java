@@ -1,17 +1,16 @@
 package com.mati.image_slider;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toolbar;
+
+import com.mati.toolbar_widgets.search_view.SearchViewCallback;
 
 /**
  * Created by mati on 2016.02.16..
@@ -43,6 +42,7 @@ public class SearchViewWidget extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public SearchViewWidget(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
