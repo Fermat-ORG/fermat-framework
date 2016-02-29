@@ -131,7 +131,7 @@
                 android:paddingBottom="10dp"/>
             </RelativeLayout>
             <!--Negotiation INI-->
-            <RelativeLayout
+        <RelativeLayout
                 android:id="@+id/negotiationAssetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -162,6 +162,7 @@
                     android:layout_below="@+id/negotiationAssetToBuyText"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
+                    android:visibility="gone"
                     />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -175,7 +176,8 @@
                     android:layout_toRightOf="@+id/negotiationAssetQuantityText"
                     android:layout_alignTop="@+id/negotiationAssetQuantityText"
                     android:paddingLeft="5dp"
-                    android:paddingTop="10dp"/>
+                    android:paddingTop="10dp"
+                    android:visibility="gone"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/negotiationAssetUnitPriceText"

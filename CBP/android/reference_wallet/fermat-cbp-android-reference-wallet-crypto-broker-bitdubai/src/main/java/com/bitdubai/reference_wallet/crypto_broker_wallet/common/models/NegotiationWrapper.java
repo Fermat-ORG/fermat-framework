@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -16,12 +15,23 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAFT;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_DELIVERY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType.SALE;
+
 
 /**
  * Created by Nelson Ramirez
@@ -36,9 +46,16 @@ final public class NegotiationWrapper {
     private Set<ClauseType> confirmedClauses;
     private long previousExpirationTime;
 
+    /**
+     * Constructor that wrap the {@link CustomerBrokerNegotiationInformation} object offering handy methods to operate with,
+     * and having the capacity to add possible missing clauses to the wrapped object
+     *
+     * @param negotiationInfo the {@link CustomerBrokerNegotiationInformation} object to wrap
+     * @param appSession      the session with the Module Manager and Error Manager in case of need to add missing clauses
+     */
     public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
         this.negotiationInfo = negotiationInfo;
-        expirationTimeStatus = ClauseStatus.DRAFT;
+        expirationTimeStatus = DRAFT;
         expirationTimeConfirmButtonClicked = false;
         confirmedClauses = new HashSet<>();
         previousExpirationTime = negotiationInfo.getNegotiationExpirationDate();
@@ -53,26 +70,26 @@ final public class NegotiationWrapper {
             if (negotiationInfo.getNegotiationExpirationDate() == 0)
                 setExpirationTime(actualTimeInMillis);
 
-            if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
-                addClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
+            if (clauses.get(CUSTOMER_DATE_TIME_TO_DELIVER) == null)
+                addClause(CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
 
-            if (clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) == null)
-                addClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
+            if (clauses.get(BROKER_DATE_TIME_TO_DELIVER) == null)
+                addClause(BROKER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
 
-            if (clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null) {
-                final String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+            if (clauses.get(CUSTOMER_PAYMENT_METHOD) == null) {
+                final String currencyToReceive = clauses.get(BROKER_CURRENCY).getValue();
                 final List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToReceive, appSession.getAppPublicKey());
                 final MoneyType paymentMethod = paymentMethods.get(0);
 
-                addClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
+                addClause(CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
 
-                if (paymentMethod == MoneyType.BANK) {
+                if (paymentMethod == BANK) {
                     List<String> bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
-                    addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "No Bank Accounts" : bankAccounts.get(0));
+                    addClause(BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
 
-                } else if (paymentMethod == MoneyType.CASH_ON_HAND || paymentMethod == MoneyType.CASH_DELIVERY) {
-                    ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
-                    addClause(ClauseType.BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "No Locations" : locations.get(0).getLocation());
+                } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
+                    ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(SALE));
+                    addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
                 }
             }
 
@@ -82,53 +99,120 @@ final public class NegotiationWrapper {
         }
     }
 
+    /**
+     * @return all the negotiation's clauses
+     */
     public Map<ClauseType, ClauseInformation> getClauses() {
         return negotiationInfo.getClauses();
     }
 
+    /**
+     * @return the {@link CustomerBrokerNegotiationInformation} object with all the negotiation information
+     */
     public CustomerBrokerNegotiationInformation getNegotiationInfo() {
         return negotiationInfo;
     }
 
+    /**
+     * @return the expiration date in millis
+     */
     public long getExpirationDate() {
         return negotiationInfo.getNegotiationExpirationDate();
     }
 
+    /**
+     * Set the value of the expiration date and update its status in advance
+     *
+     * @param expirationTime the new expiration date in millis
+     */
     public void setExpirationTime(long expirationTime) {
         negotiationInfo.setNegotiationExpirationDate(expirationTime);
 
-        if (previousExpirationTime == expirationTime && expirationTimeStatus == ClauseStatus.DRAFT)
-            expirationTimeStatus = ClauseStatus.ACCEPTED;
+        if (previousExpirationTime == expirationTime && expirationTimeStatus == DRAFT)
+            expirationTimeStatus = ACCEPTED;
         else if (previousExpirationTime != expirationTime)
-            expirationTimeStatus = ClauseStatus.CHANGED;
+            expirationTimeStatus = CHANGED;
     }
 
+    /**
+     * @return the Expiration Date's Status
+     */
     public ClauseStatus getExpirationTimeStatus() {
         return expirationTimeStatus;
     }
 
-    public boolean isExpirationTimeConfirmButtonClicked() {
+    /**
+     * @return <code>true</code> if the expiration date has been confirmed, <code>false</code> otherwise
+     */
+    public boolean isExpirationTimeConfirmed() {
         return expirationTimeConfirmButtonClicked;
     }
 
-    public void setExpirationDatetimeConfirmButtonClicked() {
+    /**
+     * Set the expiration date as confirmed  and update its status in advance
+     */
+    public void confirmExpirationDatetime() {
         setExpirationTime(negotiationInfo.getNegotiationExpirationDate());
         this.expirationTimeConfirmButtonClicked = true;
     }
 
+    /**
+     * @return <code>true</code> if the negotiation have a note, <code>false</code> otherwise
+     */
     public boolean haveNote() {
         return negotiationInfo.getMemo() != null && !negotiationInfo.getMemo().isEmpty();
     }
 
+    /**
+     * Verify if a clause is confirmed
+     *
+     * @param clause the clause to verify
+     *
+     * @return <code>true</code> if the clause is confirmed, <code>false</code> otherwise
+     */
     public boolean isClauseConfirmed(ClauseInformation clause) {
         return confirmedClauses.contains(clause.getType());
     }
 
-    public void setClauseAsConfirmed(ClauseInformation clause) {
+    /**
+     * Verify if all the clauses except the obviations are all confirmed
+     *
+     * @param obviations 0 or more clauses to obviate in the verification
+     *
+     * @return <code>true</code> if all the clauses are confirmed, <code>false</code> otherwise
+     */
+    public boolean isClausesConfirmed(ClauseType... obviations) {
+        final Collection<ClauseInformation> clauseList = getClauses().values();
+        final List<ClauseType> obviationList = Arrays.asList(obviations);
+
+        if (!expirationTimeConfirmButtonClicked)
+            return false;
+
+        for (ClauseInformation clause : clauseList) {
+            if (!isClauseConfirmed(clause) && clause.getStatus() == DRAFT) {
+                if (!obviationList.contains(clause.getType()))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Confirm the clause value changes if any and update its status in advance
+     *
+     * @param clause the clause to confirm
+     */
+    public void confirmClauseChanges(ClauseInformation clause) {
         changeClauseValue(clause, clause.getValue());
         confirmedClauses.add(clause.getType());
     }
 
+    /**
+     * Add a clause to the clauses map of the {@link CustomerBrokerNegotiationInformation} object with the {@link ClauseStatus#DRAFT} status
+     *
+     * @param clauseType the clause type to add
+     * @param value      the value of the new clause
+     */
     public void addClause(final ClauseType clauseType, final String value) {
 
         ClauseInformation clauseInformation = new ClauseInformation() {
@@ -149,13 +233,19 @@ final public class NegotiationWrapper {
 
             @Override
             public ClauseStatus getStatus() {
-                return ClauseStatus.DRAFT;
+                return DRAFT;
             }
         };
 
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
+    /**
+     * Change the value and the state of the given clause
+     *
+     * @param clause the clause the value is gonna change
+     * @param value  the new value (change the state to {@link ClauseStatus#CHANGED}) or the same (change the state to {@link ClauseStatus#ACCEPTED})
+     */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
 
         final ClauseType type = clause.getType();
@@ -179,10 +269,10 @@ final public class NegotiationWrapper {
             public ClauseStatus getStatus() {
                 final boolean equalValues = value.equals(clause.getValue());
 
-                if (equalValues && clause.getStatus() == ClauseStatus.DRAFT)
-                    return ClauseStatus.ACCEPTED;
+                if (equalValues && clause.getStatus() == DRAFT)
+                    return ACCEPTED;
                 if (!equalValues)
-                    return ClauseStatus.CHANGED;
+                    return CHANGED;
 
                 return clause.getStatus();
             }

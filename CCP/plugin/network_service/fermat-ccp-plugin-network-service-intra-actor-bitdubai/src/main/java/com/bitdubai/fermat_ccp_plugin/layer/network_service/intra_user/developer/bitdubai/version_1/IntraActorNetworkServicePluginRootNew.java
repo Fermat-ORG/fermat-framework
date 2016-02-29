@@ -229,6 +229,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
 
+
                     break;
 
 
@@ -411,6 +412,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     }
                 });
             }
+
+            System.out.println(" -----INTRA ACTOR NS REPROCESANDO MENSAJES ----");
 
         }
         catch(CantListIntraWalletUsersException e)

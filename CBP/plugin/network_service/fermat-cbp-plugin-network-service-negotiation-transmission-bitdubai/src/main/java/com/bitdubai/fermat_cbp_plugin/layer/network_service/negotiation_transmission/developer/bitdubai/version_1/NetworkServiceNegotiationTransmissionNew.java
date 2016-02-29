@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
@@ -74,6 +75,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -105,6 +107,9 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
     private NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl;
 
     NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+
+    //Represent the newLoggingLevel
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
 //
@@ -184,12 +189,10 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             NegotiationTransmission negotiationTransmission = NegotiationTransmissionImpl.fronJson(fermatMessage.getContent());
             switch (negotiationTransmission.getTransmissionType()) {
                 case TRANSMISSION_NEGOTIATION:
-                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
                     receiveNegotiation(negotiationTransmission);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
                     receiveConfirm(negotiationTransmission);
                     break;
 
@@ -197,14 +200,16 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                     throw new CantHandleNewMessagesException("Transmission Type: " + negotiationTransmission.getTransmissionType(), "Transmission type not handled.");
             }
 
-        } catch (Exception exception) {
+        } catch (CantConfirmNotificationException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch (CantHandleNewMessagesException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }
@@ -367,52 +372,6 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
         }
     }
 
-    private void receiveNegotiation(NegotiationMessage negotiationMessage) throws CantHandleNewMessagesException {
-
-        try {
-
-            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
-
-            NegotiationType negotiationType;
-
-            if (negotiationMessage.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
-                negotiationType = NegotiationType.SALE;
-            } else {
-                negotiationType = NegotiationType.PURCHASE;
-            }
-
-            NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
-                    negotiationMessage.getTransmissionId(),
-                    negotiationMessage.getTransactionId(),
-                    negotiationMessage.getNegotiationId(),
-                    negotiationMessage.getNegotiationTransactionType(),
-                    negotiationMessage.getPublicKeyActorSend(),
-                    negotiationMessage.getActorSendType(),
-                    negotiationMessage.getPublicKeyActorReceive(),
-                    negotiationMessage.getActorReceiveType(),
-                    negotiationMessage.getTransmissionType(),
-                    negotiationMessage.getTransmissionState(),
-                    negotiationType,
-                    negotiationMessage.getNegotiationXML(),
-                    negotiationMessage.getTimestamp()
-            );
-
-            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" +
-                            "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() +
-                            "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
-            );
-
-            incomingNotificationDao.createNotification(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
-//            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
-
-//        } catch (CantRegisterSendNegotiationTransmissionException e) {
-//            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
-        } catch (Exception e) {
-            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
-        }
-
-    }
-
     private void receiveNegotiation(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException {
 
         try {
@@ -466,68 +425,12 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
     }
 
-    private void receiveConfirm(ConfirmMessage confirmMessage) throws CantHandleNewMessagesException {
+    private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException, CantConfirmNotificationException {
 
-        UUID transmissionId = confirmMessage.getTransmissionId();
-        incomingNotificationDao.confirmReception(transmissionId);
+        UUID transactionId = negotiationTransmission.getTransactionId();
+//        incomingNotificationDao.confirmReception(transmissionId);
+        outgoingNotificationDao.confirmReception(transactionId);
 
-    }
-
-    private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException {
-
-        UUID transmissionId = negotiationTransmission.getTransmissionId();
-        incomingNotificationDao.confirmReception(transmissionId);
-
-    }
-
-    private void receiveNegotiationTransmissionTest(
-            NegotiationTransactionType negotiationTransactionType,
-            NegotiationTransmissionType negotiationTransmissionType,
-            NegotiationType negotiationType
-    ) {
-        try {
-            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST ****\n");
-
-            Negotiation negotiation = null;
-            PlatformComponentType actorSendType = null;
-
-            if (negotiationType.getCode().equals(NegotiationType.PURCHASE.getCode())) {
-                negotiation = purchaseNegotiationMockTest();
-                actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            } else {
-                negotiation = saleNegotiationMockTest();
-                actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            }
-
-            NegotiationMessage negotiationMessage = negotiationMessageTest(
-                    negotiation,
-                    actorSendType,
-                    negotiationTransactionType,
-                    negotiationTransmissionType,
-                    NegotiationTransmissionState.PENDING_ACTION,
-                    negotiationType
-            );
-
-            System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST DATE: ****\n" +
-                            "- ActorReceive = " + negotiationMessage.getPublicKeyActorReceive() +
-                            "- ActorSend = " + negotiationMessage.getPublicKeyActorSend()
-            );
-
-            receiveNegotiation(negotiationMessage);
-
-        } catch (CantHandleNewMessagesException e) {
-            System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
-        }
-
-    }
-
-    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-        try {
-            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().update(fermatMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest() {
@@ -694,11 +597,11 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
         //I will check the current values and update the LogLevel in those which is different
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             //if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-            if (NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (NetworkServiceNegotiationTransmissionNew.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.remove(pluginPair.getKey());
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                NetworkServiceNegotiationTransmissionNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -739,7 +642,7 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
             }

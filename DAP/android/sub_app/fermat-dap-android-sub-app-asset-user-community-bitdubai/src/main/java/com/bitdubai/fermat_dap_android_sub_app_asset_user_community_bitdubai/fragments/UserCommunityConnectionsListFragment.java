@@ -25,27 +25,27 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAppFriendsListAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAppFriendsListAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
+
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 
 /**
  * Jinmy Bohorquez 12/02/2016
@@ -152,12 +152,13 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 //            e.printStackTrace();
 //        }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         //menu.clear();
     }
@@ -251,18 +252,15 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
             result = moduleManager.getAllActorAssetUserConnected();
             if (result != null && result.size() > 0) {
                 for (ActorAssetUser record : result) {
-                    dataSet.add((new Actor((AssetUserActorRecord)record)));
+                    dataSet.add((new Actor((AssetUserActorRecord) record)));
                 }
             }
-        }
-
-        catch (CantGetAssetUserActorsException e) {
+        } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
         }
         return dataSet;
     }
-    
-    
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -276,17 +274,28 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
-        
+
     }
 
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(USER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_LIST_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
     public void onLongItemClickListener(Actor data, int position) {
 
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }

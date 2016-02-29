@@ -134,12 +134,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    /**
-     * Access modifier was changed from private to protected to enhance
-     * testability
-     */
-    // private
-    protected DatabaseTable getDatabaseContractTable() {
+
+    private DatabaseTable getDatabaseContractTable() {
 
         return getDataBase().getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME);
@@ -150,12 +146,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    /**
-     * Access modifier was changed from private to protected to enhance
-     * testability
-     */
-    // private
-    protected DatabaseTable getDatabaseEventsTable() {
+    private DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }
@@ -339,7 +330,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
-                    "Getting value from PendingTosSubmitNotificationList", "");
+                    "Getting value from PendingToSubmitNotificationList", "");
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
@@ -483,8 +474,17 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             );
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "Getting value from getPendingCryptoTransactionList", "");
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,
+                    "Getting value from getPendingCryptoTransactionList", "");
         } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected error",
                     "Check the cause");
@@ -1017,7 +1017,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,exception,"Cant Update Record","Check the cause");
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,
+                    exception,"Cant Update Record",
+                    "Check the cause");
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,

@@ -40,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
@@ -494,7 +495,12 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
-        Transaction transaction = runningAgents.get(blockchainNetworkType).wallet.getTransaction(sha256Hash);
+        Transaction transaction = runningAgents.get(blockchainNetworkType).getWallet().getTransaction(sha256Hash);
+
+        if (transaction == null){
+            Wallet wallet = getWallet(blockchainNetworkType, null);
+            transaction = wallet.getTransaction(sha256Hash);
+        }
         return transaction;
     }
 
@@ -784,6 +790,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @throws CantGetCryptoTransactionException
      */
     public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        if (StringUtils.isBlank(txHash))
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null ,"Invalid parameter. TxHash: " + txHash, "GetCryptoTransaction on CryptoNetwork");
+
         CryptoTransaction cryptoTransaction = null;
         try {
             cryptoTransaction = getDao().getCryptoTransaction(txHash);

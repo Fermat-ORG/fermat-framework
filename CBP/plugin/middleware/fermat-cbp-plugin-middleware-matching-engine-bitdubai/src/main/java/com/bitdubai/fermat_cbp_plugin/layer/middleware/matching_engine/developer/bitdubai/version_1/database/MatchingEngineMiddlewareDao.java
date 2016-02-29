@@ -2,8 +2,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -25,8 +28,6 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.P
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.*;
-
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantCreateInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetEarningsPairException;
@@ -40,6 +41,29 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ID_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TABLE_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.MATCHING_ENGINE_MIDDLEWARE_DATABASE_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao</code>
@@ -161,25 +185,26 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public final EarningsPair registerEarningsPair(final UUID            id             ,
-                                                   final Currency        earningCurrency,
-                                                   final Currency        linkedCurrency ,
-                                                   final WalletReference walletReference) throws CantAssociatePairException     ,
-                                                                                                 PairAlreadyAssociatedException {
+    public final EarningsPair registerEarningsPair(final UUID            id                    ,
+                                                   final Currency        earningCurrency       ,
+                                                   final Currency        linkedCurrency        ,
+                                                   final WalletReference earningWalletReference,
+                                                   final WalletReference walletReference       ) throws CantAssociatePairException     ,
+                                                                                                        PairAlreadyAssociatedException {
 
         try {
 
-            if (existsEarningsPair(earningCurrency, linkedCurrency))
-                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency, "The pair already exists in database.");
+            if (existsEarningsPair(earningCurrency, linkedCurrency, walletReference))
+                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletReference, "The pair already exists in database.");
 
             final EarningPairState state = EarningPairState.ASSOCIATED;
 
             final EarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
-                    id             ,
-                    earningCurrency,
-                    linkedCurrency ,
-                    walletReference,
-                    state          ,
+                    id                    ,
+                    earningCurrency       ,
+                    linkedCurrency        ,
+                    earningWalletReference,
+                    state                 ,
 
                     this
             );
@@ -188,7 +213,7 @@ public final class MatchingEngineMiddlewareDao {
 
             DatabaseTableRecord entityRecord = earningsPairTable.getEmptyRecord();
 
-            entityRecord = buildEarningsPairDatabaseRecord(entityRecord, earningsPair);
+            entityRecord = buildEarningsPairDatabaseRecord(entityRecord, earningsPair, walletReference);
 
             earningsPairTable.insertRecord(entityRecord);
 
@@ -277,8 +302,8 @@ public final class MatchingEngineMiddlewareDao {
 
 
     public final void updateEarningsPair(final UUID            id             ,
-                                         final WalletReference walletReference) throws CantUpdatePairException,
-                                                                                       PairNotFoundException  {
+                                         final WalletReference earningsWalletReference) throws CantUpdatePairException,
+                                                                                               PairNotFoundException  {
 
         try {
 
@@ -294,7 +319,7 @@ public final class MatchingEngineMiddlewareDao {
 
                 DatabaseTableRecord entityRecord = records.get(0);
 
-                entityRecord.setStringValue(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME, walletReference.getPublicKey());
+                entityRecord.setStringValue(EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME, earningsWalletReference.getPublicKey());
 
                 earningsPairTable.updateRecord(entityRecord);
 
@@ -339,8 +364,9 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public boolean existsEarningsPair(final Currency earningCurrency,
-                                      final Currency linkedCurrency ) throws CantGetEarningsPairException {
+    public boolean existsEarningsPair(final Currency        earningCurrency,
+                                      final Currency        linkedCurrency ,
+                                      final WalletReference walletReference) throws CantGetEarningsPairException {
 
         if (earningCurrency == null)
             throw new CantGetEarningsPairException(null, "", "The earningCurrency is required, can not be null");
@@ -348,14 +374,41 @@ public final class MatchingEngineMiddlewareDao {
         if (linkedCurrency == null)
             throw new CantGetEarningsPairException(null, "", "The linkedCurrency is required, can not be null");
 
+        if (walletReference == null)
+            throw new CantGetEarningsPairException(null, "", "The walletReference is required, can not be null");
+
         try {
 
             final DatabaseTable earningsPairTable = database.getTable(EARNING_PAIR_TABLE_NAME);
 
-            earningsPairTable.addFermatEnumFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , earningCurrency          , DatabaseFilterType.EQUAL);
-            earningsPairTable.addFermatEnumFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, earningCurrency.getType(), DatabaseFilterType.EQUAL);
-            earningsPairTable.addFermatEnumFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , linkedCurrency           , DatabaseFilterType.EQUAL);
-            earningsPairTable.addFermatEnumFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME, linkedCurrency.getType(), DatabaseFilterType.EQUAL);
+            final List<DatabaseTableFilter> tableFilters1 = new ArrayList<>();
+
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, linkedCurrency.getCode())           );
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
+
+            final DatabaseTableFilterGroup filterGroup1 = earningsPairTable.getNewFilterGroup(tableFilters1, null, DatabaseFilterOperator.AND);
+
+            final List<DatabaseTableFilter> tableFilters2 = new ArrayList<>();
+
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseFilterType.EQUAL, linkedCurrency.getCode())           );
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
+
+            final DatabaseTableFilterGroup filterGroup2 = earningsPairTable.getNewFilterGroup(tableFilters2, null, DatabaseFilterOperator.AND);
+
+            List<DatabaseTableFilterGroup> filterGroups = new ArrayList<>();
+
+            filterGroups.add(filterGroup1);
+            filterGroups.add(filterGroup2);
+
+            final DatabaseTableFilterGroup filterGroupFinal = earningsPairTable.getNewFilterGroup(null, filterGroups, DatabaseFilterOperator.OR);
+
+            earningsPairTable.setFilterGroup(filterGroupFinal);
 
             earningsPairTable.loadToMemory();
 
@@ -369,43 +422,45 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    private DatabaseTableRecord buildEarningsPairDatabaseRecord(final DatabaseTableRecord record      ,
-                                                                final EarningsPair        earningsPair) {
+    private DatabaseTableRecord buildEarningsPairDatabaseRecord(final DatabaseTableRecord record         ,
+                                                                final EarningsPair        earningsPair   ,
+                                                                final WalletReference     walletReference) {
 
-        record.setUUIDValue  (EARNING_PAIR_ID_COLUMN_NAME                   , earningsPair.getId()                            );
-        record.setFermatEnum (EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , earningsPair.getEarningCurrency()               );
-        record.setFermatEnum (EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, earningsPair.getEarningCurrency().getType()     );
-        record.setFermatEnum (EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , earningsPair.getLinkedCurrency()                );
-        record.setFermatEnum (EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , earningsPair.getLinkedCurrency().getType()      );
-        record.setStringValue(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , earningsPair.getEarningsWallet().getPublicKey() );
-        record.setFermatEnum (EARNING_PAIR_STATE_COLUMN_NAME                , earningsPair.getState()                         );
+        record.setUUIDValue  (EARNING_PAIR_ID_COLUMN_NAME                        , earningsPair.getId()                           );
+        record.setFermatEnum (EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME          , earningsPair.getEarningCurrency()              );
+        record.setFermatEnum (EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     , earningsPair.getEarningCurrency().getType()    );
+        record.setFermatEnum (EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           , earningsPair.getLinkedCurrency()               );
+        record.setFermatEnum (EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      , earningsPair.getLinkedCurrency().getType()     );
+        record.setStringValue(EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME, earningsPair.getEarningsWallet().getPublicKey());
+        record.setStringValue(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME         , walletReference.getPublicKey()                 );
+        record.setFermatEnum (EARNING_PAIR_STATE_COLUMN_NAME                     , earningsPair.getState()                        );
 
         return record;
     }
 
     private EarningsPair buildEarningPairRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID   requestId                 = record.getUUIDValue  (EARNING_PAIR_ID_COLUMN_NAME                   );
-        String earningCurrencyString     = record.getStringValue(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     );
-        String earningCurrencyTypeString = record.getStringValue(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME);
-        String linkedCurrencyString      = record.getStringValue(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      );
-        String linkedCurrencyTypeString  = record.getStringValue(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME );
-        String walletPublicKey           = record.getStringValue(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    );
-        String stateString               = record.getStringValue(EARNING_PAIR_STATE_COLUMN_NAME                );
+        UUID   requestId                 = record.getUUIDValue  (EARNING_PAIR_ID_COLUMN_NAME                        );
+        String earningCurrencyString     = record.getStringValue(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME);
+        String earningCurrencyTypeString = record.getStringValue(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     );
+        String linkedCurrencyString      = record.getStringValue(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           );
+        String linkedCurrencyTypeString  = record.getStringValue(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      );
+        String walletPublicKey           = record.getStringValue(EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        String stateString               = record.getStringValue(EARNING_PAIR_STATE_COLUMN_NAME                     );
 
-        Currency earningCurrency = CurrencyHelper.getCurrency(earningCurrencyString, earningCurrencyTypeString);
-        Currency linkedCurrency  = CurrencyHelper.getCurrency(linkedCurrencyString , linkedCurrencyTypeString );
+        Currency earningCurrency = CurrencyHelper.getCurrency(earningCurrencyTypeString, earningCurrencyString);
+        Currency linkedCurrency  = CurrencyHelper.getCurrency(linkedCurrencyTypeString, linkedCurrencyString);
 
         EarningPairState state = EarningPairState.getByCode(stateString);
 
-        WalletReference walletReference = new WalletReference(walletPublicKey);
+        WalletReference earningsWalletReference = new WalletReference(walletPublicKey);
 
         return new MatchingEngineMiddlewareEarningsPair(
-                requestId      ,
-                earningCurrency,
-                linkedCurrency ,
-                walletReference,
-                state          ,
+                requestId              ,
+                earningCurrency        ,
+                linkedCurrency         ,
+                earningsWalletReference,
+                state                  ,
 
                 this
         );
@@ -444,7 +499,7 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public boolean existsInputTransaction(final UUID inputTransactionId) throws CantGetInputTransactionException {
+    public boolean existsInputTransaction(final String inputTransactionId) throws CantGetInputTransactionException {
 
         if (inputTransactionId == null)
             throw new CantGetInputTransactionException(null, "", "The inputTransactionId is required, can not be null");
@@ -453,7 +508,7 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
 
-            inputTransactionsTable.addUUIDFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addStringFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
 
             inputTransactionsTable.loadToMemory();
 
@@ -471,23 +526,23 @@ public final class MatchingEngineMiddlewareDao {
                                                                     final UUID                earningPairId   ,
                                                                     final InputTransaction    inputTransaction) {
 
-        record.setUUIDValue (INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving());
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
-        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          , inputTransaction.getAmountGiving()               );
-        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
-        record.setFermatEnum(INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
+        record.setStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getId());
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving());
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
+        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          , inputTransaction.getAmountGiving()               );
+        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
+        record.setFermatEnum (INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
 
-        record.setUUIDValue (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
+        record.setUUIDValue  (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
 
         return record;
     }
 
     private InputTransaction buildInputTransactionRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID   id                          = record.getUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     );
+        String id                          = record.getStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME                     );
 
         String currencyGivingString        = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        );
         String currencyGivingTypeString    = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   );

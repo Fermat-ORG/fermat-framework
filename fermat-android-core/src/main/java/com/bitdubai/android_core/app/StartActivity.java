@@ -202,7 +202,7 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
-        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
     }
 
     @Override

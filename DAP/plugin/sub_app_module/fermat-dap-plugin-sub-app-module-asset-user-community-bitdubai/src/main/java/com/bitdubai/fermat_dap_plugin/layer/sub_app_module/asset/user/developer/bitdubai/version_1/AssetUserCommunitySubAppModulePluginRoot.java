@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -40,12 +39,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
@@ -112,13 +111,21 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
+    public DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException {
+        blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+
+        return actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetPublicKey, blockchainNetworkType);
+    }
+
+    @Override
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list = null;
         List<AssetUserActorRecord> assetUserActorRecords = null;
 
         try {
             list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-            actorAssetUserManager.createActorAssetUserRegisterInNetworkService(list);
+            if (list != null && list.size() > 0)
+                actorAssetUserManager.createActorAssetUserRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetUserRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateAssetUserActorException e) {
@@ -214,19 +221,6 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
-    }
-
-    @Override
-    public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException {
-        try {
-            actorAssetUserManager.disconnectToActorAssetUser(user, assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
-        } catch (CantDisconnectAssetUserActorException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
-        } catch (CantDeleteRecordException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -343,7 +337,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                             actorAssetUser.getProfileImage(),
                             blockchainNetworkType);
 
-                    if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                    if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                         System.out.println("The User you are trying to connect with is not connected" +
                                 "so we send the message to the assetUserActorNetworkService");
                         this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
@@ -373,7 +367,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                                 actorAssetUser.getProfileImage(),
                                 blockchainNetworkType);
 
-                        if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                        if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                             System.out.println("The User you are trying to connect with is not connected" +
                                     "so we send the message to the assetUserActorNetworkService");
                             this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
@@ -395,30 +389,30 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                 }
             }
         } catch (CantAskConnectionActorAssetException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAskConnectionActorAssetException("", e, "", "");
         } catch (CantRequestAlreadySendActorAssetException e) {
-            throw new CantAskConnectionActorAssetException("", e, "", "Intra user request already send");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAskConnectionActorAssetException("", e, "", "actor asset user request already send");
         } catch (Exception e) {
-            throw new CantAskConnectionActorAssetException("CAN'T ASK INTRA USER CONNECTION", FermatException.wrapException(e), "", "unknown exception");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAskConnectionActorAssetException("CAN'T ASK ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
     @Override
     public void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException {
         try {
-            /**
-             *Call Actor Intra User to accept request connection
-             */
+
             this.actorAssetUserManager.acceptActorAssetUser(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey);
 
-            /**
-             *Call Network Service User to accept request connection
-             */
             this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey);
 
         } catch (CantAcceptActorAssetUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetUserToAddPublicKey, e, "", "");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetUserToAddPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
@@ -426,59 +420,68 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException {
         try {
-            /**
-             *Call Actor Intra User to denied request connection
-             */
+
             this.actorAssetUserManager.denyConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey);
 
-            /**
-             *Call Network Service User to denied request connection
-             */
             this.assetUserActorNetworkServiceManager.denyConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey);
 
         } catch (CantDenyConnectionActorAssetException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToRejectPublicKey, e, "", "");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
     @Override
-    public void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
+    public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException {
         try {
-            /**
-             *Call Actor User to disconnect request connection
-             */
-            this.actorAssetUserManager.disconnectActorAssetUser(intraUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
 
-            /**
-             *Call Network Service User to disconnect request connection
-             */
-            this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(intraUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
+            this.actorAssetUserManager.disconnectToActorAssetUser(user.getActorPublicKey(), assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
+
+            this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(user.getActorPublicKey(), user.getActorPublicKey());
 
         } catch (CantDisconnectAssetUserActorException e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToDisconnectPublicKey, e, "", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + user.getActorPublicKey(), e, "", "");
         } catch (Exception e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + user.getActorPublicKey(), e, "", "");
         }
     }
+
+//    @Override
+//    public void disconnectActorAssetUser(String actorUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
+//        try {
+//
+////            this.actorAssetUserManager.disconnectActorAssetUser(actorUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
+//
+////            this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(actorUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
+//
+//        } catch (CantDisconnectAssetUserActorException e) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, e, "", "");
+//        } catch (Exception e) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
+//        }
+//    }
 
     @Override
     public void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {
-            /**
-             *Call Actor Intra User to cancel request connection
-             */
+
             this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
 
-            /**
-             *Call Network Service Intra User to cancel request connection
-             */
             this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
+
         } catch (CantCancelConnectionActorAssetException e) {
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToCancelPublicKey, e, "", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToCancelPublicKey, e, "", "");
         } catch (Exception e) {
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION- KEY:" + actorAssetUserToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -494,8 +497,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
             return this.actorAssetUserManager.getWaitingYourConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
         } catch (CantGetActorAssetWaitingException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING YOUR ACCEPTANCE", e, "", "");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING YOUR ACCEPTANCE", FermatException.wrapException(e), "", "unknown exception");
         }
     }
@@ -510,8 +515,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 //            }
             return this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
         } catch (CantGetActorAssetWaitingException e) {
-            throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on IntraUserActor Manager");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR ASSET USER MANAGER");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", FermatException.wrapException(e), "", "unknown exception");
         }
     }
@@ -521,8 +528,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             return this.actorAssetUserManager.getLastNotificationActorAssetUser(actorAssetUserInPublicKey);
         } catch (CantGetActorAssetNotificationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "", "Error on ACTOR ASSET Manager");
-
         }
     }
 
@@ -536,10 +543,13 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             }
 
         } catch (CantGetActorAssetWaitingException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantGetIdentityAssetUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return 0;
@@ -575,13 +585,14 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[4];
+        int[] notifications = new int[5];
         try {
             if (getSelectedActorIdentity() != null)
                 notifications[2] = actorAssetUserManager.getWaitingYourConnectionActorAssetUser(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
             else
                 notifications[2] = 0;
         } catch (CantGetActorAssetWaitingException | CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return notifications;

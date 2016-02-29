@@ -44,6 +44,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+
 /**
  * Wizard Activity
  *
@@ -290,6 +294,11 @@ public class WizardActivity extends FermatActivity
     @Override
     public FermatStructure getAppInUse() {
         //TODO: a implementar
+        return null;
+    }
+
+    @Override
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
         return null;
     }
 

@@ -8,11 +8,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 public class CryptoCustomerWalletSession
@@ -27,6 +26,7 @@ public class CryptoCustomerWalletSession
     public static final String CURRENCY_TO_BUY = "CURRENCY_TO_BUY";
     public static final String QUOTES = "QUOTES";
     public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
+    public static final String NEGOTIATION_ID = "NEGOTIATION_ID";
 
 
     public CryptoCustomerWalletSession() {
@@ -66,5 +66,14 @@ public class CryptoCustomerWalletSession
 
     public void setActualExchangeRates( List<IndexInfoSummary>  exchangeRates) {
         setData(EXCHANGE_RATES, exchangeRates);
+    }
+
+    public void setNegotiationId(UUID  negotiationId) {
+        setData(NEGOTIATION_ID, negotiationId);
+    }
+
+    public UUID getNegotiationId() {
+        Object data = getData(NEGOTIATION_ID);
+        return (data != null) ? (UUID) data : null;
     }
 }

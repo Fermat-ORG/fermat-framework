@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
  */
 public class RuntimeStructureManager implements FermatRuntime {
 
-    WeakReference<FermatActivity> fermatActivity;
+    private WeakReference<FermatActivity> fermatActivity;
 
     public RuntimeStructureManager(FermatActivity fermatActivity) {
         this.fermatActivity = new WeakReference(fermatActivity);
@@ -44,7 +44,7 @@ public class RuntimeStructureManager implements FermatRuntime {
         }
     }
 
-    private RuntimeManager selectRuntimeManager(){
+    public RuntimeManager selectRuntimeManager(){
         RuntimeManager runtimeManager = null;
         switch (fermatActivity.get().getType()) {
             case ACTIVITY_TYPE_WALLET:
