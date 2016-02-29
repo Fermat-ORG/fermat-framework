@@ -206,7 +206,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 //Fin Comentar
                 text.setVisibility(View.VISIBLE);
                 text.setText("No Contacts");
-                text.setBackgroundResource(R.drawable.cht_empty_contats_icon);
+                text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -309,7 +309,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                         Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                         text.setVisibility(View.VISIBLE);
                         text.setText("No Contacts");
-                        text.setBackgroundResource(R.drawable.cht_empty_contats_icon);
+                        text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
                     }
                 } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

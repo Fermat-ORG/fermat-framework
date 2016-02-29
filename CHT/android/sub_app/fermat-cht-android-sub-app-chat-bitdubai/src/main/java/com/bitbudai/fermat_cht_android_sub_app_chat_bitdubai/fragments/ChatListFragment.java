@@ -257,7 +257,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
                 text.setVisibility(View.VISIBLE);
                 text.setText("No Chats");
-                text.setBackgroundResource(R.drawable.cht_empty_chat_icon);
+                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -328,7 +328,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 Toast.makeText(getActivity(), "No Chats now", Toast.LENGTH_SHORT).show();
                                 text.setVisibility(View.VISIBLE);
                                 text.setText("No Chats");
-                                text.setBackgroundResource(R.drawable.cht_empty_chat_icon);
+                                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
                             }
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
