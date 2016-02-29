@@ -125,39 +125,7 @@ public class ClosedNegotiationDetailsFragment  extends AbstractFermatFragment<Cr
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.cbw_closed_negotiation_details_menu, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.cbw_action_cancel_negotiation) {
-            TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
-            dialog.configure(R.string.cbw_cancel_negotiation, R.string.cbw_reason);
-            dialog.setTextFreeInputType(true);
-            dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
-                @Override
-                public void onClick(String editTextValue) {
-                    try {
-                        walletManager.cancelNegotiation(negotiationWrapper.getNegotiationInfo(), editTextValue);
-                        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-
-                    } catch (FermatException e) {
-                        Toast.makeText(getActivity(), "Oopss, an error ocurred", Toast.LENGTH_SHORT).show();
-                        if (errorManager != null)
-                            errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        else
-                            Log.e(TAG, e.getMessage(), e);
-                    }
-                }
-            });
-            dialog.show();
-            return true;
-        }
-        return false;
-    }
 
 
 
