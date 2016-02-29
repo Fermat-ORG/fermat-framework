@@ -1,9 +1,11 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,6 +43,9 @@ import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.MISSING_IMAGE;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 
 /**
@@ -98,6 +103,15 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
+        Button botonU = (Button) layout.findViewById(R.id.update_crypto_broker_button);
+        botonU.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizable = false;
+                editIdentityInfoInBackDevice();
+            }
+        });
+
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
@@ -123,10 +137,18 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            if (actualizable) {
-                editIdentityInfoInBackDevice();
-                actualizable = false;
-            }
+                if (actualizable) {
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Save Changes?")
+                            .setMessage("You want to save changes?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    editIdentityInfoInBackDevice();
+                                }
+                            }).create().show();
+                    actualizable = false;
+                }
             }
         });
         if(publishIdentityCheckBox.isChecked()){
@@ -216,10 +238,19 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         }else{
             imgInBytes = profileImage;
         }
-        if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
-            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-            executor = EditIdentityWorker.execute();
+
+        if(brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+        }else{
+            if(imgInBytes == null){
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
+                if(cryptoBrokerPublicKey != null) {
+                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+                    EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+                    executor = EditIdentityWorker.execute();
+                }
+            }
         }
     }
 
@@ -245,10 +276,11 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         }
         if (result.length > 0) {
             int resultCode = (int) result[0];
-            if (resultCode == 1) {
-                Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
-            } else if (resultCode == 4) {
-                Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
+
+            switch (resultCode) {
+                case SUCCESS:
+                    Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
+                break;
             }
         }
     }

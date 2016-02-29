@@ -103,7 +103,8 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         try {
             list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
-            actorAssetRedeemPointManager.createActorAssetRedeemPointRegisterInNetworkService(list);
+            if (list != null && list.size() > 0)
+                actorAssetRedeemPointManager.createActorAssetRedeemPointRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateActorRedeemPointException e) {
@@ -361,7 +362,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[4];
+        int[] notifications = new int[5];
         try {
             if (getSelectedActorIdentity() != null)
                 notifications[2] = actorAssetRedeemPointManager.getWaitingYourConnectionActorAssetRedeem(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
