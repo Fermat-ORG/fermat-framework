@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,14 +50,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+import com.juaco.fermat_contact_fragment.adapters.WalletContact;
 import com.juaco.fermat_contact_fragment.dialog.CreateContactFragmentDialog;
+import com.juaco.fermat_contact_fragment.enums.HeaderTypes;
 import com.juaco.fermat_contact_fragment.interfaces.CreateContactDialogCallback;
 import com.juaco.fermat_contact_fragment.interfaces.FermatListViewFragment;
+import com.juaco.fermat_contact_fragment.session.SessionConstant;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.IndexBarView;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.PinnedHeaderListView;
@@ -174,7 +174,7 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {
                     if (!walletContactRecords.isEmpty()) {
-                        rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.fragment_container2).setVisibility(View.VISIBLE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }
             }, 300);
@@ -199,20 +199,20 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
         frameLayout.addView(icon);
         com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
-                .setBackgroundDrawable(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.drawable.btn_contact_selector)
+                .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
         // repeat many times:
         ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.drawable.extra_user_button);
+        itemIcon.setImageResource(R.drawable.extra_user_button);
 
         SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
         button1.setId(ID_BTN_EXTRA_USER);
 
 
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.drawable.intra_user_button);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.drawable.intra_user_button)).setText("Fermat User").build();
+        itemIcon2.setImageResource(R.drawable.intra_user_button);
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
         button2.setId(ID_BTN_INTRA_USER);
 
 
@@ -268,7 +268,7 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.drawable.help_icon)
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -321,12 +321,12 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
 
 
     private void setupViews(View rootView) {
-        mSearchView = (EditText) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.search_view);
-        mClearSearchImageButton = (ImageButton) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.clear_search_image_button);
-        contacts_container = (FrameLayout) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.contacts_container);
-        mLoadingView = (ProgressBar) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.loading_view);
-        mListView = (PinnedHeaderListView) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.list_view);
-        mEmptyView = (LinearLayout) rootView.findViewById(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.id.empty_view);
+        mSearchView = (EditText) rootView.findViewById(R.id.search_view);
+        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+        contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
+        mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
+        mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
+        mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
@@ -368,11 +368,11 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-        View pinnedHeaderView = inflater.inflate(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.section_row_view, mListView, false);
+        View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
         mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.index_bar_view, mListView, false);
+        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view, mListView, false);
         indexBarView.setData(mListView, mListItems, mListSectionPos);
         mListView.setIndexBarView(indexBarView);
         // for configure pinned header view on onrefresh change
@@ -787,7 +787,7 @@ public abstract class FermatContactFragment extends AbstractFermatFragment imple
 
     }
 
-
+    public abstract Drawable getBackground();
 
 
 }
