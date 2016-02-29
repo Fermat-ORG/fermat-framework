@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.mati.fermat_preference_settings.R;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
@@ -119,7 +120,15 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
         return this._executor;
     }
 
+    public FermatViewHolder findItemById(int position){
+        return (FermatViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+    }
+
     public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
+
+    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position){
+
+    }
 
 
     public abstract Drawable getBackground();

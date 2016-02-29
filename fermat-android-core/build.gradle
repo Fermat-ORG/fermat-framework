@@ -137,7 +137,6 @@ dependencies {
     //compile 'com.google.android.gms:play-services:6.5.87'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
@@ -161,4 +160,5 @@ dependencies {
 
 
 
+    compile 'com.android.support:appcompat-v7:23.1.1'
 }
