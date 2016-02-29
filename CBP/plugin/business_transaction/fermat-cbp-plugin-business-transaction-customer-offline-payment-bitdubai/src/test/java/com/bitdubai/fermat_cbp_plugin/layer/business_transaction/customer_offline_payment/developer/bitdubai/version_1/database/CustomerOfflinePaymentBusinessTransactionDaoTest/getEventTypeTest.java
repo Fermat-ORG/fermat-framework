@@ -54,7 +54,7 @@ public class getEventTypeTest {
         )).thenReturn("Test");
     }
     @Test
-    public void getEventTypeTest_Should_Equal_Test()throws Exception{
+    public void getEventTypeTest()throws Exception{
         when(mockDatabase.getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
         )).thenReturn(databaseTable);
