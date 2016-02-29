@@ -55,8 +55,9 @@ angular.module("serverApp").controller('UserCtrl', ['$scope', '$http', '$window'
     }
   };
 
-  self.logout = function() {
+  $scope.logout = function() {
     $window.localStorage.removeItem('jwtAuthToke');
+    $window.location.href = '../index.html';
   };
 
 }]);
