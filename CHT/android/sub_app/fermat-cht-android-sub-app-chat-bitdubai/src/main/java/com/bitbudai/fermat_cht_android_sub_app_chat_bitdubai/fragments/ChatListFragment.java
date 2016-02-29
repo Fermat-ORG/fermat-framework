@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
@@ -19,6 +20,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -117,7 +119,8 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<String> infochat=new ArrayList<String>();
     ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
     ArrayList imgid=new ArrayList();
-
+    TextView text;
+    View layout;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
@@ -208,7 +211,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 //datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
-                imgid.add(R.drawable.ic_contact_picture_holo_light);//R.drawable.ken
+                imgid.add(R.drawable.cht_profile_list_icon);//R.drawable.ken
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -249,8 +252,12 @@ public class ChatListFragment extends AbstractFermatFragment{
         try{
             if(!chatManager.getMessages().isEmpty()) {
                 chatlistview();
+                text.setVisibility(View.GONE);
             }else{
                 Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
+                text.setVisibility(View.VISIBLE);
+                text.setText(" ");
+                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -264,9 +271,25 @@ public class ChatListFragment extends AbstractFermatFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
+        layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        text=(TextView) layout.findViewById(R.id.text);
         updatevalues();
+        /*PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+            .setBannerRes(R.drawable.cht_banner)
+            .setIconRes(R.drawable.chat_subapp)
+            .setSubTitle(R.string.cht_chat_subtitle)
+            .setBody(R.string.cht_chat_body)
+            .setTextFooter(R.string.cht_chat_footer)
+            .build();*/
+        try {
+            //presentationDialog.show();
+        } catch(Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+
         adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -308,7 +331,10 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 updatevalues();
                                 adapter.refreshEvents(infochat, imgid);
                             } else {
-                                Toast.makeText(getActivity(), "No Contact now", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "No Chats now", Toast.LENGTH_SHORT).show();
+                                text.setVisibility(View.VISIBLE);
+                                text.setText(" ");
+                                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
                             }
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
