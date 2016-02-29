@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @since 21/12/15.
  */
 public class CantGetNegotiationInformationException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Cant get the negotiation information. Please check de negotiation ID";
+    public static final String DEFAULT_MESSAGE = "Cant get the negotiation information";
 
     /**
      * This is the constructor that every inherited FermatException must implement
