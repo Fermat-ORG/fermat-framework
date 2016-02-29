@@ -104,7 +104,8 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         try {
             list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
-            actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
+            if (list != null && list.size() > 0)
+                actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetIssuerRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateActorAssetIssuerException e) {
@@ -408,7 +409,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[4];
+        int[] notifications = new int[5];
         try {
             if (getSelectedActorIdentity() != null)
                 notifications[2] = actorAssetIssuerManager.getWaitingYourConnectionActorAssetIssuer(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
