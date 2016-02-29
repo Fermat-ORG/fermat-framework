@@ -341,9 +341,10 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 digitalAssets = (ArrayList) result[0];
-                if (adapter != null)
+                if (adapter != null) {
                     adapter.changeDataSet(digitalAssets);
-
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
+                }
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
         }

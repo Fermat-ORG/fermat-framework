@@ -48,7 +48,7 @@ public final class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory
 
         try {
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -59,7 +59,7 @@ public final class NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory
 
             try {
 
-                database = negotiationTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = negotiationTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
 
                 throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);

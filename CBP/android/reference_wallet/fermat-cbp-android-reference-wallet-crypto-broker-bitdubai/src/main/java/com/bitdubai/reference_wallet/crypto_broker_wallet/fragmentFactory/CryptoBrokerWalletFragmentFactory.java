@@ -5,22 +5,20 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.closed_negotiation_details.ClosedNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseContractDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CreateNewLocationFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.OpenContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details.AddNoteFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings.EarningsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsBankAccountsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsMylocationsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SetttingsStockManagementFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageOtherSettingsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetEarningsFragment;
@@ -54,9 +52,7 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
             case CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS:
                 return OpenNegotiationDetailsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS:
-                return CloseNegotiationDetailsFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS:
-                return OpenContractDetailsFragment.newInstance();
+                return ClosedNegotiationDetailsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS:
                 return CloseContractDetailsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY:
@@ -91,8 +87,6 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return SetttingsStockManagementFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS:
                 return ContractDetailActivityFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_ADD_NOTE:
-                return AddNoteFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }

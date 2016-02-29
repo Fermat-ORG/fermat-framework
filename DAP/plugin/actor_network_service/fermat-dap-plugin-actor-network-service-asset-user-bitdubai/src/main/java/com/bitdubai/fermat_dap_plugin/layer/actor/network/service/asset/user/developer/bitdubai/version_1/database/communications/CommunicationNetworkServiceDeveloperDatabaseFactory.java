@@ -178,13 +178,13 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
         /**
-         * Table outgoing messages addition.
+         * Table incoming messages addition.
          */
         DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingNotificationsColumns);
         tables.add(outgoingNotificationsTable);
 
         /**
-         * Table outgoing messages columns.
+         * Table incoming messages columns.
          */
         List<String> incomingNotificationsColumns = new ArrayList<String>();
 

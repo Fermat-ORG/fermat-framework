@@ -17,10 +17,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionT
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.enums.ActorProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConfirmNotificationException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class OutgoingNotificationDao {
 
 
         } catch (CantInsertRecordException e) {
-//            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
         }
     }
 
@@ -72,29 +73,27 @@ public class OutgoingNotificationDao {
         try {
 
 //            if (!existNotification(negotiationTransmission)) {
-                DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-                DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
 
-                cryptoPaymentRequestTable.insertRecord(loadRecordAsSendNegotiationTransmission(entityRecord, negotiationTransmission, negotiationTransmissionState));
+            cryptoPaymentRequestTable.insertRecord(loadRecordAsSendNegotiationTransmission(entityRecord, negotiationTransmission, negotiationTransmissionState));
 //            }
 
 
         } catch (CantInsertRecordException e) {
-//            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
         }
     }
 
-    public boolean existNotification(final NegotiationTransmission negotiationTransmission) {
+    public boolean existNotification(final NegotiationTransmission negotiationTransmission) throws CantCreateNotificationException {
 
 
         try {
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId(), DatabaseFilterType.EQUAL);
-//            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME, negotiationTransmission.getTransactionId(), DatabaseFilterType.EQUAL);
-//            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME, negotiationTransmission.getNegotiationId(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME, negotiationTransmission.getTransmissionId(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -108,57 +107,57 @@ public class OutgoingNotificationDao {
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            return false;
-//            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantCreateNotificationException();
         }
 
     }
 
     /*CONFIRM RECEPTION*/
-    public void confirmReception(UUID transmissionId) {
+    public void confirmReception(UUID transactionId) throws CantConfirmNotificationException {
         try {
 
-            NegotiationTransmission negotiationTransmission = getNotificationById(transmissionId);
+            NegotiationTransmission negotiationTransmission = getNotificationById(transactionId);
             negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
             update(negotiationTransmission);
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
 
         } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+            throw new CantConfirmNotificationException(e,e.getContext(),"ERROR UPDATING DATABASE. CHECK UPDATE METHOD");
         }
     }
 
-    public NegotiationTransmission getNotificationById(final UUID transmissionId) {
-//
-        if (transmissionId == null)
+    public NegotiationTransmission getNotificationById(final UUID transactionId) {
+
+        NegotiationTransmission negotiationTransmission = null;
+        if (transactionId == null)
             return null;
 
         try {
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return buildNegotiationTransmission(records.get(0));
-            else
-                ;
+            if (!records.isEmpty()) {
+                negotiationTransmission = buildNegotiationTransmission(records.get(0));
+            }
 
 
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException e) {
 
-//            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch (InvalidParameterException exception) {
-
-//            throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
+            e.printStackTrace();
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        } catch(Exception e){
+            e.printStackTrace();
         }
 
-        return null;
+        return negotiationTransmission;
 
     }
 
@@ -170,7 +169,7 @@ public class OutgoingNotificationDao {
 
         try {
 
-            DatabaseTable incomingNotificationtable = getDatabaseTable();
+            DatabaseTable outgoingNotificationtable = getDatabaseTable();
 
             DatabaseTableRecord emptyRecord = getDatabaseTable().getEmptyRecord();
             /*
@@ -184,11 +183,11 @@ public class OutgoingNotificationDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             //Set filter
-            incomingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME, entity.getResponseToNotificationId(), DatabaseFilterType.EQUAL);
-//            incomingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME, entity.getTransactionId(), DatabaseFilterType.EQUAL);
-//            incomingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME, entity.getNegotiationId(), DatabaseFilterType.EQUAL);
+            outgoingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME, entity.getTransmissionId(), DatabaseFilterType.EQUAL);
+//            outgoingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME, entity.getTransactionId(), DatabaseFilterType.EQUAL);
+//            outgoingNotificationtable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME, entity.getNegotiationId(), DatabaseFilterType.EQUAL);
 
-            transaction.addRecordToUpdate(incomingNotificationtable, entityRecord);
+            transaction.addRecordToUpdate(outgoingNotificationtable, entityRecord);
             database.executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -216,14 +215,14 @@ public class OutgoingNotificationDao {
             List<NegotiationTransmission> list = new ArrayList<>();
 
             List<DatabaseTableRecord> records;
-            DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
             if (table == null)
                 throw new CantReadRecordDataBaseException("Cant check if negotiation_transmission_network_service exists", "Network Service - Negotiation Transmission", "");
 
             table.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             records = table.getRecords();
-            if(records.isEmpty())
+            if (records.isEmpty())
                 return list;
 
             for (DatabaseTableRecord record : records) {
@@ -234,34 +233,39 @@ public class OutgoingNotificationDao {
 
         } catch (CantLoadTableToMemoryException e) {
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
-            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+            contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
+            throw new CantReadRecordDataBaseException(CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
         } catch (InvalidParameterException e) {
-            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
+            throw new CantReadRecordDataBaseException(CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
         }
     }
 
     private NegotiationTransmission buildNegotiationTransmission(DatabaseTableRecord record) throws InvalidParameterException {
         try {
 
-            UUID transmissionId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME);
-            UUID transactionId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME);
-            UUID negotiationId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME);
-            String negotiationTransactionType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME);
-            String publicKeyActorSend = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME);
-            String actorSendType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ACTOR_SEND_TYPE_COLUMN_NAME);
-            String publicKeyActorReceive = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
-            String actorReceiveType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ACTOR_RECEIVE_TYPE_COLUMN_NAME);
-            String transmissionType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_TYPE_COLUMN_NAME);
-            String transmissionState = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME);
-            String negotiationType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_TYPE_COLUMN_NAME);
-            String negotiationXML = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NEGOTIATION_XML_COLUMN_NAME);
-            long timestamp = record.getLongValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
-            String pendingFlag = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME);
-            String flagRead = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-            String protocolState = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+            UUID transmissionId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME);
+            UUID transactionId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME);
+            UUID negotiationId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME);
+            String negotiationTransactionType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_TRANSACTION_TYPE_COLUMN_NAME);
+            String publicKeyActorSend = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PUBLIC_KEY_ACTOR_SEND_COLUMN_NAME);
+            String actorSendType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ACTOR_SEND_TYPE_COLUMN_NAME);
+            String publicKeyActorReceive = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME);
+            String actorReceiveType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ACTOR_RECEIVE_TYPE_COLUMN_NAME);
+            String transmissionType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_TYPE_COLUMN_NAME);
+            String transmissionState = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME);
+            String negotiationType = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_TYPE_COLUMN_NAME);
+            String negotiationXML = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_XML_COLUMN_NAME);
+            long timestamp = record.getLongValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+            String pendingFlag = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME);
+            String flagRead = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+            String protocolState = record.getStringValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
             int sentCount = 0;
-            UUID responseToNotificationId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+            UUID responseToNotificationId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+            ActorProtocolState actorProtocolState = null;
+            if (protocolState != null) {
+                actorProtocolState = ActorProtocolState.getByCode(protocolState);
+            }
 
             return new NegotiationTransmissionImpl(
                     transmissionId,
@@ -279,7 +283,7 @@ public class OutgoingNotificationDao {
                     timestamp,
                     Boolean.valueOf(pendingFlag),
                     Boolean.valueOf(flagRead),
-                    ActorProtocolState.getByCode(protocolState),
+                    actorProtocolState,
                     sentCount,
                     responseToNotificationId
             );
@@ -306,8 +310,8 @@ public class OutgoingNotificationDao {
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(negotiationTransmission.isFlagRead()));
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, String.valueOf(negotiationTransmission.isPendingFlag()));
         record.setIntegerValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, negotiationTransmission.getSentCount());
-        if(negotiationTransmission.getResponseToNotificationId() != null)
-        record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
+        if (negotiationTransmission.getResponseToNotificationId() != null)
+            record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
         return record;
     }
 
@@ -329,6 +333,7 @@ public class OutgoingNotificationDao {
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(negotiationTransmission.isFlagRead()));
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, String.valueOf(negotiationTransmission.isPendingFlag()));
         record.setIntegerValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, negotiationTransmission.getSentCount());
+        if(negotiationTransmission.getResponseToNotificationId() != null)
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
         return record;
     }

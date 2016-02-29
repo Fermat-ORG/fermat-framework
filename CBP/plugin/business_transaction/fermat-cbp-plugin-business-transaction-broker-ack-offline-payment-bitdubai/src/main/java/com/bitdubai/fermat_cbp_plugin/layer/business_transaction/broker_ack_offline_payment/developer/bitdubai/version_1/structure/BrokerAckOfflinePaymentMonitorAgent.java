@@ -159,6 +159,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     Plugins.BROKER_ACK_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -168,7 +172,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -298,7 +308,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 brokerAckOfflinePaymentBusinessTransactionDao =new BrokerAckOfflinePaymentBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
                 String cryptoWalletPublicKey;
@@ -319,7 +330,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     contractHash=pendingToBankCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToBankCreditRecord.getCBPWalletPublicKey();
                     bankTransactionParametersRecord=getBankTransactionParametersRecordFromContractId(
-                            contractHash, cryptoWalletPublicKey);
+                            contractHash,
+                            cryptoWalletPublicKey,
+                            pendingToBankCreditRecord.getCustomerAlias());
                     bankTransaction=depositManager.makeDeposit(bankTransactionParametersRecord);
                     externalTransactionId=bankTransaction.getTransactionId();
                     pendingToBankCreditRecord.setExternalTransactionId(externalTransactionId);
@@ -343,7 +356,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     cashTransactionParametersRecord=getCashTransactionParametersRecordFromContractId(
                             contractHash,
                             cryptoWalletPublicKey,
-                            pendingToCashCreditRecord.getPaymentType());
+                            pendingToCashCreditRecord.getPaymentType(),
+                            pendingToCashCreditRecord.getCustomerAlias());
                     cashDepositTransaction=cashDepositTransactionManager.createCashDepositTransaction(
                             cashTransactionParametersRecord);
                     externalTransactionId=cashDepositTransaction.getTransactionId();
@@ -511,11 +525,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             customerBrokerContractSale,
                             "The customerBrokerContractSale is null");
                     MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
+                    FiatCurrency currencyType=getCurrencyTypeFromContract(customerBrokerContractSale);
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale,
                             paymentType,
                             customerBrokerContractSale.getPublicKeyBroker(),
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT);
+                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
+                            currencyType);
                     brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
@@ -581,7 +597,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         private CashTransactionParametersRecord getCashTransactionParametersRecordFromContractId(
                 String contractHash,
                 String cryptoWalletPublicKey,
-                MoneyType paymentType) throws CantGetCashTransactionParameterException {
+                MoneyType paymentType,
+                String customerAlias) throws CantGetCashTransactionParameterException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -606,17 +623,17 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 long customerAmountLong;
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
                         customerCurrency=FiatCurrency.getByCode(clause.getValue());
                     }
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString=clause.getValue();
                         customerAmountLong=parseToLong(customerAmountString);
                         customerAmount=BigDecimal.valueOf(customerAmountLong);
                     }
                 }
                 //Get the Bank wallet public key
-                String cashWalletPublicKey="cashWalletPublicKey";
+                String cashWalletPublicKey="cash_wallet";
                 CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.
                         loadCryptoBrokerWallet(
                                 cryptoWalletPublicKey);
@@ -629,7 +646,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                         cryptoBrokerWalletAssociatedSettingList){
                     moneyType=cryptoBrokerWalletAssociatedSetting.getMoneyType();
-                    if(moneyType== paymentType){
+                    if(moneyType.getCode().equals(paymentType.getCode())){
                         walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
                         if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
                             cashWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
@@ -644,7 +661,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 pluginId.toString(),
                                 customerAmount,
                                 customerCurrency,
-                                "Payment from Contract "+contractHash,
+                                "Payment from Customer "+customerAlias,
                                 TransactionType.CREDIT
                         );
                 return cashTransactionParametersRecord;
@@ -700,7 +717,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          */
         private BankTransactionParametersRecord getBankTransactionParametersRecordFromContractId(
                 String contractHash,
-                String cryptoWalletPublicKey) throws CantGetBankTransactionParametersRecordException {
+                String cryptoWalletPublicKey,
+                String customerAlias) throws CantGetBankTransactionParametersRecordException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -726,15 +744,15 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 String account="bankAccount";
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
                         customerCurrency=FiatCurrency.getByCode(clause.getValue());
                     }
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString=clause.getValue();
                         customerAmountLong=parseToLong(customerAmountString);
-                        customerAmount=BigDecimal.valueOf(customerAmountLong);
+                        customerAmount = BigDecimal.valueOf(customerAmountLong);
                     }
-                    if (clauseType.equals(ClauseType.BROKER_BANK_ACCOUNT)) {
+                    if (clauseType.getCode().equals(ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
                         account=clause.getValue();
                     }
                 }
@@ -752,7 +770,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                         cryptoBrokerWalletAssociatedSettingList){
                     moneyType=cryptoBrokerWalletAssociatedSetting.getMoneyType();
-                    if(moneyType== MoneyType.BANK){
+                    if(moneyType.getCode().equals(MoneyType.BANK.getCode())){
                         walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
                         if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
                             bankWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
@@ -768,7 +786,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 customerAmount,
                                 account,
                                 customerCurrency,
-                                "Payment from Contract "+contractHash
+                                "Payment from Customer "+customerAlias
                                 );
                 return bankTransactionParametersRecord;
             } catch (CantGetListCustomerBrokerContractSaleException e) {
@@ -844,6 +862,48 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * @return
          * @throws CantGetListSaleNegotiationsException
          */
+        private FiatCurrency getCurrencyTypeFromContract(
+                CustomerBrokerContractSale customerBrokerContractSale) throws
+                CantGetListSaleNegotiationsException {
+            try {
+                String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                        customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                                UUID.fromString(negotiationId));
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation,"The customerBrokerSaleNegotiation is null");
+                Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+                ClauseType clauseType;
+                for (Clause clause : clauses) {
+                    clauseType = clause.getType();
+                    if (clauseType.getCode().equals(
+                            ClauseType.CUSTOMER_CURRENCY.getCode())) {
+                        return FiatCurrency.getByCode(clause.getValue());
+                    }
+                }
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find the proper clause");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot get the negotiation list",
+                        e);
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find clauses list");
+            } catch (ObjectNotSetException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "The customerBrokerSaleNegotiation is null",
+                        e);
+            }
+
+        }
+
+        /**
+         * This method returns the currency type from a contract
+         *
+         * @param customerBrokerContractSale
+         * @return
+         * @throws CantGetListSaleNegotiationsException
+         */
         private MoneyType getMoneyTypeFromContract(
                 CustomerBrokerContractSale customerBrokerContractSale) throws
                 CantGetListSaleNegotiationsException {
@@ -857,7 +917,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 ClauseType clauseType;
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                    if (clauseType.getCode().equals(
+                            ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
                         return MoneyType.getByCode(clause.getValue());
                     }
                 }
