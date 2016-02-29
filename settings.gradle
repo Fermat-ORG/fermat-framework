@@ -18,7 +18,7 @@ apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':fermat_contact_fragment'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -74,3 +74,4 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 //project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
+project(':fermat_contact_fragment').projectDir = new File('android_toolbox/fermat_contact_fragment')
