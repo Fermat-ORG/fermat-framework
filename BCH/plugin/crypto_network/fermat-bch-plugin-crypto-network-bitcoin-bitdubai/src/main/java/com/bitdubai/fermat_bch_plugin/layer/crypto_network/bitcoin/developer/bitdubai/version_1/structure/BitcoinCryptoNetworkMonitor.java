@@ -32,10 +32,13 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -163,7 +166,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         final NetworkParameters NETWORK_PARAMETERS;
         final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
         final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
-
         final Context context;
 
 
@@ -235,13 +237,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * creates the peerGroup object
                  */
-                peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+                peerGroup = new PeerGroup(context, blockChain);
                 peerGroup.addWallet(this.wallet);
 
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName, this.context);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
@@ -427,6 +429,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @return
          */
         public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+            if (StringUtils.isBlank(txHash))
+                throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.DEFAULT_MESSAGE, null, "txHash is not correct: " + txHash, "invalid parameter");
+
             try {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 String transactionContent = pluginTextFile.getContent();
@@ -519,9 +524,28 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException{
             try {
                 /**
+                 * Verify transaction is not already stored. Delete if it exists.
+                 */
+                String txHash = tx.getHashAsString();
+                if (isTransactionAlreadyStored(txHash)){
+                    deleteStoredTransaction(txHash);
+                }
+
+                if (isTransactionAlreadyStored(txHash)){
+                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction is already stored and could not be deleted. " + txHash, "storeBitcoinTransaction on CryptoNetwork.");
+                }
+
+
+                /**
                  * I store it in the database
                  */
-                getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+                Peer downloadPeer = peerGroup.getDownloadPeer();
+
+                String peerAddress = "";
+                if (downloadPeer != null)
+                    peerAddress = downloadPeer.getAddress().toString();
+
+                getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
 
                 if (commit){
                     // commit and save the transaction
@@ -563,6 +587,77 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
+            }
+        }
+
+        private void deleteStoredTransaction(String txHash) {
+            if (isTransactionStoredInDB(txHash)){
+                try {
+                    this.getDao().deleteStoredBitcoinTransaction(txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (isTransactionStoredInWallet(txHash)){
+                //not much I can do now
+            }
+
+            if (isTransactionStoredOnDisk(txHash)){
+                deleteTransactionFromFile(txHash);
+            }
+
+        }
+
+        /**
+         * Verifies if the transaction is already stored on the database, wallet and disk
+         * @param txHash
+         * @return
+         */
+        private boolean isTransactionAlreadyStored(String txHash) {
+            if (isTransactionStoredInDB(txHash))
+                return true;
+
+            if (isTransactionStoredInWallet(txHash))
+                return true;
+
+            if (isTransactionStoredOnDisk(txHash))
+                return true;
+
+            return false;
+        }
+
+        private boolean isTransactionStoredOnDisk(String txHash) {
+            try {
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                if (pluginTextFile == null)
+                    return false;
+                else
+                    return true;
+            } catch (Exception e) {
+                return false;
+            }
+
+        }
+
+        private boolean isTransactionStoredInWallet(String txHash) {
+            Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+            Transaction transaction = this.wallet.getTransaction(sha256Hash);
+            if (transaction == null)
+                return false;
+            else
+                return true;
+        }
+
+        private boolean isTransactionStoredInDB(String txHash) {
+            try {
+                UUID uuid = getDao().getBroadcastedTransactionId(this.BLOCKCHAIN_NETWORKTYPE, txHash);
+                if (uuid == null)
+                    return false;
+                else
+                    return true;
+            } catch (CantExecuteDatabaseOperationException e) {
+                return false;
             }
         }
 
@@ -711,6 +806,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             return null;
         }
+
+        /**
+         * gets the wallet from the monitor
+         * @return
+         */
+        public Wallet getWallet() {
+            return wallet;
+        }
     }
 
     /**
@@ -740,6 +843,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException{
         return this.monitorAgent.loadTransactionFromDisk(txHash);
+    }
+
+    public Wallet getWallet(){
+        return this.monitorAgent.getWallet();
     }
 
 }

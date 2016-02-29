@@ -100,32 +100,37 @@ class VaultKeyHierarchyGenerator implements Runnable{
      * Starting point of the agent
      */
     private void doTheMainTask() throws CantLoadHierarchyAccountsException {
-        /**
-         * I generate the rootKey (m) of the hierarchy.
-         */
-        rootKey = generateRootKeyFromSeed(seed);
-
-        /**
-         * I create the VaultKeyHierarchy from the master key
-         */
-        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId, errorManager);
-
-        /**
-         * I will get from the database the list of accounts to create
-         * and add them to the hierarchy
-         */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
-            vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
-        }
-
-        /**
-         * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
-         */
-        vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
-            vaultKeyHierarchyMaintainer.start();
-        } catch (CantStartAgentException e) {
-            // I will log this error for now.
+            /**
+             * I generate the rootKey (m) of the hierarchy.
+             */
+            rootKey = generateRootKeyFromSeed(seed);
+
+            /**
+             * I create the VaultKeyHierarchy from the master key
+             */
+            vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId, errorManager);
+
+            /**
+             * I will get from the database the list of accounts to create
+             * and add them to the hierarchy
+             */
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
+                vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+            }
+
+            /**
+             * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
+             */
+            vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            try {
+                vaultKeyHierarchyMaintainer.start();
+            } catch (CantStartAgentException e) {
+                // I will log this error for now.
+                e.printStackTrace();
+            }
+
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

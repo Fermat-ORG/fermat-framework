@@ -3,43 +3,50 @@ package com.bitdubai.fermat_cbp_api.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+
 /**
  * Created by jorge on 12-10-2015.
  */
 
 public enum ClauseType implements FermatEnum {
-    CUSTOMER_CURRENCY("CUSCUR"), // Moneda que recibe como mercancia el customer
+    /** Moneda que recibe el customer como mercancia */
+    CUSTOMER_CURRENCY("CUSCUR"),
 
-    BROKER_CURRENCY("BROCUR"),   // Moneda que recibe como pago el broker
+    /** Moneda que recibe el broker como pago  */
+    BROKER_CURRENCY("BROCUR"),
 
-    EXCHANGE_RATE("EXCRAT"), // tasa de cambio
+    /** Tasa de cambio */
+    EXCHANGE_RATE("EXCRAT"),
 
-    CUSTOMER_CURRENCY_QUANTITY("CUSCURQUA"), // Cantidad de mercancia que recibe el customer
-    BROKER_CURRENCY_QUANTITY("CUSBROQUA"),   // Cantidad de pago que recibe el broker
+    /** Cantidad de mercancia que recibe el customer */
+    CUSTOMER_CURRENCY_QUANTITY("CUSCURQUA"),
+    /** Cantidad de pago que recibe el broker */
+    BROKER_CURRENCY_QUANTITY("CUSBROQUA"),
 
+    /** Forma en la que paga el customer */
+    CUSTOMER_PAYMENT_METHOD("CUSPAYMET"),
+    /** Forma en la que entrega la mercancia el broker */
+    BROKER_PAYMENT_METHOD("BROPAYMET"),
 
-    CUSTOMER_PAYMENT_METHOD("CUSPAYMET"),  // Forma en la que paga el customer
-    BROKER_PAYMENT_METHOD("BROPAYMET"),    // Forma en la que entrega la mercancia el broker
+    /** Direccion bitcoin del customer */
+    CUSTOMER_CRYPTO_ADDRESS("CUSCRYADD"),
+    /** Direccion bitcoin del Broker */
+    BROKER_CRYPTO_ADDRESS("BROCRYADD"),
 
-    CUSTOMER_CRYPTO_ADDRESS("CUSCRYADD"),  // Direccion bitcoin del customer
-    BROKER_CRYPTO_ADDRESS("BROCRYADD"),    // Direccion bitcoin del Broker
-/*
-    CUSTOMER_BANK("CUSBAN"), // No es necesaria
-    BROKER_BANK("BROBAN"), // No es necesaria
-*/
+    /** La cuenta bancaria del customer */
+    CUSTOMER_BANK_ACCOUNT("CUSBANACC"),
+    /** La cuenta bancaria del broker */
+    BROKER_BANK_ACCOUNT("BROBANACC"),
 
-    CUSTOMER_BANK_ACCOUNT("CUSBANACC"),  // Estas clausulas ya contienen toda la informacion
-    BROKER_BANK_ACCOUNT("BROBANACC"),   //  necesaria sobre las cuenta bancaria
+    /** Lugar donde el broker recibira el pago */
+    BROKER_PLACE_TO_DELIVER("BROPLADEL"),
+    /** Fecha y hora en la que el broker recibira el pago */
+    BROKER_DATE_TIME_TO_DELIVER("BRODATDEL"),
 
-/*
-    PLACE_TO_MEET("PLAMEE"),        // No es necesaria
-    DATE_TIME_TO_MEET("DATTIMMEE"), // No es necesaria
-*/
-    BROKER_PLACE_TO_DELIVER("BROPLADEL"),     // Lugar y hora donde el
-    BROKER_DATE_TIME_TO_DELIVER("BRODATDEL"), // Broker recibira el pago
-
-    CUSTOMER_PLACE_TO_DELIVER("CUSPLADEL"),     // Lugar y hora donde el
-    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL"); //  Customer recibira la mercancia
+    /** Lugar donde el customer recibira la mercancia */
+    CUSTOMER_PLACE_TO_DELIVER("CUSPLADEL"),
+    /** Fecha y hora en la que el customer recibira la mercancia */
+    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL");
 
     private final String code;
 

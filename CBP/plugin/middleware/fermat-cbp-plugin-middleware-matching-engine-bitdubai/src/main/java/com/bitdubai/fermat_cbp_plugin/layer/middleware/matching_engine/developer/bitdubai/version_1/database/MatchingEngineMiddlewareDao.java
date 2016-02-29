@@ -444,7 +444,7 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public boolean existsInputTransaction(final UUID inputTransactionId) throws CantGetInputTransactionException {
+    public boolean existsInputTransaction(final String inputTransactionId) throws CantGetInputTransactionException {
 
         if (inputTransactionId == null)
             throw new CantGetInputTransactionException(null, "", "The inputTransactionId is required, can not be null");
@@ -453,7 +453,7 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
 
-            inputTransactionsTable.addUUIDFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addStringFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
 
             inputTransactionsTable.loadToMemory();
 
@@ -471,23 +471,23 @@ public final class MatchingEngineMiddlewareDao {
                                                                     final UUID                earningPairId   ,
                                                                     final InputTransaction    inputTransaction) {
 
-        record.setUUIDValue (INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving());
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
-        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
-        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          , inputTransaction.getAmountGiving()               );
-        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
-        record.setFermatEnum(INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
+        record.setStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getId());
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving());
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
+        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          , inputTransaction.getAmountGiving()               );
+        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
+        record.setFermatEnum (INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
 
-        record.setUUIDValue (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
+        record.setUUIDValue  (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
 
         return record;
     }
 
     private InputTransaction buildInputTransactionRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID   id                          = record.getUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     );
+        String id                          = record.getStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME                     );
 
         String currencyGivingString        = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        );
         String currencyGivingTypeString    = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   );

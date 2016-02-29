@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,6 +59,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
 
 
     ArrayList<String> historialmensaje = new ArrayList<>();
@@ -90,10 +92,14 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
             whattodo();
-            //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
+            {
                 setHasOptionsMenu(true);
+            }else{ setHasOptionsMenu(false); }
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -112,7 +118,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     }
                 }
             }
-
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -145,7 +150,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
     //
-//    void findmessage(){
+//    void findMessage(){
 //        String message;
 //        String inorout;
 //        int messsize;
@@ -171,16 +176,20 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                        //.addLeftName("Probando")
-                        //.setBackground(R.color.holo_blue)
-                        //.addChatHistory(chatHistory)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
                 .addChatSession(chatSession)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
+                .addToolbar(toolbar)
                 .build();
         return adapter;
 
@@ -199,7 +208,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        ListView lstOpciones;
 //
 //
-//        findmessage();
+//        findMessage();
 //        adaptador = new ChatAdapterView(getActivity(), historialmensaje);
 //        lstOpciones = (ListView) layout.findViewById(R.id.messagesContainer);
 //        lstOpciones.setAdapter(adaptador);
@@ -212,7 +221,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                if (TextUtils.isEmpty(messageText)) {
 //                    return;
 //                }
-//                //whattodo();
+//                //whatToDo();
 //                try {
 //                    ChatImpl chat=new ChatImpl();
 //                    MessageImpl message=new MessageImpl();
@@ -232,7 +241,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                        message.setContactId(contactid);
 //                        chatManager.saveMessage(message);
 //
-//                        findmessage();
+//                        findMessage();
 //                        adaptador.refreshEvents(historialmensaje);
 //                        Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
 //
@@ -264,7 +273,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //
 //                        chatManager.saveMessage(message);
 //
-//                        findmessage();
+//                        findMessage();
 //
 //                        adaptador.refreshEvents(historialmensaje);
 //                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
@@ -296,7 +305,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                        try {
 //                            //System.out.println("Threar UI corriendo");
 //                            //TODO: fix this
-//                            findmessage();
+//                            findMessage();
 //                            adaptador.refreshEvents(historialmensaje);
 //                        } catch (Exception e) {
 //

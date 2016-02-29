@@ -176,12 +176,11 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menuItemAdd = menu.getItem(1);
+        menuItemAdd = menu.getItem(0);
         menuItemAdd.setVisible(false);
     }
 

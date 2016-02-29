@@ -29,6 +29,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.EnumSet;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.channels.UnsupportedAddressTypeException;
+import java.util.Enumeration;
 import java.util.UUID;
 
 import javax.servlet.DispatcherType;
@@ -172,8 +179,8 @@ public class JettyEmbeddedAppServer {
         this.wsServerContainer.addEndpoint(WebSocketCloudServerChannel.class);
         this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
-
         this.server.dump(System.err);
+
 
     }
 
@@ -184,6 +191,27 @@ public class JettyEmbeddedAppServer {
      */
     public void start() throws Exception {
 
+
+//        Inet4Address address;
+//        try {
+//            address = getIPv4Address("wlan0");
+//            // TfsClientSingleton.init(address, tfsCache);
+//        } catch (UnknownHostException | SocketException e) {
+//            throw new Error(e);
+//        }
+//
+//        PortMapping desiredMapping = new PortMapping(
+//                DEFAULT_PORT,
+//                address.getHostAddress(),
+//                PortMapping.Protocol.TCP
+//        );
+//
+//        UpnpService upnpService = new UpnpServiceImpl(
+//                new PortMappingListener(desiredMapping)
+//        );
+//
+//        upnpService.getControlPoint().search();
+
         this.initialize();
         LOG.info("Starting the internal server");
         this.server.start();
@@ -191,6 +219,30 @@ public class JettyEmbeddedAppServer {
         LOG.info("Server URI = " + this.server.getURI());
         this.server.join();
 
+    }
+
+    private static Inet4Address getIPv4Address(String iface) throws SocketException, UnsupportedAddressTypeException, UnknownHostException {
+        if (iface != null) {
+            NetworkInterface networkInterface = NetworkInterface.getByName(iface);
+            Enumeration<NetworkInterface> enume =NetworkInterface.getNetworkInterfaces();
+            while(enume.hasMoreElements()){
+                System.out.println(enume.nextElement().getDisplayName());
+            }
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (addr instanceof Inet4Address) {
+                    return (Inet4Address) addr;
+                }
+            }
+        }
+
+        InetAddress localhost = InetAddress.getLocalHost();
+        if (localhost instanceof Inet4Address) {
+            return (Inet4Address) localhost;
+        }
+
+        throw new UnsupportedAddressTypeException();
     }
 
     /**

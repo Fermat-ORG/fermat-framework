@@ -72,6 +72,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
+    private Menu menu;
 
     SettingsManager<RedeemPointSettings> settingsManager;
 
@@ -112,6 +113,24 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
                 actors = dataSet;
+
+                boolean someSelected = false;
+                for (Actor actor : actors) {
+                    if (actor.selected) {
+                        someSelected = true;
+                        break;
+                    }
+                }
+
+                if (someSelected) {
+                    menu.getItem(2).setVisible(true);
+                }
+                else
+                {
+                    menu.getItem(2).setVisible(false);
+                }
+
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -204,63 +223,63 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
 //        }
     }
 
-    protected void initViews(View layout) {
-
-        // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Connecting please wait...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
-                        for (Actor actor : actors) {
-                            if (actor.selected)
-                                toConnect.add(actor);
-                        }
-                        //// TODO: 28/10/15 get Actor asset Redeem Point
-                        manager.connectToActorAssetRedeemPoint(null, toConnect);
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        if (swipeRefreshLayout != null)
-                            swipeRefreshLayout.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onRefresh();
-                                }
-                            });
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset User or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-
-//                return true;
-                /* create new asset factory project */
-//                selectedAsset = null;
-//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-    }
+//    protected void initViews(View layout) {
+//
+//        // fab action button create
+//        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+//        create.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                dialog.setMessage("Connecting please wait...");
+//                dialog.setCancelable(false);
+//                dialog.show();
+//                FermatWorker worker = new FermatWorker() {
+//                    @Override
+//                    protected Object doInBackground() throws Exception {
+//                        List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
+//                        for (Actor actor : actors) {
+//                            if (actor.selected)
+//                                toConnect.add(actor);
+//                        }
+//                        //// TODO: 28/10/15 get Actor asset Redeem Point
+//                        manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                        return true;
+//                    }
+//                };
+//                worker.setContext(getActivity());
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        dialog.dismiss();
+//                        if (swipeRefreshLayout != null)
+//                            swipeRefreshLayout.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onRefresh();
+//                                }
+//                            });
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset User or Redeem Point identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
+//                        ex.printStackTrace();
+//                    }
+//                });
+//                worker.execute();
+//
+////                return true;
+//                /* create new asset factory project */
+////                selectedAsset = null;
+////                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+//            }
+//        });
+//        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+//        create.setVisibility(View.VISIBLE);
+//    }
 
 
     @Override
@@ -289,24 +308,50 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
        super.onCreateOptionsMenu(menu, inflater);
+        this.menu = menu;
         menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
+        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
+        menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-
+        menu.getItem(2).setVisible(false);
 
         //inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
 
+        if(id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL){
 
-//        if (item.getItemId() == R.id.action_connect) {
+            for (Actor actorIssuer : actors)
+            {
+                actorIssuer.selected = true;
+            }
+            adapter.changeDataSet(actors);
+            menu.getItem(2).setVisible(true);
+
+        }
+
+        if(id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL){
+
+            for (Actor actorIssuer : actors)
+            {
+                actorIssuer.selected = false;
+            }
+            adapter.changeDataSet(actors);
+            menu.getItem(2).setVisible(false);
+        }
+
+
+
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT) {
             List<ActorAssetRedeemPoint> actorsSelected = new ArrayList<>();
             for (Actor actor : actors) {

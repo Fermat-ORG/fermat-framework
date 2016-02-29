@@ -16,12 +16,14 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
@@ -32,7 +34,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantValidateActiveNetworkException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -45,6 +47,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -70,7 +73,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetCryptoVaultManager  {
+public class AssetCryptoVaultManager  extends CryptoVault{
     /**
      * AssetVaultManager variables
      */
@@ -107,6 +110,8 @@ public class AssetCryptoVaultManager  {
                                    BitcoinNetworkManager bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
 
+        super (pluginFileSystem, pluginId, bitcoinNetworkManager, "AssetVaultSeed", seedFileName);
+
         this.pluginId = pluginId;
         ASSET_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
@@ -117,38 +122,8 @@ public class AssetCryptoVaultManager  {
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId, errorManager);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId, errorManager);
         new Thread(vaultKeyHierarchyGenerator).start();
-    }
-
-    /**
-     * Creates a new Seed or loads and existing one for the user logged.
-     * @return
-     * @throws CantCreateAssetVaultSeed
-     * @throws CantLoadExistingVaultSeed
-     */
-    private DeterministicSeed getAssetVaultSeed()  throws InvalidSeedException{
-        try{
-            VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILENAME);
-            if (!vaultSeedGenerator.seedExists()){
-                vaultSeedGenerator.create();
-                /**
-                 * I realod it to make sure I'm using the seed I will start using from now on. Issue #3330
-                 */
-                vaultSeedGenerator.load();
-            } else
-                vaultSeedGenerator.load();
-
-            DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
-            seed.check();
-            return seed;
-        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, "there was an error trying to load an existing seed.", null);
-        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantCreateAssetVaultSeed, "there was an error trying to create a new seed.", null);
-        } catch (MnemonicException e) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
-        }
     }
 
 
@@ -230,7 +205,7 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
         } catch (InvalidSeedException e) {
             CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -839,7 +814,7 @@ public class AssetCryptoVaultManager  {
          */
         final Wallet wallet;
         try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
         } catch (InvalidSeedException e) {
             CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -1033,10 +1008,24 @@ public class AssetCryptoVaultManager  {
          * I will create the Bitcoin transaction
          */
         Transaction transaction = new Transaction(networkParameters);
-        transaction.addInput(genesisTransaction.getOutput(0));
+        TransactionOutput output = genesisTransaction.getOutput(0);
+        TransactionOutPoint transactionOutPoint = new TransactionOutPoint(networkParameters, output);
+        byte[] script = output.getScriptBytes();
+        Coin inputValue = output.getValue();
+        TransactionInput transactionInput = new TransactionInput(networkParameters, genesisTransaction, script, transactionOutPoint, inputValue);
+
+        transaction.addInput(transactionInput);
+
+
         transaction.addOutput(coinToSend, address);
 
         DraftTransaction draftTransaction = new DraftTransaction(transaction);
+
+        draftTransaction.addValue(inputValue.value);
+
+        System.out.println("***CryptoVault*** Draft Transaction created");
+        System.out.println(draftTransaction.toString());
+
         return draftTransaction;
     }
 
@@ -1066,87 +1055,43 @@ public class AssetCryptoVaultManager  {
      * @throws CantSignTransactionException
      */
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        if (draftTransaction == null)
+            throw new CantSignTransactionException (CantSignTransactionException.DEFAULT_MESSAGE, null, "DraftTransaction can't be null", "null parameter");
+
         Transaction transaction = draftTransaction.getBitcoinTransaction();
-        final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
 
-        if (transaction == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
-
-
-        /**
-         * Create the bitcoinj wallet from the keys of all accounts
-         */
-        final Wallet wallet;
+        HierarchyAccount masterHierarchyAccount;
         try {
-            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getAssetVaultSeed());
-        } catch (InvalidSeedException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
-        }
-
-        try {
-            wallet.importKeys(getKeysForAllAccounts(NETWORK_PARAMETERS));
+            masterHierarchyAccount = this.getDao().getHierarchyAccounts().get(0);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            //If there was an error, I will create a master account manually
+            masterHierarchyAccount = new HierarchyAccount(0, "Asset Vault", HierarchyAccountType.MASTER_ACCOUNT);
         }
 
         /**
-         * Once I get the wallet, I will get the output of the transaction that is mine.
-         * Should be the first one.
-         */
-        Script script = null;
-        for (TransactionOutput output : transaction.getOutputs()){
-            if (output.isMine(wallet)){
-                script = output.getScriptPubKey();
-            }
-        }
-        /**
-         * If I couldn't get an output that was ours, I can't go on.
-         */
-        if (script == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "The draft Transaction doesn't have an output that is ours.", null);
-
-        /**
-         * I get the signature hash for my output.
-         */
-        Sha256Hash sigHash = transaction.hashForSignature(0, script, Transaction.SigHash.ALL, false);
-
-        /**
-         * Get the private Key I will use to sign the hash
+         * I get a private key and the list of public keys we are using to monitor the network.
          */
         ECKey privateKey = null;
+        List<ECKey> walletKeys = null;
         try {
-            privateKey = this.getNextAvailableECKey(new HierarchyAccount(0, "Asset Vault Account", HierarchyAccountType.MASTER_ACCOUNT));
+            privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(masterHierarchyAccount);
+            walletKeys = this.vaultKeyHierarchyGenerator.getAllAccountsKeyList();
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting a private key from the key hierarchy. Can't sign a transaction.", "No private key to sign");
         }
 
         /**
-         * I create the signature
+         * I get a signed transaction from the abstract class CryptoVault.
          */
-        ECKey.ECDSASignature signature = privateKey.sign(sigHash);
-        TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
-        Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        System.out.println("***AssetVault*** Transaction signed.");
+        System.out.println(transaction.toString());
 
         /**
-         * Add the signature to the input that is ours. Should be the first one.
+         * add it to the draft transaction and return it.
          */
-        TransactionInput inputToSign = null;
-        for (TransactionInput input : transaction.getInputs()){
-            if (input.getConnectedOutput().isMine(wallet)){
-                inputToSign = input;
-            }
-        }
-
-        if (inputToSign == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
-
-        inputToSign.setScriptSig(inputScript);
-
-        /**
-         * return a signed draft transaction
-         */
+        draftTransaction.setBitcoinTransaction(transaction);
         return draftTransaction;
-
     }
 
 }

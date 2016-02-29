@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
 
     <style name="AppTheme" parent="@android:style/Theme"/>
@@ -9,8 +7,8 @@
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">@color/background_action_bar</item>
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
-        <item name="color">#000</item>
-        <item name="android:actionMenuTextColor">#fff</item>
+        <item name="color">#f9f9f9</item>
+        <item name="android:actionMenuTextColor">#3d3d3d</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="android:autoCompleteTextViewStyle">@style/cursorColor</item>
     </style>
@@ -57,10 +55,6 @@
 
     <style name="listViewActivatedStyle"/>
 
-    <style name="quickContactBadgeStyle">
-        <item name="android:background">@drawable/quickcontact_badge_small</item>
-    </style>
-
     <style name="searchTextHiglight">
         <item name="android:textColor">@color/holo_blue</item>
         <item name="android:textStyle">bold</item>
@@ -68,7 +62,8 @@
 
     <style name="addressHeader" parent="@android:style/TextAppearance.Small">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="addressDetail" parent="@android:style/TextAppearance.Medium">
@@ -77,8 +72,8 @@
     </style>
 
     <style name="contactNameTitle" parent="@android:style/TextAppearance.Large">
-        <item name="android:textSize">38sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textIsSelectable">true</item>
     </style>
 
