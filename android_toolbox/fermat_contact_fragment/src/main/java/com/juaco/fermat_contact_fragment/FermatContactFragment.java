@@ -39,17 +39,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.juaco.fermat_contact_fragment.adapters.WalletContact;
@@ -127,14 +120,11 @@ public abstract class FermatContactFragment <S extends FermatSession,RE extends 
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
-    private CryptoWalletManager cryptoWalletManager;
-    private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
-    private SettingsManager<BitcoinWalletSettings> settingsManager;
     private boolean isScrolled = false;
 
     private CreateContactDialogCallback createContactDialogCallback;
@@ -145,14 +135,7 @@ public abstract class FermatContactFragment <S extends FermatSession,RE extends 
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
-        try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
 
@@ -276,12 +259,14 @@ public abstract class FermatContactFragment <S extends FermatSession,RE extends 
         return super.onOptionsItemSelected(item);
     }
 
+    public abstract List<CryptoWalletWalletContact> setRecordList();
+
     private void onRefresh() {
 
 
         // TODO: Method used to fullfill the view. Override with proper data.
-
-            walletContactRecords = null;
+            if (this.setRecordList()!= null)
+            walletContactRecords = this.setRecordList();
 
         if (walletContactRecords.isEmpty()) {
             mEmptyView.setVisibility(View.VISIBLE);
