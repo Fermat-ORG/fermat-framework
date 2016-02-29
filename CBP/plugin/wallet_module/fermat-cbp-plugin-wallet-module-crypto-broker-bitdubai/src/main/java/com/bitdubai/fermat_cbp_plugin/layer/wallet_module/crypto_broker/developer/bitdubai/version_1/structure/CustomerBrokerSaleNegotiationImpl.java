@@ -38,7 +38,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
         this.negotiationId = negotiationId;
         clauses = new ArrayList<>();
-        status = null;
+        status = NegotiationStatus.WAITING_FOR_CUSTOMER;
     }
 
     public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
@@ -204,6 +204,11 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
+
+        if(dataHasChanged)
+            this.status = NegotiationStatus.WAITING_FOR_CUSTOMER;
+        else
+            this.status = NegotiationStatus.CLOSED;
 
     }
 
