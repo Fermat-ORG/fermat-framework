@@ -256,7 +256,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             }else{
                 Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
                 text.setVisibility(View.VISIBLE);
-                text.setText("No Chats");
+                text.setText(" ");
                 text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetMessageException e) {
@@ -283,6 +283,12 @@ public class ChatListFragment extends AbstractFermatFragment{
             .setBody(R.string.cht_chat_body)
             .setTextFooter(R.string.cht_chat_footer)
             .build();
+        try {
+            presentationDialog.show();
+        } catch(Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
 
         adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
@@ -327,7 +333,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             } else {
                                 Toast.makeText(getActivity(), "No Chats now", Toast.LENGTH_SHORT).show();
                                 text.setVisibility(View.VISIBLE);
-                                text.setText("No Chats");
+                                text.setText(" ");
                                 text.setBackgroundResource(R.drawable.cht_empty_chat_background);
                             }
                         } catch (Exception e) {
