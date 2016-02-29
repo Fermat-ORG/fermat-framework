@@ -319,8 +319,8 @@ public class ChatAdapterView extends LinearLayout {
                     Long dv = System.currentTimeMillis();
 
                     if (chatWasCreate) {
-                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
-                        chatManager.saveChat(chat);
+//                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
+//                        chatManager.saveChat(chat);
 
                         message.setChatId(chatId);
                         message.setMessageId(UUID.randomUUID());

@@ -57,6 +57,7 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -73,6 +74,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Gabriel Araujo 15/02/16.
@@ -100,6 +103,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CHAT;
+
+    ExecutorService executorService;
 
     private ChatExecutorAgent chatExecutorAgent;
 
@@ -173,6 +178,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatMetadataRecordDAO = new ChatMetadataRecordDAO(dataBaseCommunication, this.pluginDatabaseSystem, this.pluginId,getErrorManager());
 
             //executorService = Executors.newFixedThreadPool(2);
+            executorService = Executors.newFixedThreadPool(3);
 
             // change message state to process again first time
             reprocessMessages();
@@ -205,6 +211,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     public void stop() {
         getCommunicationNetworkServiceConnectionManager().stop();
         chatExecutorAgent.stop();
+        executorService.shutdownNow();
         super.stop();
        // executorService.shutdownNow();
     }
@@ -299,8 +306,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 launcheIncomingChatStatusNotification(chatID);
                             }
 
-                            getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
-                            chatExecutorAgent.connectionFailure(chatMetadataRecord.getRemoteActorPublicKey());
+                           // getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
+                            //chatExecutorAgent.connectionFailure(chatMetadataRecord.getRemoteActorPublicKey());
                         }
                     }
                     break;
@@ -358,7 +365,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
     @Override
     protected void onNetworkServiceRegistered() {
-        initializeAgent();
+        //initializeAgent();
     }
 
     @Override
@@ -715,7 +722,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     }
 
     @Override
-    public void sendChatMessageNewStatusNotification(final String localActorPubKey, PlatformComponentType senderType, final String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, String transactionID) throws CantSendChatMessageNewStatusNotificationException {
+    public void sendChatMessageNewStatusNotification(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, DistributionStatus newDistributionStatus, String transactionID) throws CantSendChatMessageNewStatusNotificationException {
         try {
 
             if (localActorPubKey == null || localActorPubKey.length() == 0) {
@@ -744,7 +751,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatMetadataRecord.setRemoteActorType(receiverType);
             chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
             chatMetadataRecord.setLocalActorType(senderType);
-            chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_RECEIVE);
+            chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_SEND);
             chatMetadataRecord.setResponseToNotification(getChatMetadataRecordDAO().getNotificationResponseToByID(UUID.fromString(transactionID)));
             chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
@@ -755,6 +762,21 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             );
             chatMetadataRecord.setMsgXML(msjContent);
             getChatMetadataRecordDAO().update(chatMetadataRecord);
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        sendNewMessage(
+                                constructBasicPlatformComponentProfile(localActorPubKey, senderType),
+                                constructBasicPlatformComponentProfile(remoteActorPubKey, receiverType),
+                                msjContent
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (Exception e) {
 
@@ -825,7 +847,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
             chatMetadataRecord.setSentDate(new Timestamp(currentTime));
             chatMetadataRecord.changeState(protocolState);
-            chatMetadataRecord.setMsgXML(EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType()));
+            final String EncodedMsg = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
+            chatMetadataRecord.setMsgXML(EncodedMsg);
             if(!chatMetadataRecord.isFilled(true)){
                 throw new CantSendChatMessageMetadataException("Some value of ChatMetadata Is passed NULL");
             }
@@ -835,7 +858,26 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             /*
              * Save into data base
              */
+            final String sender = chatMetadataRecord.getLocalActorPublicKey();
+            final PlatformComponentType senderType = chatMetadataRecord.getLocalActorType();
+            final String remote = chatMetadataRecord.getRemoteActorPublicKey();
+            final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        sendNewMessage(
+                                constructBasicPlatformComponentProfile(sender,senderType),
+                                constructBasicPlatformComponentProfile(remote,remoteType),
+                                EncodedMsg
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         }catch(CantSendChatMessageMetadataException e){
             StringBuilder contextBuffer = new StringBuilder();

@@ -683,8 +683,10 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws DatabaseOperationException
          */
         private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
-            String remotePk;
-            String localPk;
+            String localPublicKey;
+            PlatformComponentType localType;
+            String remotePublicKey;
+            PlatformComponentType remoteType;
       //      String newmessage="gone";
 /*            try {
                 for (int i = 0; i < chatMiddlewareDatabaseDao.getMessages().size(); i++) {
@@ -699,15 +701,10 @@ public class ChatMiddlewareMonitorAgent implements
             // change to put in the remote device in the correct place of table chat
             if(chat == null){
                 chat = getChatFromChatMetadata(chatMetadata);
-                remotePk=chat.getRemoteActorPublicKey();
-                localPk=chat.getLocalActorPublicKey();
-                chat.setLocalActorPublicKey(remotePk);
-                chat.setRemoteActorPublicKey(localPk);
-                chat.setRemoteActorType(PlatformComponentType.NETWORK_SERVICE);
             }else{
-                remotePk=chatMetadata.getRemoteActorPublicKey();
-                if(!remotePk.equals(chat.getRemoteActorPublicKey())) {
-                    chat.setLocalActorPublicKey(remotePk);
+                localPublicKey=chatMetadata.getRemoteActorPublicKey();
+                if(!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
+                    chat.setLocalActorPublicKey(localPublicKey);
                 }
 
             }
@@ -826,10 +823,10 @@ public class ChatMiddlewareMonitorAgent implements
             return new ChatImpl(
                     chatMetadata.getChatId(),
                     chatMetadata.getObjectId(),
-                    chatMetadata.getLocalActorType(),
-                    chatMetadata.getLocalActorPublicKey(),
                     chatMetadata.getRemoteActorType(),
                     chatMetadata.getRemoteActorPublicKey(),
+                    chatMetadata.getLocalActorType(),
+                    chatMetadata.getLocalActorPublicKey(),
                     chatMetadata.getChatName(),
                     ChatStatus.VISSIBLE,
                     chatMetadata.getDate(),
