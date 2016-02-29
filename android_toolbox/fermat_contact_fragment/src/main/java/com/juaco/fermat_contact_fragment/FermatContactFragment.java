@@ -50,12 +50,12 @@ import com.juaco.fermat_contact_fragment.dialog.CreateContactFragmentDialog;
 import com.juaco.fermat_contact_fragment.enums.HeaderTypes;
 import com.juaco.fermat_contact_fragment.interfaces.CreateContactDialogCallback;
 import com.juaco.fermat_contact_fragment.interfaces.FermatListViewFragment;
+import com.juaco.fermat_contact_fragment.utils.BitcoinWalletConstants;
+import com.juaco.fermat_contact_fragment.utils.MyComparator;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.IndexBarView;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.PinnedHeaderListView;
 import com.juaco.fermat_contact_fragment.views.views_contacts_fragment.SubActionButton;
-import com.juaco.fermat_contact_fragment.utils.*;
-
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
