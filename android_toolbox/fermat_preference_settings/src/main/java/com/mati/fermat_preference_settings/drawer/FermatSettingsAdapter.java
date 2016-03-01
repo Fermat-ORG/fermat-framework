@@ -87,8 +87,6 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     @Override
     protected void bindHolder(FermatViewHolder holder, PreferenceSettingsItem data, int position) {
 
-
-
         switch (holder.getHolderType()){
             case SWITH_TYPE:
                 SettingSwitchViewHolder settingSwitchViewHolder = (SettingSwitchViewHolder) holder;
@@ -156,4 +154,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     public void clear(){
         fragmentWeakReference.clear();
     }
+
+
+
 }

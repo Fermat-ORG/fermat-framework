@@ -207,7 +207,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         /*
                          * Initialize the Ip And Port to connect to the CLoud Server
                          */
-                        initializeIpAndPortProperties();
+                        //initializeIpAndPortProperties();
+                        SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+                        PORT =  ServerConf.DEFAULT_PORT;
 
                         System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 

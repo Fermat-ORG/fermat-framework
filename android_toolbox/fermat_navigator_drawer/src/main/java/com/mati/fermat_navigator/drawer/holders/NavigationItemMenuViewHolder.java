@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.mati.fermat_preference_settings.R;
+import com.mati.fermat_navigator_drawer.R;
 
 
 /**
@@ -49,5 +49,9 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
 
     public View getNavigation_row_divider() {
         return navigation_row_divider;
+    }
+
+    public View getBadge() {
+        return badge;
     }
 }
