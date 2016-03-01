@@ -6,14 +6,22 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 04/02/16.
  */
 public class parseToLongTest {
+    private CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
+
     @Mock
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     @Mock
@@ -22,21 +30,23 @@ public class parseToLongTest {
     TransactionTransmissionManager transactionTransmissionManager;
     @Mock
     CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
-    CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
-
+    @Mock
+    ErrorManager errorManager;
+    @Before
+    public void setup(){
+        MockitoAnnotations.initMocks(this);
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao,transactionTransmissionManager,customerBrokerPurchaseNegotiationManager,errorManager);
+    }
     @Test
-    public void parseToLongTest_Should_Return_Long()throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao,transactionTransmissionManager,customerBrokerPurchaseNegotiationManager);
-        customerOnlinePaymentTransactionManager.parseToLong("1");
+    public void parseToLongTest_Should_Return_Long() throws  Exception{
+        assertEquals(customerOnlinePaymentTransactionManager.parseToLong("1"),1);
     }
     @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_Return_null_InvalidParameterException()throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao,transactionTransmissionManager,customerBrokerPurchaseNegotiationManager);
+    public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws  Exception{
         customerOnlinePaymentTransactionManager.parseToLong(null);
-    }/*
+    }
     @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_Return_long_InvalidParameterException()throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,customerOnlinePaymentBusinessTransactionDao,transactionTransmissionManager,customerBrokerPurchaseNegotiationManager);
-        customerOnlinePaymentTransactionManager.parseToLong("A");
-    }*/
+    public void parseToLongTest_Should_Return_Exception() throws  Exception{
+        customerOnlinePaymentTransactionManager.parseToLong("Test");
+    }
 }

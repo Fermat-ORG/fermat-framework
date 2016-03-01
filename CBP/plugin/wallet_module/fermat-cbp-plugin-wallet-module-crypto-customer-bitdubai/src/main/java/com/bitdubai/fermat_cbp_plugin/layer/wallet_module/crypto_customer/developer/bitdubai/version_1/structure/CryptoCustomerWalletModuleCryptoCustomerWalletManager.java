@@ -353,7 +353,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             Collection<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 
             for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsBySendAndWaiting(ActorType.CUSTOMER))
-                waitingForCustomer.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
+                waitingForCustomer.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_CUSTOMER));
 
             return waitingForCustomer;
 
@@ -603,7 +603,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerPublicKey);
             customerBrokerPurchaseNegotiation.setNegotiationId(UUID.randomUUID());
             customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
-            customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.SENT_TO_BROKER);
+            customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
             customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
             customerBrokerPurchaseNegotiation.setNearExpirationDatetime(Boolean.FALSE);
             customerBrokerPurchaseNegotiation.setNegotiationExpirationDate((long) 0);
@@ -684,7 +684,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         customerBrokerPurchaseNegotiation.setCustomerPublicKey(negotiation.getCustomer().getPublicKey());
         customerBrokerPurchaseNegotiation.setNegotiationId(negotiation.getNegotiationId());
         customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
-        customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.SENT_TO_BROKER);
+        customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
         customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
         customerBrokerPurchaseNegotiation.setNearExpirationDatetime(false);
         customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(time.getTime());
@@ -1409,7 +1409,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             }
 
             @Override
-            public ClauseStatus getStatus() { return (status != null) ? status : ClauseStatus.DRAFT; }
+//            public ClauseStatus getStatus() { return (status != null) ? status : ClauseStatus.DRAFT; }
+            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
         };
     }
 }

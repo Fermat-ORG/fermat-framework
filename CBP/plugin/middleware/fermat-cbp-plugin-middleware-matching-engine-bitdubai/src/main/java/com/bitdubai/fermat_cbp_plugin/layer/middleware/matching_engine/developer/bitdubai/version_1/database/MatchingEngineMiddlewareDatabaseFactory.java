@@ -90,13 +90,14 @@ public class MatchingEngineMiddlewareDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME);
 
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                   , DatabaseDataType.STRING, 100, Boolean.TRUE );
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                        , DatabaseDataType.STRING, 100, Boolean.TRUE );
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME          , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                     , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_FIRST_KEY_COLUMN);
 

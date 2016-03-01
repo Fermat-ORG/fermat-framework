@@ -187,31 +187,67 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
 
             }
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Unexpected result from database");
         } catch (CantGetListCustomerBrokerContractSaleException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot get the contract from customerBrokerContractSaleManager");
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot insert the contract record in database");
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot update the contract status in database");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Invalid input to this manager");
         } catch (CantGetListSaleNegotiationsException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot get the payment type");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             e.printStackTrace();
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
+            throw new CantAckPaymentException(e,
+                    "Creating Broker Ack Offline Payment Business Transaction",
+                    "Unexpected Error");
         }
 
     }
@@ -237,6 +273,14 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
     /**
@@ -268,15 +312,35 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find the proper clause");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot get the negotiation list",
                     e);
         } catch (CantGetListClauseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find clauses list");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "The customerBrokerSaleNegotiation is null",
+                    e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetListSaleNegotiationsException(
+                    "Unexpected Error",
                     e);
         }
 
@@ -309,15 +373,35 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find the proper clause");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot get the negotiation list",
                     e);
         } catch (CantGetListClauseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find clauses list");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "The customerBrokerSaleNegotiation is null",
+                    e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetListSaleNegotiationsException(
+                    "Unexpected Error",
                     e);
         }
 

@@ -21,19 +21,21 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -119,21 +121,25 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
         checkNegotiationDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CustomerBrokerNegotiationInformation info;
                 try {
                     CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                    CustomerBrokerNegotiationInformation info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
-
+                    info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
                     appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 
                 } catch (FermatException ex) {
-                    Log.e(TAG, CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, ex);
-                    if (errorManager != null) {
+                    // TODO Just for testing. Add a Toast later
+                    info = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
+
+                    if (errorManager != null)
                         errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                                 UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                    }
+                    else
+                        Log.e(TAG, ex.getMessage(), ex);
                 }
-
             }
         });
     }
