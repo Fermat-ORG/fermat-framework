@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connectio
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -27,7 +28,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections {
 
     IdentityAssetUser identityAssetUser;
 
-    public WalletAssetUserFermatAppConnection(Activity activity) {
+    public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
         this.identityAssetUser = identityAssetUser;
     }
@@ -56,7 +57,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserWalletNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new UserWalletNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override

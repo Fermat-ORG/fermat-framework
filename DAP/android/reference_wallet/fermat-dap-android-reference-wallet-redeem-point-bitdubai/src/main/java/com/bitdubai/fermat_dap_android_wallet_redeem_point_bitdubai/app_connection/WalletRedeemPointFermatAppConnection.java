@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -27,7 +26,7 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections {
 
     RedeemPointIdentity redeemPointIdentity;
 
-    public WalletRedeemPointFermatAppConnection(Activity activity) {
+    public WalletRedeemPointFermatAppConnection(Context activity) {
         super(activity);
         this.redeemPointIdentity = redeemPointIdentity;
     }
@@ -56,7 +55,7 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointWalletNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new RedeemPointWalletNavigationViewPainter(getContext() ,getActiveIdentity());
     }
 
     @Override

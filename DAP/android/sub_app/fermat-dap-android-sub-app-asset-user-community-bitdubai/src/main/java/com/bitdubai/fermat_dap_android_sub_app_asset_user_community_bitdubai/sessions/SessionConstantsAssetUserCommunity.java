@@ -31,6 +31,6 @@ public class SessionConstantsAssetUserCommunity {
     public static final int IC_ACTION_USER_COMMUNITY_NOTIFICATIONS = 508;
     public static final int IC_ACTION_USER_COMMUNITY_ADD_USERS = 509;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL = 510;
-    public static final int IC_ACTION_USER_COMMUNITY_HELP_DESELECT_ALL= 511;
+    public static final int IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL= 511;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 512;
 }

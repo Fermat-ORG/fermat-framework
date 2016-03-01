@@ -75,7 +75,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private MenuItem menuItem;
+    private MenuItem menuItemSelect;
+    private MenuItem menuItemUnselect;
 
     private List<ActorIssuer> actors;
     private ActorIssuer actor;
@@ -127,19 +128,28 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actors = dataSet;
 
                 boolean someSelected = false;
+                int cantSelected=0;
                 for (ActorIssuer actor : actors) {
                     if (actor.selected) {
                         someSelected = true;
-                        break;
+                        cantSelected++;
+
                     }
                 }
 
                 if (someSelected) {
-                    menuItem.setVisible(true);
+                    menuItemUnselect.setVisible(true);
+                    if (cantSelected == actors.size())
+                    {
+                        menuItemSelect.setVisible(false);
+                    } else {
+                        menuItemSelect.setVisible(true);
+                    }
                 }
                 else
                 {
-                    menuItem.setVisible(false);
+                    menuItemUnselect.setVisible(false);
+                    menuItemSelect.setVisible(true);
                 }
 
             }
@@ -323,13 +333,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItem = menu.getItem(2);
+        menuItemSelect = menu.getItem(1);
+        menuItemUnselect = menu.getItem(2);
+        menuItemUnselect.setVisible(false);
     }
 
     @Override
@@ -344,18 +356,20 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menuItem.setVisible(true);
+            menuItemSelect.setVisible(false);
+            menuItemUnselect.setVisible(true);
 
         }
 
-        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL){
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL){
 
             for (ActorIssuer actorIssuer : actors)
             {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menuItem.setVisible(false);
+            menuItemSelect.setVisible(true);
+            menuItemUnselect.setVisible(false);
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
@@ -387,7 +401,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
 //                                    manager.askActorAssetIssuerForConnection(toConnect);
-//
+
 //                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
 //                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
 //                                    sendLocalBroadcast(broadcast);

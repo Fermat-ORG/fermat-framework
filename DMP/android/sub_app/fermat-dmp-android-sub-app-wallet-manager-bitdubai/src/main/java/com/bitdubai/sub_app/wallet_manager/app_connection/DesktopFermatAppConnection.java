@@ -1,12 +1,7 @@
 package com.bitdubai.sub_app.wallet_manager.app_connection;
 
-import android.app.Activity;
-
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
-import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -27,7 +22,7 @@ public class DesktopFermatAppConnection extends AppConnections<DesktopSession>{
     private CryptoWallet moduleManager = null;
     private DesktopSession referenceWalletSession;
 
-    public DesktopFermatAppConnection(Activity activity) {
+    public DesktopFermatAppConnection(Context activity) {
         super(activity);
     }
 

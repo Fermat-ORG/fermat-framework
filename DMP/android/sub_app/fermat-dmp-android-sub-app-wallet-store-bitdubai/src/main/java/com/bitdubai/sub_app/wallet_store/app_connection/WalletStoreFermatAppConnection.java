@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.wallet_store.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -24,7 +23,7 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
  */
 public class WalletStoreFermatAppConnection extends AppConnections {
 
-    public WalletStoreFermatAppConnection(Activity activity) {
+    public WalletStoreFermatAppConnection(Context activity) {
         super(activity);
     }
 
