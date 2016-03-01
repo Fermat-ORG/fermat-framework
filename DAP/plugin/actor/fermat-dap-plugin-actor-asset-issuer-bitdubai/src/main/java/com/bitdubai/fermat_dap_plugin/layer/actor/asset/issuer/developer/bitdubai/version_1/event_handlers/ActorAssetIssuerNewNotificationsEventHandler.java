@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -9,28 +9,28 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetUserActorPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorPluginRoot;
 
 /**
- * Created by Nerio on 17/02/16.
+ * Created by Nerio on 29/02/16.
  */
-public class ActorAssetUserNewNotificationsEventHandler implements FermatEventHandler {
+public class ActorAssetIssuerNewNotificationsEventHandler implements FermatEventHandler {
 
-    AssetUserActorPluginRoot assetActorUserPluginRoot;
+    AssetIssuerActorPluginRoot assetIssuerActorPluginRoot;
 
     FermatEventMonitor fermatEventMonitor;
 
-    public ActorAssetUserNewNotificationsEventHandler(AssetUserActorPluginRoot assetActorUserPluginRoot) {
-        this.assetActorUserPluginRoot = assetActorUserPluginRoot;
+    public ActorAssetIssuerNewNotificationsEventHandler(AssetIssuerActorPluginRoot assetActorUserPluginRoot) {
+        this.assetIssuerActorPluginRoot = assetActorUserPluginRoot;
     }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.assetActorUserPluginRoot.getStatus() == ServiceStatus.STARTED) {
-            if (fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER) {
-                System.out.println("ACTOR ASSET USER - HANDLER NOTIFICACIONES PENDIENTES A ACTOR ASSET USER!!!");
+        if (this.assetIssuerActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
+            if (fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
+                System.out.println("ACTOR ASSET ISSUER - HANDLER NOTIFICACIONES PENDIENTES A ACTOR ASSET ISSUER!!!");
                 try {
-                    assetActorUserPluginRoot.processNotifications();
+                    assetIssuerActorPluginRoot.processNotifications();
                 } catch (CantGetActorAssetNotificationException e) {
                     this.fermatEventMonitor.handleEventException(e, fermatEvent);
                 } catch (Exception e) {
@@ -44,7 +44,9 @@ public class ActorAssetUserNewNotificationsEventHandler implements FermatEventHa
                     "Event Source received: "+ fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
                     "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode() + "\n" +
                     "Event Source: "+ eventSource.toString() + " - " + eventSource.getCode();
+
             throw new UnexpectedEventException(context);
+//            throw new TransactionServiceNotStartedException();
         }
     }
 }
