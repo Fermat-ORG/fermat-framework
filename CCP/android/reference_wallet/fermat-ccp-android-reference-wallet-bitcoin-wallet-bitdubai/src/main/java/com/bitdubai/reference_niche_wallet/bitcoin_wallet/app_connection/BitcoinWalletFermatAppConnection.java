@@ -70,8 +70,8 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     public NavigationViewPainter getNavigationViewPainter() {
 
 
-        return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity());
-        //return new BitcoinWalletNavigationViewPainter(getActivity(),getActiveIdentity());
+       // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
+        return new BitcoinWalletNavigationViewPainter(getActivity(),getActiveIdentity());
     }
 
     @Override

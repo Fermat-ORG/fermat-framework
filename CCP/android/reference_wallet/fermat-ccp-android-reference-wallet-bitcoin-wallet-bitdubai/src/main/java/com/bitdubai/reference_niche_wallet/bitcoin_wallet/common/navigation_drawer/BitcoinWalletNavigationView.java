@@ -13,9 +13,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.mati.fermat_navigator.drawer.FermatNavigationViewPainter;
-import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;
-import com.mati.fermat_navigator.drawer.holders.*;
-import com.mati.fermat_navigator.drawer.interfaces.NavigatorMenuItem;
+
 import com.squareup.picasso.Picasso;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
@@ -23,7 +21,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
  * Created by natalia on 29/02/16.
  */
 public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
-
+//TODO: navigation   drawer tool implementation
 
     private Activity activity;
     public BitcoinWalletNavigationView(Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
