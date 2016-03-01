@@ -249,7 +249,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
       Skype:   gabee512
       Github:  https://github.com/GaboHub
 
-* **Miguel Payarez [New Part-Time Developer]**<br/>
+* **Miguel Payarez [Veteran Developer]**<br/>
 ---
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
