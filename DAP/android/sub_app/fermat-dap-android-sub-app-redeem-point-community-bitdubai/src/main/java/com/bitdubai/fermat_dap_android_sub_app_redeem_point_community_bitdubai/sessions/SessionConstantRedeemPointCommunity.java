@@ -23,7 +23,7 @@ public class SessionConstantRedeemPointCommunity {
 
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION = 601;
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL = 602;
-    public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL= 603;
+    public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL= 603;
     public static final int IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 604;
     public static final int IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS = 605;
 }
