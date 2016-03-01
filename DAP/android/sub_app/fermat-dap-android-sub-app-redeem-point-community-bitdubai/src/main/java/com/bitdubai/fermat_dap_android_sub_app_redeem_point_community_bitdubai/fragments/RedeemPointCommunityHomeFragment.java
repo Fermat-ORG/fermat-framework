@@ -78,6 +78,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private int offset = 0;
     private Menu menu;
 
+    private MenuItem menuItemSelect;
+    private MenuItem menuItemUnselect;
+
     SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
@@ -125,17 +128,25 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 actors = dataSet;
 
                 boolean someSelected = false;
+                int cantSelected=0;
                 for (Actor actor : actors) {
                     if (actor.selected) {
                         someSelected = true;
-                        break;
+                        cantSelected++;
                     }
                 }
 
                 if (someSelected) {
-                    menu.getItem(2).setVisible(true);
+                    menuItemUnselect.setVisible(true);
+                    if (cantSelected == actors.size())
+                    {
+                        menuItemSelect.setVisible(false);
+                    } else {
+                        menuItemSelect.setVisible(true);
+                    }
                 } else {
-                    menu.getItem(2).setVisible(false);
+                    menuItemUnselect.setVisible(false);
+                    menuItemSelect.setVisible(true);
                 }
 
 
@@ -321,13 +332,15 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.getItem(2).setVisible(false);
+        menuItemSelect = menu.getItem(1);
+        menuItemUnselect = menu.getItem(2);
+        menuItemUnselect.setVisible(false);
 
         //inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
     }
@@ -343,17 +356,19 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(true);
+            menuItemSelect.setVisible(false);
+            menuItemUnselect.setVisible(true);
 
         }
 
-        if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_DESELECT_ALL) {
+        if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL) {
 
             for (Actor actorIssuer : actors) {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(false);
+            menuItemSelect.setVisible(true);
+            menuItemUnselect.setVisible(false);
         }
 
 
