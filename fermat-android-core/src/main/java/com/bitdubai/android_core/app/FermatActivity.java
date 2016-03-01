@@ -1918,6 +1918,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public FermatRuntime getRuntimeManager(){
         return runtimeStructureManager;
@@ -1957,6 +1958,5 @@ public abstract class FermatActivity extends AppCompatActivity
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
-
 
 }
