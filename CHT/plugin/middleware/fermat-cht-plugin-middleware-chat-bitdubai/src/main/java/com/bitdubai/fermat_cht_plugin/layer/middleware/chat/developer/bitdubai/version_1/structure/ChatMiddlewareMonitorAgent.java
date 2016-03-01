@@ -480,17 +480,6 @@ public class ChatMiddlewareMonitorAgent implements
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                        if(incomingChatMetadata.getDistributionStatus() != DistributionStatus.DELIVERED){
-                            chatNetworkServiceManager.sendChatMessageNewStatusNotification(
-                                    incomingChatMetadata.getRemoteActorPublicKey(),
-                                    incomingChatMetadata.getRemoteActorType(),
-                                    incomingChatMetadata.getLocalActorPublicKey(),
-                                    incomingChatMetadata.getLocalActorType(),
-                                    DistributionStatus.DELIVERED,
-                                    pendingTransaction.getTransactionID().toString()
-                            );
-                        }
-             //           break;
                     }
                 }
                 eventRecord.setEventStatus(EventStatus.NOTIFIED);
@@ -518,13 +507,6 @@ public class ChatMiddlewareMonitorAgent implements
                         e,
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
-                );
-            }
-            catch (CantSendChatMessageNewStatusNotificationException e) {
-                throw new CantGetPendingTransactionException(
-                        e,
-                        "Checking the incoming chat pending transactions",
-                        "Cannot send the message to TX"
                 );
             } catch (CantConfirmTransactionException e) {
                 throw new CantGetPendingTransactionException(
@@ -687,28 +669,17 @@ public class ChatMiddlewareMonitorAgent implements
             PlatformComponentType localType;
             String remotePublicKey;
             PlatformComponentType remoteType;
-      //      String newmessage="gone";
-/*            try {
-                for (int i = 0; i < chatMiddlewareDatabaseDao.getMessages().size(); i++) {
-                    if (chatMiddlewareDatabaseDao.getMessageByChatId(chatMetadata.getChatId()).get(i).getMessage().equals("troy")) {
-                        newmessage = "probe";
-                    }
-                }
-            }catch(CantGetMessageException e){
-            }*/
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
 
             // change to put in the remote device in the correct place of table chat
             if(chat == null){
                 chat = getChatFromChatMetadata(chatMetadata);
-            }else{
-                localPublicKey=chatMetadata.getRemoteActorPublicKey();
-                if(!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
+            }else {
+                localPublicKey = chatMetadata.getRemoteActorPublicKey();
+                if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
                     chat.setLocalActorPublicKey(localPublicKey);
                 }
-
             }
-
             chat.setStatus(ChatStatus.VISSIBLE);
 
             chatMiddlewareDatabaseDao.saveChat(chat);
