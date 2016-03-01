@@ -1,21 +1,18 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
@@ -29,7 +26,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
  */
 public class CryptoBrokerWalletFermatAppConnection extends AppConnections<CryptoBrokerWalletSession> {
 
-    public CryptoBrokerWalletFermatAppConnection(Activity activity) {
+    public CryptoBrokerWalletFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -57,16 +54,16 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CryptoBrokerNavigationViewPainter(getActivity(), getFullyLoadedSession());
+        return new CryptoBrokerNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoBrokerWalletHeaderPainter(getActivity(), getFullyLoadedSession());
+        return new CryptoBrokerWalletHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public FooterViewPainter getFooterViewPainter() {
-        return new CryptoBrokerWalletFooterPainter(getActivity(), getFullyLoadedSession());
+        return new CryptoBrokerWalletFooterPainter(getContext(), getFullyLoadedSession());
     }
 }

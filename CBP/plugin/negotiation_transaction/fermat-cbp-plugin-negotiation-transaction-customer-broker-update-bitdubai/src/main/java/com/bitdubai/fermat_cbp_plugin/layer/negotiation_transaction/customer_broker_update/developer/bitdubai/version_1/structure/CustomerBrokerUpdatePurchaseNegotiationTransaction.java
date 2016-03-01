@@ -108,7 +108,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -179,7 +179,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
