@@ -70,6 +70,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -261,7 +262,15 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
                     //NOTIFICATION LAUNCH
                     launchIncomingChatNotification(chatMetadataRecord.getChatId());
-                   // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + chatMetadataRecord.getLocalActorPublicKey());
+                    sendChatMessageNewStatusNotification(
+                            chatMetadataRecord.getRemoteActorPublicKey(),
+                            chatMetadataRecord.getRemoteActorType(),
+                            chatMetadataRecord.getLocalActorPublicKey(),
+                            chatMetadataRecord.getLocalActorType(),
+                            DistributionStatus.DELIVERED,
+                            chatMetadataRecord.getTransactionId().toString()
+                    );
+                    // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + chatMetadataRecord.getLocalActorPublicKey());
                     break;
                 case TRANSACTION_STATUS_UPDATE:
                     DistributionStatus distributionStatus = (messageData.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
@@ -304,6 +313,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                         + "\n-------------------------------------------------");
                                 //NOTIFICATION LAUNCH
                                 launcheIncomingChatStatusNotification(chatID);
+
                             }
 
                            // getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
@@ -746,37 +756,46 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
 
             ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationById(UUID.fromString(transactionID));
-            chatMetadataRecord.setDistributionStatus(newDistributionStatus);
-            chatMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
-            chatMetadataRecord.setRemoteActorType(receiverType);
-            chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
-            chatMetadataRecord.setLocalActorType(senderType);
-            chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_SEND);
-            chatMetadataRecord.setResponseToNotification(getChatMetadataRecordDAO().getNotificationResponseToByID(UUID.fromString(transactionID)));
-            chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
                     chatMetadataRecord.getResponseToNotification(),
                     chatMetadataRecord.getTransactionId().toString(),
                     newDistributionStatus, senderType,
                     receiverType
             );
-            chatMetadataRecord.setMsgXML(msjContent);
-            getChatMetadataRecordDAO().update(chatMetadataRecord);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
+            while(!Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
+                chatMetadataRecord = getChatMetadataRecordDAO().getNotificationById(chatMetadataRecord.getTransactionId());
+                chatMetadataRecord.setDistributionStatus(newDistributionStatus);
+                chatMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
+                chatMetadataRecord.setRemoteActorType(receiverType);
+                chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
+                chatMetadataRecord.setLocalActorType(senderType);
+                chatMetadataRecord.changeState(ChatProtocolState.DONE);
+                chatMetadataRecord.setResponseToNotification(getChatMetadataRecordDAO().getNotificationResponseToByID(UUID.fromString(transactionID)));
+                chatMetadataRecord.setMsgXML(msjContent);
+                if(Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
+                    chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
+                    final ChatMetadataRecord chatMetadataTosend = chatMetadataRecord;
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
 
-                    try {
-                        sendNewMessage(
-                                constructBasicPlatformComponentProfile(localActorPubKey, senderType),
-                                constructBasicPlatformComponentProfile(remoteActorPubKey, receiverType),
-                                msjContent
-                        );
-                    } catch (CantSendMessageException e) {
-                        e.printStackTrace();
-                    }
+                                sendNewMessage(
+                                        constructBasicPlatformComponentProfile(localActorPubKey, senderType),
+                                        constructBasicPlatformComponentProfile(remoteActorPubKey, receiverType),
+                                        msjContent
+                                );
+
+                                getChatMetadataRecordDAO().update(chatMetadataTosend);
+                            } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
-            });
+
+            }
+
 
         } catch (Exception e) {
 
