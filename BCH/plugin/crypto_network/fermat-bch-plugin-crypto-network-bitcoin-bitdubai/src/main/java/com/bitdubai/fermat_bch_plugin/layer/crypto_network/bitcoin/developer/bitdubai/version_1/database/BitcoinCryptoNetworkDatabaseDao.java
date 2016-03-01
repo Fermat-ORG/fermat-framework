@@ -285,6 +285,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, addressFrom.getAddress());
         record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME, value);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME, op_Return);
+
+        /**
+         * Will override the procotol status if the trasnaction is OnPendingSubmition, because we are not informing those transaction
+         */
+        if (cryptoStatus == CryptoStatus.PENDING_SUBMIT)
+            protocolStatus = ProtocolStatus.NO_ACTION_REQUIRED;
+
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionTypes.getCode());
@@ -1340,8 +1347,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
             record = uuidRecord;
         }
 
-
-        return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+        if (record != null)
+            return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
+        else
+            return null;
     }
 
     /**

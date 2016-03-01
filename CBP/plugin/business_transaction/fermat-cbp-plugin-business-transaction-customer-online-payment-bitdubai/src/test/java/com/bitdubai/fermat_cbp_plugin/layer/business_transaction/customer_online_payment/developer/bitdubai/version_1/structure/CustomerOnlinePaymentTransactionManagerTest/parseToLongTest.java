@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 04/02/16.
  */

@@ -47,7 +47,9 @@ public class AssetSellerDeveloperDatabaseFactory {
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_VALUE_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_VALUE_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME);
 

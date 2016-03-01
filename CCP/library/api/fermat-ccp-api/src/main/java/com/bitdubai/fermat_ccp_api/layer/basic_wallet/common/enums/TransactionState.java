@@ -13,6 +13,8 @@ public enum TransactionState {
     PERSISTED_IN_WALLET ("PIW"),
     SENT_TO_CRYPTO_VAULT("STCV"),
     SUCCESSFUL_SENT("SS"),
+    REVERSED ("REV"),
+    COMPLETE ("COM"),
     RECEIVED ("RCV");
 
     private final String code;
@@ -31,6 +33,8 @@ public enum TransactionState {
             case "STCV": return SENT_TO_CRYPTO_VAULT;
             case "SS":   return SUCCESSFUL_SENT;
             case "RCV":  return RECEIVED;
+            case "REV":  return REVERSED;
+            case "COM":  return COMPLETE;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionState enum");
         }
     }
