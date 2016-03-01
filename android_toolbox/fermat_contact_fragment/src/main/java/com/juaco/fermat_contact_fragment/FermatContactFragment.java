@@ -143,7 +143,7 @@ public abstract class FermatContactFragment <S extends FermatSession,RE extends 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.main_act, container, false);
+            rootView = inflater.inflate(R.layout.main_conct_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
