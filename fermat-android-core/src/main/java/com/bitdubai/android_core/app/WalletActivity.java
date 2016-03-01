@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
@@ -311,6 +312,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 } else if (bundle.containsKey(WALLET_PUBLIC_KEY)) {
                     String walletPublicKey = (String) bundle.get(WALLET_PUBLIC_KEY);
                     lastWallet = getWalletManager().getInstalledWallet(walletPublicKey);
+                }
+                if(bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)){
+                    getSubAppRuntimeMiddleware().getSubAppByPublicKey(lastWallet.getAppPublicKey()).getActivity(Activities.valueOf(bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)));
                 }
                 walletSession = createOrGetSession(lastWallet);
             }

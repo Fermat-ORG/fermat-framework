@@ -46,4 +46,9 @@ public class UserAssetCommunityNotificationPainter implements NotificationPainte
     public int getIcon() {
         return 0;
     }
+
+    @Override
+    public String getActivityCodeResult() {
+        return null;
+    }
 }
