@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -385,8 +386,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                             toConnect.add(actor);
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
-//                                  manager.askActorAssetUserForConnection(toConnect);
-//
+//                                  manager.askActorAssetRedeemForConnection(toConnect);
+
 //                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
 //                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
 //                                  sendLocalBroadcast(broadcast);

@@ -387,7 +387,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
 //                                    manager.askActorAssetIssuerForConnection(toConnect);
-//
+
 //                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
 //                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
 //                                    sendLocalBroadcast(broadcast);

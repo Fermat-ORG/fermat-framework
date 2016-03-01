@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
- * Created by eze on 2015.08.01..
+ * Created by eze on 2015.07.29..
  */
-public class CantDenyConnectionAssetUserActorException extends DAPException {
+public class CantAcceptAssetActorException extends DAPException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantDenyConnectionAssetUserActorException extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDenyConnectionAssetUserActorException(String message, Exception cause, String context, String possibleReason) {
+    public CantAcceptAssetActorException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
