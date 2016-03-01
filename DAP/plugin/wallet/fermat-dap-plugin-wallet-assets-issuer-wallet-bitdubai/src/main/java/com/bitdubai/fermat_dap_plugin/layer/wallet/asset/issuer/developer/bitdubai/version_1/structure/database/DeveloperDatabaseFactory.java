@@ -103,6 +103,22 @@ public class DeveloperDatabaseFactory {
         DeveloperDatabaseTable assetStatisticTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME, assetStatisticColumns);
         tables.add(assetStatisticTable);
 
+        /**
+         * Asset Movement table definition
+         */
+
+        List<String> assetMovementColumns = new ArrayList<>();
+
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE);
+
+        DeveloperDatabaseTable assetMovementTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME, assetMovementColumns);
+        tables.add(assetMovementTable);
+
         return tables;
     }
 

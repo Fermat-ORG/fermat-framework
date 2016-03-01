@@ -58,6 +58,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -706,6 +707,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }
     }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals("ACCEPTED_CONEXION"))
+              onRefresh();
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
 }
 

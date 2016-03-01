@@ -72,9 +72,6 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
      */
     private void processRegistration() {
 
-        System.out.println("Cloud Client is Registered " + networkServiceRoot.getCommunicationsClientConnection().isRegister() +
-                networkServiceRoot.getNetworkServiceProfile().getAlias() + " is Registered " + networkServiceRoot.isRegister());
-
             try{
 
                 if (networkServiceRoot.getCommunicationsClientConnection().isRegister() && !networkServiceRoot.isRegister()){

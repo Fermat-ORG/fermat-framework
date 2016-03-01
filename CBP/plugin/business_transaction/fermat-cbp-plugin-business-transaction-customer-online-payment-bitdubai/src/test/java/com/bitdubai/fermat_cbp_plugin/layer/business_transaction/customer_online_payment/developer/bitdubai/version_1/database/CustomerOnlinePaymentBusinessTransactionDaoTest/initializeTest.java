@@ -13,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 import java.util.UUID;
-
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.

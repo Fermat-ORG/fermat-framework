@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.CryptoPaymentRequestPluginRoot;
@@ -37,17 +38,10 @@ public class IncomingIntraUserTransactionDebitEventHandler implements FermatEven
 
                 try
                 {
-                    cryptoPaymentRequestPluginRoot.getCryptoPaymentRegistry().approveRequest(incomingDebitEvent.getRequestId());
+                    cryptoPaymentRequestPluginRoot.getCryptoPaymentRegistry().acceptIncomingRequest(incomingDebitEvent.getRequestId());
                 
-                }catch(CantApproveCryptoPaymentRequestException e){
+                }catch(CantUpdateRequestPaymentStateException e){
                     throw new CryptoPaymentCantHandleTransactionDebitException("Can't Update CryptoPayment",e,"","");
-                }
-                catch(CryptoPaymentRequestNotFoundException e){
-                    throw new CryptoPaymentCantHandleTransactionDebitException("Crypto Payment Request NotFound",e,"","");
-                }
-                catch(InsufficientFundsException e)
-                {
-                    throw new CryptoPaymentCantHandleTransactionDebitException("Insufficient Funds",e,"","");
                 }
                 catch (FermatException e) {
                     throw new CryptoPaymentCantHandleTransactionDebitException("An exception happened",e,"","");

@@ -3772,7 +3772,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
                 walletNavigationStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, walletNavigationStructure);
 
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                try {
+                    PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    layoutFile.setContent("");
+
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
+
             } catch (CantCreateFileException e) {
                 e.printStackTrace();
             } catch (CantLoadFileException e) {

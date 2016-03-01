@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -55,7 +56,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
@@ -835,13 +835,12 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorIssuerDestination.getActorPublicKey());
 
             if (true) {
-                Gson gson = DAPMessageGson.getGson();
 
 //                JsonObject jsonObject = new JsonObject();
 //                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(dapMessage.getActorSender().getProfileImage(), Base64.DEFAULT));
 //                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(dapMessage.getActorReceiver().getProfileImage(), Base64.DEFAULT));
 
-                String messageContentIntoJson = gson.toJson(dapMessage);
+                String messageContentIntoJson = XMLParser.parseObject(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 
@@ -950,9 +949,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             if (true) {
-                Gson gson = DAPMessageGson.getGson();
-
-                String messageContentIntoJson = gson.toJson(dapMessage);
+                String messageContentIntoJson = XMLParser.parseObject(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 
@@ -1494,9 +1491,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         List<DAPMessage> listToReturn = new ArrayList<>();
         try {
             for (FermatMessage message : getNewReceivedMessageList()) {
-                Gson gson = DAPMessageGson.getGson();
                 try {
-                    DAPMessage dapMessage = gson.fromJson(message.getContent(), DAPMessage.class);
+                    DAPMessage dapMessage = (DAPMessage) XMLParser.parseXML(message.getContent(), new DAPMessage());
                     if (dapMessage.getMessageContent().messageType() == type) {
                         listToReturn.add(dapMessage);
                         markAsRead(message);
