@@ -517,7 +517,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 installedSubApp = getSubAppManager().getSubApp(subAppType.getCode());
             }
             if(bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)){
-                getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey()).getActivity(Activities.valueOf(bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)));
+                String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
+                if(activityCode!=null) getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
             }
 
             return createOrGetSession(installedSubApp);
