@@ -16,6 +16,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.enums.CryptoCustomerActorConnectionNotificationType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
@@ -47,16 +50,19 @@ public final class ActorConnectionEventActions {
     private final CryptoBrokerManager              cryptoBrokerNetworkService;
     private final CryptoCustomerActorConnectionDao dao                       ;
     private final ErrorManager                     errorManager              ;
+    private final Broadcaster                      broadcaster               ;
     private final PluginVersionReference           pluginVersionReference    ;
 
     public ActorConnectionEventActions(final CryptoBrokerManager                     cryptoBrokerNetworkService,
                                        final CryptoCustomerActorConnectionDao        dao                       ,
                                        final ErrorManager                            errorManager              ,
+                                       final Broadcaster                             broadcaster               ,
                                        final PluginVersionReference                  pluginVersionReference    ) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
         this.errorManager               = errorManager              ;
+        this.broadcaster                = broadcaster               ;
         this.pluginVersionReference     = pluginVersionReference    ;
     }
 
@@ -103,6 +109,9 @@ public final class ActorConnectionEventActions {
             );
 
             dao.registerActorConnection(actorConnection);
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
 
             cryptoBrokerNetworkService.confirm(request.getRequestId());
 

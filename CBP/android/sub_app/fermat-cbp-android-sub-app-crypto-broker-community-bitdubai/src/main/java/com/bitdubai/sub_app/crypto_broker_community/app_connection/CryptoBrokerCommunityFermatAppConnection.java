@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -14,10 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.crypto_broker_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -26,7 +25,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
+public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<CryptoBrokerCommunitySubAppSession> {
 
     public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
         super(activity);
@@ -49,15 +48,14 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public CryptoBrokerCommunitySubAppSession getSession() {
         return new CryptoBrokerCommunitySubAppSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
-                (CryptoBrokerCommunitySubAppSession) getFullyLoadedSession());
+        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(), getFullyLoadedSession());
     }
 
     @Override
@@ -69,4 +67,14 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     public FooterViewPainter getFooterViewPainter() {
         return null;
     }
+
+
+    @Override
+    public NotificationPainter getNotificationPainter(final String code) {
+
+        return CommunityNotificationPainterBuilder.getNotification(
+                code
+        );
+    }
+
 }
