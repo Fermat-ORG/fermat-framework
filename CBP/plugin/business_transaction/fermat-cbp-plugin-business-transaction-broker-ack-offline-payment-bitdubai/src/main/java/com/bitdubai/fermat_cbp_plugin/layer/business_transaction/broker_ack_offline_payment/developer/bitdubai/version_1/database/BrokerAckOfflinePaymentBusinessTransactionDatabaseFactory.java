@@ -82,6 +82,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory implement
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.FALSE);
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING, 64,Boolean.FALSE);
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING, 64,Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME,DatabaseDataType.LONG_INTEGER, 64,Boolean.FALSE);
 
 
             table.addIndex(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_FIRST_KEY_COLUMN);
