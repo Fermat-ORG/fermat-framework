@@ -223,7 +223,10 @@ public class AssetUserActorRecord implements ActorAssetUser {
      */
     @Override
     public Genders getGenders() {
-        return genders;
+        if (this.genders == null)
+            return Genders.INDEFINITE;
+        else
+            return genders;
     }
 
     public void setGenders(Genders genders) {

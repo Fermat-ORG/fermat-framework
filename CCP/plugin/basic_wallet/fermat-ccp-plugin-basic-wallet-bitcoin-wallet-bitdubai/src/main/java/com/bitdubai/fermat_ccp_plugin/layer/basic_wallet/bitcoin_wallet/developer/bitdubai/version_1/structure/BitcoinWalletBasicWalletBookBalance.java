@@ -99,4 +99,18 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
+
+    @Override
+    public void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+        try {
+            bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction,BalanceType.BOOK);
+        } catch (CantRegisterDebitException e) {
+            throw new CantRegisterCreditException("CANT REVERT CREDIT EN BOOK", FermatException.wrapException(e), null, null);
+
+        }
+
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
@@ -13,20 +14,24 @@ public class AssetSellContentMessage implements DAPContentMessage {
     //VARIABLE DECLARATION
     private UUID sellingId;
     private byte[] serializedTransaction;
+    private long transactionValue;
     private AssetSellStatus sellStatus;
     private DigitalAssetMetadata assetMetadata;
     private UUID negotiationId;
+    private CryptoAddress cryptoVaultAddress;
     //CONSTRUCTORS
 
     public AssetSellContentMessage() {
     }
 
-    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId) {
+    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId, long transactionValue, CryptoAddress cryptoVaultAddress) {
         this.sellingId = sellingId;
         this.serializedTransaction = serializedTransaction;
         this.sellStatus = sellStatus;
         this.assetMetadata = assetMetadata;
         this.negotiationId = negotiationId;
+        this.transactionValue = transactionValue;
+        this.cryptoVaultAddress = cryptoVaultAddress;
     }
 
     //PUBLIC METHODS
@@ -63,6 +68,14 @@ public class AssetSellContentMessage implements DAPContentMessage {
 
     public UUID getNegotiationId() {
         return negotiationId;
+    }
+
+    public long getTransactionValue() {
+        return transactionValue;
+    }
+
+    public CryptoAddress getCryptoVaultAddress() {
+        return cryptoVaultAddress;
     }
 
     //INNER CLASSES

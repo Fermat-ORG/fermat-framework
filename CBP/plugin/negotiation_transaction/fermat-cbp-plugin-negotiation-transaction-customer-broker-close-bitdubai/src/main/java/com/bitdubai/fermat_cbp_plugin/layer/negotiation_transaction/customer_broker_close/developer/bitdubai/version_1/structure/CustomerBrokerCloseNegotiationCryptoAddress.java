@@ -50,6 +50,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
         this.cryptoAddressBookManager   = cryptoAddressBookManager;
         this.cryptoVaultManager         = cryptoVaultManager;
         this.walletManagerManager       = walletManagerManager;
+        
     }
 
     //UPDATE THE PURCHASE NEGOTIATION FOR ADD NEW CRYPTO ADDRESS
@@ -57,9 +58,11 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
         try {
 
+            System.out.print("\n\n**** 3.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
+
             CustomerBrokerPurchaseNegotiation newNegotiation = negotiation;
 
-            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
 
                 CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
                 Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request, ClauseType.CUSTOMER_CRYPTO_ADDRESS);
@@ -71,7 +74,11 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
                     negotiation.getStartDate(),
                     negotiation.getNegotiationExpirationDate(),
                     negotiation.getStatus(),
-                    negotiationClauses
+                    negotiation.getNearExpirationDatetime(),
+                    negotiationClauses,
+                    negotiation.getLastNegotiationUpdateDate(),
+                    negotiation.getCancelReason(),
+                    negotiation.getMemo()
                 );
 
             }
@@ -91,9 +98,11 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
         try {
 
+            System.out.print("\n\n**** 3.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
+
             CustomerBrokerSaleNegotiation newNegotiation = negotiation;
 
-            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
                 CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
                 Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request, ClauseType.BROKER_CRYPTO_ADDRESS);
@@ -105,7 +114,11 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
                     negotiation.getStartDate(),
                     negotiation.getNegotiationExpirationDate(),
                     negotiation.getStatus(),
-                    negotiationClauses
+                    negotiation.getNearExpirationDatetime(),
+                    negotiationClauses,
+                    negotiation.getLastNegotiationUpdateDate(),
+                    negotiation.getCancelReason(),
+                    negotiation.getMemo()
                 );
 
             }
@@ -125,12 +138,12 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
             for (Clause clause : negotiationClauses) {
                 if (clause.getType().equals(paymentMethod)) {
-                    if (clause.getValue().equals(MoneyType.CRYPTO)) {
+                    if (clause.getValue().equals(MoneyType.CRYPTO.getCode())) {
                         return true;
                     }
                 }
             }
-
+            
             return false;
 
         } catch (Exception e){
@@ -141,12 +154,14 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
     //ADD NEW CRYPTO ADDRESS A THE CLAUSES
     private Collection<Clause> addCryptoAdreess(
-            Collection<Clause> negotiationClauses,
-            CustomerBrokerCloseCryptoAddressRequest request,
-            ClauseType cryptoAddressType)
+        Collection<Clause> negotiationClauses,
+        CustomerBrokerCloseCryptoAddressRequest request,
+        ClauseType cryptoAddressType)
     throws CantAddCryptoAddressNegotiationException{
 
         try {
+
+            System.out.print("\n\n**** 3.1.1.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. ADD CRYPTO ADDRESS ****\n");
 
             Collection<Clause> negotiationClausesNew = new ArrayList<>();
 
@@ -194,7 +209,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
     private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation negotiation) throws CantGetRequestCryptoAddressException{
 
         try {
-
+            System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
                 Actors.CBP_CRYPTO_BROKER,
                 Actors.CBP_CRYPTO_CUSTOMER,
@@ -215,7 +230,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
     private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerSaleNegotiation negotiation) throws CantGetRequestCryptoAddressException{
 
         try {
-
+            System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
                 Actors.CBP_CRYPTO_CUSTOMER,
                 Actors.CBP_CRYPTO_BROKER,
@@ -241,7 +256,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
         CryptoAddress           cryptoAdreess;
 
         try {
-
+            System.out.print("\n\n**** 3.1.1.2.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. GET CRYPTO ADDRESS ****\n");
             CustomerBrokerCloseCryptoAddress customerBrokerCloseCryptoAddress = new CustomerBrokerCloseCryptoAddress(
                     this.cryptoAddressBookManager,
                     cryptoVaultSelector,
@@ -250,6 +265,8 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
             cryptoAdreess   = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
             adreess         = cryptoAdreess.getAddress();
+
+            System.out.print("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: "+adreess+" ****\n");
 
         } catch (CantCryptoAddressesNewException e){
             throw new CantGetGenerateCryptoAddressException(e.getMessage(),e, CantGetGenerateCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET CRYPTO ADDRESS GENERATE AND REGISTER, FAILED GENERATION THE CRYPTO ADDRESS.");

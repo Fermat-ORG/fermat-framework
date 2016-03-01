@@ -4,16 +4,15 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.AssetRedeemPointActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
 
 /**
  * Created by Nerio on 26/11/15.
@@ -38,8 +37,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
             NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
             FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
             if (fermatMessageReceive.getContent() != null) {
-                Gson gson = DAPMessageGson.getGson();
-                DAPMessage message = gson.fromJson(fermatMessageReceive.getContent(), DAPMessage.class);
+                DAPMessage message = (DAPMessage) XMLParser.parseXML(fermatMessageReceive.getContent(), new DAPMessage());
 
                     System.out.println("ACTOR NETWORK SERVICE ASSET REDEEM POINT - SE LANZARA EVENTO PARA REQUEST PUBLIC KEY EXTENDED");
 
