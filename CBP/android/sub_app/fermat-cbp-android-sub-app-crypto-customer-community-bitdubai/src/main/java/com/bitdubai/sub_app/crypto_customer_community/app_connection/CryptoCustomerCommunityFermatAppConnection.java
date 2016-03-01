@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -14,10 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_community.navigationDrawer.CustomerCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.crypto_customer_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
 /**
@@ -26,7 +25,7 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
+public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<CryptoCustomerCommunitySubAppSession> {
 
     public CryptoCustomerCommunityFermatAppConnection(Activity activity) {
         super(activity);
@@ -49,7 +48,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public CryptoCustomerCommunitySubAppSession getSession() {
         return new CryptoCustomerCommunitySubAppSession();
     }
 
@@ -57,7 +56,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return new CustomerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
-                (CryptoCustomerCommunitySubAppSession) getFullyLoadedSession());
+                getFullyLoadedSession());
 
     }
 
@@ -69,5 +68,13 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(final String code) {
+
+        return CommunityNotificationPainterBuilder.getNotification(
+                code
+        );
     }
 }

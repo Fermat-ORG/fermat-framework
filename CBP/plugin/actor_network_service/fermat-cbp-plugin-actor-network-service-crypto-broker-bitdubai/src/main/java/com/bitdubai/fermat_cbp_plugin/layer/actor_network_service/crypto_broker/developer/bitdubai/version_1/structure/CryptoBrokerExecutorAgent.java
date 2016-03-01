@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
@@ -395,12 +394,12 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                 } else {
 
-                    return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
+                    return sendMessage(identityPublicKey, platformComponentTypeSelectorByActorType(identityType), actorPublicKey, jsonMessage);
 
                 }
             } else {
 
-                return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
+                return sendMessage(identityPublicKey, platformComponentTypeSelectorByActorType(identityType), actorPublicKey, jsonMessage);
             }
 
 
@@ -410,9 +409,10 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             return false;
         }
     }
-    private boolean sendMessage(final String identityPublicKey,
-                                final String actorPublicKey   ,
-                                final String jsonMessage      ) {
+    private boolean sendMessage(final String                identityPublicKey,
+                                final PlatformComponentType identityType     ,
+                                final String                actorPublicKey   ,
+                                final String                jsonMessage      ) {
 
         CommunicationNetworkServiceLocal communicationNetworkServiceLocal = cryptoBrokerActorNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
 
@@ -420,6 +420,8 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
             communicationNetworkServiceLocal.sendMessage(
                     identityPublicKey,
+                    identityType     ,
+                    NetworkServiceType.UNDEFINED,
                     jsonMessage
             );
 

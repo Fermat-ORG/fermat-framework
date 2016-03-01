@@ -130,9 +130,17 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiver())) {
                     if (networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(fermatMessage.getReceiver()) == null) {
 
-                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileSenderToRequestConnection(fermatMessage.getSender());
+                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileSenderToRequestConnection(
+                                fermatMessage.getSender(),
+                                fermatMessage.getSenderNsType(),
+                                fermatMessage.getSenderType()
+                        );
 
-                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileDestinationToRequestConnection(fermatMessage.getReceiver());
+                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileDestinationToRequestConnection(
+                                fermatMessage.getReceiver(),
+                                fermatMessage.getReceiverNsType(),
+                                fermatMessage.getReceiverType()
+                        );
 
                         System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - Requesting new connection with "+remoteParticipant.getIdentityPublicKey());
                         networkServiceRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, networkServiceRoot.getNetworkServiceProfile(), remoteParticipant);
