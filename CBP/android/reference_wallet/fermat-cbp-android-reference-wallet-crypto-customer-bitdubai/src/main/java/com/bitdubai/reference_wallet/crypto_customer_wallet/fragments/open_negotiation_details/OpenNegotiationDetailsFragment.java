@@ -84,7 +84,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private FermatTextView sellingDetails;
     private FermatTextView exchangeRateSummary;
     private FermatTextView brokerName;
-    private FermatTextView expirationDate;
     private Layout layoutExpirationDate;
     private RecyclerView recyclerView;
     private boolean valuesHasChanged;
@@ -369,7 +368,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_broker_name);
         sellingDetails = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
         exchangeRateSummary = (FermatTextView) rootView.findViewById(R.id.ccw_buying_exchange_rate);
-        expirationDate = (FermatTextView) rootView.findViewById(R.id.ccw_expiration_date);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_open_negotiation_details_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -429,8 +427,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, payment));
-        expirationDate.setVisibility(View.GONE);
-
 
 
         //PRINT CLAUSE STATUS TEST
