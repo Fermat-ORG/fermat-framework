@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.developer.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -22,7 +21,7 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
  */
 public class DeveloperFermatAppConnection extends AppConnections{
 
-    public DeveloperFermatAppConnection(Activity activity) {
+    public DeveloperFermatAppConnection(Context activity) {
         super(activity);
     }
 

@@ -1,31 +1,33 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.navigation_drawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Nerio on 24/12/15.
  */
 public class RedeemPointCommunityNavigationViewPainter implements NavigationViewPainter {
 
-    private Activity activity;
+    private WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
 
-    public RedeemPointCommunityNavigationViewPainter(Activity activity) {
-        this.activity = activity;
+    public RedeemPointCommunityNavigationViewPainter(Context activity) {
+        this.activity = new WeakReference<Context>(activity);
     }
 
-    public RedeemPointCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation activeIdentity) {
-        this.activity = activity;
+    public RedeemPointCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
+        this.activity = new WeakReference<Context>(activity);
+
         this.activeIdentity = activeIdentity;
 
     }
@@ -33,7 +35,8 @@ public class RedeemPointCommunityNavigationViewPainter implements NavigationView
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetIssuer) {
         try {
-            return RedeemPointCommunityFragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetIssuer);
+            return RedeemPointCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
         } catch (CantGetIdentityAssetUserException e) {
             e.printStackTrace();
             return null;
@@ -42,7 +45,7 @@ public class RedeemPointCommunityNavigationViewPainter implements NavigationView
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new RedeemPointCommunityNavigationAdapter(activity, null);
+        return new RedeemPointCommunityNavigationAdapter(activity.get(), null);
     }
 
     @Override
