@@ -294,7 +294,10 @@ public class CustomerBrokerUpdateAgent implements
                 if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND transactionId: " + negotiationTransaction.getTransactionId() + " ****\n");
+                        System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " +
+                                "\n - TransactionId: " + negotiationTransaction.getTransactionId() +
+                                "\n - Status: " + negotiationTransaction.getStatusTransaction() +
+                                " ****\n");
 
                         negotiationXML  = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
@@ -325,6 +328,8 @@ public class CustomerBrokerUpdateAgent implements
                         //Update the Negotiation Transaction
 //                        System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
                         customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
+                        CustomerBrokerUpdate transactionDao = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
+                        System.out.print("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: "+transactionDao.getStatusTransaction().getCode()+" ****\n");
 
                     }
                 }
@@ -354,6 +359,7 @@ public class CustomerBrokerUpdateAgent implements
 
                         //Update the Negotiation Transaction
                         customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+
                     }
                 }
 
@@ -393,6 +399,7 @@ public class CustomerBrokerUpdateAgent implements
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerUpdateNegotiationTransactionDatabaseDao.getEventType(eventId);
+                String eventStatus = customerBrokerUpdateNegotiationTransactionDatabaseDao.getEventStatus(eventId);
 
                 //EVENT - RECEIVE NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE.getCode())) {
@@ -408,7 +415,7 @@ public class CustomerBrokerUpdateAgent implements
                             transactionId = negotiationTransmission.getTransactionId();
                             negotiationType = negotiationTransmission.getNegotiationType();
 
-                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT PENDING ****\n" +
+                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT PENDING ID: " +eventId+"****\n" +
                                             "\n - NEGOTIATION TRANSACTION TYPE = "+negotiationTransmission.getNegotiationTransactionType().getCode()+
                                             "\n - TRANSACTION ID = " +transactionId+
                                             "\n - TRANSMISSION ID = " +transmissionId+
@@ -470,6 +477,7 @@ public class CustomerBrokerUpdateAgent implements
                                 //TODO. UNA EXCEPCION OCURRIDA ANTES DE ESTO, HARA QUE LA TRANSMISSION EN CUESTION SE REPITA EN EL CICLO, POR NO CAMBIAR DE ESTADO.
                                 //NOTIFIED EVENT
                                 customerBrokerUpdateNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - EVENT CHANGE A STATUS : "+eventStatus+"  ****\n");
                                 //CONFIRM TRANSMISSION
                                 negotiationTransmissionManager.confirmReception(transmissionId);
 
