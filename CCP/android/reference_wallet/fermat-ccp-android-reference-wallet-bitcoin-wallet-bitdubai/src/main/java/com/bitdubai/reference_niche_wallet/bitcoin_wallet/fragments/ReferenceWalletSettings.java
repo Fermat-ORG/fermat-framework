@@ -1,10 +1,11 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -104,62 +105,80 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
      */
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
-        PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem =   (PreferenceSettingsTextPlusRadioItem)preferenceSettingsItem;
-        BlockchainNetworkType blockchainNetworkType = null;
-
-        switch (preferenceSettingsTextPlusRadioItem.getText()){
-
-            case "MainNet":
-                blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
-
-                break;
-
-            case "TestNet":
-                blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                break;
-
-            case "RegTest":
-                blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                break;
-
-            default: blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                break;
-
-        }
-
-        preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
-
-        System.out.println("SETTING SELECTED IS "+ preferenceSettingsTextPlusRadioItem.getText());
-        System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
-
 
         try {
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-        if (blockchainNetworkType == null) {
-            if (bitcoinWalletSettings.getBlockchainNetworkType()!=null){
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            }else{
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+
+            if (preferenceSettingsItem.getId() == 1){
+                //enable notifications settings not implemented
             }
+            else {
+                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+                BlockchainNetworkType blockchainNetworkType = null;
+
+                switch (preferenceSettingsTextPlusRadioItem.getText()) {
+
+                    case "MainNet":
+                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
+                        break;
+
+                    case "TestNet":
+                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                        break;
+
+                    case "RegTest":
+                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                        break;
+
+                    default:
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        break;
+
+                }
+
+                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
+                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
+                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+
+                try {
+                    bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                } catch (CantGetSettingsException e) {
+                    e.printStackTrace();
+                } catch (SettingsNotFoundException e) {
+                    e.printStackTrace();
+                }
+                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                if (blockchainNetworkType == null) {
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                    } else {
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                    }
+                }
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                try {
+                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e){
         }
-        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-        try {
-            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
     @Override
-    public Drawable getBackground() {
-        return null;
+    public int getBackgroundColor() {
+        return Color.WHITE;
+    }
+
+    @Override
+    public int getBackgroundAlpha() {
+        return 90;
     }
 
 

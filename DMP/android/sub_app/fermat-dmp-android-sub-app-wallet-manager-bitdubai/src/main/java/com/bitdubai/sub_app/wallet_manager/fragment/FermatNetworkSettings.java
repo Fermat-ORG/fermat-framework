@@ -1,7 +1,5 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
-import android.graphics.drawable.Drawable;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
@@ -56,8 +54,13 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
     }
 
     @Override
-    public Drawable getBackground() {
-        return null;
+    public int getBackgroundColor() {
+        return 0;
+    }
+
+    @Override
+    public int getBackgroundAlpha() {
+        return 0;
     }
 
     public String[] getIpPort(){
