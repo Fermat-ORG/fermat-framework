@@ -27,8 +27,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
@@ -131,14 +129,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNew
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyNegotiationBankAccountException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -162,14 +155,11 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -686,107 +676,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo) {
-        final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        List<NegotiationStep> data = new ArrayList<>();
-        int stepNumber = 0;
-
-        // exchange rate step
-        Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-        String currencyToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-        String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
-        String suggestedExchangeRate = decimalFormat.format(215.25); // TODO este valor me lo da la wallet
-        data.add(new ExchangeRateStepImp(++stepNumber, currencyToSell, currencyToReceive, suggestedExchangeRate, exchangeRate));
-
-        // amount to sell step
-        String amountToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
-        String amountToReceive = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue();
-        data.add(new AmountToSellStepImp(++stepNumber, currencyToSell, currencyToReceive, amountToSell, amountToReceive, exchangeRate));
-
-        // Payment Method
-        String paymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.PAYMENT_METHOD, paymentMethod));
-
-        // Broker Bank Account
-        ClauseInformation clauseInformation = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
-        if (clauseInformation != null) {
-            String brokerBankAccount = clauseInformation.getValue();
-            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.BROKER_BANK_ACCOUNT, brokerBankAccount));
-        }
-
-        // Broker Locations
-        clauseInformation = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
-        if (clauseInformation != null) {
-            String brokerBankAccount = clauseInformation.getValue();
-            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.BROKER_LOCATION, brokerBankAccount));
-        }
-
-        // Customer Bank Account
-        clauseInformation = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
-        if (clauseInformation != null) {
-            String brokerBankAccount = clauseInformation.getValue();
-            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.CUSTOMER_BANK_ACCOUNT, brokerBankAccount));
-        }
-
-        // Customer Location
-        clauseInformation = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
-        if (clauseInformation != null) {
-            String brokerBankAccount = clauseInformation.getValue();
-            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.CUSTOMER_LOCATION, brokerBankAccount));
-        }
-
-        // Datetime to Pay
-        String datetimeToPay = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER).getValue();
-        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.DATE_TIME_TO_PAY, datetimeToPay));
-
-        // Datetime to Deliver
-        String datetimeToDeliver = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER).getValue();
-        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.DATE_TIME_TO_DELIVER, datetimeToDeliver));
-
-        // Datetime to Deliver
-        String expirationDatetime = String.valueOf(negotiationInfo.getNegotiationExpirationDate());
-        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.EXPIRATION_DATE_TIME, expirationDatetime));
-
-        return data;
-    }
-
-    @Override
-    public void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues) {
-        NegotiationStepType negotiationStepType = step.getType();
-
-        switch (negotiationStepType) {
-            case EXCHANGE_RATE:
-                ExchangeRateStepImp exchangeRateStep = (ExchangeRateStepImp) step;
-                exchangeRateStep.setExchangeRate(newValues[0]);
-                exchangeRateStep.setStatus(status);
-                break;
-            case AMOUNT_TO_SALE:
-                AmountToSellStepImp amountToSellStep = (AmountToSellStepImp) step;
-                amountToSellStep.setAmountToSell(newValues[0]);
-                amountToSellStep.setAmountToReceive(newValues[1]);
-                amountToSellStep.setExchangeRateValue(newValues[2]);
-                amountToSellStep.setStatus(status);
-                break;
-            default:
-                SingleValueStepImp singleValueStep = (SingleValueStepImp) step;
-                singleValueStep.setValue(newValues[0]);
-                singleValueStep.setStatus(status);
-                break;
-        }
-    }
-
-    @Override
-    public boolean isNothingLeftToConfirm(List<NegotiationStep> dataSet) {
-        for (NegotiationStep step : dataSet) {
-            if (step.getStatus() == NegotiationStepStatus.CONFIRM) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public void sendNegotiation(CustomerBrokerNegotiationInformation negotiationInfo) throws CantSendNegotiationToCryptoCustomerException {
         CustomerBrokerSaleNegotiationImpl saleNegotiationImpl = null;
 
@@ -816,128 +705,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         } catch (Exception cause) {
             throw new CantSendNegotiationToCryptoCustomerException(cause.getMessage(), cause, "N/A", "N/A");
         }
-    }
-
-    @Deprecated
-    @Override
-    public CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
-
-        CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation wrapper = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(data);
-        CryptoBrokerWalletModuleClauseInformation clause;
-        ClauseInformation clauseInfo;
-        Map<ClauseType, ClauseInformation> clauses = wrapper.getClauses();
-
-        wrapper.setStatus(NegotiationStatus.WAITING_FOR_CUSTOMER);
-        wrapper.setLastNegotiationUpdateDate(Calendar.getInstance(Locale.getDefault()).getTimeInMillis());
-
-        for (NegotiationStep step : dataSet) {
-            NegotiationStepType type = step.getType();
-            switch (type) {
-                case AMOUNT_TO_SALE:
-                    AmountToSellStep amountToSellStep = (AmountToSellStep) step;
-
-                    clauseInfo = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-                    clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), amountToSellStep.getAmountToReceive(), clauseInfo.getStatus());
-                    clauses.put(ClauseType.BROKER_CURRENCY_QUANTITY, clause);
-
-                    clauseInfo = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-                    clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), amountToSellStep.getAmountToSell(), clauseInfo.getStatus());
-                    clauses.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, clause);
-                    break;
-
-                case BROKER_BANK_ACCOUNT:
-                    SingleValueStep singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.BROKER_BANK_ACCOUNT, clause);
-                    }
-                    break;
-
-                case BROKER_LOCATION:
-                    singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.BROKER_PLACE_TO_DELIVER, clause);
-                    }
-                    break;
-
-                case CUSTOMER_BANK_ACCOUNT:
-                    singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.CUSTOMER_BANK_ACCOUNT, clause);
-                    }
-                    break;
-
-                case CUSTOMER_LOCATION:
-                    singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.CUSTOMER_PLACE_TO_DELIVER, clause);
-                    }
-                    break;
-
-                case DATE_TIME_TO_DELIVER:
-                    singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, clause);
-                    }
-                    break;
-
-                case DATE_TIME_TO_PAY:
-                    singleValueStep = (SingleValueStep) step;
-
-                    clauseInfo = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, clause);
-                    }
-                    break;
-
-                case EXCHANGE_RATE:
-                    ExchangeRateStep exchangeRateStep = (ExchangeRateStep) step;
-                    clauseInfo = clauses.get(ClauseType.EXCHANGE_RATE);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), exchangeRateStep.getExchangeRate(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.EXCHANGE_RATE, clause);
-                    }
-                    break;
-
-                case PAYMENT_METHOD:
-                    singleValueStep = (SingleValueStep) step;
-                    clauseInfo = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-                    if (clauseInfo != null) {
-                        clause = new CryptoBrokerWalletModuleClauseInformation(clauseInfo.getType(), singleValueStep.getValue(), clauseInfo.getStatus());
-                        clauses.put(ClauseType.CUSTOMER_PAYMENT_METHOD, clause);
-                    }
-                    break;
-
-                case EXPIRATION_DATE_TIME:
-                    singleValueStep = (SingleValueStep) step;
-                    wrapper.setExpirationDatetime(Long.valueOf(singleValueStep.getValue()));
-                    break;
-            }
-        }
-
-        List<CustomerBrokerNegotiationInformation> openNegotiations = new ArrayList<>();
-
-        // TODO el wrapper se le va a pasar al plugin de Yordin "Customer Broker Update Negotiation Transaction"
-        //Negotiation Transaccion Update createCustomerBrokerUpdateSaleNegotiationTranasction
-        for (int i = 0; i < openNegotiations.size(); i++) {
-            CustomerBrokerNegotiationInformation item = openNegotiations.get(i);
-            if (item.getNegotiationId().equals(wrapper.getNegotiationId())) {
-                openNegotiations.set(i, wrapper);
-                break;
-            }
-        }
-
-        return wrapper;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         clauses = data.getClauses();
         status = data.getStatus();
         note = data.getMemo();
-        lastNegotiationUpdateDate = data.getNegotiationExpirationDate();
+        lastNegotiationUpdateDate = data.getLastNegotiationUpdateDate();
         expirationDatetime = data.getNegotiationExpirationDate();
         negotiationId = data.getNegotiationId();
     }
