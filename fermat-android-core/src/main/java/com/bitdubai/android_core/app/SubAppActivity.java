@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
@@ -515,6 +516,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 assert subAppType != null;
                 installedSubApp = getSubAppManager().getSubApp(subAppType.getCode());
             }
+            if(bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)){
+                getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey()).getActivity(Activities.valueOf(bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)));
+            }
+
             return createOrGetSession(installedSubApp);
 
         } catch (NullPointerException nullPointerException){
