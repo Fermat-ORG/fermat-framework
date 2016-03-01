@@ -199,7 +199,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
 
         clauseViewHolder.bindData(negotiationWrapper, clause, position);
-        clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
+        clauseViewHolder.confirmButton.setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
         setViewResources(clause.getType(), position, clauseViewHolder);
