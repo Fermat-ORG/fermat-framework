@@ -98,7 +98,8 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 return new DateTimeViewHolder(itemView, TYPE_DATE_TIME);
             case TYPE_DATE_EXPIRATION_TIME:
                 ExpirationTimeViewHolder expirationTimeViewHolder = new ExpirationTimeViewHolder(itemView, TYPE_DATE_EXPIRATION_TIME);
-                expirationTimeViewHolder.setListener(expirationDatetimeListener);
+                expirationTimeViewHolder.HideButtons();
+               // expirationTimeViewHolder.setListener(expirationDatetimeListener);
                 return expirationTimeViewHolder;
             case TYPE_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView, TYPE_SINGLE_CHOICE);
@@ -113,7 +114,8 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_RECEIVE);
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_FOOTER);
-                footerViewHolder.setListener(footerListener);
+               footerViewHolder.HideButtons();
+               // footerViewHolder.setListener(footerListener);
                 return footerViewHolder;
             default:
                 throw new IllegalArgumentException("Cant recognise the given value");
@@ -209,8 +211,8 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
 
         clauseViewHolder.bindData(negotiationWrapper, clause, position);
-        clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
-        clauseViewHolder.setListener(clauseListener);
+        clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
+        //clauseViewHolder.setListener(clauseListener);
 
         setViewResources(clause.getType(), position, clauseViewHolder);
     }

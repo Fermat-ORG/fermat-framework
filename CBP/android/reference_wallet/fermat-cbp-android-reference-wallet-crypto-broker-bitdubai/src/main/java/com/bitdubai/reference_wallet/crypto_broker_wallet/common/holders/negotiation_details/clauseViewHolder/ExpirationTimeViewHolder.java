@@ -61,6 +61,9 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
                 listener.onExpirationDatetimeValueClicked((FermatButton) view);
         }
     }
+    public void HideButtons() {
+        confirmButton.setVisibility(View.GONE);
+    }
 
     public void setListener(Listener listener) {
         this.listener = listener;
