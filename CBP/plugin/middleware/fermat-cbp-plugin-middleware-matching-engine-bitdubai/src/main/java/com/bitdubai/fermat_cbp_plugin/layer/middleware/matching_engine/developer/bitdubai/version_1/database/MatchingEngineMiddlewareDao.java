@@ -381,14 +381,13 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable earningsPairTable = database.getTable(EARNING_PAIR_TABLE_NAME);
 
-            earningsPairTable.addStringFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME, walletReference.getPublicKey(), DatabaseFilterType.EQUAL);
-
             final List<DatabaseTableFilter> tableFilters1 = new ArrayList<>();
 
             tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
             tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
             tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, linkedCurrency.getCode())           );
             tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
+            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
 
             final DatabaseTableFilterGroup filterGroup1 = earningsPairTable.getNewFilterGroup(tableFilters1, null, DatabaseFilterOperator.AND);
 
@@ -398,6 +397,7 @@ public final class MatchingEngineMiddlewareDao {
             tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
             tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
             tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
+            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
 
             final DatabaseTableFilterGroup filterGroup2 = earningsPairTable.getNewFilterGroup(tableFilters2, null, DatabaseFilterOperator.AND);
 

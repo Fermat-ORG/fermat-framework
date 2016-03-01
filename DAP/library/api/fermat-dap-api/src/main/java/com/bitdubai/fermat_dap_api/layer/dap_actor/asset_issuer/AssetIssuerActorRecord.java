@@ -31,7 +31,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private Double                  locationLongitude;
     private byte[]                  profileImage;
     private String                  extendedPublicKey;
-    private Actors                  actorsType              = Actors.DAP_ASSET_USER;
+    private Actors                  actorsType              = Actors.DAP_ASSET_ISSUER;
 
 
     /**
@@ -77,9 +77,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final Double locationLongitude,
                                   final Long registrationDate,
                                   final Long lastConnectionDate,
-                                  final byte[] profileImage,
+                                  final Actors actorsType,
                                   final String description,
-                                  final String extendedPublicKey) {
+                                  final String extendedPublicKey,
+                                  final byte[] profileImage) {
 
         this.actorPublicKey     = actorPublicKey;
         this.name               = name;
@@ -88,10 +89,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.locationLongitude  = locationLongitude;
         this.registrationDate   = registrationDate;
         this.lastConnectionDate = lastConnectionDate;
-        this.profileImage       = profileImage.clone();
         this.description        = description;
         this.extendedPublicKey  = extendedPublicKey;
         this.actorsType         = actorsType;
+        this.profileImage       = profileImage.clone();
     }
 
     private AssetIssuerActorRecord(JsonObject jsonObject, Gson gson) {
@@ -267,9 +268,9 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         jsonObject.addProperty("location",              location.toString());
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
-        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         jsonObject.addProperty("actorsType",            actorsType.toString());
         jsonObject.addProperty("extendedPublicKey",     extendedPublicKey);
+        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
 

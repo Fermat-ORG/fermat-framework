@@ -4,6 +4,7 @@ package com.bitdubai.android_core.app;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
@@ -40,7 +41,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
 
     private static ApplicationSession instance;
-
     /**
      * Application states
      */
@@ -55,10 +55,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     private FermatSystem fermatSystem;
 
     /**
-     * Fermat session manager
+     * Apps manager
      */
-
-    private FermatSessionManager fermatSessionManager;
+    private FermatAppsManager fermatAppsManager;
 
     /**
      *  Application state
@@ -83,7 +82,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public ApplicationSession() {
         super();
         fermatSystem = FermatSystem.getInstance();
-        fermatSessionManager = new FermatSessionManager();
+        fermatAppsManager = new FermatAppsManager(this);
 
     }
 
@@ -103,12 +102,21 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      * Method to get FermatSessionManager which can manipulate the active session of apps
      * @return WalletSessionManager
      */
-
+    @Deprecated
     public FermatSessionManager getFermatSessionManager() {
-        if(fermatSessionManager==null){
-            fermatSessionManager = new FermatSessionManager();
+        if(fermatAppsManager==null){
+            fermatAppsManager = new FermatAppsManager(this);
         }
-        return fermatSessionManager;
+        return fermatAppsManager.getFermatSessionManager();
+    }
+
+    /**
+     * Fermat app manager
+     *
+     * @return FermatAppsManager
+     */
+    public FermatAppsManager getFermatAppsManager() {
+        return fermatAppsManager;
     }
 
     /**
@@ -131,12 +139,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return applicationState;
     }
 
-    /**
-     *  Add supApp fragment factory
-     */
-    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
-        subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
-    }
 
     @Override
     public void onTerminate(){

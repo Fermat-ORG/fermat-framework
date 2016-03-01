@@ -14,10 +14,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 02/02/16.

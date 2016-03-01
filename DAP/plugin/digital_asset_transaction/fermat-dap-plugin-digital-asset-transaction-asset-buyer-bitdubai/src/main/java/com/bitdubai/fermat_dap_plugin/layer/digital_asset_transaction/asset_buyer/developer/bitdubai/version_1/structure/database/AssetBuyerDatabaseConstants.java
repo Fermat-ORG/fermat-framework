@@ -14,9 +14,12 @@ public class AssetBuyerDatabaseConstants {
     public static final String ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME = "networkType";
     public static final String ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME = "sellerPublicKey";
     public static final String ASSET_BUYER_SELL_STATUS_COLUMN_NAME = "status";
+    public static final String ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME = "sellerCryptoAddress";
     public static final String ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME = "negotiation";
     public static final String ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME = "unsignedTransaction"; //This will be encode as string using Apache Commons base 64 encoding.
+    public static final String ASSET_BUYER_BUYER_VALUE_COLUMN_NAME = "buyerValue";
     public static final String ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME = "signedTransaction"; //This will be encode as string using Apache Commons base 64 encoding.
+    public static final String ASSET_BUYER_SELLER_VALUE_COLUMN_NAME = "sellerValue";
     public static final String ASSET_BUYER_TX_HASH_COLUMN_NAME = "transactionHash"; //This transaction is the already full signed transaction.
     public static final String ASSET_BUYER_TIMESTAMP_COLUMN_NAME = "timeStamp";
 
