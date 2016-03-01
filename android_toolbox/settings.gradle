@@ -31,6 +31,11 @@ include ':reveal_menu'
 project(':reveal_menu').projectDir = new File('android_toolbox/reveal_menu')
 
 
+include ':fermat_preference_settings'
+project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
+
+include ':fermat_navigator_drawer'
+project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
 
 
 
