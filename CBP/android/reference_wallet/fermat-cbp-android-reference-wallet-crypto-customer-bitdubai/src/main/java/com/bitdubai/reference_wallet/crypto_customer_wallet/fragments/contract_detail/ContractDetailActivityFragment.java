@@ -248,11 +248,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
 
-                //ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
+                ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
                 //ContractStatus contractStatus = ContractStatus.PENDING_PAYMENT;
                 //ContractStatus contractStatus = ContractStatus.PAYMENT_SUBMIT;
                 //ContractStatus contractStatus = ContractStatus.PENDING_MERCHANDISE;
-                ContractStatus contractStatus = ContractStatus.MERCHANDISE_SUBMIT;
+                //ContractStatus contractStatus = ContractStatus.MERCHANDISE_SUBMIT;
                 //ContractStatus contractStatus = ContractStatus.READY_TO_CLOSE;
                 //ContractStatus contractStatus = ContractStatus.COMPLETED;
                 //ContractStatus contractStatus = ContractStatus.CANCELLED;
