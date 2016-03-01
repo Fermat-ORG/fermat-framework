@@ -181,13 +181,13 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
     Github:  https://github.com/furszy
     
     
-* **Natalia Cortez [Veteran Developer]**<br/>
+* **Natalia Cortez [New Team Leader]**<br/>
 ---
       Email:   nattyco@gmail.com
       Skype:   nattyco
       Github:  https://github.com/nattyco
 
-* **Joaquin Carrasquero [New Developer]** <br/>
+* **Joaquin Carrasquero [Veteran Developer]** <br/>
 ---
       Email:   jc.juaco@gmail.com
       Skype:   j-u-a-c-o@hotmail.com
