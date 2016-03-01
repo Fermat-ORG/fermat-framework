@@ -61,7 +61,8 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState        = actorAssetProtocolState;
         this.flagRead                       = flagRead;
         this.sentCount                      = sendCount;
-        this.blockchainNetworkType          = blockchainNetworkType;
+        if (blockchainNetworkType != null)
+            this.blockchainNetworkType          = blockchainNetworkType;
         this.responseToNotificationId       = responseToNotificationId;
     }
 
@@ -80,8 +81,8 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState =      gson.fromJson(jsonObject.get("actorAssetProtocolState").getAsString(), ActorAssetProtocolState.class);
         this.flagRead =                  jsonObject.get("flagRead").getAsBoolean();
         this.sentCount =                    jsonObject.get("sentCount").getAsInt();
-        this.blockchainNetworkType       =  gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
-
+        if (jsonObject.get("blockchainNetworkType") != null)
+            this.blockchainNetworkType       =  gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
         if (jsonObject.get("responseToNotificationId") != null)
             this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
@@ -218,7 +219,8 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         jsonObject.addProperty("actorAssetProtocolState",       actorAssetProtocolState.toString());
         jsonObject.addProperty("flagRead",                      flagRead);
         jsonObject.addProperty("sentCount",                     sentCount);
-        jsonObject.addProperty("blockchainNetworkType",         blockchainNetworkType.toString());
+        if (blockchainNetworkType != null)
+            jsonObject.addProperty("blockchainNetworkType",         blockchainNetworkType.toString());
         if (responseToNotificationId != null)
             jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
         return gson.toJson(jsonObject);

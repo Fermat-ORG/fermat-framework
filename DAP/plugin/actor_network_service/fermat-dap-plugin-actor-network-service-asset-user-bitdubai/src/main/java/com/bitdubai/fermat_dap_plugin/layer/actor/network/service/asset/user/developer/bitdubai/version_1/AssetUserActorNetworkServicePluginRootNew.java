@@ -468,6 +468,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 //TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
     private void launchNotificationActorAsset() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        fermatEvent.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
         eventManager.raiseEvent(actorAssetRequestConnectionEvent);
     }
@@ -661,7 +662,8 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     @Override
                     public void run() {
                         try {
-                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetUser);
+                            communicationsClientConnection.registerComponentForCommunication(
+                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetUser);
                             onComponentRegistered(platformComponentProfileAssetUser);
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();

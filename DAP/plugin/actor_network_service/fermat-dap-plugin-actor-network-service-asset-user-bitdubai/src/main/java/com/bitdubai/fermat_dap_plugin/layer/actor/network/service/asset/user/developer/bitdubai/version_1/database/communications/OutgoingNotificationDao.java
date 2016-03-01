@@ -456,7 +456,8 @@ public class OutgoingNotificationDao {
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorAssetProtocolState().getCode());
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(connectionRequestRecord.isFlagRead()));
             record.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
-            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
+            if (connectionRequestRecord.getBlockchainNetworkType() != null)
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
             if (connectionRequestRecord.getResponseToNotificationId() != null)
                 record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getResponseToNotificationId());
 
@@ -473,6 +474,8 @@ public class OutgoingNotificationDao {
 
     private ActorAssetNetworkServiceRecord buildAssetUserNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
         try {
+            BlockchainNetworkType blockchainNetworkType;
+
             UUID notificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
             String senderAlias = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
             String descriptor = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
@@ -491,7 +494,12 @@ public class OutgoingNotificationDao {
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.getByCode(protocolState);
             Boolean read = Boolean.valueOf(flagRead);
             AssetNotificationDescriptor assetNotificationDescriptor = AssetNotificationDescriptor.getByCode(descriptor);
-            BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetwork);
+
+            if (blockchainNetwork != null)
+                blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetwork);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
             Actors actorDestinationType = Actors.getByCode(destinationType);
             Actors actorSenderType = Actors.getByCode(senderType);
 
