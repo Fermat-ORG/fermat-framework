@@ -221,35 +221,39 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             try {
                 CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
-                //TODO: Esta linea explota, probablemente pues no existe ninguna negociacion...
-//                CustomerBrokerNegotiationInformation negotiationInformation = walletManager.getNegotiationInformation(data.getNegotiationId());
-//                Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
-//
-//                //Extract info from negotiation
-//                String exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
-//                String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-//                String paymentAmount = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue();
-//                String paymentPaymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-//
-//                String merchandiseCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-//                String merchandiseAmount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
-//                String merchandisePaymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+                String exchangeRate = "MK.ER";
+                String paymentCurrency = "MK.CUR";
+                String paymentAmount = "123.45";
+                String paymentPaymentMethod = "MK.PM";
+                String merchandiseCurrency = "MK.CUR";
+                String merchandiseAmount = "234.56";
+                String merchandisePaymentMethod = "MK.PM";
 
-                String exchangeRate = "MOCKED";
-                String paymentCurrency = "MOCKED";
-                float paymentAmount = 0.0f;
-                String paymentPaymentMethod = "MOCKED";
-                String merchandiseCurrency = "MOCKED";
-                float merchandiseAmount = 0.0f;
-                String merchandisePaymentMethod = "MOCKED";
+                try{
+                    //TODO: Esta linea explota, probablemente pues no existe ninguna negociacion... si tal, usar los mocks arriba....
+                    CustomerBrokerNegotiationInformation negotiationInformation = walletManager.getNegotiationInformation(data.getNegotiationId());
+                    Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+
+                    //Extract info from negotiation
+                    exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
+                    paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+                    paymentAmount = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue();
+                    paymentPaymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
+
+                    merchandiseCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+                    merchandiseAmount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
+                    merchandisePaymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+
+                }catch(Exception e) {e.printStackTrace();}
+
 
 
                 //ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
                 //ContractStatus contractStatus = ContractStatus.PENDING_PAYMENT;
                 //ContractStatus contractStatus = ContractStatus.PAYMENT_SUBMIT;
                 //ContractStatus contractStatus = ContractStatus.PENDING_MERCHANDISE;
-                //ContractStatus contractStatus = ContractStatus.MERCHANDISE_SUBMIT;
-                ContractStatus contractStatus = ContractStatus.READY_TO_CLOSE;
+                ContractStatus contractStatus = ContractStatus.MERCHANDISE_SUBMIT;
+                //ContractStatus contractStatus = ContractStatus.READY_TO_CLOSE;
                 //ContractStatus contractStatus = ContractStatus.COMPLETED;
                 //ContractStatus contractStatus = ContractStatus.CANCELLED;
                 //ContractStatus contractStatus = ContractStatus.PAUSED;
