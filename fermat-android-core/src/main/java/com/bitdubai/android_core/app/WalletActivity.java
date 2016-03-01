@@ -314,7 +314,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                     lastWallet = getWalletManager().getInstalledWallet(walletPublicKey);
                 }
                 if(bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)){
-                    getSubAppRuntimeMiddleware().getSubAppByPublicKey(lastWallet.getAppPublicKey()).getActivity(Activities.valueOf(bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)));
+                    String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
+                    if(activityCode!=null) getSubAppRuntimeMiddleware().getSubAppByPublicKey(lastWallet.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                 }
                 walletSession = createOrGetSession(lastWallet);
             }
