@@ -17,7 +17,9 @@ public class AssetSellerDatabaseConstants {
     public static final String ASSET_SELLER_SELL_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME = "negotiation";
     public static final String ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME = "unsignedTransaction"; //This will be encode as string using Apache Commons base 64 encoding.
+    public static final String ASSET_SELLER_SELLER_VALUE_COLUMN_NAME = "sellerValue";
     public static final String ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME = "signedTransaction"; //This will be encode as string using Apache Commons base 64 encoding.
+    public static final String ASSET_SELLER_BUYER_VALUE_COLUMN_NAME = "buyerValue";
     public static final String ASSET_SELLER_TX_HASH_COLUMN_NAME = "transactionHash"; //This transaction is the already full signed transaction.
     public static final String ASSET_SELLER_TIMESTAMP_COLUMN_NAME = "timeStamp";
 

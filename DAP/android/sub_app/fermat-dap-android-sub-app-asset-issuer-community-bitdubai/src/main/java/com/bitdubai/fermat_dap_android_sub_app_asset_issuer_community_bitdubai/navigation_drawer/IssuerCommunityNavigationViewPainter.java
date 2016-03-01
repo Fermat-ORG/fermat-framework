@@ -20,14 +20,9 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
     private Activity activity;
     private ActiveActorIdentityInformation activeIdentity;
 
-    public IssuerCommunityNavigationViewPainter(Activity activity) {
-        this.activity = activity;
-    }
-
     public IssuerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation activeIdentity) {
         this.activity = activity;
         this.activeIdentity = activeIdentity;
-
     }
 
     @Override
@@ -72,6 +67,6 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public boolean hasClickListener() {
-        return false;
+        return true;
     }
 }

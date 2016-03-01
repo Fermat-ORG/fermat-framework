@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,6 +39,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.m
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -61,7 +64,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager manager;
-    private List<ActorIssuer> actors;
+    private int IssuerNotificationsCount = 0;
+
     ErrorManager errorManager;
 
     // recycler
@@ -71,6 +75,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+    private MenuItem menuItem;
+
+    private List<ActorIssuer> actors;
+    private ActorIssuer actor;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -90,8 +98,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         try {
             manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
+            actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
+
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            IssuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            new FetchCountTask().execute();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -112,6 +125,23 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
                 actors = dataSet;
+
+                boolean someSelected = false;
+                for (ActorIssuer actor : actors) {
+                    if (actor.selected) {
+                        someSelected = true;
+                        break;
+                    }
+                }
+
+                if (someSelected) {
+                    menuItem.setVisible(true);
+                }
+                else
+                {
+                    menuItem.setVisible(false);
+                }
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -286,16 +316,47 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.ic_sub_menu_connect)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menuItem = menu.getItem(2);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
+
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL){
+
+            for (ActorIssuer actorIssuer : actors)
+            {
+                actorIssuer.selected = true;
+            }
+            adapter.changeDataSet(actors);
+            menuItem.setVisible(true);
+
+        }
+
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL){
+
+            for (ActorIssuer actorIssuer : actors)
+            {
+                actorIssuer.selected = false;
+            }
+            adapter.changeDataSet(actors);
+            menuItem.setVisible(false);
+        }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
             List<ActorAssetIssuer> toConnect = new ArrayList<>();
@@ -325,6 +386,12 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                             toConnect.add(actorIssuer.getRecord());
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
+//                                    manager.askActorAssetIssuerForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+
                                     manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
@@ -386,6 +453,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateNotificationsBadge(int count) {
+        IssuerNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -403,6 +475,21 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetIdentityAssetIssuerException {
 
+    }
+
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return IssuerNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 
     @Override
@@ -474,7 +561,17 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onItemClickListener(ActorIssuer data, int position) {
         appSession.setData(ISSUER_SELECTED, data);
         changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+    }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 
     @Override

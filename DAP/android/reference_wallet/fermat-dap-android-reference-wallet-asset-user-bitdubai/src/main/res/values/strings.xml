@@ -50,6 +50,7 @@
     <string name="dap_user_wallet_validate_sell_user">Must be select an user</string>
     <string name="dap_user_wallet_validate_buy_quantity_zero">Must be entered a number of assets to buy</string>
     <string name="dap_user_wallet_validate_buy_quantity">Assets to buy can\'t be greater than assets remaining</string>
+    <string name="dap_user_wallet_validate_buy_available">Not enought available balance in bitcoin wallet</string>
 
     <!-- -->
 
@@ -73,6 +74,7 @@
     <string name="dap_user_wallet_sell_total_value">Total Value</string>
     <string name="dap_user_wallet_sell_to">Sell to</string>
     <string name="dap_user_wallet_sell_button">Sell Assets</string>
+    <string name="dap_user_wallet_buy_no_available">No Available</string>
     <!-- -->
 
     <!-- app strings -->

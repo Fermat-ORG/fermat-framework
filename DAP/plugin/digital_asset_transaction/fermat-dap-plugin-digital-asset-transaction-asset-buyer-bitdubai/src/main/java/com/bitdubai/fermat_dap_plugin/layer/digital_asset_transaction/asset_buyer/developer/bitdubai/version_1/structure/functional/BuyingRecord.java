@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
@@ -21,10 +22,11 @@ public final class BuyingRecord {
     private DraftTransaction sellerTransaction;
     private String broadcastingTxHash;
     private UUID negotiationId;
+    private CryptoAddress cryptoAddress;
 
     //CONSTRUCTORS
 
-    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId) {
+    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId, CryptoAddress cryptoAddress) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.seller = seller;
@@ -33,6 +35,7 @@ public final class BuyingRecord {
         this.sellerTransaction = sellerTransaction;
         this.broadcastingTxHash = broadcastingTxHash;
         this.negotiationId = negotiationId;
+        this.cryptoAddress = cryptoAddress;
     }
     //PUBLIC METHODS
 
@@ -70,6 +73,10 @@ public final class BuyingRecord {
 
     public UUID getNegotiationId() {
         return negotiationId;
+    }
+
+    public CryptoAddress getCryptoAddress() {
+        return cryptoAddress;
     }
 
     //INNER CLASSES

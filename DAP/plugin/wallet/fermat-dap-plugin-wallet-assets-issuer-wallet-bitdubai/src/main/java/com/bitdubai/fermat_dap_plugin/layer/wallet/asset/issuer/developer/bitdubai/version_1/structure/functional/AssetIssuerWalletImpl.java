@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -366,12 +367,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
-    public void newMovement(DAPActor actorFrom, DAPActor actorTo, UUID metadataId) throws CantSaveStatisticException {
+    public void newMovement(DAPActor actorFrom, DAPActor actorTo, String assetPk, AssetMovementType type) throws CantSaveStatisticException {
         String fromPk = actorFrom.getActorPublicKey();
         Actors fromType = ActorUtils.getActorType(actorFrom);
         String toPk = actorTo.getActorPublicKey();
         Actors toType = ActorUtils.getActorType(actorTo);
-        assetIssuerWalletDao.newMovement(metadataId, fromPk, fromType, toPk, toType);
+        assetIssuerWalletDao.newMovement(assetPk, fromPk, fromType, toPk, toType, type);
     }
 
 
@@ -457,12 +458,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                     //If this happen it means we couldn't get the redeem point or there were none. So we'll keep it as null.
                 }
             }
-        }
-        try {
-            assetStatistic.setAssetMovements(assetIssuerWalletDao.getAllMovementsForMetadataId(transactionId));
-        } catch (CantGetAssetStatisticException e) {
-            e.printStackTrace();
-            //If this happen it means we couldn't get the movement list. So we'll keep it as an empty list.
         }
 
         return assetStatistic;

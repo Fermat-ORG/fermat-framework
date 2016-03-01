@@ -25,6 +25,8 @@ public class Actor extends RedeemPointActorRecord
                 record.getCryptoAddress(),
                 record.getRegistrationDate(),
                 record.getLastConnectionDate(),
+                record.getType(),
+                record.getBlockchainNetworkType(),
                 record.getProfileImage()
         );
     }
