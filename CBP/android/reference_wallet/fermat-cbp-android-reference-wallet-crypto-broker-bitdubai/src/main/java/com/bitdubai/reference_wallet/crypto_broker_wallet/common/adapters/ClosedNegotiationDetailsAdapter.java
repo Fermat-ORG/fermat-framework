@@ -113,7 +113,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
 
     @Override
     public int getItemCount() {
-        return haveNote ? super.getItemCount() + 3 : super.getItemCount() + 2;
+        return haveNote ? super.getItemCount() + 2 : super.getItemCount() + 1;
     }
 
     @Override
@@ -283,13 +283,6 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
         return (position == 0) && (haveNote);
     }
 
-    private boolean isExpirationDatePosition(int position) {
-        return position == getExpirationDatePosition();
-    }
-
-    private int getExpirationDatePosition() {
-        return getItemCount() - 2;
-    }
 
     private boolean isFooterPosition(int position) {
         return position == getItemCount() - 1;

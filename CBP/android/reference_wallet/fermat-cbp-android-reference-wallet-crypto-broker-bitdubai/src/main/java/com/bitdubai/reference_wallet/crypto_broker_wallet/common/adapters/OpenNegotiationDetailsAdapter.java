@@ -145,7 +145,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
 
     @Override
     public int getItemCount() {
-        return haveNote ? super.getItemCount() + 3 : super.getItemCount() + 2;
+        return haveNote ? super.getItemCount() + 2 : super.getItemCount() + 1;
     }
 
     @Override
