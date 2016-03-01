@@ -39,6 +39,6 @@ public interface CloseContractManager extends FermatManager {
      * @return
      * @throws CantGetCompletionDateException
      */
-    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException;
+    long getCompletionDate(String contractHash) throws CantGetCompletionDateException;
 
 }
