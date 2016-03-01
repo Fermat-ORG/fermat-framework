@@ -1107,24 +1107,7 @@ public abstract class FermatActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        try {
-//            getNotificationManager().deleteObserver(this);
-//            getNotificationManager().deleteCallback(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        if(broadcastManager!=null)broadcastManager.stop();
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancelAll();
 
-
-//        networkStateReceiver.removeListener(this);
-        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-    }
     /**
      * @param tabs
      * @param activity
@@ -1831,13 +1814,36 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, NotificationService.class);
-        intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
-        startService(intent);
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        if(!mNotificationServiceConnected) {
+            Intent intent = new Intent(this, NotificationService.class);
+            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+            startService(intent);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        try {
+//            getNotificationManager().deleteObserver(this);
+//            getNotificationManager().deleteCallback(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        if(broadcastManager!=null)broadcastManager.stop();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
+
+
+//        networkStateReceiver.removeListener(this);
+        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
 
 
