@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -32,8 +33,11 @@ public class NotificationService extends Service {
 
     // map from AppPublicKey to notificationId
     private Map<String,Integer> lstNotifications;
-    private int notificationId;
+    private int notificationIdCount;
 
+    //for progress notifications
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
 
 
     public class LocalBinder extends Binder {
@@ -74,8 +78,8 @@ public class NotificationService extends Service {
     public void notificate(String code,FermatStructure fermatStructure){
         Notification.Builder builder = null;
         if (fermatStructure != null) {
-//            notificationId++;
-//            lstNotifications.put(fermatStructure.getPublicKey(),notificationId);
+//            notificationIdCount++;
+//            lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
             NotificationPainter notificationPainter = null;
             try {
@@ -149,6 +153,54 @@ public class NotificationService extends Service {
                     getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
         }
+    }
+
+    public void notificateProgress(final String code){
+        if(!lstNotifications.containsKey(code)){
+            notificationIdCount++;
+            lstNotifications.put(code,notificationIdCount);
+        }
+
+        mNotifyManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle("Downloading blockchain blocks")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.fermat_logo_310_x_310);
+// Start a lengthy operation in a background thread
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        int incr;
+                        // Do the "lengthy" operation 20 times
+                        for (incr = 0; incr <= 100; incr+=5) {
+                            // Sets the progress indicator to a max value, the
+                            // current completion percentage, and "determinate"
+                            // state
+                            mBuilder.setProgress(100, incr, false);
+                            // Displays the progress bar for the first time.
+                            mNotifyManager.notify(lstNotifications.get(code), mBuilder.build());
+                            // Sleeps the thread, simulating an operation
+                            // that takes time
+                            try {
+                                // Sleep for 5 seconds
+                                Thread.sleep(5*1000);
+                            } catch (InterruptedException e) {
+                                Log.d(LOG_TAG, "sleep failure");
+                            }
+                        }
+                        // When the loop is finished, updates the notification
+                        mBuilder.setContentText("Download complete")
+                                // Removes the progress bar
+                                .setProgress(0,0,false);
+                        mNotifyManager.notify(lstNotifications.get(code), mBuilder.build());
+                    }
+                }
+// Starts the thread by calling the run() method in its Runnable
+        ).start();
+
+
     }
 
 }
