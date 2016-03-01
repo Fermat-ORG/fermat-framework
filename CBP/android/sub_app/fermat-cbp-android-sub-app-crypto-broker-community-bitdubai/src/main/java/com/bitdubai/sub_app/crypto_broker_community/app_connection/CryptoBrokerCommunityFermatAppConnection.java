@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.crypto_broker_community.app_connection;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -28,7 +27,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<CryptoBrokerCommunitySubAppSession> {
 
-    public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
+    public CryptoBrokerCommunityFermatAppConnection(Context activity) {
         super(activity);
     }
 
