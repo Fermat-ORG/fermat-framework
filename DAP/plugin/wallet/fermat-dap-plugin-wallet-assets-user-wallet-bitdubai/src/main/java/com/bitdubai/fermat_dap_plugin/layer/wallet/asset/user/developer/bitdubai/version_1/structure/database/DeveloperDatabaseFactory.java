@@ -78,8 +78,8 @@ public class DeveloperDatabaseFactory {
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME);
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
-        assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME);
+        assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
 
         /**
          * AssetIssuerWalletTotalBalanceColumns table
@@ -87,6 +87,18 @@ public class DeveloperDatabaseFactory {
         DeveloperDatabaseTable  assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_NAME, assetIssuerWalletTotalBalancesColumns);
         tables.add(assetIssuerWalletWalletTotalBalances);
 
+        /**
+         * Added new table AssetIssuerWalletTotalBalances
+         */
+        List<String> metadataLockColumns = new ArrayList<>();
+        metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME);
+        metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME);
+        metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME);
+        /**
+         * AssetIssuerWalletTotalBalanceColumns table
+         */
+        DeveloperDatabaseTable metadataLockTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME, metadataLockColumns);
+        tables.add(metadataLockTable);
         return tables;
     }
 

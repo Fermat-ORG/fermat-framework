@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
@@ -31,11 +32,18 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
+
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
  * Created by mati on 2015.11.19..
@@ -99,7 +107,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null
-            //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
@@ -117,6 +125,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     public FermatStructure getAppInUse() {
         return getDesktopRuntimeManager().getLastDesktopObject();
+    }
+
+    @Override
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
+        return getDesktopRuntimeManager().getDesktopObject(publicKey);
     }
 
 
@@ -190,8 +203,36 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     public void onBackPressed() {
         try {
-            finish();
-            super.onBackPressed();
+
+            // get actual fragment on execute
+
+            // Check if no view has focus:
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+
+            String frgBackType = null;
+
+            RuntimeManager runtimeManager = getDesktopRuntimeManager();
+
+            FermatStructure structure = runtimeManager.getLastApp();
+
+            Activity activity = structure.getLastActivity();
+
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
+
+            if (fragment != null) frgBackType = fragment.getBack();
+
+            if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
+                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            } else {
+                finish();
+                super.onBackPressed();
+            }
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -299,7 +340,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     try {
                         resetThisActivity();
 
-                        getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
+                        getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
                         loadUI();
 

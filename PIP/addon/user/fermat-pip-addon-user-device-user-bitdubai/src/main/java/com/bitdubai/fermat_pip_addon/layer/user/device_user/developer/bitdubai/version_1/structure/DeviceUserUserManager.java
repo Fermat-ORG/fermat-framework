@@ -88,7 +88,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
         try {
             userPublicKey = createNewDeviceUser("test1", "test1");
             DeviceUser deviceUser = getDeviceUser(userPublicKey);
-            System.out.println("soy una direccion "+deviceUser.getPublicKey());
+
             return deviceUser;
         } catch (Exception e) {
             try {

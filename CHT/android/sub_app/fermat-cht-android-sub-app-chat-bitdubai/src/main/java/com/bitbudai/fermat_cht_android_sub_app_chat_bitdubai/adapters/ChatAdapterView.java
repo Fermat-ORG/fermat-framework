@@ -43,13 +43,18 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -82,6 +87,7 @@ public class ChatAdapterView extends LinearLayout {
     private Drawable contactIcon;
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
+    private Calendar today;
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
@@ -173,13 +179,25 @@ public class ChatAdapterView extends LinearLayout {
 
                 for (int i = 0; i < messSize; i++) {
                     msg = new ChatMessage();
-                    message=chatManager.getMessageByChatId(chatId).get(i).getMessage();
-                    inorout=chatManager.getMessageByChatId(chatId).get(i).getType().toString();
+                    message = chatManager.getMessageByChatId(chatId).get(i).getMessage();
+                    inorout = chatManager.getMessageByChatId(chatId).get(i).getType().toString();
                     msg.setId(chatManager.getMessageByChatId(chatId).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
                     msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
-                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()))))
+                    {
+                        String S = new SimpleDateFormat("HH:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
+                        msg.setDate(S);
+                    }else
+                    {
+                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+                    }
+//                    if (ts_now.before(chatManager.getMessageByChatId(chatId).get(i).getMessageDate())) {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+//                    }else {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+//                    }
                     msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
@@ -267,7 +285,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 50));//in the future, this image should come from chatmanager
+                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIcon);
             }
         }
@@ -321,10 +339,34 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatName("Chat_" + remotePk);
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
+                        /**
+                         * Now we got the identities registered in the device.
+                         * To avoid nulls, I'll put default data in chat object
+                         */
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        chat.setRemoteActorPublicKey(remotePk);
-                        chat.setRemoteActorType(remotePCT);
+                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
+                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
+                        for(PlatformComponentType key : keySet) {
+                            chat.setLocalActorPublicKey(identitiesMap.get(key));
+                            chat.setLocalActorType(key);
+                            break;
+                        }
+                        //chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                        /**
+                         * This case is when I got an unregistered contact, I'll set the
+                         * LocalActorType as is defined in database
+                         */
+                        //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        Contact newContact=chatManager.getContactByContactId(
+                                contactId);
+                        PlatformComponentType remoteActorType=newContact.getRemoteActorType();
+                        String remotePublicKey=newContact.getRemoteActorPublicKey();
+                        //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        //chat.setRemoteActorPublicKey(remotePk);
+                        //chat.setRemoteActorType(remotePCT);
+                        chat.setRemoteActorType(remoteActorType);
+                        chat.setRemoteActorPublicKey(remotePublicKey);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -339,8 +381,8 @@ public class ChatAdapterView extends LinearLayout {
                         chatSession.setData("whocallme","chatlist");
                         chatSession.setData(
                                 "contactid",
-                                chatManager.getContactByContactId(
-                                        contactId));
+                                newContact
+                        );
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
@@ -353,7 +395,9 @@ public class ChatAdapterView extends LinearLayout {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setId(UUID.randomUUID());//dummy
                     chatMessage.setMessage(messageText);
-                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    //chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    String S = new SimpleDateFormat("HH:mm").format(new Date());
+                    chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
                     adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());

@@ -136,4 +136,9 @@ public class RuntimeSubApp implements SubApp {
     public AppsStatus getAppStatus() {
         return null;
     }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.SUB_APP;
+    }
 }
