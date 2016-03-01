@@ -48,5 +48,11 @@ public class HomeIssuerItemViewHolder extends ChildViewHolder {
         homeAssetAmount.setText(asset.getFormattedAmount());
         homeAssetExpDate.setText(asset.getFormattedExpDate());
         homeAssetStatus.setText(asset.getStatus().getDesc());
+
+        if (asset.getStatus().equals(Asset.Status.PENDING)) {
+            homeAssetStatus.setTextColor(res.getColor(R.color.dap_user_wallet_blue_text));
+        } else {
+            homeAssetStatus.setTextColor(res.getColor(R.color.dap_user_wallet_black_text));
+        }
     }
 }

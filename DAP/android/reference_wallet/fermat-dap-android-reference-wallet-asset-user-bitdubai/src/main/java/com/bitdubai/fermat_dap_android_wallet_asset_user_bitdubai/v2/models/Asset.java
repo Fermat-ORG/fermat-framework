@@ -100,7 +100,7 @@ public class Asset {
     }
 
     public String getFormattedExpDate() {
-        return DAPStandardFormats.DATE_FORMAT.format(expDate);
+        return (expDate == null) ? "No expiration date" : DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
     public Status getStatus() {

@@ -1995,7 +1995,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = "asset_user";
 
-        final String statusBarColor = "#381a5e";
+        final String statusBarColor = "#0097A7";
         final String titleBarLabelColor = "#ffffff";
         final int titleBarLabelSize = 20;
 

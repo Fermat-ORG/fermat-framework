@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
-public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem, AssetUserSession, ResourceProviderManager> implements FermatListItemListeners<Issuer> {
+public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem, AssetUserSession, ResourceProviderManager> implements FermatListItemListeners<Asset> {
 
     // Fermat Managers
     private ErrorManager errorManager;
@@ -89,12 +89,12 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.fab_material_white));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.fab_material_blue_grey_500));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.fab_material_white));
 
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.fab_material_blue_grey_500));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
             }
         }
     }
@@ -176,16 +176,6 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
     }
 
     @Override
-    public void onItemClickListener(Issuer data, int position) {
-
-    }
-
-    @Override
-    public void onLongItemClickListener(Issuer data, int position) {
-
-    }
-
-    @Override
     public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<GrouperItem> data = new ArrayList<>();
         try {
@@ -203,5 +193,15 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
                         ex);
         }
         return data;
+    }
+
+    @Override
+    public void onItemClickListener(Asset data, int position) {
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Asset data, int position) {
+
     }
 }

@@ -44,7 +44,6 @@ public class DataManager {
             }
 
             long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
-            assets = new ArrayList<>();
             for(long i = 0; i < quantityBookBalance; i++) {
                 assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
             }
