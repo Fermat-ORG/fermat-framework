@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.int
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.OpenContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -36,6 +37,16 @@ public interface OpenContractManager extends FermatManager {
      * @param negotiationId
      * @return
      */
-    ContractTransactionStatus getOpenContractStatus(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException;
+    ContractTransactionStatus getOpenContractStatus(String negotiationId)
+            throws UnexpectedResultReturnedFromDatabaseException;
+
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    long getCompletionDate(String contractHash) throws CantGetCompletionDateException;
 
 }
