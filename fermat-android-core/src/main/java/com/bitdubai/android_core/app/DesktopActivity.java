@@ -35,10 +35,12 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
 import java.util.List;
 import java.util.Objects;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
@@ -223,6 +225,13 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
 
+            onBackPressedNotificate();
+
+            if(activity.getType() != Activities.CCP_DESKTOP){
+                String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
+                getCloudClient().changeIpAndPortProperties(ipPort[0],Integer.getInteger(ipPort[1]));
+            }
+
             if (fragment != null) frgBackType = fragment.getBack();
 
             if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
@@ -342,7 +351,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                         getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
-                        loadUI();
+                        Intent intent = new Intent(this, DesktopActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
+                        startActivity(intent);
 
 
                     } catch (Exception e) {
@@ -435,6 +448,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 } else {
 
                     hideBottonIcons();
+
+                    findViewById(R.id.reveal_container_base).setVisibility(View.GONE);
 
                     paintScreen(activity);
 

@@ -8,6 +8,9 @@ project(':currency-selector').projectDir = new File('android_toolbox/currency-se
 include ':picker-unit-selector'
 project(':picker-unit-selector').projectDir = new File('android_toolbox/picker-unit-selector')
 
+include ':custom-material-spinner'
+project(':custom-material-spinner').projectDir = new File('android_toolbox/custom-material-spinner')
+
 include ':fermat_preference_settings'
 project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
 
@@ -31,6 +34,11 @@ include ':reveal_menu'
 project(':reveal_menu').projectDir = new File('android_toolbox/reveal_menu')
 
 
+include ':fermat_preference_settings'
+project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
+
+include ':fermat_navigator_drawer'
+project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
 
 
 

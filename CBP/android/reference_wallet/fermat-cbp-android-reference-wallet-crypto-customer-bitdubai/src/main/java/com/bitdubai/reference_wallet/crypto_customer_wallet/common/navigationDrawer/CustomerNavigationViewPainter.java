@@ -1,6 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -26,6 +25,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by mati on 2015.11.24..
  */
@@ -37,10 +38,10 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     private CryptoCustomerWalletSession session;
     private ErrorManager errorManager;
     private CryptoCustomerWalletManager walletManager;
-    private Activity activity;
+    private WeakReference<Context> activity;
 
-    public CustomerNavigationViewPainter(Activity activity, CryptoCustomerWalletSession session) {
-        this.activity = activity;
+    public CustomerNavigationViewPainter(Context activity, CryptoCustomerWalletSession session) {
+        this.activity = new WeakReference<Context>(activity);
         this.session = session;
 
         errorManager = session.getErrorManager();
@@ -62,7 +63,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -72,7 +74,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CryptoCustomerWalletNavigationViewAdapter(activity);
+            return new CryptoCustomerWalletNavigationViewAdapter(activity.get());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +98,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.ccw_navigation_drawer_background, options);
+                    activity.get().getResources(), R.drawable.ccw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }

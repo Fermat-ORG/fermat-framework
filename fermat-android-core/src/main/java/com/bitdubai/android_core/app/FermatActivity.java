@@ -565,7 +565,7 @@ public abstract class FermatActivity extends AppCompatActivity
         btn_fermat_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
+                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),"main_desktop");
             }
         });
 
@@ -1570,6 +1570,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
+
+            //        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
             if (appPublicKey != null) {
                 FermatStructure fermatStructure = getAppInUse(appPublicKey);
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
@@ -1677,6 +1683,19 @@ public abstract class FermatActivity extends AppCompatActivity
             });
 
         }
+    }
+
+    protected void onBackPressedNotificate(){
+        if(getAdapter()!=null) {
+            for (AbstractFermatFragment abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
+                abstractFermatFragment.onBackPressed();
+            }
+        }else if(getScreenAdapter()!=null){
+            for (AbstractFermatFragment abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
+                abstractFermatFragment.onBackPressed();
+            }
+        }
+
     }
 
 
@@ -1905,6 +1924,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public FermatRuntime getRuntimeManager(){
         return runtimeStructureManager;
@@ -1944,6 +1964,5 @@ public abstract class FermatActivity extends AppCompatActivity
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
-
 
 }

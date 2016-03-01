@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_community.app_connection;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -55,7 +56,8 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Cry
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(), getFullyLoadedSession());
+
+        return new BrokerCommunityNavigationViewPainter(getContext(), getActiveIdentity(), getFullyLoadedSession());
     }
 
     @Override

@@ -1,37 +1,36 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.navigation_drawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
-    private Activity activity;
+    private WeakReference<Context> activity;
     private final ActiveActorIdentityInformation identityAssetUser;
 
-    public UserWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation identityAssetUser) {
-        this.activity = activity;
+    public UserWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation identityAssetUser) {
+        this.activity = new WeakReference<Context>(activity);
         this.identityAssetUser = identityAssetUser;
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetUser) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetUser);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetUser);
         } catch (CantGetIdentityAssetUserException e) {
             e.printStackTrace();
         }
@@ -41,7 +40,7 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new UserWalletNavigationViewAdapter(activity);
+            return new UserWalletNavigationViewAdapter(activity.get());
         } catch (Exception e) {
             e.printStackTrace();
         }
