@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
@@ -79,6 +80,7 @@ public class RedeemPointCommunityNavigationAdapter extends FermatAdapter<MenuIte
                     break;
                 case 2:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).setPosition(BadgeDrawable.Position.CENTER).build());
                     break;
                 case 3:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);

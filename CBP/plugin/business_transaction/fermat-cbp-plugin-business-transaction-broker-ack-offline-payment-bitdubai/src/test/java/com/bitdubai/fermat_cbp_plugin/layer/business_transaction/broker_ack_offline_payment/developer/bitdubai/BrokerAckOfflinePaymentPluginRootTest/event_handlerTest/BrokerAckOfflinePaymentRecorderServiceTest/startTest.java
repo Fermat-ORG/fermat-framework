@@ -1,5 +1,6 @@
-package event_handlerTest.BrokerAckOfflinePaymentRecorderServiceTest;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.BrokerAckOfflinePaymentPluginRootTest.event_handlerTest.BrokerAckOfflinePaymentRecorderServiceTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,22 +48,34 @@ public class startTest {
     }
 
 
+
+
+
     @Test
-    public void Should_throw_CantStartServiceException() throws Exception {
+    public void testStart_Should_Return_Start() throws Exception {
         brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(brokerAckOfflinePaymentBusinessTransactionDao, eventManager);
+        brokerAckOfflinePaymentRecorderService.start();
+        assertEquals(ServiceStatus.STARTED, brokerAckOfflinePaymentRecorderService.getStatus());
 
+
+    }
+
+    @Test (expected = CantStartServiceException.class)
+    public void Should_throw_CantStartServiceException() throws Exception {
+        brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(null, eventManager);
         brokerAckOfflinePaymentRecorderService.start();
 
-
-
+        //brokerAckOfflinePaymentRecorderService.start();
     }
 
 
     @Test
-    public void Should_throw_() throws Exception {
-
+    public void testStop_Should_Return_Stop() throws Exception {
+        brokerAckOfflinePaymentRecorderService = new BrokerAckOfflinePaymentRecorderService(brokerAckOfflinePaymentBusinessTransactionDao,eventManager);
+        brokerAckOfflinePaymentRecorderService.setEventManager(eventManager);
         brokerAckOfflinePaymentRecorderService.start();
+        brokerAckOfflinePaymentRecorderService.stop();
+        assertEquals(brokerAckOfflinePaymentRecorderService.getStatus(), ServiceStatus.STOPPED);
     }
-
 
 }

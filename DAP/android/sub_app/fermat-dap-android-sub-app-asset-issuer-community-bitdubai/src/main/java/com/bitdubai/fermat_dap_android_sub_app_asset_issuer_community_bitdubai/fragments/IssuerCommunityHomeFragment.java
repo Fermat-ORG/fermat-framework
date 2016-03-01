@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private Menu menu;
+    private MenuItem menuItem;
 
     private List<ActorIssuer> actors;
     private ActorIssuer actor;
@@ -134,11 +135,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
 
                 if (someSelected) {
-                    menu.getItem(2).setVisible(true);
+                    menuItem.setVisible(true);
                 }
                 else
                 {
-                    menu.getItem(2).setVisible(false);
+                    menuItem.setVisible(false);
                 }
 
             }
@@ -315,7 +316,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        this.menu = menu;
+
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -328,7 +329,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.getItem(2).setVisible(false);
+        menuItem = menu.getItem(2);
     }
 
     @Override
@@ -343,7 +344,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(true);
+            menuItem.setVisible(true);
 
         }
 
@@ -354,7 +355,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(false);
+            menuItem.setVisible(false);
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
@@ -385,6 +386,12 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                             toConnect.add(actorIssuer.getRecord());
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
+//                                    manager.askActorAssetIssuerForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+
                                     manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }

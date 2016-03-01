@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
@@ -188,12 +189,10 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             NegotiationTransmission negotiationTransmission = NegotiationTransmissionImpl.fronJson(fermatMessage.getContent());
             switch (negotiationTransmission.getTransmissionType()) {
                 case TRANSMISSION_NEGOTIATION:
-                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
                     receiveNegotiation(negotiationTransmission);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
                     receiveConfirm(negotiationTransmission);
                     break;
 
@@ -201,14 +200,16 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                     throw new CantHandleNewMessagesException("Transmission Type: " + negotiationTransmission.getTransmissionType(), "Transmission type not handled.");
             }
 
-        } catch (Exception exception) {
+        } catch (CantConfirmNotificationException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch (CantHandleNewMessagesException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }
@@ -424,10 +425,11 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
     }
 
-    private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException {
+    private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException, CantConfirmNotificationException {
 
-        UUID transmissionId = negotiationTransmission.getTransmissionId();
-        incomingNotificationDao.confirmReception(transmissionId);
+        UUID transactionId = negotiationTransmission.getTransactionId();
+//        incomingNotificationDao.confirmReception(transmissionId);
+        outgoingNotificationDao.confirmReception(transactionId);
 
     }
 
@@ -640,7 +642,7 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
             }
