@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDa
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/02/16.
  */
-public interface BusinessTransactionManager extends FermatManager {
+public interface BusinessTransactionManager extends FermatManager  {
     /**
      * This method returns the transaction completion date.
      * If returns 0 the transaction is processing.

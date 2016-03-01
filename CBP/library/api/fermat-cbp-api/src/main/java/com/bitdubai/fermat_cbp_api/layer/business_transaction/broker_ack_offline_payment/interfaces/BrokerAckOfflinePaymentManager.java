@@ -23,12 +23,4 @@ public interface BrokerAckOfflinePaymentManager extends BrokerAckPaymentManager 
             String actorPublicKey,
             String customerAlias)throws CantAckPaymentException;
 
-    /**
-     * This method returns the transaction completion date.
-     * If returns 0 the transaction is processing.
-     * @param contractHash
-     * @return
-     * @throws CantGetCompletionDateException
-     */
-    long getCompletionDate(String contractHash) throws CantGetCompletionDateException;
 }
