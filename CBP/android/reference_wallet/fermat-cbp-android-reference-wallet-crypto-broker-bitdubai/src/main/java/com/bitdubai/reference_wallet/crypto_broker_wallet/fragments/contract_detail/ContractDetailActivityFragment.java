@@ -210,9 +210,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Customer
                 ContractStatus mockedStatus = ContractStatus.PENDING_PAYMENT;
 
+
                 contractDetail = new ContractDetail(
                         1,
-                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         data.getAmount(),
@@ -224,7 +225,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Payment Reception step
                 contractDetail = new ContractDetail(
                         2,
-                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         data.getAmount(),
@@ -236,7 +237,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Merchandise Delivery step
                 contractDetail = new ContractDetail(
                         3,
-                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         0.0f,                               //TODO: getMerchandiseAmount() missing
@@ -248,14 +249,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Merchandise Reception step
                 contractDetail = new ContractDetail(
                         4,
-                        mockedStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         0.0f,                               //TODO: get merchandise amount?
                         "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
                         data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
                         data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
-                contractDetails.add(contractDetail);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

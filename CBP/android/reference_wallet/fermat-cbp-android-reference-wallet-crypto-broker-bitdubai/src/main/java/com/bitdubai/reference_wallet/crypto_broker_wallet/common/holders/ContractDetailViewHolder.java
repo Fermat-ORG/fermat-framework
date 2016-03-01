@@ -188,7 +188,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("Send:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-                        confirmButton.setText("Confirm");
                         break;
 
                     default:
@@ -211,6 +210,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("Broker receives:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        confirmButton.setText("Confirm");
                         break;
 
                     default:
@@ -233,6 +233,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("Broker sends:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        confirmButton.setText("Confirm");
                         break;
 
                     default:
@@ -255,7 +256,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("You receive:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-                        confirmButton.setText("Confirm");
                         break;
 
                     default:
