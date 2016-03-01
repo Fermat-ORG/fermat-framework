@@ -154,7 +154,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Victor Mars [New Team Leader]** <br/>
+* **Victor Mars [Team Leader]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
@@ -339,7 +339,11 @@ We are a team with diverse tastes and full of color making it an explosive integ
       Skype:   jinmyb22
       Github:  https://github.com/jinmyjbv
 
-
+* **Frank Contreras [New Developer]** <br/>
+---
+      Email:   contrerasfrank@gmail.com
+      Skype:   fcontreras1234
+      Github:  https://github.com/javafrank
 <br/>
 
 ### Team Yayo:
@@ -357,15 +361,16 @@ We are responsible of only one thing, making fermat a successfully project, shar
 
 * **José Briceño [New Developer]** <br/>
 ---
-      Email:   josebricenor@gmail.com@gmail.com
+      Email:   josebricenor@gmail.com
       Skype:   josebricenor
       Github:  https://github.com/josebricenor
 
-* **Frank Contreras [New Developer]** <br/>
+* **Luis Torres [New Developer]** <br/>
 ---
-      Email:   contrerasfrank@gmail.com
-      Skype:   fcontreras1234
-      Github:  https://github.com/javafrank
+      Email:   lutor1106@gmail.com
+      Skype:   luis.fernando.torres.leon
+      Github:  https://github.com/iLutor
+
 
 <br>
 We don't mean to make fun of everything, just about the serious things.
