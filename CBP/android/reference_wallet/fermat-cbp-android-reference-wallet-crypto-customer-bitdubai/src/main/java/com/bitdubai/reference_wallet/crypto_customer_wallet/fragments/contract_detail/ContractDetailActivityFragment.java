@@ -201,11 +201,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
         double amount = getFormattedNumber(data.getAmount());
 
-        brokerName.setText(data.getCryptoCustomerAlias());
+
+        brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
+        brokerName.setText(data.getCryptoBrokerAlias());
         sellingSummary.setText("SELLING " + paymentCurrency);
         detailDate.setText("Date:\n" + formatter.format(date));
-        //detailRate.setText("1 BTC @ 254 USD");
-
         detailRate.setText(exchangeRateAmount + " " + paymentCurrency + " @ " + amount + " " + data.getMerchandise());
 
     }
