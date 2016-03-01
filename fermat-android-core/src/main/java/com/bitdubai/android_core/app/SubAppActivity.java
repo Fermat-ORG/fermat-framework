@@ -240,6 +240,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     Intent intent = new Intent(this, DesktopActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                     startActivity(intent);
 
 

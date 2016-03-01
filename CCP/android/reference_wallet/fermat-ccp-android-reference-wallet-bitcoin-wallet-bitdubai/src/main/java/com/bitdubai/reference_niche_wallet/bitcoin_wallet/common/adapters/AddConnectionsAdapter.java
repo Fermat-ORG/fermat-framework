@@ -79,7 +79,8 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                     holder.checkbox_connection.setChecked(true);
                     FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
                     addConnectionCallback.addMenuEnabled();
-
+                   // holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
+                    holder.container_data.setAlpha(20);
 
                 } else {
                     holder.checkbox_connection.setChecked(false);
@@ -93,7 +94,7 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                 holder.container_data.setBackground(ContextCompat.getDrawable(context, R.drawable.add_connection_rounded_rectangle_shape));
             }
         }else{
-            holder.container_data.setBackgroundColor(Color.parseColor("#ffffff"));
+            //holder.container_data.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         }
         holder.checkbox_connection.setChecked(false);
