@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.int
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -106,7 +107,7 @@ public class ActorConnectionEventActions {
 
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CryptoBrokerActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(), CryptoBrokerActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
 
                         break;
                    /* case CANCEL:

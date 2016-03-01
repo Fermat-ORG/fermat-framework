@@ -1,6 +1,8 @@
 package com.mati.image_slider;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.ui.adapters.AbstractViewPagerAdapter;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class ImageSlider<I> extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ImageSlider(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -70,6 +74,7 @@ public class ImageSlider<I> extends RelativeLayout {
         private RelativeLayout parent;
         private List<I> lstItems;
         private AbstractViewPagerAdapter sliderAdapter;
+        private FermatViewHolder fermatViewHolder;
 
         public Builder(Context context) {
             this.context = context;
