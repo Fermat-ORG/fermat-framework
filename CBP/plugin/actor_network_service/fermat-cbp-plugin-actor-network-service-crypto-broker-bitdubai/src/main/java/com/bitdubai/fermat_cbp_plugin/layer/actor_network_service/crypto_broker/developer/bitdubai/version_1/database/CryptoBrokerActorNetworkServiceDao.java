@@ -485,6 +485,36 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
+
+    public CryptoBrokerConnectionRequest getConnectionRequest(final UUID requestId) throws CantFindRequestException, ConnectionRequestNotFoundException {
+
+        if (requestId == null)
+            throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
+
+        try {
+
+            final DatabaseTable connectionRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionRequestTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            connectionRequestTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildConnectionNewRecord(records.get(0));
+            else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
     /**
      * change the protocol state
      *
@@ -709,7 +739,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public CryptoBrokerActorNetworkServiceQuotesRequest getQuotesRequest(final UUID requestId) throws CantFindRequestException {
+    public CryptoBrokerActorNetworkServiceQuotesRequest getQuotesRequest(final UUID requestId) throws CantFindRequestException, QuotesRequestNotFoundException {
 
         if (requestId == null)
             throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
@@ -727,7 +757,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
             if (!records.isEmpty())
                 return buildQuotesRequestObject(records.get(0));
             else
-                return null;
+                throw new QuotesRequestNotFoundException(null, "", "Cannot find a quotes request with that id.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -741,12 +771,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final CryptoBrokerExtraData<CryptoBrokerQuote> createQuotesRequest(final UUID                    requestId            ,
-                                                                              final String                  requesterPublicKey   ,
-                                                                              final Actors                  requesterActorType   ,
-                                                                              final String                  cryptoBrokerPublicKey,
-                                                                              final ProtocolState           state                ,
-                                                                              final RequestType             type                 ) throws CantRequestQuotesException {
+    public final CryptoBrokerActorNetworkServiceQuotesRequest createQuotesRequest(final UUID                    requestId            ,
+                                                                                  final String                  requesterPublicKey   ,
+                                                                                  final Actors                  requesterActorType   ,
+                                                                                  final String                  cryptoBrokerPublicKey,
+                                                                                  final ProtocolState           state                ,
+                                                                                  final RequestType             type                 ) throws CantRequestQuotesException {
 
         try {
 

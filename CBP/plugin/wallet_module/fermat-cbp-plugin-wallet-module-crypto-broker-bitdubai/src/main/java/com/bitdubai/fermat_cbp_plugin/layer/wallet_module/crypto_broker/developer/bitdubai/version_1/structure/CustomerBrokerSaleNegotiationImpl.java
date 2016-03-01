@@ -18,8 +18,6 @@ import java.util.UUID;
  */
 public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
     long startDate;
-//    long negotiationUpdateDatetime;
-//    long expirationDatetime;
     Long lastNegotiationUpdateDate;
     Long negotiationExpirationDate;
     boolean nearExpirationDatetime;
@@ -45,8 +43,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         dataHasChanged = false;
 
         startDate = negotiationInfo.getStartDate();
-//        negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
-//        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
         lastNegotiationUpdateDate = negotiationInfo.getLastNegotiationUpdateDate();
         negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
         nearExpirationDatetime = negotiationInfo.getNearExpirationDatetime();
@@ -186,10 +182,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
-//        dataHasChanged = expirationDatetime != negotiationInfo.getNegotiationExpirationDate();
-//        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
-        dataHasChanged = negotiationExpirationDate != negotiationInfo.getNegotiationExpirationDate();
-        negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
 
         dataHasChanged = dataHasChanged || Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();

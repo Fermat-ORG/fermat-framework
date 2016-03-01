@@ -409,6 +409,26 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //GET EVENT TYPE OF TRANSACTION
+    public String getEventStatus(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
+
+            return value;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+        }
+
+    }
+
+    //GET EVENT TYPE OF TRANSACTION
     public String getEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
         try{

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_conne
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -23,7 +24,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.A
  */
 public class AssetFactoryFermatAppConnection extends AppConnections {
 
-    public AssetFactoryFermatAppConnection(Activity activity) {
+    public AssetFactoryFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -50,7 +51,7 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new AssetFactoryNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new AssetFactoryNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override
