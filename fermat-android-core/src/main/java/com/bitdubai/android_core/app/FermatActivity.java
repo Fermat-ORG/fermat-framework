@@ -1570,6 +1570,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
+
+            //        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
             if (appPublicKey != null) {
                 FermatStructure fermatStructure = getAppInUse(appPublicKey);
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
