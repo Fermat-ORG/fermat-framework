@@ -101,13 +101,13 @@ public class ContactsListFragment extends AbstractFermatFragment {
     TextView text;
     View layout;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
+//    static void initchatinfo(){
+//        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
+//        //imgid[0]=R.drawable.ken;
+//    }
 
     public static ContactsListFragment newInstance() {
-        initchatinfo();
+        //initchatinfo();
         return new ContactsListFragment();}
 
     @Override
@@ -212,7 +212,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager, chatManager, appSession);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -220,47 +220,15 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-//                Contact contactexist= chatSession.getSelectedContactToUpdate();
-//                if(contactexist!=null) {
-//                    if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-//                        UUID contactidnew = contactexist.getContactId();
-//                        contactexist=chatManager.getContactByContactId(contactid.get(position));
-//                        Chat chat=chatSession.getSelectedChat();
-//                        if(chat!=null) {
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew = chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            chatManager.deleteContact(contactexist);
-//                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//                            appSession.setData("whocallme", "contact");
-//                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//                        }
-//                    }
-//                }else {
+                try{
                     appSession.setData("whocallme", "contact");
                     appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                //}
-            //}catch(CantSaveChatException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantDeleteContactException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantSaveContactException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                }catch(CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -268,15 +236,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
+                goToContactDetail(position);
+                return true;
             }
         });
 
@@ -299,9 +260,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
                             contacticon.add(R.drawable.ic_contact_picture_holo_light);
                         }
                         final ContactListAdapter adaptador =
-                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager, chatManager, appSession);
                         adaptador.refreshEvents(contactname, contacticon, contactid);
-                        //adaptador.notifyDataSetChanged();
                         list.invalidateViews();
                         list.requestLayout();
                         text.setVisibility(View.GONE);
@@ -332,6 +292,17 @@ public class ContactsListFragment extends AbstractFermatFragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToContactDetail(int position){
+        try{
+            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+            changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+        }catch(CantGetContactException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
 //    public void setSearchQuery(String query) {

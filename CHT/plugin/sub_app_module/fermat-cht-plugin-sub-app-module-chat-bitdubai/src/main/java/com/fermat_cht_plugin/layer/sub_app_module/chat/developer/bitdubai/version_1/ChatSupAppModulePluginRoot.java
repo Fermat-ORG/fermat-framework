@@ -41,6 +41,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Edited by Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  */
 public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,

@@ -9,7 +9,10 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 /**
- * Created by j on 29/02/16.
+ * ChatPreferenceSettings
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
+ * @version 1.0
  */
 public class ChatPreferenceSettings implements FermatSettings {
     private boolean isHomeTutorialDialogEnabled;
