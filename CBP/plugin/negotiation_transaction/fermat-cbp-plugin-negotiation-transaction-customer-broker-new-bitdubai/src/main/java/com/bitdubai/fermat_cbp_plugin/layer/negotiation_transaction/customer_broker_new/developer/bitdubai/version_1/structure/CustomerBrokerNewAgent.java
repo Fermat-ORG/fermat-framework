@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantNewSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
@@ -315,6 +316,8 @@ public class CustomerBrokerNewAgent implements
 
                         //Update the Negotiation Transaction
                         customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
+                        CustomerBrokerNew transactionDao = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        System.out.print("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: " + transactionDao.getStatusTransaction().getCode() + " ****\n");
 
                     }
                 }
@@ -379,6 +382,7 @@ public class CustomerBrokerNewAgent implements
                 CustomerBrokerSaleNegotiation   saleNegotiation     = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
+                String eventStatus = customerBrokerNewNegotiationTransactionDatabaseDao.getEventStatus(eventId);
 
                 //EVENT - RECEIVE NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW.getCode())) {
@@ -424,6 +428,7 @@ public class CustomerBrokerNewAgent implements
 
                                 //NOTIFIED EVENT
                                 customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
                                 //CONFIRM TRANSMISSION
                                 negotiationTransmissionManager.confirmReception(transmissionId);
                             }
