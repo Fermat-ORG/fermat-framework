@@ -198,80 +198,64 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
         ContractDetail contractDetail;
-        //Testing Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.BROKER_DETAIL,
-                MoneyType.CRYPTO.getCode(),
-                CryptoCurrency.BITCOIN.getFriendlyName(),
-                12,
-                ContractStatus.PENDING_MERCHANDISE,
-                "BTC Broker",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-        //Customer Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.CUSTOMER_DETAIL,
-                MoneyType.BANK.getCode(),
-                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-                12,
-                ContractStatus.PAYMENT_SUBMIT,
-                "BTC Customer",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-
-        /**
-         * Get the wallet module manager
-         */
         //TODO: when the module is finished, use the followings lines to create contract details.
         CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager=
                 appSession.getModuleManager();
         if(walletManager!=null){
-
             try{
-                CryptoBrokerWalletManager cryptoCustomerWalletManager=
-                        cryptoBrokerWalletModuleManager.getCryptoBrokerWallet(
-                                appSession.getAppPublicKey()
-                        );
+                CryptoBrokerWalletManager cryptoCustomerWalletManager= cryptoBrokerWalletModuleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 //ContractDetail contractDetail;
-                CustomerBrokerContractSale customerBrokerContractPurchase=
-                        cryptoCustomerWalletManager.
-                                getCustomerBrokerContractSaleByNegotiationId(
-                                        data.getNegotiationId().toString());
+                CustomerBrokerContractSale customerBrokerContractPurchase= cryptoCustomerWalletManager.getCustomerBrokerContractSaleByNegotiationId(data.getNegotiationId().toString());
                 //Customer
-                contractDetail=new ContractDetail(
-                        ContractDetailType.CUSTOMER_DETAIL,
+                ContractStatus mockedStatus = ContractStatus.PENDING_PAYMENT;
+
+
+                contractDetail = new ContractDetail(
+                        1,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        data.getAmount(),
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
-                        data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
                 contractDetails.add(contractDetail);
-                //Broker
-                contractDetail=new ContractDetail(
-                        ContractDetailType.BROKER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
+
+                //Payment Reception step
+                contractDetail = new ContractDetail(
+                        2,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail = new ContractDetail(
+                        3,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        0.0f,                               //TODO: getMerchandiseAmount() missing
+                        "Missing type of merchandise",      //TODO: getTypeOfMerchandise() missing
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail = new ContractDetail(
+                        4,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        0.0f,                               //TODO: get merchandise amount?
+                        "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -291,7 +275,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     .show();
         }
 
-        try{
+        /*try{
 
             CustomerBrokerContractSale contract= walletManager.getCustomerBrokerContractSaleForContractId(data.getContractId().toString());
             for (ContractClause clause:contract.getContractClause()){
@@ -314,7 +298,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
-        }
+        }*/
 
         return contractDetails;
     }
