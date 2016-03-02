@@ -75,4 +75,16 @@ public class ChatMiddlewareDatabaseConstants {
 
     public static final String EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
+    /**
+     * Crypto Identity database table definition.
+     */
+    public static final String IDENTITY_TABLE_NAME = "identity";
+
+    public static final String IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
+    public static final String IDENTITY_ALIAS_COLUMN_NAME = "alias";
+    public static final String IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
+
+    public static final String IDENTITY_FIRST_KEY_COLUMN = "identity_public_key";
+
+
 }
