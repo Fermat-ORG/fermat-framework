@@ -144,10 +144,46 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
             return;
         }
 
-        // compare the transactions and generate the neccesary earning transactions
-
-        // have in count:
-        // there can be a lot of transactions in a side and a lot of transactions in the other side
+        /* divide the list in two:
+         *    list of sell transactions (linked currency)
+         *    list of buy transactions  (linked currency)
+         *
+         * we will sort the list by the amount of linked currency descendant
+         *
+         * once we have the list split:
+         *    we get our first sell transaction
+         *    we compare with a buy transaction
+         *    if the amount of sell and buy the currency are equals:
+         *       we create immediately an earning transaction
+         *       the value of the amount earnt or loose is the difference between the amounts sold/bought
+         *       example:
+         *         earning currency ARS
+         *         input1: BTC-ARS | 1.0  / 1000
+         *         input2: ARS-BTC | 1100 /  1.0
+         *
+         *         we compare BTC vs BTC 1.0 == 1.0
+         *         then we do 1100-1000 = 100 <- this is how much we earn
+         *
+         *    if the amount of sell is higher than the amount of buying:
+         *       we will bring another buy transaction
+         *       and compare again with the sum of both
+         *         if still higher we get another and then
+         *         if lower we will cut the buying transaction to exactly sum the amount of selling
+         *         and then we will create:
+         *           an input transaction with the rest of the buying amount
+         *           an earning transaction relating the sell transaction with all the buying transaction matched
+         *
+         *    if the amount of sell is lower than the amount of buying
+         *       we will cut the buying transaction to exactly sum the amount of selling
+         *       and then we will create:
+         *         an input transaction with the rest of the buying amount
+         *         an earning transaction relating the sell transaction with all the buying transaction matched
+         *
+         *    if there isn't more buying transactions we will cut the sell transaction to match with the amount of buying
+         *    and create an input transaction for the buying
+         *
+         * all the process must be in an unique transaction (against database) to avoid any issues
+         */
     }
 
     private void cleanResources() {
