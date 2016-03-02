@@ -38,6 +38,11 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
             return ContactsListFragment.newInstance();
         }
 
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT))
+        {
+            return ConnectionsListFragment.newInstance();
+        }
+
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
         {
             return ContactsListFragment.newInstance();

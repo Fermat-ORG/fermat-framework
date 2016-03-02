@@ -28,6 +28,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -59,7 +60,7 @@ import java.util.UUID;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment {
+public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -101,14 +102,19 @@ public class ContactsListFragment extends AbstractFermatFragment {
     TextView text;
     View layout;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
+//    static void initchatinfo(){
+//        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
+//        //imgid[0]=R.drawable.ken;
+//    }
 
     public static ContactsListFragment newInstance() {
-        initchatinfo();
+        //initchatinfo();
         return new ContactsListFragment();}
+
+    @Override
+    public void onMethodCallback() {
+        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +125,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                    moduleManager, errorManager, chatSession, appSession, this);
         }catch (Exception e)
         {
             if(errorManager!=null)
@@ -128,7 +136,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         //setHasOptionsMenu(true);
@@ -173,6 +181,26 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
     }
 
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        long viewId = view.getId();
+//        try{
+//            if (viewId == R.id.icon) {
+//                goToContactDetail(chatManager, moduleManager, chatSession,
+//                        appSession, errorManager, contactid.get(position));
+//            } else {
+//                appSession.setData("whocallme", "contact");
+//                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+//                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+//            }
+//        }catch(CantGetContactException e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,55 +240,32 @@ public class ContactsListFragment extends AbstractFermatFragment {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                moduleManager, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-//                Contact contactexist= chatSession.getSelectedContactToUpdate();
-//                if(contactexist!=null) {
-//                    if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-//                        UUID contactidnew = contactexist.getContactId();
-//                        contactexist=chatManager.getContactByContactId(contactid.get(position));
-//                        Chat chat=chatSession.getSelectedChat();
-//                        if(chat!=null) {
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew = chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            chatManager.deleteContact(contactexist);
-//                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//                            appSession.setData("whocallme", "contact");
-//                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//                        }
-//                    }
-//                }else {
-                    appSession.setData("whocallme", "contact");
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                //}
-            //}catch(CantSaveChatException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantDeleteContactException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantSaveContactException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                //public void onClick(View view) {
+                try {
+                    //Object selection =  parent.getItemAtPosition(position);
+
+                    //if (selection == R.id.icon) {
+                    //    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    //    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    //} else {
+                        appSession.setData("whocallme", "contact");
+                        appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                   // }
+                } catch (CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -268,15 +273,15 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
+                try{
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                }catch(CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                return true;
             }
         });
 
@@ -299,9 +304,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
                             contacticon.add(R.drawable.ic_contact_picture_holo_light);
                         }
                         final ContactListAdapter adaptador =
-                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                                        moduleManager, errorManager, chatSession, appSession, null);
                         adaptador.refreshEvents(contactname, contacticon, contactid);
-                        //adaptador.notifyDataSetChanged();
                         list.invalidateViews();
                         list.requestLayout();
                         text.setVisibility(View.GONE);
@@ -333,6 +338,18 @@ public class ContactsListFragment extends AbstractFermatFragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSession chatSession,
+//                                  FermatSession appSession, ErrorManager errorManager, UUID id){
+//        try{
+//            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(id));
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+//        }catch(CantGetContactException e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//    }
 
 //    public void setSearchQuery(String query) {
 //        if (TextUtils.isEmpty(query)) {
@@ -455,7 +472,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
-        //inflater.inflate(R.menu.contact_list_menu, menu);
+        inflater.inflate(R.menu.contact_list_menu, menu);
         // Locate the search item
         //MenuItem searchItem = menu.findItem(R.id.menu_search);
 

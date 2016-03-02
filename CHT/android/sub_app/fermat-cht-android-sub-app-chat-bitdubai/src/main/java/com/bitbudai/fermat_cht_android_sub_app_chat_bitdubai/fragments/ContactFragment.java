@@ -101,13 +101,13 @@ public class ContactFragment extends AbstractFermatFragment {
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
+    //static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
         //imgid[0]=R.drawable.ken;
-    }
+    //}
 
     public static ContactFragment newInstance() {
-        initchatinfo();
+        //initchatinfo();
         return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -195,7 +195,7 @@ public class ContactFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
+            contacticon.add(R.drawable.cht_profile_icon);
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(contactalias.get(0));
@@ -532,10 +532,11 @@ public class ContactFragment extends AbstractFermatFragment {
                                     for (int i=0;i<cont.size();i++){
                                         contactname.add(cont.get(i).getAlias());
                                         contactid.add(cont.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                        contacticon.add(R.drawable.cht_profile_icon);
                                     }
                                     final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
+                                                    moduleManager, errorManager, chatSession, appSession, null);
                                     adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
                             }catch(CantGetContactException e) {
