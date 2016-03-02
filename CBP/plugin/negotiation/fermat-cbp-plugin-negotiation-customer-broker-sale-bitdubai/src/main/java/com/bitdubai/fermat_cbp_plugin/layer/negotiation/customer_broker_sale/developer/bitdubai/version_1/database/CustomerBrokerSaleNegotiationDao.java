@@ -94,7 +94,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
             }
 
-            new NegotiationSaleTestData(this);
+            //new NegotiationSaleTestData(this);
         }
 
         public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {

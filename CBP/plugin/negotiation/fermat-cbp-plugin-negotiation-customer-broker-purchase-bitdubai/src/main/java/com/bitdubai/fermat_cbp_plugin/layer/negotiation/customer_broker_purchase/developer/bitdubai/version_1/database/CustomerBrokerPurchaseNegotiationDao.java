@@ -87,7 +87,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             }
         }
 
-        new NegotiationPurchaseTestData(this);
+        //new NegotiationPurchaseTestData(this);
     }
 
     public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
