@@ -101,13 +101,13 @@ public class ContactFragment extends AbstractFermatFragment {
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
+    //static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
         //imgid[0]=R.drawable.ken;
-    }
+    //}
 
     public static ContactFragment newInstance() {
-        initchatinfo();
+        //initchatinfo();
         return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -535,7 +535,8 @@ public class ContactFragment extends AbstractFermatFragment {
                                         contacticon.add(R.drawable.ic_contact_picture_holo_light);
                                     }
                                     final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
+                                                    moduleManager, errorManager, chatSession, appSession, null);
                                     adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
                             }catch(CantGetContactException e) {

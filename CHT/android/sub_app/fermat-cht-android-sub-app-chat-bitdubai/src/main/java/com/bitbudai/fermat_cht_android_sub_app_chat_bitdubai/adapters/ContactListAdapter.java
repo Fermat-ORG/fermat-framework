@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
@@ -24,6 +31,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -52,46 +60,101 @@ public class ContactListAdapter extends ArrayAdapter<String> {
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
+    private ChatModuleManager moduleManager;
+    private ChatSession chatSession;
     private ContactsListFragment contactsListFragment;
+    private Context context;
+    private Context mContext;
     ImageView imagen;
     TextView contactname;
+    int position;
+    private AdapterCallback mAdapterCallback;//private AdapterCallback mAdapterCallback;
+    //View.OnClickListener clickListener;
 
     public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
-                              ErrorManager errorManager, ChatManager chatManager, FermatSession appSession ) {
+                              ChatManager chatManager, ChatModuleManager moduleManager,
+                              ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
-        this.errorManager = errorManager;
-        this.appSession = appSession;
-        this.chatManager = chatManager;
+        this.chatManager=chatManager;
+        this.moduleManager=moduleManager;
+        this.errorManager=errorManager;
+        this.chatSession=chatSession;
+        this.appSession=appSession;
+        this.mContext=context;
+        try {
+            this.mAdapterCallback = mAdapterCallback;//((AdapterCallback) mContext);
+        }catch (Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        }
+      //  this.clickListener = clickListener;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
+
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
+
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
-            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)),300));
+            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
 
-            imagen.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+//            setClickListeners(imagen);
+//            setClickListeners(contactname);
+//
+//            setTagsToViews(imagen, position);
+//            setTagsToViews(contactname, position);
+            final int pos=position;
+            imagen.setOnClickListener(new View.OnClickListener() {
+               // int pos = position;
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    contactsListFragment.goToContactDetail(position);
+                public void onClick(View v) {
+                    try {
+                            //contactsListFragment = new ContactsListFragment();
+                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(pos)));
+                            //mAdapterCallback = ((AdapterCallback) mContext);
+                            mAdapterCallback.onMethodCallback();
+                            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                        } catch (CantGetContactException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        } catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                    //int posr=pos;
+                    /*contactsListFragment = new ContactsListFragment();
+                    contactsListFragment.goToContactDetail(chatManager, moduleManager, chatSession,
+                            appSession, errorManager, contactid.get(posr));*/
                 }
             });
+//            imagen.setOnClickListener(new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                    ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+//                }
+//            });
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
         return item;
     }
+    /** * Sets the onClickListener on the view * * @param view */
+//    private void setClickListeners(View view) {
+//        view.setOnClickListener(clickListener);
+//    }
+
+    public static interface AdapterCallback {
+        void onMethodCallback();
+    }
+
 
     public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         this.contactinfo=contactinfo;
