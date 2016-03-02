@@ -122,13 +122,16 @@ public class MonitoringWebService {
         LOG.info("Executing systemData()");
         JsonObject respond = new JsonObject();
 
-        if (Boolean.getBoolean(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALED))){
+        if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED))){
 
             MonitClient monitClient = new MonitClient(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL), ConfigurationManager.getValue(ConfigurationManager.MONIT_USER), ConfigurationManager.getValue(ConfigurationManager.MONIT_PASSWORD));
             Map<String, JsonArray> data = null;
             try {
 
                 data = monitClient.getComponents();
+
+                LOG.info("data = "+data);
+
                 respond.addProperty("success", Boolean.TRUE);
                 respond.addProperty("data", gson.toJson(data));
 

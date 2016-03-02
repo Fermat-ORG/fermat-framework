@@ -12,12 +12,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.bouncycastle.util.encoders.Base64;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager</code> implements
@@ -71,9 +68,9 @@ public class ConfigurationManager {
     public static final String MONIT_PASSWORD = "monit_password";
 
     /**
-     * Represent the value of MONIT_INSTALED
+     * Represent the value of MONIT_INSTALLED
      */
-    public static final String MONIT_INSTALED = "monit_instaled";
+    public static final String MONIT_INSTALLED = "monit_installed";
 
     /**
      * Represent the value of MONIT_URL
@@ -136,8 +133,8 @@ public class ConfigurationManager {
         newConfigurationFile.addProperty(USER, "fermat");
         newConfigurationFile.addProperty(PASSWORD, "5e494e695571ede182fb62299373678158c752fb8d3c04104a46b7de139dab5e"); //fermat
 
-        newConfigurationFile.getLayout().setComment(MONIT_INSTALED, "\n# * MONIT CONFIGURATION");
-        newConfigurationFile.addProperty(MONIT_INSTALED, Boolean.FALSE);
+        newConfigurationFile.getLayout().setComment(MONIT_INSTALLED, "\n# * MONIT CONFIGURATION");
+        newConfigurationFile.addProperty(MONIT_INSTALLED, Boolean.FALSE);
         newConfigurationFile.addProperty(MONIT_URL, "http://localhost:2812/");
 
         newConfigurationFile.save();

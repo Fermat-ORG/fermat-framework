@@ -104,7 +104,7 @@ public class MonitClient {
        Document parse = Jsoup.parse(pageContent);
        Elements tables = parse.select("table[id=header-row]");
 
-       if(tables.size() > 1){
+       if(tables.size() > 0){
 
            for (Element table: tables) {
 

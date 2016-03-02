@@ -65,13 +65,20 @@
           <div class="row">
               <div class="col-md-3">
 
-                  <div class="panel panel-primary">
+                  <div class="panel panel-primary" ng-controller="ConfigurationCtrl" ng-show="!configuration.monitInstalled" >
                       <div class="panel-heading">
-                          <h3 class="panel-title">Panel title</h3>
+                          <h3 class="panel-title">Monit Data</h3>
                       </div>
                       <div class="panel-body">
-                          Panel content
+                          Monit is no active and configure.
                       </div>
+                  </div>
+
+                  <div ng-controller="ConfigurationCtrl" ng-show="configuration.monitInstalled" >
+                      <h4>Monit Info</h4>
+
+
+
                   </div>
 
               </div>
@@ -221,7 +228,7 @@
                               <div class="form-group">
                                   <div class="checkbox">
                                       <label>
-                                          <input type="checkbox" ng-model="configuration.monitInstalled" value="True"> Monit installed
+                                          <input type="checkbox" ng-model="configuration.monitInstalled" value="True" ng-checked="configuration.monitInstalled" > Monit installed
                                       </label>
                                   </div>
                                   <label for="monituser">Monit User</label>

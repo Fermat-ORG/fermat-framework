@@ -6,21 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnClientConnection;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -75,7 +66,7 @@ public class ConfigurationWebService {
         Configuration configuration = new Configuration();
         configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
         configuration.setUser(ConfigurationManager.getValue(ConfigurationManager.USER));
-        configuration.setMonitInstalled(Boolean.getBoolean(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL)));
+        configuration.setMonitInstalled(Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED)));
         configuration.setMonitUser(ConfigurationManager.getValue(ConfigurationManager.MONIT_USER));
         configuration.setMonitUrl(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL));
 
@@ -105,8 +96,8 @@ public class ConfigurationWebService {
             }
 
 
-            if(!configuration.getMonitInstalled().toString().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALED))){
-                ConfigurationManager.updateValue(ConfigurationManager.MONIT_INSTALED, configuration.getMonitInstalled().toString());
+            if(!configuration.getMonitInstalled().toString().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED))){
+                ConfigurationManager.updateValue(ConfigurationManager.MONIT_INSTALLED, configuration.getMonitInstalled().toString());
             }
 
             if(!configuration.getMonitUser().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_USER))){
@@ -117,7 +108,7 @@ public class ConfigurationWebService {
                 ConfigurationManager.updateValue(ConfigurationManager.MONIT_PASSWORD, configuration.getMonitPassword());
             }
 
-            if(!configuration.getMonitUrl().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL))){
+            if (!configuration.getMonitUrl().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL))){
                 ConfigurationManager.updateValue(ConfigurationManager.MONIT_URL, configuration.getMonitUrl());
             }
 

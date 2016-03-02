@@ -7,6 +7,7 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
       $scope.labels = [];
       $scope.series = ['Client Connections', 'Actives VPN'];
       $scope.charData = [[],[]];
+      $scope.monitData = ;
 
       var requestMonitoringData = function() {
 
@@ -41,7 +42,31 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
 
       };
 
+
+      var requestMonitData = function() {
+
+                  $http({
+                          method: 'GET',
+                          url: '/fermat/api/admin/monitoring/system/data'
+                    }).then(function successCallback(response) {
+
+                            var data = response.data;
+                            alert(angular.toJson(data));
+
+                 }, function errorCallback(response) {
+                      var message = "";
+                      if(response.status === -1){message = "Server no available";}
+                      if(response.status === 401){message = "You must authenticate again";}
+                      alert(response.status+" - Service error: "+response.statusText+" "+message);
+                      $window.location.href = '../index.html';
+                 });
+
+            };
+
+
      requestMonitoringData();
+
+     requestMonitData();
 
     $interval(requestMonitoringData, 60000);
 
