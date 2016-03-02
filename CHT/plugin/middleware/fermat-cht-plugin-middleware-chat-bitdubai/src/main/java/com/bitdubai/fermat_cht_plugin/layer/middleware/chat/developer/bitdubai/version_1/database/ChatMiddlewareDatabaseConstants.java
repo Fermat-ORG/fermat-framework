@@ -73,6 +73,7 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME = "remote_actor_type";
     public static final String CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME = "remote_actor_pub_key";
     public static final String CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME = "creation_date";
+    public static final String CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME = "contact_status";
 
     public static final String CONTACTS_CONNECTION_FIRST_KEY_COLUMN = "id_contact";
 
