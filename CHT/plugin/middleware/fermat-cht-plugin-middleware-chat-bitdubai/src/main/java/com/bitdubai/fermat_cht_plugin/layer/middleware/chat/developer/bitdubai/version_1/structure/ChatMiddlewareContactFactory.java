@@ -490,11 +490,11 @@ public class ChatMiddlewareContactFactory {
      * identity to avoid to create an unregistered contact in the message receptor.
      * @return
      */
-    public HashMap<PlatformComponentType, String> getSelfIdentities() //TODO:Cambiar el parametro del mapa del String por byte[]
+    public HashMap<PlatformComponentType, Object> getSelfIdentities() //TODO:Cambiar el parametro del mapa del String por byte[]
             throws CantGetOwnIdentitiesException {
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();
         Object value;
-        HashMap<PlatformComponentType, String> selfIdentitiesMap=new HashMap<>(); //TODO:Cambiar el parametro del mapa del String por byte[]
+        HashMap<PlatformComponentType, Object> selfIdentitiesMap=new HashMap<>(); //TODO:Cambiar el parametro del mapa del String por byte[]
         try{
             for(String key : keySet){
                 value=this.compatiblesActorNetworkServiceMap.get(key);
@@ -513,7 +513,7 @@ public class ChatMiddlewareContactFactory {
                     if(appPublicKey==null){
                         continue;
                     }
-                    selfIdentitiesMap.put(PlatformComponentType.ACTOR_INTRA_USER, appPublicKey);
+                    selfIdentitiesMap.put(PlatformComponentType.ACTOR_INTRA_USER, identity);
                 }
                 //DAP ACTORS
                 if(key.equals(Platforms.DIGITAL_ASSET_PLATFORM.getCode())){
@@ -523,7 +523,7 @@ public class ChatMiddlewareContactFactory {
                             String dapUserPublicKey=actorAssetUser.getActorPublicKey();
                             selfIdentitiesMap.put(
                                     PlatformComponentType.ACTOR_ASSET_USER,
-                                    dapUserPublicKey);
+                                    actorAssetUser);
                         }
 
                     }
@@ -533,7 +533,7 @@ public class ChatMiddlewareContactFactory {
                             String dapIssuerPublicKey=actorAssetIssuer.getActorPublicKey();
                             selfIdentitiesMap.put(
                                     PlatformComponentType.ACTOR_ASSET_ISSUER,
-                                    dapIssuerPublicKey);
+                                    actorAssetIssuer);
                         }
 
                     }
@@ -543,7 +543,7 @@ public class ChatMiddlewareContactFactory {
                             String dapRedeemPointPublicKey=actorAssetRedeemPoint.getActorPublicKey();
                             selfIdentitiesMap.put(
                                     PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
-                                    dapRedeemPointPublicKey);
+                                    actorAssetRedeemPoint);
                         }
 
                     }
@@ -559,7 +559,7 @@ public class ChatMiddlewareContactFactory {
                             brokerPublicKey=brokerIdentity.getPublicKey();
                             selfIdentitiesMap.put(
                                     PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                                    brokerPublicKey);
+                                    brokerIdentity);
                             break;
                         }
                     }
@@ -571,7 +571,7 @@ public class ChatMiddlewareContactFactory {
                             customerPublicKey=customerIdentity.getPublicKey();
                             selfIdentitiesMap.put(
                                     PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                                    customerPublicKey);
+                                    customerIdentity);
                             break;
                         }
                     }
