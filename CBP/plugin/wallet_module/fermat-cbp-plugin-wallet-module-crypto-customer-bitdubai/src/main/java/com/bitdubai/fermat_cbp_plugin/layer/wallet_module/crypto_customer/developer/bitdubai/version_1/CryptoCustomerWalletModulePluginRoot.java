@@ -247,10 +247,11 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
     private void preConfigureWallet() {
         final String customerWalletPublicKey = "crypto_customer_wallet";
+        boolean walletConfigured;
         try {
             walletManager = getCryptoCustomerWallet(customerWalletPublicKey);
-
-            if (!walletManager.isWalletConfigured(customerWalletPublicKey)) {
+            walletConfigured = walletManager.isWalletConfigured(customerWalletPublicKey);
+            if (!walletConfigured) {
                 // IDENTITY
                 createIdentity("Crypto Customer", "", new byte[0]);
                 final CryptoCustomerIdentity cryptoCustomerIdentity = walletManager.getListOfIdentities().get(0);
@@ -279,7 +280,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET,
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

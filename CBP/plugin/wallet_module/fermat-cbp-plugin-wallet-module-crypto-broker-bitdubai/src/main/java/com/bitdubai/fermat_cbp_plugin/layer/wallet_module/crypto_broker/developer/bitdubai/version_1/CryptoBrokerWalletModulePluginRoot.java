@@ -364,7 +364,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
             }
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET,
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
