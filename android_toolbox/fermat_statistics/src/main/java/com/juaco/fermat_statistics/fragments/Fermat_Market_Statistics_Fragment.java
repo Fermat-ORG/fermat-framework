@@ -24,7 +24,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.juaco.fermat_statistics.R;
-import com.juaco.fermat_statistics.interfaces.Fermat_market_data;
+import com.juaco.fermat_statistics.models.Fermat_market_data;
 
 import java.util.ArrayList;
 import java.util.Collection;

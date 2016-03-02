@@ -1,4 +1,4 @@
-package com.juaco.fermat_statistics.interfaces;
+package com.juaco.fermat_statistics.models;
 
 import android.app.Activity;
 
@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import java.util.Collection;
 
 /**
- * Created by root on 01/03/16.
+ * Created by Joaquin Carrasquero on 01/03/16.
  */
 public class Fermat_market_data {
 
