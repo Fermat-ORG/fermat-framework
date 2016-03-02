@@ -183,7 +183,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
 
-        dataHasChanged = dataHasChanged || Objects.equals(cancelReason, negotiationInfo.getCancelReason());
+        dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
 
         dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
