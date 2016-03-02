@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -118,7 +120,7 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public List<Contact> discoverActorsRegistered() throws CantGetContactException {
+    public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
         return middlewareChatManager.discoverActorsRegistered();
     }
 
