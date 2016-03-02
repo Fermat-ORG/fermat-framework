@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
@@ -824,7 +825,8 @@ public class ChatMiddlewareMonitorAgent implements
                     PlatformComponentType.NETWORK_SERVICE,
                     chatMetadata.getLocalActorPublicKey(),
                     date.getTime(),
-                    new byte[0]
+                    new byte[0],
+                    ContactStatus.AVAILABLE
             );
             chatMiddlewareDatabaseDao.saveContact(contact);
             return contact;
