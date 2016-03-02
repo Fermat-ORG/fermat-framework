@@ -1,4 +1,4 @@
-angular.module("serverApp").controller('ConfigurationCtrl', ['$scope', '$http', '$window',  function ($scope, $http, $window) {
+angular.module("serverApp").controller('ConfCtrl', ['$scope', '$http', '$window',  function ($scope, $http, $window) {
   $scope.message = '';
   $scope.configuration = {
        port: '',
@@ -36,6 +36,10 @@ angular.module("serverApp").controller('ConfigurationCtrl', ['$scope', '$http', 
             $window.location.href = '../index.html';
          });
     };
+
+    this.monitInstalled = function () {
+        return $scope.configuration.monitInstalled;
+    }
 
     $scope.get();
 

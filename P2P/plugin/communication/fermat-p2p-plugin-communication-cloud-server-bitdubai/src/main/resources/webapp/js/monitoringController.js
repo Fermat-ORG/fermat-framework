@@ -1,4 +1,27 @@
-angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$interval', '$filter', '$window', function($scope, $http, $interval, $filter, $window) {
+angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interval', '$filter', '$window',  function($scope, $http, $interval, $filter, $window) {
+
+    var parseJwtToken = function(token) {
+                 var base64Url = token.split('.')[1];
+                 var base64 = base64Url.replace('-', '+').replace('_', '/');
+                 return JSON.parse($window.atob(base64));
+             };
+
+        var isAuthenticate = function() {
+
+           var token = window.localStorage['jwtAuthToke'];
+           if(token) {
+             var params = parseJwtToken(token);
+             return Math.round(new Date().getTime() / 1000) <= params.exp;
+           } else {
+             return false;
+           }
+
+      };
+
+    if(!isAuthenticate()){
+        alert("Service error: You must authenticate again");
+        $window.location.href = '../index.html';
+    }
 
     if(window.localStorage['jwtAuthToke'] !== null){
           $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
@@ -7,7 +30,7 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
       $scope.labels = [];
       $scope.series = ['Client Connections', 'Actives VPN'];
       $scope.charData = [[],[]];
-      $scope.monitData = ;
+      $scope.monitInfo = [];
 
       var requestMonitoringData = function() {
 
@@ -43,31 +66,41 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
       };
 
 
-      var requestMonitData = function() {
+      var requestMonitInfo = function() {
 
-                  $http({
-                          method: 'GET',
-                          url: '/fermat/api/admin/monitoring/system/data'
-                    }).then(function successCallback(response) {
+              $http({
+                      method: 'GET',
+                      url: '/fermat/api/admin/monitoring/system/data'
+                }).then(function successCallback(response) {
+                        var respond = angular.fromJson(response.data);
+                        var success = respond.success;
 
-                            var data = response.data;
-                            alert(angular.toJson(data));
+                        if(success === true){
 
-                 }, function errorCallback(response) {
-                      var message = "";
-                      if(response.status === -1){message = "Server no available";}
-                      if(response.status === 401){message = "You must authenticate again";}
-                      alert(response.status+" - Service error: "+response.statusText+" "+message);
-                      $window.location.href = '../index.html';
-                 });
+                            var data    = angular.fromJson(respond.data)
+                            var array = [];
+                            for(var key in data){
+                                var test = {};
+                                test[key] = angular.fromJson(data[key]);
+                                array.push(test);
+                            }
 
-            };
+                            $scope.monitInfo = array;
+                        }
 
+             }, function errorCallback(response) {
+                  var message = "";
+                  if(response.status === -1){message = "Server no available";}
+                  if(response.status === 401){message = "You must authenticate again";}
+                  alert(response.status+" - Service error: "+response.statusText+" "+message);
+                  $window.location.href = '../index.html';
+             });
+
+       };
 
      requestMonitoringData();
-
-     requestMonitData();
-
+     requestMonitInfo();
     $interval(requestMonitoringData, 60000);
+    $interval(requestMonitInfo, 30000);
 
 }]);
