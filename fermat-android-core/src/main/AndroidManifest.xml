@@ -109,6 +109,8 @@
 
         </activity>
 
+        <service android:name="com.bitdubai.android_core.app.NotificationService"/>
+
 
         <activity
             android:name="com.bitdubai.android_core.app.WizardActivity"
