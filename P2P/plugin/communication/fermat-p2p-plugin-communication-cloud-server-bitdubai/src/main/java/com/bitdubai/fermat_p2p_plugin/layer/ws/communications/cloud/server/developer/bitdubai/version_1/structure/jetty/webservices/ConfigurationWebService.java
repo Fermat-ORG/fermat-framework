@@ -75,6 +75,9 @@ public class ConfigurationWebService {
         Configuration configuration = new Configuration();
         configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
         configuration.setUser(ConfigurationManager.getValue(ConfigurationManager.USER));
+        configuration.setMonitInstalled(Boolean.getBoolean(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL)));
+        configuration.setMonitUser(ConfigurationManager.getValue(ConfigurationManager.MONIT_USER));
+        configuration.setMonitUrl(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL));
 
         return Response.status(200).entity(gson.toJson(configuration)).build();
 
@@ -99,6 +102,23 @@ public class ConfigurationWebService {
 
             if(!configuration.getPassword().equals(ConfigurationManager.getValue(ConfigurationManager.PASSWORD))){
                 ConfigurationManager.updateValue(ConfigurationManager.PASSWORD, configuration.getPassword());
+            }
+
+
+            if(!configuration.getMonitInstalled().toString().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALED))){
+                ConfigurationManager.updateValue(ConfigurationManager.MONIT_INSTALED, configuration.getMonitInstalled().toString());
+            }
+
+            if(!configuration.getMonitUser().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_USER))){
+                ConfigurationManager.updateValue(ConfigurationManager.MONIT_USER, configuration.getMonitUser());
+            }
+
+            if(!configuration.getMonitPassword().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_PASSWORD))){
+                ConfigurationManager.updateValue(ConfigurationManager.MONIT_PASSWORD, configuration.getMonitPassword());
+            }
+
+            if(!configuration.getMonitUrl().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL))){
+                ConfigurationManager.updateValue(ConfigurationManager.MONIT_URL, configuration.getMonitUrl());
             }
 
         } catch (ConfigurationException e) {

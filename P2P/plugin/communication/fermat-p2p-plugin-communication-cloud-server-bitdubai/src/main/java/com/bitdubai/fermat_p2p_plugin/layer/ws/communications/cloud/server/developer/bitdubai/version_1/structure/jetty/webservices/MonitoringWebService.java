@@ -8,15 +8,19 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MonitClient;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnClientConnection;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,8 +109,41 @@ public class MonitoringWebService {
 
         globalData.addProperty("vpnByNetworkServiceDetails", gson.toJson(vpnNetworkServiceData));
 
-        //return Response.status(200).entity("angular.callbacks._0 (" + gson.toJson(globalData)+")").build();
         return Response.status(200).entity(gson.toJson(globalData)).build();
+
+    }
+
+
+    @GET
+    @Path("/system/data")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response systemData() {
+
+        LOG.info("Executing systemData()");
+        JsonObject respond = new JsonObject();
+
+        if (Boolean.getBoolean(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALED))){
+
+            MonitClient monitClient = new MonitClient(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL), ConfigurationManager.getValue(ConfigurationManager.MONIT_USER), ConfigurationManager.getValue(ConfigurationManager.MONIT_PASSWORD));
+            Map<String, JsonArray> data = null;
+            try {
+
+                data = monitClient.getComponents();
+                respond.addProperty("success", Boolean.TRUE);
+                respond.addProperty("data", gson.toJson(data));
+
+            } catch (IOException e) {
+                respond.addProperty("success", Boolean.FALSE);
+                respond.addProperty("data", "Error: "+e.getMessage());
+            }
+
+        }else {
+
+            respond.addProperty("success", Boolean.FALSE);
+            respond.addProperty("data", "Error: Monit is no installed and configured.");
+        }
+
+        return Response.status(200).entity(gson.toJson(respond)).build();
 
     }
 

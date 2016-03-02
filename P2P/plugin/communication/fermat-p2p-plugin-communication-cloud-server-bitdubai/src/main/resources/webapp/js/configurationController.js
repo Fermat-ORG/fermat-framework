@@ -3,7 +3,11 @@ angular.module("serverApp").controller('ConfigurationCtrl', ['$scope', '$http', 
   $scope.configuration = {
        port: '',
        user: '',
-       password: ''
+       password: '',
+       monitInstalled: '',
+       monitUser: '',
+       monitPassword: '',
+       monitUrl: ''
   };
 
   $scope.save = function () {

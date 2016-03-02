@@ -4,7 +4,7 @@ var app = angular.module("serverApp",  ["chart.js"]);
 
     // Configure all charts
     ChartJsProvider.setOptions({
-      colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+      colours: ['#FAAC58', '#D0FA58'],
       responsive: true
     });
 

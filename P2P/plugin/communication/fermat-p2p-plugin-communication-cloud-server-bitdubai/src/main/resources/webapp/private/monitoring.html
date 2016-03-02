@@ -16,8 +16,8 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/cover.css" rel="stylesheet">
     <link href="../css/angular-chart.min.css" rel="stylesheet">
+    <link href="../css/monitoring.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -45,7 +45,7 @@
                   <ul class="nav navbar-nav">
                       <li class="active"><a href="../index.html">Home</a></li>
                       <li><a href="#" data-toggle="modal" data-target="#configurationModal" >Configuration</a></li>
-                      <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md">Contact</a></li>
+                      <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                       <li ng-controller="UserCtrl" ><a href="#" ng-click="logout();">Logout</a></li>
                   </ul>
               </div><!--/.nav-collapse -->
@@ -217,11 +217,21 @@
                                   <label for="password">Password</label>
                                   <input type="password" id="password" class="form-control" placeholder="Password" ng-model="configuration.password" required>
                               </div>
-                              <div class="checkbox">
-                                  <label>
-                                      <input type="checkbox" value="Y"> Monit installed
-                                  </label>
+
+                              <div class="form-group">
+                                  <div class="checkbox">
+                                      <label>
+                                          <input type="checkbox" ng-model="configuration.monitInstalled" value="True"> Monit installed
+                                      </label>
+                                  </div>
+                                  <label for="monituser">Monit User</label>
+                                  <input type="text" id="monituser" class="form-control" placeholder="Monit Username" ng-model="configuration.monitUser" required>
+                                  <label for="monitpass">Monit Password</label>
+                                  <input type="password" id="monitpass" class="form-control" placeholder="Password" ng-model="configuration.monitPassword" required>
+                                  <label for="moniturl">Monit url</label>
+                                  <input type="text" id="moniturl" class="form-control" placeholder="Url" ng-model="configuration.monitUrl" required>
                               </div>
+
                           </fieldset>
 
                           <p class="bg-warning">The configuration changes require a server restart to produce effect.</p>

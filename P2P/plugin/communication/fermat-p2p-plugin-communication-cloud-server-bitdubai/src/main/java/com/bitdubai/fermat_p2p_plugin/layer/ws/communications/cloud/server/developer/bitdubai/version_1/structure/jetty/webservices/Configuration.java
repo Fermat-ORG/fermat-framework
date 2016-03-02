@@ -23,15 +23,23 @@ public class Configuration {
     private Integer port;
     private String user;
     private String password;
+    private Boolean monitInstalled;
+    private String monitUser;
+    private String monitPassword;
+    private String monitUrl;
 
     public Configuration() {
         super();
     }
 
-    public Configuration(Integer port, String user, String password) {
+    public Configuration(Integer port, String user, String password, Boolean monitInstalled, String monitUser, String monitPassword, String monitUrl) {
         this.port = port;
         this.user = user;
         this.password = password;
+        this.monitInstalled = monitInstalled;
+        this.monitUser = monitUser;
+        this.monitPassword = monitPassword;
+        this.monitUrl = monitUrl;
     }
 
     public Integer getPort() {
@@ -42,6 +50,14 @@ public class Configuration {
         this.port = port;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -50,11 +66,35 @@ public class Configuration {
         this.password = password;
     }
 
-    public String getUser() {
-        return user;
+    public Boolean getMonitInstalled() {
+        return monitInstalled;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setMonitInstalled(Boolean monitInstalled) {
+        this.monitInstalled = monitInstalled;
+    }
+
+    public String getMonitUser() {
+        return monitUser;
+    }
+
+    public void setMonitUser(String monitUser) {
+        this.monitUser = monitUser;
+    }
+
+    public String getMonitPassword() {
+        return monitPassword;
+    }
+
+    public void setMonitPassword(String monitPassword) {
+        this.monitPassword = monitPassword;
+    }
+
+    public String getMonitUrl() {
+        return monitUrl;
+    }
+
+    public void setMonitUrl(String monitUrl) {
+        this.monitUrl = monitUrl;
     }
 }

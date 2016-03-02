@@ -61,6 +61,26 @@ public class ConfigurationManager {
     public static final String PASSWORD = "password";
 
     /**
+     * Represent the value of MONIT_USER
+     */
+    public static final String MONIT_USER = "monit_user";
+
+    /**
+     * Represent the value of MONIT_PASSWORD
+     */
+    public static final String MONIT_PASSWORD = "monit_password";
+
+    /**
+     * Represent the value of MONIT_INSTALED
+     */
+    public static final String MONIT_INSTALED = "monit_instaled";
+
+    /**
+     * Represent the value of MONIT_URL
+     */
+    public static final String MONIT_URL = "monit_url";
+
+    /**
      * Represent the value of configuration file
      */
     private static PropertiesConfiguration configuration = new PropertiesConfiguration();
@@ -115,6 +135,11 @@ public class ConfigurationManager {
         newConfigurationFile.getLayout().setComment(USER, "\n# * MONITORIG USER");
         newConfigurationFile.addProperty(USER, "fermat");
         newConfigurationFile.addProperty(PASSWORD, "5e494e695571ede182fb62299373678158c752fb8d3c04104a46b7de139dab5e"); //fermat
+
+        newConfigurationFile.getLayout().setComment(MONIT_INSTALED, "\n# * MONIT CONFIGURATION");
+        newConfigurationFile.addProperty(MONIT_INSTALED, Boolean.FALSE);
+        newConfigurationFile.addProperty(MONIT_URL, "http://localhost:2812/");
+
         newConfigurationFile.save();
 
         LOG.info("Setup configuration file is complete!");
