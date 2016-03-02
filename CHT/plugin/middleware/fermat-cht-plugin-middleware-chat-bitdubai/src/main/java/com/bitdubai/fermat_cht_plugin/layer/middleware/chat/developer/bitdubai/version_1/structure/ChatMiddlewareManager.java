@@ -7,9 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
@@ -18,6 +22,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatExc
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
@@ -25,6 +31,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -732,6 +740,46 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "Checking own identities",
                     "Unexpected Exception getting network service public key");
         }
+    }
+
+    @Override
+    public void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException {
+
+    }
+
+    @Override
+    public void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException {
+
+    }
+
+    @Override
+    public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
+        return null;
+    }
+
+    @Override
+    public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
+        return null;
+    }
+
+    @Override
+    public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
+
+    }
+
+    @Override
+    public void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException {
+
+    }
+
+    @Override
+    public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
+        return null;
+    }
+
+    @Override
+    public ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException {
+        return null;
     }
 
 
