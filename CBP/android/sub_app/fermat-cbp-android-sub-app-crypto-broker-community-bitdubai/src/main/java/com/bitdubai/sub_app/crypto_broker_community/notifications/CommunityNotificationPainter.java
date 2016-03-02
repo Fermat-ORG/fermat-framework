@@ -18,17 +18,21 @@ public class CommunityNotificationPainter implements NotificationPainter {
     private String textBody;
     private String image;
     private RemoteViews remoteViews;
+    private int    icon;
 
     public CommunityNotificationPainter(final String title   ,
                                         final String textBody,
                                         final String image   ,
-                                        final String viewCode){
+                                        final String viewCode,
+                                        final int    icon    ){
 
         this.title    = title   ;
         this.textBody = textBody;
         this.image    = image   ;
+        this.icon     = icon    ;
 
     }
+
 
     @Override
     public RemoteViews getNotificationView(String code) {
@@ -52,8 +56,12 @@ public class CommunityNotificationPainter implements NotificationPainter {
 
     @Override
     public int getIcon() {
-        return 0;
+        return icon;
     }
 
+    @Override
+    public String getActivityCodeResult() {
+        return null;
+    }
 
 }

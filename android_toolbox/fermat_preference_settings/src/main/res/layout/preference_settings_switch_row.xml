@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -13,7 +14,8 @@
         tools:text="settings"
         android:textSize="15sp"
         android:paddingLeft="24dp"
-        android:paddingTop="24dp"/>
+        android:paddingTop="24dp"
+        android:textColor="@color/color_black"/>
 
     <Switch
         android:layout_width="wrap_content"

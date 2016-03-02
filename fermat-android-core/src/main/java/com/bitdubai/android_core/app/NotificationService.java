@@ -9,14 +9,20 @@ import android.graphics.Color;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
-import com.bitdubai.fermat.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mati on 2016.03.01..
@@ -26,11 +32,23 @@ public class NotificationService extends Service {
     public static String LOG_TAG = "NotificationService";
     private final IBinder mBinder = new LocalBinder();
 
+    // map from AppPublicKey to notificationId
+    private Map<String,Integer> lstNotifications;
+    private int notificationIdCount;
+
+    //for progress notifications
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
+
 
     public class LocalBinder extends Binder {
         NotificationService getService() {
             return NotificationService.this;
         }
+    }
+
+    public NotificationService() {
+        this.lstNotifications = new HashMap<>();
     }
 
     @Nullable
@@ -58,20 +76,28 @@ public class NotificationService extends Service {
         Log.v(LOG_TAG, "in onDestroy");
     }
 
-    private void notificate(String code,FermatStructure fermatStructure){
+    public void notificate(String code,FermatStructure fermatStructure){
+        Notification.Builder builder = null;
         if (fermatStructure != null) {
-            //FermatStructure fermatStructure = getAppInUse(appPublicKey);
+//            notificationIdCount++;
+//            lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
-            NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
+            NotificationPainter notificationPainter = null;
+            try {
+                notificationPainter = fermatAppConnection.getNotificationPainter(code);
+            }catch (Exception e){
+
+            }
             if (notificationPainter != null) {
                 RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                 Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
                 intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
                         .getActivity(this, 0, intent, 0);
 
-                Notification.Builder builder = null;
+
                 if (remoteViews != null) {
                     builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
                             .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
@@ -95,9 +121,25 @@ public class NotificationService extends Service {
                 NotificationManager notificationManager = (NotificationManager)
                         getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, builder.build());
+            }else{
+                Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pi = PendingIntent
+                        .getActivity(this, 0, intent, 0);
+
+                builder = new Notification.Builder(this)
+                        .setTicker("Something arrive")
+                        .setSmallIcon(R.drawable.fermat_logo_310_x_310)
+                        .setContentTitle("Fermat: new notification")
+                        .setAutoCancel(true)
+                        .setContentIntent(pi)
+                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                        .setLights(Color.YELLOW, 3000, 3000);
+
             }
         } else {
-            Notification.Builder builder = new Notification.Builder(this)
+            builder = new Notification.Builder(this)
                     .setTicker("Something arrive")
                     .setSmallIcon(R.drawable.fermat_logo_310_x_310)
                     .setContentTitle("Fermat: new notification")
@@ -105,10 +147,62 @@ public class NotificationService extends Service {
                     .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                     .setLights(Color.YELLOW, 3000, 3000);
 
+
+        }
+
+        if(builder!=null) {
             NotificationManager notificationManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(0, builder.build());
+            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
         }
+    }
+
+    public void notificateProgress(final String code){
+        if(!lstNotifications.containsKey(code)){
+            notificationIdCount++;
+            lstNotifications.put(code,notificationIdCount);
+        }
+
+        mNotifyManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle("Downloading blockchain blocks")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.fermat_logo_310_x_310);
+// Start a lengthy operation in a background thread
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        int incr;
+                        // Do the "lengthy" operation 20 times
+                        for (incr = 0; incr <= 100; incr+=5) {
+                            // Sets the progress indicator to a max value, the
+                            // current completion percentage, and "determinate"
+                            // state
+                            mBuilder.setProgress(100, incr, false);
+                            // Displays the progress bar for the first time.
+                            mNotifyManager.notify(lstNotifications.get(code), mBuilder.build());
+                            // Sleeps the thread, simulating an operation
+                            // that takes time
+                            try {
+                                // Sleep for 5 seconds
+                                Thread.sleep(5*1000);
+                            } catch (InterruptedException e) {
+                                Log.d(LOG_TAG, "sleep failure");
+                            }
+                        }
+                        // When the loop is finished, updates the notification
+                        mBuilder.setContentText("Download complete")
+                                // Removes the progress bar
+                                .setProgress(0,0,false);
+                        mNotifyManager.notify(lstNotifications.get(code), mBuilder.build());
+                    }
+                }
+// Starts the thread by calling the run() method in its Runnable
+        ).start();
+
+
     }
 
 }
