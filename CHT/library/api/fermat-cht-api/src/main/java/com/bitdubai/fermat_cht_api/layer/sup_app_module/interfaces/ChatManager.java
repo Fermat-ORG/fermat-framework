@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -74,5 +75,7 @@ public interface ChatManager {
      * Service.
      * @return
      */
-    HashMap<PlatformComponentType, String> getSelfIdentities() throws CantGetOwnIdentitiesException;
+    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
+
+    void createSelfIdentities() throws CantCreateSelfIdentityException;
 }

@@ -1,6 +1,7 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -142,8 +143,13 @@ public class ChatSupAppModuleManager implements ChatManager {
      * @return
      */
     @Override
-    public HashMap<PlatformComponentType, String> getSelfIdentities()
+    public HashMap<PlatformComponentType, Object> getSelfIdentities()
             throws CantGetOwnIdentitiesException {
         return middlewareChatManager.getSelfIdentities();
+    }
+
+    @Override
+    public void createSelfIdentities() throws CantCreateSelfIdentityException {
+        middlewareChatManager.createSelfIdentities();
     }
 }

@@ -1,13 +1,17 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
@@ -38,10 +42,14 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatUserIdentityImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -49,6 +57,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -735,10 +744,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @return
      */
     @Override
-    public HashMap<PlatformComponentType, String> getSelfIdentities()
+    public HashMap<PlatformComponentType, Object> getSelfIdentities()
             throws CantGetOwnIdentitiesException {
         try {
-            HashMap<PlatformComponentType, String> selfIdentitiesMap=
+            HashMap<PlatformComponentType, Object> selfIdentitiesMap=
                     this.chatMiddlewareContactFactory.getSelfIdentities();
             selfIdentitiesMap=checkSelfIdentitiesMap(selfIdentitiesMap);
             return selfIdentitiesMap;
@@ -802,9 +811,67 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         return null;
     }
 
+    @Override
+    public void createSelfIdentities() throws CantCreateSelfIdentityException {
+        try {
+                HashMap<PlatformComponentType, Object> selfIdentitiesMap =
+                    this.chatMiddlewareContactFactory.getSelfIdentities();
+            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
 
-    private HashMap<PlatformComponentType, String> checkSelfIdentitiesMap(
-            HashMap<PlatformComponentType, String> selfIdentitiesMap) throws
+            List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
+
+            Iterator it = selfIdentitiesMap.keySet().iterator();
+            while (it.hasNext()){
+                PlatformComponentType key = (PlatformComponentType) it.next();
+
+                if (PlatformComponentType.ACTOR_ASSET_USER.getCode() == key.getCode())
+                {
+                    ActorAssetUser actorAssetUser = (ActorAssetUser) selfIdentitiesMap.get(key);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), Actors.DAP_ASSET_USER);
+                    saveChatUserIdentity(chatUserIdentity);
+                }
+                if (PlatformComponentType.ACTOR_ASSET_ISSUER.getCode() == key.getCode())
+                {
+                    ActorAssetIssuer actorAssetIssuer = (ActorAssetIssuer) selfIdentitiesMap.get(key);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), Actors.DAP_ASSET_USER);
+                    saveChatUserIdentity(chatUserIdentity);
+                }
+                if (PlatformComponentType.ACTOR_ASSET_REDEEM_POINT.getCode() == key.getCode())
+                {
+                    ActorAssetRedeemPoint actorAssetRedeemPoint = (ActorAssetRedeemPoint) selfIdentitiesMap.get(key);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), Actors.DAP_ASSET_USER);
+                    saveChatUserIdentity(chatUserIdentity);
+                }
+                if (PlatformComponentType.ACTOR_INTRA_USER.getCode() == key.getCode())
+                {
+                    IntraUserLoginIdentity intraUserLoginIdentity = (IntraUserLoginIdentity) selfIdentitiesMap.get(key);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.DAP_ASSET_USER);
+                    saveChatUserIdentity(chatUserIdentity);
+                }
+                if (PlatformComponentType.ACTOR_CRYPTO_BROKER.getCode() == key.getCode())
+                {
+
+                }
+                if (PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode() == key.getCode())
+                {
+
+                }
+            }
+
+        } catch (CantGetOwnIdentitiesException e) {
+            e.printStackTrace();
+        } catch (CantGetNetworkServicePublicKeyException e) {
+            e.printStackTrace();
+        } catch (CantGetContactException e) {
+            e.printStackTrace();
+        } catch (CantSaveChatUserIdentityException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private HashMap<PlatformComponentType, Object> checkSelfIdentitiesMap(
+            HashMap<PlatformComponentType, Object> selfIdentitiesMap) throws
             CantGetNetworkServicePublicKeyException {
         if(selfIdentitiesMap.isEmpty()) {
             String chatNetworkServicePublicKey = getNetworkServicePublicKey();

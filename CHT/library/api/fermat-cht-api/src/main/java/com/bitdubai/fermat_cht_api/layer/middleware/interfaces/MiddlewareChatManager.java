@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
@@ -83,7 +84,7 @@ public interface MiddlewareChatManager extends FermatManager{
      * Service.
      * @return
      */
-    HashMap<PlatformComponentType, String> getSelfIdentities() throws CantGetOwnIdentitiesException;
+    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
 
     void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException;
 
@@ -100,5 +101,7 @@ public interface MiddlewareChatManager extends FermatManager{
     List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
 
     ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
+
+    void createSelfIdentities() throws CantCreateSelfIdentityException;
 
 }
