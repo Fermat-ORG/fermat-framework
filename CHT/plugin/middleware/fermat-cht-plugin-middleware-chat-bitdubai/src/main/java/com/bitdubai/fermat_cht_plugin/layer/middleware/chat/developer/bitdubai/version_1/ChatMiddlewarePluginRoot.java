@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
@@ -631,12 +632,17 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     private void getOwnIdentitiesTest(){
-        try{
-            HashMap<PlatformComponentType, String> ownIdentities=this.chatMiddlewareManager.getSelfIdentities();
-            System.out.println("CHAT IDENTITIES:\n"+ownIdentities);
-        } catch (Exception exception){
-            System.out.println("Exception in raise event chat own identities discovery test: "+exception.getMessage());
-            exception.printStackTrace();
+//        try{
+//            HashMap<PlatformComponentType, String> ownIdentities=this.chatMiddlewareManager.getSelfIdentities();
+//            System.out.println("CHAT IDENTITIES:\n"+ownIdentities);
+//        } catch (Exception exception){
+//            System.out.println("Exception in raise event chat own identities discovery test: "+exception.getMessage());
+//            exception.printStackTrace();
+//        }
+        try {
+            this.chatMiddlewareManager.createSelfIdentities();
+        } catch (CantCreateSelfIdentityException e) {
+            e.printStackTrace();
         }
 
     }
