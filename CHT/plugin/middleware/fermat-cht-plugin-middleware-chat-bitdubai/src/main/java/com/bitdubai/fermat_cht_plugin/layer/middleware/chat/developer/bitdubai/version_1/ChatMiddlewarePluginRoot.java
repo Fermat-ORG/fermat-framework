@@ -44,6 +44,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
@@ -378,7 +379,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     pluginId,
                     networkServiceChatManager,
                     chatMiddlewareManager,
-                    broadcaster);
+                    broadcaster,
+                    pluginFileSystem);
             openContractMonitorAgent.start();
 
 
@@ -601,10 +603,10 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     private void discoveryTest(){
         try{
-            List<Contact> contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
+            List<ContactConnection> contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
             System.out.println("Discovery Test: Init*****");
             int counter=0;
-            for(Contact contact : contactList){
+            for(ContactConnection contact : contactList){
                 System.out.println("Discovery Test: Contact "+counter+"\n"+contact);
                 counter++;
             }
