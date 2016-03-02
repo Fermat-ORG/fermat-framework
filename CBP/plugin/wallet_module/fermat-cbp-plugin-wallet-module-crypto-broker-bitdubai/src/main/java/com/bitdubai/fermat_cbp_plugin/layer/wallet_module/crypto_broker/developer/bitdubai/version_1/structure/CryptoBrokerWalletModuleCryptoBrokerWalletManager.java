@@ -278,6 +278,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, status, customerBrokerContractSale, saleNegotiation);
                     filteredList.add(contract);
                 }
+                if(status == ContractStatus.CANCELLED){
+                    for (CustomerBrokerSaleNegotiation saleNegotiation:customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CANCELLED)){
+                        //CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
+                        if (saleNegotiation.getStatus().equals(status)) {
+                            merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
+                            typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                            paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
+                        }
+                        customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
+                        contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, status, null, saleNegotiation);
+                        filteredList.add(contract);
+                    }
+                }
+
                 contractsHistory = filteredList;
             } else {
 
