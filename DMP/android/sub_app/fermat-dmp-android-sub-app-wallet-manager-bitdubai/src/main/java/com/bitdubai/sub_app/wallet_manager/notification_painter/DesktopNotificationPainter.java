@@ -47,4 +47,9 @@ public class DesktopNotificationPainter implements NotificationPainter {
     public int getIcon() {
         return 0;
     }
+
+    @Override
+    public String getActivityCodeResult() {
+        return null;
+    }
 }

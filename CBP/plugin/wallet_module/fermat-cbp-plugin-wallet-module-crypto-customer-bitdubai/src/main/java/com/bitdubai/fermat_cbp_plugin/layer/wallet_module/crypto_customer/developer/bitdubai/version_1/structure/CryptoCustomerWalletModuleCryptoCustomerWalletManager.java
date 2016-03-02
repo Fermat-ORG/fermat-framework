@@ -240,9 +240,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             } else {
 
                 ListsForStatusPurchase history = customerBrokerContractPurchaseManager.getCustomerBrokerContractHistory();
+                final Collection<CustomerBrokerContractPurchase> historyContracts = history.getHistoryContracts();
 
                 //CONTRACT
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : history.getHistoryContracts()) {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : historyContracts) {
 
                     CustomerBrokerPurchaseNegotiation PurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
                     if (customerBrokerContractPurchase.getStatus().equals(status)) {
