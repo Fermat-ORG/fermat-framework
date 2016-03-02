@@ -58,8 +58,23 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME = "remote_actor_type";
     public static final String CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME = "remote_actor_pub_key";
     public static final String CONTACTS_CREATION_DATE_COLUMN_NAME = "creation_date";
+    public static final String CONTACTS_CONTACT_STATUS_COLUMN_NAME = "contact_status";
 
     public static final String CONTACTS_FIRST_KEY_COLUMN = "id_contact";
+
+    /**
+     * Contacts Connection database table definition.
+     */
+    public static final String CONTACTS_CONNECTION_TABLE_NAME = "contacts";
+
+    public static final String CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME = "id_contact";
+    public static final String CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME = "remote_name";
+    public static final String CONTACTS_CONNECTION_ALIAS_COLUMN_NAME = "alias";
+    public static final String CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME = "remote_actor_type";
+    public static final String CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME = "remote_actor_pub_key";
+    public static final String CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME = "creation_date";
+
+    public static final String CONTACTS_CONNECTION_FIRST_KEY_COLUMN = "id_contact";
 
     /**
      * Events recorded database table definition.
