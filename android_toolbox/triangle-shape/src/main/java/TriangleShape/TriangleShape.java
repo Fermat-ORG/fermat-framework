@@ -13,10 +13,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.customviews.clelia.triangleshape.R;
+
 
 /**
  * Created by Clelia López on 2/27/16
  */
+
 public class TriangleShape
         extends View {
 
@@ -39,7 +42,7 @@ public class TriangleShape
         super(context, attrs);
         setDrawingCacheEnabled(true);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TriangleShape);
-        String value = typedArray.getString(android.R.styleable.TriangleShape_direction);
+        String value = typedArray.getString(R.styleable.TriangleShape_direction);
         typedArray.recycle();
 
         direction = Direction.SOUTH;
