@@ -1,12 +1,12 @@
 package com.bitdubai.android_core.app;
 
 import android.animation.AnimatorListenerAdapter;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -46,7 +47,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +78,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -235,7 +234,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Service
      */
-//    boolean mServiceConnected = false;
+//    boolean mNotificationServiceConnected = false;
 
 
     /**
@@ -335,9 +334,9 @@ public abstract class FermatActivity extends AppCompatActivity
             /**
              * Service
              */
-//            if (mServiceConnected) {
+//            if (mNotificationServiceConnected) {
 //                unbindService(mServiceConnection);
-//                mServiceConnected = false;
+//                mNotificationServiceConnected = false;
 //            }
 
 
@@ -565,7 +564,7 @@ public abstract class FermatActivity extends AppCompatActivity
         btn_fermat_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
+                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),"main_desktop");
             }
         });
 
@@ -1108,24 +1107,7 @@ public abstract class FermatActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        try {
-//            getNotificationManager().deleteObserver(this);
-//            getNotificationManager().deleteCallback(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        if(broadcastManager!=null)broadcastManager.stop();
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancelAll();
 
-
-//        networkStateReceiver.removeListener(this);
-        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-    }
     /**
      * @param tabs
      * @param activity
@@ -1547,8 +1529,8 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onDestroy() {
 
         wizards = null;
-//        Intent intent = new Intent(this,NotificationService.class);
-//        stopService(intent);
+        Intent intent = new Intent(this,NotificationService.class);
+        stopService(intent);
 
         //navigationDrawerFragment.onDetach();
         if(appStatusListener != null)
@@ -1570,58 +1552,15 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
-            if (appPublicKey != null) {
-                FermatStructure fermatStructure = getAppInUse(appPublicKey);
-                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
-                NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
-                if (notificationPainter != null) {
-                    RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                    Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
-                    intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PendingIntent pi = PendingIntent
-                            .getActivity(this, 0, intent, 0);
-
-                    Notification.Builder builder = null;
-                    if (remoteViews != null) {
-                        builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
-                                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
-                                .setAutoCancel(true)
-                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                                .setLights(Color.YELLOW, 3000, 3000)
-                                .setContent(remoteViews)
-                                .setWhen(System.currentTimeMillis());
-                    } else {
-                        builder = new Notification.Builder(this)
-                                .setTicker(notificationPainter.getNotificationTitle())
-                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                                .setContentTitle(notificationPainter.getNotificationTitle())
-                                .setContentText(notificationPainter.getNotificationTextBody())
-                                .setContentIntent(pi)
-                                .setAutoCancel(true)
-                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                                .setLights(Color.YELLOW, 3000, 3000);
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager)
-                            getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(0, builder.build());
-                }
-            } else {
-                Notification.Builder builder = new Notification.Builder(this)
-                        .setTicker("Something arrive")
-                        .setSmallIcon(R.drawable.fermat_logo_310_x_310)
-                        .setContentTitle("Fermat: new notification")
-                        .setAutoCancel(true)
-                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                        .setLights(Color.YELLOW, 3000, 3000);
-
-                NotificationManager notificationManager = (NotificationManager)
-                        getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, builder.build());
+            if(mNotificationServiceConnected){
+                notificationService.notificate(code,getAppInUse(appPublicKey));
+            }else{
+                Intent intent = new Intent(this, NotificationService.class);
+                //acá puedo mandarle el messenger con el handler para el callback
+                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+                startService(intent);
+                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
             }
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1677,6 +1616,19 @@ public abstract class FermatActivity extends AppCompatActivity
             });
 
         }
+    }
+
+    protected void onBackPressedNotificate(){
+        if(getAdapter()!=null) {
+            for (AbstractFermatFragment abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
+                abstractFermatFragment.onBackPressed();
+            }
+        }else if(getScreenAdapter()!=null){
+            for (AbstractFermatFragment abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
+                abstractFermatFragment.onBackPressed();
+            }
+        }
+
     }
 
 
@@ -1862,40 +1814,64 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
-//        Intent intent = new Intent(this, BoundService.class);
-//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
-//        startService(intent);
-//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        if(!mNotificationServiceConnected) {
+            Intent intent = new Intent(this, NotificationService.class);
+            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+            startService(intent);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        try {
+//            getNotificationManager().deleteObserver(this);
+//            getNotificationManager().deleteCallback(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        if(broadcastManager!=null)broadcastManager.stop();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
+
+
+//        networkStateReceiver.removeListener(this);
+        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
 
 
 //    private BoundService mBoundService;
-//    /**
-//     * Service
-//     */
-//
-//
-//    private ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            mServiceConnected = false;
-//        }
-//
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            mBoundService = ((BoundService.LocalBinder)service).getService();
-//            mBoundService.registerCallback(registerCallback());
-//            mServiceConnected = true;
-//        }
-//    };
-//
-//    private ServiceCallback registerCallback(){
-//        return this;
-//    }
+    private NotificationService notificationService;
+    private boolean mNotificationServiceConnected;
+    /**
+     * Service
+     */
+
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mNotificationServiceConnected = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            notificationService = ((NotificationService.LocalBinder)service).getService();
+            mNotificationServiceConnected = true;
+        }
+    };
+
+    private ServiceCallback getServiceCallback(){
+        return this;
+    }
 
 
     @Override
@@ -1944,6 +1920,5 @@ public abstract class FermatActivity extends AppCompatActivity
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
-
 
 }

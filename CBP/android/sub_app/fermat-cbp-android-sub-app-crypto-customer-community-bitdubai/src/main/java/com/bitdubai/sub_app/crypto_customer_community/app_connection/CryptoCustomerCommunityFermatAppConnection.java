@@ -1,6 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_community.app_connection;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -27,7 +27,7 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  */
 public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<CryptoCustomerCommunitySubAppSession> {
 
-    public CryptoCustomerCommunityFermatAppConnection(Activity activity) {
+    public CryptoCustomerCommunityFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -55,8 +55,8 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<C
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
-                getFullyLoadedSession());
+
+        return new CustomerCommunityNavigationViewPainter(getContext(), getActiveIdentity(), getFullyLoadedSession());
 
     }
 

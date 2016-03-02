@@ -66,6 +66,8 @@ public class PickerUnitSelector
         selectorSpinner = (FrameLayout) pickerLinearLayout.getChildAt(3);
 
         lineBottomView = view.getChildAt(2);
+
+        editorEditText.setText("0");
     }
 
     /**

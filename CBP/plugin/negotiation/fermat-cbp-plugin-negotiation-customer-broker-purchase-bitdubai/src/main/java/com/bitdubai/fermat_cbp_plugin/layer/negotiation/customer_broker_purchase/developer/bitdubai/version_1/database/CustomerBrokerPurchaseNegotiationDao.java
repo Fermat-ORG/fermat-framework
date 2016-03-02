@@ -138,7 +138,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             }
 
             //Add Yordin Alayn 19.02.16
-            updateNegotiationMemo(negotiation.getNegotiationId(), negotiation.getMemo());
+            updateNegotiationInfo(negotiation.getNegotiationId(), negotiation.getMemo(), negotiation.getStatus());
 
         } catch (CantGetListClauseException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
@@ -150,7 +150,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
     }
 
     //Add Yordin Alayn 19.02.16
-    public void updateNegotiationMemo(UUID negotiationId, String memo) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+    public void updateNegotiationInfo(UUID negotiationId, String memo, NegotiationStatus status) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
             DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
 
@@ -158,6 +158,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             DatabaseTableRecord recordsToUpdate = PurchaseNegotiationClauseTable.getEmptyRecord();
 
             recordsToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME, memo);
+            recordsToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
             PurchaseNegotiationClauseTable.updateRecord(recordsToUpdate);
 
         } catch (CantUpdateRecordException e) {

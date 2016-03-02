@@ -1,33 +1,20 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
-import android.app.Activity;
-
-import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
-import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-
-import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceWalletFragmentFactory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-
-import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -37,7 +24,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     private CryptoWallet moduleManager = null;
     private ReferenceWalletSession referenceWalletSession;
 
-    public BitcoinWalletFermatAppConnection(Activity activity) {
+    public BitcoinWalletFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -64,7 +51,10 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new BitcoinWalletNavigationViewPainter(getActivity(),getActiveIdentity());
+
+
+       // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
+        return new BitcoinWalletNavigationViewPainter(getContext(),getActiveIdentity());
     }
 
     @Override

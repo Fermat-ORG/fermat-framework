@@ -53,10 +53,10 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
-                transactionId,
-                customerBrokerSaleNegotiation,
-                NegotiationType.SALE,
-                NegotiationTransactionStatus.PENDING_SUBMIT
+                    transactionId,
+                    customerBrokerSaleNegotiation,
+                    NegotiationType.SALE,
+                    NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -90,7 +90,7 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
 //        } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -160,7 +160,7 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {

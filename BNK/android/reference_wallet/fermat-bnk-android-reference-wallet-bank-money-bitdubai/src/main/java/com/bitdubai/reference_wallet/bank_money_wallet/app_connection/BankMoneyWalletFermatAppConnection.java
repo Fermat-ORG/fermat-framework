@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -22,7 +21,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
  */
 public class BankMoneyWalletFermatAppConnection extends AppConnections {
 
-    public BankMoneyWalletFermatAppConnection(Activity activity) {
+    public BankMoneyWalletFermatAppConnection(Context activity) {
         super(activity);
     }
 
