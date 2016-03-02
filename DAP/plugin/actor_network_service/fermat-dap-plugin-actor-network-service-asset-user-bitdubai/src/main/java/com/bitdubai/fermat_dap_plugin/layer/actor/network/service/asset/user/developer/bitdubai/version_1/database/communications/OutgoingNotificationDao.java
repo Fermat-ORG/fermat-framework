@@ -28,12 +28,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNo
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantBuildDataBaseRecordException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantGetActorAssetProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantGetPendingRequestException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.structure.AssetUserNetworkServiceRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantBuildDataBaseRecordException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetProfileImageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetPendingRequestException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class OutgoingNotificationDao {
         return database.getTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
     }
 
-    public AssetUserNetworkServiceRecord createNotification(UUID notificationId,
+    public ActorAssetNetworkServiceRecord createNotification(UUID notificationId,
                                                             String senderPublicKey,
                                                             Actors senderType,
                                                             String destinationPublicKey,
@@ -81,13 +81,13 @@ public class OutgoingNotificationDao {
                                                             UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
 
         try {
-            AssetUserNetworkServiceRecord connectionRequestRecord = null;
+            ActorAssetNetworkServiceRecord connectionRequestRecord = null;
             if (!existNotification(notificationId)) {
                 DatabaseTable outgoingNotificationTable = getDatabaseTable();
 
                 DatabaseTableRecord entityRecord = outgoingNotificationTable.getEmptyRecord();
 
-                connectionRequestRecord = new AssetUserNetworkServiceRecord(
+                connectionRequestRecord = new ActorAssetNetworkServiceRecord(
                         notificationId,
                         senderAlias,
 //                        senderPhrase,
@@ -118,7 +118,7 @@ public class OutgoingNotificationDao {
         }
     }
 
-    public void createNotification(AssetUserNetworkServiceRecord assetUserNetworkServiceRecord) throws CantCreateActorAssetNotificationException {
+    public void createNotification(ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord) throws CantCreateActorAssetNotificationException {
         try {
             if (!existNotification(assetUserNetworkServiceRecord.getId())) {
                 DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -136,7 +136,7 @@ public class OutgoingNotificationDao {
         }
     }
 
-    public AssetUserNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetActorAssetNotificationException {
+    public ActorAssetNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetActorAssetNotificationException {
 
         if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
@@ -162,10 +162,10 @@ public class OutgoingNotificationDao {
         return null;
     }
 
-    public List<AssetUserNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetActorAssetNotificationException {
+    public List<ActorAssetNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetActorAssetNotificationException {
         try {
 
-            List<AssetUserNetworkServiceRecord> assetUserNetworkServiceRecordList = new ArrayList<>();
+            List<ActorAssetNetworkServiceRecord> assetUserNetworkServiceRecordList = new ArrayList<>();
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
@@ -318,7 +318,7 @@ public class OutgoingNotificationDao {
     }
 
 
-    public List<AssetUserNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ActorAssetProtocolState actorAssetProtocolState)
+    public List<ActorAssetNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ActorAssetProtocolState actorAssetProtocolState)
             throws CantGetActorAssetNotificationException {
 
         if (actorAssetProtocolState == null)
@@ -333,7 +333,7 @@ public class OutgoingNotificationDao {
 
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
-            List<AssetUserNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+            List<ActorAssetNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
                 cryptoPaymentList.add(buildAssetUserNetworkServiceRecord(record));
@@ -397,7 +397,7 @@ public class OutgoingNotificationDao {
         }
     }
 
-    public List<AssetUserNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
+    public List<ActorAssetNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
                                                                                   final AssetNotificationDescriptor assetNotificationDescriptor)
             throws CantGetActorAssetNotificationException {
 
@@ -417,7 +417,7 @@ public class OutgoingNotificationDao {
 
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
-            List<AssetUserNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+            List<ActorAssetNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
                 cryptoPaymentList.add(buildAssetUserNetworkServiceRecord(record));
@@ -442,7 +442,7 @@ public class OutgoingNotificationDao {
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
-                                                    AssetUserNetworkServiceRecord connectionRequestRecord) throws CantBuildDataBaseRecordException {
+                                                    ActorAssetNetworkServiceRecord connectionRequestRecord) throws CantBuildDataBaseRecordException {
 
         try {
             record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getId());
@@ -456,7 +456,8 @@ public class OutgoingNotificationDao {
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorAssetProtocolState().getCode());
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(connectionRequestRecord.isFlagRead()));
             record.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
-            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
+            if (connectionRequestRecord.getBlockchainNetworkType() != null)
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
             if (connectionRequestRecord.getResponseToNotificationId() != null)
                 record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getResponseToNotificationId());
 
@@ -471,8 +472,10 @@ public class OutgoingNotificationDao {
         }
     }
 
-    private AssetUserNetworkServiceRecord buildAssetUserNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private ActorAssetNetworkServiceRecord buildAssetUserNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
         try {
+            BlockchainNetworkType blockchainNetworkType;
+
             UUID notificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
             String senderAlias = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
             String descriptor = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
@@ -491,7 +494,12 @@ public class OutgoingNotificationDao {
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.getByCode(protocolState);
             Boolean read = Boolean.valueOf(flagRead);
             AssetNotificationDescriptor assetNotificationDescriptor = AssetNotificationDescriptor.getByCode(descriptor);
-            BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetwork);
+
+            if (blockchainNetwork != null)
+                blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetwork);
+            else
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
             Actors actorDestinationType = Actors.getByCode(destinationType);
             Actors actorSenderType = Actors.getByCode(senderType);
 
@@ -503,7 +511,7 @@ public class OutgoingNotificationDao {
                 profileImage = new byte[0];
             }
 
-            return new AssetUserNetworkServiceRecord(
+            return new ActorAssetNetworkServiceRecord(
                     notificationId,
                     senderAlias,
 //                    senderPhase,
@@ -532,7 +540,7 @@ public class OutgoingNotificationDao {
      * @param entity AssetUserNetworkServiceRecord to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(AssetUserNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException {
+    public void update(ActorAssetNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");

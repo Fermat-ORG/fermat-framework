@@ -7,7 +7,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
  */
 public class CantGetAssetUserActorsException extends DAPException {
 
-    private static final String DEFAULT_MESSAGE = "There was an exception while trying to load the asset user actors list.";
+    public static final String DEFAULT_MESSAGE = "There was an exception while trying to load the asset user actors list.";
 
     public CantGetAssetUserActorsException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, null, null);

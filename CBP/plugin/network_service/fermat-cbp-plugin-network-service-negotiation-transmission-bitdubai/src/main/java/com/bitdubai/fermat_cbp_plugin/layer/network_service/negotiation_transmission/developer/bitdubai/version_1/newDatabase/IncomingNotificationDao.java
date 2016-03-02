@@ -196,7 +196,7 @@ public class IncomingNotificationDao {
     }
 
     /*CONFIRM RECEPTION*/
-    public void confirmReception(UUID transmissionId) {
+    public void confirmReception(UUID transmissionId) throws CantConfirmNotificationException {
         try {
 
             NegotiationTransmission negotiationTransmission = getNotificationById(transmissionId);
@@ -205,7 +205,7 @@ public class IncomingNotificationDao {
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
 
         } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+            throw new CantConfirmNotificationException(e,e.getContext(),"NO PUDE ACTUALIZAR LA BASE DE DATO. REVISAR EL METODO UPDATE");
         }
     }
 

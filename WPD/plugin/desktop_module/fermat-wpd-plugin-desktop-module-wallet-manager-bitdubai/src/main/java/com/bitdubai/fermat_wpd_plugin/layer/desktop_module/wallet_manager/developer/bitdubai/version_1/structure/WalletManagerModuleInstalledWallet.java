@@ -4,6 +4,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.devel
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -177,5 +178,10 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     @Override
     public AppsStatus getAppStatus() {
         return appStatus;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.WALLET;
     }
 }

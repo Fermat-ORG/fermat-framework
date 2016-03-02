@@ -37,4 +37,6 @@ public interface BitcoinWalletTransactionRecord {
 
     BlockchainNetworkType getBlockchainNetworkType();
 
+
+
 }

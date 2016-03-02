@@ -92,7 +92,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS.getCode())){
                     return clause.getValue();
                 }
             }
@@ -118,7 +118,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }

@@ -30,12 +30,6 @@ public class testSetLoggingLevelPerClass {
         assertEquals(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(classToTest), newLogLevel);
     }
 
-    @Test(expected = Exception.class)
-    public void TestSetLogLevelPerClass_Should_Return_Exception() throws Exception{
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
-        newLoggingLevel.put(classToTest, logLevel);
-        customerOnlinePaymentPluginRoot.setLoggingLevelPerClass(null);
-    }
     @Test
     public void TestGetLogLevelPerClass_Should_Return_Default_Log_Level() throws Exception{
         Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;

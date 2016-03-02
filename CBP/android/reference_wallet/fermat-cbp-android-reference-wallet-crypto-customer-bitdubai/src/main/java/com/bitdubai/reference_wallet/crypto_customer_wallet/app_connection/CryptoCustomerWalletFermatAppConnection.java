@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection;
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -26,7 +27,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
  */
 public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSession> {
 
-    public CryptoCustomerWalletFermatAppConnection(Activity activity) {
+    public CryptoCustomerWalletFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -54,12 +55,12 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getActivity(), getFullyLoadedSession());
+        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoCustomerWalletHeaderPainter(getActivity(), getFullyLoadedSession());
+        return new CryptoCustomerWalletHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

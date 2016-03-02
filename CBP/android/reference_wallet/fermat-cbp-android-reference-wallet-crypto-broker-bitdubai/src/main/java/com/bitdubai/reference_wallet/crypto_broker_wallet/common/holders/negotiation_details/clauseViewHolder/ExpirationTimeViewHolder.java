@@ -73,7 +73,7 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
 
         final CustomerBrokerNegotiationInformation negotiationInformation = negotiation.getNegotiationInfo();
-        final ClauseStatus status = negotiation.isExpirationTimeConfirmButtonClicked() ? negotiation.getExpirationTimeStatus() : ClauseStatus.DRAFT;
+        final ClauseStatus status = negotiation.isExpirationTimeConfirmed() ? negotiation.getExpirationTimeStatus() : ClauseStatus.DRAFT;
         final long expirationDate = negotiationInformation.getNegotiationExpirationDate();
 
         buttonTime.setText(timeFormat.format(expirationDate));

@@ -23,6 +23,7 @@ public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
 
     @Override
     protected void bindHolder(View item_view) {
+
     }
 
     @Override
