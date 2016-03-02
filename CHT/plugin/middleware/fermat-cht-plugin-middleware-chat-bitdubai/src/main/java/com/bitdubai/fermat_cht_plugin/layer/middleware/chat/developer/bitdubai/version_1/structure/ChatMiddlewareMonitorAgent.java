@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -390,7 +391,7 @@ public class ChatMiddlewareMonitorAgent implements
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         e);
                 e.printStackTrace();
-            } catch (CantSaveContactException e) {
+            } catch (CantSaveContactConnectionException e) {
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -424,13 +425,13 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws DatabaseOperationException
          */
         private void saveContactConnection(ContactConnection contact) throws
-                CantSaveContactException,
+                CantSaveContactConnectionException,
                 DatabaseOperationException {
             try{
-                ObjectChecker.checkArgument(contact, "The contact is null");
+                ObjectChecker.checkArgument(contact, "The contact connection is null");
                 String actorPublicKey=contact.getRemoteActorPublicKey();
                 Contact contactFromDatabase=
-                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey(
+                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey( //TODO:Modificar por un metodo getContactConnectionByLocalPublicKey
                                 actorPublicKey);
                 if(contactFromDatabase!=null){
                     //This contact already exists, so, I don't gonna save in database.
@@ -439,12 +440,12 @@ public class ChatMiddlewareMonitorAgent implements
                 }
                 //chatMiddlewareDatabaseDao.saveContact(contact); TODO:Modificar por ContactConnection que esta haciendo jose
             } catch (ObjectNotSetException e) {
-                throw new CantSaveContactException(
+                throw new CantSaveContactConnectionException(
                         e,
                         "Saving the remote contact",
                         "The contact object is null");
             } catch (CantGetContactException e) {
-                throw new CantSaveContactException(
+                throw new CantSaveContactConnectionException(
                         e,
                         "Saving the remote contact",
                         "Unexpected error in database");
@@ -822,7 +823,8 @@ public class ChatMiddlewareMonitorAgent implements
                     //chatMetadata.getLocalActorType(),
                     PlatformComponentType.NETWORK_SERVICE,
                     chatMetadata.getLocalActorPublicKey(),
-                    date.getTime()
+                    date.getTime(),
+                    new byte[0]
             );
             chatMiddlewareDatabaseDao.saveContact(contact);
             return contact;
