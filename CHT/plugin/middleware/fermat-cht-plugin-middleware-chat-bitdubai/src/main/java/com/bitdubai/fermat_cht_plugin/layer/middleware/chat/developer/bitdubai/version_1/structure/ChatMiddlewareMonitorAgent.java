@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
@@ -91,6 +94,7 @@ public class ChatMiddlewareMonitorAgent implements
     NetworkServiceChatManager chatNetworkServiceManager;
     MiddlewareChatManager chatMiddlewareManager;
     private final Broadcaster broadcaster;
+    private PluginFileSystem pluginFileSystem;
 
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -98,8 +102,7 @@ public class ChatMiddlewareMonitorAgent implements
                                     ErrorManager errorManager,
                                     EventManager eventManager,
                                     UUID pluginId,
-                                    NetworkServiceChatManager chatNetworkServiceManager,
-                                      MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster) throws CantSetObjectException {
+                                    NetworkServiceChatManager chatNetworkServiceManager, MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -108,6 +111,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.chatNetworkServiceManager=chatNetworkServiceManager;
         this.chatMiddlewareManager = chatMiddlewareManager;
         this.broadcaster=broadcaster;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     @Override
@@ -282,19 +286,20 @@ public class ChatMiddlewareMonitorAgent implements
                         pluginDatabaseSystem,
                         pluginId,
                         database,
-                        errorManager);
+                        errorManager,
+                        pluginFileSystem);
 
                 /**
                  * Discover contact
                  */
-                List<Contact> contactList;
+                List<ContactConnection> contactList;
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
                     contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
-                        for(Contact contact : contactList){
-                            saveContact(contact);
+                        for(ContactConnection contact : contactList){
+                            saveContactConnection(contact);
                         }
                     }
                 }
@@ -378,7 +383,7 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the pending transaction from Network Service plugin"
                 );
-            } catch (CantGetContactException e) {
+            } catch (CantGetContactConnectionException e) {
                 //For now, I'm gonna handle this print the exception and continue the thread
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
@@ -418,7 +423,7 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws CantSaveContactException
          * @throws DatabaseOperationException
          */
-        private void saveContact(Contact contact) throws
+        private void saveContactConnection(ContactConnection contact) throws
                 CantSaveContactException,
                 DatabaseOperationException {
             try{
@@ -432,7 +437,7 @@ public class ChatMiddlewareMonitorAgent implements
                     //TODO: I need to study if the contact must be updated.
                     return;
                 }
-                chatMiddlewareDatabaseDao.saveContact(contact);
+                //chatMiddlewareDatabaseDao.saveContact(contact); TODO:Modificar por ContactConnection que esta haciendo jose
             } catch (ObjectNotSetException e) {
                 throw new CantSaveContactException(
                         e,
