@@ -7,7 +7,13 @@
     android:layout_height="match_parent"
     >
 
-    <LinearLayout
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -48,33 +54,30 @@
                     />
 
 
-                <include layout="@layout/reveal_top"
-                    android:id="@+id/reveal_container_base"/>
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:orientation="horizontal"
-                android:id="@+id/radiogroup"
-                android:visibility="gone"
-                android:paddingBottom="12dp">
-
-                <RadioButton
+                <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/radioButton"
-                    android:button="@drawable/pager_selector"
-                    android:checked="true" />
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:orientation="horizontal"
+                    android:id="@+id/radiogroup"
+                    android:visibility="gone"
+                    android:paddingBottom="12dp">
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton2"
-                    android:layout_marginLeft="6dp"/>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButton"
+                        android:button="@drawable/pager_selector"
+                        android:checked="true" />
 
-            </RadioGroup>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/pager_selector"
+                        android:id="@+id/radioButton2"
+                        android:layout_marginLeft="6dp"/>
+
+                </RadioGroup>
 
                 <SlidingDrawer
                     android:layout_width="match_parent"
@@ -157,6 +160,13 @@
 
 
             </LinearLayout>
+
+        <include layout="@layout/reveal_bottom"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </FrameLayout>
 
 
 

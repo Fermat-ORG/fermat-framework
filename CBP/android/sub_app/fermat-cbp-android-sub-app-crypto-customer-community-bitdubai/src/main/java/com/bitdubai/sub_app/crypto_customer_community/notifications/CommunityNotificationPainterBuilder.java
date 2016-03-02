@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.crypto_customer_community.notifications;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.enums.CryptoCustomerActorConnectionNotificationType;
 
+import com.bitdubai.sub_app.crypto_customer_community.R;
+
 /**
  * This class contains all the necessary logic to build the notifications of the crypto customer community.
  *
@@ -22,7 +24,7 @@ public class CommunityNotificationPainterBuilder {
 
             switch (notificationType) {
                 case CONNECTION_REQUEST_RECEIVED:
-                    notification = new CommunityNotificationPainter("Crypto Customer Community", "A customer wants to connect with you.", "", "");
+                    notification = new CommunityNotificationPainter("Crypto Customer Community", "A customer wants to connect with you.", "", "", R.drawable.cbc_ic_nav_connections);
                     break;
             }
 

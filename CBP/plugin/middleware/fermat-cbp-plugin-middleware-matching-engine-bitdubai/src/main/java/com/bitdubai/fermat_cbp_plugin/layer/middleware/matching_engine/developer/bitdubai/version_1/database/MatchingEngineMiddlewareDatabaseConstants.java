@@ -63,7 +63,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String INPUT_TRANSACTION_TABLE_NAME                          = "input_transaction"         ;
 
     public static final String INPUT_TRANSACTION_ID_COLUMN_NAME                      = "id"                        ;
-    @Deprecated // todo IM NOT SURE OF THIS FIELD
+    @Deprecated // todo this field will be used to reference the origin of the transaction i need a type too PURE_TRANSACTION / PARTIAL_TRANSACTION
     public static final String INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME   = "origin_transaction_id"     ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME         = "currency_giving"           ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME    = "currency_giving_type"      ;

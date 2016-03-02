@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.crypto_broker_community.notifications;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.enums.CryptoBrokerActorConnectionNotificationType;
 
+import com.bitdubai.sub_app.crypto_broker_community.R;
+
 /**
  * This class contains all the necessary logic to build the notifications of the crypto broker community.
  *
@@ -22,7 +24,7 @@ public class CommunityNotificationPainterBuilder {
 
             switch (notificationType) {
                 case ACTOR_CONNECTED:
-                    notification = new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.", "", "");
+                    notification = new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.", "", "", R.drawable.cbc_ic_nav_connections);
                     break;
             }
 

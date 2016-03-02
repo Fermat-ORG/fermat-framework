@@ -67,6 +67,8 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
@@ -684,10 +686,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             saleNegotiationImpl = new CustomerBrokerSaleNegotiationImpl(saleNegotiation);
             saleNegotiationImpl.changeInfo(negotiationInfo, NegotiationStatus.WAITING_FOR_CUSTOMER);
 
-            if (saleNegotiationImpl.dataHasChanged())
+            if (saleNegotiationImpl.dataHasChanged()) {
                 customerBrokerUpdateManager.createCustomerBrokerUpdateSaleNegotiationTranasction(saleNegotiationImpl);
-            else
+                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
+            }else {
+                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION****\n");
                 customerBrokerCloseManager.createCustomerBrokerCloseSaleNegotiationTranasction(saleNegotiationImpl);
+            }
 
         } catch (CantGetListSaleNegotiationsException cause) {
             throw new CantSendNegotiationToCryptoCustomerException("Cant get the Sale Negotiation from the Data Base",
@@ -1659,14 +1664,34 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
-        EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
+    public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency,
+                                                         Currency linkedCurrency,
+                                                         String earningWalletPublicKey,
+                                                         String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
+
+        EarningsSettings earningsSettings;
+
+        try {
+
+            earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
+
+        } catch(EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+
+            try {
+
+                earningsSettings = matchingEngineManager.registerEarningsSettings(new WalletReference(brokerWalletPublicKey));
+
+            } catch (CantRegisterEarningsSettingsException cantRegisterEarningsSettingsException) {
+
+                throw new CantAssociatePairException(cantRegisterEarningsSettingsException, "", "");
+            }
+        }
         return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
     }
 
     @Override
-    public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException {
-        EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
+    public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException, CantListEarningsPairsException {
+        EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
         return earningsSettings.listEarningPairs();
     }
 }
