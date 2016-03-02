@@ -286,7 +286,8 @@ public class ChatMiddlewareContactFactory {
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
                                 date.getTime(),
-                                intraUserInformation.getProfileImage()
+                                intraUserInformation.getProfileImage(),
+                                ContactStatus.AVAILABLE
                         );
                         contactList.add(contact);
                     }
@@ -303,7 +304,8 @@ public class ChatMiddlewareContactFactory {
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
                                 date.getTime(),
-                                intraUserInformation.getProfileImage()
+                                intraUserInformation.getProfileImage(),
+                                ContactStatus.AVAILABLE
                         );
                         contactList.add(contact);
                     }
@@ -329,7 +331,8 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_USER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetUser.getProfileImage()
+                                        actorAssetUser.getProfileImage(),
+                                        ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
                             }
@@ -351,7 +354,8 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_ISSUER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetIssuer.getProfileImage()
+                                        actorAssetIssuer.getProfileImage(),
+                                        ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
                             }
@@ -373,7 +377,8 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetRedeemPoint.getProfileImage()
+                                        actorAssetRedeemPoint.getProfileImage(),
+                                        ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
                             }
@@ -402,7 +407,8 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorBroker.getImage()
+                                        actorBroker.getImage(),
+                                        ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
                             }
@@ -424,7 +430,8 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorCustomer.getImage()
+                                        actorCustomer.getImage(),
+                                        ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
                             }
