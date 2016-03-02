@@ -778,17 +778,22 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     @Override
     public void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException {
-
+        chatMiddlewareDatabaseDao.deleteChatUserIdentity(chatUserIdentity);
     }
 
     @Override
     public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
+        try {
+            return chatMiddlewareDatabaseDao.getChatUserIdentities(null);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
-        return null;
+        return chatMiddlewareDatabaseDao.getChatUserIdentity(publicKey);
     }
 
     @Override
