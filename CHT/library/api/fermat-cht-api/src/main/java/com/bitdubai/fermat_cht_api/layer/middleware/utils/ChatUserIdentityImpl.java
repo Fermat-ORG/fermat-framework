@@ -48,7 +48,7 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
      */
     @Override
     public void setNewProfileImage(byte[] newProfileImage) {
-
+        this.image = newProfileImage;
     }
 
     /**
