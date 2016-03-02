@@ -39,6 +39,5 @@ project(':fermat_contact_fragment').projectDir = new File('android_toolbox/ferma
 include ':fermat_navigator_drawer'
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
 
-
-
-
+include ':fermat_statistics'
+project(':fermat_statistics').projectDir = new File('android_toolbox/fermat_statistics')
