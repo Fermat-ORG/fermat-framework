@@ -21,4 +21,7 @@ public interface ContactConnection {
     void setRemoteActorPublicKey(String remoteActorPublicKey);
     long getCreationDate();
     void setCreationDate(long creationDate);
+    byte[] getProfileImage();
+    void setProfileImage(byte[] profileImage);
+
 }
