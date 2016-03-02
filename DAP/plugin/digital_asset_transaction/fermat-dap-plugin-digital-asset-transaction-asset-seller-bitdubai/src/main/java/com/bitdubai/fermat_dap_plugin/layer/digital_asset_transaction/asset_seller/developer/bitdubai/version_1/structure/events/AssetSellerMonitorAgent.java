@@ -158,28 +158,34 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         }
 
         private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException {
+            checkTimeout();
             checkUnreadMessages();
             checkPendingSells();
-            checkTimeout();
         }
 
         private void checkUnreadMessages() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException, CantLoadWalletException {
             //NEGOTIATION
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEGOTIATION_ANSWER)) {
-                AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
-                SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
-                switch (content.getSellStatus()) {
-                    case NEGOTIATION_CONFIRMED: {
-                        dao.updateSellingStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
-                        break;
+                try {
+                    AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
+                    SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
+                    switch (content.getSellStatus()) {
+                        case NEGOTIATION_CONFIRMED: {
+                            dao.updateSellingStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
+                            break;
+                        }
+                        case NEGOTIATION_REJECTED: {
+                            unlockFunds(sellingRecord.getMetadata());
+                            dao.deleteSellingRecord(sellingRecord.getRecordId());
+                            break;
+                        }
                     }
-                    case NEGOTIATION_REJECTED: {
-                        unlockFunds(sellingRecord.getMetadata());
-                        dao.deleteSellingRecord(sellingRecord.getRecordId());
-                        break;
-                    }
+                } catch (RecordsNotFoundException e) {
+                    //If we cannot found any record it means that the message was already cancelled but failed to notify the buyer
+                    //Or the buyer answered before receiving the cancelled message, so we'll just ignore his answer.
+                } finally {
+                    assetTransmission.confirmReception(message);
                 }
-                assetTransmission.confirmReception(message);
             }
             //SIGNED TRANSACTIONS
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.TRANSACTION_SIGNED)) {
@@ -255,13 +261,13 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             for (NegotiationRecord negotiation : dao.getWaitingConfirmationNegotiations()) {
                 if (negotiation.isExpired()) {
                     dao.updateNegotiationStatus(negotiation.getNegotiation().getNegotiationId(), AssetSellStatus.NEGOTIATION_CANCELLED);
-                    for (SellingRecord record : dao.getAllSelingRecordsForNegotiation(negotiation.getNegotiation().getNegotiationId())){
+                    for (SellingRecord record : dao.getAllSelingRecordsForNegotiation(negotiation.getNegotiation().getNegotiationId())) {
                         unlockFunds(record.getMetadata());
                         dao.deleteSellingRecord(record.getRecordId());
                     }
                     AssetNegotiationContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.NEGOTIATION_CANCELLED, negotiation.getNegotiation());
                     ActorAssetUser user = actorAssetUserManager.getActorAssetUser();
-                    DAPMessage message = new DAPMessage(content, user, negotiation.getBuyer(), DAPMessageSubject.NEGOTIATION_ANSWER);
+                    DAPMessage message = new DAPMessage(content, user, negotiation.getBuyer(), DAPMessageSubject.NEGOTIATION_CANCELLED);
                     assetTransmission.sendMessage(message);
                 }
             }
