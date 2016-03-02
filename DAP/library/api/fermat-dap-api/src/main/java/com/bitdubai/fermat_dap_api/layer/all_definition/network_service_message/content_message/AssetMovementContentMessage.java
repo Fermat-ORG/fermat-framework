@@ -10,20 +10,22 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
-public class AssetTransferContentMessage implements DAPContentMessage {
+public class AssetMovementContentMessage implements DAPContentMessage {
 
     //VARIABLE DECLARATION
-    private DAPActor actor;
-    private UUID metadataId;
+    private DAPActor systemUser;
+    private DAPActor newUser;
+    private String assetPublicKey;
     private BlockchainNetworkType networkType;
 
     //CONSTRUCTORS
-    public AssetTransferContentMessage() {
+    public AssetMovementContentMessage() {
     }
 
-    public AssetTransferContentMessage(DAPActor actor, UUID metadataId, BlockchainNetworkType networkType) {
-        this.actor = actor;
-        this.metadataId = metadataId;
+    public AssetMovementContentMessage(DAPActor systemUser, DAPActor newUser, String assetPublicKey, BlockchainNetworkType networkType) {
+        this.systemUser = systemUser;
+        this.newUser = newUser;
+        this.assetPublicKey = assetPublicKey;
         this.networkType = networkType;
     }
 
@@ -43,20 +45,12 @@ public class AssetTransferContentMessage implements DAPContentMessage {
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
-    public DAPActor getActor() {
-        return actor;
+    public DAPActor getNewUser() {
+        return newUser;
     }
 
-    public void setActor(DAPActor actor) {
-        this.actor = actor;
-    }
-
-    public UUID getMetadataId() {
-        return metadataId;
-    }
-
-    public void setMetadataId(UUID metadataId) {
-        this.metadataId = metadataId;
+    public void setNewUser(DAPActor newUser) {
+        this.newUser = newUser;
     }
 
     public BlockchainNetworkType getNetworkType() {
@@ -65,6 +59,22 @@ public class AssetTransferContentMessage implements DAPContentMessage {
 
     public void setNetworkType(BlockchainNetworkType networkType) {
         this.networkType = networkType;
+    }
+
+    public DAPActor getSystemUser() {
+        return systemUser;
+    }
+
+    public void setSystemUser(DAPActor systemUser) {
+        this.systemUser = systemUser;
+    }
+
+    public String getAssetPublicKey() {
+        return assetPublicKey;
+    }
+
+    public void setAssetPublicKey(String assetPublicKey) {
+        this.assetPublicKey = assetPublicKey;
     }
 
     /**
