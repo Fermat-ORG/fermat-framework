@@ -68,7 +68,8 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status " + customerBrokerSaleNegotiation.getStatus()
             );
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
@@ -77,7 +78,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                     this.walletManagerManager
             );
 
-            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
                 System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerSaleNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerSaleNegotiation);
@@ -118,7 +119,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                     this.walletManagerManager
             );
 
-            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerSaleNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerSaleNegotiation);
 
@@ -157,7 +158,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                     this.walletManagerManager
             );
 
-            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
 
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);

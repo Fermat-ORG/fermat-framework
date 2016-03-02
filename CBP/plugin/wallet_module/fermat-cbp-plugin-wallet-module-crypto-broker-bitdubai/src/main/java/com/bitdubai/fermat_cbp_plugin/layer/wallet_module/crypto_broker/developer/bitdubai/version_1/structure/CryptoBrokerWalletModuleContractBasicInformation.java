@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -31,8 +32,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private ContractStatus status;
     private String cancellationReason;
 
-    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerContractSale customerBrokerContractSale, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) {
-        this.customerAlias = customerAlias;
+    public CryptoBrokerWalletModuleContractBasicInformation(ActorIdentity customer, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerContractSale customerBrokerContractSale, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) {
+        this.customerAlias = customer.getAlias();
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
@@ -60,8 +61,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
             date = instance.getTimeInMillis(); //
             negotiationId = UUID.randomUUID(); //Contrato
         }
-
         imageBytes = new byte[0]; //Actor customer
+        imageBytes = customer.getProfileImage();
         if (customerBrokerContractSale != null){
             this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
         }else this.status = status;
