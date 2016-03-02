@@ -1,6 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
@@ -9,23 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockBarChartPageAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +36,13 @@ import java.util.List;
 public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewPager.OnPageChangeListener {
 
     private final List<StockStatisticsData> data;
-    private final Activity activity;
+    private final WeakReference<Context> activity;
     private final CryptoBrokerWalletSession session;
     private FermatTextView stockCurrency;
     private FermatTextView stockQuantity;
 
-    public CryptoBrokerWalletFooterPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
-        this.activity = activity;
+    public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+        this.activity = new WeakReference<Context>(activity);
         session = fullyLoadedSession;
 
         data = getData();
@@ -54,7 +52,8 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
     public ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container) {
         ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
 
-        StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(activity.getFragmentManager(), data);
+        //TOOD: obtene el fragment manager desde un servicio please
+        StockBarChartPageAdapter pageAdapter =null;// new StockBarChartPageAdapter(activity.getFragmentManager(), data);
         ViewPager stockViewPager = (ViewPager) layout.findViewById(R.id.cbw_stock_view_pager);
         stockViewPager.setAdapter(pageAdapter);
         stockViewPager.setOffscreenPageLimit(3);

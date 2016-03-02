@@ -71,16 +71,19 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * This method creates an ack offline payment by a contract hash given
      * @param walletPublicKey
      * @param contractHash
+     * @param actorPublicKey
+     * @param customerAlias
      * @throws CantAckPaymentException
      */
     @Override
     public void ackPayment(String walletPublicKey,
                            String contractHash,
-                           String actorPublicKey) throws
+                           String actorPublicKey,
+                           String customerAlias) throws
             CantAckPaymentException {
         try{
             //Checking the arguments
-            Object[] arguments={walletPublicKey, contractHash};
+            Object[] arguments={walletPublicKey, contractHash, actorPublicKey, customerAlias};
             ObjectChecker.checkArguments(arguments);
             //First we check if the contract exits in this plugin database
             boolean contractExists=
@@ -107,7 +110,8 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                 this.brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                         customerBrokerContractSale,
                         paymentType,
-                        actorPublicKey);
+                        actorPublicKey,
+                        customerAlias);
 
             } else{
                 /**
@@ -143,7 +147,9 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             throw new InvalidParameterException(
                                     paymentType+" value from MoneyType is not valid in this plugin");
                     }
-                    FiatCurrency currencyType=getCurrencyTypeFromContract(customerBrokerContractSale);
+                    FiatCurrency currencyType=getCurrencyTypeFromContract(
+                            customerBrokerContractSale);
+                    //Update the contract in database.
                     this.brokerAckOfflinePaymentBusinessTransactionDao.
                             updateRecordCurrencyTypeByContractHash(
                                     contractHash,
@@ -156,7 +162,12 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             updateRecordPaymentTypeByContractHash(
                                     contractHash,
                                     paymentType);
-                    this.brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateCustomerAliasByContractHash(
+                                    contractHash,
+                                    customerAlias);
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateContractTransactionStatus(
                             contractHash,
                             contractTransactionStatus);
 
@@ -176,31 +187,67 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
 
             }
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Unexpected result from database");
         } catch (CantGetListCustomerBrokerContractSaleException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot get the contract from customerBrokerContractSaleManager");
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot insert the contract record in database");
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot update the contract status in database");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Invalid input to this manager");
         } catch (CantGetListSaleNegotiationsException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot get the payment type");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
             e.printStackTrace();
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
+            throw new CantAckPaymentException(e,
+                    "Creating Broker Ack Offline Payment Business Transaction",
+                    "Unexpected Error");
         }
 
     }
@@ -226,6 +273,14 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
     /**
@@ -249,22 +304,43 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                if (clauseType.getCode().equals(
+                        ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
                     return MoneyType.getByCode(clause.getValue());
                 }
             }
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find the proper clause");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot get the negotiation list",
                     e);
         } catch (CantGetListClauseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find clauses list");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "The customerBrokerSaleNegotiation is null",
+                    e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetListSaleNegotiationsException(
+                    "Unexpected Error",
                     e);
         }
 
@@ -297,15 +373,35 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find the proper clause");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot get the negotiation list",
                     e);
         } catch (CantGetListClauseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find clauses list");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetListSaleNegotiationsException(
                     "The customerBrokerSaleNegotiation is null",
+                    e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetListSaleNegotiationsException(
+                    "Unexpected Error",
                     e);
         }
 

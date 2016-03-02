@@ -150,7 +150,6 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 issuerExtendedKey.setText(actorIssuer.getRecord().getExtendedPublicKey());
             } else {
                 issuerExtendedKey.setText("None");
-                connectRequest();
             }
 
             //issuerRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
@@ -169,28 +168,28 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
-            Toast.makeText(getActivity(), "Fixing for your convenience.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Fixing for your convenience.", Toast.LENGTH_SHORT).show();
 
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
-//            ConnectDialog connectDialog;
+            ConnectDialog connectDialog;
 //            try {
-//                connectDialog = new ConnectDialog(getActivity(),
-//                        (AssetIssuerCommunitySubAppSession) appSession,
-//                        null,
-//                        actorIssuer,
-//                        null);
+                connectDialog = new ConnectDialog(getActivity(),
+                        (AssetIssuerCommunitySubAppSession) appSession,
+                        null,
+                        actorIssuer,
+                        null);
 //                        manager.getActiveAssetIssuerIdentity());
-//                connectDialog.setTitle("Connection Request");
-//                connectDialog.setDescription("Do you want to send ");
-//                connectDialog.setUsername(actorIssuer.getRecord().getName());
-//                connectDialog.setSecondDescription("a connection request");
-//                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialog) {
-//                        updateButton();
-//                    }
-//                });
-//                connectDialog.show();
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(actorIssuer.getRecord().getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
 //            } catch (CantGetIdentityAssetIssuerException e) {
 //                e.printStackTrace();
 //
@@ -207,7 +206,6 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        //TODO Implementar aca que va a pasar con los estados de los botones
                        // connectRequest();
                         // updateButton();
                     }
@@ -347,7 +345,6 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
-                onRefresh();
                 updateButton();
                 break;
             default:
@@ -356,32 +353,9 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     }
 
     private synchronized ActorAssetIssuer getProfileData() {
-//        List<ActorAssetIssuer> tempActor = new ArrayList<>();
-//        ActorAssetIssuer actorAssetIssuer;
-//        actors = new ArrayList<>();
-
         try {
             actorAssetIssuer = manager.getActorIssuer(actorIssuer.getRecord().getActorPublicKey());
 
-//            tempActor.add(new ActorIssuer(actorAssetIssuer.getActorPublicKey(),
-//                    actorAssetIssuer.getName(),
-//                    actorAssetIssuer.getDapConnectionState(),
-//                    actorAssetIssuer.getLocationLatitude(),
-//                    actorAssetIssuer.getLocationLongitude(),
-//                    actorAssetIssuer.getExtendedPublicKey(),
-//                    actorAssetIssuer.getRegistrationDate(),
-//                    actorAssetIssuer.getLastConnectionDate(),
-//                    actorAssetIssuer.getType(),
-//                    actorAssetIssuer.getProfileImage()));
-
-//            if (tempActor.size() > 0) {
-//                tempActor.add(actorAssetIssuer);
-
-//                for (ActorAssetIssuer record : tempActor) {
-//                    actors.add((new ActorIssuer(record)));
-//                    actors.add((new ActorIssuer(record)));
-//                }
-//            }
         } catch (CantGetAssetIssuerActorsException e) {
             e.printStackTrace();
         } catch (CantAssetIssuerActorNotFoundException e) {
@@ -407,7 +381,6 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                     issuerExtendedKey.setText(actorAssetIssuer.getExtendedPublicKey());
                 } else {
                     issuerExtendedKey.setText("None");
-                    connectRequest();
                 }
             }
 

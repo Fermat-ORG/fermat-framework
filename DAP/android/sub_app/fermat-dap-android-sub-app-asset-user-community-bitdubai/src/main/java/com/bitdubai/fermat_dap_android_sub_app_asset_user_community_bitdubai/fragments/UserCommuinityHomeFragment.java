@@ -31,7 +31,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
@@ -47,7 +46,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserS
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +79,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private int MAX = 1;
     private int offset = 0;
     private Menu menu;
+
+    private MenuItem menuItemSelect;
+    private MenuItem menuItemUnselect;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -130,19 +131,27 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
 
                 boolean someSelected = false;
+                int cantSelected=0;
                 for (Actor actor : actors) {
                     if (actor.selected) {
                         someSelected = true;
-                        break;
+                        cantSelected++;
                     }
                 }
 
                 if (someSelected) {
-                    menu.getItem(2).setVisible(true);
+                    menuItemUnselect.setVisible(true);
+                    if (cantSelected == actors.size())
+                    {
+                        menuItemSelect.setVisible(false);
+                    } else {
+                        menuItemSelect.setVisible(true);
+                    }
                 }
                 else
                 {
-                    menu.getItem(2).setVisible(false);
+                    menuItemUnselect.setVisible(false);
+                    menuItemSelect.setVisible(true);
                 }
 
             }
@@ -324,12 +333,15 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.getItem(2).setVisible(false);
+        menuItemSelect = menu.getItem(1);
+        menuItemUnselect = menu.getItem(2);
+        menuItemUnselect.setVisible(false);
+
     }
 
     @Override
@@ -344,18 +356,20 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(true);
+            menuItemSelect.setVisible(false);
+            menuItemUnselect.setVisible(true);
 
         }
 
-        if(id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_DESELECT_ALL){
+        if(id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL){
 
             for (Actor actorIssuer : actors)
             {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(false);
+            menuItemSelect.setVisible(true);
+            menuItemUnselect.setVisible(false);
         }
 
 
@@ -614,7 +628,7 @@ Sample AsyncTask to fetch the notifications count
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(USER_SELECTED, data);
-        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

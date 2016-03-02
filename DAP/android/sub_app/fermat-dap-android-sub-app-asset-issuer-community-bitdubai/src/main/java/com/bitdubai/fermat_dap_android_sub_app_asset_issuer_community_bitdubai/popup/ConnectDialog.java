@@ -11,16 +11,17 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     private CharSequence title;
 
     private final ActorIssuer actorIssuer;
-    List<ActorIssuer> toConnect;
+    List<ActorAssetIssuer> issuerConnect;
     private final IdentityAssetIssuer identity;
 
 
@@ -124,32 +125,30 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
+
             //image null
-
-            if (actorIssuer != null) { // && identity != null) {
-
-                try {
-                    List<ActorAssetIssuer> actorConnect = new ArrayList<>();
-
-                    actorConnect.add(actorIssuer.getRecord());
-
-                    getSession().getModuleManager().askActorAssetIssuerForConnection(actorConnect);
-//                    getSession().getModuleManager().connectToActorAssetIssuer(null, actorConnect);
-
-                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-                } catch (CantAskConnectionActorAssetException e) {
-                    e.printStackTrace();
-                } catch (CantRequestAlreadySendActorAssetException e) {
-                    e.printStackTrace();
-//                } catch (CantConnectToActorAssetRedeemPointException e) {
-//                    e.printStackTrace();
-                }
-            } else {
-                super.toastDefaultError();
-            }
+//            try {
+//                if (actorIssuer != null) {
+//                    issuerConnect = new ArrayList<>();
+//
+//                    issuerConnect.add(actorIssuer.getRecord());
+//
+//                    getSession().getModuleManager().askActorAssetIssuerForConnection(issuerConnect);
+//
+//                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+//                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                    sendLocalBroadcast(broadcast);
+//                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    super.toastDefaultError();
+//                }
+//            } catch (CantAskConnectionActorAssetException e) {
+//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                super.toastDefaultError();
+//            } catch (CantRequestAlreadySendActorAssetException e) {
+//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                super.toastDefaultError();
+//            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();

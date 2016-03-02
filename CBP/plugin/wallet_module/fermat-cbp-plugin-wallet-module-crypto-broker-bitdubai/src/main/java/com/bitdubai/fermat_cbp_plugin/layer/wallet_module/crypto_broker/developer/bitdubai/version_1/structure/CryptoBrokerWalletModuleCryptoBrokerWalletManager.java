@@ -60,11 +60,14 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
@@ -482,10 +485,31 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException, CantGetListSaleNegotiationsException {
-        CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation cryptoBrokerWalletModuleCustomerBrokerNegotiationInformation = null;
-        cryptoBrokerWalletModuleCustomerBrokerNegotiationInformation = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationID).getCustomerPublicKey(), customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationID).getStatus());
-        return cryptoBrokerWalletModuleCustomerBrokerNegotiationInformation;
+    public CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException {
+        final CustomerBrokerSaleNegotiation saleNegotiation;
+        try {
+            saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationID);
+        } catch (CantGetListSaleNegotiationsException e) {
+            throw new CantGetNegotiationInformationException(CantGetNegotiationInformationException.DEFAULT_MESSAGE, e,
+                    "negotiationID = " + negotiationID, "Cant get the Sale Negotiation Information");
+        } catch (Exception e) {
+            throw new CantGetNegotiationInformationException(e);
+        }
+
+        try {
+            ActorIdentity customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
+            ActorIdentity brokerIdentity = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(saleNegotiation.getBrokerPublicKey());
+            return new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(saleNegotiation, customerIdentity, brokerIdentity);
+
+        } catch (CantListActorConnectionsException e) {
+            throw new CantGetNegotiationInformationException(CantGetNegotiationInformationException.DEFAULT_MESSAGE, e,
+                    "saleNegotiation = " + saleNegotiation, "Cant get the Customer Information");
+        } catch (IdentityNotFoundException | CantGetCryptoBrokerIdentityException e) {
+            throw new CantGetNegotiationInformationException(CantGetNegotiationInformationException.DEFAULT_MESSAGE, e,
+                    "saleNegotiation = " + saleNegotiation + " - customerIdentity = ", "Cant get the Broker Information");
+        } catch (Exception e) {
+            throw new CantGetNegotiationInformationException(e);
+        }
     }
 
     /**
@@ -794,6 +818,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         }
     }
 
+    @Deprecated
     @Override
     public CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
 
@@ -1665,7 +1690,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                if (clauseType.getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }
@@ -1820,10 +1845,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
                 //TODO: this is a hardcoded public key
                 String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //Get the customer alias to show in contract execution
+                ActorIdentity actorIdentity = getCustomerInfoByPublicKey(
+                        customerBrokerContractSale.
+                                getPublicKeyBroker(),
+                        customerBrokerContractSale.
+                                getPublicKeyCustomer());
+                String customerAlias;
+                if (actorIdentity == null) {
+                    customerAlias = "Unregistered customer";
+                } else {
+                    customerAlias = actorIdentity.getAlias();
+                }
                 this.brokerAckOfflinePaymentManager.ackPayment(
                         cryptoBrokerPublicKey,
                         contractHash,
-                        customerBrokerContractSale.getPublicKeyBroker()
+                        customerBrokerContractSale.getPublicKeyBroker(),
+                        customerAlias
                 );
                 return customerBrokerContractSale.getStatus();
             }
@@ -1845,6 +1883,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     e,
                     "Cannot ack the merchandise",
                     "Cannot get the negotiation list");
+        } catch (CantListActorConnectionsException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the customer alias");
         }
     }
 
@@ -1852,5 +1895,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
         EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
         return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
+    }
+
+    @Override
+    public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException {
+        EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
+        return earningsSettings.listEarningPairs();
     }
 }

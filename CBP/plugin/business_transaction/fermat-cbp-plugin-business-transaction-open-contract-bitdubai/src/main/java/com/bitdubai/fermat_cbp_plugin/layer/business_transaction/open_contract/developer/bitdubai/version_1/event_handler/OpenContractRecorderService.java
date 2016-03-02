@@ -78,7 +78,7 @@ public class OpenContractRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.OPEN_CONTRACT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
                 this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -101,7 +101,7 @@ public class OpenContractRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.OPEN_CONTRACT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
                 this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -124,7 +124,7 @@ public class OpenContractRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.OPEN_CONTRACT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
                 this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }

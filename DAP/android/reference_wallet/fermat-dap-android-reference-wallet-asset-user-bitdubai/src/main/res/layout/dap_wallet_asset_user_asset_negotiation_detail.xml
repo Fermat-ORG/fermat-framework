@@ -411,6 +411,33 @@
                 android:visibility="gone"/>
 
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinBalanceLabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:text="bitcoin Wallet Balance:"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinBalanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/fab_material_orange_500"
+                android:layout_toRightOf="@id/bitcoinBalanceLabelText"
+                android:layout_marginLeft="10dp"
+                android:text="0.111111 BTC"/>
+
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/acceptNegotiationButton"
             android:layout_width="match_parent"

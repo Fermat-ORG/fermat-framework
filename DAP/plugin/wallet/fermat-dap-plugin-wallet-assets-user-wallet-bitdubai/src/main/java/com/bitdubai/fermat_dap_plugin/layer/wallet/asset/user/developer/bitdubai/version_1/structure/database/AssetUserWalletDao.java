@@ -370,7 +370,7 @@ public final class AssetUserWalletDao {
     private void updateLockStatus(String genesisTx, LockStatus lockStatus) throws RecordsNotFoundException, CantExecuteLockOperationException {
         try {
             DatabaseTable lockTable = getLockTable();
-            lockTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
+            lockTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
             lockTable.loadToMemory();
             if (lockTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
             DatabaseTableRecord record = lockTable.getRecords().get(0);

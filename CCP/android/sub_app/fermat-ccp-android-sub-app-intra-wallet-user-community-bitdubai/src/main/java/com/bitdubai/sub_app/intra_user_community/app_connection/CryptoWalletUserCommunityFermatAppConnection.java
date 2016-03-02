@@ -1,27 +1,19 @@
 package com.bitdubai.sub_app.intra_user_community.app_connection;
 
-import android.app.Activity;
-
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
-import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.navigation_drawer.IntraUserCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
@@ -30,7 +22,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
    private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
 
-    public CryptoWalletUserCommunityFermatAppConnection(Activity activity) {
+    public CryptoWalletUserCommunityFermatAppConnection(Context activity) {
         super(activity);
 
     }
@@ -58,7 +50,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IntraUserCommunityNavigationViewPainter(getActivity(),getActiveIdentity());
+        return new IntraUserCommunityNavigationViewPainter(getContext(),getActiveIdentity());
     }
 
     @Override
@@ -73,40 +65,18 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
-
-
-        NotificationPainter notification = null;
         try
         {
             this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
             if(intraUserSubAppSession!=  null)
                moduleManager = intraUserSubAppSession.getModuleManager();
-            String[] params = code.split("_");
-            String notificationType = params[0];
-            String senderActorPublicKey = params[1];
-
-            switch (notificationType){
-                case "CONNECTIONREQUEST":
-
-                        if(moduleManager != null) {
-                            //find last notification by sender actor public key
-                            IntraWalletUserActor senderActor = moduleManager.getLastNotification(senderActorPublicKey);
-                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
-                            break;
-                        }else
-                        {
-                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
-                        }
-
-            }
+            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-
-
-        return notification;
+        return null;
     }
 }

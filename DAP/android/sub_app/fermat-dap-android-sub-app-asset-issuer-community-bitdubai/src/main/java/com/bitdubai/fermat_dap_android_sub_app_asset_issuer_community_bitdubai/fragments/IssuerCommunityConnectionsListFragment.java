@@ -31,6 +31,8 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.m
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
@@ -177,14 +179,21 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
     private synchronized List<ActorIssuer> getMoreData() {
         List<ActorIssuer> dataSet = new ArrayList<>();
-        //TODO hacer el metodo que me trae solo los conectados a el
-//        try {
-//
-//            //dataSet.addAll(manager.getAllIntraUsers(manager.getActiveAssetIssuerIdentity().getPublicKey(), MAX, offset));
-//        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
-//            e.printStackTrace();
-//        }
 
+        List<ActorAssetIssuer> result;
+        try {
+            if (manager == null)
+                throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
+
+            result = manager.getAllActorAssetIssuerConnected();
+            if (result != null && result.size() > 0) {
+                for (ActorAssetIssuer record : result) {
+                    dataSet.add((new ActorIssuer((AssetIssuerActorRecord) record)));
+                }
+            }
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 

@@ -236,7 +236,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao=
                     new BrokerAckOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init event recorder service.
@@ -244,15 +245,16 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOfflinePaymentRecorderService brokerAckOfflinePaymentRecorderService=
                     new BrokerAckOfflinePaymentRecorderService(
                             brokerAckOfflinePaymentBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
             brokerAckOfflinePaymentRecorderService.start();
 
             /**
              * Init Monitor Agent
              */
             //TODO: mock manager only for testing, please, comment the following line when finish the test.
-            customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
+            //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+            //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
             BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent=new BrokerAckOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
@@ -285,41 +287,87 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             //newOpenedContractRaiseEventTest();
             //testAck();
         } catch (CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Unexpected error");
         }
     }
 
     @Override
     public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
+        try{
+            this.serviceStatus = ServiceStatus.PAUSED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
     public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
+
+        try{
+            this.serviceStatus = ServiceStatus.STARTED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
     public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
+        try{
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
@@ -372,7 +420,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             brokerAckOfflinePaymentTransactionManager.ackPayment(
                     "walletPublicKeyTest",
                     "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2",
-                    "brokerPublicKey");
+                    "brokerPublicKey",
+                    "Fox Mulder");
         }catch (Exception e){
             System.out.println("Exception in ACK OFFLINE PAYMENT:");
             e.printStackTrace();
