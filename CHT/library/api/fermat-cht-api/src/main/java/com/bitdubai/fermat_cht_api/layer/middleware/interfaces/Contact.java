@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 08/01/16.
  */
-public interface Contact {
+public interface Contact { //TODO: agregar imagen
     //Documentar
     UUID getContactId();
     void setContactId(UUID contactId);
@@ -22,4 +22,6 @@ public interface Contact {
     void setRemoteActorPublicKey(String remoteActorPublicKey);
     long getCreationDate();
     void setCreationDate(long creationDate);
+    byte[] getProfileImage();
+    void setProfileImage(byte[] profileImage);
 }
