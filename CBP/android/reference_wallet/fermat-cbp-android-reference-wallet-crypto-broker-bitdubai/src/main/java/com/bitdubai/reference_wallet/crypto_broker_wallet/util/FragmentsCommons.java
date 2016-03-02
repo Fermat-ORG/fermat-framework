@@ -1,15 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -43,7 +40,7 @@ public class FragmentsCommons {
         }
     }
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, CryptoBrokerIdentity identity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, CryptoBrokerIdentity identity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.cbw_navigation_view_header, null, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.cbw_image_view_profile);

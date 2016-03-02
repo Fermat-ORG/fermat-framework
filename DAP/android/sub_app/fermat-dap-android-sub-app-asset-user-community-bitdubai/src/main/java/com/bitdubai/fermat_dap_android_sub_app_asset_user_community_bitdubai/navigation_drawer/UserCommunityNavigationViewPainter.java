@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,23 +13,26 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by Nerio on 24/12/15.
  */
 public class UserCommunityNavigationViewPainter implements NavigationViewPainter {
 
-    private Activity activity;
+    private  WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
 
-    public UserCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation activeIdentity) {
-        this.activity = activity;
+    public UserCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
+        this.activity = new WeakReference<Context>(activity);
         this.activeIdentity = activeIdentity;
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetUser) {
         try {
-            return UserCommunityFragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetUser);
+            return UserCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetUser);
         } catch (CantGetIdentityAssetUserException e) {
             e.printStackTrace();
             return null;
@@ -37,7 +41,7 @@ public class UserCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new UserCommunityNavigationAdapter(activity, null);
+        return new UserCommunityNavigationAdapter(activity.get(), null);
     }
 
     @Override
