@@ -166,6 +166,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME);
         contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
         contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME);
         /**
          * Table Contacts addition.
          */
