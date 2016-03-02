@@ -44,6 +44,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
+        this.amount = 0;
+        this.exchangeRateAmount = 0;
         if (customerBrokerPurchaseNegotiation != null) {
             this.cancellationReason = customerBrokerPurchaseNegotiation.getCancelReason();
             negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
@@ -51,10 +53,10 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
             try {
                 for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
                     if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
-                        amount = Float.valueOf(clause.getValue());
+                        amount = Float.valueOf(clause.getValue().replace(",",""));
                     }
                     if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
-                        exchangeRateAmount = Float.valueOf(clause.getValue());
+                        exchangeRateAmount = Float.valueOf(clause.getValue().replace(",",""));
                     }
                 }
             } catch (CantGetListClauseException e) {
@@ -63,8 +65,6 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         }
         else{
             this.cancellationReason = "";
-            this.amount = 0;
-            this.exchangeRateAmount = 0;
             negotiationId = UUID.randomUUID();
             date = instance.getTimeInMillis();
         }

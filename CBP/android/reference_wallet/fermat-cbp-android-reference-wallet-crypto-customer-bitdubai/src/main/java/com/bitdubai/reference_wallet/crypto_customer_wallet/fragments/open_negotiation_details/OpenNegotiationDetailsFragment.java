@@ -34,6 +34,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
@@ -309,11 +310,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
                     if (validateStatusClause(mapClauses)) {
 
-                        if (walletManager.updateNegotiation(negotiationInfo)) {
-                            Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
-                        } else {
-                            Toast.makeText(getActivity(), "Error send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
+                        if(negotiationInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CUSTOMER)) {
+
+                            if (walletManager.updateNegotiation(negotiationInfo)) {
+                                Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
+                                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+                            } else {
+                                Toast.makeText(getActivity(), "Error send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
+                            }
+
+                        }else {
+                            Toast.makeText(getActivity(), "You must wait for the response Broker to close the Negotiation", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
