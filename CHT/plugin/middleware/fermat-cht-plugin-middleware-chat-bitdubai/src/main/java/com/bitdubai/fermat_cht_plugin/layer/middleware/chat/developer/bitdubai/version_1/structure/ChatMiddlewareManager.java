@@ -794,21 +794,133 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     @Override
     public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
 
+        try{
+            ObjectChecker.checkArgument(contactConnection, "The contact argument is null");
+            this.chatMiddlewareDatabaseDao.saveContactConnection(contactConnection);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveContactConnectionException(
+                    e,
+                    "Saving a contact in database",
+                    "The message is probably null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSaveContactConnectionException(
+                    e,
+                    "Saving a contact in database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveContactConnectionException(
+                    FermatException.wrapException(exception),
+                    "Getting a new empty instance contact",
+                    "Unexpected exception");
+        }
     }
 
     @Override
-    public void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException {
-
+    public void deleteContactConnection(ContactConnection contactConnection) throws CantDeleteContactConnectionException {
+        try{
+            ObjectChecker.checkArgument(contactConnection, "The contact argument is null");
+            this.chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteContactConnectionException(
+                    e,
+                    "Deleting a message from database",
+                    "The message is probably null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteContactConnectionException(
+                    e,
+                    "Deleting a message from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteContactConnectionException(
+                    FermatException.wrapException(exception),
+                    "Deleting a message from database",
+                    "Unexpected exception");
+        }
     }
 
     @Override
     public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
-        return null;
+        DatabaseTableFilter filter = null;
+        try {
+            return this.chatMiddlewareDatabaseDao.getContactConnections(filter);
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetContactConnectionException(
+                    e,
+                    "Getting the full contact list",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetContactConnectionException(
+                    FermatException.wrapException(exception),
+                    "Getting the full contact list",
+                    "Unexpected exception");
+        }
     }
 
     @Override
     public ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException {
-        return null;
+        try{
+            ObjectChecker.checkArgument(contactId, "The contact id argument is null");
+            return this.chatMiddlewareDatabaseDao.getContactConnectionByContactId(contactId);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetContactConnectionException(
+                    e,
+                    "Getting a message from database",
+                    "The contact id is probably null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetContactConnectionException(
+                    e,
+                    "Getting a message from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetContactConnectionException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
+        }
     }
 
     @Override
