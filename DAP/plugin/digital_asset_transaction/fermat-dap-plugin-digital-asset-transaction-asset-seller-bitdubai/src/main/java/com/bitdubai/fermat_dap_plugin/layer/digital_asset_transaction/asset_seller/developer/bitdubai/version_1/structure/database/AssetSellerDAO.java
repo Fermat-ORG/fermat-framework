@@ -343,7 +343,9 @@ public class AssetSellerDAO {
         DatabaseTableFilter referenceFilter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
         DatabaseTableFilter statusFilter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
         try {
-            return constructSellingRecordList(getRecordsByFilterSellerTable(referenceFilter, statusFilter)).get(0);
+            List<SellingRecord> records = constructSellingRecordList(getRecordsByFilterSellerTable(referenceFilter, statusFilter));
+            if (records.isEmpty()) throw new RecordsNotFoundException();
+            return records.get(0);
         } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
             throw new DAPException(e);
         }
