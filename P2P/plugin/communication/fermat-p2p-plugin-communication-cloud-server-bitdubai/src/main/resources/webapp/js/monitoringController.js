@@ -1,36 +1,27 @@
-angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interval', '$filter', '$window',  function($scope, $http, $interval, $filter, $window) {
-
-    var parseJwtToken = function(token) {
-                 var base64Url = token.split('.')[1];
-                 var base64 = base64Url.replace('-', '+').replace('_', '/');
-                 return JSON.parse($window.atob(base64));
-             };
-
-        var isAuthenticate = function() {
-
-           var token = window.localStorage['jwtAuthToke'];
-           if(token) {
-             var params = parseJwtToken(token);
-             return Math.round(new Date().getTime() / 1000) <= params.exp;
-           } else {
-             return false;
-           }
-
-      };
-
-    if(!isAuthenticate()){
-        alert("Service error: You must authenticate again");
-        $window.location.href = '../index.html';
-    }
-
-    if(window.localStorage['jwtAuthToke'] !== null){
-          $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
-    }
+angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interval', '$filter', '$window', '$location',  function($scope, $http, $interval, $filter, $window, $location) {
 
       $scope.labels = [];
       $scope.series = ['Client Connections', 'Actives VPN'];
       $scope.charData = [[],[]];
       $scope.monitInfo = [];
+
+      var parseJwtToken = function(token) {
+                   var base64Url = token.split('.')[1];
+                   var base64 = base64Url.replace('-', '+').replace('_', '/');
+                   return JSON.parse($window.atob(base64));
+      };
+
+      var isAuthenticate = function() {
+
+         var token = window.localStorage['jwtAuthToke'];
+         if(token) {
+           var params = parseJwtToken(token);
+           return Math.round(new Date().getTime() / 1000) <= params.exp;
+         } else {
+           return false;
+         }
+
+      };
 
       var requestMonitoringData = function() {
 
@@ -98,9 +89,20 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
        };
 
-     requestMonitoringData();
-     requestMonitInfo();
-    $interval(requestMonitoringData, 60000);
-    $interval(requestMonitInfo, 30000);
+        if(isAuthenticate() === false){
+            alert("Service error: You must authenticate again");
+            $location.url('../index.html');
+        }else{
+
+            if(window.localStorage['jwtAuthToke'] !== null){
+                  $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
+            }
+
+            requestMonitoringData();
+            requestMonitInfo();
+            $interval(requestMonitoringData, 60000);
+            $interval(requestMonitInfo, 30000);
+        }
+
 
 }]);
