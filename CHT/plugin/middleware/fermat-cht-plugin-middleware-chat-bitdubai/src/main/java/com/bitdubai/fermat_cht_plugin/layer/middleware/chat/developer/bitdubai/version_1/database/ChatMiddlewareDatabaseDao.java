@@ -56,6 +56,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatUserIdentityImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
@@ -795,17 +796,75 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException
+    public void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException
     {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
 
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
+            DatabaseTableRecord record = getCahtUserIdentityRecord(chatUserIdentity);
+
+            table.deleteRecord(record);
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantDeleteChatUserIdentityException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the message Transaction in the database.",
+                    null);
+        }
     }
 
-    List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException
+    public List<ChatUserIdentity> getChatUserIdentities(DatabaseTableFilter filter) throws CantGetChatUserIdentityException, DatabaseOperationException
     {
-        return null;
+        //if filter is null all records
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<ChatUserIdentity> chatUserIdentities = new ArrayList<>();
+            // I will add the message information from the database
+            List<DatabaseTableRecord> records=getChatUserIdentityData(filter);
+            if(records==null|| records.isEmpty()){
+                return chatUserIdentities;
+            }
+            for (DatabaseTableRecord record : records) {
+                final ChatUserIdentity chatUserIdentity = getChatUserIdentityTransaction(record);
+
+                chatUserIdentities.add(chatUserIdentity);
+            }
+
+            database.closeDatabase();
+
+            return chatUserIdentities;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    e.getMessage(),
+                    null);
+        }
     }
 
-    ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException
+    public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException
     {
         return null;
     }
@@ -942,6 +1001,18 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
+    private DatabaseTableRecord getCahtUserIdentityRecord(ChatUserIdentity chatUserIdentity) throws DatabaseOperationException
+    {
+        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+
+        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, chatUserIdentity.getAlias());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.getPublicKey());
+        //record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.);
+
+        return record;
+    }
+
     private List<DatabaseTableRecord> getChatData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
     {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
@@ -957,6 +1028,18 @@ public class ChatMiddlewareDatabaseDao {
     private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
     {
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+        if (filter != null)
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
+        table.loadToMemory();
+
+        return table.getRecords();
+    }
+
+    private List<DatabaseTableRecord> getChatUserIdentityData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
+    {
+        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
 
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
@@ -1017,6 +1100,19 @@ public class ChatMiddlewareDatabaseDao {
 
 
         return message;
+    }
+
+    private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
+    {
+        ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME),
+                null,
+                chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                null,
+                new byte[0],
+                null
+                );
+
+        return chatUserIdentity;
     }
 
     private Contact getContactTransaction(final DatabaseTableRecord contactTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException
