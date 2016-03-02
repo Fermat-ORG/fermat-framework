@@ -197,6 +197,9 @@ public final class MatchingEngineMiddlewareDao {
             if (existsEarningsPair(earningCurrency, linkedCurrency, walletReference))
                 throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletReference, "The pair already exists in database.");
 
+            if (existsEarningsPair(linkedCurrency, earningCurrency, walletReference))
+                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletReference, "The pair already exists in database.");
+
             final EarningPairState state = EarningPairState.ASSOCIATED;
 
             final EarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
@@ -381,34 +384,11 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable earningsPairTable = database.getTable(EARNING_PAIR_TABLE_NAME);
 
-            final List<DatabaseTableFilter> tableFilters1 = new ArrayList<>();
-
-            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
-            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
-            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, linkedCurrency.getCode())           );
-            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
-            tableFilters1.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
-
-            final DatabaseTableFilterGroup filterGroup1 = earningsPairTable.getNewFilterGroup(tableFilters1, null, DatabaseFilterOperator.AND);
-
-            final List<DatabaseTableFilter> tableFilters2 = new ArrayList<>();
-
-            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseFilterType.EQUAL, linkedCurrency.getCode())           );
-            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, linkedCurrency.getType().getCode()) );
-            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseFilterType.EQUAL, earningCurrency.getCode())          );
-            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseFilterType.EQUAL, earningCurrency.getType().getCode()));
-            tableFilters2.add(earningsPairTable.getNewFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseFilterType.EQUAL, walletReference.getPublicKey()     ));
-
-            final DatabaseTableFilterGroup filterGroup2 = earningsPairTable.getNewFilterGroup(tableFilters2, null, DatabaseFilterOperator.AND);
-
-            List<DatabaseTableFilterGroup> filterGroups = new ArrayList<>();
-
-            filterGroups.add(filterGroup1);
-            filterGroups.add(filterGroup2);
-
-            final DatabaseTableFilterGroup filterGroupFinal = earningsPairTable.getNewFilterGroup(null, filterGroups, DatabaseFilterOperator.OR);
-
-            earningsPairTable.setFilterGroup(filterGroupFinal);
+            earningsPairTable.addStringFilter(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , earningCurrency.getCode()          , DatabaseFilterType.EQUAL);
+            earningsPairTable.addStringFilter(EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, earningCurrency.getType().getCode(), DatabaseFilterType.EQUAL);
+            earningsPairTable.addStringFilter(EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , linkedCurrency.getCode()           , DatabaseFilterType.EQUAL);
+            earningsPairTable.addStringFilter(EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , linkedCurrency.getType().getCode() , DatabaseFilterType.EQUAL);
+            earningsPairTable.addStringFilter(EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , walletReference.getPublicKey()     , DatabaseFilterType.EQUAL);
 
             earningsPairTable.loadToMemory();
 
