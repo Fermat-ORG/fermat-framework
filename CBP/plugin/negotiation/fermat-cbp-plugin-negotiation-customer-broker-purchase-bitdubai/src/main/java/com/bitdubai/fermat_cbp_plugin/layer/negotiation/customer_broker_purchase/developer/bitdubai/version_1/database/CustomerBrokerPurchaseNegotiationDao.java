@@ -86,7 +86,6 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
-
         //new NegotiationPurchaseTestData(this);
     }
 
