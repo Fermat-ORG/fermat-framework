@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetEarningsPairException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningsPair;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareInputTransaction;
@@ -186,11 +187,9 @@ public final class MatchingEngineMiddlewareDao {
 
             for (DatabaseTableRecord record : records) {
 
-                WalletReference walletReference = new WalletReference(
-                        record.getStringValue(WALLETS_PUBLIC_KEY_COLUMN_NAME)
+                walletReferenceList.add(
+                        buildWalletReferenceRecord(record)
                 );
-
-                walletReferenceList.add(walletReference);
             }
 
             return walletReferenceList;
@@ -198,6 +197,9 @@ public final class MatchingEngineMiddlewareDao {
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantListWalletsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListWalletsException(e, "", "Exception reading records of the table Cannot recognize the codes of the enums.");
         }
     }
 
@@ -518,12 +520,43 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
+    public final List<InputTransaction> listUnmatchedInputTransactions(final UUID earningPairId) throws CantListInputTransactionsException {
+
+        try {
+
+            final InputTransactionState state = InputTransactionState.UNMATCHED;
+
+            final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
+
+            inputTransactionsTable.addUUIDFilter      (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningPairId, DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_STATE_COLUMN_NAME          , state        , DatabaseFilterType.EQUAL);
+
+            inputTransactionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = inputTransactionsTable.getRecords();
+
+            final List<InputTransaction> inputTransactionList = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                inputTransactionList.add(buildInputTransactionRecord(record));
+
+            return inputTransactionList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListInputTransactionsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListInputTransactionsException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
     private DatabaseTableRecord buildInputTransactionDatabaseRecord(final DatabaseTableRecord record          ,
                                                                     final UUID                earningPairId   ,
                                                                     final InputTransaction    inputTransaction) {
 
-        record.setStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getId());
-        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving());
+        record.setStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving()             );
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
