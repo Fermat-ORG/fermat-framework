@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -28,6 +31,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Nelson Ramirez
  *
@@ -42,7 +46,7 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
     private FermatTextView stockQuantity;
 
     public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
-        this.activity = new WeakReference<Context>(activity);
+        this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
         data = getData();
@@ -52,8 +56,8 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
     public ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container) {
         ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
 
-        //TOOD: obtene el fragment manager desde un servicio please
-        StockBarChartPageAdapter pageAdapter =null;// new StockBarChartPageAdapter(activity.getFragmentManager(), data);
+        final FragmentManager fragmentManager = ((Activity) this.activity.get()).getFragmentManager();
+        StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(fragmentManager, data);
         ViewPager stockViewPager = (ViewPager) layout.findViewById(R.id.cbw_stock_view_pager);
         stockViewPager.setAdapter(pageAdapter);
         stockViewPager.setOffscreenPageLimit(3);
