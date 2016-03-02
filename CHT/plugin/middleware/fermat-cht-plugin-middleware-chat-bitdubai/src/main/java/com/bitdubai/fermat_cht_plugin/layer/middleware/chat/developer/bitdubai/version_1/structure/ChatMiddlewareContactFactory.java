@@ -24,6 +24,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -240,10 +242,10 @@ public class ChatMiddlewareContactFactory {
      * @return
      * @throws CantGetContactException
      */
-    public List<Contact> discoverDeviceActors() throws
+    public List<ContactConnection> discoverDeviceActors() throws
             CantGetContactException {
-        List<Contact> contactList=new ArrayList<>();
-        Contact contact;
+        List<ContactConnection> contactList=new ArrayList<>();
+        ContactConnection contact;
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();
         Object value;
         String remoteName;
@@ -276,13 +278,14 @@ public class ChatMiddlewareContactFactory {
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();
                         actorPublicKey=intraUserInformation.getPublicKey();
-                        contact=new ContactImpl(
+                        contact=new ContactConnectionImpl(
                                 UUID.randomUUID(),
                                 remoteName,
                                 alias,
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
-                                date.getTime()
+                                date.getTime(),
+                                intraUserInformation.getProfileImage()
                         );
                         contactList.add(contact);
                     }
@@ -292,13 +295,14 @@ public class ChatMiddlewareContactFactory {
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();
                         actorPublicKey=intraUserInformation.getPublicKey();
-                        contact=new ContactImpl(
+                        contact=new ContactConnectionImpl(
                                 UUID.randomUUID(),
                                 remoteName,
                                 alias,
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
-                                date.getTime()
+                                date.getTime(),
+                                intraUserInformation.getProfileImage()
                         );
                         contactList.add(contact);
                     }
@@ -317,13 +321,14 @@ public class ChatMiddlewareContactFactory {
                                 remoteName=actorAssetUser.getName();
                                 alias=actorAssetUser.getName();
                                 actorPublicKey=actorAssetUser.getActorPublicKey();
-                                contact=new ContactImpl(
+                                contact=new ContactConnectionImpl(
                                         UUID.randomUUID(),
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_ASSET_USER,
                                         actorPublicKey,
-                                        date.getTime()
+                                        date.getTime(),
+                                        actorAssetUser.getProfileImage()
                                 );
                                 contactList.add(contact);
                             }
@@ -338,13 +343,14 @@ public class ChatMiddlewareContactFactory {
                                 remoteName=actorAssetIssuer.getName();
                                 alias=actorAssetIssuer.getName();
                                 actorPublicKey=actorAssetIssuer.getActorPublicKey();
-                                contact=new ContactImpl(
+                                contact=new ContactConnectionImpl(
                                         UUID.randomUUID(),
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_ASSET_ISSUER,
                                         actorPublicKey,
-                                        date.getTime()
+                                        date.getTime(),
+                                        actorAssetIssuer.getProfileImage()
                                 );
                                 contactList.add(contact);
                             }
@@ -359,13 +365,14 @@ public class ChatMiddlewareContactFactory {
                                 remoteName=actorAssetRedeemPoint.getName();
                                 alias=actorAssetRedeemPoint.getName();
                                 actorPublicKey=actorAssetRedeemPoint.getActorPublicKey();
-                                contact=new ContactImpl(
+                                contact=new ContactConnectionImpl(
                                         UUID.randomUUID(),
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
                                         actorPublicKey,
-                                        date.getTime()
+                                        date.getTime(),
+                                        actorAssetRedeemPoint.getProfileImage()
                                 );
                                 contactList.add(contact);
                             }
@@ -387,13 +394,14 @@ public class ChatMiddlewareContactFactory {
                                 remoteName=actorBroker.getAlias();
                                 alias=actorBroker.getAlias();
                                 actorPublicKey=actorBroker.getPublicKey();
-                                contact=new ContactImpl(
+                                contact=new ContactConnectionImpl(
                                         UUID.randomUUID(),
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
                                         actorPublicKey,
-                                        date.getTime()
+                                        date.getTime(),
+                                        actorBroker.getImage()
                                 );
                                 contactList.add(contact);
                             }
@@ -408,13 +416,14 @@ public class ChatMiddlewareContactFactory {
                                 remoteName=actorCustomer.getAlias();
                                 alias=actorCustomer.getAlias();
                                 actorPublicKey=actorCustomer.getPublicKey();
-                                contact=new ContactImpl(
+                                contact=new ContactConnectionImpl(
                                         UUID.randomUUID(),
                                         remoteName,
                                         alias,
                                         PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                         actorPublicKey,
-                                        date.getTime()
+                                        date.getTime(),
+                                        actorCustomer.getImage()
                                 );
                                 contactList.add(contact);
                             }
@@ -481,11 +490,11 @@ public class ChatMiddlewareContactFactory {
      * identity to avoid to create an unregistered contact in the message receptor.
      * @return
      */
-    public HashMap<PlatformComponentType, String> getSelfIdentities()
+    public HashMap<PlatformComponentType, String> getSelfIdentities() //TODO:Cambiar el parametro del mapa del String por byte[]
             throws CantGetOwnIdentitiesException {
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();
         Object value;
-        HashMap<PlatformComponentType, String> selfIdentitiesMap=new HashMap<>();
+        HashMap<PlatformComponentType, String> selfIdentitiesMap=new HashMap<>(); //TODO:Cambiar el parametro del mapa del String por byte[]
         try{
             for(String key : keySet){
                 value=this.compatiblesActorNetworkServiceMap.get(key);
