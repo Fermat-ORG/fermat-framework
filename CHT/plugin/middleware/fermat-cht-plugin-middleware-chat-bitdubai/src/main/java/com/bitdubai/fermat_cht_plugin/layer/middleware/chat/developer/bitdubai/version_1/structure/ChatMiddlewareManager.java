@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
@@ -42,6 +44,9 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,18 +81,25 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     ErrorManager errorManager;
 
+    /**
+     * Represents the DeviceUserManager
+     */
+    private DeviceUserManager deviceUserManager;
+
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             ChatMiddlewareContactFactory chatMiddlewareContactFactory,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
             NetworkServiceChatManager networkServiceChatManager,
-            ErrorManager errorManager
+            ErrorManager errorManager,
+            DeviceUserManager deviceUserManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.networkServiceChatManager = networkServiceChatManager;
         this.errorManager = errorManager;
+        this.deviceUserManager = deviceUserManager;
     }
 
     /**
@@ -744,7 +756,15 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     @Override
     public void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException {
-
+        try {
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
+            chatMiddlewareDatabaseDao.saveCharUserIdentity(chatUserIdentity, keyPair.getPublicKey(), loggedUser);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (CantGetLoggedInDeviceUserException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
