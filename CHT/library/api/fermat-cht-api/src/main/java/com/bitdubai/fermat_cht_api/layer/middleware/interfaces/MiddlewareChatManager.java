@@ -67,7 +67,7 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
-    List<Contact> discoverActorsRegistered() throws CantGetContactException;
+    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
 
     void notificationNewIncomingMessage(
             String publicKey,

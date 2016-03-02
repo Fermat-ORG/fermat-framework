@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.util.HashMap;
@@ -61,7 +63,7 @@ public interface ChatManager {
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
-    List<Contact> discoverActorsRegistered() throws CantGetContactException;
+    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 

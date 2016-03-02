@@ -641,7 +641,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @throws CantGetContactException
      */
     @Override
-    public List<Contact> discoverActorsRegistered() throws CantGetContactException {
+    public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
         try{
             return this.chatMiddlewareContactFactory.discoverDeviceActors();
         } catch (Exception exception){
@@ -649,7 +649,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     Plugins.CHAT_MIDDLEWARE,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
-            throw new CantGetContactException(
+            throw new CantGetContactConnectionException(
                     FermatException.wrapException(exception),
                     "Getting the actors registered",
                     "Unexpected exception");
