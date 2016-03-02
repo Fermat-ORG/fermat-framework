@@ -686,10 +686,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             saleNegotiationImpl = new CustomerBrokerSaleNegotiationImpl(saleNegotiation);
             saleNegotiationImpl.changeInfo(negotiationInfo, NegotiationStatus.WAITING_FOR_CUSTOMER);
 
-            if (saleNegotiationImpl.dataHasChanged())
+            if (saleNegotiationImpl.dataHasChanged()) {
                 customerBrokerUpdateManager.createCustomerBrokerUpdateSaleNegotiationTranasction(saleNegotiationImpl);
-            else
+                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
+            }else {
+                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION****\n");
                 customerBrokerCloseManager.createCustomerBrokerCloseSaleNegotiationTranasction(saleNegotiationImpl);
+            }
 
         } catch (CantGetListSaleNegotiationsException cause) {
             throw new CantSendNegotiationToCryptoCustomerException("Cant get the Sale Negotiation from the Data Base",
