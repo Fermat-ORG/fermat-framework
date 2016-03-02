@@ -17,6 +17,7 @@ public class ContactImpl implements Contact {
     private PlatformComponentType remoteActorType;
     private String remoteActorPublicKey;
     private long creationDate;
+    private byte[] image;
 
     public ContactImpl(){}
 
@@ -25,7 +26,8 @@ public class ContactImpl implements Contact {
                        String alias,
                        PlatformComponentType remoteActorType,
                        String remoteActorPublicKey,
-                       long creationDate)
+                       long creationDate,
+                       byte[] image)
     {
         this.contactId            = contactId;
         this.remoteName           = remoteName;
@@ -33,6 +35,7 @@ public class ContactImpl implements Contact {
         this.remoteActorType      = remoteActorType;
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.creationDate         = creationDate;
+        this.image                = image;
     }
 
     @Override
@@ -93,6 +96,16 @@ public class ContactImpl implements Contact {
     @Override
     public void setCreationDate(long creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public byte[] getProfileImage() {
+        return this.image;
+    }
+
+    @Override
+    public void setProfileImage(byte[] profileImage) {
+        this.image = profileImage;
     }
 
     @Override
