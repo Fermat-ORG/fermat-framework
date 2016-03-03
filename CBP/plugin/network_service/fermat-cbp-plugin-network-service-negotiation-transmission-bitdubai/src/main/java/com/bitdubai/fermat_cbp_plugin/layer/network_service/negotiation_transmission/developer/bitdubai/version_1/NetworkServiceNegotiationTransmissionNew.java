@@ -346,24 +346,68 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
             switch (negotiationTransmission.getNegotiationTransactionType()) {
                 case CUSTOMER_BROKER_NEW: {
-                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
-                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
-                    getEventManager().raiseEvent(event);
+                    System.out.print("\n**** 12.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER NEW****\n");
+                    if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER NEW TRANSACTION****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    }else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER NEW TRANSACTION****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    }
+
                 }
                 break;
                 case CUSTOMER_BROKER_UPDATE: {
-                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
-                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
-                    getEventManager().raiseEvent(event);
+                    System.out.print("\n**** 12.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER UPDATE****\n");
+                    if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER UPDATE TRANSACTION****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    }else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER UPDATE CONFIRM****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    }
+
                 }
                 break;
                 case CUSTOMER_BROKER_CLOSE: {
-                    IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
-                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-                    event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
-                    getEventManager().raiseEvent(event);
+                    System.out.print("\n**** 12.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER CLOSE****\n");
+                    if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER CLOSE TRANSACTION****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+                        System.out.print("\n**** 12.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION CUSTOMER BROKER CLOSE CONFIRM****\n");
+                        IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
+                        event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                        event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+                        getEventManager().raiseEvent(event);
+
+                    }
                 }
                 break;
             }

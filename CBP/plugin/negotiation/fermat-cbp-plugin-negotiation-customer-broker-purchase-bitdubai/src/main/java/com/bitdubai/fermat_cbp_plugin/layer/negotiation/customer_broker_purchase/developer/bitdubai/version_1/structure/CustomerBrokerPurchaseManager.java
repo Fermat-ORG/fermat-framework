@@ -127,7 +127,17 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            try{
+                this.customerBrokerPurchaseNegotiationDao.waitForCustomer(negotiation);
+            } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.getMessage(), e, "", "Cant Update Customer Broker Purchase Negotiation");
+            }
+        }
+
+        @Override
+        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException{
             try{
                 this.customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
             } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -320,6 +330,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
     *   Private Methods
     * */
 
+        @Deprecated
         private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
 

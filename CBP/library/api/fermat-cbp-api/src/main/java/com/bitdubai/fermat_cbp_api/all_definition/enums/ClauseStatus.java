@@ -32,12 +32,7 @@ public enum ClauseStatus implements FermatEnum {
     public static ClauseStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "DRA": return DRAFT;
-            case "STB": return SENT_TO_BROKER;
-            case "WFB": return WAITING_FOR_BROKER;
-            case "STC": return SENT_TO_CUSTOMER;
-            case "WFC": return WAITING_FOR_CUSTOMER;
             case "AGR": return AGREED;
-            case "REJ": return REJECTED;
             case "ACCEPT": return ACCEPTED;
             case "CHANGE":  return CHANGED;
             case "CONFIR":  return CONFIRM;
