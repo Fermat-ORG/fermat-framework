@@ -208,9 +208,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                     receiveConnectionInformation(informationMessage);
 
-                    String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
-
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(destinationPublicKey);
                     break;
 
                 case CONNECTION_REQUEST:
@@ -350,6 +347,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                             "action not handled."
                     );
             }
+
+            String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
+            getCommunicationNetworkServiceConnectionManager().closeConnection(destinationPublicKey);
 
             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
             eventToRaise.setSource(eventSource);
