@@ -152,4 +152,9 @@ public class ChatSupAppModuleManager implements ChatManager {
     public void createSelfIdentities() throws CantCreateSelfIdentityException {
         middlewareChatManager.createSelfIdentities();
     }
+
+    @Override
+    public boolean isIdentityDevice(){
+     return false;
+    }
 }

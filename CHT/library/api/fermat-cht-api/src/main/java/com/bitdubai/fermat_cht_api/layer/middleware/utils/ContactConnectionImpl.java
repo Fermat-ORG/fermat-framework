@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class ContactConnectionImpl implements ContactConnection {
     private String remoteActorPublicKey;
     private long creationDate;
     private byte[] image;
+    private ContactStatus contactStatus;
 
     public ContactConnectionImpl(){}
 
@@ -26,7 +28,8 @@ public class ContactConnectionImpl implements ContactConnection {
                                  PlatformComponentType remoteActorType,
                                  String remoteActorPublicKey,
                                  long creationDate,
-                                 byte[] image)
+                                 byte[] image,
+                                 ContactStatus contactStatus)
     {
         this.contactId            = contactId;
         this.remoteName           = remoteName;
@@ -35,6 +38,7 @@ public class ContactConnectionImpl implements ContactConnection {
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.creationDate         = creationDate;
         this.image                = image;
+        this.contactStatus        = contactStatus;
     }
 
     @Override
@@ -117,5 +121,15 @@ public class ContactConnectionImpl implements ContactConnection {
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
                 ", creationDate=" + creationDate +
                 '}';
+    }
+
+    @Override
+    public ContactStatus getContactStatus() {
+        return contactStatus;
+    }
+
+    @Override
+    public void setContactStatus(ContactStatus contactStatus) {
+        this.contactStatus = contactStatus;
     }
 }
