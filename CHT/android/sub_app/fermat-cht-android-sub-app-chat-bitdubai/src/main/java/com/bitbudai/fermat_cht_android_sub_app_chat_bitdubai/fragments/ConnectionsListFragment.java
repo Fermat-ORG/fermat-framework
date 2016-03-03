@@ -2,7 +2,9 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,12 +34,16 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,8 +57,8 @@ import java.util.UUID;
  */
 public class ConnectionsListFragment extends AbstractFermatFragment {
 
-    public List<Contact> contacts;
-    private Contact contactl;
+    public List<ContactConnection> contacts;
+    private ContactConnection contactl;
 
     // Whether or not this fragment is showing in a two-pane layout
     private boolean mIsTwoPaneLayout;
@@ -70,7 +76,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     // Defines a tag for identifying log entries
     String TAG="CHT_ConnectionsListFragment";
     ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     Typeface tf;
@@ -120,18 +126,18 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
 //            cadded.setRemoteName("No hay nadie conectado");
 //            chatManager.saveContact(cadded);
 //            //Fin Comentar
-            List <Contact> con=  chatManager.getContacts();
+            List<ContactConnection> con = chatManager.getContactConnections();
             int size = con.size();
             if (size > 0) {
-                for (int i=0;i<size;i++){
-                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
-                        contactname.add(con.get(i).getAlias());
-                        contactid.add(con.get(i).getContactId());
-                        contacticon.add(R.drawable.cht_profile_list_icon);
-                    }
+                for (int i = 0; i < size; i++) {
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
                 }
                 text.setVisibility(View.GONE);
-            }else{
+            } else {
                 text.setVisibility(View.VISIBLE);
                 text.setText("No Connections");
             }
@@ -190,10 +196,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                         }
                     }else {
                         final int pos=position;
-                        Contact contacto = chatManager.getContactByContactId(contactid.get(pos));
+                        final ContactConnection contactConn = chatManager.getContactConnection(contactid.get(pos));
 
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                        builder1.setMessage("Do you want to add "+contacto.getRemoteName()+" to your Contact List?");
+                        builder1.setMessage("Do you want to add "+contactConn.getRemoteName()+" to your Contact List?");
                         builder1.setCancelable(true);
 
                         builder1.setPositiveButton(
@@ -202,9 +208,20 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                         try {
-                                            appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(pos)));
-                                            Contact conn = chatSession.getSelectedConnection();
-                                            chatManager.saveContact(conn);
+                                            // appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
+                                            //Contact conn = chatSession.getSelectedConnection();
+
+                                            Long dv = System.currentTimeMillis();
+                                            ContactImpl newContact = new ContactImpl();
+                                            newContact.setAlias(contactConn.getAlias());
+                                            newContact.setRemoteActorType(contactConn.getRemoteActorType());
+                                            newContact.setRemoteActorPublicKey(contactConn.getRemoteActorPublicKey());
+                                            newContact.setRemoteName(contactConn.getRemoteName());
+                                            newContact.setContactId(UUID.randomUUID());
+                                            newContact.setCreationDate(System.currentTimeMillis());
+                                            newContact.setContactStatus(contactConn.getContactStatus());
+                                            newContact.setProfileImage(contactConn.getProfileImage());
+                                            chatManager.saveContact(newContact);
                                             Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
                                             changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                                         }catch(CantSaveContactException e) {
@@ -251,7 +268,6 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     @Override
                     public void run() {
                         Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
-
                         try {
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
@@ -262,7 +278,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     if(!con.get(i).getRemoteName().equals("Not registered contact")) {
                                         contactname.add(con.get(i).getAlias());
                                         contactid.add(con.get(i).getContactId());
-                                        contacticon.add(R.drawable.cht_profile_list_icon);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        contacticon.add(bmd.getBitmap());
                                     }
                                 }
                                 final ConnectionListAdapter adaptador =
