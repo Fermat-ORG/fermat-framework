@@ -1038,7 +1038,44 @@ public class ChatMiddlewareDatabaseDao {
 
     public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException
     {
-        return null;
+
+        //if filter is null all records
+        Database database = null;
+        try {
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(publicKey);
+            filter.setColumn(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+
+            database = openDatabase();
+            // I will add the message information from the database
+            List<DatabaseTableRecord> records=getChatUserIdentityData(filter);
+            if(records==null|| records.isEmpty()){
+                return null;
+            }
+
+            final ChatUserIdentity chatUserIdentity = getChatUserIdentityTransaction(records.get(0));
+            chatUserIdentity.setNewProfileImage(getChatUserIdentityProfileImage(chatUserIdentity.getPublicKey()));
+
+
+            database.closeDatabase();
+
+            return chatUserIdentity;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatUserIdentityException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    e.getMessage(),
+                    null);
+        }
     }
 
     private byte[] getChatUserIdentityProfileImage(String publicKey)
