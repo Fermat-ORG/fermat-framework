@@ -77,15 +77,15 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
             boolean enabledNotification = true;
             this.referenceWalletSession = (ReferenceWalletSession)this.getSession();
             if(referenceWalletSession!=  null)
-            {
-                if(referenceWalletSession.getModuleManager()!=  null)
+               if(referenceWalletSession.getModuleManager()!=  null)
+                {
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            //get enabled notification settings
+                    //get enabled notification settings
 
-               settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-                enabledNotification = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
-            }
+                    settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+                    enabledNotification = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
+                }
 
 
             if(enabledNotification)
