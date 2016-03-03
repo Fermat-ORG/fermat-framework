@@ -81,6 +81,8 @@ final public class NegotiationWrapper {
                 } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
                     ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(SALE));
                     addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
+                }else {
+                    addClause(BROKER_CRYPTO_ADDRESS, "");
                 }
             }
 

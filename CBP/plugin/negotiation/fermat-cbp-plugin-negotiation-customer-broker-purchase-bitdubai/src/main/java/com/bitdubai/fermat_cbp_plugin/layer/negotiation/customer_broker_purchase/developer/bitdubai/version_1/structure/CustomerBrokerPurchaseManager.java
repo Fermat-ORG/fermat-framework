@@ -23,7 +23,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -105,12 +104,8 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         @Override
         public boolean closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
-                if(verifyStatusClause(negotiation.getClauses())) {
-                    this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
-                    return true;
-                }
-                return false;
-            } catch (CantGetListClauseException e) {
+                    return this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+            } catch (Exception e) {
                 this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
             }
@@ -127,7 +122,17 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            try{
+                this.customerBrokerPurchaseNegotiationDao.waitForCustomer(negotiation);
+            } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.getMessage(), e, "", "Cant Update Customer Broker Purchase Negotiation");
+            }
+        }
+
+        @Override
+        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException{
             try{
                 this.customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
             } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -320,6 +325,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
     *   Private Methods
     * */
 
+        @Deprecated
         private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
 

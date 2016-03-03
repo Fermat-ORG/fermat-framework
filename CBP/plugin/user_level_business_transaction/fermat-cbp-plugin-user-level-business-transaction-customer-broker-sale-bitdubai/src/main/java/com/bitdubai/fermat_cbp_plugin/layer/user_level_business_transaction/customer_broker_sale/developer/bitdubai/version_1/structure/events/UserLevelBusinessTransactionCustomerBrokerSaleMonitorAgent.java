@@ -281,6 +281,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
+                            // TODO
 //                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }

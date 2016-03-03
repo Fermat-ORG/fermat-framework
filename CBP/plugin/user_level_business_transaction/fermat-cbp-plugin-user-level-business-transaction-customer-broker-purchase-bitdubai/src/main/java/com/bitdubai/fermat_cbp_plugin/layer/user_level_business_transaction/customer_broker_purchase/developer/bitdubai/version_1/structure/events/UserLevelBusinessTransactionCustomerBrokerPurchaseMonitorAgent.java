@@ -32,7 +32,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerPurchaseDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.utils.CustomerBrokerPurchaseImpl;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -224,6 +223,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
 
                             userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
+                            //TODO
 //                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }
