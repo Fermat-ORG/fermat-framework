@@ -81,13 +81,7 @@
                     android:textSize="@dimen/csh_regular_text_size" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:orientation="vertical"
-                android:background="@drawable/csh_setup_page_background_top_2">
 
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

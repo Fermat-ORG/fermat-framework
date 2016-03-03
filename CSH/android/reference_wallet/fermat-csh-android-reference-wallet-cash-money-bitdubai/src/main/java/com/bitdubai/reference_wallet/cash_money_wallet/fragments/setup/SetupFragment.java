@@ -113,8 +113,8 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
 
         setupContainer = (LinearLayout) layout.findViewById(R.id.setup_container);
-        setupContainerasd = (LinearLayout) layout.findViewById(R.id.some_lame_ass_id);
-        setupContainerasd.setBackground(new SemiCircleDrawable());
+        //setupContainerasd = (LinearLayout) layout.findViewById(R.id.some_lame_ass_id);
+        //setupContainerasd.setBackground(new SemiCircleDrawable());
 
         okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
         okBtn.setOnClickListener(this);

@@ -33,9 +33,9 @@ public class SemiCircleDrawable extends Drawable {
         this.color = color;
         this.angle = angle;
         paint = new Paint();
-        //paint.setColor(color);
-        //paint.setStyle(Paint.Style.FILL);
-        paint.setShader(new LinearGradient(0, 0, 0, getMinimumHeight(), Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL);
+        //paint.setShader(new LinearGradient(0, 0, 0, getMinimumHeight(), Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
 
         rectF = new RectF();
     }
@@ -58,6 +58,8 @@ public class SemiCircleDrawable extends Drawable {
         canvas.save();
 
         Rect bounds = getBounds();
+        bounds.bottom = (int)(bounds.bottom * 1.5);
+        bounds.right = (int)(bounds.right * 1.5);
 
         if(angle == Direction.LEFT || angle == Direction.RIGHT)
         {
