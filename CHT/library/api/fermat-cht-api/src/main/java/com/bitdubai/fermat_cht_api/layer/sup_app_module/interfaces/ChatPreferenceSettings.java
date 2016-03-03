@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import java.util.UUID;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
@@ -16,9 +17,24 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
  */
 public class ChatPreferenceSettings implements FermatSettings {
     private boolean isHomeTutorialDialogEnabled;
+    private Actors localActorType;
+    private String localPublicKey;
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;
+    }
+
+    public Actors localActorType() {
+        return localActorType;
+    }
+
+    public String localPublicKey() {
+        return localPublicKey;
+    }
+
+    public void setProfileSelected(String publicKey, Actors actorType) {
+        this.localActorType=actorType;
+        this.localPublicKey=publicKey;
     }
 
     public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
@@ -72,4 +88,6 @@ public class ChatPreferenceSettings implements FermatSettings {
     public void setIsPresentationHelpEnabled(boolean b) {
         isHomeTutorialDialogEnabled=b;
     }
+
+
 }

@@ -208,9 +208,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                         try {
-                                            // appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
+                                            //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
                                             //Contact conn = chatSession.getSelectedConnection();
-
                                             Long dv = System.currentTimeMillis();
                                             ContactImpl newContact = new ContactImpl();
                                             newContact.setAlias(contactConn.getAlias());

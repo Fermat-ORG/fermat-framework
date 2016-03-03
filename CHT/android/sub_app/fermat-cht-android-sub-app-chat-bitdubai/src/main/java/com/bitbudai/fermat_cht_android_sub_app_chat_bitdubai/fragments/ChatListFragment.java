@@ -298,7 +298,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         text = (TextView) layout.findViewById(R.id.text);

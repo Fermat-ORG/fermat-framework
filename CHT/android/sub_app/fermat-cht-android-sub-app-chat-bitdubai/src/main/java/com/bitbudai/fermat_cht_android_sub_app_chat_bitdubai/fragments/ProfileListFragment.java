@@ -2,7 +2,9 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,13 +33,16 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,8 +56,8 @@ import java.util.UUID;
  */
 public class ProfileListFragment extends AbstractFermatFragment {
 
-    public List<Contact> contacts;
-    private Contact contactl;
+    public List<ChatUserIdentity> profiles;
+    private ChatUserIdentity profileslist;
 
     // Whether or not this fragment is showing in a two-pane layout
     private boolean mIsTwoPaneLayout;
@@ -63,15 +68,16 @@ public class ProfileListFragment extends AbstractFermatFragment {
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
+    private ChatPreferenceSettings chatSettings;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
     private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ProfileListFragment";
-    ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> profilename=new ArrayList<>();
+    ArrayList<Bitmap> profileicon=new ArrayList<>();
+    ArrayList<String> profileid=new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     Typeface tf;
 
@@ -86,6 +92,22 @@ public class ProfileListFragment extends AbstractFermatFragment {
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            //Obtain chatSettings or create new chat settings if first time opening chat platform
+            chatSettings = null;
+            try {
+                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatSettings = null;
+            }
+            if (chatSettings == null) {
+                chatSettings = new ChatPreferenceSettings();
+                chatSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         }catch (Exception e)
@@ -105,20 +127,20 @@ public class ProfileListFragment extends AbstractFermatFragment {
         text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
-            List <Contact> con=  chatManager.getContacts();
+            List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
             int size = con.size();
             if (size > 0) {
                 for (int i=0;i<size;i++){
-                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
-                        contactname.add(con.get(i).getAlias());
-                        contactid.add(con.get(i).getContactId());
-                        contacticon.add(R.drawable.cht_profile_list_icon);
-                    }
+                    profilename.add(con.get(i).getAlias());
+                    profileid.add(con.get(i).getPublicKey());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    profileicon.add(bmd.getBitmap());
                 }
                 text.setVisibility(View.GONE);
             }else{
                 text.setVisibility(View.VISIBLE);
-                text.setText("No Registered Profile");
+                text.setText("No Registered Profile. Please create one in any Fermat Community.");
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -132,7 +154,7 @@ public class ProfileListFragment extends AbstractFermatFragment {
             }
         });
 
-        ProfileListAdapter adapter=new ProfileListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+        ProfileListAdapter adapter=new ProfileListAdapter(getActivity(), profilename, profileicon, profileid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -142,9 +164,9 @@ public class ProfileListFragment extends AbstractFermatFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     final int pos=position;
-                    Contact contacto = chatManager.getContactByContactId(contactid.get(pos));
+                    final ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(profileid.get(pos));
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage("Do you want to select "+contacto.getRemoteName()+" as your active profile?");
+                    builder1.setMessage("Do you want to select "+profileSelected.getAlias()+" as your active profile?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(
                             "Yes",
@@ -152,10 +174,10 @@ public class ProfileListFragment extends AbstractFermatFragment {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     try {
-                                        appSession.setData(ChatSession.PROFILE_DATA, chatManager.getContactByContactId(contactid.get(pos)));
-                                        Contact profile = chatSession.getSelectedProfile();
-                                        //TODO: save profile in settings
-                                        Toast.makeText(getActivity(), "Profile Selected", Toast.LENGTH_SHORT).show();
+                                        //appSession.setData(ChatSession.PROFILE_DATA, profileSelected);
+                                        //ChatUserIdentity profile = chatSession.getSelectedProfile();
+                                        chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getActorType());
+                                        Toast.makeText(getActivity(), "Profile Selected: "+ profileSelected.getAlias(), Toast.LENGTH_SHORT).show();
                                         changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                                     }catch (Exception e){
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -177,9 +199,6 @@ public class ProfileListFragment extends AbstractFermatFragment {
                             });
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
-
-                }catch(CantGetContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -194,28 +213,26 @@ public class ProfileListFragment extends AbstractFermatFragment {
                     public void run() {
                         Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
                         try {
-                            List <Contact> con=  chatManager.getContacts();
+                            List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
                             if (con.size() > 0) {
-                                contactname.clear();
-                                contactid.clear();
-                                contacticon.clear();
+                                profilename.clear();
+                                profileid.clear();
+                                profileicon.clear();
                                 for (int i=0;i<con.size();i++){
-                                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
-                                        contactname.add(con.get(i).getAlias());
-                                        contactid.add(con.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                                    }
+                                    profilename.add(con.get(i).getAlias());
+                                    profileid.add(con.get(i).getPublicKey());
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    profileicon.add(bmd.getBitmap());
                                 }
                                 final ProfileListAdapter adaptador =
-                                        new ProfileListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
-                                adaptador.refreshEvents(contactname, contacticon, contactid);
+                                        new ProfileListAdapter(getActivity(), profilename, profileicon, profileid, errorManager);
+                                adaptador.refreshEvents(profilename, profileicon, profileid);
                                 list.invalidateViews();
                                 list.requestLayout();
                             }else{
                                 Toast.makeText(getActivity(), "No Registered Profile", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (CantGetContactException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
