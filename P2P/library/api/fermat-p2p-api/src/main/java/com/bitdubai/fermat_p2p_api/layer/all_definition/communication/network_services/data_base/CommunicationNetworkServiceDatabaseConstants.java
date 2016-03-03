@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 public final class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "network_service_data_base_"+ UUID.randomUUID().toString();
+    public static final String DATA_BASE_NAME                                   = "network_service_database";
 
 
     /**
