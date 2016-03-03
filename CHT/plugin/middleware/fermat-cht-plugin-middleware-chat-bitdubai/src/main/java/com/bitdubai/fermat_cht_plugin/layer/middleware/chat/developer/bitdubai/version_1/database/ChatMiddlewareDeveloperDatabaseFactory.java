@@ -198,6 +198,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME);
         identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME);
 
         /**
          * Table Identity addition.

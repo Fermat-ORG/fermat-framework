@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -1252,6 +1253,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.getPublicKey());
         record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, chatUserIdentity.getAlias());
         record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUserPublicKey);
+        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME, chatUserIdentity.getActorType().getCode());
 
         return record;
     }
@@ -1300,6 +1302,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME, chatUserIdentity.getAlias());
         record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.getPublicKey());
         //record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, chatUserIdentity.);
+        record.setStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME, chatUserIdentity.getActorType().getCode());
 
         return record;
     }
@@ -1411,8 +1414,8 @@ public class ChatMiddlewareDatabaseDao {
                 null,
                 chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                 null,
-                new byte[0],
-                null
+                getChatUserIdentityProfileImage(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                Actors.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME))
                 );
 
         return chatUserIdentity;
