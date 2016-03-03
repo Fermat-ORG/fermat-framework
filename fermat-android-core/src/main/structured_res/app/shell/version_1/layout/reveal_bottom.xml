@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/reveal"
+        android:visibility="gone"
         >
 
         <RelativeLayout
@@ -33,15 +34,6 @@
                 android:paddingBottom="7dp"
                 >
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="48dp"
-                    android:paddingTop="3dp"
-                    android:layout_marginLeft="7dp"
-                    android:src="@drawable/icon_settings_menu"
-                    android:id="@+id/img_fermat_setting_1"
-                    android:layout_marginBottom="3dp"
-                    android:visibility="gone"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
@@ -75,7 +67,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
 
 
 
@@ -184,6 +178,7 @@
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/btn_settings_bottom_menu"
                         android:background="@drawable/background_circle"
                         android:src="@drawable/settings_icon_dialog"
                         android:layout_gravity="center_vertical"
