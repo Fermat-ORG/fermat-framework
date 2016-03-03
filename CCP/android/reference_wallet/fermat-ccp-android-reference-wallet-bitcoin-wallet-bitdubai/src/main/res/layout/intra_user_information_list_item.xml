@@ -51,7 +51,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColorHint="@color/black_overlay"
+            android:textColorHint="@color/color_white"
+            android:buttonTint="@color/color_white"
+            android:width="30dp"
+            android:height="16dp"
            />
 
     </LinearLayout>
