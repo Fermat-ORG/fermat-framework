@@ -28,6 +28,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.drawables.SemiCircleDrawable;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
 
     //UI
     LinearLayout setupContainer;
+    LinearLayout setupContainerasd;
     Spinner currencySpinner;
     ArrayAdapter<String> currencySpinnerAdapter;
     Button okBtn;
@@ -111,6 +113,8 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
 
         setupContainer = (LinearLayout) layout.findViewById(R.id.setup_container);
+        setupContainerasd = (LinearLayout) layout.findViewById(R.id.some_lame_ass_id);
+        setupContainerasd.setBackground(new SemiCircleDrawable());
 
         okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
         okBtn.setOnClickListener(this);
