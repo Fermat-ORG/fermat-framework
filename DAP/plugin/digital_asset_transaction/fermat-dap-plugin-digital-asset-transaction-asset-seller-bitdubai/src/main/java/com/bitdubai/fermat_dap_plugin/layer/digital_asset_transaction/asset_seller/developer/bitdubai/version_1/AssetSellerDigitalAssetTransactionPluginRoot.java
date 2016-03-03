@@ -65,6 +65,8 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     //VARIABLE DECLARATION
 
+    public static int SELL_TIMEOUT = 1 * 60 * 1000; //1 MINUTE FOR TESTING.
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
