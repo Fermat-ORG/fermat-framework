@@ -67,9 +67,7 @@ import android.support.v4.widget.CursorAdapter;*/
  */
 public class ConnectionsListFragment extends AbstractFermatFragment {
 
-    // Defines a tag for identifying log entries
     public List<Contact> contacts;
-
     private Contact contactl;
 
     // Whether or not this fragment is showing in a two-pane layout
@@ -85,17 +83,14 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     private ChatSession chatSession;
     private Toolbar toolbar;
     ListView list;
+    // Defines a tag for identifying log entries
     String TAG="CHT_ConnectionsListFragment";
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    //public ContactsListFragment() {}
-   // static void initchatinfo(){
-   // }
 
     public static ConnectionsListFragment newInstance() {
-    //    initchatinfo();
         return new ConnectionsListFragment();}
 
     @Override
@@ -145,7 +140,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     if(!con.get(i).getRemoteName().equals("Not registered contact")) {
                         contactname.add(con.get(i).getAlias());
                         contactid.add(con.get(i).getContactId());
-                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                        contacticon.add(R.drawable.cht_profile_list_icon);
                     }
                 }
                 text.setVisibility(View.GONE);
@@ -309,7 +304,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     if(!con.get(i).getRemoteName().equals("Not registered contact")) {
                                         contactname.add(con.get(i).getAlias());
                                         contactid.add(con.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                        contacticon.add(R.drawable.cht_profile_list_icon);
                                     }
                                 }
                                 final ConnectionListAdapter adaptador =
