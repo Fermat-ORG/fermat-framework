@@ -437,8 +437,6 @@ public class ChatAdapterView extends LinearLayout {
         });
     }
 
-
-
     private void loadDummyHistory() {
 
         if (loadDummyData) {

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +40,12 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {//public class 
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     private ErrorManager errorManager;
+    Typeface tf;
 
 
     public ConnectionListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid, ErrorManager errorManager) {
         super(context, R.layout.connection_list_item, contactinfo);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -58,6 +61,7 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {//public class 
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
+            contactname.setTypeface(tf, Typeface.NORMAL);
         }catch (Exception e)
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

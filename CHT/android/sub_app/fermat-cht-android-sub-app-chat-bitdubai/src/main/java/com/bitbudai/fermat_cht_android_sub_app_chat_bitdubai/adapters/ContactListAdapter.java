@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-
 /**
  * Contact List Adapter
  *
@@ -49,8 +48,7 @@ import java.util.UUID;
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ContactListAdapter extends ArrayAdapter<String> {
+public class ContactListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
@@ -69,12 +67,14 @@ public class ContactListAdapter extends ArrayAdapter<String> {
     TextView contactname;
     int position;
     private AdapterCallback mAdapterCallback;//private AdapterCallback mAdapterCallback;
+    Typeface tf;
     //View.OnClickListener clickListener;
 
     public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
                               ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -94,51 +94,31 @@ public class ContactListAdapter extends ArrayAdapter<String> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
-
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
             imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
+            contactname.setTypeface(tf, Typeface.NORMAL);
 
-//            setClickListeners(imagen);
-//            setClickListeners(contactname);
-//
-//            setTagsToViews(imagen, position);
-//            setTagsToViews(contactname, position);
             final int pos=position;
             imagen.setOnClickListener(new View.OnClickListener() {
                // int pos = position;
                 @Override
                 public void onClick(View v) {
                     try {
-                            //contactsListFragment = new ContactsListFragment();
                             appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(pos)));
-                            //mAdapterCallback = ((AdapterCallback) mContext);
-                            mAdapterCallback.onMethodCallback();
-                            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                            mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
                         } catch (CantGetContactException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
-                    //int posr=pos;
-                    /*contactsListFragment = new ContactsListFragment();
-                    contactsListFragment.goToContactDetail(chatManager, moduleManager, chatSession,
-                            appSession, errorManager, contactid.get(posr));*/
                 }
             });
-//            imagen.setOnClickListener(new OnClickListener() {
-//
-//                @Override
-//                public void onClick(View v) {
-//                    ((ListView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
-//                }
-//            });
 
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -146,15 +126,10 @@ public class ContactListAdapter extends ArrayAdapter<String> {
 
         return item;
     }
-    /** * Sets the onClickListener on the view * * @param view */
-//    private void setClickListeners(View view) {
-//        view.setOnClickListener(clickListener);
-//    }
 
     public static interface AdapterCallback {
         void onMethodCallback();
     }
-
 
     public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         this.contactinfo=contactinfo;

@@ -1,13 +1,12 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +38,17 @@ import java.util.Date;
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ChatListAdapter extends ArrayAdapter {
-    //private final LayoutInflater inflater;
+public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+
     List<ChatsList> chatsList = new ArrayList<>();
-    private final ArrayList<String> chatinfo=new ArrayList<String>();   //work
+    private final ArrayList<String> chatinfo=new ArrayList<String>();
     private final ArrayList<Integer> imgid=new ArrayList<Integer>();
     private ErrorManager errorManager;
+    Typeface tf;
 
     public ChatListAdapter(Context context, ArrayList<String> chatinfo,ArrayList imgid, ErrorManager errorManager) {
         super(context, R.layout.chat_list_listview, chatinfo);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.chatinfo.addAll(chatinfo);
         this.imgid.addAll(imgid);
         this.errorManager=errorManager;
@@ -71,12 +71,15 @@ public class ChatListAdapter extends ArrayAdapter {
 
             TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
             contactname.setText(name);//    contactname.setText(chatinfo.get(0).get(0));
+            contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
             lastmessage.setText(message);        //   lastmessage.setText(chatinfo.get(0).get(1));
+            lastmessage.setTypeface(tf, Typeface.NORMAL);
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
             dateofmessage.setText(messagedate);//   dateofmessage.setText(chatinfo.get(0).get(2));
+            dateofmessage.setTypeface(tf, Typeface.NORMAL);
         }catch (Exception e)
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -84,7 +87,7 @@ public class ChatListAdapter extends ArrayAdapter {
         return (item);
     }
 
-     public void refreshEvents(ArrayList datos,ArrayList  imagen) {
+    public void refreshEvents(ArrayList datos,ArrayList  imagen) {
          this.chatinfo.removeAll(this.chatinfo);
          this.imgid.removeAll(this.imgid);
          this.chatinfo.addAll(datos);
@@ -93,11 +96,11 @@ public class ChatListAdapter extends ArrayAdapter {
     }
 
     public static Bitmap decodeFile(Context context,int resId) {
-// decode image size
+        // decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), resId, o);
-// Find the correct scale value. It should be the power of 2.
+        // Find the correct scale value. It should be the power of 2.
         final int REQUIRED_SIZE = 300;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
         int scale = 1;

@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -101,18 +102,13 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     SwipeRefreshLayout mSwipeRefreshLayout;
     TextView text;
     View layout;
-    //public ContactsListFragment() {}
-//    static void initchatinfo(){
-//        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-//        //imgid[0]=R.drawable.ken;
-//    }
+    Typeface tf;
 
     public static ContactsListFragment newInstance() {
-        //initchatinfo();
         return new ContactsListFragment();}
 
     @Override
-    public void onMethodCallback() {
+    public void onMethodCallback() {//solution to access to another activity clicking the photo icon of the list
         changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
     }
 
@@ -204,9 +200,12 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
         text=(TextView) layout.findViewById(R.id.text);
+        text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+
         try {
             List <Contact> con=  chatManager.getContacts();
             int size = con.size();

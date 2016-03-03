@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -72,6 +73,7 @@ public class ProfileListFragment extends AbstractFermatFragment {
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
+    Typeface tf;
 
     public static ProfileListFragment newInstance() {
         return new ProfileListFragment();}
@@ -97,8 +99,10 @@ public class ProfileListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.profile_list_fragment, container, false);
         TextView text=(TextView) layout.findViewById(R.id.text);
+        text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
             List <Contact> con=  chatManager.getContacts();

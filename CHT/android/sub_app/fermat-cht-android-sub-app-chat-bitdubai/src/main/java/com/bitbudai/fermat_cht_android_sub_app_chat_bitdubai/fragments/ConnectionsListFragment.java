@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -89,6 +90,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
+    Typeface tf;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();}
@@ -115,8 +117,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.connection_list_fragment, container, false);
         TextView text=(TextView) layout.findViewById(R.id.text);
+        text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
 //            //Comentar, solo para pruebas
@@ -243,35 +247,6 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                         AlertDialog alert11 = builder1.create();
                         alert11.show();
                     }
-//                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-//                            UUID contactidnew = contactexist.getContactId();
-//                            contactexist=chatManager.getContactByContactId(contactid.get(position));
-//                            Chat chat=chatSession.getSelectedChat();
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew=chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            chatManager.deleteContact(contactexist);
-//                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//                            appSession.setData("whocallme", "contact");
-//                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-//                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//                        }
-//                    }else {
-//                        appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(position)));
-//                        Contact conn = chatSession.getSelectedConnection();
-//                        //chatManager.saveContact(conn);
-//                        Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-//                        //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//                    }
-
                 }catch(CantSaveChatException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch(CantDeleteContactException e) {
@@ -310,8 +285,6 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
-                                //adaptador.notifyDataSetChanged();
-
                                 list.invalidateViews();
                                 list.requestLayout();
                             }else{
@@ -327,10 +300,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                 }, 2500);
             }
         });
-
-        return layout;
         // Inflate the list fragment layout
-        //return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;
     }
 
     @Override
