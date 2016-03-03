@@ -255,39 +255,29 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
     }
 
-    private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
-
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException {
         List<ContractBasicInformation> filteredList = new ArrayList<>();
         ActorIdentity customerIdentity;
         try {
 
-            List<ContractBasicInformation> contractsHistory = new ArrayList<>();
-            CryptoBrokerWalletModuleContractBasicInformation contract = null;
+            CryptoBrokerWalletModuleContractBasicInformation contract;
 
             if (status != null) {
 
-                for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(status)) {
-
-                    CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-                    if (customerBrokerContractSale.getStatus().equals(status)) {
-                        merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                        typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                        paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
-                    }
-                    customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, status, customerBrokerContractSale, saleNegotiation);
+                final Collection<CustomerBrokerContractSale> saleContracts = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(status);
+                for (CustomerBrokerContractSale saleContract : saleContracts) {
+                    CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(saleContract.getNegotiatiotId()));
+                    customerIdentity = getCustomerInfoByPublicKey(saleContract.getPublicKeyBroker(), saleContract.getPublicKeyCustomer());
+                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, saleContract, saleNegotiation);
                     filteredList.add(contract);
                 }
+
                 if (status == ContractStatus.CANCELLED) {
                     final Collection<CustomerBrokerSaleNegotiation> canceledNegotiations = customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CANCELLED);
                     for (CustomerBrokerSaleNegotiation saleNegotiation : canceledNegotiations) {
-                        merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                        typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                        paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
                         customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
-                        contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, status, null, saleNegotiation);
+                        contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, saleNegotiation);
                         filteredList.add(contract);
                     }
                 }
@@ -295,25 +285,18 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             } else {
 
                 ListsForStatusSale history = customerBrokerContractSaleManager.getCustomerBrokerContractHistory();
-                for (CustomerBrokerContractSale customerBrokerContractSale : history.getHistoryContracts()) {
-
+                final Collection<CustomerBrokerContractSale> historyContracts = history.getHistoryContracts();
+                for (CustomerBrokerContractSale customerBrokerContractSale : historyContracts) {
                     CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-
-                    merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                    typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                    paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
                     customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, ContractStatus.CANCELLED, customerBrokerContractSale, saleNegotiation);
+                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, customerBrokerContractSale, saleNegotiation);
                     filteredList.add(contract);
                 }
 
                 final Collection<CustomerBrokerSaleNegotiation> canceledNegotiations = customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CANCELLED);
                 for (CustomerBrokerSaleNegotiation saleNegotiation : canceledNegotiations) {
-                    merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                    typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                    paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
                     customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, status, null, saleNegotiation);
+                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, saleNegotiation);
                     filteredList.add(contract);
                 }
             }
@@ -328,36 +311,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException {
         try {
-            ContractBasicInformation contract;
             Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
             ListsForStatusSale history = customerBrokerContractSaleManager.getCustomerBrokerContractHistory();
-            ActorIdentity customerIdentity;
-            for (CustomerBrokerContractSale customerBrokerContractSale : history.getContractsWaitingForBroker()) {
+            final Collection<CustomerBrokerContractSale> contractsWaitingForBroker = history.getContractsWaitingForBroker();
+
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractsWaitingForBroker) {
                 CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-
-                merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
-
-                customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
-
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, ContractStatus.PENDING_MERCHANDISE, customerBrokerContractSale, saleNegotiation);
+                ActorIdentity customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
+                ContractBasicInformation contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, customerBrokerContractSale, saleNegotiation);
                 waitingForBroker.add(contract);
             }
 
-            /*//TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            waitingForBroker.add(contract);
-*/
             return waitingForBroker;
 
-        } catch (CantGetListSaleNegotiationsException e) {
-            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", e);
-        } catch (CantGetListCustomerBrokerContractSaleException e) {
-            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", e);
         } catch (Exception ex) {
             throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", ex);
         }
@@ -366,53 +333,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset) throws CantGetContractsWaitingForCustomerException {
         try {
-            ContractBasicInformation contract;
             Collection<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
 
             ListsForStatusSale history = customerBrokerContractSaleManager.getCustomerBrokerContractHistory();
-            ActorIdentity customerIdentity;
-            for (CustomerBrokerContractSale customerBrokerContractSale : history.getContractsWaitingForCustomer()) {
+            final Collection<CustomerBrokerContractSale> contractsWaitingForCustomer = history.getContractsWaitingForCustomer();
+
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractsWaitingForCustomer) {
                 CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-
-                merchandise = getClauseType(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
-                typeOfPayment = getClauseType(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                paymentCurrency = getClauseType(saleNegotiation, ClauseType.BROKER_CURRENCY);
-                customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
-
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, merchandise, typeOfPayment, paymentCurrency, ContractStatus.PENDING_MERCHANDISE, customerBrokerContractSale, saleNegotiation);
+                ActorIdentity customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
+                ContractBasicInformation contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, customerBrokerContractSale, saleNegotiation);
                 waitingForCustomer.add(contract);
             }
 
-            /*//TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null, null);
-            waitingForCustomer.add(contract);
-*/
             return waitingForCustomer;
 
-        } catch (CantGetListSaleNegotiationsException e) {
-            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", e);
-        } catch (CantGetListCustomerBrokerContractSaleException e) {
-            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", e);
         } catch (Exception ex) {
             throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", ex);
         }
-    }
-
-    private String getClauseType(CustomerBrokerSaleNegotiation saleNegotiation, ClauseType clauseType) throws CantGetListClauseException {
-        String value = null;
-        try {
-            for (Clause clause : saleNegotiation.getClauses()) {
-                if (clause.getType() == clauseType) {
-                    value = clause.getValue();
-                }
-            }
-        } catch (CantGetListClauseException e) {
-            throw new CantGetListClauseException("Cant get the clauses", e);
-        }
-
-        return value;
     }
 
     @Override

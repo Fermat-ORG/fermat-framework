@@ -9,16 +9,21 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
+
 
 /**
  * Created by nelson on 11/11/15.
  */
 public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
-    private static Random random = new Random(321515131);
-    private static Calendar instance = Calendar.getInstance();
+    private static final Random random = new Random(321515131);
+    private static final Calendar instance = Calendar.getInstance();
+    private static final NumberFormat numberFormat = DecimalFormat.getInstance();
 
     private String customerAlias;
     private byte[] imageBytes;
@@ -34,38 +39,64 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
 
     public CryptoBrokerWalletModuleContractBasicInformation(ActorIdentity customer, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerContractSale customerBrokerContractSale, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) {
         this.customerAlias = customer.getAlias();
+        imageBytes = customer.getProfileImage();
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
 
         if (customerBrokerSaleNegotiation != null) {
-            this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason(); //Negotiation del objeto como tal
-            date = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis(); //
-            negotiationId = customerBrokerSaleNegotiation.getNegotiationId(); //UUID.fromString(customerBrokerContractSale.getNegotiatiotId()); //Contrato
+            this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason();
+            date = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
+            negotiationId = customerBrokerSaleNegotiation.getNegotiationId();
             try {
                 for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
-                    if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
+                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                         amount = Float.valueOf(clause.getValue());
-                    }
-                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                    else if (clause.getType() == ClauseType.EXCHANGE_RATE)
                         exchangeRateAmount = Float.valueOf(clause.getValue());
-                    }
                 }
             } catch (CantGetListClauseException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             amount = random.nextFloat() * 100; //Cantidad de mercancia que recibe el customer
             exchangeRateAmount = random.nextFloat(); //tasa de cambio
             this.cancellationReason = ""; //Negotiation del objeto como tal
             date = instance.getTimeInMillis(); //
             negotiationId = UUID.randomUUID(); //Contrato
         }
-        imageBytes = new byte[0]; //Actor customer
+        if (customerBrokerContractSale != null) {
+            this.status = customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
+        } else this.status = status;
+    }
+
+    public CryptoBrokerWalletModuleContractBasicInformation(ActorIdentity customer, CustomerBrokerSaleNegotiation saleNegotiation) {
+
+        customerAlias = customer.getAlias();
         imageBytes = customer.getProfileImage();
-        if (customerBrokerContractSale != null){
-            this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
-        }else this.status = status;
+        negotiationId = saleNegotiation.getNegotiationId();
+        cancellationReason = saleNegotiation.getCancelReason();
+        date = saleNegotiation.getLastNegotiationUpdateDate();
+        status = ContractStatus.CANCELLED;
+        merchandise = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
+        typeOfPayment = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+        paymentCurrency = getClauseValue(saleNegotiation, ClauseType.BROKER_CURRENCY);
+        amount = toFloatValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        exchangeRateAmount = toFloatValue(saleNegotiation, ClauseType.EXCHANGE_RATE);
+    }
+
+    public CryptoBrokerWalletModuleContractBasicInformation(ActorIdentity customer, CustomerBrokerContractSale saleContract, CustomerBrokerSaleNegotiation saleNegotiation) {
+        customerAlias = customer.getAlias();
+        imageBytes = customer.getProfileImage();
+        negotiationId = saleNegotiation.getNegotiationId();
+        cancellationReason = saleNegotiation.getCancelReason();
+        date = saleContract.getDateTime();
+        status = saleContract.getStatus();
+        merchandise = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
+        typeOfPayment = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+        paymentCurrency = getClauseValue(saleNegotiation, ClauseType.BROKER_CURRENCY);
+        amount = toFloatValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+        exchangeRateAmount = toFloatValue(saleNegotiation, ClauseType.EXCHANGE_RATE);
     }
 
     @Override
@@ -168,5 +199,26 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
 
     public void setCancellationReason(String cancellationReason) {
         this.cancellationReason = cancellationReason;
+    }
+
+    private String getClauseValue(CustomerBrokerSaleNegotiation saleNegotiation, ClauseType clauseType) {
+        try {
+            for (Clause clause : saleNegotiation.getClauses())
+                if (clause.getType() == clauseType)
+                    return clause.getValue();
+
+        } catch (CantGetListClauseException e) {
+            return "No value";
+        }
+        return "No value";
+    }
+
+    private float toFloatValue(CustomerBrokerSaleNegotiation saleNegotiation, ClauseType clauseType) {
+        final String clauseValue = getClauseValue(saleNegotiation, clauseType);
+        try {
+            return numberFormat.parse(clauseValue).floatValue();
+        } catch (ParseException e) {
+            return 0.0f;
+        }
     }
 }
