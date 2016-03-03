@@ -117,6 +117,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
 
         /**
          * Table Online Payment addition.

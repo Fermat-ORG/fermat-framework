@@ -48,7 +48,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNe
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ExpirationTimeViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
@@ -69,12 +68,10 @@ import java.util.Map;
 
 import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_BANK_ACCOUNT;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY_QUANTITY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_DATE_TIME_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_PLACE_TO_DELIVER;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY_QUANTITY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
@@ -87,7 +84,7 @@ import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.e
  * A simple {@link Fragment} subclass.
  */
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener, ExpirationTimeViewHolder.Listener {
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "OpenNegotiationDetails";
     private static final NumberFormat numberFormat = DecimalFormat.getInstance();
@@ -161,7 +158,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter.setMarketRateList(appSession.getActualExchangeRates());
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
-        adapter.setExpirationDatetimeListener(this);
         setSuggestedExchangeRateInAdapter(adapter);
 
         recyclerView.setAdapter(adapter);
@@ -234,29 +230,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 datetimeToDeliverEventAction(triggerView, clause);
                 break;
         }
-    }
-
-    @Override
-    public void onExpirationDatetimeValueClicked(Button triggerView) {
-        ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), negotiationWrapper.getExpirationDate());
-        if (triggerView.getId() == R.id.cbw_date_value)
-            clauseDateTimeDialog.showDateDialog();
-        else
-            clauseDateTimeDialog.showTimeDialog();
-
-        clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-            @Override
-            public void getDate(long newValue) {
-                negotiationWrapper.setExpirationTime(newValue);
-                adapter.changeDataSet(negotiationWrapper);
-            }
-        });
-    }
-
-    @Override
-    public void onExpirationDatetimeConfirmButtonClicked() {
-        negotiationWrapper.confirmExpirationDatetime();
-        adapter.changeDataSet(negotiationWrapper);
     }
 
     @Override
@@ -354,7 +327,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onSendButtonClicked() {
         try {
-            if (negotiationWrapper.isClausesConfirmed(CUSTOMER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, BROKER_CURRENCY, CUSTOMER_CURRENCY)) {
+            if (negotiationWrapper.isClausesConfirmed()) {
                 walletManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
             } else

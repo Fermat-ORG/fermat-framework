@@ -44,13 +44,12 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exc
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -489,29 +488,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
-    }
-
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return getCommunicationsClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                        "sender_alias",
-                        "sender_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return getCommunicationsClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                        "destination_alias",
-                        "destionation_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
     }
 
     @Override
@@ -1063,8 +1039,16 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     public void run() {
                         try {
                             sendNewMessage(
-                                    getProfileSenderToRequestConnection(cpr.getSenderPublicKey()),
-                                    getProfileDestinationToRequestConnection(cpr.getDestinationPublicKey()),
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cpr.getDestinationPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
                                     cpr.toJson());
                         } catch (CantSendMessageException e) {
                             e.printStackTrace();
@@ -1078,8 +1062,16 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     public void run() {
                         try {
                             sendNewMessage(
-                                    getProfileSenderToRequestConnection(cpr.getSenderPublicKey()),
-                                    getProfileDestinationToRequestConnection(cpr.getDestinationPublicKey()),
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cpr.getDestinationPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
                                     buildJsonMetadataResponseMessage(cpr));
                         } catch (CantSendMessageException e) {
                             e.printStackTrace();
