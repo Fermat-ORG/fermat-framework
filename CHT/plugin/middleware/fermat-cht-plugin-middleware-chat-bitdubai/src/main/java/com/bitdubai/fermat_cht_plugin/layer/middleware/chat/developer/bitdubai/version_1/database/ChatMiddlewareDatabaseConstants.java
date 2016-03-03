@@ -65,7 +65,7 @@ public class ChatMiddlewareDatabaseConstants {
     /**
      * Contacts Connection database table definition.
      */
-    public static final String CONTACTS_CONNECTION_TABLE_NAME = "contacts";
+    public static final String CONTACTS_CONNECTION_TABLE_NAME = "contacts_connections";
 
     public static final String CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME = "id_contact";
     public static final String CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME = "remote_name";
