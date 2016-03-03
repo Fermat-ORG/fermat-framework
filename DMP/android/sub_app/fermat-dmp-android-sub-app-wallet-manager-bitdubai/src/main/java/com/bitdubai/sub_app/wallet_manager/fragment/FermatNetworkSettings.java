@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
+import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
@@ -50,7 +52,7 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     @Override
     public void onBackPressed() {
-
+        Toast.makeText(getActivity(),"Settings has saved",Toast.LENGTH_SHORT).show();
     }
 
     @Override
