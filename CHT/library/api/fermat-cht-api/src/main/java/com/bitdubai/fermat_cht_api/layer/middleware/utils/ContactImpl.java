@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ public class ContactImpl implements Contact {
     private String remoteActorPublicKey;
     private long creationDate;
     private byte[] image;
+    private ContactStatus contactStatus;
 
     public ContactImpl(){}
 
@@ -27,7 +29,8 @@ public class ContactImpl implements Contact {
                        PlatformComponentType remoteActorType,
                        String remoteActorPublicKey,
                        long creationDate,
-                       byte[] image)
+                       byte[] image,
+                       ContactStatus contactStatus)
     {
         this.contactId            = contactId;
         this.remoteName           = remoteName;
@@ -36,6 +39,7 @@ public class ContactImpl implements Contact {
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.creationDate         = creationDate;
         this.image                = image;
+        this.contactStatus        = contactStatus;
     }
 
     @Override
@@ -109,6 +113,16 @@ public class ContactImpl implements Contact {
     }
 
     @Override
+    public ContactStatus getContactStatus() {
+        return contactStatus;
+    }
+
+    @Override
+    public void setContactStatus(ContactStatus contactStatus) {
+        this.contactStatus = contactStatus;
+    }
+
+    @Override
     public String toString() {
         return "ContactImpl{" +
                 "contactId=" + contactId +
@@ -116,7 +130,8 @@ public class ContactImpl implements Contact {
                 ", alias='" + alias + '\'' +
                 ", remoteActorType=" + remoteActorType +
                 ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", creationDate=" + creationDate +
+                ", creationDate=" + creationDate + '\'' +
+                ", contactStatus=" + contactStatus +
                 '}';
     }
 }

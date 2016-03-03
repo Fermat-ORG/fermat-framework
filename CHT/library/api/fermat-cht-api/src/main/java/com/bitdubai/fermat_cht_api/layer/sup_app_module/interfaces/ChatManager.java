@@ -78,4 +78,6 @@ public interface ChatManager {
     HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
 
     void createSelfIdentities() throws CantCreateSelfIdentityException;
+
+    boolean isIdentityDevice();
 }
