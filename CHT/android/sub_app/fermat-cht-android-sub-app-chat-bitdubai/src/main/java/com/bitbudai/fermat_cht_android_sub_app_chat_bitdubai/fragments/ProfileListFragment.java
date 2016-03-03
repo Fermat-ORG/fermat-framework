@@ -176,7 +176,7 @@ public class ProfileListFragment extends AbstractFermatFragment {
                                     try {
                                         //appSession.setData(ChatSession.PROFILE_DATA, profileSelected);
                                         //ChatUserIdentity profile = chatSession.getSelectedProfile();
-                                        chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getActorType());
+                                        chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
                                         Toast.makeText(getActivity(), "Profile Selected: "+ profileSelected.getAlias(), Toast.LENGTH_SHORT).show();
                                         changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                                     }catch (Exception e){

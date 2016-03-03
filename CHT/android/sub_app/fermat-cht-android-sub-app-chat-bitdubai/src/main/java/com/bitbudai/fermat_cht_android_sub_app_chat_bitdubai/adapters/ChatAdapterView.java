@@ -352,10 +352,10 @@ public class ChatAdapterView extends LinearLayout {
                         if(chatSettings!=null)
                         {
                             chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
-                            chat.setLocalActorType(null);//chatSettings.getLocalActorType()
+                            chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
                         }
 
-                        //TODO:Revisar esto ya que cambio el mapa por el actor como tal
+                        //Revisar esto ya que cambio el mapa por el actor como tal
 //                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
 //                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
 //                        for(PlatformComponentType key : keySet) {
