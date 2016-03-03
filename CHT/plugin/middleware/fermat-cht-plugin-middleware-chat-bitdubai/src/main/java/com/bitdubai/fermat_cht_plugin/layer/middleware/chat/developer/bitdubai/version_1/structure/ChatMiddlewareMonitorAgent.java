@@ -439,16 +439,21 @@ public class ChatMiddlewareMonitorAgent implements
                     //TODO: I need to study if the contact must be updated.
                     return;
                 }
-                //chatMiddlewareDatabaseDao.saveContact(contact); TODO:Modificar por ContactConnection que esta haciendo jose
+                chatMiddlewareDatabaseDao.saveContactConnection(contact);
             } catch (ObjectNotSetException e) {
                 throw new CantSaveContactConnectionException(
                         e,
-                        "Saving the remote contact",
+                        "Saving the remote contact connection",
                         "The contact object is null");
             } catch (CantGetContactException e) {
                 throw new CantSaveContactConnectionException(
                         e,
-                        "Saving the remote contact",
+                        "Saving the remote contact connection",
+                        "Unexpected error in database");
+            } catch (CantSaveContactException e) {
+                throw new CantSaveContactConnectionException(
+                        e,
+                        "Saving the remote contact connection",
                         "Unexpected error in database");
             }
         }
