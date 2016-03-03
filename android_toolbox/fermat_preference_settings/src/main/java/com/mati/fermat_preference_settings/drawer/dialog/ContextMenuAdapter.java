@@ -3,6 +3,7 @@ package com.mati.fermat_preference_settings.drawer.dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.mati.fermat_preference_settings.R;
@@ -47,15 +48,18 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
 
             @Override
             public void onClick(View view) {
-                clearNotSelectedRadioButton(position);
+                 clearNotSelectedRadioButton(position,view);
                  callBack.optionSelected(data,position);
             }
         });
     }
 
-    private void clearNotSelectedRadioButton(int positionSelected){
+    private void clearNotSelectedRadioButton(int positionSelected,View view){
         for (int i = 0; i < getItemCount(); i++) {
-            if(i!=positionSelected) getItem(i).setIsRadioTouched(false);
+            if(i!=positionSelected){
+                getItem(i).setIsRadioTouched(false);
+                ((RadioButton)view).setChecked(false);
+            }
         }
     }
 
