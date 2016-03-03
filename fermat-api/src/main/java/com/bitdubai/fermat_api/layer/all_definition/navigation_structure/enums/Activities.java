@@ -126,6 +126,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY("DWAUANDA"),
 
     DAP_WALLET_ASSET_USER_V2_HOME("DWAUH"),
+    DAP_WALLET_ASSET_USER_V2_DETAIL("DWAUD"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -663,6 +664,8 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_USER_MAIN_ACTIVITY;
             case "DWAUH":
                 return DAP_WALLET_ASSET_USER_V2_HOME;
+            case "DWAUD":
+                return DAP_WALLET_ASSET_USER_V2_DETAIL;
             case "DWAUHA":
                 return DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY;
             case "DWAUAD":

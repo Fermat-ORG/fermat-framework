@@ -18,6 +18,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.Sett
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserHistoryActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.DetailFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.HomeFragment;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -81,6 +82,9 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     break;
                 case DAP_WALLET_ASSET_USER_V2_HOME:
                     currentFragment = new HomeFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_V2_DETAIL:
+                    currentFragment = new DetailFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");

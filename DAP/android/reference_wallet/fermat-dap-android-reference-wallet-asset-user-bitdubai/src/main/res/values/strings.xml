@@ -11,10 +11,10 @@
     <string name="dap_user_wallet_search_hint">Asset name</string>
     <string name="dap_user_wallet_show_no_balance">Hide empty assets</string>
     <string name="dap_user_wallet_show_all">Show empty assets</string>
-    <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
-    <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
-    <string name="dap_user_wallet_action_transfer">Transfer Asset</string>
-    <string name="dap_user_wallet_action_sell">Sell Asset</string>
+    <string name="dap_user_wallet_action_redeem">Redeem</string>
+    <string name="dap_user_wallet_action_appropriate">Appropriate</string>
+    <string name="dap_user_wallet_action_transfer">Transfer</string>
+    <string name="dap_user_wallet_action_sell">Sell</string>
     <!-- -->
 
     <!-- empty list views -->
@@ -126,5 +126,6 @@
 
     <!-- v2 -->
     <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
+    <string name="dap_user_wallet_v2_detail_received">Received by</string>
     <!-- -->
 </resources>

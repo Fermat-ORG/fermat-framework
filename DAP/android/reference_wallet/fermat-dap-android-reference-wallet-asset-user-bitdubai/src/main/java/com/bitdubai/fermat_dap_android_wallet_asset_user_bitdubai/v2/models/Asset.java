@@ -24,6 +24,7 @@ public class Asset {
     private String description;
     private Timestamp expDate;
     private Status status;
+    private String actorName;
 
     public enum Status {
         PENDING("PENDING"),
@@ -53,6 +54,7 @@ public class Asset {
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
         setStatus(status);
+        setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
     }
 
     public byte[] getImage() {
@@ -80,7 +82,7 @@ public class Asset {
     }
 
     public String getFormattedAmount() {
-        return DAPStandardFormats.BITCOIN_FORMAT.format(BitcoinConverter.convert(amount, SATOSHI, BITCOIN));
+        return DAPStandardFormats.BITCOIN_FORMAT.format(BitcoinConverter.convert(amount, SATOSHI, BITCOIN)) + " " + BITCOIN.getName();
     }
 
     public String getDescription() {
@@ -109,5 +111,13 @@ public class Asset {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getActorName() {
+        return actorName;
+    }
+
+    public void setActorName(String actorName) {
+        this.actorName = actorName;
     }
 }
