@@ -129,12 +129,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    /**
-     * Access modifier was changed from private to protected to enhance
-     * testability
-     */
-    // private
-    protected DatabaseTable getDatabaseContractTable() {
+    private DatabaseTable getDatabaseContractTable() {
         return getDataBase().getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME);
     }
@@ -144,12 +139,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    /**
-     * Access modifier was changed from private to protected to enhance
-     * testability
-     */
-    // private
-    protected DatabaseTable getDatabaseEventsTable() {
+    private DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }

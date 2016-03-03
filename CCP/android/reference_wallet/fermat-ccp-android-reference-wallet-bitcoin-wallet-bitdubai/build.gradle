@@ -11,7 +11,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -39,6 +39,8 @@ dependencies {
     compile project(':fermat-android-api')
 
     compile project(':fermat_preference_settings')
+
+    compile project(':fermat_navigator_drawer')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 

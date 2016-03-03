@@ -97,6 +97,41 @@ dependencies {
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 
 	deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
+    compile project(':fermat-p2p-api')
+    compile project(':fermat-pip-api')
+    compile 'org.eclipse.jetty:jetty-server:9.2.14.v20151106'
+    compile 'org.eclipse.jetty.websocket:websocket-server:9.2.14.v20151106'
+    compile 'org.eclipse.jetty.websocket:websocket-api:9.2.14.v20151106'
+    compile 'org.eclipse.jetty.websocket:javax-websocket-server-impl:9.2.14.v20151106'
+    compile 'org.eclipse.jetty:jetty-servlet:9.2.14.v20151106'
+    compile 'org.eclipse.jetty:jetty-webapp:9.2.14.v20151106'
+    compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.14.Final'
+    compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.14.Final'
+    compile 'org.jboss.resteasy:resteasy-multipart-provider:3.0.14.Final'
+    compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.14.Final'
+    compile 'org.jboss.resteasy:async-http-servlet-3.0:3.0.14.Final'
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'org.slf4j:slf4j-log4j12:1.7.13'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
+    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
+    //    compile files('src/main/libs/cling-core-2.1.0.jar')
+
+    //    compile files('src/main/libs/cling-support-2.1.0.jar')
+
+    //    compile files('src/main/libs/seamless-http-1.1.1.jar')
+
+    //    compile files('src/main/libs/seamless-util-1.1.1.jar')
+
+    //    compile files('src/main/libs/seamless-xml-1.1.1.jar')
+    compile files('src/main/libs/cling-core-2.1.0.jar')
+    compile files('src/main/libs/cling-support-2.1.0.jar')
+    compile files('src/main/libs/seamless-http-1.1.1.jar')
+    compile files('src/main/libs/seamless-util-1.1.1.jar')
+    compile files('src/main/libs/seamless-xml-1.1.1.jar')
+    compile files('src/main/libs/cling-support-2.1.0-sources.jar')
+    compile files('src/main/libs/cling-core-2.1.0-sources.jar')
 }
 
 pmd {

@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.intra_user_identity.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -22,7 +21,7 @@ import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppS
  */
 public class CryptoWalletUserFermatAppConnection extends AppConnections{
 
-    public CryptoWalletUserFermatAppConnection(Activity activity) {
+    public CryptoWalletUserFermatAppConnection(Context activity) {
         super(activity);
     }
 
