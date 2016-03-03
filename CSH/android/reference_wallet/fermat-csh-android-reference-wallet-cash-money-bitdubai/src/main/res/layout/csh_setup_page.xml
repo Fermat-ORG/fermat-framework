@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/csh_setup_background"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,10 +20,11 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/some_lame_ass_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/csh_setup_background"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/csh_setup_page_background_top">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -78,6 +79,14 @@
                     android:text="This step cannot be undone"
                     android:textColor="#fff"
                     android:textSize="@dimen/csh_regular_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="vertical"
+                android:background="@drawable/csh_setup_page_background_top_2">
+
             </LinearLayout>
 
             <LinearLayout
