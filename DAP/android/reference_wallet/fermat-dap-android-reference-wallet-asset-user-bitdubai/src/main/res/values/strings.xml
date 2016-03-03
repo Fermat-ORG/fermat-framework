@@ -15,6 +15,7 @@
     <string name="dap_user_wallet_action_appropriate">Appropriate</string>
     <string name="dap_user_wallet_action_transfer">Transfer</string>
     <string name="dap_user_wallet_action_sell">Sell</string>
+    <string name="dap_user_wallet_action_redeem_title">Redeem Asset</string>
     <!-- -->
 
     <!-- empty list views -->

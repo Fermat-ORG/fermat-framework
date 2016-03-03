@@ -120,4 +120,8 @@ public class Asset {
     public void setActorName(String actorName) {
         this.actorName = actorName;
     }
+
+    public DigitalAsset getDigitalAsset() {
+        return digitalAsset;
+    }
 }
