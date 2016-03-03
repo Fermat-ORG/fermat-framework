@@ -151,7 +151,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
     public void receiveSaleConfirm(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantReceiveConfirmNegotiationTransactionException {
 
         try {
-
+            System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     this.cryptoAddressBookManager,
                     this.cryptoVaultManager,
@@ -159,7 +159,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
-
+                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 

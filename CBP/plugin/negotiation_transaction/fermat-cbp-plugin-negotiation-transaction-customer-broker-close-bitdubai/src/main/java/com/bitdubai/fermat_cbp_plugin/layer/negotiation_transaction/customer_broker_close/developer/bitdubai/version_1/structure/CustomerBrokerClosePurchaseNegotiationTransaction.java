@@ -152,13 +152,16 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
 //            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
+                System.out.print("\n\n**** 21.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
+                System.out.print("\n\n**** 21.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
             }
 
+            System.out.print("\n\n**** 21.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
@@ -184,6 +187,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
+            System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     this.cryptoAddressBookManager,
                     this.cryptoVaultManager,
@@ -192,7 +196,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
 //            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
-
+                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 

@@ -350,17 +350,26 @@ public class CustomerBrokerCloseAgent  implements
                         transactionId   = negotiationTransaction.getTransactionId();
                         negotiationType = negotiationTransaction.getNegotiationType();
 
+                        System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE CONFIRM STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
+
                         switch (negotiationType) {
                             case PURCHASE:
+                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n"+
+                                        "\n - Status :" + purchaseNegotiation.getStatus().getCode()
+                                );
                                 //SEND CONFIRM NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                             case SALE:
+                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n"+
+                                                "\n - Status :" + purchaseNegotiation.getStatus().getCode()
+                                );
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                         }
 
+                        System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode() + " ****\n");
                         //Update the Negotiation Transaction
                         customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                     }
@@ -413,12 +422,14 @@ public class CustomerBrokerCloseAgent  implements
                         transactionId           = negotiationTransmission.getTransactionId();
                         negotiationType         = negotiationTransmission.getNegotiationType();
 
+                        System.out.print("\n\n**** 20.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION  ****\n");
                         if (negotiationXML != null) {
 
                             //TODO FOR TEST.
 //                            if(customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(negotiationTransmission.getNegotiationId()) == null) {
                                 switch (negotiationType) {
                                     case PURCHASE:
+                                        System.out.print("\n\n**** 20.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION PURCHASE ****\n");
                                         //CLOSE PURCHASE NEGOTIATION
                                         purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                         customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
@@ -431,6 +442,7 @@ public class CustomerBrokerCloseAgent  implements
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
                                         break;
                                     case SALE:
+                                        System.out.print("\n\n**** 20.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION SALE ****\n");
                                         //CLOSE SALE NEGOTIATION
                                         saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                         customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
@@ -467,11 +479,14 @@ public class CustomerBrokerCloseAgent  implements
                         negotiationType         = negotiationTransmission.getNegotiationType();
                         negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
+                        System.out.print("\n\n**** 27.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM  ****\n");
+
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
 
                             if (negotiationXML != null) {
                                 switch (negotiationType) {
                                     case PURCHASE:
+                                        System.out.print("\n\n**** 27.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE ****\n");
                                         //UPDATE NEGOTIATION IF PAYMENT IS CRYPTO CURRENCY
                                         purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                         customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
@@ -484,6 +499,7 @@ public class CustomerBrokerCloseAgent  implements
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
                                         break;
                                     case SALE:
+                                        System.out.print("\n\n**** 27.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM SALE ****\n");
                                         //UPDATE NEGOTIATION IF MERCHANDISE IS CRYPTO CURRENCY
                                         saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                         customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
