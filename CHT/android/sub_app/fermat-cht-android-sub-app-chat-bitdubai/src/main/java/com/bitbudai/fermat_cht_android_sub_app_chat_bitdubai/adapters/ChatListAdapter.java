@@ -42,7 +42,7 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
 
     List<ChatsList> chatsList = new ArrayList<>();
     private final ArrayList<String> chatinfo=new ArrayList<String>();
-    private final ArrayList<Integer> imgid=new ArrayList<Integer>();
+    private final ArrayList<Bitmap> imgid=new ArrayList<>();
     private ErrorManager errorManager;
     Typeface tf;
 
@@ -67,7 +67,7 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             messagedate=converter.get(2);
 
             ImageView imagen = (ImageView) item.findViewById(R.id.image);//imagen.setImageResource(imgid.get(position));
-            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), imgid.get(position)), 300));
+            imagen.setImageBitmap(getRoundedShape(imgid.get(position), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
             contactname.setText(name);//    contactname.setText(chatinfo.get(0).get(0));

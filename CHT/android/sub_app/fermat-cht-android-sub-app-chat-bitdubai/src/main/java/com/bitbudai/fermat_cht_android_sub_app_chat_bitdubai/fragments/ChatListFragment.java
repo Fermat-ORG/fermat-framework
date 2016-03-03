@@ -1,6 +1,9 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +47,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -120,10 +124,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     SwipeRefreshLayout mSwipeRefreshLayout;
     ArrayList<String> infochat=new ArrayList<String>();
     ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
-    ArrayList imgid=new ArrayList();
+    ArrayList<Bitmap> imgid=new ArrayList<>();
     TextView text;
     View layout;
     PresentationDialog presentationDialog;
+    Typeface tf;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
@@ -214,7 +219,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                 //datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
-                imgid.add(R.drawable.cht_profile_list_icon);//R.drawable.ken
+                ByteArrayInputStream bytes = new ByteArrayInputStream(chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getProfileImage());
+                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                imgid.add(bmd.getBitmap());//imgid.add(R.drawable.cht_profile_list_icon);
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -295,6 +302,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         text = (TextView) layout.findViewById(R.id.text);
+        text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -333,8 +341,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    //CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
-                    //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                 } catch(Exception e)
                 {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -370,9 +376,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         });
         return layout;
     }
-
-    //FINALLY
-
 
     @Override
     public void onUpdateViewOnUIThread(String code) {

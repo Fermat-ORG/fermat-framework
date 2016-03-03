@@ -36,13 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
-//import android.widget.LinearLayout;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-//import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
 /**
  * Chat Fragment
  *
@@ -60,7 +53,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
     private Toolbar toolbar;
-
 
     ArrayList<String> historialmensaje = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -80,7 +72,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private RecyclerView messagesContainer;
     public Button sendBtn;
     private ChatAdapterView adapter;
-    public ArrayList<ChatMessage> chatHistory= new ArrayList<ChatMessage>();
+    public ArrayList<ChatMessage> chatHistory= new ArrayList<>();
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
 
@@ -147,7 +139,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             adapter.refreshEvents();
         }
     }
-
 
     //
 //    void findMessage(){
