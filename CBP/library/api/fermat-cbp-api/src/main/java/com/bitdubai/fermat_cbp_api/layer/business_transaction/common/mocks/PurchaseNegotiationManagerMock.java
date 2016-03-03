@@ -65,6 +65,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
+    public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+
+    }
+
+    @Override
     public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException {
         return null;
     }
