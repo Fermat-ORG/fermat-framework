@@ -60,7 +60,6 @@ import com.bitdubai.android_core.app.common.version_1.provisory.DesktopManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatDesktopManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
@@ -68,6 +67,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -687,12 +687,11 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory) {
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession fermatSession) {
 
         try {
             FermatStructure fermatStructure = getAppInUse();
             String appPublicKey = fermatStructure.getPublicKey();
-            FermatSession fermatSession = getFermatSessionInUse(appPublicKey);
             String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
 
             if (fermatFragmentFactory != null) {
@@ -743,6 +742,9 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_desktop);
+                if(activityType != ActivityType.ACTIVITY_TYPE_DESKTOP){
+                    findViewById(R.id.reveal_bottom_container).setVisibility(View.GONE);
+                }
             }
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
@@ -1162,7 +1164,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                         fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
-                                createOrGetSession(getDesktopManager()),
+                                createOrOpenApp(getDesktopManager()),
                                 null
                         );
 
@@ -1273,26 +1275,21 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param fermatApp
      * @return
      */
-    protected FermatSession createOrGetSession(FermatApp fermatApp){
+    protected FermatSession createOrOpenApp(FermatApp fermatApp){
         FermatSession fermatSession = null;
-        AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
-        if (getFermatSessionManager().isSessionOpen(fermatApp.getAppPublicKey())) {
-            fermatSession = getFermatSessionManager().getAppsSession(fermatApp.getAppPublicKey());
-        } else {
-            ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
-            fermatSession = getFermatSessionManager().openAppSession(fermatApp,getErrorManager(),moduleManager,fermatAppConnection);
+        FermatAppsManager fermatAppsManager = getFermatAppManager();
+        if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
+            fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
+        }else{
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
+            fermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
         }
         return fermatSession;
     }
 
-    /**
-     *  Get app session manager
-     */
-    @Deprecated
-    public FermatSessionManager getFermatSessionManager() {
-        return ApplicationSession.getInstance().getFermatSessionManager();
+    protected FermatAppsManager getFermatAppManager(){
+        return getApplicationSession().getFermatAppsManager();
     }
-
 
 
     //TODO: esto es un plugin más para el manejo de los desktops
@@ -1414,7 +1411,7 @@ public abstract class FermatActivity extends AppCompatActivity
     public void invalidate() {
         FermatStructure fermatStructure = getAppInUse();
         Activity activity = fermatStructure.getLastActivity();
-        FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+        FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
         AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
         try {
             appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
@@ -1430,7 +1427,7 @@ public abstract class FermatActivity extends AppCompatActivity
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
             final FermatStructure fermatStructure = getAppInUse();
-            FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+            FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
             AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
             final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
             final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
@@ -1610,9 +1607,9 @@ public abstract class FermatActivity extends AppCompatActivity
         return this;
     }
 
-    private FermatSession getFermatSessionInUse(String appPublicKey){
-        return getFermatSessionManager().getAppsSession(appPublicKey);
-    }
+//    private FermatSession getFermatSessionInUse(String appPublicKey){
+//        return getFermatSessionManager().getAppsSession(appPublicKey);
+//    }
 
     /**
      * Abstract methods

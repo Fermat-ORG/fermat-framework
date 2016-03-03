@@ -464,17 +464,16 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 loadBasicUI(activity, fermatAppConnection);
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
+                    findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                     initialisePaging();
                 } else {
 
                     hideBottonIcons();
 
-                    //findViewById(R.id.reveal_container_base).setVisibility(View.GONE);
-
                     paintScreen(activity);
 
                     if (activity.getFragments().size() == 1) {
-                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(),getFermatAppManager().lastAppSession());
                     }
                 }
             } catch (Exception e) {
