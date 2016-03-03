@@ -105,7 +105,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
             onRefresh();
         } catch (Exception ex) {
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -113,7 +113,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -125,7 +125,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Connections");
+            connectionsProgressDialog.setMessage(getString(R.string.loading_connections));
             connectionsProgressDialog.setCancelable(false);
             connectionsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
@@ -236,7 +236,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Community Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_community_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

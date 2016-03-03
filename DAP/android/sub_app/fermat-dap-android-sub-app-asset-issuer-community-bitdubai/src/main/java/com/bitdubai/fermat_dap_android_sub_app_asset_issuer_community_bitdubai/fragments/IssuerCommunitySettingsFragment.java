@@ -85,8 +85,8 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, R.string.help)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
