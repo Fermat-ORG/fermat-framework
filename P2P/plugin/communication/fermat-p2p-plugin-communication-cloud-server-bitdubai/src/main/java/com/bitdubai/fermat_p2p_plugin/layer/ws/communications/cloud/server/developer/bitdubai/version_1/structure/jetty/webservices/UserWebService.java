@@ -14,9 +14,8 @@ import com.google.gson.Gson;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
-
-
 import java.util.Date;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

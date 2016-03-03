@@ -18,7 +18,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 
