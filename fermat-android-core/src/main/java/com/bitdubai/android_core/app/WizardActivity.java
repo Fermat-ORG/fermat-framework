@@ -171,7 +171,7 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                FermatSession fermatSession = getFermatSessionManager().getAppsSession(wallet.getPublicKey());
+                FermatSession fermatSession = getFermatAppManager().getAppsSession(wallet.getPublicKey());
 
 //                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
 
