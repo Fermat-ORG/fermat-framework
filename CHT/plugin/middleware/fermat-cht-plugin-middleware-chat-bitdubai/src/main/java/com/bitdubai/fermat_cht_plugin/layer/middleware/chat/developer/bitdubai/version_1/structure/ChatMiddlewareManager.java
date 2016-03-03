@@ -947,37 +947,37 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 if (PlatformComponentType.ACTOR_ASSET_USER.getCode() == key.getCode())
                 {
                     ActorAssetUser actorAssetUser = (ActorAssetUser) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), actorAssetUser.getType());
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), actorAssetUser.getType(), PlatformComponentType.ACTOR_ASSET_USER);
                     saveChatUserIdentity(chatUserIdentity);
                 }
                 if (PlatformComponentType.ACTOR_ASSET_ISSUER.getCode() == key.getCode())
                 {
                     ActorAssetIssuer actorAssetIssuer = (ActorAssetIssuer) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), actorAssetIssuer.getType());
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), actorAssetIssuer.getType(), PlatformComponentType.ACTOR_ASSET_ISSUER);
                     saveChatUserIdentity(chatUserIdentity);
                 }
                 if (PlatformComponentType.ACTOR_ASSET_REDEEM_POINT.getCode() == key.getCode())
                 {
                     ActorAssetRedeemPoint actorAssetRedeemPoint = (ActorAssetRedeemPoint) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), actorAssetRedeemPoint.getType());
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), actorAssetRedeemPoint.getType(), PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
                     saveChatUserIdentity(chatUserIdentity);
                 }
                 if (PlatformComponentType.ACTOR_INTRA_USER.getCode() == key.getCode())
                 {
                     IntraUserLoginIdentity intraUserLoginIdentity = (IntraUserLoginIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.INTRA_USER);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.INTRA_USER, PlatformComponentType.ACTOR_INTRA_USER);
                     saveChatUserIdentity(chatUserIdentity);
                 }
                 if (PlatformComponentType.ACTOR_CRYPTO_BROKER.getCode() == key.getCode())
                 {
                     CryptoBrokerIdentity brokerIdentity =  (CryptoBrokerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(brokerIdentity.getAlias(), null, brokerIdentity.getPublicKey(), null, brokerIdentity.getProfileImage(), Actors.CBP_CRYPTO_BROKER);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(brokerIdentity.getAlias(), null, brokerIdentity.getPublicKey(), null, brokerIdentity.getProfileImage(), Actors.CBP_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
                     saveChatUserIdentity(chatUserIdentity);
                 }
                 if (PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode() == key.getCode())
                 {
                     CryptoCustomerIdentity broCustomerIdentity =  (CryptoCustomerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(broCustomerIdentity.getAlias(), null, broCustomerIdentity.getPublicKey(), null, broCustomerIdentity.getProfileImage(), Actors.CBP_CRYPTO_CUSTOMER);
+                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(broCustomerIdentity.getAlias(), null, broCustomerIdentity.getPublicKey(), null, broCustomerIdentity.getProfileImage(), Actors.CBP_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                     saveChatUserIdentity(chatUserIdentity);
                 }
             }
