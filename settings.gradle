@@ -17,12 +17,11 @@ apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':triangle-shape', ':triangle-shape'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
-
 
 //include ':fermat_linux_core'
 //include ':manifest_generator'
