@@ -1,7 +1,10 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.header;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +12,26 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.viewpagerindicator.LinePageIndicator;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -36,7 +48,7 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
 
     public CryptoCustomerWalletHeaderPainter(Context activity, CryptoCustomerWalletSession session) {
         this.session = session;
-        this.activity = new WeakReference<Context>(activity);
+        this.activity = new WeakReference<>(activity);
 
         try {
             errorManager = session.getErrorManager();
@@ -73,63 +85,62 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
     private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
 
         //TODO: hacerlo con el contexto
-//        FermatWorker fermatWorker = new FermatWorker(activity.get()) {
-//            @Override
-//            protected Object doInBackground() throws Exception {
-//                List<IndexInfoSummary> data = new ArrayList<>();
-//                data.addAll(walletManager.getProvidersCurrentExchangeRates(session.getAppPublicKey()));
-//
-//                return data;
-//            }
-//        };
+        FermatWorker fermatWorker = new FermatWorker(activity.get()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                List<IndexInfoSummary> data = new ArrayList<>();
+                data.addAll(walletManager.getProvidersCurrentExchangeRates(session.getAppPublicKey()));
 
-//        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-//            @Override
-//            public void onPostExecute(Object... result) {
-//                if (result != null && result.length > 0) {
-//                    List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
-//                    session.setActualExchangeRates(summaries);
-//
-//                    progressBar.setVisibility(View.GONE);
-//
-//                    if (summaries.isEmpty()) {
-//                        FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
-//                        noMarketRateTextView.setVisibility(View.VISIBLE);
-//
-//                    } else {
-//                        View marketRateViewPagerContainer = container.findViewById(R.id.ccw_market_rate_view_pager_container);
-//                        marketRateViewPagerContainer.setVisibility(View.VISIBLE);
-//
-//                        //TODO chamo esto no te lo puedo dejar hacer, podes obtener el fragment manager como servicio, si no sabes como avisame
-//                        final FragmentManager fragmentManager = null;//activity.getFragmentManager();
-//                        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(fragmentManager, summaries);
-//
-//                        ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
-//                        viewPager.setOffscreenPageLimit(3);
-//                        viewPager.setAdapter(pageAdapter);
-//
-//                        LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
-//                        indicator.setViewPager(viewPager);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onErrorOccurred(Exception ex) {
-//                progressBar.setVisibility(View.GONE);
-//
-//                FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
-//                noMarketRateTextView.setVisibility(View.VISIBLE);
-//
-//                ErrorManager errorManager = session.getErrorManager();
-//                if (errorManager != null)
-//                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-//                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-//                else
-//                    Log.e(TAG, ex.getMessage(), ex);
-//            }
-//        });
-//
-//        Executors.newSingleThreadExecutor().execute(fermatWorker);
+                return data;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                    List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
+                    session.setActualExchangeRates(summaries);
+
+                    progressBar.setVisibility(View.GONE);
+
+                    if (summaries.isEmpty()) {
+                        FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
+                        noMarketRateTextView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        View marketRateViewPagerContainer = container.findViewById(R.id.ccw_market_rate_view_pager_container);
+                        marketRateViewPagerContainer.setVisibility(View.VISIBLE);
+
+                        final FragmentManager fragmentManager = ((Activity)activity.get()).getFragmentManager();
+                        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(fragmentManager, summaries);
+
+                        ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
+                        viewPager.setOffscreenPageLimit(3);
+                        viewPager.setAdapter(pageAdapter);
+
+                        LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.ccw_exchange_rate_view_pager_indicator);
+                        indicator.setViewPager(viewPager);
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                progressBar.setVisibility(View.GONE);
+
+                FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.ccw_no_market_rate);
+                noMarketRateTextView.setVisibility(View.VISIBLE);
+
+                ErrorManager errorManager = session.getErrorManager();
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e(TAG, ex.getMessage(), ex);
+            }
+        });
+
+        fermatWorker.execute();
     }
 }
