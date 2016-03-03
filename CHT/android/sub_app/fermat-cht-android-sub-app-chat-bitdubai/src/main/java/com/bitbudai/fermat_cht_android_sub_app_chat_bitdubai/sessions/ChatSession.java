@@ -18,6 +18,7 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
     public static final String CONTACT_DATA = "CONTACT_DATA";
     public static final String CONTACTTOUPDATE_DATA = "CONTACTTOUPDATE_DATA";
     public static final String CONNECTION_DATA = "CONNECTION_DATA";
+    public static final String PROFILE_DATA = "PROFILE_DATA";
     public static final String CHAT_DATA = "CHAT_DATA";
     public static final String whocallme = "whocallme";
     public static final String chatvalues = "chatvalues";
@@ -27,6 +28,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
 
     public Contact getSelectedContact() {
         Object data = getData(CONTACT_DATA);
+        return (data != null) ? (Contact) data : null;
+    }
+
+    public Contact getSelectedProfile() {
+        Object data = getData(PROFILE_DATA);
         return (data != null) ? (Contact) data : null;
     }
 

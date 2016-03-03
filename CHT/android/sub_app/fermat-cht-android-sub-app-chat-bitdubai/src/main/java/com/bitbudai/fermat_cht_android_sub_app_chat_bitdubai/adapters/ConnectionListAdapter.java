@@ -23,18 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-
 /**
- * Contact List Adapter
+ * Connection List Adapter
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ConnectionListAdapter extends ArrayAdapter<String> {
+public class ConnectionListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
@@ -56,7 +53,7 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.connection_list_item, null, true);
         try {
-            ImageView imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));
+            ImageView imagen = (ImageView) item.findViewById(R.id.icon);
             imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);

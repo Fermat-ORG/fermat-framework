@@ -33,16 +33,14 @@ import java.util.UUID;
 
 public class ProfileListAdapter extends ArrayAdapter<String> {
 
-
     List<ContactList> contactsList = new ArrayList<>();
     ArrayList<String> contactinfo=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     private ErrorManager errorManager;
 
-
     public ProfileListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid, ErrorManager errorManager) {
-        super(context, R.layout.connection_list_item, contactinfo);
+        super(context, R.layout.profile_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -51,7 +49,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.connection_list_item, null, true);
+        View item = inflater.inflate(R.layout.profile_list_item, null, true);
         try {
             ImageView imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));
             imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));

@@ -336,6 +336,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
             return true;
         }
+        if (item.getItemId() == R.id.menu_switch_profile) {
+            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

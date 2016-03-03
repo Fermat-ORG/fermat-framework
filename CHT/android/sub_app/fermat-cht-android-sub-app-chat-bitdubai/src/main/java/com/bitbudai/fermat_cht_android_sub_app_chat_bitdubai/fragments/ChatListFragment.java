@@ -399,6 +399,10 @@ public class ChatListFragment extends AbstractFermatFragment{
             changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
+        if (item.getItemId() == R.id.menu_switch_profile) {
+            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

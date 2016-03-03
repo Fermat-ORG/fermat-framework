@@ -50,9 +50,7 @@ import java.util.UUID;
  */
 public class ProfileListFragment extends AbstractFermatFragment {
 
-
     public List<Contact> contacts;
-
     private Contact contactl;
 
     // Whether or not this fragment is showing in a two-pane layout
@@ -99,7 +97,7 @@ public class ProfileListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View layout = inflater.inflate(R.layout.connection_list_fragment, container, false);
+        View layout = inflater.inflate(R.layout.profile_list_fragment, container, false);
         TextView text=(TextView) layout.findViewById(R.id.text);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
@@ -110,13 +108,13 @@ public class ProfileListFragment extends AbstractFermatFragment {
                     if(!con.get(i).getRemoteName().equals("Not registered contact")) {
                         contactname.add(con.get(i).getAlias());
                         contactid.add(con.get(i).getContactId());
-                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                        contacticon.add(R.drawable.cht_profile_list_icon);
                     }
                 }
                 text.setVisibility(View.GONE);
             }else{
                 text.setVisibility(View.VISIBLE);
-                text.setText("No Connections");
+                text.setText("No Registered Profile");
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -150,13 +148,11 @@ public class ProfileListFragment extends AbstractFermatFragment {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     try {
-                                        appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(pos)));
-                                        Contact conn = chatSession.getSelectedConnection();
-                                        chatManager.saveContact(conn);
-                                        Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
-                                        changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                                    }catch(CantSaveContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                        appSession.setData(ChatSession.PROFILE_DATA, chatManager.getContactByContactId(contactid.get(pos)));
+                                        Contact profile = chatSession.getSelectedProfile();
+                                        //TODO: save profile in settings
+                                        Toast.makeText(getActivity(), "Profile Selected", Toast.LENGTH_SHORT).show();
+                                        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                                     }catch (Exception e){
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
