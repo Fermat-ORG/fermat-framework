@@ -87,6 +87,8 @@ public class ChatMiddlewareDatabaseDao {
     private ErrorManager errorManager;
     private PluginFileSystem pluginFileSystem;
     private static String CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "chatUserIdentityProfileImage";
+    private static String CONTACT_IMAGE_FILE_NAME = "contactImage";
+    private static String CONTACT_CONNECTION_IMAGE_FILE_NAME = "contactImage";
 
     /**
      * Constructor
@@ -117,6 +119,8 @@ public class ChatMiddlewareDatabaseDao {
             }
             for (DatabaseTableRecord record : records) {
                 final Contact contact = getContactTransaction(record);
+
+                contact.setProfileImage(getContactImage(contact.getRemoteActorPublicKey()));
 
                 contacts.add(contact);
             }
@@ -155,6 +159,8 @@ public class ChatMiddlewareDatabaseDao {
             for (DatabaseTableRecord record : records) {
                 final ContactConnection contactConnection = getContactConnectionTransaction(record);
 
+                contactConnection.setProfileImage(getContactImage(contactConnection.getRemoteActorPublicKey()));
+
                 contactConnections.add(contactConnection);
             }
 
@@ -191,6 +197,8 @@ public class ChatMiddlewareDatabaseDao {
             // I will add the contact information from the database
             for (DatabaseTableRecord record : getContactData(filter)) {
                 final Contact contact = getContactTransaction(record);
+
+                contact.setProfileImage(getContactImage(contact.getRemoteActorPublicKey()));
 
                 contacts.add(contact);
             }
@@ -232,6 +240,8 @@ public class ChatMiddlewareDatabaseDao {
             // I will add the contact information from the database
             for (DatabaseTableRecord record : getContactConnectionData(filter)) {
                 final ContactConnection contact = getContactConnectionTransaction(record);
+
+                contact.setProfileImage(getContactConnectionImage(contact.getRemoteActorPublicKey()));
 
                 contacts.add(contact);
             }
@@ -345,6 +355,8 @@ public class ChatMiddlewareDatabaseDao {
                 transaction.addRecordToUpdate(table, record);
             }
 
+            persistNewContactImage(contact.getRemoteActorPublicKey(), contact.getProfileImage());
+
             //I execute the transaction and persist the database side of the Contact.
             database.executeTransaction(transaction);
             database.closeDatabase();
@@ -385,6 +397,8 @@ public class ChatMiddlewareDatabaseDao {
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, record);
             }
+
+            persistNewContactConnectionImage(contactConnection.getRemoteActorPublicKey(), contactConnection.getProfileImage());
 
             //I execute the transaction and persist the database side of the Contact.
             database.executeTransaction(transaction);
@@ -997,6 +1011,8 @@ public class ChatMiddlewareDatabaseDao {
             for (DatabaseTableRecord record : records) {
                 final ChatUserIdentity chatUserIdentity = getChatUserIdentityTransaction(record);
 
+                chatUserIdentity.setNewProfileImage(getChatUserIdentityProfileImage(chatUserIdentity.getPublicKey()));
+
                 chatUserIdentities.add(chatUserIdentity);
             }
 
@@ -1050,6 +1066,61 @@ public class ChatMiddlewareDatabaseDao {
 
         return profileImage;
     }
+
+    private byte[] getContactImage(String publicKey)
+    {
+        byte[] profileImage = new byte[0];
+
+        PluginBinaryFile file = null;
+        try {
+            file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.loadFromMedia();
+            profileImage = file.getContent();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (CantLoadFileException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return profileImage;
+    }
+
+    private byte[] getContactConnectionImage(String publicKey)
+    {
+        byte[] profileImage = new byte[0];
+
+        PluginBinaryFile file = null;
+        try {
+            file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CONTACT_CONNECTION_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.loadFromMedia();
+            profileImage = file.getContent();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (CantLoadFileException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return profileImage;
+    }
+
     private void  persistNewChatUserIdentityProfileImage(String publicKey,byte[] profileImage) {
 
         PluginBinaryFile file = null;
@@ -1057,6 +1128,50 @@ public class ChatMiddlewareDatabaseDao {
             file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     CHAT_USER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void  persistNewContactImage(String publicKey,byte[] profileImage) {
+
+        PluginBinaryFile file = null;
+        try {
+            file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CONTACT_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void  persistNewContactConnectionImage(String publicKey,byte[] profileImage) {
+
+        PluginBinaryFile file = null;
+        try {
+            file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CONTACT_CONNECTION_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
