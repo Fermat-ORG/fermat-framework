@@ -345,13 +345,14 @@ public class ChatAdapterView extends LinearLayout {
                          */
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
-                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
-                        for(PlatformComponentType key : keySet) {
-                            chat.setLocalActorPublicKey(identitiesMap.get(key));
-                            chat.setLocalActorType(key);
-                            break;
-                        }
+                        //TODO:Revisar esto ya que cambio el mapa por el actor como tal
+//                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
+//                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
+//                        for(PlatformComponentType key : keySet) {
+//                            chat.setLocalActorPublicKey(identitiesMap.get(key));
+//                            chat.setLocalActorType(key);
+//                            break;
+//                        }
                         //chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         /**
                          * This case is when I got an unregistered contact, I'll set the

@@ -486,6 +486,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
     private void launchNotificationActorAsset() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        fermatEvent.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
         eventManager.raiseEvent(actorAssetRequestConnectionEvent);
     }
@@ -671,41 +672,24 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                 /**
                  * I need to add this in a new thread other than the main android thread
                  */
+                if (!actorAssetIssuerPendingToRegistration.contains(platformComponentProfileAssetIssuer)) {
+                    actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
+                }
+
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                            communicationsClientConnection.registerComponentForCommunication(
+                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                            onComponentRegistered(platformComponentProfileAssetIssuer);
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
                     }
-                });
+                }, "ACTOR ASSET ISSUER REGISTER-ACTOR");
                 thread.start();
-
-
             }
-// else {
-//                /*
-//                 * Construct the profile
-//                 */
-//                Gson gson = new Gson();
-//                JsonObject jsonObject = new JsonObject();
-//                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
-//                String extraData = gson.toJson(jsonObject);
-//
-//                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
-//                        actorAssetIssuerToRegister.getActorPublicKey(),
-//                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
-//                        actorAssetIssuerToRegister.getName(),
-//                        NetworkServiceType.UNDEFINED,
-//                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-//                        extraData);
-//                /*
-//                 * Add to the list of pending to register
-//                 */
-//                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
-//            }
         } catch (Exception e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -754,36 +738,16 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     @Override
                     public void run() {
                         try {
-                            communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                            communicationsClientConnection.updateRegisterActorProfile(
+                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
+                            onComponentRegistered(platformComponentProfileAssetIssuer);
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
                     }
-                });
+                }, "ACTOR ASSET ISSUER UPDATE-ACTOR");
                 thread.start();
             }
-
-//            else {
-//                /*
-//                 * Construct the profile
-//                 */
-//                Gson gson = new Gson();
-//                JsonObject jsonObject = new JsonObject();
-//                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
-//                String extraData = gson.toJson(jsonObject);
-//
-//                PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
-//                        actorAssetIssuerToRegister.getActorPublicKey(),
-//                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
-//                        actorAssetIssuerToRegister.getName(),
-//                        NetworkServiceType.UNDEFINED,
-//                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-//                        extraData);
-//                /*
-//                 * Add to the list of pending to register
-//                 */
-//                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
-//            }
         } catch (Exception e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -1270,6 +1234,10 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
+    public void buildSendMessage(){
+
+
+    }
     @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
         switch (dapMessage.getMessageContent().messageType()) {

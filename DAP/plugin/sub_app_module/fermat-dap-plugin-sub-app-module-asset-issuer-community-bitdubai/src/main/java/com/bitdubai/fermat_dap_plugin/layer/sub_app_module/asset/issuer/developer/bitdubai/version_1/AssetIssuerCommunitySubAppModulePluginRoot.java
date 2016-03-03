@@ -27,7 +27,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
@@ -104,7 +104,8 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         try {
             list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
-            actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
+            if (list != null && list.size() > 0)
+                actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetIssuerRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateActorAssetIssuerException e) {
@@ -190,7 +191,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
         } catch (CantGetAssetRedeemPointActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "THERE WAS AN ERROR GET ACTOR ASSET REDEEM POINT.", null);
-        } catch (CantConnectToActorAssetUserException e) {
+        } catch (CantConnectToActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "THERE WAS AN ERROR CONNECTING TO ASSET ISSUERS.", null);
         } catch (CantUpdateActorAssetIssuerException e) {
@@ -224,12 +225,12 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
                         actorAssetIssuer.getProfileImage());
 
 //                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
-                //TODO SOLO DEBE ENVIARSE EL MENSAJE LUEGO DE RECIBIDA LA ACEPTACION POR EL ISSUER DE CONECTAR
+                //TODO SOLO DEBE ENVIARSE EL MENSAJE LUEGO DE RECIBIDA LA ACEPTACION POR EL ISSUER A CONECTAR
 //                actorAssetRedeemPointManager.sendMessage(actorAssetRedeemPoint, actorAssetIssuers);
 
                 if (this.actorAssetIssuerManager.getActorIssuerRegisteredDAPConnectionState(actorAssetIssuer.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
                     System.out.println("The User you are trying to connect with is not connected" +
-                            "so we send the message to the assetUserActorNetworkService");
+                            "so we send the message to the assetIssuerActorNetworkService");
                     this.assetIssuerActorNetworkServiceManager.askConnectionActorAsset(
                             actorAssetRedeemPoint.getActorPublicKey(),
                             actorAssetRedeemPoint.getName(),
@@ -241,7 +242,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
                             blockchainNetworkType);
                 } else {
                     this.assetIssuerActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetRedeemPoint.getActorPublicKey(), actorAssetIssuer.getActorPublicKey());
-                    System.out.println("The actor asset user is connected");
+                    System.out.println("The actor asset Issuer is connected");
                 }
             }
         }
@@ -408,7 +409,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[4];
+        int[] notifications = new int[5];
         try {
             if (getSelectedActorIdentity() != null)
                 notifications[2] = actorAssetIssuerManager.getWaitingYourConnectionActorAssetIssuer(getSelectedActorIdentity().getPublicKey(), 99, 0).size();

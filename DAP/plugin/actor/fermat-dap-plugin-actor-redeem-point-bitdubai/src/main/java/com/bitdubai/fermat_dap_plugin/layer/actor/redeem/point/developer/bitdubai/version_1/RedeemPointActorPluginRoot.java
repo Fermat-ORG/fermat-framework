@@ -47,8 +47,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
@@ -64,6 +64,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.agent.ActorAssetRedeemPointMonitorAgent;
@@ -413,7 +414,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException {
+    public void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
             try {
                 AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage();
@@ -424,7 +425,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
 //                this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
             } catch (CantSendMessageException e) {
-                throw new CantConnectToActorAssetUserException("CAN'T SEND MESSAGE TO ACTOR ASSET ISSUER", e, "", "");
+                throw new CantConnectToActorAssetException("CAN'T SEND MESSAGE TO ACTOR ASSET ISSUER", e, "", "");
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             }
@@ -468,16 +469,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetUserActorException {
+    public void disconnectToActorAssetRedeemPoint(String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException {
         try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
 
-            this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(actorUserToDisconnectPublicKey.getActorPublicKey());
-            this.redeemPointActorDao.updateRegisteredConnectionState(actorUserToDisconnectPublicKey.getActorPublicKey(), actorUserToDisconnectPublicKey.getActorPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
+            this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(actorUserToDisconnectPublicKey);
+            this.redeemPointActorDao.updateRegisteredConnectionState(actorUserToDisconnectPublicKey, actorUserToDisconnectPublicKey, DAPConnectionState.REGISTERED_ONLINE);
 
         } catch (CantUpdateRedeemPointException e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
+            throw new CantDisconnectAssetActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
         } catch (Exception e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
+            throw new CantDisconnectAssetActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -757,5 +758,87 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressesNetworkServiceManager));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+    }
+
+    /**
+     * Procces the list o f notifications from Intra User Network Services
+     * And update intra user actor contact state
+     *
+     * @throws CantGetActorAssetNotificationException
+     */
+    public void processNotifications() throws CantGetActorAssetNotificationException {
+
+        try {
+
+            System.out.println("PROCESSING NOTIFICATIONS IN ACTOR REDEEM POINT");
+            List<ActorNotification> actorNotifications = assetRedeemPointActorNetworkServiceManager.getPendingNotifications();
+
+
+            for (ActorNotification notification : actorNotifications) {
+
+                String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
+
+                String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
+
+                switch (notification.getAssetNotificationDescriptor()) {
+                    case ASKFORCONNECTION:
+                        this.receivingActorAssetRedeemRequestConnection(
+                                intraUserToConnectPublicKey,
+                                notification.getActorSenderAlias(),
+//                                notification.getActorSenderPhrase(),
+                                intraUserSendingPublicKey,
+                                notification.getActorSenderProfileImage());
+                        break;
+                    case CANCEL:
+                        this.cancelActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        break;
+                    case ACCEPTED:
+                        this.acceptActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+
+//                        this.connectToActorAssetUser(notification.getActorSenderPublicKey(),
+//                                notification.getActorSenderType(),
+//                                notification.getActorDestinationPublicKey(),
+//                                notification.getActorDestinationType(),
+//                                notification.getBlockchainNetworkType());
+//                        /**
+//                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+//                         */
+//                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
+                        break;
+                    case DISCONNECTED:
+//                        this.disconnectActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        this.disconnectToActorAssetRedeemPoint(intraUserSendingPublicKey, notification.getBlockchainNetworkType());
+
+                        break;
+                    case RECEIVED:
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+                         */
+                        //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+                        break;
+                    case DENIED:
+                        this.denyConnectionActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        break;
+                    case ACTOR_ASSET_NOT_FOUND:
+                        this.redeemPointActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);
+                        break;
+                    default:
+                        break;
+                }
+                /**
+                 * I confirm the application in the Network Service
+                 */
+                //TODO: VER PORQUE TIRA ERROR
+                assetRedeemPointActorNetworkServiceManager.confirmActorAssetNotification(notification.getId());
+            }
+        } catch (CantAcceptActorAssetUserException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
+        } catch (CantDisconnectAssetActorException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Disconnected");
+        } catch (CantDenyConnectionActorAssetException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
+        } catch (Exception e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
+        }
     }
 }

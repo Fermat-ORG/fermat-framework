@@ -125,6 +125,7 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
+
             //image null
 //            try {
 //                if (actorIssuer != null) {
