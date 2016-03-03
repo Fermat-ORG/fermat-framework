@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -57,9 +58,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-
 
 /**
  * Chat List Fragment
@@ -133,63 +131,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
-    //Create a object list with
-    //contactcreated(Map<remoteactorPK,Map<PlatformComponentType,Contact>)
-    //chatcreated(chatid,chat);
-    //Message(Map<chatid,Kist<Message>)
-
-    /*public void listChatcreated(){
-        String tempcon;
-        UUID tempchat;
-        UUID tempmessage;
-        try {
-            chatcreated.clear();
-            messagecreated.clear();
-            contactcreated.clear();
-
-            if((chatManager.getChats().isEmpty())){
-                System.out.println("/n/nSORRY NO CHAT FOR YOU/n/n");
-            }else{
-                for (int i=0;i<chatManager.getChats().size();i++){
-                    tempchat=chatManager.getChats().get(i).getChatId();
-                    if(!(chatcreated.containsKey(tempchat))) {
-                        chatcreated.put(tempchat, chatManager.getChatByChatId(chatManager.getChats().get(i).getChatId()));
-                    }
-                }
-                for (int i=0;i<chatManager.getMessages().size();i++){
-                        tempmessage=chatManager.getMessages().get(i).getMessageId();
-                        if(!messagecreated.containsKey((tempmessage))){
-                            messagecreated.put(tempmessage,chatManager.getMessageByChatId(tempmessage));
-                        }
-
-                }
-                for (int i=0;i<chatManager.getContacts().size();i++){
-                    tempcon=chatManager.getContacts().get(i).getRemoteActorPublicKey();
-                    if(!(contactcreated.containsKey(tempcon))) {
-                        contactcreated.put(tempcon,chatManager.getContacts().get(i));
-                    }
-                }
-            }
-
-        } catch (CantGetChatException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (CantGetMessageException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (CantGetContactException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }*/
-
-
-    //contactcreated(Map<remoteactorPK,Map<PlatformComponentType,Contact>)
-    //chatcreated(chatid,chat);
-    //Message(Map<chatid,Kist<Message>)
-
-
-    //Load chatlist viewdata
-
     public void chatlistview (){
 
         int sizeofmessagelist=0;
@@ -242,7 +183,12 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
-
+            try {
+                chatManager.createSelfIdentities();
+            }catch(CantCreateSelfIdentityException e)
+            {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
             try {
@@ -270,7 +216,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-    //    mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+        // mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -298,11 +244,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         text = (TextView) layout.findViewById(R.id.text);
-        text.setTypeface(tf, Typeface.NORMAL);
+        //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -321,14 +267,14 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
         }
 
-        if (chatSettings.getLocalActorType() == null || chatSettings.getLocalActorType() == null)
-        {
-            try {
-                changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
-            } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-        }
+//        if (chatSettings.getLocalActorType() == null || chatSettings.getLocalActorType() == null)
+//        {
+//            try {
+//                changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+//            } catch (Exception e) {
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//        }
 
         adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);

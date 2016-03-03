@@ -182,7 +182,7 @@ public class ContactFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
@@ -194,10 +194,10 @@ public class ContactFragment extends AbstractFermatFragment {
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(contactalias.get(0));
-            name.setTypeface(tf, Typeface.NORMAL);
+            //name.setTypeface(tf, Typeface.NORMAL);
             FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
             id.setText(contactid.get(0).toString());
-            id.setTypeface(tf, Typeface.NORMAL);
+            //id.setTypeface(tf, Typeface.NORMAL);
 
             // create bitmap from resource
             Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));

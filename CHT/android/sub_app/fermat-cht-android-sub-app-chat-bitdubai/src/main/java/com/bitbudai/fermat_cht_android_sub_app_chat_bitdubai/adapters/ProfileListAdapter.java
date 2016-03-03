@@ -43,7 +43,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {
 
     public ProfileListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid, ErrorManager errorManager) {
         super(context, R.layout.profile_list_item, contactinfo);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -59,7 +59,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
-            contactname.setTypeface(tf, Typeface.NORMAL);
+            //contactname.setTypeface(tf, Typeface.NORMAL);
         }catch (Exception e)
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

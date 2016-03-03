@@ -44,11 +44,11 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
     private final ArrayList<String> chatinfo=new ArrayList<String>();
     private final ArrayList<Bitmap> imgid=new ArrayList<>();
     private ErrorManager errorManager;
-    Typeface tf;
+    //Typeface tf;
 
     public ChatListAdapter(Context context, ArrayList<String> chatinfo,ArrayList imgid, ErrorManager errorManager) {
         super(context, R.layout.chat_list_listview, chatinfo);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.chatinfo.addAll(chatinfo);
         this.imgid.addAll(imgid);
         this.errorManager=errorManager;
@@ -71,15 +71,15 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
 
             TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
             contactname.setText(name);//    contactname.setText(chatinfo.get(0).get(0));
-            contactname.setTypeface(tf, Typeface.NORMAL);
+            //contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
             lastmessage.setText(message);        //   lastmessage.setText(chatinfo.get(0).get(1));
-            lastmessage.setTypeface(tf, Typeface.NORMAL);
+            //lastmessage.setTypeface(tf, Typeface.NORMAL);
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
             dateofmessage.setText(messagedate);//   dateofmessage.setText(chatinfo.get(0).get(2));
-            dateofmessage.setTypeface(tf, Typeface.NORMAL);
+            //dateofmessage.setTypeface(tf, Typeface.NORMAL);
         }catch (Exception e)
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

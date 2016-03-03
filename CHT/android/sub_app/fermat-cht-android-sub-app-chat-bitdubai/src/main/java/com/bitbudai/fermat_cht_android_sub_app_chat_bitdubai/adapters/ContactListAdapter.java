@@ -73,7 +73,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
                               ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -100,7 +100,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
 
             contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
-            contactname.setTypeface(tf, Typeface.NORMAL);
+            //contactname.setTypeface(tf, Typeface.NORMAL);
 
             final int pos=position;
             imagen.setOnClickListener(new View.OnClickListener() {
