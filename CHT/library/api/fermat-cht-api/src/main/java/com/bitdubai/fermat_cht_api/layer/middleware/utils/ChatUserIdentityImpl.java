@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
@@ -15,11 +16,12 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
     private byte[] image;
     private String privateKey;
     private Actors actors;
+    private PlatformComponentType platformComponentType;
 
     /**
      * Constructor
      */
-    public ChatUserIdentityImpl(String alias, String phrase,String publicKey, String privateKey, byte[] image, Actors actors)
+    public ChatUserIdentityImpl(String alias, String phrase,String publicKey, String privateKey, byte[] image, Actors actors, PlatformComponentType platformComponentType)
     {
         this.alias = alias;
         this.phrase = phrase;
@@ -27,6 +29,7 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
         this.image = image;
         this.privateKey = privateKey;
         this.actors = actors;
+        this.platformComponentType = platformComponentType;
 //        this.pluginFileSystem = pluginFileSystem;
 //        this.pluginId = pluginId;
     }
@@ -66,6 +69,17 @@ public class ChatUserIdentityImpl implements ChatUserIdentity {
             // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
         return null;
+    }
+
+    /**
+     * This method let an intra user sign a message with his unique private key
+     *
+     * @return the platformComponentType
+     * @throws
+     */
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return this.platformComponentType;
     }
 
     /**

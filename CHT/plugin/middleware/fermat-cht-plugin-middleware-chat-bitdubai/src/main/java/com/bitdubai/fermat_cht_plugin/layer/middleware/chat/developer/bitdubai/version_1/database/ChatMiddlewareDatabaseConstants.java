@@ -99,6 +99,8 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String IDENTITY_ALIAS_COLUMN_NAME = "alias";
     public static final String IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
+    public static final String IDENTITY_ACTOR_TYPE_COLUMN_NAME = "actor_type";
+    public static final String IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME = "platform_component_type";
 
     public static final String IDENTITY_FIRST_KEY_COLUMN = "identity_public_key";
 
