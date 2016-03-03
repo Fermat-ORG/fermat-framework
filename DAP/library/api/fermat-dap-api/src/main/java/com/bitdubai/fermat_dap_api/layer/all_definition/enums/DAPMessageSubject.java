@@ -16,6 +16,7 @@ public enum DAPMessageSubject implements FermatEnum {
      * to that message.
      */
     DEFAULT("DEFAULT"),
+    ASSET_APPROPRIATED("ASAP"),
     ASSET_DISTRIBUTION("ASDI"),
     ASSET_TRANSFER("ASTR"),
     ASSET_MOVEMENT("ASMO"),

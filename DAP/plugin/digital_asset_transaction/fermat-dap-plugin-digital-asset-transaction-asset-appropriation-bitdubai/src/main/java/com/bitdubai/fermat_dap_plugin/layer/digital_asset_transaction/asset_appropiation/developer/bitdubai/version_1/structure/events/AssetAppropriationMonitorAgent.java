@@ -30,8 +30,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
@@ -42,7 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
@@ -92,7 +91,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
-    private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
+    private final AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
     private final ActorAssetUserManager actorAssetUserManager;
     private final ExtraUserManager extraUserManager;
@@ -117,7 +116,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           CryptoAddressBookManager cryptoAddressBookManager,
                                           CryptoVaultManager cryptoVaultManager,
                                           IntraWalletUserIdentityManager intraWalletUserIdentityManager,
-                                          AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
+                                          AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                           AssetIssuerWalletManager assetIssuerWalletManager,
                                           ActorAssetUserManager actorAssetUserManager,
                                           ExtraUserManager extraUserManager) throws CantSetObjectException {
@@ -132,7 +131,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
         this.cryptoVaultManager = Validate.verifySetter(cryptoVaultManager, "cryptoVaultManager is null");
         this.intraWalletUserIdentityManager = Validate.verifySetter(intraWalletUserIdentityManager, "intraWalletUserIdentityManager is null");
-        this.assetIssuerActorNetworkServiceManager = Validate.verifySetter(assetIssuerActorNetworkServiceManager, "assetIssuerActorNetworkServiceManager is null");
+        this.assetTransmissionNetworkServiceManager = Validate.verifySetter(assetTransmissionNetworkServiceManager, "assetIssuerActorNetworkServiceManager is null");
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
         this.extraUserManager = Validate.verifySetter(extraUserManager, "extraUserManager is null");
@@ -210,7 +209,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         private void doTheMainTask() {
             try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
 
-                eventMonitoring(dao);
+                messageMonitoring();
                 statusMonitoring(dao);
 
             } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
@@ -224,24 +223,13 @@ public class AssetAppropriationMonitorAgent implements Agent {
             }
         }
 
-        private void eventMonitoring(AssetAppropriationDAO dao) throws Exception {
-            for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
-                switch (dao.getDAPEventTypeById(eventId)) {
-                    case NEW_RECEIVE_MESSAGE_ACTOR:
-                        for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_APPROPRIATION)) {
-                            if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
-                                AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
-                                //TODO REMOVE HARDCODE.
-                                AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, contentMessage.getNetworkType());
-                                wallet.assetAppropriated(contentMessage.getTransactionId(), contentMessage.getUserThatAppropriate());
-                            }
-                        }
-                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
-                        break;
-                    default:
-                        //I can't do anything with this event...
-                        dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
-                        break;
+        private void messageMonitoring() throws Exception {
+            for (DAPMessage message : assetTransmissionNetworkServiceManager.getUnreadDAPMessageBySubject(DAPMessageSubject.ASSET_APPROPRIATED)) {
+                if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
+                    AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
+                    //TODO REMOVE HARDCODE.
+                    AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, contentMessage.getNetworkType());
+                    wallet.assetAppropriated(contentMessage.getTransactionId(), contentMessage.getUserThatAppropriate());
                 }
             }
         }
@@ -343,8 +331,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     metadata.getDigitalAsset().getIdentityAssetIssuer().getPublicKey());
             CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, metadata);
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-            DAPMessage message = new DAPMessage(new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer);
-            assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
+            DAPMessage message = new DAPMessage(new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer, DAPMessageSubject.ASSET_APPROPRIATED);
+            assetTransmissionNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         }
 
         private IntraWalletUserIdentity getIntraUserIdentity(AppropriationTransactionRecord record) throws CantListIntraWalletUsersException, CantCreateNewIntraWalletUserException {
