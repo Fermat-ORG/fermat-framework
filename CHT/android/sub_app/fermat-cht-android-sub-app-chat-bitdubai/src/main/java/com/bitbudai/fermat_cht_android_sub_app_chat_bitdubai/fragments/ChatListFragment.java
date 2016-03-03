@@ -321,6 +321,14 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
         }
 
+        if (chatSettings.getLocalActorType() == null || chatSettings.getLocalActorType() == null)
+        {
+            try {
+                changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+            } catch (Exception e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
 
         adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);

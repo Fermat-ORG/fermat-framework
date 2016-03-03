@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -51,6 +52,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
+    private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     private Toolbar toolbar;
 
@@ -84,9 +86,27 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+
+            //Obtain chatSettings  or create new chat settings if first time opening chat platform
+            chatSettings = null;
+            try {
+                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatSettings = null;
+            }
+
+            if (chatSettings == null) {
+                chatSettings = new ChatPreferenceSettings();
+                chatSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
+
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-
 
             whattodo();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
@@ -181,6 +201,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addChatSession(chatSession)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
+                .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
                 .build();
         return adapter;

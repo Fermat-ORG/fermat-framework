@@ -24,11 +24,11 @@ public class ChatPreferenceSettings implements FermatSettings {
         return isHomeTutorialDialogEnabled;
     }
 
-    public Actors localActorType() {
+    public Actors getLocalActorType() {
         return localActorType;
     }
 
-    public String localPublicKey() {
+    public String getLocalPublicKey() {
         return localPublicKey;
     }
 
