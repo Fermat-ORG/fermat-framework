@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     //private final List<ChatMessage> chatMessages;
     List<ChatMessage> chatMessages = new ArrayList<>();
+    //Typeface tf;
+    //Typeface tf2;
 
     //private Activity context;
 
@@ -40,6 +43,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     public ChatAdapter(Context context, List<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        //tf2 = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Light.ttf");
         //super(context, R.layout.chat_list_item);
 //        this.chatMessages=chatMessages;
         //this.chatMessages = chatMessages;
@@ -80,7 +85,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg);
             holder.txtMessage.setText(data.getMessage());
+            //holder.txtMessage.setTypeface(tf2, Typeface.NORMAL);
             holder.txtInfo.setText(data.getDate());
+            //holder.txtInfo.setTypeface(tf, Typeface.NORMAL);
             if (data.getStatus() != null && myMsg) {
                 if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
@@ -90,12 +97,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
             }
         }
-//        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
-//        lblTitulo.setText(data.getMessage());
-//
-//        lblSubtitulo = (FermatTextView) convertView.findViewById(R.id.txtMessage);
-//        lblSubtitulo.setText(data.getMessage());
-
     }
 
     public int getCount() {

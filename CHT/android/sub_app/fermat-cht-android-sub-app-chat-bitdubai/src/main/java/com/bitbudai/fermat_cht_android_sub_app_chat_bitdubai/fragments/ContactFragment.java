@@ -13,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
@@ -100,14 +101,9 @@ public class ContactFragment extends AbstractFermatFragment {
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
-    //public ContactsListFragment() {}
-    //static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    //}
+    Typeface tf;
 
     public static ContactFragment newInstance() {
-        //initchatinfo();
         return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -130,8 +126,6 @@ public class ContactFragment extends AbstractFermatFragment {
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
-            //CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
-            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             if(errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -188,6 +182,7 @@ public class ContactFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
@@ -199,8 +194,10 @@ public class ContactFragment extends AbstractFermatFragment {
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(contactalias.get(0));
+            //name.setTypeface(tf, Typeface.NORMAL);
             FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
             id.setText(contactid.get(0).toString());
+            //id.setTypeface(tf, Typeface.NORMAL);
 
             // create bitmap from resource
             Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));

@@ -86,7 +86,6 @@ public class ContactEditFragment extends AbstractFermatFragment {
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
 
-
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();

@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -43,6 +44,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -73,6 +75,7 @@ public class ChatAdapterView extends LinearLayout {
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private ChatSession chatSession;
+    private ChatPreferenceSettings chatSettings;
     private FermatSession appSession;
     private Toolbar toolbar;
     private EditText messageET;
@@ -91,7 +94,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar) {
+                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -102,6 +105,7 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSession=chatSession;
         this.appSession=appSession;
         this.toolbar=toolbar;
+        this.chatSettings=chatSettings;
         //this.background=background;
         initControls();
     }
@@ -319,7 +323,7 @@ public class ChatAdapterView extends LinearLayout {
                     Long dv = System.currentTimeMillis();
 
                     if (chatWasCreate) {
-                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
+                        chat = (ChatImpl) chatManager.getChatByChatId(chatId);
                         chatManager.saveChat(chat);
 
                         message.setChatId(chatId);
@@ -345,7 +349,13 @@ public class ChatAdapterView extends LinearLayout {
                          */
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        //TODO:Revisar esto ya que cambio el mapa por el actor como tal
+                        if(chatSettings!=null)
+                        {
+                            chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
+                            chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
+                        }
+
+                        //Revisar esto ya que cambio el mapa por el actor como tal
 //                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
 //                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
 //                        for(PlatformComponentType key : keySet) {
@@ -359,10 +369,10 @@ public class ChatAdapterView extends LinearLayout {
                          * LocalActorType as is defined in database
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact=chatManager.getContactByContactId(
+                        Contact newContact = chatManager.getContactByContactId(
                                 contactId);
-                        PlatformComponentType remoteActorType=newContact.getRemoteActorType();
-                        String remotePublicKey=newContact.getRemoteActorPublicKey();
+                        PlatformComponentType remoteActorType = newContact.getRemoteActorType();
+                        String remotePublicKey = newContact.getRemoteActorPublicKey();
                         //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //chat.setRemoteActorPublicKey(remotePk);
                         //chat.setRemoteActorType(remotePCT);
@@ -379,7 +389,7 @@ public class ChatAdapterView extends LinearLayout {
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
                         //If everything goes OK, we save the chat in the fragment session.
-                        chatSession.setData("whocallme","chatlist");
+                        chatSession.setData("whocallme", "chatlist");
                         chatSession.setData(
                                 "contactid",
                                 newContact
@@ -389,8 +399,8 @@ public class ChatAdapterView extends LinearLayout {
                          * the multiple chats from this contact. Also I will put the chatId as
                          * newChatId
                          */
-                        chatWasCreate=true;
-                        chatId =newChatId;
+                        chatWasCreate = true;
+                        chatId = newChatId;
                     }
 
                     ChatMessage chatMessage = new ChatMessage();
@@ -421,23 +431,21 @@ public class ChatAdapterView extends LinearLayout {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                    try {
-                        findMessage();
-                    } catch (Exception e) {
-                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                        try {
+                            findMessage();
+                        } catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }, 2500);
+                }, 2500);
             }
         });
     }
-
-
 
     private void loadDummyHistory() {
 
@@ -523,6 +531,10 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSession = chatSession;
     }
 
+    private void setChatSettings(ChatPreferenceSettings chatSettings) {
+        this.chatSettings = chatSettings;
+    }
+
     private void setAppSession(FermatSession appSession) {
         this.appSession = appSession;
     }
@@ -544,6 +556,7 @@ public class ChatAdapterView extends LinearLayout {
         private ChatModuleManager moduleManager;
         private ErrorManager errorManager;
         private ChatSession chatSession;
+        private ChatPreferenceSettings chatSettings;
         private FermatSession appSession;
         private Toolbar toolbar;
         private boolean loadDummyData = false;
@@ -614,6 +627,11 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
+        public Builder addChatSettings(ChatPreferenceSettings chatSettings) {
+            this.chatSettings = chatSettings;
+            return this;
+        }
+
         public Builder addToolbar(Toolbar toolbar) {
             this.toolbar = toolbar;
             return this;
@@ -630,7 +648,7 @@ public class ChatAdapterView extends LinearLayout {
 
         public ChatAdapterView build() {
             ChatAdapterView chatView = new ChatAdapterView(context, chatHistory,
-                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar);
+                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar, chatSettings);
             if (rootView != null) {
                 chatView.setRootView(rootView);
             }
@@ -645,6 +663,9 @@ public class ChatAdapterView extends LinearLayout {
             }
             if (errorManager != null) {
                 chatView.setErrorManager(errorManager);
+            }
+            if (chatSettings != null) {
+                chatView.setChatSettings(chatSettings);
             }
             if (chatSession != null) {
                 chatView.setChatSession(chatSession);
