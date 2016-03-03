@@ -25,6 +25,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -56,11 +58,14 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private IssuerRedemptionDao issuerRedemptionDao;
     private AssetIssuerWalletManager assetIssuerWalletManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private ActorAssetIssuerManager actorAssetIssuerManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private AssetVaultManager assetVaultManager;
     private IssuerAppropriationManager issuerAppropriationManager;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
+    //ActorManagers
+    private ActorAssetUserManager actorAssetUserManager;
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
     //TODO REMOVE HARDCODE!!!
     private String issuerPublicKeyWallet = WalletUtilities.WALLET_PUBLIC_KEY;
     private String btcWallet;
@@ -74,8 +79,10 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                         PluginDatabaseSystem pluginDatabaseSystem,
                                         AssetVaultManager assetVaultManager,
                                         IssuerAppropriationManager issuerAppropriationManager,
-                                        WalletManagerManager walletMiddlewareManager, AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                        WalletManagerManager walletMiddlewareManager, AssetTransmissionNetworkServiceManager assetTransmissionManager, ActorAssetUserManager actorAssetUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         this.assetTransmissionManager = assetTransmissionManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
@@ -154,8 +161,8 @@ public class IssuerRedemptionMonitorAgent implements Agent {
             for (DAPMessage message : assetTransmissionManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_TRANSFER)) {
                 AssetMovementContentMessage content = (AssetMovementContentMessage) message.getMessageContent();
 
-                ActorUtils.storeDAPActor(content.getSystemUser(),null, null, actorAssetIssuerManager);
-                ActorUtils.storeDAPActor(content.getNewUser(), null, null, actorAssetIssuerManager);
+                ActorUtils.storeDAPActor(content.getSystemUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+                ActorUtils.storeDAPActor(content.getNewUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
 
                 assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(content.getNewUser(), content.getSystemUser(), content.getAssetPublicKey(), AssetMovementType.ASSET_TRANSFERRED);
             }
