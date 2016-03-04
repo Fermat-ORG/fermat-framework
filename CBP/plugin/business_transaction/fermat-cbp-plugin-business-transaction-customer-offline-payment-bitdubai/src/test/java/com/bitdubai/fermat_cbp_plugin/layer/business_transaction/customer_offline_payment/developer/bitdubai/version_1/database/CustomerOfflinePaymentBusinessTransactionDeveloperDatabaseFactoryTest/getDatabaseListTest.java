@@ -14,7 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,7 +30,8 @@ public class getDatabaseListTest {
     private Database mockDatabase;
     private UUID testId;
     private String testDataBaseName;
-    private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
     public void setUpTestValues(){
         testId = UUID.randomUUID();
         testDataBaseName = CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
@@ -45,8 +46,9 @@ public class getDatabaseListTest {
         setUpGeneralMockitoRules();
     }
     @Test
-    public void getDatabaseListTest_Should_Return_Not_Null() throws Exception{
-        customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
-        assertNotNull(customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory));
-    }
+    public void getDatabaseListTest() throws Exception{
+        customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory =
+                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+        assertEquals(java.util.ArrayList.class, customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.
+                getDatabaseList(developerObjectFactory).getClass());    }
 }
