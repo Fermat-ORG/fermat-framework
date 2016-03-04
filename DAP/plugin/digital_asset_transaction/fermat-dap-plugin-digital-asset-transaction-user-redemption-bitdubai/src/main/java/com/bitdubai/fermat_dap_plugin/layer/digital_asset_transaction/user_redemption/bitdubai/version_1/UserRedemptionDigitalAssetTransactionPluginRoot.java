@@ -263,7 +263,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     logManager,
                     bitcoinNetworkManager,
                     digitalAssetUserRedemptionVault,
-                    assetTransmissionNetworkServiceManager);
+                    assetTransmissionNetworkServiceManager, actorAssetUserManager);
         }
         this.userRedemptionMonitorAgent.start();
     }
