@@ -117,8 +117,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
             try {
                 for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered()) {
-                    AssetIssuerActorRecord assetIssuerActorRecord = (AssetIssuerActorRecord) actorAssetIssuer;
-                    assetIssuerActorRecords.add(assetIssuerActorRecord);
+                    if (Objects.equals(actorAssetIssuer.getType().getCode(), Actors.DAP_ASSET_ISSUER.getCode())) {
+                        AssetIssuerActorRecord assetIssuerActorRecord = (AssetIssuerActorRecord) actorAssetIssuer;
+                        assetIssuerActorRecords.add(assetIssuerActorRecord);
+                    }
                 }
 
             } catch (CantGetAssetIssuerActorsException e) {

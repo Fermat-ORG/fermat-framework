@@ -39,7 +39,7 @@ public class ActorAssetIssuerNewNotificationsEventHandler implements FermatEvent
             }
         } else {
             EventType eventExpected = EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS;
-            EventSource eventSource = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
+            EventSource eventSource = EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER;
             String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" +
                     "Event Source received: "+ fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
                     "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode() + "\n" +
