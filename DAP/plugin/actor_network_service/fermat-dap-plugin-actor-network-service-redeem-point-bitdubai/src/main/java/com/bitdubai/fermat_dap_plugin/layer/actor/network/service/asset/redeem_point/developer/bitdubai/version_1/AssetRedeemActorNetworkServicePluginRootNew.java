@@ -438,11 +438,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
 //                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
 //                                    cpr.toJson());
-                            getProfileSenderToRequestConnection(
-                                    cpr.getActorSenderPublicKey(),
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(cpr.getActorSenderType())
-                            ),
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getActorSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(cpr.getActorSenderType())
+                                    ),
                                     getProfileDestinationToRequestConnection(
                                             cpr.getActorDestinationPublicKey(),
                                             NetworkServiceType.UNDEFINED,
@@ -920,11 +920,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(assetRedeemNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(assetRedeemNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                assetRedeemNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(assetRedeemNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetRedeemNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         assetRedeemNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -998,11 +998,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
 //                                messageToSend.toJson());
-                        getProfileSenderToRequestConnection(
-                                messageToSend.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        messageToSend.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         messageToSend.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1055,11 +1055,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                actorNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1134,11 +1134,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                actorNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1190,11 +1190,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(assetRedeemNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(assetRedeemNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                assetRedeemNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(assetRedeemNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        assetRedeemNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetRedeemNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         assetRedeemNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1356,11 +1356,11 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 //                            getProfileSenderToRequestConnection(actorAssetIssuerSender.getActorPublicKey()),
 //                            getProfileDestinationToRequestConnection(actorRedeemPointDestination.getActorPublicKey()),
 //                            messageContentIntoJson);
-                    getProfileSenderToRequestConnection(
-                            actorAssetIssuerSender.getActorPublicKey(),
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actorAssetIssuerSender.getType())
-                    ),
+                            getProfileSenderToRequestConnection(
+                                    actorAssetIssuerSender.getActorPublicKey(),
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(actorAssetIssuerSender.getType())
+                            ),
                             getProfileDestinationToRequestConnection(
                                     actorRedeemPointDestination.getActorPublicKey(),
                                     NetworkServiceType.UNDEFINED,
