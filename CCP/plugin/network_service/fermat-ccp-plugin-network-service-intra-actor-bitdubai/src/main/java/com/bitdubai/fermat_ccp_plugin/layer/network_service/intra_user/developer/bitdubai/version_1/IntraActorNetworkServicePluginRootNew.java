@@ -1094,7 +1094,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException {
 
         try {
-
+            if(incomingNotificationsDao==null) incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication,pluginFileSystem,pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
 
         } catch (CantListIntraWalletUsersException e) {

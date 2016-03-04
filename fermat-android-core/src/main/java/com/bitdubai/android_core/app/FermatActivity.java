@@ -744,6 +744,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.base_layout_desktop);
                 if(activityType != ActivityType.ACTIVITY_TYPE_DESKTOP){
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.GONE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
                 }
             }
 
