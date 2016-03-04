@@ -26,9 +26,9 @@ import java.util.Map;
 public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private final FermatTextView markerRateReferenceText;
-    private final FermatTextView exchangeRateReferenceValue;
+    public final FermatTextView exchangeRateReferenceValue;
     private final FermatTextView exchangeRateReferenceText;
-    private final FermatTextView markerRateReference;
+    public final FermatTextView markerRateReference;
     private final FermatTextView yourExchangeRateValueLeftSide;
     private final FermatTextView yourExchangeRateValueRightSide;
     private final FermatTextView yourExchangeRateText;

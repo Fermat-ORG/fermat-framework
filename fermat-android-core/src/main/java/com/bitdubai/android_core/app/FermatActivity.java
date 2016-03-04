@@ -1,12 +1,11 @@
 package com.bitdubai.android_core.app;
 
-import android.animation.AnimatorListenerAdapter;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -39,19 +39,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
@@ -65,8 +61,6 @@ import com.bitdubai.android_core.app.common.version_1.provisory.FermatDesktopMan
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
-import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
-import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
@@ -78,7 +72,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -89,7 +82,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
@@ -106,23 +98,18 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 
@@ -133,9 +120,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -229,13 +213,12 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Listeners
      */
-    private AppStatusListener appStatusListener;
     private RuntimeStructureManager runtimeStructureManager;
 
     /**
      * Service
      */
-//    boolean mServiceConnected = false;
+//    boolean mNotificationServiceConnected = false;
 
 
     /**
@@ -335,10 +318,10 @@ public abstract class FermatActivity extends AppCompatActivity
             /**
              * Service
              */
-//            if (mServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mServiceConnected = false;
-//            }
+            if (mNotificationServiceConnected) {
+                unbindService(mServiceConnection);
+                mNotificationServiceConnected = false;
+            }
 
 
         } catch (Exception e) {
@@ -432,149 +415,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void setMenuSettings(View viewGroup, final View container_title){
-        final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.reveal_items);
-        mRevealView.setVisibility(View.INVISIBLE);
-        final View view = findViewById(R.id.reveal);
-        final View txt_settings = view.findViewById(R.id.txt_settings);
-        txt_settings.setVisibility(View.INVISIBLE);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-                                                                     @Override
-                                                                     public void onClick(View v) {
-                                                                         int cx = (mRevealView.getLeft() + mRevealView.getRight());
-                                                                        //                int cy = (mRevealView.getTop() + mRevealView.getBottom())/2;
-                                                                         int cy = mRevealView.getTop();
 
-                                                                         int radius = Math.max(mRevealView.getWidth(), mRevealView.getHeight());
-
-                                                                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-
-
-                                                                             SupportAnimator animator =
-                                                                                     ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
-                                                                             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                                                                             animator.setDuration(800);
-
-                                                                             SupportAnimator animator_reverse = animator.reverse();
-
-                                                                             if (hidden) {
-                                                                                 mRevealView.setVisibility(View.VISIBLE);
-                                                                                 view.bringToFront();
-                                                                                 animator.start();
-                                                                                 hidden = false;
-                                                                             } else {
-                                                                                 animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
-                                                                                     @Override
-                                                                                     public void onAnimationStart() {
-
-                                                                                     }
-
-                                                                                     @Override
-                                                                                     public void onAnimationEnd() {
-                                                                                         mRevealView.setVisibility(View.INVISIBLE);
-                                                                                         hidden = true;
-
-                                                                                     }
-
-                                                                                     @Override
-                                                                                     public void onAnimationCancel() {
-
-                                                                                     }
-
-                                                                                     @Override
-                                                                                     public void onAnimationRepeat() {
-
-                                                                                     }
-                                                                                 });
-                                                                                 animator_reverse.start();
-
-                                                                             }
-                                                                         } else {
-                                                                             if (hidden) {
-                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, 0, cy, 0, radius);
-                                                                                 mRevealView.setVisibility(View.VISIBLE);
-                                                                                 FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container_main);
-                                                                                 frameLayout.bringChildToFront(mRevealView);
-                                                                                 FermatAnimationsUtils.showEmpty(getApplicationContext(),true,txt_settings);
-                                                                                 anim.start();
-                                                                                 hidden = false;
-
-                                                                             } else {
-                                                                                 android.animation.Animator anim = android.view.ViewAnimationUtils.createCircularReveal(mRevealView, 0, cy, radius, 0);
-                                                                                 anim.addListener(new AnimatorListenerAdapter() {
-                                                                                     @Override
-                                                                                     public void onAnimationEnd(android.animation.Animator animation) {
-                                                                                         super.onAnimationEnd(animation);
-                                                                                         mRevealView.setVisibility(View.INVISIBLE);
-                                                                                         container_title.setVisibility(View.VISIBLE);
-                                                                                         FermatAnimationsUtils.showEmpty(getApplicationContext(), false, txt_settings);
-                                                                                         hidden = true;
-                                                                                     }
-                                                                                 });
-                                                                                 anim.start();
-
-                                                                             }
-                                                                         }
-                                                                     }
-                                                                 };
-        view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
-        view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
-
-
-
-        ImageButton btn_fermat_apps_status = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_apps_status);
-        final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
-
-        if(appStatusListener==null){
-            appStatusListener = new AppStatusListener(this,btn_fermat_apps_status);
-        }
-
-        try {
-            AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
-            switch (androidCoreSettings.getAppsStatus()){
-                case RELEASE:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-                    break;
-                case BETA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_beta);
-                    break;
-                case ALPHA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_alfa);
-                    break;
-                case DEV:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_developer);
-                    break;
-                default:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-                    break;
-            }
-        } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-           // e.printStackTrace();
-        }
-        btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AppStatusDialog(view.getContext(), androidCoreModule, appStatusListener).show();
-            }
-        });
-
-
-        ImageButton btn_fermat_network = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_network);
-        btn_fermat_network.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),"main_desktop");
-            }
-        });
-
-
-
-
-//        TopSettings topSettings = new TopSettings((ViewGroup) mRevealView.findViewById(R.id.horizontal_container));
-//        topSettings.init();
-    }
 
 
 
@@ -901,13 +742,7 @@ public abstract class FermatActivity extends AppCompatActivity
             if (header != null) {
                 setContentView(R.layout.new_wallet_runtime);
             } else {
-                setContentView(R.layout.base_layout_without_collapse);
-                if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
-                    findViewById(R.id.bottom_navigation_container).setVisibility(View.VISIBLE);
-                }else{
-                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
-                    findViewById(R.id.reveal).setVisibility(View.GONE);
-                }
+                setContentView(R.layout.base_layout_desktop);
             }
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
@@ -1108,24 +943,7 @@ public abstract class FermatActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        try {
-//            getNotificationManager().deleteObserver(this);
-//            getNotificationManager().deleteCallback(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        if(broadcastManager!=null)broadcastManager.stop();
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancelAll();
 
-
-//        networkStateReceiver.removeListener(this);
-        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-    }
     /**
      * @param tabs
      * @param activity
@@ -1547,12 +1365,11 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onDestroy() {
 
         wizards = null;
-//        Intent intent = new Intent(this,NotificationService.class);
-//        stopService(intent);
+        Intent intent = new Intent(this,NotificationService.class);
+        stopService(intent);
 
         //navigationDrawerFragment.onDetach();
-        if(appStatusListener != null)
-             appStatusListener.clear();
+
         if(runtimeStructureManager!=null){
             runtimeStructureManager.clear();
         }
@@ -1570,64 +1387,15 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
-
-            //        Intent intent = new Intent(this, BoundService.class);
-//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
-//        startService(intent);
-//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
-            if (appPublicKey != null) {
-                FermatStructure fermatStructure = getAppInUse(appPublicKey);
-                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
-                NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
-                if (notificationPainter != null) {
-                    RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                    Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
-                    intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PendingIntent pi = PendingIntent
-                            .getActivity(this, 0, intent, 0);
-
-                    Notification.Builder builder = null;
-                    if (remoteViews != null) {
-                        builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
-                                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
-                                .setAutoCancel(true)
-                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                                .setLights(Color.YELLOW, 3000, 3000)
-                                .setContent(remoteViews)
-                                .setWhen(System.currentTimeMillis());
-                    } else {
-                        builder = new Notification.Builder(this)
-                                .setTicker(notificationPainter.getNotificationTitle())
-                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                                .setContentTitle(notificationPainter.getNotificationTitle())
-                                .setContentText(notificationPainter.getNotificationTextBody())
-                                .setContentIntent(pi)
-                                .setAutoCancel(true)
-                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                                .setLights(Color.YELLOW, 3000, 3000);
-                    }
-
-                    NotificationManager notificationManager = (NotificationManager)
-                            getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(0, builder.build());
-                }
-            } else {
-                Notification.Builder builder = new Notification.Builder(this)
-                        .setTicker("Something arrive")
-                        .setSmallIcon(R.drawable.fermat_logo_310_x_310)
-                        .setContentTitle("Fermat: new notification")
-                        .setAutoCancel(true)
-                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                        .setLights(Color.YELLOW, 3000, 3000);
-
-                NotificationManager notificationManager = (NotificationManager)
-                        getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, builder.build());
+            if(mNotificationServiceConnected){
+                notificationService.notificate(code,getAppInUse(appPublicKey));
+            }else{
+                Intent intent = new Intent(this, NotificationService.class);
+                //acá puedo mandarle el messenger con el handler para el callback
+                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+                startService(intent);
+                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
             }
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1881,40 +1649,64 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
-//        Intent intent = new Intent(this, BoundService.class);
-//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
-//        startService(intent);
-//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        if(!mNotificationServiceConnected) {
+            Intent intent = new Intent(this, NotificationService.class);
+            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+            startService(intent);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        try {
+//            getNotificationManager().deleteObserver(this);
+//            getNotificationManager().deleteCallback(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        if(broadcastManager!=null)broadcastManager.stop();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
+
+
+//        networkStateReceiver.removeListener(this);
+        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
 
 
 //    private BoundService mBoundService;
-//    /**
-//     * Service
-//     */
-//
-//
-//    private ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            mServiceConnected = false;
-//        }
-//
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            mBoundService = ((BoundService.LocalBinder)service).getService();
-//            mBoundService.registerCallback(registerCallback());
-//            mServiceConnected = true;
-//        }
-//    };
-//
-//    private ServiceCallback registerCallback(){
-//        return this;
-//    }
+    private NotificationService notificationService;
+    private boolean mNotificationServiceConnected;
+    /**
+     * Service
+     */
+
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mNotificationServiceConnected = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            notificationService = ((NotificationService.LocalBinder)service).getService();
+            mNotificationServiceConnected = true;
+        }
+    };
+
+    private ServiceCallback getServiceCallback(){
+        return this;
+    }
 
 
     @Override
@@ -1923,7 +1715,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
-
 
     @Override
     public FermatRuntime getRuntimeManager(){

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
@@ -31,9 +32,13 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.uti
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmQuotesRequestException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -43,6 +48,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceManager</code>
@@ -52,23 +59,31 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class CryptoBrokerActorNetworkServiceManager implements CryptoBrokerManager {
 
-    private final CommunicationsClientConnection communicationsClientConnection;
-    private final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
-    private final ErrorManager                   errorManager                  ;
-    private final PluginVersionReference         pluginVersionReference        ;
+    private final CommunicationsClientConnection            communicationsClientConnection    ;
+    private final CryptoBrokerActorNetworkServiceDao        cryptoBrokerActorNetworkServiceDao;
+    private final CryptoBrokerActorNetworkServicePluginRoot pluginRoot                        ;
+    private final ErrorManager                              errorManager                      ;
+    private final PluginVersionReference                    pluginVersionReference            ;
 
+    /**
+     * Executor
+     */
+    ExecutorService executorService;
 
     private PlatformComponentProfile platformComponentProfile;
 
-    public CryptoBrokerActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
-                                                  final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao,
-                                                  final ErrorManager                   errorManager                  ,
-                                                  final PluginVersionReference         pluginVersionReference        ) {
+    public CryptoBrokerActorNetworkServiceManager(final CommunicationsClientConnection            communicationsClientConnection    ,
+                                                  final CryptoBrokerActorNetworkServiceDao        cryptoBrokerActorNetworkServiceDao,
+                                                  final CryptoBrokerActorNetworkServicePluginRoot pluginRoot                        ,
+                                                  final ErrorManager                              errorManager                      ,
+                                                  final PluginVersionReference                    pluginVersionReference            ) {
 
-        this.communicationsClientConnection = communicationsClientConnection;
+        this.communicationsClientConnection     = communicationsClientConnection    ;
         this.cryptoBrokerActorNetworkServiceDao = cryptoBrokerActorNetworkServiceDao;
-        this.errorManager                   = errorManager                  ;
-        this.pluginVersionReference         = pluginVersionReference        ;
+        this.pluginRoot                         = pluginRoot                        ;
+        this.errorManager                       = errorManager                      ;
+        this.pluginVersionReference             = pluginVersionReference            ;
+        this.executorService                    = Executors.newFixedThreadPool(3)   ;
     }
 
     private ConcurrentHashMap<String, CryptoBrokerExposingData> cryptoBrokersToExpose;
@@ -188,6 +203,14 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     action
             );
 
+            sendMessage(
+                    buildJsonRequestMessage(brokerInformation),
+                    brokerInformation.getSenderPublicKey(),
+                    brokerInformation.getSenderActorType(),
+                    brokerInformation.getDestinationPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER
+            );
+
         } catch (final CantRequestConnectionException e){
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -206,7 +229,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void disconnect(final UUID requestId) throws CantDisconnectException            ,
-            ConnectionRequestNotFoundException {
+                                                              ConnectionRequestNotFoundException {
 
         try {
 
@@ -216,6 +239,26 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     requestId,
                     state
             );
+
+            CryptoBrokerConnectionRequest cbcr = cryptoBrokerActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            if (cbcr.getRequestType() == RequestType.RECEIVED) {
+                sendMessage(
+                        buildJsonInformationMessage(cbcr),
+                        cbcr.getDestinationPublicKey(),
+                        Actors.CBP_CRYPTO_BROKER,
+                        cbcr.getSenderPublicKey(),
+                        cbcr.getSenderActorType()
+                );
+            } else {
+                sendMessage(
+                        buildJsonInformationMessage(cbcr),
+                        cbcr.getSenderPublicKey(),
+                        cbcr.getSenderActorType(),
+                        cbcr.getDestinationPublicKey(),
+                        Actors.CBP_CRYPTO_BROKER
+                );
+            }
 
         } catch (final CantDisconnectException | ConnectionRequestNotFoundException e){
 
@@ -244,6 +287,16 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             cryptoBrokerActorNetworkServiceDao.denyConnection(
                     requestId,
                     protocolState
+            );
+
+            CryptoBrokerConnectionRequest cbcr = cryptoBrokerActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(cbcr),
+                    cbcr.getDestinationPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER,
+                    cbcr.getSenderPublicKey(),
+                    cbcr.getSenderActorType()
             );
 
         } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException e){
@@ -286,6 +339,16 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             cryptoBrokerActorNetworkServiceDao.acceptConnection(
                     requestId,
                     protocolState
+            );
+
+            CryptoBrokerConnectionRequest cbcr = cryptoBrokerActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(cbcr),
+                    cbcr.getDestinationPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER,
+                    cbcr.getSenderPublicKey(),
+                    cbcr.getSenderActorType()
             );
 
         } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException e){
@@ -360,14 +423,24 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
             final RequestType             type   = RequestType            .SENT           ;
 
-            return cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
-                    newId                ,
-                    requesterPublicKey   ,
-                    requesterActorType   ,
+            CryptoBrokerActorNetworkServiceQuotesRequest quotesRequest = cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
+                    newId,
+                    requesterPublicKey,
+                    requesterActorType,
                     cryptoBrokerPublicKey,
-                    state                ,
+                    state,
                     type
             );
+
+            sendMessage(
+                    quotesRequest.toJson(),
+                    quotesRequest.getRequesterPublicKey(),
+                    quotesRequest.getRequesterActorType(),
+                    quotesRequest.getCryptoBrokerPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER
+            );
+
+            return quotesRequest;
 
         } catch (final CantRequestQuotesException e){
 
@@ -402,15 +475,25 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public void answerQuotesRequest(final UUID                    requestId ,
                                     final long                    updateTime,
                                     final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
-            QuotesRequestNotFoundException  {
+                                                                                     QuotesRequestNotFoundException  {
 
         try {
 
             cryptoBrokerActorNetworkServiceDao.answerQuotesRequest(
-                    requestId                    ,
-                    updateTime                   ,
-                    quotes                       ,
+                    requestId,
+                    updateTime,
+                    quotes,
                     ProtocolState.PROCESSING_SEND
+            );
+
+            CryptoBrokerActorNetworkServiceQuotesRequest quotesRequest = cryptoBrokerActorNetworkServiceDao.getQuotesRequest(requestId);
+
+            sendMessage(
+                    quotesRequest.toJson(),
+                    quotesRequest.getCryptoBrokerPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER,
+                    quotesRequest.getRequesterPublicKey(),
+                    quotesRequest.getRequesterActorType()
             );
 
         } catch (final QuotesRequestNotFoundException | CantAnswerQuotesRequestException e){
@@ -467,4 +550,72 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             throw new CantConfirmException(e, null, "Unhandled Exception.");
         }
     }
+
+    private void sendMessage(final String jsonMessage      ,
+                             final String identityPublicKey,
+                             final Actors identityType     ,
+                             final String actorPublicKey   ,
+                             final Actors actorType        ) {
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    pluginRoot.sendNewMessage(
+                            pluginRoot.getProfileSenderToRequestConnection(
+                                    identityPublicKey,
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(identityType)
+                            ),
+                            pluginRoot.getProfileDestinationToRequestConnection(
+                                    actorPublicKey,
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(actorType)
+                            ),
+                            jsonMessage
+                    );
+                } catch (CantSendMessageException | InvalidParameterException e) {
+                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+            }
+        });
+    }
+
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
+
+        switch (type) {
+
+            case CBP_CRYPTO_BROKER    : return PlatformComponentType.ACTOR_CRYPTO_BROKER  ;
+            case CBP_CRYPTO_CUSTOMER  : return PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+
+            default: throw new InvalidParameterException(
+                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
+                    " type of actor not expected."
+            );
+        }
+    }
+
+    private String buildJsonInformationMessage(final CryptoBrokerConnectionRequest aer) {
+
+        return new InformationMessage(
+                aer.getRequestId(),
+                aer.getRequestAction()
+        ).toJson();
+    }
+
+    private String buildJsonRequestMessage(final CryptoBrokerConnectionInformation aer) {
+
+        return new RequestMessage(
+                aer.getConnectionId(),
+                aer.getSenderPublicKey(),
+                aer.getSenderActorType(),
+                aer.getSenderAlias(),
+                aer.getSenderImage(),
+                aer.getDestinationPublicKey(),
+                ConnectionRequestAction.REQUEST,
+                aer.getSendingTime()
+        ).toJson();
+    }
+
 }

@@ -1,0 +1,203 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/send_form_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <SendForm.Custom.CaviarTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_label"
+        android:textColor="@color/black" />
+
+    <SendForm.Custom.CaviarEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingStart="12dp"
+        android:paddingRight="12dp"
+        android:paddingEnd="12dp"
+        android:hint="@string/name_hint"
+        android:textColor="@color/grey_dark"
+        android:textColorHint="@color/grey_500"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/expand_button"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="top"
+            android:background="@drawable/ic_chevron_closed"
+            android:clickable="true" />
+
+        <SendForm.Custom.CaviarTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/bitcoin_wallet_address_label"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <SendForm.Custom.CaviarEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingStart="12dp"
+        android:paddingRight="5dp"
+        android:paddingEnd="5dp"
+        android:hint="@string/bitcoin_wallet_address_hint"
+        android:textColor="@color/grey_dark"
+        android:textColorHint="@color/grey_500"
+        android:inputType="text"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <SendForm.Custom.CaviarTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/currency_label"
+        android:textColor="@color/black"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <SendForm.Spinner.Spinner
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            app:visibleItems="4"
+            app:textSize="16"
+            app:mode="text" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <SendForm.Custom.CaviarTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/amount_label"
+                android:textColor="@color/black"
+                />
+
+            <SendForm.Custom.CaviarEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12dp"
+                android:paddingStart="12dp"
+                android:paddingRight="12dp"
+                android:paddingEnd="12dp"
+                android:hint="@string/amount_hint"
+                android:textColor="@color/grey_dark"
+                android:textColorHint="@color/grey_500"
+                android:inputType="numberDecimal"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <SendForm.Custom.CaviarTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8.4dp"
+                android:text="@string/unit_label"
+                android:textColor="@color/black"
+                />
+
+            <SendForm.Spinner.Spinner
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                app:textSize="16"
+                app:mode="text" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <SendForm.Custom.CaviarTextView
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/note_label"
+        android:textColor="@color/black"
+        />
+
+    <SendForm.Custom.CaviarEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingStart="12dp"
+        android:paddingRight="12dp"
+        android:paddingEnd="12dp"
+        android:hint="@string/note_hint"
+        android:textColor="@color/grey_dark"
+        android:textColorHint="@color/grey_500"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <SendForm.Spinner.CaviarButton
+            style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cancel_label"
+            android:background="@drawable/action_button"
+            app:typeface="caviar_dreams_bold" />
+
+        <SendForm.Spinner.CaviarButton
+            style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/send_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/send_label"
+            android:background="@drawable/action_button"
+            app:typeface="caviar_dreams_bold" />
+    </LinearLayout>
+</LinearLayout>
