@@ -40,6 +40,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -56,6 +57,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -185,29 +187,26 @@ public class ChatAdapterView extends LinearLayout {
 
             if(chatId !=null){
                 messSize=chatManager.getMessageByChatId(chatId).size();
-
-                for (int i = 0; i < messSize; i++) {
+                List<Message> messL=  chatManager.getMessageByChatId(chatId);
+                messSize= messL.size();
+                //for (int i = 0; i < messSize; i++) {
+                for(Message mess : messL){
                     msg = new ChatMessage();
-                    message = chatManager.getMessageByChatId(chatId).get(i).getMessage();
-                    inorout = chatManager.getMessageByChatId(chatId).get(i).getType().toString();
-                    msg.setId(chatManager.getMessageByChatId(chatId).get(i).getMessageId());
+                    message = mess.getMessage();
+                    inorout = mess.getType().toString();
+                    msg.setId(mess.getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
-                    msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
-                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()))))
+                    msg.setStatus(mess.getStatus().toString());
+                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(mess.getMessageDate()))))
                     {
-                        String S = new SimpleDateFormat("HH:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
+                        String S = new SimpleDateFormat("HH:mm").format(mess.getMessageDate());
                         msg.setDate(S);
                     }else
                     {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+                        msg.setDate(DateFormat.getDateTimeInstance().format(mess.getMessageDate()));
                     }
-//                    if (ts_now.before(chatManager.getMessageByChatId(chatId).get(i).getMessageDate())) {
-//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
-//                    }else {
-//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
-//                    }
-                    msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
+                    msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
                 }
