@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -106,6 +107,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
 
     @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
     NotificationManagerMiddleware notificationManagerMiddleware;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
@@ -235,7 +239,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
                     cashMoneyRestockManager,
                     cryptoMoneyRestockManager,
                     notificationManagerMiddleware,
-                    customerBrokerSaleManager);
+                    customerBrokerSaleManager,
+                    broadcaster);
             userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
         }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
     }
