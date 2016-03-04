@@ -4,9 +4,12 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -94,22 +98,23 @@ public class CustomerBrokerUpdateAgent implements
 
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager;
+    private Broadcaster broadcaster;
 
     /*Represent the Monitor Agent*/
     private MonitorAgentTransaction                     monitorAgentTransaction;
 
     public CustomerBrokerUpdateAgent(
-        PluginDatabaseSystem                        pluginDatabaseSystem,
-        LogManager                                  logManager,
-        ErrorManager                                errorManager,
-        EventManager                                eventManager,
-        UUID                                        pluginId,
-        NegotiationTransmissionManager              negotiationTransmissionManager,
-        CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation,
-        CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
-        CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
-        CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager
-    ){
+            PluginDatabaseSystem pluginDatabaseSystem,
+            LogManager logManager,
+            ErrorManager errorManager,
+            EventManager eventManager,
+            UUID pluginId,
+            NegotiationTransmissionManager negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            Broadcaster broadcaster){
         this.pluginDatabaseSystem                       = pluginDatabaseSystem;
         this.logManager                                 = logManager;
         this.errorManager                               = errorManager;
@@ -120,6 +125,7 @@ public class CustomerBrokerUpdateAgent implements
         this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
         this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
+        this.broadcaster = broadcaster;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -445,6 +451,8 @@ public class CustomerBrokerUpdateAgent implements
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
                                             customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+                                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, Wallets.CBP_CRYPTO_BROKER_WALLET.getCode(),
+                                                    CBPBroadcasterConstants.CBW_WAITING_FOR_CUSTOMER_NOTIFICATION);
                                         }
                                         break;
 
@@ -466,6 +474,8 @@ public class CustomerBrokerUpdateAgent implements
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
                                             customerBrokerUpdateSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, Wallets.CBP_CRYPTO_CUSTOMER_WALLET.getCode(),
+                                                    CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION);
                                         }
                                         break;
                                 }
