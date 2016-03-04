@@ -84,6 +84,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
 //    private FermatTextView assetDetailRedeemText;
+    private FermatTextView assetUserDetailLockedAssets;
 
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
@@ -317,6 +318,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
         pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
+        assetUserDetailLockedAssets = (FermatTextView) rootView.findViewById(R.id.assetUserDetailLockedAssets);
     }
 
     private void setupBackgroundBitmap() {
@@ -381,6 +383,14 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         }
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
+
+        if (digitalAsset.getLockedAssets() > 0){
+            assetUserDetailLockedAssets.setVisibility(View.VISIBLE);
+            assetUserDetailLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
+                    digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
+        }else{
+            assetUserDetailLockedAssets.setVisibility(View.GONE);
+        }
     }
 
     private String pendingText(long pendingValue) {

@@ -251,7 +251,7 @@ public class IncomingNotificationDao {
 
 
             if (!records.isEmpty())
-                return buildAssetUserNetworkServiceRecord(records.get(0));
+                return buildAssetUserNetworkServiceRecord(records.get(records.size()-1));
             else
                 throw new CantGetActorAssetNotificationException("", null, "RequestID: " + notificationId, "Can not find an crypto payment request with the given request id.");
 
@@ -311,7 +311,7 @@ public class IncomingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = records.get(records.size()-1);
 
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode());
 
@@ -348,7 +348,7 @@ public class IncomingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = records.get(records.size()-1);
 
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode());
 
