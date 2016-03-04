@@ -223,7 +223,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatManager.createSelfIdentities();
             List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
             size = con.size();
-            if((chatSettings.getLocalActorType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
+            if((chatSettings.getLocalPlatformComponentType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
                 ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(con.get(0).getPublicKey());
                 chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
             }
@@ -299,7 +299,10 @@ public class ChatListFragment extends AbstractFermatFragment{
                 ChatUserIdentity localUser = chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
                 //toolbar = getToolbar();
                 //getContext().getActionBar().setTitle("");
-                toolbar.setTitle(localUser.getAlias() + " - Fermat Chat");
+                ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
+                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                contactIcon =bmd.getBitmap();
+                toolbar.setTitle(localUser.getAlias());
                 contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
                 //getActivity().getActionBar().setLogo(contactIconCircular);
