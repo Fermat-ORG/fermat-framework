@@ -400,4 +400,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         }
         return fermatStructure;
     }
+
+    @Override
+    public FermatStructure getAppByPublicKey(String appPublicKey) {
+        return getDesktopObject(appPublicKey);
+    }
 }
