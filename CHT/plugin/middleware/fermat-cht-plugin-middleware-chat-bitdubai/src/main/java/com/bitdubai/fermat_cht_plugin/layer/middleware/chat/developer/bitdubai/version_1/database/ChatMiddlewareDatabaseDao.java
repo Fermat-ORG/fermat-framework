@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -291,6 +292,49 @@ public class ChatMiddlewareDatabaseDao {
             // I will add the contact information from the database
             for (DatabaseTableRecord record : getContactData(filter)) {
                 final Contact contact = getContactTransaction(record);
+
+                contacts.add(contact);
+            }
+
+            database.closeDatabase();
+
+            if(contacts.isEmpty()){
+                return null;
+            }
+
+            return contacts.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Contact from the database with filter: " + localPublicKey,
+                    null);
+        }
+    }
+
+    public ContactConnection getContactConnectionByLocalPublicKey(String localPublicKey) throws DatabaseOperationException
+    {
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<ContactConnection> contacts = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(localPublicKey);
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactConnectionData(filter)) {
+                final ContactConnection contact = getContactConnectionTransaction(record);
+
+                contact.setProfileImage(getContactConnectionImage(localPublicKey));
 
                 contacts.add(contact);
             }
@@ -1038,7 +1082,44 @@ public class ChatMiddlewareDatabaseDao {
 
     public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException
     {
-        return null;
+
+        //if filter is null all records
+        Database database = null;
+        try {
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(publicKey);
+            filter.setColumn(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+
+            database = openDatabase();
+            // I will add the message information from the database
+            List<DatabaseTableRecord> records=getChatUserIdentityData(filter);
+            if(records==null|| records.isEmpty()){
+                return null;
+            }
+
+            final ChatUserIdentity chatUserIdentity = getChatUserIdentityTransaction(records.get(0));
+            chatUserIdentity.setNewProfileImage(getChatUserIdentityProfileImage(chatUserIdentity.getPublicKey()));
+
+
+            database.closeDatabase();
+
+            return chatUserIdentity;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatUserIdentityException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    e.getMessage(),
+                    null);
+        }
     }
 
     private byte[] getChatUserIdentityProfileImage(String publicKey)
