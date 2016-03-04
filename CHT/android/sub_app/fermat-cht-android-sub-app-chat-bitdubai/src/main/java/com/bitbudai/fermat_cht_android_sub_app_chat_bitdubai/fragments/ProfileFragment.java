@@ -1,13 +1,18 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,51 +20,45 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Profile List fragment
+ * Profile fragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 03/03/16
  * @version 1.0
  *
  */
-public class ProfileListFragment extends AbstractFermatFragment implements ProfileListAdapter.AdapterCallback {
+public class ProfileFragment extends AbstractFermatFragment {
 
+//    // Defines a tag for identifying log entries
+//    private static final String TAG = "ContactsListFragment";
+//
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
-    private ProfileListAdapter adapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
+//    //private ContactsAdapter mAdapter; // The main query adapter
+//    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
 //    private String mSearchTerm; // Stores the current search query term
 //
 //    //private OnContactsInteractionListener mOnContactSelectedListener;
@@ -68,9 +67,9 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
 // public ArrayList<ContactList> contactList;
-    public List<ChatUserIdentity> profiles;
+    //public List<ChatUserIdentity> profiles;
 //    private ListView contactsContainer;
-    private ChatUserIdentity profilesl;//= new Contact();
+//    //private ContactsAdapter adapter;
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
@@ -85,82 +84,56 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     private Toolbar toolbar;
-    ListView list;
     // Defines a tag for identifying log entries
-    String TAG="CHT_ProfileListFragment";
+    String TAG = "CHT_ProfileFragment";
+
     ArrayList<String> profilename=new ArrayList<>();
     ArrayList<Bitmap> profileicon=new ArrayList<>();
     ArrayList<String> profileid=new ArrayList<>();
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    TextView text;
-    View layout;
+    ArrayList<String> profilealias =new ArrayList<>();
+    ChatUserIdentity cont;
     Typeface tf;
 
-    public static ProfileListFragment newInstance() {
-        return new ProfileListFragment();}
+    public static ProfileFragment newInstance() {
+        return new ProfileFragment();}
 
-    @Override
-    public void onMethodCallback() {//solution to access to another activity clicking the photo icon of the list
-        changeActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL, appSession.getAppPublicKey());
-    }
+//    public void setSearchQuery(String query) {
+//        if (TextUtils.isEmpty(query)) {
+//            mIsSearchResultView = false;
+//        } else {
+//            mSearchTerm = query;
+//            mIsSearchResultView = true;
+//        }
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try{
+        try {
             chatSession=((ChatSession) appSession);
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
-            try {
-                chatManager.createSelfIdentities();
-            }catch(CantCreateSelfIdentityException e)
-            {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            //Obtain chatSettings or create new chat settings if first time opening chat platform
-            chatSettings = null;
-            try {
-                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                chatSettings = null;
-            }
-            if (chatSettings == null) {
-                chatSettings = new ChatPreferenceSettings();
-                chatSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-
-            adapter=new ProfileListAdapter(getActivity(), profilename, profileicon, profileid, chatManager,
-                    moduleManager, errorManager, chatSession, appSession, this);
-        }catch (Exception e)
-        {
-            if(errorManager!=null)
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        } catch (Exception e) {
+            if(errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        setHasOptionsMenu(false);
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+       // mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         // Create the main contacts adapter
-        //adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+//        mAdapter = new ContactsAdapter(getActivity());
 //
 //        if (savedInstanceState != null) {
 //            // If we're restoring state after this fragment was recreated then
@@ -182,7 +155,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
          *
          * http://developer.android.com/training/displaying-bitmaps/
          */
-//        mImageLoader = new ImageLoader(getContext(), getListPreferredItemHeight()) {
+//        mImageLoader = new ImageLoader(getActivity(), getListPreferredItemHeight()) {
 //            @Override
 //            protected Bitmap processBitmap(Object data) {
 //                // This gets called in a background thread and passed the data from
@@ -195,342 +168,128 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //        mImageLoader.setLoadingImage(R.drawable.ic_contact_picture_holo_light);
 
         // Add a cache to the image loader
-        //mImageLoader.addImageCache(getRuntimeManager(), 0.1f);
+        //mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
 
     }
-
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        long viewId = view.getId();
-//        try{
-//            if (viewId == R.id.icon) {
-//                goToContactDetail(chatManager, moduleManager, chatSession,
-//                        appSession, errorManager, contactid.get(position));
-//            } else {
-//                appSession.setData("whocallme", "contact");
-//                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-//                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//            }
-//        }catch(CantGetContactException e) {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }catch (Exception e){
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
-//
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
-        layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
-        text=(TextView) layout.findViewById(R.id.text);
-        //text.setTypeface(tf, Typeface.NORMAL);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        View layout = inflater.inflate(R.layout.profile_detail_fragment, container, false);
 
         try {
-            List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
-            int size = con.size();
-            if (size > 0) {
-                for (int i=0;i<size;i++){
-                    profilename.add(con.get(i).getAlias());
-                    profileid.add(con.get(i).getPublicKey());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
-                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                    profileicon.add(bmd.getBitmap());
-                }
-                text.setVisibility(View.GONE);
-            }else{
-                //Comentar, solo para pruebas
-//                ContactImpl cadded=new ContactImpl();
-//                cadded.setContactId(UUID.randomUUID());
-//                cadded.setAlias("josejcb");
-//                cadded.setRemoteActorPublicKey("jose");
-//                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
-//                String dateString = "30/09/2014";
-//                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//                Date date = sdf.parse(dateString);
-//                long startDate = date.getTime();
-//                cadded.setCreationDate(startDate);
-//                cadded.setRemoteName("No hay nadie conectado");
-//                chatManager.saveContact(cadded);
-                //Fin Comentar
-                text.setVisibility(View.VISIBLE);
-                text.setText("No Registered Profile. Please create one in any Fermat Community.");
-            }
+            ChatUserIdentity con= chatSession.getSelectedProfile();
+            profilename.add(con.getAlias());
+            profileid.add(con.getPublicKey());
+            profilealias.add(con.getAlias());
+            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            profileicon.add(bmd.getBitmap());
 
+            ProfileAdapter adapter=new ProfileAdapter(getActivity(), profilename,  profilealias, profileid, "detail", errorManager);
+            FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
+            name.setText(profilealias.get(0));
+            //name.setTypeface(tf, Typeface.NORMAL);
+            FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
+            id.setText(profileid.get(0).toString());
+            //id.setTypeface(tf, Typeface.NORMAL);
+
+            // create bitmap from resource
+            //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+
+            // set circle bitmap
+            ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+            mImage.setImageBitmap(getCircleBitmap(profileicon.get(0)));
+
+            LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
+
+            final int adapterCount = adapter.getCount();
+
+            for (int i = 0; i < adapterCount; i++) {
+                View item = adapter.getView(i, null, null);
+                detalles.addView(item);
+            }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             }
         });
 
-        adapter=new ProfileListAdapter(getActivity(), profilename, profileicon, profileid, chatManager,
-                moduleManager, errorManager, chatSession, appSession, this);
-        list=(ListView)layout.findViewById(R.id.list);
-        list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    final ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(profileid.get(position));
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                    builder1.setMessage("Do you want to select "+profileSelected.getAlias()+" as your active profile?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    try {
-                                        //appSession.setData(ChatSession.PROFILE_DATA, profileSelected);
-                                        //ChatUserIdentity profile = chatSession.getSelectedProfile();
-                                        chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
-                                        Toast.makeText(getActivity(), "Profile Selected: " + profileSelected.getAlias(), Toast.LENGTH_SHORT).show();
-                                        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                                    } catch (Exception e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    }
-                                    changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    try {
-                                        dialog.cancel();
-                                    } catch (Exception e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    }
-                                }
-                            });
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                } catch (CantGetChatUserIdentityException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
-        });
-
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    appSession.setData(ChatSession.PROFILE_DATA, chatManager.getChatUserIdentity(profileid.get(position)));
-                    changeActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL, appSession.getAppPublicKey());
-                }catch(CantGetChatUserIdentityException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                return true;
-            }
-        });
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                try {
-                    Toast.makeText(getActivity(), "Profiles Updated", Toast.LENGTH_SHORT).show();
-                    List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
-                    if (con.size() > 0) {
-                        profilename.clear();
-                        profileid.clear();
-                        profileicon.clear();
-                        for (int i=0;i<con.size();i++){
-                            profilename.add(con.get(i).getAlias());
-                            profileid.add(con.get(i).getPublicKey());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            profileicon.add(bmd.getBitmap());
-                        }
-                        final ProfileListAdapter adaptador =
-                                new ProfileListAdapter(getActivity(), profilename, profileicon, profileid, chatManager,
-                                        moduleManager, errorManager, chatSession, appSession, null);
-                        adaptador.refreshEvents(profilename, profileicon, profileid);
-                        list.invalidateViews();
-                        list.requestLayout();
-                        text.setVisibility(View.GONE);
-                    }else{
-                        //Toast.makeText(getActivity(), "No Registered Profile", Toast.LENGTH_SHORT).show();
-                        text.setVisibility(View.VISIBLE);
-                        text.setText("No Registered Profile. Please create one in any Fermat Community.");
-                    }
-                } catch (CantGetChatUserIdentityException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }, 2500);
-            }
-        });
         // Inflate the list fragment layout
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_add_contact) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
-//            return true;
-//        }else if (item.getItemId() == R.id.menu_switch_profile) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-        /*else if(item.getItemId()==R.id.menu_search)
-        {
-            getActivity().onSearchRequested();
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
 
-        }*/
-        return super.onOptionsItemSelected(item);
+        final int color = Color.RED;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        //final Paint paintBorder = new Paint();
+       // paintBorder.setColor(Color.GREEN);
+        //paintBorder.setShadowLayer(4.0f, 0.0f, 2.0f, Color.BLACK);
+        //BitmapShader shader = new BitmapShader(Bitmap.createScaledBitmap(output, canvas.getWidth(), canvas.getHeight(), false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        //paint.setShader(shader);
+        paint.setAntiAlias(true);
+        //paintBorder.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawOval(rectF, paint);
+        //int circleCenter = bitmap.getWidth() / 2;
+        //int borderWidth = 2;
+        //canvas.drawCircle(circleCenter + borderWidth, circleCenter + borderWidth, circleCenter + borderWidth - 4.0f, paintBorder);
+        //canvas.drawCircle(circleCenter + borderWidth, circleCenter + borderWidth, circleCenter - 4.0f, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        //canvas.drawBitmap(bitmap, circleCenter + borderWidth, circleCenter + borderWidth, paint);
+        bitmap.recycle();
+        return output;
     }
 
-    // This method uses APIs from newer OS versions than the minimum that this app supports. This
-    // annotation tells Android lint that they are properly guarded so they won't run on older OS
-    // versions and can be ignored by lint.
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        //inflater.inflate(R.menu.contact_list_menu, menu);
-        // Locate the search item
-        //MenuItem searchItem = menu.findItem(R.id.menu_search);
-
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-        // if (mIsSearchResultView) {
-        //    searchItem.setVisible(false);
-        //}
-
-        // Retrieves the system search manager service
-/*        final SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-
-        // Retrieves the SearchView from the search menu item
- /*       final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        // Assign searchable info to SearchView
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        // Set listeners for SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String queryText) {
-                // Nothing needs to happen when the user submits the search string
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Called when the action bar search text has changed.  Updates
-                // the search filter, and restarts the loader to do a new query
-                // using the new search string.
-                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
-
-                // Don't do anything if the filter is empty
-                if (mSearchTerm == null && newFilter == null) {
-                    return true;
-                }
-
-                // Don't do anything if the new filter is the same as the current filter
-                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
-                    return true;
-                }
-
-                // Updates current filter to new filter
-                mSearchTerm = newFilter;
-
-                // Restarts the loader. This triggers onCreateLoader(), which builds the
-                // necessary content Uri from mSearchTerm.
-                mSearchQueryChanged = true;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                // Nothing to do when the action item is expanded
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                // When the user collapses the SearchView the current search string is
-                // cleared and the loader restarted.
-                if (!TextUtils.isEmpty(mSearchTerm)) {
-                    onSelectionCleared();
-                }
-                mSearchTerm = null;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        if (mSearchTerm != null) {
-            // If search term is already set here then this fragment is
-            // being restored from a saved state and the search menu item
-            // needs to be expanded and populated again.
-
-            // Stores the search term (as it will be wiped out by
-            // onQueryTextChange() when the menu item is expanded).
-            final String savedSearchTerm = mSearchTerm;
-
-            // Expands the search menu item
-            searchItem.expandActionView();
-
-            // Sets the SearchView to the previous search string
-            searchView.setQuery(savedSearchTerm, false);
-        }
-*/
-    }
-
-//    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSession chatSession,
-//                                  FermatSession appSession, ErrorManager errorManager, UUID id){
-//        try{
-//            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(id));
-//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-//        }catch(CantGetContactException e) {
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }catch (Exception e){
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
-//    }
-
-//    public void setSearchQuery(String query) {
-//        if (TextUtils.isEmpty(query)) {
-//            mIsSearchResultView = false;
-//        } else {
-//            mSearchTerm = query;
-//            mIsSearchResultView = true;
-//        }
-//    }
+//    private void loadDummyHistory(){// Hard Coded
 //
+//        contactList = new ArrayList<ContactList>();
+//
+//        ContactList cl = new ContactList();
+//        cl.setId(1);
+//        cl.setName("John Doe");
+//        cl.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+//        contactList.add(cl);
+//        ContactList cl1 = new ContactList();
+//        cl1.setId(2);
+//        cl1.setName("Jane Doe");
+//        cl1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+//        contactList.add(cl1);
+//        //adapter = new ChatAdapter(getActivity());//,
+//        //contactsContainer.setAdapter((ListAdapter) cl);
+//
+//        for(int i=0; i<contactList.size(); i++) {
+//            ContactList contact_list = contactList.get(i);
+//            //displayMessage(contact_list);
+//        }
+//    }
+
+   /* public void displayMessage(ContactList message) {
+        adapter.add(message);
+        //adapter.notifyDataSetChanged();
+        scroll();
+    }
+*/
+    /*private void scroll() {
+        contactsContainer.setSelection(contactsContainer.getCount() - 1);
+    }*/
+
 //    @Override
 //    public void onActivityCreated(Bundle savedInstanceState) {
 //        super.onActivityCreated(savedInstanceState);
@@ -635,7 +394,110 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
         //getListView().clearChoices();
     }*/
 
+    // This method uses APIs from newer OS versions than the minimum that this app supports. This
+    // annotation tells Android lint that they are properly guarded so they won't run on older OS
+    // versions and can be ignored by lint.
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        // Inflate the menu items
+        //inflater.inflate(R.menu.contact_detail_menu, menu);
+        // Locate the search item
+
+
+        // Retrieves the system search manager service
+/*        final SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        // Retrieves the SearchView from the search menu item
+ /*       final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        // Assign searchable info to SearchView
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        // Set listeners for SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String queryText) {
+                // Nothing needs to happen when the user submits the search string
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Called when the action bar search text has changed.  Updates
+                // the search filter, and restarts the loader to do a new query
+                // using the new search string.
+                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
+
+                // Don't do anything if the filter is empty
+                if (mSearchTerm == null && newFilter == null) {
+                    return true;
+                }
+
+                // Don't do anything if the new filter is the same as the current filter
+                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
+                    return true;
+                }
+
+                // Updates current filter to new filter
+                mSearchTerm = newFilter;
+
+                // Restarts the loader. This triggers onCreateLoader(), which builds the
+                // necessary content Uri from mSearchTerm.
+                mSearchQueryChanged = true;
+                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                return true;
+            }
+        });
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                // Nothing to do when the action item is expanded
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                // When the user collapses the SearchView the current search string is
+                // cleared and the loader restarted.
+                if (!TextUtils.isEmpty(mSearchTerm)) {
+                    onSelectionCleared();
+                }
+                mSearchTerm = null;
+                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                return true;
+            }
+        });
+
+        if (mSearchTerm != null) {
+            // If search term is already set here then this fragment is
+            // being restored from a saved state and the search menu item
+            // needs to be expanded and populated again.
+
+            // Stores the search term (as it will be wiped out by
+            // onQueryTextChange() when the menu item is expanded).
+            final String savedSearchTerm = mSearchTerm;
+
+            // Expands the search menu item
+            searchItem.expandActionView();
+
+            // Sets the SearchView to the previous search string
+            searchView.setQuery(savedSearchTerm, false);
+        }
+*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
 
 //    @Override
 //    public void onSaveInstanceState(Bundle outState) {
@@ -786,7 +648,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //        // Ensures the Fragment is still added to an activity. As this method is called in a
 //        // background thread, there's the possibility the Fragment is no longer attached and
 //        // added to an activity. If so, no need to spend resources loading the contact photo.
-//        if (!isAdded() || getContext() == null) {
+//        if (!isAdded() || getActivity() == null) {
 //            return null;
 //        }
 //
@@ -804,7 +666,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //            // Retrieves a file descriptor from the Contacts Provider. To learn more about this
 //            // feature, read the reference documentation for
 //            // ContentResolver#openAssetFileDescriptor.
-//            afd = getContext().getContentResolver().openAssetFileDescriptor(thumbUri, "r");
+//            afd = getActivity().getContentResolver().openAssetFileDescriptor(thumbUri, "r");
 //
 //            // Gets a FileDescriptor from the AssetFileDescriptor. A BitmapFactory object can
 //            // decode the contents of a file pointed to by a FileDescriptor into a Bitmap.
@@ -1077,7 +939,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 
     /**
      * This interface defines constants for the Cursor and CursorLoader, based on constants defined
-     * in the {@link android.provider.ContactsContract.Contacts} class.
+     * in the {@link ContactsContract.Contacts} class.
      */
 //    public interface ContactsQuery {
 //

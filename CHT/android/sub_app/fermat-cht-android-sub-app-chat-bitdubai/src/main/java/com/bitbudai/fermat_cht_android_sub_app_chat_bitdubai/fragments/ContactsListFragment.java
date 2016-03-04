@@ -316,7 +316,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                         list.requestLayout();
                         text.setVisibility(View.GONE);
                     }else{
-                        Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                         text.setVisibility(View.VISIBLE);
                         text.setText(" ");
                         text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
