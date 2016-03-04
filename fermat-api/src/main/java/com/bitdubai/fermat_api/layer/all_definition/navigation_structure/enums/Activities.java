@@ -293,6 +293,7 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_EDIT_CONTACT("CHTEDCO"),
     CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLT"),
     CHT_CHAT_OPEN_PROFILELIST("CHTOPRL"),
+    CHT_CHAT_OPEN_PROFILE_DETAIL("CHTOPOD"),
 
 
     WPD_DESKTOP("WPD"),
@@ -703,6 +704,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CONNECTIONLIST;
             case "CHTOPRL":
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
+            case "CHTOPOD":
+                return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;

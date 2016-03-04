@@ -354,7 +354,7 @@ public class ChatAdapterView extends LinearLayout {
                          */
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        if(chatSettings!=null)
+                        if(chatSettings.getLocalPublicKey()!=null && chatSettings.getLocalPlatformComponentType()!=null)
                         {
                             chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
                             chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
