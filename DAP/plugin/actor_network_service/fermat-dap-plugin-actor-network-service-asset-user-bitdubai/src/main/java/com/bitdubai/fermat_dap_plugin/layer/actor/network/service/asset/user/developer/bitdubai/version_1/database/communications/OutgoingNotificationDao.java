@@ -151,7 +151,7 @@ public class OutgoingNotificationDao {
                 List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
                 if (!records.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records.get(0));
+                    return buildAssetUserNetworkServiceRecord(records.get(records.size()-1));
                 else
                     throw new CantGetActorAssetNotificationException("", null, "RequestID: " + notificationId, "Can not find an actor aset user request with the given request id.");
             } catch (CantLoadTableToMemoryException exception) {
@@ -197,14 +197,14 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = actorRequestTable.getRecords();
 
             if (!records.isEmpty())
-                return buildAssetUserNetworkServiceRecord(records.get(0)).getActorSenderType();
+                return buildAssetUserNetworkServiceRecord(records.get(records.size()-1)).getActorSenderType();
             else{
                 actorRequestTable.clearAllFilters();
                 actorRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeySender, DatabaseFilterType.EQUAL);
                 actorRequestTable.loadToMemory();
                 List<DatabaseTableRecord> records1 = actorRequestTable.getRecords();
                 if (!records1.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records1.get(0)).getActorDestinationType();
+                    return buildAssetUserNetworkServiceRecord(records1.get(records.size()-1)).getActorDestinationType();
                 else
                     throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
@@ -227,14 +227,14 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = actorToRequestTable.getRecords();
 
             if (!records.isEmpty())
-                return buildAssetUserNetworkServiceRecord(records.get(0)).getActorDestinationType();
+                return buildAssetUserNetworkServiceRecord(records.get(records.size()-1)).getActorDestinationType();
             else{
                 actorToRequestTable.clearAllFilters();
                 actorToRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeyDestination, DatabaseFilterType.EQUAL);
                 actorToRequestTable.loadToMemory();
                 List<DatabaseTableRecord> records1 = actorToRequestTable.getRecords();
                 if (!records1.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records1.get(0)).getActorSenderType();
+                    return buildAssetUserNetworkServiceRecord(records1.get(records.size()-1)).getActorSenderType();
                 else
                     throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
@@ -270,7 +270,7 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = records.get(records.size()-1);
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
@@ -304,7 +304,7 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(0);
+                DatabaseTableRecord record = records.get(records.size()-1);
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
@@ -474,7 +474,7 @@ public class OutgoingNotificationDao {
 
     private ActorAssetNetworkServiceRecord buildAssetUserNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
         try {
-            BlockchainNetworkType blockchainNetworkType;
+            BlockchainNetworkType blockchainNetworkType = null;
 
             UUID notificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
             String senderAlias = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
@@ -497,8 +497,8 @@ public class OutgoingNotificationDao {
 
             if (blockchainNetwork != null)
                 blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetwork);
-            else
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+//            else
+//                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
             Actors actorDestinationType = Actors.getByCode(destinationType);
             Actors actorSenderType = Actors.getByCode(senderType);
