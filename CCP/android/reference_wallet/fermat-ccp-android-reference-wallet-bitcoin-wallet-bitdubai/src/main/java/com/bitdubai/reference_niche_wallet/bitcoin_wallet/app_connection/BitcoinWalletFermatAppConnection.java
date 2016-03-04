@@ -91,7 +91,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
             if(enabledNotification)
               return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager,code,referenceWalletSession.getAppPublicKey());
             else
-                return null;
+                return new BitcoinWalletNotificationPainter("","","","",false);
         }
         catch(Exception e)
         {

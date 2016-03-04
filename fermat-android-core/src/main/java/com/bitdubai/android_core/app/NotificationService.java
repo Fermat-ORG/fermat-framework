@@ -89,39 +89,42 @@ public class NotificationService extends Service {
 
             }
             if (notificationPainter != null) {
-                RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
-                intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
-                intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pi = PendingIntent
-                        .getActivity(this, 0, intent, 0);
+                if (notificationPainter.showNotification() ) {
+                    RemoteViews remoteViews = notificationPainter.getNotificationView(code);
+                    Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                    intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                    intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    PendingIntent pi = PendingIntent
+                            .getActivity(this, 0, intent, 0);
 
 
-                if (remoteViews != null) {
-                    builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
-                            .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
-                            .setAutoCancel(true)
-                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                            .setLights(Color.YELLOW, 3000, 3000)
-                            .setContent(remoteViews)
-                            .setWhen(System.currentTimeMillis());
-                } else {
-                    builder = new Notification.Builder(this)
-                            .setTicker(notificationPainter.getNotificationTitle())
-                            .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                            .setContentTitle(notificationPainter.getNotificationTitle())
-                            .setContentText(notificationPainter.getNotificationTextBody())
-                            .setContentIntent(pi)
-                            .setAutoCancel(true)
-                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                            .setLights(Color.YELLOW, 3000, 3000);
+                    if (remoteViews != null) {
+                        builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
+                                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
+                                .setAutoCancel(true)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                                .setLights(Color.YELLOW, 3000, 3000)
+                                .setContent(remoteViews)
+                                .setWhen(System.currentTimeMillis());
+                    } else {
+                        builder = new Notification.Builder(this)
+                                .setTicker(notificationPainter.getNotificationTitle())
+                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
+                                .setContentTitle(notificationPainter.getNotificationTitle())
+                                .setContentText(notificationPainter.getNotificationTextBody())
+                                .setContentIntent(pi)
+                                .setAutoCancel(true)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                                .setLights(Color.YELLOW, 3000, 3000);
+                    }
+
+                    NotificationManager notificationManager = (NotificationManager)
+                            getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.notify(0, builder.build());
                 }
-
-                NotificationManager notificationManager = (NotificationManager)
-                        getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, builder.build());
-            }else{
+            }
+            else{
                 Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
                 intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
