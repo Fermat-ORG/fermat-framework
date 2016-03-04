@@ -165,17 +165,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-                //TODO: kill testdata!
                 waitingForCustomer.addAll(wallet.getContractsWaitingForCustomer(10, 0));
-                waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
+                //waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(grouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_broker);
                 List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                //TODO: kill testdata!
                 waitingForBroker.addAll(wallet.getContractsWaitingForBroker(10, 0));
-                waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
+                //waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
                 grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
