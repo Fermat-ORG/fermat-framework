@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -101,7 +102,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        Button botonU = (Button) layout.findViewById(R.id.update_crypto_customer_button);
+        TextView botonU = (TextView) layout.findViewById(R.id.update_crypto_customer_button);
         botonU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +132,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (actualizable) {
+                    /*
                     new AlertDialog.Builder(v.getContext())
                             .setTitle("Save Changes?")
                             .setMessage("You want to save changes?")
@@ -140,6 +142,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
                                     editIdentityInfoInBackDevice();
                                 }
                             }).create().show();
+                    */
                     actualizable = false;
                 }
             }
@@ -236,6 +239,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             int resultCode = (int) result[0];
             if (resultCode == 1) {
                 Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
             } else if (resultCode == 4) {
                 Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
             }
