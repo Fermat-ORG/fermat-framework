@@ -223,7 +223,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatManager.createSelfIdentities();
             List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
             size = con.size();
-            if((chatSettings.getLocalActorType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
+            if((chatSettings.getLocalPlatformComponentType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
                 ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(con.get(0).getPublicKey());
                 chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
             }
