@@ -91,9 +91,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             if (data.getStatus() != null && myMsg) {
                 if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-                if (data.getStatus() == MessageStatus.DELIVERED.toString())
+                else if (data.getStatus() == MessageStatus.DELIVERED.toString())
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-                if (data.getStatus() == MessageStatus.READ.toString())
+                else if (data.getStatus() == MessageStatus.READ.toString())
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
             }
         }
