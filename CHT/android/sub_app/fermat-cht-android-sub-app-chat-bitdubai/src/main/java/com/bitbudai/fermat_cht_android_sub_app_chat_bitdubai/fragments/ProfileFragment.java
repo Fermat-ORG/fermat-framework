@@ -1,7 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -25,8 +24,7 @@ import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -35,9 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -46,12 +42,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Contact fragment
+ * Profile fragment
  *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 05/01/16
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 03/03/16
  * @version 1.0
  *
  */
@@ -72,7 +67,7 @@ public class ProfileFragment extends AbstractFermatFragment {
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
 // public ArrayList<ContactList> contactList;
-    public List<ChatUserIdentity> profiles;
+    //public List<ChatUserIdentity> profiles;
 //    private ListView contactsContainer;
 //    //private ContactsAdapter adapter;
 //
@@ -92,7 +87,7 @@ public class ProfileFragment extends AbstractFermatFragment {
     private ChatSession chatSession;
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
-    String TAG = "CHT_ContactFragment";
+    String TAG = "CHT_ProfileFragment";
 
     ArrayList<String> profilename=new ArrayList<>();
     ArrayList<Bitmap> profileicon=new ArrayList<>();
@@ -192,7 +187,7 @@ public class ProfileFragment extends AbstractFermatFragment {
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             profileicon.add(bmd.getBitmap());
 
-            ContactAdapter adapter=new ContactAdapter(getActivity(), profilename,  profilealias, profileid, "detail", errorManager);
+            ProfileAdapter adapter=new ProfileAdapter(getActivity(), profilename,  profilealias, profileid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(profilealias.get(0));
             //name.setTypeface(tf, Typeface.NORMAL);
@@ -222,7 +217,7 @@ public class ProfileFragment extends AbstractFermatFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             }
         });
 
