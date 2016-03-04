@@ -228,10 +228,9 @@ public class JettyEmbeddedAppServer {
 
         for(Inet4Address address : addressList){
 
-            System.out.println("IP ADDRESS "+ address.getHostAddress());
-
             arr[i] = new PortMapping(9090, address.getHostAddress(), PortMapping.Protocol.TCP,"My Port Mapping1");
             i++;
+
         }
 
         upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
