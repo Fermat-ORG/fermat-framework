@@ -38,8 +38,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.UnsupportedAddressTypeException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.DispatcherType;
@@ -216,6 +218,26 @@ public class JettyEmbeddedAppServer {
 
         upnpService.getControlPoint().search();*/
 
+        /* Use this is OK, load the ip dynamically */
+
+        UpnpServiceImpl upnpService = null;
+        PortMapping[] arr = new PortMapping[2];
+        List<Inet4Address> addressList;
+        int i = 0;
+        addressList = getIPv4Address();
+
+        for(Inet4Address address : addressList){
+
+            System.out.println("IP ADDRESS "+ address.getHostAddress());
+
+            arr[i] = new PortMapping(9090, address.getHostAddress(), PortMapping.Protocol.TCP,"My Port Mapping1");
+            i++;
+        }
+
+        upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
+        upnpService.getControlPoint().search();
+
+
         this.initialize();
         LOG.info("Starting the internal server");
         this.server.start();
@@ -244,6 +266,41 @@ public class JettyEmbeddedAppServer {
         InetAddress localhost = InetAddress.getLocalHost();
         if (localhost instanceof Inet4Address) {
             return (Inet4Address) localhost;
+        }
+
+        throw new UnsupportedAddressTypeException();
+    }
+
+    /*
+     * Return Inet4Address List of All the IpAddress Assignaded to the interfaces
+     * example a T2000 of Sun has four interfaces
+     */
+    private static List<Inet4Address> getIPv4Address() throws Exception {
+        List<Inet4Address> listOfInterfaces = null;
+        // if (iface != null) {
+        //NetworkInterface networkInterface = NetworkInterface.getByName(iface);
+        Enumeration<NetworkInterface> enume = NetworkInterface.getNetworkInterfaces();
+
+        if(enume != null){
+            listOfInterfaces = new ArrayList<>();
+
+            while(enume.hasMoreElements()){
+
+                System.out.println(enume.nextElement().getDisplayName());
+
+                NetworkInterface networkInterface = NetworkInterface.getByName(enume.nextElement().getDisplayName());
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (addr instanceof Inet4Address) {
+                        listOfInterfaces.add((Inet4Address) addr);
+                    }
+                }
+
+            }
+
+            return listOfInterfaces;
         }
 
         throw new UnsupportedAddressTypeException();
