@@ -82,7 +82,7 @@ public abstract class AbstractOpenContract {
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToLong(clauseValue);
+                    paymentAmount=parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
@@ -144,11 +144,11 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException, CantGetIndexException {
 
         ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
-        MoneyType merchandiseCurrency;
+        Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
-        MoneyType paymentCurrency;
+        Currency paymentCurrency = FiatCurrency.US_DOLLAR;
         long paymentExpirationDate;
         String clauseValue;
         long dayTime;
@@ -164,7 +164,12 @@ public abstract class AbstractOpenContract {
             switch (clauseType){
 
                 case BROKER_CURRENCY:
-                    merchandiseCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
@@ -176,11 +181,16 @@ public abstract class AbstractOpenContract {
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToLong(clauseValue);
+                    paymentAmount=parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    paymentCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        paymentCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        paymentCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
