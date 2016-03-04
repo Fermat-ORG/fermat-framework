@@ -71,6 +71,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+
 /**
  * The Class <code>UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent</code>
  * contains the logic for handling agent transactional
@@ -242,8 +243,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 //        }
 //
 //    }
-
-
     private void doTheMainTask() {
         try {
             CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
@@ -270,16 +269,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                 //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
                 String customerCurrency = "";
-                for(Clause clause : customerBrokerSaleNegotiation.getClauses())
-                    if(clause.getType() == ClauseType.CUSTOMER_CURRENCY)
+                for (Clause clause : customerBrokerSaleNegotiation.getClauses())
+                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY)
                         customerCurrency = clause.getValue();
 
                 float marketExchangeRate = 1;
-                if(customerCurrency != "")
-                {
-                    try{
+                if (customerCurrency.isEmpty()) {
+                    try {
                         marketExchangeRate = getMarketExchangeRate(customerCurrency);
-                    }catch (CantGetExchangeRateException e) {
+                    } catch (CantGetExchangeRateException e) {
                         marketExchangeRate = 1;
                     }
                 }
@@ -464,7 +462,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCloseContractException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }  catch (CantGetCryptoBrokerWalletSettingException e) {
+        } catch (CantGetCryptoBrokerWalletSettingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CryptoBrokerWalletNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -532,24 +530,23 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
     /* Private methods */
 
-    private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException
-    {
+    private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {
         //Find out if customerCurrency parameter is a FiatCurrency or a CryptoCurrency
         Currency currency = null;
         try {
-            if(FiatCurrency.codeExists(customerCurrency))
+            if (FiatCurrency.codeExists(customerCurrency))
                 currency = FiatCurrency.getByCode(customerCurrency);
-            else if(CryptoCurrency.codeExists(customerCurrency))
+            else if (CryptoCurrency.codeExists(customerCurrency))
                 currency = CryptoCurrency.getByCode(customerCurrency);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new CantGetExchangeRateException();
         }
 
-        if(currency == null)
+        if (currency == null)
             throw new CantGetExchangeRateException();
 
 
-        CurrencyPair currencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, currency);
+        CurrencyPair currencyPair =  new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
 
 
         //Get saved CER providers in broker wallet

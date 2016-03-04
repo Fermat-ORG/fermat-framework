@@ -224,8 +224,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         customerCurrency = clause.getValue();
 
                 float marketExchangeRate = 1;
-                if(customerCurrency != "")
-                {
+                if(customerCurrency.isEmpty()) {
                     try{
                         marketExchangeRate = getMarketExchangeRate(customerCurrency);
                     }catch (CantGetExchangeRateException e) {
@@ -416,7 +415,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             throw new CantGetExchangeRateException();
 
 
-        CurrencyPair currencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, currency);
+        CurrencyPair currencyPair = new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
 
 
         //Get saved CER providers in broker wallet
