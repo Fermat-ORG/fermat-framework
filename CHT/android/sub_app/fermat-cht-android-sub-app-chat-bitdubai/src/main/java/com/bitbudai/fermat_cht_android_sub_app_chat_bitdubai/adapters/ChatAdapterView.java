@@ -497,7 +497,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     private void scroll() {
-        messagesContainer.scrollToPosition(adapter.getItemCount() - 1);
+        if(adapter != null && adapter.getItemCount()!=0 && adapter.getItemCount()>0)
+            messagesContainer.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     public void setRootView(ViewGroup rootView) {

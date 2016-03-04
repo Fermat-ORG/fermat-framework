@@ -210,19 +210,24 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                         try {
                                             //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
                                             //Contact conn = chatSession.getSelectedConnection();
-                                            Long dv = System.currentTimeMillis();
-                                            ContactImpl newContact = new ContactImpl();
-                                            newContact.setAlias(contactConn.getAlias());
-                                            newContact.setRemoteActorType(contactConn.getRemoteActorType());
-                                            newContact.setRemoteActorPublicKey(contactConn.getRemoteActorPublicKey());
-                                            newContact.setRemoteName(contactConn.getRemoteName());
-                                            newContact.setContactId(UUID.randomUUID());
-                                            newContact.setCreationDate(System.currentTimeMillis());
-                                            newContact.setContactStatus(contactConn.getContactStatus());
-                                            newContact.setProfileImage(contactConn.getProfileImage());
-                                            chatManager.saveContact(newContact);
-                                            Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
-                                            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                            if (chatManager.getContactByLocalPublicKey(contactConn.getRemoteActorPublicKey())== null) {
+                                                Long dv = System.currentTimeMillis();
+                                                ContactImpl newContact = new ContactImpl();
+                                                newContact.setAlias(contactConn.getAlias());
+                                                newContact.setRemoteActorType(contactConn.getRemoteActorType());
+                                                newContact.setRemoteActorPublicKey(contactConn.getRemoteActorPublicKey());
+                                                newContact.setRemoteName(contactConn.getRemoteName());
+                                                newContact.setContactId(UUID.randomUUID());
+                                                newContact.setCreationDate(System.currentTimeMillis());
+                                                newContact.setContactStatus(contactConn.getContactStatus());
+                                                newContact.setProfileImage(contactConn.getProfileImage());
+                                                chatManager.saveContact(newContact);
+                                                Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
+                                                changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                            }else{
+                                                Toast.makeText(getActivity(), "Contact already exist", Toast.LENGTH_SHORT).show();
+                                                changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                            }
                                         }catch(CantSaveContactException e) {
                                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                         }catch (Exception e){
