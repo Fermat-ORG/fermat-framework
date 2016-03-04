@@ -53,6 +53,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -117,8 +118,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
             try {
                 for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered()) {
-                    AssetIssuerActorRecord assetIssuerActorRecord = (AssetIssuerActorRecord) actorAssetIssuer;
-                    assetIssuerActorRecords.add(assetIssuerActorRecord);
+                    if (Objects.equals(actorAssetIssuer.getType().getCode(), Actors.DAP_ASSET_ISSUER.getCode())) {
+                        AssetIssuerActorRecord assetIssuerActorRecord = (AssetIssuerActorRecord) actorAssetIssuer;
+                        assetIssuerActorRecords.add(assetIssuerActorRecord);
+                    }
                 }
 
             } catch (CantGetAssetIssuerActorsException e) {

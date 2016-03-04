@@ -424,6 +424,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
             }
 
+            referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
+
         }
         catch(Exception e)
         {

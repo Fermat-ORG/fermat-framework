@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -74,8 +73,8 @@ public class getCustomerOnlinePaymentRecordTest {
         when(databaseTableRecord.getStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                         ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("POMC");
-        assertEquals("contract_hash",
-                customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord("Test").getContractHash());
+        assertEquals("Test",
+                customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord("Test").getTransactionHash());
     }
     //this test catch the InvalidParameterException
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)

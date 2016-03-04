@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.apache.commons.lang.Validate;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -113,5 +114,19 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
      */
     public final long getUpdateTime() {
         return updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ActorConnection{" +
+                "connectionId=" + connectionId +
+                ", linkedIdentity=" + linkedIdentity +
+                ", publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", image=" + (image != null) +
+                ", connectionState=" + connectionState +
+                ", creationTime=" + creationTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

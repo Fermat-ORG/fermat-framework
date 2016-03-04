@@ -24,12 +24,14 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ContractBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -157,6 +159,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             try {
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
                 // waitingForCustomer.addAll(walletManager.getContractsWaitingForCustomer(10, 0));
+                //CryptoBrokerWalletModuleContractBasicInformation
                 waitingForCustomer.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForCustomer(10, 0));
                 waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);

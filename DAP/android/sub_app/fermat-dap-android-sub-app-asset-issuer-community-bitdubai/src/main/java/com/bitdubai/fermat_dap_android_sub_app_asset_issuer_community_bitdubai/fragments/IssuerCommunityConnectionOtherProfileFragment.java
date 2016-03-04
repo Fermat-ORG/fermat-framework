@@ -149,7 +149,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             if (actorIssuer.getRecord().getExtendedPublicKey() != null) {
                 issuerExtendedKey.setText(actorIssuer.getRecord().getExtendedPublicKey());
             } else {
-                issuerExtendedKey.setText("None");
+                issuerExtendedKey.setText(R.string.none);
             }
 
             //issuerRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
@@ -158,7 +158,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -179,7 +179,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                         actorIssuer,
                         null);
 //                        manager.getActiveAssetIssuerIdentity());
-                connectDialog.setTitle("Connection Request");
+                connectDialog.setTitle(R.string.connection_request_title);
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(actorIssuer.getRecord().getName());
                 connectDialog.setSecondDescription("a connection request");
@@ -216,7 +216,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             }
         }*/
         if (i == R.id.btn_connection_accept) {
-            Toast.makeText(getActivity(), "The connection was accepted successfully.\n It can not be unmade", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.connection_success, Toast.LENGTH_SHORT).show();
 //            try {
 //                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
 //                        (AssetIssuerCommunitySubAppSession) appSession,
@@ -238,11 +238,11 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         }
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.connection_request, Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
             // CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.connection_rejected, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -380,7 +380,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 if (actorAssetIssuer.getExtendedPublicKey() != null) {
                     issuerExtendedKey.setText(actorAssetIssuer.getExtendedPublicKey());
                 } else {
-                    issuerExtendedKey.setText("None");
+                    issuerExtendedKey.setText(R.string.none);
                 }
             }
 

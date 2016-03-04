@@ -44,7 +44,8 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
             System.out.print("\n\n --- 3.1) Negotiation Mock Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getBrokerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getBrokerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             System.out.print("\n**** 3.2) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES NEGOTIATION****\n");
@@ -61,7 +62,8 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
             System.out.print("\n\n --- 3.3) Negotiation DATABASE Date" +
                             "\n- NegotiationId = " + purchase.getNegotiationId() +
                             "\n- CustomerPublicKey = " + purchase.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + purchase.getBrokerPublicKey()
+                            "\n- BrokerPublicKey = " + purchase.getBrokerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION TRANSATION

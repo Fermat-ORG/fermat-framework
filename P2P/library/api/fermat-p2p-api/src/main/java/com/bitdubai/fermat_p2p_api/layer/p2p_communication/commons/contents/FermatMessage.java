@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
@@ -40,6 +42,14 @@ public interface FermatMessage {
      * @return String
      */
     public String getReceiver();
+
+    PlatformComponentType getSenderType();
+
+    PlatformComponentType getReceiverType();
+
+    NetworkServiceType getSenderNsType();
+
+    NetworkServiceType getReceiverNsType();
 
     /**
      * Get the Content

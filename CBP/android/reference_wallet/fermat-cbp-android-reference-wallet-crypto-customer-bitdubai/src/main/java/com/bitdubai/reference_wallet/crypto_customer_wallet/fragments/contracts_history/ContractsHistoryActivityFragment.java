@@ -208,7 +208,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                data.addAll(TestData.getContractsHistory(filterContractStatus));
+//                data.addAll(TestData.getContractsHistory(filterContractStatus));
+                data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
                 //TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
