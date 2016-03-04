@@ -1,15 +1,20 @@
 package com.bitdubai.android_core.app.common.version_1.apps_manager;
 
-import android.content.Context;
-
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
-import java.lang.ref.WeakReference;
 import java.util.Stack;
 
 /**
@@ -20,31 +25,33 @@ import java.util.Stack;
 
 public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine.FermatAppsManager {
 
-    private WeakReference<Context> applicationContext;
-    private Stack<String> openAppsStack;
+    private Stack<RecentApp> recentsAppsStack;
     private FermatSessionManager fermatSessionManager;
 
 
-    public FermatAppsManager(Context applicationContext) {
-        this.applicationContext = new WeakReference<>(applicationContext);
-        this.openAppsStack = new Stack<>();
+    public FermatAppsManager() {
+        this.recentsAppsStack = new Stack<>();
         this.fermatSessionManager = new FermatSessionManager();
     }
 
     public void addApp(String appPublickKey){
-        openAppsStack.push(appPublickKey);
+        recentsAppsStack.push(new RecentApp(appPublickKey));
     }
 
     public FermatStructure lastAppStructure(){
-        String appPublicKey = openAppsStack.peek();
+        String appPublicKey = recentsAppsStack.peek().getPublicKey();
         return selectRuntimeManager(fermatSessionManager.getAppsSession(appPublicKey).getFermatApp().getAppType()).getLastApp();
     }
 
-    public FermatSession lastAppSession(){
-        String appPublicKey = openAppsStack.peek();
+    @Override
+    public FermatSession lastAppSession() {
+        String appPublicKey = recentsAppsStack.peek().getPublicKey();
         return fermatSessionManager.getAppsSession(appPublicKey);
     }
 
+    public Stack<RecentApp> getRecentsAppsStack() {
+        return recentsAppsStack;
+    }
 
     public RuntimeManager selectRuntimeManager(FermatAppType fermatAppType){
         RuntimeManager runtimeManager = null;
@@ -62,8 +69,45 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         return runtimeManager;
     }
 
-    @Deprecated
-    public FermatSessionManager getFermatSessionManager() {
-        return fermatSessionManager;
+    @Override
+    public boolean isAppOpen(String appPublicKey) {
+        return recentsAppsStack.contains(new RecentApp(appPublicKey));
     }
+
+    @Override
+    public FermatSession getAppsSession(String appPublicKey) {
+        return fermatSessionManager.getAppsSession(appPublicKey);
+    }
+
+    @Override
+    public FermatSession openApp(FermatApp fermatApp,AppConnections fermatAppConnection) {
+        recentsAppsStack.push(
+                new RecentApp(
+                        fermatApp.getAppPublicKey(),
+                        fermatApp.getAppName(),
+                        fermatApp.getAppStatus(),
+                        fermatApp.getAppType()));
+        return fermatSessionManager.openAppSession(fermatApp,FermatSystemUtils.getErrorManager(),getModuleManager(fermatAppConnection.getPluginVersionReference()),fermatAppConnection);
+    }
+
+
+
+    /**
+     *  Return an instance of module manager
+     * @param pluginVersionReference
+     * @return
+     */
+    public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
+        try {
+            return ApplicationSession.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
+        } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
+            return null;
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            return null;
+        }
+    }
+
 }

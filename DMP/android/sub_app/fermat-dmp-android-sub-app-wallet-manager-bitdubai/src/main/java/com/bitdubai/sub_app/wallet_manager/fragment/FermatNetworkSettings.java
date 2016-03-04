@@ -49,6 +49,11 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     }
 
+    @Override
+    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
+
+    }
+
 
     @Override
     public void onBackPressed() {
