@@ -13,4 +13,6 @@ public interface RuntimeManager extends FermatManager {
     void recordNAvigationStructure(FermatStructure fermatStructure);
 
     FermatStructure getLastApp();
+
+    FermatStructure getAppByPublicKey(String appPublicKey);
 }
