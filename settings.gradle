@@ -19,7 +19,7 @@ apply from: 'WPD/settings.gradle'
 apply from: 'WRD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':fermat-wrd-plugin-api-tokenly-bitdubai'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
