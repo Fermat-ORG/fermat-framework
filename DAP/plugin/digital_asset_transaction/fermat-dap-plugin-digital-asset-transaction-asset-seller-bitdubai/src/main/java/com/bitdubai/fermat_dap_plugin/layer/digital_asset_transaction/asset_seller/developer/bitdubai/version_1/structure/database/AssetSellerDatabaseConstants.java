@@ -32,6 +32,7 @@ public class AssetSellerDatabaseConstants {
     public static final String ASSET_SELLER_NEGOTIATION_ACCEPTED_ASSETS_COLUMN_NAME = "acceptedAssets";
     public static final String ASSET_SELLER_NEGOTIATION_REJECTED_ASSETS_COLUMN_NAME = "rejectedAssets";
     public static final String ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME = "status";
+    public static final String ASSET_SELLER_NEGOTIATION_BUYER_PUBLICKEY_COLUMN_NAME = "buyerPk";
     public static final String ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME = "timeStamp";
 
     public static final String ASSET_SELLER_NEGOTIATION_FIRST_KEY_COLUMN = ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME;

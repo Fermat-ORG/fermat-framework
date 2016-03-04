@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -11,8 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory;
@@ -32,7 +34,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceQuotesRequest;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -54,8 +55,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     /**
      * Crypto Broker Actor Network Service member variables.
      */
-    private CryptoBrokerExecutorAgent cryptoBrokerExecutorAgent;
-
     private CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
 
     /**
@@ -88,11 +87,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             fermatManager = new CryptoBrokerActorNetworkServiceManager(
                     getCommunicationsClientConnection(),
                     cryptoBrokerActorNetworkServiceDao ,
+                    this,
                     errorManager                       ,
                     getPluginVersionReference()
             );
-
-            initializeAgent();
 
         } catch(final CantInitializeDatabaseException e) {
 
@@ -113,7 +111,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         fermatManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().pause();
-        cryptoBrokerExecutorAgent.pause();
 
         super.pause();
     }
@@ -123,7 +120,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         // resume connections manager.
         getCommunicationNetworkServiceConnectionManager().resume();
-        cryptoBrokerExecutorAgent.resume();
 
         super.resume();
     }
@@ -133,47 +129,62 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         fermatManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().stop();
-        cryptoBrokerExecutorAgent.stop();
 
         super.stop();
-    }
-
-    /**
-     * Handles the events CompleteComponentRegistrationNotification
-     */
-    public void initializeAgent() {
-
-        try {
-
-            if (cryptoBrokerExecutorAgent == null) {
-
-                cryptoBrokerExecutorAgent = new CryptoBrokerExecutorAgent(
-                        this,
-                        errorManager,
-                        eventManager,
-                        cryptoBrokerActorNetworkServiceDao
-                );
-            }
-
-            if (!cryptoBrokerExecutorAgent.isRunning())
-                cryptoBrokerExecutorAgent.start();
-
-        } catch(final CantStartAgentException e) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
     }
 
     @Override
     protected void onNetworkServiceRegistered() {
 
-        initializeAgent();
         fermatManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
-
     }
+
     @Override
     public final void onSentMessage(final FermatMessage fermatMessage) {
         System.out.println("************ Mensaje supuestamente enviado crypto broker actor network service");
+
+        try {
+
+            String jsonMessage = fermatMessage.getContent();
+
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
+
+            System.out.println("********************* Message Sent Type:  " + networkServiceMessage.getMessageType());
+
+            switch (networkServiceMessage.getMessageType()) {
+
+                case CONNECTION_INFORMATION:
+                    InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
+
+                    cryptoBrokerActorNetworkServiceDao.confirmActorConnectionRequest(informationMessage.getRequestId());
+                    break;
+
+                case CONNECTION_REQUEST:
+                    // update the request to processing receive state with the given action.
+
+                    RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
+
+                    cryptoBrokerActorNetworkServiceDao.confirmActorConnectionRequest(requestMessage.getRequestId());
+                    break;
+
+                case QUOTES_REQUEST:
+
+                    CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestMessage = CryptoBrokerActorNetworkServiceQuotesRequest.fromJson(jsonMessage);
+
+                    cryptoBrokerActorNetworkServiceDao.confirmQuotesRequest(quotesRequestMessage.getRequestId());
+                    break;
+
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
@@ -197,10 +208,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                     receiveConnectionInformation(informationMessage);
 
-                    String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
-
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(destinationPublicKey);
-                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);
                     break;
 
                 case CONNECTION_REQUEST:
@@ -212,8 +219,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                     receiveRequest(requestMessage);
 
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
-                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());
                     break;
 
                 case QUOTES_REQUEST:
@@ -224,8 +229,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                     receiveQuotesRequest(quotesRequestMessage);
 
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(quotesRequestMessage.getRequesterPublicKey());
-                    cryptoBrokerExecutorAgent.connectionFailure(quotesRequestMessage.getRequesterPublicKey());
                     break;
 
                 default:
@@ -253,17 +256,21 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestInDatabase = cryptoBrokerActorNetworkServiceDao.getQuotesRequest(quotesRequestReceived.getRequestId());
 
-            if (quotesRequestInDatabase != null) {
-                if (quotesRequestInDatabase.getType() == RequestType.SENT) {
-                    cryptoBrokerActorNetworkServiceDao.answerQuotesRequest(
-                            quotesRequestReceived.getRequestId(),
-                            quotesRequestReceived.getUpdateTime(),
-                            quotesRequestReceived.listInformation(),
-                            ProtocolState.PENDING_LOCAL_ACTION
-                    );
-                }
-            } else {
+            if (quotesRequestInDatabase.getType() == RequestType.SENT) {
+                cryptoBrokerActorNetworkServiceDao.answerQuotesRequest(
+                        quotesRequestReceived.getRequestId(),
+                        quotesRequestReceived.getUpdateTime(),
+                        quotesRequestReceived.listInformation(),
+                        ProtocolState.PENDING_LOCAL_ACTION
+                );
+                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_QUOTES_REQUEST_UPDATES);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            }
 
+        } catch (QuotesRequestNotFoundException quotesRequestNotFoundException) {
+
+            try {
                 final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
                 final RequestType type = RequestType.RECEIVED;
 
@@ -275,9 +282,17 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                         state,
                         type
                 );
+
+                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            } catch (CantRequestQuotesException cantRequestQuotesException) {
+
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestQuotesException);
+                throw new CantHandleNewMessagesException(cantRequestQuotesException, "", "Error in Crypto Broker ANS Dao.");
             }
 
-        } catch(CantRequestQuotesException | CantFindRequestException e) {
+        } catch (CantFindRequestException e) {
             // i inform to error manager the error.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
@@ -331,6 +346,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     );
             }
 
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
+            eventToRaise.setSource(eventSource);
+            eventManager.raiseEvent(eventToRaise);
+
         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -374,6 +393,10 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     type,
                     requestMessage.getRequestAction()
             );
+
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            eventToRaise.setSource(eventSource);
+            eventManager.raiseEvent(eventToRaise);
 
         } catch(CantRequestConnectionException e) {
             // i inform to error manager the error.
