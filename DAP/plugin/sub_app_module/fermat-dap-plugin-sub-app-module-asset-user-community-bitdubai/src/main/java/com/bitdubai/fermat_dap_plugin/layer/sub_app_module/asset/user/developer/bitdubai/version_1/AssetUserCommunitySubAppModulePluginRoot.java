@@ -201,26 +201,26 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetException {
-        try {
-            ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-            if (actorAssetIssuer != null) {
-                blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
-
-                actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers, blockchainNetworkType);
-            } else {
-                ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
-                if (actorAssetUser != null) {
-                    blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
-
-                    actorAssetUserManager.connectToActorAssetUser(actorAssetUser, actorAssetUsers, blockchainNetworkType);
-                } else {
-                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
-                }
-            }
-        } catch (CantGetAssetIssuerActorsException | CantGetAssetUserActorsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
-        }
+//        try {
+//            ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+//            if (actorAssetIssuer != null) {
+//                blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+//
+//                actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers, blockchainNetworkType);
+//            } else {
+//                ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
+//                if (actorAssetUser != null) {
+//                    blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
+//
+//                    actorAssetUserManager.connectToActorAssetUser(actorAssetUser, actorAssetUsers, blockchainNetworkType);
+//                } else {
+//                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
+//                }
+//            }
+//        } catch (CantGetAssetIssuerActorsException | CantGetAssetUserActorsException e) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
+//        }
     }
 
     @Override
