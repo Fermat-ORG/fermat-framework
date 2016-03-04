@@ -289,7 +289,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         marketExchangeRate = 1;
                     }
                 }
-
                 openContractManager.openSaleContract(customerBrokerSaleNegotiation, marketExchangeRate);
 
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
@@ -316,6 +315,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
+                            // TODO
 //                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }
@@ -470,9 +470,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCloseContractException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetIndexException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetCryptoBrokerWalletSettingException e) {
+        }  catch (CantGetCryptoBrokerWalletSettingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CryptoBrokerWalletNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

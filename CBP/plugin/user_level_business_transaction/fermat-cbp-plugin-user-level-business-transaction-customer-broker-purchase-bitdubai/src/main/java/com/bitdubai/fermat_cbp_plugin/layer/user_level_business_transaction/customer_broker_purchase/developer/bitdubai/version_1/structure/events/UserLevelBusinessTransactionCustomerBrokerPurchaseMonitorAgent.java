@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerPurchaseDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.utils.CustomerBrokerPurchaseImpl;
+<<<<<<< HEAD
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -48,6 +49,8 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRate
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
+=======
+>>>>>>> upstream_nelson/develop
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -234,8 +237,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         marketExchangeRate = 1;
                     }
                 }
-
                 openContractManager.openPurchaseContract(customerBrokerPurchaseNegotiation, marketExchangeRate);
+
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Purchase a IN_OPEN_CONTRACT
                 customerBrokerPurchase.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                 userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
@@ -261,6 +264,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
 
                             userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
+                            //TODO
 //                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }
@@ -343,8 +347,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCloseContractException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetIndexException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

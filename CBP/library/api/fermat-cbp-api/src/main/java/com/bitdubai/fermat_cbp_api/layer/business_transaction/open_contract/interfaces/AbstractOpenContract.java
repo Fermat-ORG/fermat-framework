@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
@@ -35,7 +38,7 @@ public abstract class AbstractOpenContract {
 
     private ContractSaleRecord createContractRecordFromNegotiationClauses(
             Collection<Clause> negotiationClauses,
-            FiatIndex fiatIndex,
+            float referencePrice,
             String brokerPublicKey,
             String customerPublicKey,
             String negotiationId,
@@ -43,11 +46,11 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException, CantGetIndexException {
 
         ContractSaleRecord contractRecord=new ContractSaleRecord();
-        MoneyType merchandiseCurrency;
+        Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
-        MoneyType paymentCurrency;
+        Currency paymentCurrency = FiatCurrency.US_DOLLAR;
         long paymentExpirationDate;
         String clauseValue;
         long dayTime;
@@ -62,7 +65,12 @@ public abstract class AbstractOpenContract {
             switch (clauseType){
 
                 case BROKER_CURRENCY:
-                    merchandiseCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
@@ -74,11 +82,16 @@ public abstract class AbstractOpenContract {
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToLong(clauseValue);
+                    paymentAmount=parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    paymentCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        paymentCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        paymentCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
@@ -101,7 +114,6 @@ public abstract class AbstractOpenContract {
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
         contractRecord.setPublicKeyBroker(brokerPublicKey);
         contractRecord.setPublicKeyCustomer(customerPublicKey);
@@ -123,7 +135,7 @@ public abstract class AbstractOpenContract {
 
     private ContractPurchaseRecord createContractPurchaseRecordFromNegotiationClauses(
             Collection<Clause> negotiationClauses,
-            FiatIndex fiatIndex,
+            float referencePrice,
             String brokerPublicKey,
             String customerPublicKey,
             String negotiationId,
@@ -131,11 +143,11 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException, CantGetIndexException {
 
         ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
-        MoneyType merchandiseCurrency;
+        Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
-        MoneyType paymentCurrency;
+        Currency paymentCurrency = FiatCurrency.US_DOLLAR;
         long paymentExpirationDate;
         String clauseValue;
         long dayTime;
@@ -151,7 +163,12 @@ public abstract class AbstractOpenContract {
             switch (clauseType){
 
                 case BROKER_CURRENCY:
-                    merchandiseCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        merchandiseCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
@@ -163,11 +180,16 @@ public abstract class AbstractOpenContract {
                     contractRecord.setMerchandiseDeliveryExpirationDate(merchandiseDeliveryExpirationDate);
                     break;
                 case CUSTOMER_CURRENCY_QUANTITY:
-                    paymentAmount=parseToLong(clauseValue);
+                    paymentAmount=parseToFloat(clauseValue);
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    paymentCurrency= MoneyType.getByCode(clauseValue);
+                    if(FiatCurrency.codeExists(clauseValue)){
+                        paymentCurrency= FiatCurrency.getByCode(clauseValue);
+                    }
+                    if(CryptoCurrency.codeExists(clauseValue)){
+                        paymentCurrency= CryptoCurrency.getByCode(clauseValue);
+                    }
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
@@ -191,7 +213,6 @@ public abstract class AbstractOpenContract {
         }
 
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
         contractRecord.setPublicKeyBroker(brokerPublicKey);
         contractRecord.setPublicKeyCustomer(customerPublicKey);
@@ -227,7 +248,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractPurchaseRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
                                                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                               FiatIndex fiatIndex)
+                                               float referencePrice)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -236,7 +257,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
         ContractPurchaseRecord contractRecord= createContractPurchaseRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndex,
+                referencePrice,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId,
@@ -253,7 +274,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractSaleRecord createSaleContractRecord(Collection<Clause> negotiationClauses,
                                                        CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                                       FiatIndex fiatIndex)
+                                                       float referencePrice)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -262,7 +283,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerSaleNegotiation.getNegotiationId().toString();
         ContractSaleRecord contractRecord= createContractRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndex,
+                referencePrice,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId,
