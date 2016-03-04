@@ -263,6 +263,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             this.userRedemptionMonitorAgent = new UserRedemptionMonitorAgent(pluginDatabaseSystem,
                     errorManager,
                     pluginId,
+                    redeemPointManager,
                     assetVaultManager,
                     logManager,
                     bitcoinNetworkManager,
