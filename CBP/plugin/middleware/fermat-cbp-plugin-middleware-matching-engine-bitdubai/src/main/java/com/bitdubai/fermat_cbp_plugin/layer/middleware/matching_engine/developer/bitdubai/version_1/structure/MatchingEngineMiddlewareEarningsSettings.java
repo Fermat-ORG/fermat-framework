@@ -60,7 +60,7 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
                     earningCurrency       ,
                     linkedCurrency        ,
                     earningWalletReference,
-                    walletReference
+                    walletReference.getPublicKey()
             );
 
         } catch (final CantAssociatePairException | PairAlreadyAssociatedException e){

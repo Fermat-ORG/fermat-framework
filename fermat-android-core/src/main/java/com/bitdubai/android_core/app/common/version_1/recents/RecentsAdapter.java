@@ -15,11 +15,11 @@ import java.util.List;
 public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
 
 
-    public RecentsAdapter() {
-    }
+    private final Context context;
 
-    public RecentsAdapter(List<RecentApp> recentApps) {
+    public RecentsAdapter(Context context,List<RecentApp> recentApps) {
         super(recentApps);
+        this.context = context;
     }
 
     @Override
@@ -31,6 +31,7 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
     @Override
     public void onBindViewHolder(RecentHolder viewHolder) {
         viewHolder.itemView.setBackgroundColor(viewHolder.model.getBackgroundColor());
+        //viewHolder.getRoot().addView(View.inflate(context, R.layout.widgetlayout, null));
     }
 
 

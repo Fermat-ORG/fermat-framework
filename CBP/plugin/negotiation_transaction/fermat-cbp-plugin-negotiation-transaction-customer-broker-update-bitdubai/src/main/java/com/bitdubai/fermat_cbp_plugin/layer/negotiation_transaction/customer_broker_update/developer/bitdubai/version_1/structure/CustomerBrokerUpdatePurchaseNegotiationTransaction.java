@@ -47,7 +47,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //UPDATE NEGOTIATION
@@ -81,7 +82,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             if(customerBrokerPurchaseNegotiation.getClauses() != null) {
@@ -106,7 +108,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -131,7 +133,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
@@ -164,7 +167,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
@@ -175,7 +179,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
