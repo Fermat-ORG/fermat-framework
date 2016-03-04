@@ -73,7 +73,7 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         switch (code){
-            case CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFIACTION:
+            case CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire check your wallet","",0);
             default:
                 return super.getNotificationPainter(code);

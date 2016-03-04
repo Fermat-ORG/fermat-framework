@@ -7,10 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -74,7 +77,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     //private final NotificationManagerMiddleware notificationManagerMiddleware;
     private final UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
-
+    private final Broadcaster broadcaster;
 
     public final int DELAY_HOURS = 2;
     public final int SLEEP_TIME = 5000;
@@ -90,7 +93,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                                                                           CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter,
                                                                           //NotificationManagerMiddleware notificationManagerMiddleware,
                                                                           UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager,
-                                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager) {
+                                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                                          Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
@@ -101,7 +105,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         //this.notificationManagerMiddleware = notificationManagerMiddleware;
         this.userLevelBusinessTransactionCustomerBrokerPurchaseManager = userLevelBusinessTransactionCustomerBrokerPurchaseManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
-
+        this.broadcaster = broadcaster;
         this.userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
 
         this.agentThread = new Thread(new Runnable() {
@@ -256,10 +260,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
-
-                            // userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
-                            //TODO
-                            // notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -293,8 +294,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
-                            userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
-//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -326,8 +326,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
                 }
             }
-        } catch (CantSendNotificationReviewNegotiation e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetListPurchaseNegotiationsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {

@@ -233,7 +233,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     currencyExchangeRateProviderFilter,
                     //notificationManagerMiddleware,
                     customerBrokerPurchaseManager,
-                    cryptoBrokerWalletManager
+                    cryptoBrokerWalletManager,
+                    broadcaster
                     );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
