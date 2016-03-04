@@ -10,8 +10,8 @@ public enum Wallets {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
     BNK_BANKING_WALLET("BNKBW"),
-    CBP_CRYPTO_BROKER_WALLET("CBPCBW"),
-    CBP_CRYPTO_CUSTOMER_WALLET("CBPCCW"),
+    CBP_CRYPTO_BROKER_WALLET("crypto_broker_wallet"),
+    CBP_CRYPTO_CUSTOMER_WALLET("crypto_customer_wallet"),
     CSH_CASH_WALLET("CSHCW"),
     CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI("ADULTS"),
     CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI("KIDS"),
@@ -45,9 +45,9 @@ public enum Wallets {
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI;
             case "KIDS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
-            case "CBPCBW":
+            case "crypto_broker_wallet":
                 return CBP_CRYPTO_BROKER_WALLET;
-            case "CBPCCW":
+            case "crypto_customer_wallet":
                 return CBP_CRYPTO_CUSTOMER_WALLET;
             case "CSHCW":
                 return CSH_CASH_WALLET;
