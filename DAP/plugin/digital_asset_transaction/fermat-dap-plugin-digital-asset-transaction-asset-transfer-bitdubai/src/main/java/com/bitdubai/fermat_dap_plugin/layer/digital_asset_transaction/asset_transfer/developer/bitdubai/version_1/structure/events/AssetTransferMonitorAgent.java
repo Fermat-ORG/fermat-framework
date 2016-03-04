@@ -37,14 +37,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetTransferContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -457,11 +456,13 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
 
         private void checkTransferMessages() throws CantCreateAssetUserActorException, CantGetIssuerNetworkServiceMessageListException, CantLoadWalletException, CantSaveStatisticException, CantGetDAPMessagesException {
             for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_TRANSFER)) {
-                AssetTransferContentMessage content = (AssetTransferContentMessage) message.getMessageContent();
-                ActorAssetUser actorTo = (ActorAssetUser) content.getActor();
+                AssetMovementContentMessage content = (AssetMovementContentMessage) message.getMessageContent();
+                //TODO use the ActorUtils
+                ActorAssetUser actorTo = (ActorAssetUser) content.getSystemUser();
+                ActorAssetUser actorFrom = (ActorAssetUser) content.getNewUser();
+                //Esto se va con el ActorUtils
                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(actorTo);
-                //TODO Acomodar el ASSET_PUBLIC_KEY de la siguiente linea
-                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(message.getActorSender(), actorTo, "ASSET_PUBLIC_KEY", AssetMovementType.ASSET_TRANSFERRED);//metadata.getDigitalAsset.getAssetPublicKey
+                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(actorFrom, actorTo, content.getAssetPublicKey(), AssetMovementType.ASSET_TRANSFERRED);
             }
         }
 
@@ -483,10 +484,10 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
         }
 
         private void sendActorInformation(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser newUser, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
-            AssetTransferContentMessage content = new AssetTransferContentMessage(newUser, digitalAssetMetadata.getMetadataId(), networkType);
+            AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), newUser, digitalAssetMetadata.getDigitalAsset().getPublicKey(), networkType);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetUser actorReceiver = (ActorAssetUser) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
-            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver);
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
             assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
         }
 
