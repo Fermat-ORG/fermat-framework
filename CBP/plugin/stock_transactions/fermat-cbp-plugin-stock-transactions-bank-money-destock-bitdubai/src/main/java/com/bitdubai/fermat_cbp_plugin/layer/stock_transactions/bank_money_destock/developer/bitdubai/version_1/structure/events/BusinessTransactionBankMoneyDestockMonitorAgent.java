@@ -183,7 +183,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         break;
-                    case IN_WALLET:
+                    case IN_WALLET: {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
@@ -224,7 +224,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
-
+                    }
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -258,6 +258,46 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                             stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
                         break;
+                    case REJECTED:{
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                bankMoneyTransaction.getTransactionId(),
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
+                                TransactionType.CREDIT,
+                                MoneyType.BANK,
+                                bankMoneyTransaction.getCbpWalletPublicKey(),
+                                bankMoneyTransaction.getActorPublicKey(),
+                                bankMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                bankMoneyTransaction.getConcept(),
+                                bankMoneyTransaction.getPriceReference(),
+                                bankMoneyTransaction.getOriginTransaction(),
+                                bankMoneyTransaction.getOriginTransactionId(),
+                                false);
+
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                bankMoneyTransaction.getTransactionId(),
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.CREDIT,
+                                MoneyType.BANK,
+                                bankMoneyTransaction.getCbpWalletPublicKey(),
+                                bankMoneyTransaction.getActorPublicKey(),
+                                bankMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                bankMoneyTransaction.getConcept(),
+                                bankMoneyTransaction.getPriceReference(),
+                                bankMoneyTransaction.getOriginTransaction(),
+                                bankMoneyTransaction.getOriginTransactionId(),
+                                false);
+                        //TODO:Solo para testear
+                        bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        break;
+                    }
                 }
             }
         } catch (CryptoBrokerWalletNotFoundException e) {

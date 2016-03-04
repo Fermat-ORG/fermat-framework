@@ -47,12 +47,32 @@
             android:layout_alignParentRight="true" />
 
         <ImageView
-            android:id="@+id/connection_state"
+            android:id="@+id/connection_state_connected"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/issuer_community_ic_home_friend"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/connection_state_waiting"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/issuer_community_icon_contact_standby"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/connection_state_denied"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/issuer_community_icon_contact_no_conect"
             android:visibility="gone"
             tools:ignore="ContentDescription,RtlHardcoded" />
     </RelativeLayout>

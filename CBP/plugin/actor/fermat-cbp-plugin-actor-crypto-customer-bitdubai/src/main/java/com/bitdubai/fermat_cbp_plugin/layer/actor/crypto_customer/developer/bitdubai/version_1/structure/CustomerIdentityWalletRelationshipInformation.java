@@ -62,4 +62,13 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
         c += wallet.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerIdentityWalletRelationshipInformation{" +
+                "relationshipId=" + relationshipId +
+                ", identity='" + identity + '\'' +
+                ", wallet='" + wallet + '\'' +
+                '}';
+    }
 }

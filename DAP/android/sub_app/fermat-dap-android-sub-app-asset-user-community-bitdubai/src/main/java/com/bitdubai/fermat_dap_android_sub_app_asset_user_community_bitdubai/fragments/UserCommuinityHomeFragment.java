@@ -36,9 +36,11 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.ada
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -80,6 +82,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private int offset = 0;
     private Menu menu;
 
+    private MenuItem menuItemConnect;
+    private MenuItem menuItemDisconnect;
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
 
@@ -132,14 +136,18 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 boolean someSelected = false;
                 int cantSelected=0;
+                List<Actor> actorsSelected = new ArrayList<>();
+
                 for (Actor actor : actors) {
                     if (actor.selected) {
+                        actorsSelected.add(actor);
                         someSelected = true;
                         cantSelected++;
                     }
                 }
 
                 if (someSelected) {
+
                     menuItemUnselect.setVisible(true);
                     if (cantSelected == actors.size())
                     {
@@ -147,11 +155,27 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                     } else {
                         menuItemSelect.setVisible(true);
                     }
+
+                  if(ableToDisconnect(actorsSelected)){
+                    menuItemConnect.setVisible(false);
+                    menuItemDisconnect.setVisible(true);
+                      /*TODO solucion temporal discutir*/
+                     /* if (cantSelected > 1){
+                          menuItemConnect.setVisible(false);
+                          menuItemDisconnect.setVisible(false);
+                      }*/
+                  }else if(!(ableToDisconnect(actorsSelected))&& cantSelected > 1 && !(ableToConnect(actorsSelected))){
+                      menuItemConnect.setVisible(false);
+                      menuItemDisconnect.setVisible(false);
+                  }
+
                 }
                 else
                 {
                     menuItemUnselect.setVisible(false);
                     menuItemSelect.setVisible(true);
+                    menuItemConnect.setVisible(true);
+                    menuItemDisconnect.setVisible(false);
                 }
 
             }
@@ -331,16 +355,23 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
         menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        //}else if(actor.getDapConnectionState() == DAPConnectionState.CONNECTING){
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 0, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemSelect = menu.getItem(1);
-        menuItemUnselect = menu.getItem(2);
+        menuItemSelect = menu.getItem(2);
+        menuItemUnselect = menu.getItem(3);
         menuItemUnselect.setVisible(false);
+        menuItemConnect = menu.getItem(0);
+        menuItemDisconnect = menu.getItem(1);
+        menuItemDisconnect.setVisible(false);
 
     }
 
@@ -460,6 +491,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
             }
 
 
+
         /*int id = item.getItemId();
 
 //        if (item.getItemId() == R.id.action_connect) {
@@ -505,6 +537,96 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
             });
             worker.execute();
             return true;*/
+        }
+
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT) {
+            List<ActorAssetUser> actorsSelected = new ArrayList<>();
+            for (Actor actor : actors) {
+                if (actor.selected)
+                    actorsSelected.add(actor);
+            }
+            if(actorsSelected.size() > 0) {
+
+
+                DisconnectDialog disconnectDialog;
+
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+                        if (i == R.id.positive_button) {
+
+                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Disconnecting please wait...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            FermatWorker worker = new FermatWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+                                    List<ActorAssetUser> toDisconnect = new ArrayList<>();
+                                    for (Actor actor : actors) {
+                                        if (actor.selected)
+                                            toDisconnect.add(actor);
+                                    }
+                                    /*TODO implementar disconnect*/
+                                    for(ActorAssetUser actor: toDisconnect) {
+                                        manager.disconnectToActorAssetUser(actor);
+                                    }
+
+                                    /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);*/
+
+//                                    manager.connectToActorAssetUser(null, toConnect);
+                                    return true;
+                                }
+                            };
+                            worker.setContext(getActivity());
+                            worker.setCallBack(new FermatWorkerCallBack() {
+                                @Override
+                                public void onPostExecute(Object... result) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getContext(), "Disconnection performed successfully", Toast.LENGTH_SHORT).show();
+                                    if (swipeRefreshLayout != null)
+                                        swipeRefreshLayout.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                onRefresh();
+                                            }
+                                        });
+                                }
+
+                                @Override
+                                public void onErrorOccurred(Exception ex) {
+                                    dialog.dismiss();
+                                    /*TODO aun no se que error deberia ir aqui*/
+//                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Asset Issuer or Asset User Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                                ex.printStackTrace();
+                                }
+                            });
+                            worker.execute();
+
+
+                            dismiss();
+                        } else if (i == R.id.negative_button) {
+                            dismiss();
+                        }
+                    }
+                };
+                disconnectDialog.setTitle("Disconnection request");
+                disconnectDialog.setDescription("Do you want to disconnect from ");
+                disconnectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
+                        " Users" : actorsSelected.get(0).getName());
+                //connectDialog.setSecondDescription("a connection request");
+                disconnectDialog.show();
+                return true;
+            }else {
+                Toast.makeText(getActivity(), "No User selected to disconnect.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+
         }
 
         try {
@@ -651,4 +773,76 @@ Sample AsyncTask to fetch the notifications count
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+    private boolean ableToDisconnect(List<Actor> actors){
+        List <Actor> allActors = actors;
+        for (Actor actor : allActors){
+            String connectionState = actor.getDapConnectionState().toString();
+            switch (connectionState){
+                case "BLOCKED_LOCALLY":
+                case "BLOCKED_REMOTELY":
+                case "CANCELLED_LOCALLY":
+                case "CANCELLED_REMOTELY": {
+                    return false;
+                }
+                case "CONNECTED_ONLINE":
+                case "CONNECTED_OFFLINE":
+                case "CONNECTING":
+                case "CONNECTED":{
+
+                    continue;
+                }
+                case "DENIED_LOCALLY":
+                case "DENIED_REMOTELY":
+                case "DISCONNECTED_LOCALLY":
+                case "DISCONNECTED_REMOTELY":
+                case "ERROR_UNKNOWN":
+                case "PENDING_LOCALLY":
+                case "PENDING_REMOTELY":
+                case "REGISTERED_LOCALLY":
+                case "REGISTERED_REMOTELY":
+                case "REGISTERED_ONLINE":
+                case "REGISTERED_OFFLINE": {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private boolean ableToConnect(List<Actor> actors){
+        List <Actor> allActors = actors;
+        for (Actor actor : allActors){
+            String connectionState = actor.getDapConnectionState().toString();
+            switch (connectionState){
+                case "BLOCKED_LOCALLY":
+                case "BLOCKED_REMOTELY":
+                case "CANCELLED_LOCALLY":
+                case "CANCELLED_REMOTELY": {
+                    continue;
+                }
+                case "CONNECTED_ONLINE":
+                case "CONNECTED_OFFLINE":
+                case "CONNECTING":
+                case "CONNECTED":{
+
+                    return false;
+                }
+                case "DENIED_LOCALLY":
+                case "DENIED_REMOTELY":
+                case "DISCONNECTED_LOCALLY":
+                case "DISCONNECTED_REMOTELY":
+                case "ERROR_UNKNOWN":
+                case "PENDING_LOCALLY":
+                case "PENDING_REMOTELY":
+                case "REGISTERED_LOCALLY":
+                case "REGISTERED_REMOTELY":
+                case "REGISTERED_ONLINE":
+                case "REGISTERED_OFFLINE": {
+                    continue;
+                }
+            }
+        }
+        return true;
+    }
+
+
 }

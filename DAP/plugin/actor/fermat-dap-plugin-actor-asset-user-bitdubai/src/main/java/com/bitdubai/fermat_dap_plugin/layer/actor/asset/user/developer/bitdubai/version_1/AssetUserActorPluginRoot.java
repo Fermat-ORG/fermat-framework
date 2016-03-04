@@ -960,6 +960,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DENIED:
                         this.denyConnectionActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
                         break;
                     case ACTOR_ASSET_NOT_FOUND:
                         this.assetUserActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);

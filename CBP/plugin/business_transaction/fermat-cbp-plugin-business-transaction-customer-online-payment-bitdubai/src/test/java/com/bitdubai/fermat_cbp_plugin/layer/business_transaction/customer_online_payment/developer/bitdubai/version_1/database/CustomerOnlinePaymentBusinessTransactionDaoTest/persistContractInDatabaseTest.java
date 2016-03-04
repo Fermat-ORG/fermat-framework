@@ -82,6 +82,7 @@ public class persistContractInDatabaseTest {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME
         )).thenReturn(databaseTable);
         customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+        verify(databaseTable,times(1)).insertRecord(databaseTableRecord);
     }
     @Test(expected = CantInsertRecordException.class)
     public void persistContractInDatabaseTest_Should_Throw_Exception_() throws Exception{

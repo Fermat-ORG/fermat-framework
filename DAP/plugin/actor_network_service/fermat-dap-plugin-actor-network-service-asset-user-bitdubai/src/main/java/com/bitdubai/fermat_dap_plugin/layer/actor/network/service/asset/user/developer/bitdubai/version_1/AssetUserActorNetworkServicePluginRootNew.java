@@ -350,44 +350,6 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        try {
-
-            Actors actors = outgoingNotificationDao.getActorTypeFromRequest(identityPublicKeySender);
-
-            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                    .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                            "sender_alias",
-                            "sender_name",
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actors),
-                            "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        try {
-
-            Actors actors = outgoingNotificationDao.getActorTypeToRequest(identityPublicKeyDestination);
-
-            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                    .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                            "destination_alias",
-                            "destination_name",
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actors),
-                            "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private void reprocessPendingMessage() {
         try {
             outgoingNotificationDao.changeStatusNotSentMessage();
@@ -404,10 +366,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     public void run() {
                         try {
                             sendNewMessage(
-                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
-                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getActorSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(cpr.getActorSenderType())
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cpr.getActorDestinationPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(cpr.getActorDestinationType())
+                                    ),
                                     cpr.toJson());
-                        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                             reportUnexpectedError(e);
                         }
                     }
@@ -946,10 +916,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(assetUserNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        assetUserNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetUserNetworkServiceRecord.getActorSenderType())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        assetUserNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetUserNetworkServiceRecord.getActorDestinationType())
+                                ),
                                 assetUserNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                         reportUnexpectedError(e);
                     }
                 }
@@ -1013,10 +991,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     try {
                         // Sending message to the destination
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        messageToSend.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        messageToSend.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(messageToSend.getActorDestinationType())
+                                ),
                                 messageToSend.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                         e.printStackTrace();
                     }
                 }
@@ -1058,10 +1044,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorDestinationType())
+                                ),
                                 actorNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                         e.printStackTrace();
                     }
                 }
@@ -1142,10 +1136,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorDestinationType())
+                                ),
                                 actorNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                         e.printStackTrace();
                     }
                 }
@@ -1186,10 +1188,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(assetUserNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        assetUserNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetUserNetworkServiceRecord.getActorSenderType())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        assetUserNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetUserNetworkServiceRecord.getActorDestinationType())
+                                ),
                                 assetUserNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
                         e.printStackTrace();
                     }
                 }

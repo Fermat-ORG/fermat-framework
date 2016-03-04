@@ -55,6 +55,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -493,15 +494,27 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (dataSet != null && !dataSet.isEmpty()) {
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
-                dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
+                /*dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
                     @Override
                     public boolean evaluate(Object object) {
                         IntraUserInformation intraUserInformation = (IntraUserInformation) object;
                         return intraUserInformation.getName().toLowerCase().contains(charSequence);
                     }
-                });
-            } else
+                });*/
+
+
+                dataSetFiltered = new ArrayList<IntraUserInformation>();
+                for (IntraUserInformation intraUser : dataSet) {
+
+                    if(intraUser.getName().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                        dataSetFiltered.add(intraUser);
+
+                }
+
+
+            } else {
                 dataSetFiltered = null;
+            }
         }
         return dataSetFiltered;
     }
@@ -541,6 +554,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             userList.add(intraUserCache);
                     }
                     //guardo el cache
+
                     moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
