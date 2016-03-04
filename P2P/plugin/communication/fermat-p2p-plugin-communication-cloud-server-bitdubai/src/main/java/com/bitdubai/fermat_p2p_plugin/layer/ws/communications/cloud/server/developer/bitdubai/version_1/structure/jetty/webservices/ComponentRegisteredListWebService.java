@@ -44,7 +44,7 @@ import javax.ws.rs.core.Response;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Path("components/registered")
+@Path("/api/components/registered")
 public class ComponentRegisteredListWebService {
 
     /**
