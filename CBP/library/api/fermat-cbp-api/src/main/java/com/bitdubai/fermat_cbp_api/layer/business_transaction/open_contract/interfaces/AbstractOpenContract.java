@@ -11,15 +11,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -311,14 +310,13 @@ public abstract class AbstractOpenContract {
             throw new InvalidParameterException("Cannot parse a null string value to float");
         }else{
             try{
-                return Float.valueOf(stringValue);
+                return DecimalFormat.getInstance().parse(stringValue).floatValue();
             }catch (Exception exception){
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
-                        FermatException.wrapException(exception),
-                        "Paring String object to float",
-                        "Cannot parse string value to float");
+                    throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
+                            FermatException.wrapException(exception),
+                            "Paring String object to float",
+                            "Cannot parse string value to float");
             }
-
         }
     }
 

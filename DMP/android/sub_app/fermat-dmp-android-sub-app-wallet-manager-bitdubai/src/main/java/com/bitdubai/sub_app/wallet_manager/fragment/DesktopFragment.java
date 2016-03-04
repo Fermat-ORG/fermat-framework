@@ -152,8 +152,6 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
             mItemTouchHelper = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-            View container_title = rootView.findViewById(R.id.container_title);
-            getPaintActivtyFeactures().setMenuSettings(rootView,container_title);
             //adapter.setFermatListEventListener(this);
 
         } catch(Exception ex) {
@@ -552,8 +550,10 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
             arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
         }
 
-        adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
-        adapter.notifyDataSetChanged();
+        if(adapter!=null) {
+            adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+            adapter.notifyDataSetChanged();
+        }
     }
 
 

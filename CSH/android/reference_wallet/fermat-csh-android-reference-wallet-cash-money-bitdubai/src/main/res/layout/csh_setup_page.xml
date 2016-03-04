@@ -2,32 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/csh_setup_background"
+    android:background="@drawable/csh_background_bottom"
     android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/setup_container"
+        android:id="@+id/csh_setup_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/csh_setup_background"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/csh_setup_background"
-            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/csh_setup_background_top"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/csh_setup_background"
-                android:orientation="vertical">
+                android:layout_height="250dp"
+                android:layout_marginTop="-80dp"
+                android:orientation="vertical"
+                android:background="@drawable/csh_background_top">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -64,9 +61,10 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="26dp"
                     android:gravity="center_horizontal"
-                    android:text="Select a currency"
+                    android:textStyle="bold"
+                    android:text="SELECT A CURRENCY"
                     android:textColor="#fff"
-                    android:textSize="@dimen/csh_regular_plus_text_size" />
+                    android:textSize="@dimen/csh_regular_text_size" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
@@ -75,10 +73,12 @@
                     android:layout_marginBottom="30dp"
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal"
-                    android:text="This step cannot be undone"
+                    android:text="This step cannot be undone!"
                     android:textColor="#fff"
                     android:textSize="@dimen/csh_regular_text_size" />
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -89,30 +89,21 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="false"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/csh_bg_setup" />
+                    <!--<ImageView-->
+                        <!--android:layout_width="fill_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:adjustViewBounds="false"-->
+                        <!--android:scaleType="centerCrop"-->
+                        <!--android:src="@drawable/csh_bg_setup" />-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:paddingTop="110dp">
+
 
                             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-
-
-
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="left"
@@ -128,9 +119,12 @@
                                 android:id="@+id/csh_setup_currency_spinner"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAlignment="center" />
+                                android:textAlignment="center"
+                                android:background="#0055ff"
+                                android:dropDownSelector="#00ff66"
+                                android:textColor="#ff0044"/>
 
-                        </LinearLayout>
+
 
                         <Button
                             android:id="@+id/csh_setup_ok_btn"
@@ -148,6 +142,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
