@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -397,13 +398,13 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 
                 intent = getIntent();//new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-                if (intent.hasExtra(WalletActivity.WALLET_PUBLIC_KEY)) {
-                    intent.removeExtra(WalletActivity.WALLET_PUBLIC_KEY);
+                if (intent.hasExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)){
+                    intent.removeExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
                 }
-                if (intent.hasExtra(WalletActivity.INSTALLED_WALLET)) {
-                    intent.removeExtra(WalletActivity.INSTALLED_WALLET);
+                if (intent.hasExtra(ApplicationConstants.INSTALLED_FERMAT_APP)) {
+                    intent.removeExtra(ApplicationConstants.INSTALLED_FERMAT_APP);
                 }
-                intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, getWalletRuntimeManager().getLastWallet().getPublicKey());
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, getWalletRuntimeManager().getLastWallet().getPublicKey());
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
