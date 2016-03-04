@@ -60,6 +60,11 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
                 getItem(i).setIsRadioTouched(false);
                 ((RadioButton)view).setChecked(false);
             }
+            else
+            {
+                getItem(i).setIsRadioTouched(true);
+                ((RadioButton)view).setChecked(true);
+            }
         }
     }
 
