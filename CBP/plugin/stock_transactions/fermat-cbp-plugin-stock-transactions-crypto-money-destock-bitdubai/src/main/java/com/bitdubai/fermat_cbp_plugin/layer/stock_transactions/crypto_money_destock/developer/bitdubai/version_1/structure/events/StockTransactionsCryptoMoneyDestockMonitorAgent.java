@@ -239,6 +239,30 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                             stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
                         }
                         break;
+                    case REJECTED:
+                        WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                                cryptoMoneyTransaction.getTransactionId(),
+                                cryptoMoneyTransaction.getCryptoCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.DEBIT,
+                                MoneyType.CRYPTO,
+                                cryptoMoneyTransaction.getCbpWalletPublicKey(),
+                                cryptoMoneyTransaction.getActorPublicKey(),
+                                cryptoMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cryptoMoneyTransaction.getConcept(),
+                                cryptoMoneyTransaction.getPriceReference(),
+                                cryptoMoneyTransaction.getOriginTransaction(),
+                                cryptoMoneyTransaction.getOriginTransactionId(),
+                                false);
+
+                        //TODO:Solo para testear
+                        cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                        break;
                 }
             }
         } catch (DatabaseOperationException e) {

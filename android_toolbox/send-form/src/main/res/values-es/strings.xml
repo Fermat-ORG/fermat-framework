@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SendForm</string>
+
+    <string name="name_label">Nombre</string>
+    <string name="name_hint">p. ej. Sergey Brin</string>
+    <string name="bitcoin_wallet_address_label">Dirección Bitcoin Wallet</string>
+    <string name="bitcoin_wallet_address_hint">p. ej. abc3def6ghi7jkl8mno2pq5rst7</string>
+    <string name="currency_label">Divisa</string>
+    <string name="amount_label">Monto</string>
+    <string name="amount_hint">p. ej. 27.3</string>
+    <string name="unit_label">Unidad</string>
+    <string name="note_label">Nota</string>
+    <string name="note_hint">Pago pendiente</string>
+    <string name="send_label">Enviar</string>
+    <string name="cancel_label">Cancelar</string>
+
+    <string name="address_error_message_label">La longitud debe estar entre 24 y 37 caracteres</string>
+    <string name="empty_message_label">Los campos no pueden quedar vacíos</string>
+    <string name="cancel_toast_label">La transacción ha sido cancelada</string>
+    <string name="send_toast_label">Fondos envíados</string>
+
+    <string-array name="test_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Clelia López</item>
+        <item>Item with very extra super duper long name</item>
+    </string-array>
+
+    <string-array name="currency_array">
+        <item>Bitcoins - BTC</item>
+        <item>Dólar Americano (USD)</item>
+        <item>Dólar Canadiense (CAD)</item>
+        <item>Peso Argentino (ARG)</item>
+        <item>Bolívar Venezolano (VEF)</item>
+    </string-array>
+
+    <string-array name="unit_array">
+        <item>mBTC</item>
+        <item>Bits</item>
+        <item>Satoshis</item>
+    </string-array>
+</resources>

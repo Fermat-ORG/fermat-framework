@@ -6,6 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal</code>
  * <p/>
@@ -23,6 +26,6 @@ public interface NetworkServiceLocal {
      * @param senderIdentityPublicKey
      * @param messageContent
      */
-     void sendMessage(final String senderIdentityPublicKey, final String messageContent);
+     void sendMessage(final String senderIdentityPublicKey, final PlatformComponentType senderType, final NetworkServiceType senderNsType, final String messageContent);
 
 }

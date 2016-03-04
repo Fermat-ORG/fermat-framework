@@ -25,7 +25,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     private Resources res;
     private CardView containerCardView;
 
-    protected FermatButton confirmButton;
+    public final FermatButton confirmButton;
     protected ImageView clauseNumberImageView;
     protected FermatTextView titleTextView;
 
@@ -54,9 +54,6 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         this.listener = listener;
     }
 
-    public FermatButton getConfirmButton() {
-        return confirmButton;
-    }
 
     public void bindData(NegotiationWrapper negotiationWrapper, ClauseInformation clause, int clausePosition) {
         this.negotiationInformation = negotiationWrapper.getNegotiationInfo();

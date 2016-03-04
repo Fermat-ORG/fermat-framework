@@ -12,16 +12,18 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
  *Created by Nelson Ramirez
  * @since 17-02-2016.
  */
+
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
     OnFooterButtonsClickListener listener;
-
+    CardView addNoteButton;
+    TextView sendButton;
     public FooterViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
 
-        CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
+        addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setOnClickListener(this);
 
-        TextView sendButton = (FermatTextView) itemView.findViewById(R.id.send_button);
+        sendButton = (FermatTextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
     }
 
@@ -34,7 +36,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
             listener.onSendButtonClicked();
         }
     }
-
+    public void HideButtons(){ addNoteButton.setVisibility(View.GONE); sendButton.setVisibility(View.GONE); }
     public void setListener(OnFooterButtonsClickListener listener) {
         this.listener = listener;
     }

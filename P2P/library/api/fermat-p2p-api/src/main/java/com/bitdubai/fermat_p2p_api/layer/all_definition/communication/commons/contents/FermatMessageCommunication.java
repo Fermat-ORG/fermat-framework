@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -41,6 +43,12 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      */
     private String sender;
 
+    private transient PlatformComponentType senderType;
+    private transient PlatformComponentType receiverType;
+
+    private transient NetworkServiceType senderNsType;
+    private transient NetworkServiceType receiverNsType;
+
     /**
      * Represent the receiver of the message
      */
@@ -64,12 +72,12 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     /**
      * Represent the failCount
      */
-    private int failCount = 0;
+    private transient int failCount = 0;
 
     /**
      * Represent the status
      */
-    private FermatMessagesStatus fermatMessagesStatus;
+    private transient FermatMessagesStatus fermatMessagesStatus;
 
     /**
      * Represent the signature
@@ -328,6 +336,40 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         return Objects.hash(getId(), getSender(), getReceiver(), getContent(), getShippingTimestamp(), getDeliveryTimestamp(), getFermatMessagesStatus(), getSignature(), getFermatMessageContentType());
     }
 
+    @Override
+    public PlatformComponentType getSenderType() {
+        return senderType;
+    }
+
+    public void setSenderType(PlatformComponentType senderType) {
+        this.senderType = senderType;
+    }
+
+    @Override
+    public PlatformComponentType getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(PlatformComponentType receiverType) {
+        this.receiverType = receiverType;
+    }
+
+    public NetworkServiceType getSenderNsType() {
+        return senderNsType;
+    }
+
+    public void setSenderNsType(NetworkServiceType senderNsType) {
+        this.senderNsType = senderNsType;
+    }
+
+    public NetworkServiceType getReceiverNsType() {
+        return receiverNsType;
+    }
+
+    public void setReceiverNsType(NetworkServiceType receiverNsType) {
+        this.receiverNsType = receiverNsType;
+    }
+
     /**
      * (no-javadoc)
      * @see Object#toString()
@@ -345,6 +387,10 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
                 ", signature='" + signature + '\'' +
                 ", failCount='" + failCount + '\'' +
                 ", fermatMessageContentType=" + fermatMessageContentType +
+                ", senderType=" + senderType +
+                ", receiverType=" + receiverType +
+                ", senderNsType=" + senderNsType +
+                ", receiverNsType=" + receiverNsType +
                 '}';
     }
 }
