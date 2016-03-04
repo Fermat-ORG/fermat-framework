@@ -19,4 +19,6 @@ public interface NotificationPainter {
 
     String getActivityCodeResult();
 
+    boolean showNotification();
+
 }
