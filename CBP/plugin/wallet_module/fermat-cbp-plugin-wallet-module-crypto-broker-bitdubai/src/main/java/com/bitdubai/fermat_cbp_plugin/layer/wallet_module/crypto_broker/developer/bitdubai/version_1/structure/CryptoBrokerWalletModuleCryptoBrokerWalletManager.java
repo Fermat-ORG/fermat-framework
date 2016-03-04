@@ -480,11 +480,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return cryptoBrokerActorManager.createNewBrokerIdentityWalletRelationship(brokerIdentity, brokerWalletPublicKey) != null;
     }
 
-    @Override //TODO: Implementar CustomerBrokerUpdateManager Negotiation Transaction
+    @Override
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException, CantCancelNegotiationException {
-        CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(negotiation.getNegotiationId());
+        CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(
+                negotiation.getNegotiationId(),
+                negotiation.getBroker().getPublicKey(),
+                negotiation.getCustomer().getPublicKey()
+        );
         customerBrokerSaleNegotiation.setCancelReason(reason);
         customerBrokerUpdateManager.cancelNegotiation(customerBrokerSaleNegotiation);
+
         return negotiation;
     }
 

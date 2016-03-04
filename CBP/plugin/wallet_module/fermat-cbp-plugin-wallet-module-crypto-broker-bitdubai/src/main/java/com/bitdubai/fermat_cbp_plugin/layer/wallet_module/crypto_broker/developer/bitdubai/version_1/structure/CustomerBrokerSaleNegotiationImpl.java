@@ -40,6 +40,17 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         status = NegotiationStatus.WAITING_FOR_CUSTOMER;
     }
 
+    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId, String brokerPublicKey, String customerPublicKey) {
+        dataHasChanged = false;
+
+        this.negotiationId = negotiationId;
+        clauses = new ArrayList<>();
+        status = NegotiationStatus.WAITING_FOR_CUSTOMER;
+
+        this.customerPublicKey = customerPublicKey;
+        this.brokerPublicKey = brokerPublicKey;
+    }
+
     public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
         dataHasChanged = false;
 

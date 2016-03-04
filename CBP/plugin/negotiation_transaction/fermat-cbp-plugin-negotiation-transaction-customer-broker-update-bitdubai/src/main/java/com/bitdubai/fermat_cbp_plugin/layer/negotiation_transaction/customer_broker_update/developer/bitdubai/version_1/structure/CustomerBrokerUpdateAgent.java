@@ -443,7 +443,7 @@ public class CustomerBrokerUpdateAgent implements
 
                                         );
 
-                                        if (purchaseNegotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
+                                        if(!purchaseNegotiation.getCancelReason().toString().trim().equalsIgnoreCase("")){
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
@@ -466,7 +466,7 @@ public class CustomerBrokerUpdateAgent implements
 
                                         );
 
-                                        if (saleNegotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
+                                        if(!saleNegotiation.getCancelReason().toString().trim().equalsIgnoreCase("")){
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
