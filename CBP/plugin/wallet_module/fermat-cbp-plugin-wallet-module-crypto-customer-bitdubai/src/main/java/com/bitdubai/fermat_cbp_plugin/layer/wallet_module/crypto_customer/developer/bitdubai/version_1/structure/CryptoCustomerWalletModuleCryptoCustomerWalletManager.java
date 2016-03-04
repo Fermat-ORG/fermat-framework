@@ -334,14 +334,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 paymentCurrency = getClauseType(negotiation, ClauseType.BROKER_CURRENCY);
 
                 ActorIdentity brokerIdentity = getBrokerInfoByPublicKey(customerBrokerContract.getPublicKeyCustomer(), customerBrokerContract.getPublicKeyBroker());
+                ActorIdentity customerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerBrokerContract.getPublicKeyCustomer());
 
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContract.getPublicKeyCustomer(), new byte[0], brokerIdentity.getAlias(), brokerIdentity.getProfileImage(),
+                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity.getAlias(), customerIdentity.getProfileImage(), brokerIdentity.getAlias(), brokerIdentity.getProfileImage(),
                                                                                 merchandise, typeOfPayment, paymentCurrency, customerBrokerContract.getStatus(), negotiation);
                 waitingForBroker.add(contract);
             }
 
             //TODO:Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("customerAlias", new byte[0], "brokerAlias", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
+                                                                            "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, null);
             waitingForBroker.add(contract);
 
             return waitingForBroker;
@@ -372,16 +374,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 paymentCurrency = getClauseType(negotiation, ClauseType.BROKER_CURRENCY);
 
                 ActorIdentity brokerIdentity = getBrokerInfoByPublicKey(customerBrokerContract.getPublicKeyCustomer(), customerBrokerContract.getPublicKeyBroker());
+                ActorIdentity customerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerBrokerContract.getPublicKeyCustomer());
 
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContract.getPublicKeyCustomer(), new byte[0], brokerIdentity.getAlias(), brokerIdentity.getProfileImage(),
-                        merchandise, typeOfPayment, paymentCurrency, customerBrokerContract.getStatus(), negotiation);
+                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity.getAlias(), customerIdentity.getProfileImage(), brokerIdentity.getAlias(), brokerIdentity.getProfileImage(),
+                                                                                merchandise, typeOfPayment, paymentCurrency, customerBrokerContract.getStatus(), negotiation);
                 waitingForBroker.add(contract);
             }
 
             //TODO: Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("customerAlias", new byte[0], "brokerAlias", new byte[0],
-                                                                            "merchandise", "typeOfPayment", "paymentCurrency",
-                                                                            ContractStatus.PENDING_MERCHANDISE, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
+                                                                            "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, null);
             waitingForBroker.add(contract);
 
             return waitingForBroker;
@@ -392,6 +394,18 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", e);
         }catch(Exception ex){
             throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", ex);
+        }
+    }
+
+    @Override
+    public Collection<Clause> getNegotiationClausesFromNegotiationId(UUID negotiationId) throws CantGetListClauseException
+    {
+        try{
+            CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationId);
+            Collection<Clause> clauses = negotiation.getClauses();
+            return clauses;
+        }catch(CantGetListPurchaseNegotiationsException | CantGetListClauseException ex) {
+            throw new CantGetListClauseException("Cant get the negotiation clauses for the given negotiationId " + negotiationId.toString(), ex);
         }
     }
 
@@ -1012,21 +1026,21 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @throws CantGetListCustomerBrokerContractPurchaseException
      */
     @Override
-    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
-            String negotiationId) throws CantGetListCustomerBrokerContractPurchaseException {
-        Collection<CustomerBrokerContractPurchase> customerBrokerContractPurchases =
-                customerBrokerContractPurchaseManager.getAllCustomerBrokerContractPurchase();
+    public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(String negotiationId) throws CantGetListCustomerBrokerContractPurchaseException {
+        Collection<CustomerBrokerContractPurchase> customerBrokerContractPurchases = customerBrokerContractPurchaseManager.getAllCustomerBrokerContractPurchase();
         String negotiationIdFromCollection;
-        //This line is only for testing
-        return new CustomerBrokerContractPurchaseMock();
-        /*for(CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchases){
-            negotiationIdFromCollection=customerBrokerContractPurchase.getNegotiatiotId();
+
+        for(CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchases){
+            negotiationIdFromCollection = customerBrokerContractPurchase.getNegotiatiotId();
             if(negotiationIdFromCollection.equals(negotiationId)){
                 return customerBrokerContractPurchase;
             }
         }
-        throw new CantGetListCustomerBrokerContractPurchaseException(
-                "Cannot find the contract associated to negotiation "+negotiationId);*/
+
+        //TODO: This line is only for testing, kill this and uncomment exception below when done
+        return new CustomerBrokerContractPurchaseMock();
+
+        //throw new CantGetListCustomerBrokerContractPurchaseException("Cannot find the contract associated to negotiation "+negotiationId);
     }
 
     /**
