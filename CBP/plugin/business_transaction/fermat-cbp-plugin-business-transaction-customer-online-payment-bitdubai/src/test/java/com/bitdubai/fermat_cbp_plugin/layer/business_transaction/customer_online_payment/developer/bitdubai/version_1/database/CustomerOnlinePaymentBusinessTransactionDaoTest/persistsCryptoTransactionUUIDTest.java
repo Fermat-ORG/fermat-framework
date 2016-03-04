@@ -46,11 +46,13 @@ public class persistsCryptoTransactionUUIDTest {
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
                 pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        setupGeneralMockitoRules();
+    }
+    public void setupGeneralMockitoRules()throws Exception{
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
         doNothing().when(databaseTable).updateRecord(databaseTableRecord);
     }
-
     @Test
     public void persistsCryptoTransactionUUIDTest()throws Exception{
         when(mockDatabase.getTable(
