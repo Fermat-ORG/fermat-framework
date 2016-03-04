@@ -329,8 +329,8 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<BuyingRecord> getPartiallySignedBuying() throws DAPException {
-        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.PARTIALLY_SIGNED.getCode());
+    public List<BuyingRecord> getWaitingCompleteSignature() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_COMPLETE_SIGNATURE.getCode());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
         } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
