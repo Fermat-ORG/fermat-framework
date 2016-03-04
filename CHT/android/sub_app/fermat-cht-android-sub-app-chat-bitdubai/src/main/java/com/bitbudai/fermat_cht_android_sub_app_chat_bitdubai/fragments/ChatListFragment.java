@@ -302,7 +302,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                 contactIcon =bmd.getBitmap();
-                toolbar.setTitle(localUser.getAlias());
+                //toolbar.setTitle(localUser.getAlias());
                 contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
                 //getActivity().getActionBar().setLogo(contactIconCircular);
@@ -330,11 +330,9 @@ public class ChatListFragment extends AbstractFermatFragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
-                String Slecteditem = infochat.get(position).toString();
                 String values = infochat.get(position);
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
-                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
                 try{
                     appSession.setData("whocallme", "chatlist");
                     appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
