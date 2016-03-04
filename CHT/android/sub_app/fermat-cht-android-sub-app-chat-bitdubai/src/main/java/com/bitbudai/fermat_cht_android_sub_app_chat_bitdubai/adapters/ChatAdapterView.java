@@ -49,6 +49,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,7 +88,8 @@ public class ChatAdapterView extends LinearLayout {
     private int background = -1;
     private String remotePk;
     private PlatformComponentType remotePCT;
-    private Drawable contactIcon;
+    private Bitmap contactIcon;
+    private BitmapDrawable contactIconCircular;
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
     private Calendar today;
@@ -128,6 +130,9 @@ public class ChatAdapterView extends LinearLayout {
                 remotePk = contact.getRemoteActorPublicKey();
                 remotePCT = contact.getRemoteActorType();
                 contactId =contact.getContactId();
+                ByteArrayInputStream bytes = new ByteArrayInputStream(contact.getProfileImage());
+                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                contactIcon =bmd.getBitmap();
                 leftName=contact.getAlias();
                 for (int i = 0; i < chatManager.getMessages().size(); i++) {
                     if (contactId.equals(chatManager.getMessages().get(i).getContactId())) {
@@ -289,8 +294,8 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.cht_profile_icon), 80));//in the future, this image should come from chatmanager
-                toolbar.setLogo(contactIcon);
+                contactIconCircular = new BitmapDrawable( getResources(),  getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
+                toolbar.setLogo(contactIconCircular);
             }
         }
         //companionLabel.setText(leftName);

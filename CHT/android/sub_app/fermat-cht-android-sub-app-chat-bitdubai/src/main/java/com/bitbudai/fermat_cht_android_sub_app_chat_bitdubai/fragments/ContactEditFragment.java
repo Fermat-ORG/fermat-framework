@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -87,7 +89,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
     private static final String TAG = "CHT_ContactEditFragment";
 
     ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
@@ -192,7 +194,9 @@ public class ContactEditFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.cht_profile_icon);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            contacticon.add(bmd.getBitmap());
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
             //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             //name.setText(contactname.get(0));
@@ -200,11 +204,11 @@ public class ContactEditFragment extends AbstractFermatFragment {
             //id.setText(contactid.get(0).toString());
 
             // create bitmap from resource
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+            //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
 
             // set circle bitmap
             ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(getCircleBitmap(bm));
+            mImage.setImageBitmap(getCircleBitmap(contacticon.get(0)));
 
             aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
             aliasET.setText(contactalias.get(0));
@@ -214,7 +218,6 @@ public class ContactEditFragment extends AbstractFermatFragment {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

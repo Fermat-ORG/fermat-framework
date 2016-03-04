@@ -35,9 +35,9 @@ import java.util.UUID;
 public class ProfileListAdapter extends ArrayAdapter<String> {
 
     List<ContactList> contactsList = new ArrayList<>();
-    ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactinfo=new ArrayList<>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
+    ArrayList<UUID> contactid=new ArrayList<>();
     private ErrorManager errorManager;
     Typeface tf;
 
@@ -55,7 +55,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {
         View item = inflater.inflate(R.layout.profile_list_item, null, true);
         try {
             ImageView imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));
-            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
