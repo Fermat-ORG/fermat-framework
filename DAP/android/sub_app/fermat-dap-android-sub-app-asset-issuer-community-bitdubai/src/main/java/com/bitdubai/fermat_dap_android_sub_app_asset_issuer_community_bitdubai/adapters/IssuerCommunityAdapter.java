@@ -42,10 +42,26 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
         try {
             holder.name.setText(String.format("%s", data.getRecord().getName()));
             if (data.getRecord().getExtendedPublicKey() != null) {
-                holder.connectedState.setVisibility(View.VISIBLE);
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
                 holder.connect.setVisibility(View.GONE);
             } else {
-                holder.connectedState.setVisibility(View.GONE);
+                switch (data.getRecord().getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
                 holder.connect.setVisibility(View.VISIBLE);
             }
 
@@ -59,6 +75,10 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
             }
             if (data.getRecord().getDapConnectionState() == DAPConnectionState.CONNECTING) {
                 holder.status.setText(R.string.status_connecting);
+            }
+
+            if (data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
             }
 
             holder.name.setText(data.getRecord().getName());
