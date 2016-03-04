@@ -292,7 +292,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        //preConfigureWallet();
+        preConfigureWallet();
     }
 
     private void preConfigureWallet() {
@@ -336,8 +336,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
 
                 // EARNINGS -> BTC/USD - Earning Wallet: Cash USD
                 // TODO uncomment this when Leon fix the error
-                //final String earningWalletPublicKey = installedWallet.getWalletPublicKey();
-                //walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+                final String earningWalletPublicKey = installedWallet.getWalletPublicKey();
+                walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/USD
                 final List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
