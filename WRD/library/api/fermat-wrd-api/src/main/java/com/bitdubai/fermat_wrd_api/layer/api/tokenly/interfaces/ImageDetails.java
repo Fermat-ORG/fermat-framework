@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.
  */
-public interface BackgroundImageDetails {
+public interface ImageDetails {
 
     /**
      * Represents the background id.
