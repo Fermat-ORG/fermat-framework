@@ -38,7 +38,7 @@ public abstract class AbstractOpenContract {
 
     private ContractSaleRecord createContractRecordFromNegotiationClauses(
             Collection<Clause> negotiationClauses,
-            FiatIndex fiatIndex,
+            float referencePrice,
             String brokerPublicKey,
             String customerPublicKey,
             String negotiationId,
@@ -114,7 +114,6 @@ public abstract class AbstractOpenContract {
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
         contractRecord.setPublicKeyBroker(brokerPublicKey);
         contractRecord.setPublicKeyCustomer(customerPublicKey);
@@ -136,7 +135,7 @@ public abstract class AbstractOpenContract {
 
     private ContractPurchaseRecord createContractPurchaseRecordFromNegotiationClauses(
             Collection<Clause> negotiationClauses,
-            FiatIndex fiatIndex,
+            float referencePrice,
             String brokerPublicKey,
             String customerPublicKey,
             String negotiationId,
@@ -214,7 +213,6 @@ public abstract class AbstractOpenContract {
         }
 
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
-        float referencePrice = (float) fiatIndex.getPurchasePrice();
         contractRecord.setNegotiationId(negotiationId);
         contractRecord.setPublicKeyBroker(brokerPublicKey);
         contractRecord.setPublicKeyCustomer(customerPublicKey);
@@ -250,7 +248,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractPurchaseRecord createPurchaseContractRecord(Collection<Clause> negotiationClauses,
                                                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                               FiatIndex fiatIndex)
+                                               float referencePrice)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -259,7 +257,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerPurchaseNegotiation.getNegotiationId().toString();
         ContractPurchaseRecord contractRecord= createContractPurchaseRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndex,
+                referencePrice,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId,
@@ -276,7 +274,7 @@ public abstract class AbstractOpenContract {
      */
     public ContractSaleRecord createSaleContractRecord(Collection<Clause> negotiationClauses,
                                                        CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                                       FiatIndex fiatIndex)
+                                                       float referencePrice)
             throws InvalidParameterException,
             CantGetIndexException {
 
@@ -285,7 +283,7 @@ public abstract class AbstractOpenContract {
         String negotiationId=customerBrokerSaleNegotiation.getNegotiationId().toString();
         ContractSaleRecord contractRecord= createContractRecordFromNegotiationClauses(
                 negotiationClauses,
-                fiatIndex,
+                referencePrice,
                 brokerPublicKey,
                 customerPublicKey,
                 negotiationId,
