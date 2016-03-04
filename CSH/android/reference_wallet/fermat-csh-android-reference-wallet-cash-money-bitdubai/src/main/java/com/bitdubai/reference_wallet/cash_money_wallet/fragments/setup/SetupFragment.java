@@ -19,8 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
@@ -28,12 +26,10 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.drawables.SemiCircleDrawable;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
@@ -112,7 +108,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
 
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
 
-        setupContainer = (LinearLayout) layout.findViewById(R.id.setup_container);
+        setupContainer = (LinearLayout) layout.findViewById(R.id.csh_setup_container);
         //setupContainerasd = (LinearLayout) layout.findViewById(R.id.some_lame_ass_id);
         //setupContainerasd.setBackground(new SemiCircleDrawable());
 
