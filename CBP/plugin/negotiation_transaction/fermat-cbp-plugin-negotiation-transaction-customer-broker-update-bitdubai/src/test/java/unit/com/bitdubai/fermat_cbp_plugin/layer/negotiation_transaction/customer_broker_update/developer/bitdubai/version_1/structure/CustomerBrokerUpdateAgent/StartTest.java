@@ -83,8 +83,8 @@ public class StartTest {
                 customerBrokerPurchaseNegotiation,
                 customerBrokerSaleNegotiation,
                 customerBrokerPurchaseNegotiationManager,
-                customerBrokerSaleNegotiationManager
-        );
+                customerBrokerSaleNegotiationManager,
+                broadcaster);
 /*
         testObj1.start();
         Thread.sleep(100);

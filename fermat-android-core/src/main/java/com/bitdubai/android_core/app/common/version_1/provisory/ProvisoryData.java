@@ -20,11 +20,19 @@ public class ProvisoryData {
     public static List<Item> getBottomNavigationProvisoryData(){
         List<Item> lst = new ArrayList<>();
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.Scanner, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+
+        //settings
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.SETTINGS,null,null,"settings","Settings","public_key_settings","settings",new Version(1,0,0));
         Item item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.ic_04);
-        item2.setPosition(1);
+        item2.setIconResource(R.drawable.icon_settings_menu);
+        item2.setPosition(0);
         lst.add(item2);
+
+//        installedSubApp = new InstalledSubApp(SubApps.Scanner, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.ic_04);
+//        item2.setPosition(5);
+//        lst.add(item2);
 
 
         //Identities
@@ -179,6 +187,8 @@ public class ProvisoryData {
         item2.setIconResource(R.drawable.ic_03);
         item2.setPosition(4);
         lst.add(item2);
+
+
 
         return lst;
     }
