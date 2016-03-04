@@ -1,0 +1,12 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-wrd-api'
+project(':fermat-wrd-api').projectDir = new File('WRD/library/api/fermat-wrd-api')
+
+include ':fermat-wrd-core'
+project(':fermat-wrd-core').projectDir = new File('WRD/library/core/fermat-wrd-core')
