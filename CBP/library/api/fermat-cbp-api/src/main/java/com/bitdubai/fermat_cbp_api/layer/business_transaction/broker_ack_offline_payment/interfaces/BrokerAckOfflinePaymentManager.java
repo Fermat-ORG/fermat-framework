@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces;
 
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BrokerAckPaymentManager;
 

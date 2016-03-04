@@ -69,7 +69,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             );
             customerBrokerUpdatePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
-            getAllTranasctionTest();
+//            getAllTranasctionTest();
 
         } catch (CantUpdatePurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -92,7 +92,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             );
             customerBrokerUpdateSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
-            getAllTranasctionTest();
+//            getAllTranasctionTest();
 
         } catch (CantUpdateSaleNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -114,7 +114,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             );
             customerBrokerUpdatePurchaseNegotiationTransaction.SendCancelPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
-            getAllTranasctionTest();
+//            getAllTranasctionTest();
 
         } catch (CantCancelPurchaseNegotiationTransactionException e){
             throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -136,7 +136,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
             );
             customerBrokerUpdateSaleNegotiationTransaction.sendCancelSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
-            getAllTranasctionTest();
+//            getAllTranasctionTest();
 
         } catch (CantCancelSaleNegotiationTransactionException e){
             throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");

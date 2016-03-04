@@ -27,7 +27,7 @@ public class FermatSessionManager {
     }
 
     public FermatSession<FermatApp,?> openAppSession(FermatApp app, ErrorManager errorManager, ModuleManager moduleManager, AppConnections appConnections) {
-        FermatSession<FermatApp,?> AppsSession  = appConnections.buildSession(app,moduleManager,errorManager);
+        FermatSession AppsSession  = appConnections.buildSession(app, moduleManager, errorManager);
         lstAppSession.put(app.getAppPublicKey(), AppsSession);
         return AppsSession;
     }
