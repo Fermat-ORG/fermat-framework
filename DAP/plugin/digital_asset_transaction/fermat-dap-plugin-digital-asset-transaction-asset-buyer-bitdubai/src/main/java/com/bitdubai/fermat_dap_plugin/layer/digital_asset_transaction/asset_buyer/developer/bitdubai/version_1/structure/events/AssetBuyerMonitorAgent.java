@@ -171,6 +171,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                 dao.updateNegotiationStatus(contentMessage.getAssetNegotiation().getNegotiationId(), contentMessage.getSellStatus());
                 assetTransmission.confirmReception(message);
             }
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.SIGNATURE_REJECTED)) {
+                System.out.println("Signature Rejected...");
+                //TODO
+            }
         }
 
         private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
