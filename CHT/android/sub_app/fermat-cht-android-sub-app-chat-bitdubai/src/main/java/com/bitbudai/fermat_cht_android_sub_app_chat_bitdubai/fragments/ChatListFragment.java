@@ -298,11 +298,13 @@ public class ChatListFragment extends AbstractFermatFragment{
             if (chatSettings.getLocalPublicKey() != null) {
                 ChatUserIdentity localUser = chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
                 //toolbar = getToolbar();
-                getActivity().getActionBar().setTitle("");
+                //getContext().getActionBar().setTitle("");
                 toolbar.setTitle(localUser.getAlias() + " - Fermat Chat");
                 contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
                 //getActivity().getActionBar().setLogo(contactIconCircular);
+            }else{
+                toolbar.setTitle("Fermat Chat");
             }
         }catch (CantGetChatUserIdentityException e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
