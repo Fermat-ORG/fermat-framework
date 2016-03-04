@@ -766,6 +766,24 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    /**
+     * This method returns the contact id by local public key.
+     *
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    @Override
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException {
+        Contact contact = null;
+        try {
+             contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(localPublicKey);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
+        return contact;
+    }
+
     @Override
     public void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException {
         try {

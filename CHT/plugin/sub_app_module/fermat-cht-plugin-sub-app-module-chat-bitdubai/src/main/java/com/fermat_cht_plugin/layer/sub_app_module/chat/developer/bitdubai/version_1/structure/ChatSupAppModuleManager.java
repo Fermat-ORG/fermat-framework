@@ -152,6 +152,18 @@ public class ChatSupAppModuleManager implements ChatManager {
         return middlewareChatManager.getSelfIdentities();
     }
 
+    /**
+     * This method returns the contact id by local public key.
+     *
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    @Override
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException {
+        return middlewareChatManager.getContactByLocalPublicKey(localPublicKey);
+    }
+
     @Override
     public void createSelfIdentities() throws CantCreateSelfIdentityException {
         middlewareChatManager.createSelfIdentities();

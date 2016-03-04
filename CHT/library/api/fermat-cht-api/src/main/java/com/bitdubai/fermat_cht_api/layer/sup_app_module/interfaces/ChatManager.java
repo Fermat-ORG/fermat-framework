@@ -81,6 +81,14 @@ public interface ChatManager {
      */
     HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
 
+    /**
+     * This method returns the contact id by local public key.
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
+
     void createSelfIdentities() throws CantCreateSelfIdentityException;
 
     boolean isIdentityDevice() throws CantGetChatUserIdentityException;

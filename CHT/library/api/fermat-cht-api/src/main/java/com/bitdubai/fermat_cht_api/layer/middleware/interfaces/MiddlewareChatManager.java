@@ -86,6 +86,14 @@ public interface MiddlewareChatManager extends FermatManager{
      */
     HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
 
+    /**
+     * This method returns the contact id by local public key.
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
+
     void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException;
 
     void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException;
