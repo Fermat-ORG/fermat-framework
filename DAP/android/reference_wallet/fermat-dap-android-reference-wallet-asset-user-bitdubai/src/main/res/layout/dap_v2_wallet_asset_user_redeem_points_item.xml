@@ -47,4 +47,12 @@
         android:textColor="@color/gray"
         android:textSize="12sp"/>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/fab_material_grey_500"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
 </RelativeLayout>

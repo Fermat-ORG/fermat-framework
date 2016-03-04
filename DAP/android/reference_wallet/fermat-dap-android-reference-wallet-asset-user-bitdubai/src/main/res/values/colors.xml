@@ -34,5 +34,8 @@
     <color name="dap_user_wallet__home_issuer_item">#26A69A</color>
     <color name="dap_user_wallet_detail_background">#000000</color>
     <color name="dap_user_wallet_detail_header">#0097A7</color>
+    <color name="dap_user_wallet_dialog_body">#78909C</color>
+    <color name="dap_user_wallet_dialog_text">#ECEFF1</color>
+    <color name="dap_user_wallet_dialog_bar">#263238</color>
     <!-- -->
 </resources>

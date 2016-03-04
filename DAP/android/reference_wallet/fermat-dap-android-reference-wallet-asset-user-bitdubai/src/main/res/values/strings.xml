@@ -128,5 +128,9 @@
     <!-- v2 -->
     <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
     <string name="dap_user_wallet_v2_detail_received">Received by</string>
+    <string name="dap_user_wallet_v2_confirm_title">Do this Redeem Point?</string>
+    <string name="dap_user_wallet_v2_confirm_body">Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ...</string>
+    <string name="dap_user_wallet_v2_confirm_button_agree">AGREE</string>
+    <string name="dap_user_wallet_v2_confirm_button_disagree">DISAGREE</string>
     <!-- -->
 </resources>
