@@ -180,6 +180,9 @@ public class ActorConnectionEventActions {
                     throw new UnsupportedActorTypeException("request: "+request, "Unsupported actor type exception.");
             }
 
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(), CryptoBrokerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
+
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
 
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, unsupportedActorTypeException);
