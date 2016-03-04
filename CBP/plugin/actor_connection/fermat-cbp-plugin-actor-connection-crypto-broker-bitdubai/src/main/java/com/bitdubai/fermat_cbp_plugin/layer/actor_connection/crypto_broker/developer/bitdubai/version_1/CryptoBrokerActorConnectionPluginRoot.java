@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.structure.ActorConnectionManager;
@@ -104,10 +105,10 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implem
                     this.getPluginVersionReference()
             );
 
-           /* FermatEventListener newsListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            FermatEventListener newsListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
             newsListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
             eventManager.addListener(newsListener);
-            listenersAdded.add(newsListener);*/
+            listenersAdded.add(newsListener);
 
             FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(new     CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));

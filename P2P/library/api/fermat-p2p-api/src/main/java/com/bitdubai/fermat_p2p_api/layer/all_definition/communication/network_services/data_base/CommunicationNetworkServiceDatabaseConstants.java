@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base;
 
-import java.util.UUID;
-
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
@@ -19,7 +17,7 @@ import java.util.UUID;
  */
 public final class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "network_service_data_base_"+ UUID.randomUUID().toString();
+    public static final String DATA_BASE_NAME                                   = "network_service_database";
 
 
     /**
@@ -48,8 +46,8 @@ public final class CommunicationNetworkServiceDatabaseConstants {
     public static final String OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME        = "receiver_id"       ;
     public static final String OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME        = "sender_type"       ;
     public static final String OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME      = "receiver_type"     ;
-    public static final String OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME     = "sender_ns_type"       ;
-    public static final String OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME   = "receiver_ns_type"     ;
+    public static final String OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME     = "sender_ns_type"    ;
+    public static final String OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME   = "receiver_ns_type"  ;
     public static final String OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME       = "text_content"      ;
     public static final String OUTGOING_MESSAGES_TYPE_COLUMN_NAME               = "type"              ;
     public static final String OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME = "shipping_timestamp";
