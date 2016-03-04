@@ -15,8 +15,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
@@ -153,18 +152,15 @@ public class IssuerRedemptionMonitorAgent implements Agent {
 
         private void doTheMainTask() throws Exception {
             checkPendingCryptoRouterEvents();
-            checkTransferMessages();
+            checkAssetMovements();
         }
 
-        private void checkTransferMessages() throws DAPException, CantLoadWalletException {
-
-            for (DAPMessage message : assetTransmissionManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_TRANSFER)) {
+        private void checkAssetMovements() throws DAPException, CantLoadWalletException {
+            for (DAPMessage message : assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.ASSET_MOVEMENT)) {
                 AssetMovementContentMessage content = (AssetMovementContentMessage) message.getMessageContent();
-
                 ActorUtils.storeDAPActor(content.getSystemUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
                 ActorUtils.storeDAPActor(content.getNewUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
-
-                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(content.getNewUser(), content.getSystemUser(), content.getAssetPublicKey(), AssetMovementType.ASSET_TRANSFERRED);
+                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(content.getNewUser(), content.getSystemUser(), content.getAssetPublicKey(), content.getMovementType());
             }
         }
 
