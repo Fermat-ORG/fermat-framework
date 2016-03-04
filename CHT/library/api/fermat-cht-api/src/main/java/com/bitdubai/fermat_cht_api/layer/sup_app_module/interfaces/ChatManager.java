@@ -103,5 +103,5 @@ public interface ChatManager {
 
     List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
 
-    ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
+    ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException;
 }

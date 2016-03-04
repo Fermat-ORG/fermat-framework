@@ -202,7 +202,7 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException {
+    public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
         return middlewareChatManager.getContactConnection(contactId);
     }
 }
