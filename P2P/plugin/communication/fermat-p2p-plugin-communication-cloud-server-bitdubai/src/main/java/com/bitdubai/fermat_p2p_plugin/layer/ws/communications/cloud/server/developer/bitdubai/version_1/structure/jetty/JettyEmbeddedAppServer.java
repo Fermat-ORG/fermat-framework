@@ -32,6 +32,7 @@ import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URISyntaxException;
@@ -41,6 +42,7 @@ import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -221,21 +223,27 @@ public class JettyEmbeddedAppServer {
         /* Use this is OK, load the ip dynamically */
 
         UpnpServiceImpl upnpService = null;
-        PortMapping[] arr = new PortMapping[2];
-        List<Inet4Address> addressList;
+        PortMapping[] arr = null;
+        List<String> addressList;
         int i = 0;
         addressList = getIPv4Address();
 
-        for(Inet4Address address : addressList){
+        if(addressList != null) {
 
-            arr[i] = new PortMapping(9090, address.getHostAddress(), PortMapping.Protocol.TCP,"My Port Mapping1");
-            i++;
+            arr = new PortMapping[addressList.size()];
+
+            for (String address : addressList) {
+
+                LOG.info("Ip Address " + address);
+                arr[i] = new PortMapping(9090, address, PortMapping.Protocol.TCP, "My Port Mapping1");
+                i++;
+
+            }
+
+            upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
+            upnpService.getControlPoint().search();
 
         }
-
-        upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
-        upnpService.getControlPoint().search();
-
 
         this.initialize();
         LOG.info("Starting the internal server");
@@ -274,35 +282,47 @@ public class JettyEmbeddedAppServer {
      * Return Inet4Address List of All the IpAddress Assignaded to the interfaces
      * example a T2000 of Sun has four interfaces
      */
-    private static List<Inet4Address> getIPv4Address() throws Exception {
-        List<Inet4Address> listOfInterfaces = null;
-        // if (iface != null) {
-        //NetworkInterface networkInterface = NetworkInterface.getByName(iface);
-        Enumeration<NetworkInterface> enume = NetworkInterface.getNetworkInterfaces();
+    private static List<String> getIPv4Address() throws Exception {
 
-        if(enume != null){
-            listOfInterfaces = new ArrayList<>();
+        Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+        List<String> addressList = new ArrayList<>();
+        String address = null;
 
-            while(enume.hasMoreElements()){
+        while (en.hasMoreElements()) {
 
-                System.out.println(enume.nextElement().getDisplayName());
+            NetworkInterface ni = en.nextElement();
+            address = constructAddress(ni);
 
-                NetworkInterface networkInterface = NetworkInterface.getByName(enume.nextElement().getDisplayName());
-                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            if(address!=null)
+                addressList.add(address);
 
-                while (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    if (addr instanceof Inet4Address) {
-                        listOfInterfaces.add((Inet4Address) addr);
-                    }
-                }
-
-            }
-
-            return listOfInterfaces;
         }
 
-        throw new UnsupportedAddressTypeException();
+        return addressList;
+
+    }
+
+    private static String constructAddress(NetworkInterface ni) throws Exception {
+
+        String address = null;
+
+        List<InterfaceAddress> list = ni.getInterfaceAddresses();
+        Iterator<InterfaceAddress> it = list.iterator();
+
+        while (it.hasNext()) {
+
+            InterfaceAddress ia = it.next();
+            String dir = ia.getAddress().toString();
+            dir = dir.replace("/", "");
+
+            if(ia.getNetworkPrefixLength() > 8 && ia.getNetworkPrefixLength() < 32)
+                address = dir;
+
+
+        }
+
+        return address;
+
     }
 
     /**
