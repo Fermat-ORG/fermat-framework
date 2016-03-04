@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="75dp"
-    android:background="@color/fab_material_blue_grey_900">
+    android:background="@color/dap_user_wallet__home_issuer_item">
 
     <RelativeLayout
         android:id="@+id/homeIssuerImageLayout"
@@ -43,13 +43,14 @@
         android:text="2 assets"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/homeIssuerArrow"/>
+        android:layout_toLeftOf="@+id/homeIssuerArrow"
+        android:textColor="@color/fab_material_white"/>
 
     <ImageView
         android:id="@+id/homeIssuerArrow"
         android:layout_width="24dp"
         android:layout_height="18dp"
-        android:src="@drawable/ic_arrow_down_grey"
+        android:src="@drawable/ic_arrow_down_white"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
 

@@ -1055,87 +1055,43 @@ public class AssetCryptoVaultManager  extends CryptoVault{
      * @throws CantSignTransactionException
      */
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        if (draftTransaction == null)
+            throw new CantSignTransactionException (CantSignTransactionException.DEFAULT_MESSAGE, null, "DraftTransaction can't be null", "null parameter");
+
         Transaction transaction = draftTransaction.getBitcoinTransaction();
-        final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
 
-        if (transaction == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
-
-
-        /**
-         * Create the bitcoinj wallet from the keys of all accounts
-         */
-        final Wallet wallet;
+        HierarchyAccount masterHierarchyAccount;
         try {
-            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getVaultSeed());
-        } catch (InvalidSeedException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
-        }
-
-        try {
-            wallet.importKeys(getKeysForAllAccounts(NETWORK_PARAMETERS));
+            masterHierarchyAccount = this.getDao().getHierarchyAccounts().get(0);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            //If there was an error, I will create a master account manually
+            masterHierarchyAccount = new HierarchyAccount(0, "Asset Vault", HierarchyAccountType.MASTER_ACCOUNT);
         }
 
         /**
-         * Once I get the wallet, I will get the output of the transaction that is mine.
-         * Should be the first one.
-         */
-        Script script = null;
-        for (TransactionOutput output : transaction.getOutputs()){
-            if (output.isMine(wallet)){
-                script = output.getScriptPubKey();
-            }
-        }
-        /**
-         * If I couldn't get an output that was ours, I can't go on.
-         */
-        if (script == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "The draft Transaction doesn't have an output that is ours.", null);
-
-        /**
-         * I get the signature hash for my output.
-         */
-        Sha256Hash sigHash = transaction.hashForSignature(0, script, Transaction.SigHash.ALL, false);
-
-        /**
-         * Get the private Key I will use to sign the hash
+         * I get a private key and the list of public keys we are using to monitor the network.
          */
         ECKey privateKey = null;
+        List<ECKey> walletKeys = null;
         try {
-            privateKey = this.getNextAvailableECKey(new HierarchyAccount(0, "Asset Vault Account", HierarchyAccountType.MASTER_ACCOUNT));
+            privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(masterHierarchyAccount);
+            walletKeys = this.vaultKeyHierarchyGenerator.getAllAccountsKeyList();
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting a private key from the key hierarchy. Can't sign a transaction.", "No private key to sign");
         }
 
         /**
-         * I create the signature
+         * I get a signed transaction from the abstract class CryptoVault.
          */
-        ECKey.ECDSASignature signature = privateKey.sign(sigHash);
-        TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
-        Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        System.out.println("***AssetVault*** Transaction signed.");
+        System.out.println(transaction.toString());
 
         /**
-         * Add the signature to the input that is ours. Should be the first one.
+         * add it to the draft transaction and return it.
          */
-        TransactionInput inputToSign = null;
-        for (TransactionInput input : transaction.getInputs()){
-            if (input.getConnectedOutput().isMine(wallet)){
-                inputToSign = input;
-            }
-        }
-
-        if (inputToSign == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
-
-        inputToSign.setScriptSig(inputScript);
-
-        /**
-         * return a signed draft transaction
-         */
+        draftTransaction.setBitcoinTransaction(transaction);
         return draftTransaction;
-
     }
 
 }

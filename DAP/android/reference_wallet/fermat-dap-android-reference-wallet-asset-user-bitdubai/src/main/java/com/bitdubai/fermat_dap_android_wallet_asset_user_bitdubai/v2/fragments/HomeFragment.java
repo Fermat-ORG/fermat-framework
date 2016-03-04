@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -35,7 +37,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
-public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem, AssetUserSession, ResourceProviderManager> implements FermatListItemListeners<Issuer> {
+public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem, AssetUserSession, ResourceProviderManager> implements FermatListItemListeners<Asset> {
 
     // Fermat Managers
     private ErrorManager errorManager;
@@ -54,7 +56,7 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
         setHasOptionsMenu(true);
 
         try {
-            dataManager = new DataManager((AssetUserWalletSubAppModuleManager) appSession.getModuleManager());
+            dataManager = new DataManager(appSession.getModuleManager());
             errorManager = appSession.getErrorManager();
 //            settingsManager = appSession.getModuleManager().getSettingsManager();
 
@@ -89,12 +91,12 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.fab_material_white));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.fab_material_blue_grey_500));
-
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.fab_material_blue_grey_500));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
             }
         }
     }
@@ -176,16 +178,6 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
     }
 
     @Override
-    public void onItemClickListener(Issuer data, int position) {
-
-    }
-
-    @Override
-    public void onLongItemClickListener(Issuer data, int position) {
-
-    }
-
-    @Override
     public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<GrouperItem> data = new ArrayList<>();
         try {
@@ -203,5 +195,16 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
                         ex);
         }
         return data;
+    }
+
+    @Override
+    public void onItemClickListener(Asset data, int position) {
+        appSession.setData("asset", data);
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_V2_DETAIL, appSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onLongItemClickListener(Asset data, int position) {
+
     }
 }

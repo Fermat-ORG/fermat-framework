@@ -2,7 +2,10 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.dat
 
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Issuer;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.RedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -44,7 +47,6 @@ public class DataManager {
             }
 
             long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
-            assets = new ArrayList<>();
             for(long i = 0; i < quantityBookBalance; i++) {
                 assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
             }
@@ -53,5 +55,15 @@ public class DataManager {
             issuers.add(issuer);
         }
         return issuers;
+    }
+
+    public List<RedeemPoint> getConnectedRedeemPoints(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
+        List<RedeemPoint> redeemPoints = new ArrayList<>();
+        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getRedeemPointsConnectedForAsset(assetPublicKey);
+        for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
+            RedeemPoint newUser = new RedeemPoint(actorAssetRedeemPoint);
+            redeemPoints.add(newUser);
+        }
+        return redeemPoints;
     }
 }

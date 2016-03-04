@@ -15,12 +15,16 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 import java.io.ByteArrayInputStream;
+
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
 
 /**
  * Created by frank on 12/8/15.
@@ -41,7 +45,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public FermatTextView expDateText;
 
     public View negotiationAssetLayout;
-    public FermatTextView negotiationAssetQuantity;
+    //public FermatTextView negotiationAssetQuantity;
     public FermatTextView negotiationAssetUnitPrice;
 
     /**
@@ -66,8 +70,9 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         expDateText = (FermatTextView) itemView.findViewById(R.id.assetExpDateText);
 
         negotiationAssetLayout = itemView.findViewById(R.id.negotiationAssetLayout);
-        negotiationAssetQuantity = (FermatTextView) itemView.findViewById(R.id.negotiationAssetQuantity);
         negotiationAssetUnitPrice = (FermatTextView) itemView.findViewById(R.id.negotiationAssetUnitPrice);
+        //negotiationAssetQuantity = (FermatTextView) itemView.findViewById(R.id.negotiationAssetQuantity);
+
     }
 
     public void bind(final DigitalAsset digitalAsset) {
@@ -82,9 +87,13 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             normalAssetLayout.setVisibility(View.GONE);
             negotiationAssetLayout.setVisibility(View.VISIBLE);
 
-            long quantity = digitalAsset.getAvailableBalanceQuantity();
-            negotiationAssetQuantity.setText(availableText(quantity));
-            negotiationAssetUnitPrice.setText(String.format("%s BTC", DAPStandardFormats.BITCOIN_FORMAT.format(digitalAsset.getUserAssetNegotiation().getAmmountPerUnit())));
+
+            negotiationAssetUnitPrice.setText(String.format("%s BTC", DAPStandardFormats.BITCOIN_FORMAT.format(
+                    BitcoinConverter.convert(Double.valueOf(digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()), SATOSHI, BITCOIN))));
+            //negotiationAssetUnitPrice.setText(String.format("%s BTC", digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()));
+            //long quantity = digitalAsset.getAvailableBalanceQuantity();
+            //negotiationAssetQuantity.setText(availableText(quantity));
+
             /*assetBalanceText.setVisibility(View.GONE);
             availableText.setVisibility(View.GONE);
             pendingText.setVisibility(View.GONE);

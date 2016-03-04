@@ -46,6 +46,13 @@ final public class NegotiationWrapper {
     private Set<ClauseType> confirmedClauses;
     private long previousExpirationTime;
 
+    /**
+     * Constructor that wrap the {@link CustomerBrokerNegotiationInformation} object offering handy methods to operate with,
+     * and having the capacity to add possible missing clauses to the wrapped object
+     *
+     * @param negotiationInfo the {@link CustomerBrokerNegotiationInformation} object to wrap
+     * @param appSession      the session with the Module Manager and Error Manager in case of need to add missing clauses
+     */
     public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
         this.negotiationInfo = negotiationInfo;
         expirationTimeStatus = DRAFT;
@@ -92,18 +99,32 @@ final public class NegotiationWrapper {
         }
     }
 
+    /**
+     * @return all the negotiation's clauses
+     */
     public Map<ClauseType, ClauseInformation> getClauses() {
         return negotiationInfo.getClauses();
     }
 
+    /**
+     * @return the {@link CustomerBrokerNegotiationInformation} object with all the negotiation information
+     */
     public CustomerBrokerNegotiationInformation getNegotiationInfo() {
         return negotiationInfo;
     }
 
+    /**
+     * @return the expiration date in millis
+     */
     public long getExpirationDate() {
         return negotiationInfo.getNegotiationExpirationDate();
     }
 
+    /**
+     * Set the value of the expiration date and update its status in advance
+     *
+     * @param expirationTime the new expiration date in millis
+     */
     public void setExpirationTime(long expirationTime) {
         negotiationInfo.setNegotiationExpirationDate(expirationTime);
 
@@ -113,27 +134,53 @@ final public class NegotiationWrapper {
             expirationTimeStatus = CHANGED;
     }
 
+    /**
+     * @return the Expiration Date's Status
+     */
     public ClauseStatus getExpirationTimeStatus() {
         return expirationTimeStatus;
     }
 
-    public boolean isExpirationTimeConfirmButtonClicked() {
+    /**
+     * @return <code>true</code> if the expiration date has been confirmed, <code>false</code> otherwise
+     */
+    public boolean isExpirationTimeConfirmed() {
         return expirationTimeConfirmButtonClicked;
     }
 
-    public void setExpirationDatetimeConfirmButtonClicked() {
+    /**
+     * Set the expiration date as confirmed  and update its status in advance
+     */
+    public void confirmExpirationDatetime() {
         setExpirationTime(negotiationInfo.getNegotiationExpirationDate());
         this.expirationTimeConfirmButtonClicked = true;
     }
 
+    /**
+     * @return <code>true</code> if the negotiation have a note, <code>false</code> otherwise
+     */
     public boolean haveNote() {
         return negotiationInfo.getMemo() != null && !negotiationInfo.getMemo().isEmpty();
     }
 
+    /**
+     * Verify if a clause is confirmed
+     *
+     * @param clause the clause to verify
+     *
+     * @return <code>true</code> if the clause is confirmed, <code>false</code> otherwise
+     */
     public boolean isClauseConfirmed(ClauseInformation clause) {
         return confirmedClauses.contains(clause.getType());
     }
 
+    /**
+     * Verify if all the clauses except the obviations are all confirmed
+     *
+     * @param obviations 0 or more clauses to obviate in the verification
+     *
+     * @return <code>true</code> if all the clauses are confirmed, <code>false</code> otherwise
+     */
     public boolean isClausesConfirmed(ClauseType... obviations) {
         final Collection<ClauseInformation> clauseList = getClauses().values();
         final List<ClauseType> obviationList = Arrays.asList(obviations);
@@ -150,11 +197,22 @@ final public class NegotiationWrapper {
         return true;
     }
 
-    public void setClauseAsConfirmed(ClauseInformation clause) {
+    /**
+     * Confirm the clause value changes if any and update its status in advance
+     *
+     * @param clause the clause to confirm
+     */
+    public void confirmClauseChanges(ClauseInformation clause) {
         changeClauseValue(clause, clause.getValue());
         confirmedClauses.add(clause.getType());
     }
 
+    /**
+     * Add a clause to the clauses map of the {@link CustomerBrokerNegotiationInformation} object with the {@link ClauseStatus#DRAFT} status
+     *
+     * @param clauseType the clause type to add
+     * @param value      the value of the new clause
+     */
     public void addClause(final ClauseType clauseType, final String value) {
 
         ClauseInformation clauseInformation = new ClauseInformation() {
@@ -182,6 +240,12 @@ final public class NegotiationWrapper {
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
+    /**
+     * Change the value and the state of the given clause
+     *
+     * @param clause the clause the value is gonna change
+     * @param value  the new value (change the state to {@link ClauseStatus#CHANGED}) or the same (change the state to {@link ClauseStatus#ACCEPTED})
+     */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
 
         final ClauseType type = clause.getType();

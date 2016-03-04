@@ -24,5 +24,7 @@ public interface BitcoinWalletBalance {
 
     void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
+    void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
+
 
 }

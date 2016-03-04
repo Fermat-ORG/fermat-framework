@@ -81,7 +81,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_ONLINE_PAYMENT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -104,7 +104,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_ONLINE_PAYMENT) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_ONLINE_PAYMENT.getCode())) {
                 this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }

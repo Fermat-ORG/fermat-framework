@@ -46,10 +46,10 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
     }
 
     @Override
-    public EarningsPair registerPair(final Currency        earningCurrency,
-                                     final Currency        linkedCurrency ,
-                                     final WalletReference walletReference) throws CantAssociatePairException     ,
-                                                                                   PairAlreadyAssociatedException {
+    public EarningsPair registerPair(final Currency        earningCurrency       ,
+                                     final Currency        linkedCurrency        ,
+                                     final WalletReference earningWalletReference) throws CantAssociatePairException     ,
+                                                                                          PairAlreadyAssociatedException {
 
         try {
 
@@ -57,8 +57,9 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
 
             return dao.registerEarningsPair(
                     newId,
-                    earningCurrency,
-                    linkedCurrency,
+                    earningCurrency       ,
+                    linkedCurrency        ,
+                    earningWalletReference,
                     walletReference
             );
 
