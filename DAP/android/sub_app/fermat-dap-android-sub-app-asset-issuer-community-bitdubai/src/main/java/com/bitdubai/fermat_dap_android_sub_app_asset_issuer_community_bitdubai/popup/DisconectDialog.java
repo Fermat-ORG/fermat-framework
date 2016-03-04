@@ -111,7 +111,7 @@ public class DisconectDialog extends FermatDialog<AssetIssuerCommunitySubAppSess
 //                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
 //                    sendLocalBroadcast(broadcast);
 //
-            Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.disconnected, Toast.LENGTH_SHORT).show();
 //
 //                } else {
 //                    super.toastDefaultError();
