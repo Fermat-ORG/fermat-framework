@@ -132,6 +132,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         return homeScreen;
     }
 
+    @Override
+    public FermatStructure getAppByPublicKey(String appPublicKey) {
+        return getSubAppByPublicKey(appPublicKey);
+    }
+
 
     @Override
     public SubApp getSubAppByPublicKey(String subAppPublicKey) {

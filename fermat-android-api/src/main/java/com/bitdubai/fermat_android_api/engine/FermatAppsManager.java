@@ -22,4 +22,7 @@ public interface FermatAppsManager {
 
     FermatSession openApp(FermatApp fermatApp,AppConnections fermatAppConnection);
 
+    FermatApp getApp(String publicKey,FermatAppType fermatAppType) throws Exception;
+
+    FermatStructure getAppStructure(String appPublicKey, FermatAppType appType);
 }

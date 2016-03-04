@@ -19,10 +19,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
+import com.bitdubai.fermat_api.layer.dmp_module.DesktopManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -387,4 +395,40 @@ public class FermatSystemUtils {
         }
     }
 
+
+    //TODO: hay que crear este plugin en el futuro
+    public static AppManager getDesktopManager() {
+        return new DesktopManager() {
+
+            @Override
+            public SettingsManager<FermatSettings> getSettingsManager() {
+                return null;
+            }
+
+            @Override
+            public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+                return null;
+            }
+
+            @Override
+            public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+            }
+
+            @Override
+            public void setAppPublicKey(String publicKey) {
+
+            }
+
+            @Override
+            public int[] getMenuNotifications() {
+                return new int[0];
+            }
+
+            @Override
+            public FermatApp getApp(String publicKey) {
+                return null;
+            }
+        };
+    }
 }
