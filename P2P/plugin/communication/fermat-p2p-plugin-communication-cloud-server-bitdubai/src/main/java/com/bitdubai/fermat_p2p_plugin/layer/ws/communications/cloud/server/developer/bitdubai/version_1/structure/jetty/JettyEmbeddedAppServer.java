@@ -196,9 +196,9 @@ public class JettyEmbeddedAppServer {
     public void start() throws Exception {
 
 
-        Inet4Address address;
+       /* Inet4Address address;
         try {
-            address = getIPv4Address("wlan0");
+            address = getIPv4Address("eth0");
             // TfsClientSingleton.init(address, tfsCache);
         } catch (UnknownHostException | SocketException e) {
             throw new Error(e);
@@ -214,7 +214,7 @@ public class JettyEmbeddedAppServer {
                 new PortMappingListener(desiredMapping)
         );
 
-        upnpService.getControlPoint().search();
+        upnpService.getControlPoint().search();*/
 
         this.initialize();
         LOG.info("Starting the internal server");
