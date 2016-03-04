@@ -22,13 +22,13 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -40,7 +40,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
@@ -50,6 +49,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -131,7 +132,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     PresentationDialog presentationDialog;
     Typeface tf;
     private Toolbar toolbar;
-
+    private Bitmap contactIcon;
+    private BitmapDrawable contactIconCircular;
+    private int size;
+    private String profileid;
+    TitleBar title;
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
@@ -187,35 +192,51 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
-            try {
-                chatManager.createSelfIdentities();
-            }catch(CantCreateSelfIdentityException e)
-            {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            //Obtain chatSettings  or create new chat settings if first time opening chat platform
-            chatSettings = null;
-            try {
-                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                chatSettings = null;
-            }
-
-            if (chatSettings == null) {
-                chatSettings = new ChatPreferenceSettings();
-                chatSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
-
-            //      filldatabase();
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+        try {
+            chatManager.createSelfIdentities();
+        }catch(CantCreateSelfIdentityException e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+        //Obtain chatSettings  or create new chat settings if first time opening chat platform
+        chatSettings = null;
+        try {
+            chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            chatSettings = null;
+        }
+
+        if (chatSettings == null) {
+            chatSettings = new ChatPreferenceSettings();
+            chatSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+            } catch (Exception e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
+        try {
+            chatManager.createSelfIdentities();
+            List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
+            size = con.size();
+            if((chatSettings.getLocalActorType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
+                ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(con.get(0).getPublicKey());
+                chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
+            }
+        }catch(CantCreateSelfIdentityException e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }catch(CantGetChatUserIdentityException e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+
+        //      filldatabase();
+
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
@@ -253,17 +274,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         text = (TextView) layout.findViewById(R.id.text);
-        try {
-            if (chatSettings.getLocalPublicKey() != null) {
-                ChatUserIdentity localUser = chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
-                toolbar = getToolbar();
-                toolbar.setSubtitle(localUser.getAlias());
-            }
-        }catch (CantGetChatUserIdentityException e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
@@ -282,7 +293,22 @@ public class ChatListFragment extends AbstractFermatFragment{
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
-
+        try {
+            toolbar = getToolbar();
+            if (chatSettings.getLocalPublicKey() != null) {
+                ChatUserIdentity localUser = chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
+                //toolbar = getToolbar();
+                getActivity().getActionBar().setTitle("");
+                toolbar.setTitle(localUser.getAlias() + " - Fermat Chat");
+                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
+                toolbar.setLogo(contactIconCircular);
+                //getActivity().getActionBar().setLogo(contactIconCircular);
+            }
+        }catch (CantGetChatUserIdentityException e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
 //        if (chatSettings.getLocalActorType() == null || chatSettings.getLocalActorType() == null)
 //        {
 //            try {
