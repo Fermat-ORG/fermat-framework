@@ -938,7 +938,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     this.chatMiddlewareContactFactory.getSelfIdentities();
             selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
 
-            List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
+            //List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
 
             Iterator it = selfIdentitiesMap.keySet().iterator();
             while (it.hasNext()){
@@ -986,8 +986,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             e.printStackTrace();
         } catch (CantGetNetworkServicePublicKeyException e) {
             e.printStackTrace();
-        } catch (CantGetContactException e) {
-            e.printStackTrace();
+//        } catch (CantGetContactException e) {
+//            e.printStackTrace();
         } catch (CantSaveChatUserIdentityException e) {
             e.printStackTrace();
         }
