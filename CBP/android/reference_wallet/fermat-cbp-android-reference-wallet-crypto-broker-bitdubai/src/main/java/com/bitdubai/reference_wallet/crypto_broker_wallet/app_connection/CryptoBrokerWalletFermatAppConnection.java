@@ -22,6 +22,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.Crypto
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
 
 
@@ -78,6 +79,8 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
         switch (code){
             case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
+            case CBW_NEW_NEGOTIATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("New Negotiation","You have a new negotiation! Please check your wallet.","");
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
             default:
