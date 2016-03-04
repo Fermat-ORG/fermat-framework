@@ -99,7 +99,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
             models.add(new RecentApp("pk",color));
         }
 
-        RecentsAdapter recentsAdapter = new RecentsAdapter();
+        RecentsAdapter recentsAdapter = new RecentsAdapter(this,models);
 
         mRecentsView.setTaskStack(recentsAdapter);
 
