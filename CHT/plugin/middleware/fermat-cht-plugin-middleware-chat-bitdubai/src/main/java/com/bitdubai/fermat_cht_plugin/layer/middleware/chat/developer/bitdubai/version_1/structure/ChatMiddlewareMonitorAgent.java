@@ -820,18 +820,21 @@ public class ChatMiddlewareMonitorAgent implements
         private Contact createUnregisteredContact(
                 ChatMetadata chatMetadata) throws
                 CantSaveContactException,
-                DatabaseOperationException {
+                DatabaseOperationException, CantGetContactException {
             Date date=new Date();
+
+            //Se trae de la tabla Contact Connection para forzarlo a guardar el contacto no registrado
+            ContactConnection contactConnection;
+            contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
             Contact contact=new ContactImpl(
                     UUID.randomUUID(),
-                    "Not registered contact",
-                    "Not registered contact",
-                    //chatMetadata.getLocalActorType(),
-                    PlatformComponentType.NETWORK_SERVICE,
+                    contactConnection.getRemoteName(),
+                    contactConnection.getAlias(),
+                    contactConnection.getRemoteActorType(),
                     chatMetadata.getLocalActorPublicKey(),
                     date.getTime(),
-                    new byte[0],
-                    ContactStatus.AVAILABLE
+                    contactConnection.getProfileImage(),
+                    contactConnection.getContactStatus()
             );
             chatMiddlewareDatabaseDao.saveContact(contact);
             return contact;
