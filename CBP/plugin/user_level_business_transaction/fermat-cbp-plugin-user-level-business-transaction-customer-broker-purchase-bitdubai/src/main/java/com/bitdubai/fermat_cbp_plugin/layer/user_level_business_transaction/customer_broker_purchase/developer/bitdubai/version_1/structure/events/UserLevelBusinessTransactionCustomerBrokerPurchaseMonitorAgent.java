@@ -257,9 +257,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
 
-                            userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
+                            // userLevelBusinessTransactionCustomerBrokerPurchaseManager.notificationReviewNegotiation("crypto_broker_wallet", "Review negotiation", "Review negotiation");
                             //TODO
-//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            // notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }
                 }

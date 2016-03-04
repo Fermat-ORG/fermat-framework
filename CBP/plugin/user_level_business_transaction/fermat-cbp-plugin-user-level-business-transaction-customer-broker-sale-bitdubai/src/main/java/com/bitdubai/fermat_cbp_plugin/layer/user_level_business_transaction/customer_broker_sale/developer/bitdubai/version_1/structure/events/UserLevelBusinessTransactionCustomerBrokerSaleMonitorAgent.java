@@ -306,9 +306,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
-                            // TODO
-//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            //userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
+                            // TODO agregar lo de las nuevas notificaciones con el Broadcaster
+                            // notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                         }
                     }
                 }
