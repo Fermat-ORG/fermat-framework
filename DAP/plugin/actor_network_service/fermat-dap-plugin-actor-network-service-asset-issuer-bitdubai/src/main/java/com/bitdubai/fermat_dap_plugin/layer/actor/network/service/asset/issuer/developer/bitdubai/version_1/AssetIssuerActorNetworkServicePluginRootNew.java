@@ -907,11 +907,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                assetIssuerNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -985,11 +985,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
 //                                messageToSend.toJson());
-                        getProfileSenderToRequestConnection(
-                                messageToSend.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        messageToSend.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         messageToSend.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1042,11 +1042,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                actorNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1121,11 +1121,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                actorNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1177,11 +1177,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
 //                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
 //                                assetIssuerNetworkServiceRecord.toJson());
-                        getProfileSenderToRequestConnection(
-                                assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                NetworkServiceType.UNDEFINED,
-                                platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                        ),
+                                getProfileSenderToRequestConnection(
+                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
+                                ),
                                 getProfileDestinationToRequestConnection(
                                         assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1334,11 +1334,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                            getProfileSenderToRequestConnection(actorRedeemPointSender.getActorPublicKey()),
 //                            getProfileDestinationToRequestConnection(actorIssuerDestination.getActorPublicKey()),
 //                            messageContentIntoJson);
-                    getProfileSenderToRequestConnection(
-                            actorRedeemPointSender.getActorPublicKey(),
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actorRedeemPointSender.getType())
-                    ),
+                            getProfileSenderToRequestConnection(
+                                    actorRedeemPointSender.getActorPublicKey(),
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(actorRedeemPointSender.getType())
+                            ),
                             getProfileDestinationToRequestConnection(
                                     actorIssuerDestination.getActorPublicKey(),
                                     NetworkServiceType.UNDEFINED,
@@ -1478,11 +1478,11 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 //                            getProfileSenderToRequestConnection(actorAssetUserSender.getActorPublicKey()),
 //                            getProfileDestinationToRequestConnection(actorAssetIssuerReceiver.getActorPublicKey()),
 //                            messageContentIntoJson);
-                    getProfileSenderToRequestConnection(
-                            actorAssetUserSender.getActorPublicKey(),
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actorAssetUserSender.getType())
-                    ),
+                            getProfileSenderToRequestConnection(
+                                    actorAssetUserSender.getActorPublicKey(),
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(actorAssetUserSender.getType())
+                            ),
                             getProfileDestinationToRequestConnection(
                                     actorAssetIssuerReceiver.getActorPublicKey(),
                                     NetworkServiceType.UNDEFINED,
