@@ -106,16 +106,16 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
     @Override
     public void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                 FiatIndex fiatIndex) throws CantOpenContractException{
+                                 float referencePrice) throws CantOpenContractException{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
                 errorManager);
         try {
-            Object[] arguments={customerBrokerSaleNegotiation, fiatIndex};
+            Object[] arguments={customerBrokerSaleNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
-            openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
+            openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
@@ -144,16 +144,16 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
     @Override
     public void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                     FiatIndex fiatIndex) throws CantOpenContractException{
+                                     float referencePrice) throws CantOpenContractException{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
                 errorManager);
         try {
-            Object[] arguments={customerBrokerPurchaseNegotiation, fiatIndex};
+            Object[] arguments={customerBrokerPurchaseNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
-            openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
+            openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
