@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
+
 /**
  * Created by mati on 2016.03.01..
  */
@@ -81,7 +83,7 @@ public class NotificationService extends Service {
         if (fermatStructure != null) {
 //            notificationIdCount++;
 //            lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
