@@ -431,8 +431,8 @@ public class ChatMiddlewareMonitorAgent implements
             try{
                 ObjectChecker.checkArgument(contact, "The contact connection is null");
                 String actorPublicKey=contact.getRemoteActorPublicKey();
-                Contact contactFromDatabase=
-                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey( //TODO:Modificar por un metodo getContactConnectionByLocalPublicKey
+                ContactConnection contactFromDatabase=
+                        chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey( //TODO:Modificar por un metodo getContactConnectionByLocalPublicKey
                                 actorPublicKey);
                 if(contactFromDatabase!=null){
                     //This contact already exists, so, I don't gonna save in database.
@@ -445,11 +445,6 @@ public class ChatMiddlewareMonitorAgent implements
                         e,
                         "Saving the remote contact connection",
                         "The contact object is null");
-            } catch (CantGetContactException e) {
-                throw new CantSaveContactConnectionException(
-                        e,
-                        "Saving the remote contact connection",
-                        "Unexpected error in database");
             } catch (CantSaveContactException e) {
                 throw new CantSaveContactConnectionException(
                         e,

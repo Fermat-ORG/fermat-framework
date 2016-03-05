@@ -88,7 +88,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             //holder.txtMessage.setTypeface(tf2, Typeface.NORMAL);
             holder.txtInfo.setText(data.getDate());
             //holder.txtInfo.setTypeface(tf, Typeface.NORMAL);
-            if (data.getStatus() != null && myMsg) {
+            if (data.getStatus() != null && myMsg==true) {
                 if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
                 else if (data.getStatus() == MessageStatus.DELIVERED.toString() || data.getStatus() == MessageStatus.RECEIVE.toString())

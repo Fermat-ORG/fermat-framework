@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ConnectionListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -35,7 +34,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
@@ -43,7 +41,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -195,8 +192,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                         }
                     }else {
-                        final int pos = position;
-                        final ContactConnection contactConn = chatManager.getContactConnection(contactid.get(pos));
+                        final int pos=position;
+                        final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
+                       
                         if (contactConn.getRemoteName()!=null) {
                             AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
                             builder1.setMessage("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
