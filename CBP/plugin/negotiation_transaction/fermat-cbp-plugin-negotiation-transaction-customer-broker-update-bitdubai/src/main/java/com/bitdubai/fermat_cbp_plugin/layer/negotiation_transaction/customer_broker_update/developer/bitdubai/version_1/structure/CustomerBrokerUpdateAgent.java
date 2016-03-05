@@ -447,6 +447,8 @@ public class CustomerBrokerUpdateAgent implements
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+
+                                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
                                         } else {
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
@@ -470,6 +472,8 @@ public class CustomerBrokerUpdateAgent implements
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
+
+                                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION);
                                         } else {
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
