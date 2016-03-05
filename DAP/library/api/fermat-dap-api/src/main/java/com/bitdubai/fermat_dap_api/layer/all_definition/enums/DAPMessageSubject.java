@@ -16,6 +16,7 @@ public enum DAPMessageSubject implements FermatEnum {
      * to that message.
      */
     DEFAULT("DEFAULT"),
+    ASSET_APPROPRIATED("ASAP"),
     ASSET_DISTRIBUTION("ASDI"),
     ASSET_TRANSFER("ASTR"),
     ASSET_MOVEMENT("ASMO"),
@@ -24,6 +25,7 @@ public enum DAPMessageSubject implements FermatEnum {
     NEGOTIATION_ANSWER("ASSE"),
     NEGOTIATION_CANCELLED("NECA"),
     NEW_NEGOTIATION_STARTED("NNS"),
+    SIGNATURE_REJECTED("SIRE"),
     USER_REDEMPTION("USRE"),
     REDEEM_POINT_REDEMPTION("RPR"),
     ASSET_RECEPTION("ASRE");
