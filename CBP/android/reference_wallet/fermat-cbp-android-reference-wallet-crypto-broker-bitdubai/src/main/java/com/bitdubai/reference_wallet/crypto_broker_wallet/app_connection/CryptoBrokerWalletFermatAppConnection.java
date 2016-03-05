@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -13,10 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.notifications.CryptoBrokerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 /**
@@ -65,5 +68,15 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return new CryptoBrokerWalletFooterPainter(getContext(), getFullyLoadedSession());
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        switch (code){
+            case CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","",0);
+            default:
+                return super.getNotificationPainter(code);
+        }
     }
 }
