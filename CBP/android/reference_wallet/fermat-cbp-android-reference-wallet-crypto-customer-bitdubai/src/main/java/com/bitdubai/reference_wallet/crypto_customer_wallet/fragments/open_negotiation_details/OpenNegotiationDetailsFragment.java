@@ -219,7 +219,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     @Override
-    public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
+    public void onClauseClicked(final Button triggerView, final ClauseInformation clause, final int position) {
         final ClauseType type = clause.getType();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
