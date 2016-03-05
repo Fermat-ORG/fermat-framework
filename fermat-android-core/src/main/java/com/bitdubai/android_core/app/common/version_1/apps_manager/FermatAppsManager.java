@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.apps_manager;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
@@ -31,16 +32,18 @@ import java.util.Map;
  */
 //TODO: esta clase es la cual se encargará de manejar la creación de una aplicación fermat, manejo de sesiones, ubicacion en la stack (para el back button o para ver la lista de apps activas),
     // obtener conexiones, etc
-
+//TODO: falta agregar el tema de cargar el AppsConfig cuando se incia la app por primera vez
 public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine.FermatAppsManager {
 
     private Map<String,RecentApp> recentsAppsStack;
     private FermatSessionManager fermatSessionManager;
+    private HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
 
 
     public FermatAppsManager() {
         this.recentsAppsStack = new HashMap<>();
         this.fermatSessionManager = new FermatSessionManager();
+        appsInstalledInDevice = new AppsConfiguration(this).readAppsCoreInstalled();
     }
 
     public FermatStructure lastAppStructure() {
@@ -77,14 +80,22 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
 
     @Override
     public FermatSession getAppsSession(String appPublicKey) {
-        if(fermatSessionManager.isSessionOpen(appPublicKey)){
-            return fermatSessionManager.getAppsSession(appPublicKey);
-        }else{
-            //todo: tengo que armar un archivo que contenga las aplicaciones que estan instaladas y su tipo para poder ir a buscarlas a donde corresponda
-            //openApp();
-            return null;
+        try {
+            if (fermatSessionManager.isSessionOpen(appPublicKey)) {
+                return fermatSessionManager.getAppsSession(appPublicKey);
+            } else {
+                return openApp(
+                        selectAppManager(
+                                appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey),
+                                FermatAppConnectionManager.getFermatAppConnection(
+                                        appPublicKey,ApplicationSession.getInstance().getApplicationContext()
+                                )
+                );
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
+        return null;
     }
 
     @Override
@@ -155,6 +166,7 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
      */
     public RuntimeManager selectRuntimeManager(FermatAppType fermatAppType){
         RuntimeManager runtimeManager = null;
+        //Este swith debe ser cambiado por una petición al core pasandole el FermatAppType
         switch (fermatAppType) {
             case WALLET:
                 runtimeManager = FermatSystemUtils.getWalletRuntimeManager();
@@ -168,11 +180,6 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         }
         return runtimeManager;
     }
-
-
-
-
-
 
 
     /**
