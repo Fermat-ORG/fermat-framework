@@ -287,7 +287,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 return true;
             }
         });
-
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -330,7 +330,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 }
             }, 2500);
             }
-        });
+        });*/
         // Inflate the list fragment layout
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }

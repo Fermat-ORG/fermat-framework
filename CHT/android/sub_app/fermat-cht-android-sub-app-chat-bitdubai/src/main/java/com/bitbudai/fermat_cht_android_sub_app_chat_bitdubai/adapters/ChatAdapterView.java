@@ -431,7 +431,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
             }
         });
-
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -448,7 +448,7 @@ public class ChatAdapterView extends LinearLayout {
                     }
                 }, 2500);
             }
-        });
+        });*/
     }
 
     private void loadDummyHistory() {

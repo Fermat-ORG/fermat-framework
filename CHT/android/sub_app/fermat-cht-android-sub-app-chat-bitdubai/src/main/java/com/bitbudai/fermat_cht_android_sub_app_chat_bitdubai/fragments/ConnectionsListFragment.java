@@ -265,7 +265,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             }
         });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        /*mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
@@ -304,7 +304,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     }
                 }, 2500);
             }
-        });
+        });*/
         // Inflate the list fragment layout
         return layout;
     }
