@@ -450,24 +450,24 @@ public class CustomerBrokerUpdateAgent implements
 
                                         );
 
-                                        /*
-                                        if(!purchaseNegotiation.getCancelReason().isEmpty() && purchaseNegotiation.getCancelReason() != null){
+                                        System.out.println("CancelReason: "+purchaseNegotiation.getCancelReason());
+
+                                        if(!purchaseNegotiation.getCancelReason().isEmpty() && !purchaseNegotiation.getCancelReason().toString().equalsIgnoreCase("null")){
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
                                             //broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
                                         } else {
-                                        */
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
                                             customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
                                             final String customerWalletPublicKey = "crypto_customer_wallet"; // TODO: Esto es provisorio. Hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                                             broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
-                                            broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
-                                       // }
-                                        break;
+                                        }
+                                        broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                    break;
 
                                     case SALE:
                                         System.out.print("\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
@@ -478,24 +478,25 @@ public class CustomerBrokerUpdateAgent implements
                                                 customerBrokerUpdateNegotiationTransactionDatabaseDao
 
                                         );
-                                        /*
-                                        if(!saleNegotiation.getCancelReason().isEmpty() && saleNegotiation.getCancelReason() != null){
+
+                                        System.out.println("CancelReason: "+saleNegotiation.getCancelReason());
+
+                                        if(!saleNegotiation.getCancelReason().isEmpty() && !saleNegotiation.getCancelReason().toString().equalsIgnoreCase("null")){
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");
                                             //CANCEL NEGOTIATION
                                             customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
 
                                             //broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION);
                                         } else {
-                                        */
                                             System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION  ****\n");
                                             //UPDATE NEGOTIATION
                                             customerBrokerUpdateSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
 
                                             final String brokerWalletPublicKey = "crypto_broker_wallet"; // TODO: Esto es provisorio. Hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                                             broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_WAITING_FOR_BROKER_NOTIFICATION);
-                                            broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
-                                        //}
-                                        break;
+                                        }
+                                        broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                    break;
                                 }
 //                                }
 
@@ -506,7 +507,7 @@ public class CustomerBrokerUpdateAgent implements
                                 //CONFIRM TRANSMISSION
                                 negotiationTransmissionManager.confirmReception(transmissionId);
 
-                            }
+                                }
                         }
                     }
                 }
