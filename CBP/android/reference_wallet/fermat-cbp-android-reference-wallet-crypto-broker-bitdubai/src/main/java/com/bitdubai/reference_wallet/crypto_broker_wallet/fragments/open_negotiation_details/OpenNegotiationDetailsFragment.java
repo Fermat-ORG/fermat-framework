@@ -217,14 +217,20 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             case CUSTOMER_PAYMENT_METHOD:
                 paymentMethodEventAction(clause, clauses);
                 break;
-            case BROKER_PAYMENT_METHOD:
-                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
-                break;
             case BROKER_BANK_ACCOUNT:
                 brokerBankAccountEventAction(clause, clauses);
                 break;
             case BROKER_PLACE_TO_DELIVER:
                 brokerLocationsEventAction(clause);
+                break;
+            case BROKER_PAYMENT_METHOD:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                break;
+            case CUSTOMER_BANK_ACCOUNT:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                break;
+            case CUSTOMER_PLACE_TO_DELIVER:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
                 break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 datetimeToPayEventAction(triggerView, clause);
