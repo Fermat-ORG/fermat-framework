@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -35,13 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-
-//import android.widget.LinearLayout;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-//import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
  * Chat Fragment
@@ -58,9 +52,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
+    private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     private Toolbar toolbar;
-
 
     ArrayList<String> historialmensaje = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -80,7 +74,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private RecyclerView messagesContainer;
     public Button sendBtn;
     private ChatAdapterView adapter;
-    public ArrayList<ChatMessage> chatHistory= new ArrayList<ChatMessage>();
+    public ArrayList<ChatMessage> chatHistory= new ArrayList<>();
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
 
@@ -92,6 +86,25 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+
+            //Obtain chatSettings  or create new chat settings if first time opening chat platform
+            chatSettings = null;
+            try {
+                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatSettings = null;
+            }
+
+            if (chatSettings == null) {
+                chatSettings = new ChatPreferenceSettings();
+                chatSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
+
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
@@ -148,7 +161,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-
     //
 //    void findMessage(){
 //        String message;
@@ -189,6 +201,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addChatSession(chatSession)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
+                .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
                 .build();
         return adapter;
