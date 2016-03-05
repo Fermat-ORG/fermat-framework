@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
@@ -17,18 +18,19 @@ public class AssetMovementContentMessage implements DAPContentMessage {
     private DAPActor newUser;
     private String assetPublicKey;
     private BlockchainNetworkType networkType;
+    private AssetMovementType movementType;
 
     //CONSTRUCTORS
     public AssetMovementContentMessage() {
     }
 
-    public AssetMovementContentMessage(DAPActor systemUser, DAPActor newUser, String assetPublicKey, BlockchainNetworkType networkType) {
+    public AssetMovementContentMessage(DAPActor systemUser, DAPActor newUser, String assetPublicKey, BlockchainNetworkType networkType, AssetMovementType movementType) {
         this.systemUser = systemUser;
         this.newUser = newUser;
         this.assetPublicKey = assetPublicKey;
         this.networkType = networkType;
+        this.movementType = movementType;
     }
-
     //PUBLIC METHODS
 
     /**
@@ -77,6 +79,14 @@ public class AssetMovementContentMessage implements DAPContentMessage {
         this.assetPublicKey = assetPublicKey;
     }
 
+    public AssetMovementType getMovementType() {
+        return movementType;
+    }
+
+    public void setMovementType(AssetMovementType movementType) {
+        this.movementType = movementType;
+    }
+
     /**
      * Every content message should have a unique type associate to it.
      *
@@ -84,7 +94,7 @@ public class AssetMovementContentMessage implements DAPContentMessage {
      */
     @Override
     public DAPMessageType messageType() {
-        return DAPMessageType.ASSET_TRANSFER;
+        return DAPMessageType.ASSET_MOVEMENT;
     }
     //INNER CLASSES
 }

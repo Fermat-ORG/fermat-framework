@@ -206,7 +206,6 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
                     logManager,
                     digitalAssetTransferVault,
                     assetTransmissionNetworkServiceManager,
-                    assetIssuerActorNetworkServiceManager,
                     actorAssetUserManager,
                     assetIssuerWalletManager);
         }
