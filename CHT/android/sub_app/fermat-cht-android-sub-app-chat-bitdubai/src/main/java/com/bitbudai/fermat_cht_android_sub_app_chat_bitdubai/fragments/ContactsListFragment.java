@@ -96,7 +96,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
-    private Toolbar toolbar;
+    //private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
@@ -125,8 +125,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
-            toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+            //toolbar = getToolbar();
+            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
             adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                     moduleManager, errorManager, chatSession, appSession, this);
         }catch (Exception e)
@@ -248,12 +248,12 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+//            }
+//        });
 
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                 moduleManager, errorManager, chatSession, appSession, this);
