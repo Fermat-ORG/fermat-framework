@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.util;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
+import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
@@ -45,6 +46,16 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  * Created by mati on 2016.01.12..
  */
 public class FermatSystemUtils {
+
+    /**
+     * Get the application manager
+     *
+     * @return
+     */
+
+    public static FermatAppsManager getFermatAppManager(){
+        return ApplicationSession.getInstance().getFermatAppsManager();
+    }
 
 
     /**
