@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -68,7 +69,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
     private ContactListAdapter adapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
+    //private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
 //    private String mSearchTerm; // Stores the current search query term
 //
 //    //private OnContactsInteractionListener mOnContactSelectedListener;
@@ -79,22 +80,23 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 // public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
 //    private ListView contactsContainer;
-    private Contact contactl;//= new Contact();
+    //private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
 
     // Whether or not this fragment is showing in a two-pane layout
-    private boolean mIsTwoPaneLayout;
+    //private boolean mIsTwoPaneLayout;
 
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-    private boolean mIsSearchResultView = false;
+    //private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
@@ -123,6 +125,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
             adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                     moduleManager, errorManager, chatSession, appSession, this);
         }catch (Exception e)
@@ -243,6 +247,14 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
+
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                 moduleManager, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
