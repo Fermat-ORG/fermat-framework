@@ -77,7 +77,14 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
 
     @Override
     public FermatSession getAppsSession(String appPublicKey) {
-        return fermatSessionManager.getAppsSession(appPublicKey);
+        if(fermatSessionManager.isSessionOpen(appPublicKey)){
+            return fermatSessionManager.getAppsSession(appPublicKey);
+        }else{
+            //todo: tengo que armar un archivo que contenga las aplicaciones que estan instaladas y su tipo para poder ir a buscarlas a donde corresponda
+            //openApp();
+            return null;
+        }
+
     }
 
     @Override
