@@ -8,6 +8,6 @@ public class TokenlyConfiguration {
     /**
      * Represents the basic URL call for Tokenly swapbot api
      */
-    public static final String URL_TOKENLY_SWAPBOT_API = "http://swapbot.tokenly.com/api/v1/public";
+    public static final String URL_TOKENLY_SWAPBOT_API = "http://swapbot.tokenly.com/api/v1/public/";
 
 }

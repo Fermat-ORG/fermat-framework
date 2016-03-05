@@ -297,10 +297,13 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    //WRD
+    API_TOKENLY                         ("TOKAP")
 
     // End  new Plugins
-
+    ;
     private final String code;
 
     Plugins(final String code) {
@@ -435,6 +438,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
             case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
+            case "TOKAP":   return API_TOKENLY                      ;
 
             default:
                 throw new InvalidParameterException(

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/03/16.
  */
-public interface TokenlyManager extends FermatManager {
+public interface TokenlyApiManager extends FermatManager {
 
     /**
      * This method returns String that contains the botUrl by botId

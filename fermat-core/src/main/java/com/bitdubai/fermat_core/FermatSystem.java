@@ -39,6 +39,7 @@ import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
+import com.bitdubai.fermat_wrd_core.WRDPlatform;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -138,6 +139,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+            fermatSystemContext.registerPlatform(new WRDPlatform());
 
 
         } catch(CantRegisterPlatformException e) {
