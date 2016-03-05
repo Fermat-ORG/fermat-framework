@@ -154,24 +154,32 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
 
         private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException, RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_NEGOTIATION_STARTED)) {
+                System.out.println("New Negotiation Started...");
                 AssetNegotiationContentMessage contentMessage = (AssetNegotiationContentMessage) message.getMessageContent();
                 dao.saveAssetNegotiation(contentMessage.getAssetNegotiation(), message.getActorSender().getActorPublicKey());
                 assetTransmission.confirmReception(message);
             }
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_SELL_STARTED)) {
+                System.out.println("New Sell Started...");
                 AssetSellContentMessage contentMessage = (AssetSellContentMessage) message.getMessageContent();
                 dao.saveNewBuying(contentMessage, message.getActorSender().getActorPublicKey(), contentMessage.getCryptoVaultAddress());
                 assetTransmission.confirmReception(message);
             }
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEGOTIATION_CANCELLED)) {
+                System.out.println("Negotiation Cancelled...");
                 AssetNegotiationContentMessage contentMessage = (AssetNegotiationContentMessage) message.getMessageContent();
                 dao.updateNegotiationStatus(contentMessage.getAssetNegotiation().getNegotiationId(), contentMessage.getSellStatus());
                 assetTransmission.confirmReception(message);
+            }
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.SIGNATURE_REJECTED)) {
+                System.out.println("Signature Rejected...");
+                //TODO
             }
         }
 
         private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
             for (NegotiationRecord record : dao.getNegotiationAnswer()) {
+                System.out.println("New negotiation answer: " + record.getNegotiationStatus().name());
                 assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
                 dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), AssetSellStatus.NO_ACTION_REQUIRED);
             }
@@ -181,6 +189,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             for (BuyingRecord buyingRecord : dao.getActionRequiredBuying()) {
                 switch (buyingRecord.getStatus()) {
                     case WAITING_FIRST_SIGNATURE: {
+                        System.out.println("Adding inputs...");
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         //TODO USE CCP OUTGOING DRAFT PLUGIN
                         DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
@@ -189,12 +198,14 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                         break;
                     }
                     case INPUTS_ADDED: {
+                        System.out.println("Signing transaction...");
                         DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getBuyerTransaction());
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
                         break;
                     }
                     case PARTIALLY_SIGNED: {
+                        System.out.println("Sending message...");
                         DAPMessage message = transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED);
                         assetTransmission.sendMessage(message);
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.WAITING_COMPLETE_SIGNATURE);
