@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
@@ -135,6 +136,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
     @Override
     public FermatStructure getAppByPublicKey(String appPublicKey) {
         return getSubAppByPublicKey(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return listSubApp.keySet();
     }
 
 

@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -288,6 +289,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @Override
     public FermatStructure getAppByPublicKey(String appPublicKey) {
         return getNavigationStructure(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return lstWalletNavigationStructureOpen.keySet();
     }
 
     /**

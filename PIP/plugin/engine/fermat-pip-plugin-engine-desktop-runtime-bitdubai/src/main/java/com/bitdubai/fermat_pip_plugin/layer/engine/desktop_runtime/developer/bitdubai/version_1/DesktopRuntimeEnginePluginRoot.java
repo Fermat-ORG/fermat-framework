@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -404,5 +405,10 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     @Override
     public FermatStructure getAppByPublicKey(String appPublicKey) {
         return getDesktopObject(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return lstDesktops.keySet();
     }
 }
