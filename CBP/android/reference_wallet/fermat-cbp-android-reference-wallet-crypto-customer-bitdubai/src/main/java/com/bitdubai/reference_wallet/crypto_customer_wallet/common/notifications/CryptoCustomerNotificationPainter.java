@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.notifications;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.common.notifications;
 
 import android.widget.RemoteViews;
 
@@ -21,6 +21,10 @@ public class CryptoCustomerNotificationPainter implements NotificationPainter {
         this.image = image;
         this.textBody = textBody;
         this.icon = icon;
+    }
+
+    public CryptoCustomerNotificationPainter(String title, String textBody, String image) {
+       this(title, textBody, image, 0);
     }
 
     @Override
