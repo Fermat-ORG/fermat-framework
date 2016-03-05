@@ -303,9 +303,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void connectionSend() {
-        connectionRequestSend.setVisibility(View.VISIBLE);
+        //connectionRequestSend.setVisibility(View.VISIBLE);
         connect.setVisibility(View.GONE);
-        disconnect.setVisibility(View.GONE);
+        disconnect.setVisibility(View.VISIBLE);
         connectionRequestRejected.setVisibility(View.GONE);
     }
 

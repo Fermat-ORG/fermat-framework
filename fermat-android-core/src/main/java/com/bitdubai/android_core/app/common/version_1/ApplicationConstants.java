@@ -12,4 +12,5 @@ public class ApplicationConstants {
 
     public static final String SETTINGS_CORE = "settings_core";
     public static final String SETTINGS_FERMAT_NETWORK = "settings fermat network";
+    public static final String ACTIVITY_CODE_TO_OPEN = "activity_code_to_open";
 }

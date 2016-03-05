@@ -84,6 +84,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -485,6 +486,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.PENDING_MERCHANDISE);
+                            Date date=new Date();
+                            brokerAckOfflinePaymentBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raiseAckConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -509,6 +513,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PENDING_MERCHANDISE);
+                                Date date=new Date();
+                                brokerAckOfflinePaymentBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raiseAckConfirmationEvent(contractHash);
                             }
                         }

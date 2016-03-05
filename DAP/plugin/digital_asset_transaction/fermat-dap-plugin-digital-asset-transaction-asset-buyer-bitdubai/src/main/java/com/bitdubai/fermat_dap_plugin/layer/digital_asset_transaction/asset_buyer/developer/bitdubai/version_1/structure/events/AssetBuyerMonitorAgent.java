@@ -30,6 +30,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
@@ -151,7 +152,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             checkPendingEvents();
         }
 
-        private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException {
+        private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException, RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_NEGOTIATION_STARTED)) {
                 AssetNegotiationContentMessage contentMessage = (AssetNegotiationContentMessage) message.getMessageContent();
                 dao.saveAssetNegotiation(contentMessage.getAssetNegotiation(), message.getActorSender().getActorPublicKey());
@@ -160,6 +161,11 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEW_SELL_STARTED)) {
                 AssetSellContentMessage contentMessage = (AssetSellContentMessage) message.getMessageContent();
                 dao.saveNewBuying(contentMessage, message.getActorSender().getActorPublicKey(), contentMessage.getCryptoVaultAddress());
+                assetTransmission.confirmReception(message);
+            }
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEGOTIATION_CANCELLED)) {
+                AssetNegotiationContentMessage contentMessage = (AssetNegotiationContentMessage) message.getMessageContent();
+                dao.updateNegotiationStatus(contentMessage.getAssetNegotiation().getNegotiationId(), contentMessage.getSellStatus());
                 assetTransmission.confirmReception(message);
             }
         }
@@ -177,12 +183,21 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         //TODO USE CCP OUTGOING DRAFT PLUGIN
-                        // todo creo que deberias manejar un estado más por si hay un error, no volver a llamar al addInputsToDraftTransaction una vez que ya pasó esa etapa.
                         DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
-                        buyerTx = cryptoVaultManager.signTransaction(buyerTx);
+                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
-                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
                         break;
+                    }
+                    case INPUTS_ADDED: {
+                        DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getBuyerTransaction());
+                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
+                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
+                        break;
+                    }
+                    case PARTIALLY_SIGNED: {
+                        DAPMessage message = transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED);
+                        assetTransmission.sendMessage(message);
+                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.WAITING_COMPLETE_SIGNATURE);
                     }
                 }
             }
@@ -192,7 +207,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             for (String eventId : dao.getPendingEvents()) {
                 switch (dao.getEventType(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
-                        for (BuyingRecord record : dao.getPartiallySignedBuying()) {
+                        for (BuyingRecord record : dao.getWaitingCompleteSignature()) {
                             creditUserWallet(record, BalanceType.BOOK);
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
                         }

@@ -13,16 +13,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,8 +45,10 @@ public class getCustomerOfflinePaymentRecordTest {
     public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
-        when(mockDatabase.getTable(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
+        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
+                mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+        when(mockDatabase.getTable(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME)).
+                thenReturn(databaseTable);
         doNothing().when(databaseTable).addStringFilter(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 "Test",
@@ -63,11 +63,12 @@ public class getCustomerOfflinePaymentRecordTest {
                         OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME)).thenReturn("contract_hash");
     }
     @Test
-    public void getCustomerOfflinePaymentRecord_Should_Run_Once() throws Exception{
+    public void getCustomerOfflinePaymentRecord() throws Exception{
         when(databaseTableRecord.getStringValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                         OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("POMC");
-        customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord("Test");
+        assertEquals("Test",
+                customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord("Test").getTransactionHash());
     }
     //InvalidParameterException
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
@@ -76,7 +77,8 @@ public class getCustomerOfflinePaymentRecordTest {
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void getCustomerOfflinePaymentRecord_Should_Return_Exception() throws Exception{
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(null,null,null,errorManager);
+        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
+                null,null,null,errorManager);
         customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(null);
     }
 }

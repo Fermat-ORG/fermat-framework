@@ -66,8 +66,8 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connect");
-        description.setText("Do you want to accept");
+        title.setText(R.string.connect);
+        description.setText(R.string.connection_request_accept);
         userName.setText(actorIssuer.getRecord().getName());
 
     }
@@ -95,7 +95,7 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                             actorIssuer.getRecord().getActorPublicKey()//USER OUTSIDE
                     );
                     getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
-                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + R.string.connection_request_accepted, Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }
@@ -113,7 +113,7 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                             identity.getPublicKey(),
                             actorIssuer.getRecord().getActorPublicKey());
                     getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
-                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + R.string.connection_request_deny, Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }

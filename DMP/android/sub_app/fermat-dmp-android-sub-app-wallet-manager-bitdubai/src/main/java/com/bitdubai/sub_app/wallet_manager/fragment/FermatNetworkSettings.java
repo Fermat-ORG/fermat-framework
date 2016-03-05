@@ -1,6 +1,6 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
-import android.graphics.drawable.Drawable;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -49,15 +49,25 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     }
 
-
     @Override
-    public void onBackPressed() {
+    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
 
     }
 
+
     @Override
-    public Drawable getBackground() {
-        return null;
+    public void onBackPressed() {
+        Toast.makeText(getActivity(),"Settings has saved",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public int getBackgroundColor() {
+        return 0;
+    }
+
+    @Override
+    public int getBackgroundAlpha() {
+        return 0;
     }
 
     public String[] getIpPort(){

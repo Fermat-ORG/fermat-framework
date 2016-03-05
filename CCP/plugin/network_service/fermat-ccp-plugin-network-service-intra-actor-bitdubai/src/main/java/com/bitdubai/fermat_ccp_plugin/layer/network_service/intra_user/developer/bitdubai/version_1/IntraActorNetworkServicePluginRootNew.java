@@ -363,29 +363,6 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                        "destination_alias",
-                        "destionation_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                                                       .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                                                                               "sender_alias",
-                                                                               "sender_name",
-                                                                               NetworkServiceType.UNDEFINED,
-                                                                               PlatformComponentType.ACTOR_INTRA_USER,
-                                                                               "");
-    }
-
-
     private void reprocessPendingMessage()
     {
         try {
@@ -403,9 +380,18 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     public void run() {
                         try {
                             sendNewMessage(
-                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
-                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
-                                    cpr.toJson());
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getActorSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cpr.getActorDestinationPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    cpr.toJson()
+                            );
                         } catch (CantSendMessageException e) {
                             reportUnexpectedError(e);
                         }
@@ -872,8 +858,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(intraUserSelectedPublicKey),
-                                getProfileDestinationToRequestConnection(intraUserToAddPublicKey),
+                                getProfileSenderToRequestConnection(
+                                        intraUserSelectedPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        intraUserToAddPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         reportUnexpectedError(e);
@@ -937,8 +931,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     try {
                         // Sending message to the destination
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        messageToSend.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        messageToSend.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 messageToSend.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -977,8 +979,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1029,8 +1039,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1073,8 +1091,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1094,7 +1120,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException {
 
         try {
-
+            if(incomingNotificationsDao==null) incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication,pluginFileSystem,pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
 
         } catch (CantListIntraWalletUsersException e) {
