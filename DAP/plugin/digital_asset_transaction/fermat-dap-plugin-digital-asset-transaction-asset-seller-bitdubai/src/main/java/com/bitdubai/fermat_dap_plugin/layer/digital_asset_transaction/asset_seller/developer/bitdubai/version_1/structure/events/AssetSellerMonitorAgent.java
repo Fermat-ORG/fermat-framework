@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -29,13 +30,19 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -168,13 +175,21 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             for (DAPMessage message : assetTransmission.getUnreadDAPMessageBySubject(DAPMessageSubject.NEGOTIATION_ANSWER)) {
                 try {
                     AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
+                    NegotiationRecord record = dao.getNegotiationForId(content.getAssetNegotiation().getNegotiationId());
+                    if (record.getNegotiationStatus() == AssetSellStatus.NEGOTIATION_CANCELLED) {
+                        System.out.println("This transaction was already cancelled.");
+                        continue;
+                    }
+                    dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), content.getSellStatus());
                     SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
                     switch (content.getSellStatus()) {
                         case NEGOTIATION_CONFIRMED: {
+                            System.out.println("Negotiation confirmed...");
                             dao.updateSellingStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
                             break;
                         }
                         case NEGOTIATION_REJECTED: {
+                            System.out.println("Negotiation rejected...");
                             unlockFunds(sellingRecord.getMetadata());
                             dao.deleteSellingRecord(sellingRecord.getRecordId());
                             break;
@@ -202,25 +217,29 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             for (SellingRecord record : dao.getActionRequiredSellings()) {
                 switch (record.getStatus()) {
                     case NEGOTIATION_CONFIRMED: {
+                        System.out.println("Negotiation confirmed...");
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         CryptoAddress cryptoVaultAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
                         cryptoAddressBookManager.registerCryptoAddress(cryptoVaultAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, record.getBuyer().getActorPublicKey(), Actors.DAP_ASSET_USER, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
+                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                         AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue(), cryptoVaultAddress);
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
+                        sendAssetMovement(record.getMetadata(), record.getBuyer());
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
                         break;
                     }
                     case PARTIALLY_SIGNED: {
-                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
-                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
-                            ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer());
-                            //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
-                            assetTransmission.sendMessage(message);
-                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
-                        }
+                        System.out.println("Negotiation partially signed...");
+//                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+//                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
+//                            ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+//                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
+//                            //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
+//                            assetTransmission.sendMessage(message);
+//                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
+//                        }
                         DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
                         dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                         String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
@@ -230,11 +249,13 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         break;
                     }
                     case COMPLETE_SIGNATURE: {
+                        System.out.println("Complete signed...");
                         debitUserWallet(record, BalanceType.BOOK);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WALLET_DEBITED);
                         break;
                     }
                     case WALLET_DEBITED: {
+                        System.out.println("Broadcasting...");
                         bitcoinNetworkManager.broadcastTransaction(record.getBroadcastingTxHash());
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.BROADCASTING);
                     }
@@ -244,6 +265,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                             case BROADCASTED: {
                                 debitUserWallet(record, BalanceType.AVAILABLE);
                                 dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
+                                System.out.println("Asset Sold...");
                                 break;
                             }
                             case WITH_ERROR: {
@@ -260,17 +282,23 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         private void checkTimeout() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException, CantDeleteRecordException, CantLoadWalletException {
             for (NegotiationRecord negotiation : dao.getWaitingConfirmationNegotiations()) {
                 if (negotiation.isExpired()) {
-                    dao.updateNegotiationStatus(negotiation.getNegotiation().getNegotiationId(), AssetSellStatus.NEGOTIATION_CANCELLED);
-                    for (SellingRecord record : dao.getAllSelingRecordsForNegotiation(negotiation.getNegotiation().getNegotiationId())) {
-                        unlockFunds(record.getMetadata());
-                        dao.deleteSellingRecord(record.getRecordId());
-                    }
-                    AssetNegotiationContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.NEGOTIATION_CANCELLED, negotiation.getNegotiation());
-                    ActorAssetUser user = actorAssetUserManager.getActorAssetUser();
-                    DAPMessage message = new DAPMessage(content, user, negotiation.getBuyer(), DAPMessageSubject.NEGOTIATION_CANCELLED);
-                    assetTransmission.sendMessage(message);
+                    cancellNegotiation(negotiation);
                 }
             }
+        }
+
+        private void cancellNegotiation(NegotiationRecord negotiation) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException, CantLoadWalletException {
+            System.out.println("Cancelling negotiation for asset: " + negotiation.getNegotiation().getAssetToOffer().getName());
+            dao.updateNegotiationStatus(negotiation.getNegotiation().getNegotiationId(), AssetSellStatus.NEGOTIATION_CANCELLED);
+            for (SellingRecord record : dao.getAllSelingRecordsForNegotiation(negotiation.getNegotiation().getNegotiationId())) {
+                unlockFunds(record.getMetadata());
+                System.out.println("Deleting selling record: " + record.getRecordId());
+                dao.deleteSellingRecord(record.getRecordId());
+            }
+            AssetNegotiationContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.NEGOTIATION_CANCELLED, negotiation.getNegotiation());
+            ActorAssetUser user = actorAssetUserManager.getActorAssetUser();
+            DAPMessage message = new DAPMessage(content, user, negotiation.getBuyer(), DAPMessageSubject.NEGOTIATION_CANCELLED);
+            assetTransmission.sendMessage(message);
         }
 
         private void debitUserWallet(SellingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterDebitException {
@@ -284,6 +312,14 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         private void unlockFunds(DigitalAssetMetadata assetMetadata) throws RecordsNotFoundException, CantExecuteLockOperationException, CantLoadWalletException {
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, assetMetadata.getNetworkType());
             userWallet.unlockFunds(assetMetadata);
+        }
+
+        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser newUser) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
+            AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), newUser, digitalAssetMetadata.getDigitalAsset().getPublicKey(), digitalAssetMetadata.getNetworkType(), AssetMovementType.ASSET_SOLD);
+            ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
+            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
+            assetTransmission.sendMessage(dapMessage);
         }
 
         public boolean isAgentRunning() {
