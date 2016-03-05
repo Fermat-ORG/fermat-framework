@@ -35,7 +35,7 @@ import java.util.NoSuchElementException;
  * Created by Yordin Alayn on 22.01.16.
  * Based in StartNegotiationAdapter of Star_negotiation by nelson
  */
-public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, FermatViewHolder> {
+public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformation, FermatViewHolder> {
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
@@ -52,7 +52,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
     private boolean haveNote;
 
-    public OpenNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
+    public OpenNegotiationDetailsAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
 
         super(context);
 

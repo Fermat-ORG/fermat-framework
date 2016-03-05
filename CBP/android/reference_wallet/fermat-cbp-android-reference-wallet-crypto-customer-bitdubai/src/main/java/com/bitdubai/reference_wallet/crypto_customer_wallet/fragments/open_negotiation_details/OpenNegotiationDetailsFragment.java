@@ -46,7 +46,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.SingleTextDialog;
@@ -84,7 +84,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
-    private OpenNegotiationAdapter adapter;
+    private OpenNegotiationDetailsAdapter adapter;
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
@@ -424,7 +424,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         //PRINT CLAUSE STATUS TEST
         validateStatusClauseTest(clauses);
 
-        adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
+        adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationInfo);
         adapter.setClauseListener(this);
         adapter.setFooterListener(this);
         adapter.setMarketRateList(appSession.getActualExchangeRates());
