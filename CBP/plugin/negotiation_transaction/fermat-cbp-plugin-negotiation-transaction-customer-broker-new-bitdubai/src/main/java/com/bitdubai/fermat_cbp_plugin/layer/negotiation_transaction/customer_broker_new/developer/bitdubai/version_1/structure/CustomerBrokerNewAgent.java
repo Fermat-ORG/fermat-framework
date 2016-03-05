@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
 
 
@@ -434,7 +436,7 @@ public class CustomerBrokerNewAgent implements
 
                                             final String brokerWalletPublicKey = "crypto_broker_wallet"; // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                                             broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_NEW_NEGOTIATION_NOTIFICATION);
-                                            //broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                            broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
                                             break;
                                     }
 //                                }

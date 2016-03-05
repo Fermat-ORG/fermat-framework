@@ -32,6 +32,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
+
 
 /**
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
@@ -214,6 +216,15 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code){
+            case CBW_NEGOTIATION_UPDATE_VIEW:
+                onRefresh();
+                break;
         }
     }
 }
