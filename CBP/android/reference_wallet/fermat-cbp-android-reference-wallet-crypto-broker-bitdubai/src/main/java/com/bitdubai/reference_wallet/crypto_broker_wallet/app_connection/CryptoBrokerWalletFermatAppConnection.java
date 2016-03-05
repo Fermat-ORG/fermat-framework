@@ -14,13 +14,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.notifications.CryptoBrokerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.notifications.CryptoBrokerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
+
 
 /**
  * Created by Nelson Ramirez
@@ -73,8 +78,14 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         switch (code){
-            case CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","",0);
+            case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
+            case CBW_NEW_NEGOTIATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("New Negotiation","You have a new negotiation! Please check your wallet.","");
+            case CBW_WAITING_FOR_BROKER_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
+            case CBW_CANCEL_NEGOTIATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract Story, a customer has canceled a negotiation","");
             default:
                 return super.getNotificationPainter(code);
         }
