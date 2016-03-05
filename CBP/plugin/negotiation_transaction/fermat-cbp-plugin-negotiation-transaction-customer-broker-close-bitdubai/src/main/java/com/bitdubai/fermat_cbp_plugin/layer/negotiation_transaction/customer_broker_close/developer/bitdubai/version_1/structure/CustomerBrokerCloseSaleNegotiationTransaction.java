@@ -88,10 +88,12 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
 
             //CLOSE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+//            customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+//            CustomerBrokerSaleNegotiation nego = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(customerBrokerSaleNegotiation.getNegotiationId());
+//            System.out.print("\n\n**** 3.2) Status: " + nego.getStatus().getCode() + " ****\n");
 
             //CREATE NEGOTIATION TRANSATION
-            this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
+            customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
@@ -159,11 +161,15 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
-                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
+                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             }
+
+            System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION ****\n");
+            //CLOSE NEGOTIATION
+            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(), e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");

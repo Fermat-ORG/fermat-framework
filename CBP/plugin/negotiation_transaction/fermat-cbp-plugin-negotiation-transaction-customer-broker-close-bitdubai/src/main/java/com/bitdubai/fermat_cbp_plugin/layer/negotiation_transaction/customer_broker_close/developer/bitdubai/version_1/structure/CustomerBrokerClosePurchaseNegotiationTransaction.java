@@ -106,7 +106,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             System.out.print("\n\n**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+//            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -163,10 +163,12 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             System.out.print("\n\n**** 21.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            CustomerBrokerPurchaseNegotiation nego = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(customerBrokerPurchaseNegotiation.getNegotiationId());
+            System.out.print("\n\n**** 21.3) Status: "+nego.getStatus().getCode()+" ****\n");
 
             //CREATE NEGOTIATION TRANSATION
-            this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
+            customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
@@ -201,6 +203,10 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             }
+
+            System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION****\n");
+            //CLOSE NEGOTIATION
+            customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(),e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");

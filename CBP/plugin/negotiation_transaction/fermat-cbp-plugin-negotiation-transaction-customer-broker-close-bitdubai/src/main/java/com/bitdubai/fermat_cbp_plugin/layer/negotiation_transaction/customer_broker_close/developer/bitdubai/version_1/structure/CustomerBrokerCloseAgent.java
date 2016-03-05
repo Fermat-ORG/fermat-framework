@@ -21,6 +21,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -354,16 +355,12 @@ public class CustomerBrokerCloseAgent  implements
 
                         switch (negotiationType) {
                             case PURCHASE:
-                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n"+
-                                        "\n - Status :" + purchaseNegotiation.getStatus().getCode()
-                                );
+                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - PURCHASE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                                 //SEND CONFIRM NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                             case SALE:
-                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n"+
-                                                "\n - Status :" + purchaseNegotiation.getStatus().getCode()
-                                );
+                                System.out.print("\n\n**** 24) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - SALE NEGOTIATION SEND CONFIRM negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
@@ -425,6 +422,7 @@ public class CustomerBrokerCloseAgent  implements
                         System.out.print("\n\n**** 20.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION  ****\n");
                         if (negotiationXML != null) {
 
+                            if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
                             //TODO FOR TEST.
 //                            if(customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasctionFromNegotiationId(negotiationTransmission.getNegotiationId()) == null) {
                                 switch (negotiationType) {
@@ -462,13 +460,59 @@ public class CustomerBrokerCloseAgent  implements
                             //CONFIRM TRANSMISSION
                             negotiationTransmissionManager.confirmReception(transmissionId);
 
+                            } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+//                                negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
+
+//                                if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                                    switch (negotiationType) {
+                                        case PURCHASE:
+                                            System.out.print("\n\n**** 27.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE ****\n");
+                                            //UPDATE NEGOTIATION IF PAYMENT IS CRYPTO CURRENCY
+                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                            customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
+                                                    customerBrokerPurchaseNegotiationManager,
+                                                    customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                                    cryptoAddressBookManager,
+                                                    cryptoVaultManager,
+                                                    walletManagerManager
+                                            );
+                                            customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
+                                            break;
+                                        case SALE:
+                                            System.out.print("\n\n**** 27.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM SALE ****\n");
+                                            //UPDATE NEGOTIATION IF MERCHANDISE IS CRYPTO CURRENCY
+                                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                            customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
+                                                    customerBrokerSaleNegotiationManager,
+                                                    customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                                    cryptoAddressBookManager,
+                                                    cryptoVaultManager,
+                                                    walletManagerManager
+                                            );
+                                            customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
+                                            break;
+                                    }
+
+                                    //CONFIRM TRANSACTION
+                                    customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                                    //NOTIFIED EVENT
+                                    customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                    //CONFIRM TRANSMISSION
+                                    negotiationTransmissionManager.confirmReception(transmissionId);
+
+//                                }
+
+                            }
+
                         }
 
                     }
                 }
 
                 //EVENT - RECEIVE CONFIRM NEGOTIATION
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE.getCode())) {
+                /*if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
@@ -523,7 +567,7 @@ public class CustomerBrokerCloseAgent  implements
 
                         }
                     }
-                }
+                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
