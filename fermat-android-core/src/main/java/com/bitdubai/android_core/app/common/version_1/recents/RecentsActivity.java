@@ -96,7 +96,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
         mVisible = true;
 
         ArrayList<RecentApp> models = new ArrayList<>();
-        for(int i = 0; i < 10; ++i)
+        for(int i = 0; i < 4; ++i)
         {
             Random random = new Random();
             random.setSeed(i);

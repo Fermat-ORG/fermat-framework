@@ -86,9 +86,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:src="@drawable/ic_action_replay_grey"
+                    android:src="@drawable/icon_recent_app"
                     android:id="@+id/btn_recents"
-                    android:visibility="gone"/>
+                    android:visibility="visible"
+                    android:layout_marginRight="9dp"
+                    android:layout_marginTop="9dp"/>
 
 
                 <SlidingDrawer
