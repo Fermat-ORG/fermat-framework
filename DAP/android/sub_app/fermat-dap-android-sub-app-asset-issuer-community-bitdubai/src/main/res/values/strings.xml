@@ -11,6 +11,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_connecting">Connecting</string>
     <string name="loading_connections">Loading Connections</string>
+    <string name="status_denied">Connection Denied</string>
 
     <string name="dap_other_profile_last_connection_date">Last Connection Date</string>
 

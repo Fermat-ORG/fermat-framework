@@ -17,6 +17,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,14 +41,18 @@ public class persistsCryptoTransactionUUIDTest {
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
     @Before
-    public void setup(){
+    public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        setupGeneralMockitoRules();
+    }
+    public void setupGeneralMockitoRules()throws Exception{
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
+        doNothing().when(databaseTable).updateRecord(databaseTableRecord);
     }
-
     @Test
     public void persistsCryptoTransactionUUIDTest()throws Exception{
         when(mockDatabase.getTable(
@@ -53,6 +60,7 @@ public class persistsCryptoTransactionUUIDTest {
         )).thenReturn(databaseTable);
         testId = UUID.randomUUID();
         customerOfflinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID("contractHash",testId);
+        verify(databaseTable,times(1)).updateRecord(databaseTableRecord);
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void persistsCryptoTransactionUUIDTest_Should_Throw_Exception()throws Exception{

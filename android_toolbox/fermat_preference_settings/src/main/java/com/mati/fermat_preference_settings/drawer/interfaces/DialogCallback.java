@@ -7,4 +7,6 @@ public interface DialogCallback {
 
     void optionSelected(PreferenceSettingsItem preferenceSettingsItem,int position);
 
+    void optionChanged(PreferenceSettingsItem preferenceSettingsItem,int position,boolean isChecked);
+
 }

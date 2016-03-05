@@ -9,11 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 03/02/16.
@@ -23,32 +22,26 @@ public class initializeDatabaseTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
-
     @Mock
     private Database mockDatabase;
     private UUID testId;
-    private String testDataBaseName;
-    private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    private CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
     public void setUpTestValues(){
         testId = UUID.randomUUID();
-        testDataBaseName = CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
-    }
-
-    public void setUpGeneralMockitoRules() throws Exception{
-        when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
-
     }
 
     @Before
     public void setUp() throws Exception{
         setUpTestValues();
-        setUpGeneralMockitoRules();
     }
 
     @Test
-    public void TestInitializeDatabaseTest_Should_() throws Exception{
-        customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+    public void TestInitializeDatabaseTest() throws Exception{
+        customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory =
+                new CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
         customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
-
+        Mockito.verify(mockPluginDatabaseSystem, Mockito.times(1)).openDatabase(
+                testId, CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
     }
 }

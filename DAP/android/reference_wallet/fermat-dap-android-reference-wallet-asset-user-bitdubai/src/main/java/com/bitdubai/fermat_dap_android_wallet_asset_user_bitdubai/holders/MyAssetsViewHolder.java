@@ -43,7 +43,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public FermatTextView assetBalanceText;
     public FermatTextView btcText;
     public FermatTextView expDateText;
-    public FermatTextView assetUserDetailLockedAssets;
+    public FermatTextView assetUserLockedAssets;
 
     public View negotiationAssetLayout;
     //public FermatTextView negotiationAssetQuantity;
@@ -73,7 +73,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         negotiationAssetLayout = itemView.findViewById(R.id.negotiationAssetLayout);
         negotiationAssetUnitPrice = (FermatTextView) itemView.findViewById(R.id.negotiationAssetUnitPrice);
 
-        assetUserDetailLockedAssets = (FermatTextView) itemView.findViewById(R.id.assetUserDetailLockedAssets);
+        assetUserLockedAssets = (FermatTextView) itemView.findViewById(R.id.assetUserLockedAssets);
 
     }
 
@@ -125,11 +125,11 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             expDateText.setText(digitalAsset.getFormattedExpDate());
 
             if (digitalAsset.getLockedAssets() > 0){
-                assetUserDetailLockedAssets.setVisibility(View.VISIBLE);
-                assetUserDetailLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
+                assetUserLockedAssets.setVisibility(View.VISIBLE);
+                assetUserLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
                         digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
             }else{
-                assetUserDetailLockedAssets.setVisibility(View.GONE);
+                assetUserLockedAssets.setVisibility(View.GONE);
             }
 
         }

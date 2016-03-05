@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -94,7 +95,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_broker_button);
 
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +112,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
+                    /*
                     if(!mBrokerName.getText().toString().trim().equals("")) {
                         if (cryptoBrokerBitmap != null) {
                             new AlertDialog.Builder(v.getContext())
@@ -124,6 +126,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                                     }).create().show();
                         }
                     }
+                    */
                 }
             }
         });
