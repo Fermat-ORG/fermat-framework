@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -339,7 +340,7 @@ public class CustomerBrokerUpdateAgent implements
                 if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-//                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
+                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION FOR SEND ****\n");
 
                         transactionId   = negotiationTransaction.getTransactionId();
                         negotiationType = negotiationTransaction.getNegotiationType();
@@ -415,18 +416,20 @@ public class CustomerBrokerUpdateAgent implements
                             transactionId = negotiationTransmission.getTransactionId();
                             negotiationType = negotiationTransmission.getNegotiationType();
 
-                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT PENDING ID: " +eventId+"****\n" +
-                                            "\n - NEGOTIATION TRANSACTION TYPE = "+negotiationTransmission.getNegotiationTransactionType().getCode()+
-                                            "\n - TRANSACTION ID = " +transactionId+
-                                            "\n - TRANSMISSION ID = " +transmissionId+
-                                            "\n - TRANSMISSION STATE = "+negotiationTransmission.getTransmissionState().getCode()+
-                                            "\n - NEGOTIATION TYPE = "+negotiationType+
-                                            "\n - NEGOTIATION XML = "+negotiationXML
+                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT PENDING ID: " + eventId + "****\n" +
+                                            "\n - NEGOTIATION TRANSACTION TYPE = " + negotiationTransmission.getNegotiationTransactionType().getCode() +
+                                            "\n - TRANSACTION ID = " + transactionId +
+                                            "\n - TRANSMISSION ID = " + transmissionId +
+                                            "\n - TRANSMISSION STATE = " + negotiationTransmission.getTransmissionState().getCode() +
+                                            "\n - NEGOTIATION TYPE = " + negotiationType +
+                                            "\n - NEGOTIATION XML = " + negotiationXML
                             );
 
                             if (negotiationXML != null) {
 
-                                //TODO FOR TEST
+                                if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+
+                                    //TODO FOR TEST
 //                                if(customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationTransmission.getNegotiationId()) == null) {
 //                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT ID "+ eventId +" PENDING ****\n");
                                     switch (negotiationType) {
@@ -474,29 +477,75 @@ public class CustomerBrokerUpdateAgent implements
                                     }
 //                                }
 
-                                //TODO. UNA EXCEPCION OCURRIDA ANTES DE ESTO, HARA QUE LA TRANSMISSION EN CUESTION SE REPITA EN EL CICLO, POR NO CAMBIAR DE ESTADO.
-                                //NOTIFIED EVENT
-                                customerBrokerUpdateNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                                System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - EVENT CHANGE A STATUS : "+eventStatus+"  ****\n");
-                                //CONFIRM TRANSMISSION
-                                negotiationTransmissionManager.confirmReception(transmissionId);
+                                    //TODO. UNA EXCEPCION OCURRIDA ANTES DE ESTO, HARA QUE LA TRANSMISSION EN CUESTION SE REPITA EN EL CICLO, POR NO CAMBIAR DE ESTADO.
+                                    //NOTIFIED EVENT
+                                    customerBrokerUpdateNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                    System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
+                                    //CONFIRM TRANSMISSION
+                                    negotiationTransmissionManager.confirmReception(transmissionId);
+
+                                } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+                                    System.out.print("\n**** 25.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE NEGOTIATION TRANSACTION CONFIRM ****\n");
+//                                    negotiationTransaction = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
+
+//                                    if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                                        switch (negotiationType) {
+                                            case PURCHASE:
+                                                System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                                break;
+                                            case SALE:
+                                                System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                                customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
+                                                break;
+                                        }
+
+                                        //CONFIRM TRANSACTION
+                                        customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                                        //NOTIFIED EVENT
+                                        customerBrokerUpdateNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                        //CONFIRM TRANSMISSION
+                                        negotiationTransmissionManager.confirmReception(transmissionId);
+
+//                                    }
+
+                                }
 
                             }
                         }
                     }
                 }
 
-                //EVENT - RECEIVE CONFIRM NEGOTIATION
+                /*//EVENT - RECEIVE CONFIRM NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        transmissionId          = negotiationTransmission.getTransmissionId();
-                        transactionId           = negotiationTransmission.getTransactionId();
-                        negotiationTransaction  = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
+                        transmissionId = negotiationTransmission.getTransmissionId();
+                        transactionId = negotiationTransmission.getTransactionId();
+                        negotiationType = negotiationTransmission.getNegotiationType();
+                        negotiationXML = negotiationTransmission.getNegotiationXML();
+
+
+                        negotiationTransaction = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
 
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                            switch (negotiationType) {
+                                case PURCHASE:
+                                    purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                    customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                    break;
+                                case SALE:
+                                    saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                    customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
+                                    break;
+                            }
 
                             //CONFIRM TRANSACTION
                             customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
@@ -507,8 +556,7 @@ public class CustomerBrokerUpdateAgent implements
 
                         }
                     }
-                }
-
+                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }

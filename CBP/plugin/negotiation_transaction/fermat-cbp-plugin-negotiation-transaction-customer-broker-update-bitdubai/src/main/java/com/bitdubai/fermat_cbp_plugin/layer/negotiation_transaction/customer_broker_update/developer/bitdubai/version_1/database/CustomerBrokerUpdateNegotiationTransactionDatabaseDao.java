@@ -290,7 +290,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker update exists", "Customer Broker New Negotiation Transaction", "");
 
-            table.addStringFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.isEmpty())
