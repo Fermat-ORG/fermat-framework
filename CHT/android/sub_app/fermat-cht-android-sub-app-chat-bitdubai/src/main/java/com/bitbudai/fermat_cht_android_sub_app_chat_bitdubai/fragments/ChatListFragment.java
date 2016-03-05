@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
@@ -40,6 +41,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
@@ -135,8 +138,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     private int size;
-    private String profileid;
-    TitleBar title;
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
@@ -148,30 +149,33 @@ public class ChatListFragment extends AbstractFermatFragment{
         String name,message,datemessage,chatid;
         try {
             infochat.clear();
-            for (int i=0;i<chatManager.getChats().size();i++){
-                chatidtemp=chatManager.getChats().get(i).getChatId();
-                contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId());
-                name=chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getRemoteName();
-                sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
-                message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
-                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate())))){
-                    datemessage= new SimpleDateFormat("HH:mm").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());
+            //for (int i=0;i<chatManager.getChats().size();i++){
+            List<Chat> chats = chatManager.getChats();
+            for(Chat chat :chats){//for (int i=0;i<chatManager.getChats().size();i++){
+                chatidtemp=chat.getChatId();
+                Message mess= chatManager.getMessageByChatId(chatidtemp).get(0);
+                List<Message> messl= chatManager.getMessageByChatId(chatidtemp);
+                contactid=String.valueOf(mess.getContactId());
+                Contact cont = chatManager.getContactByContactId(mess.getContactId());
+                name=cont.getRemoteName();
+                message=messl.get(messl.size() - 1).getMessage();
+                Chat chatl= chatManager.getChatByChatId(chatidtemp);
+                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatl.getLastMessageDate())))){
+                    datemessage= new SimpleDateFormat("HH:mm").format(chatl.getLastMessageDate());
                 }else{
-                    Date old=new Date(DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate()));
+                    Date old=new Date(DateFormat.getDateTimeInstance().format(chatl.getLastMessageDate()));
                     Date today = new Date();
                     long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                    //int numDates=old.compareTo(new Date());
                     if(dias==1) {
                         datemessage = "YESTERDAY";
                     }else
-                        datemessage= new SimpleDateFormat("dd/MM/yy").format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
+                        datemessage= new SimpleDateFormat("dd/MM/yy").format(chatl.getLastMessageDate());//.toString();
                 }
-                //datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
-                ByteArrayInputStream bytes = new ByteArrayInputStream(chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getProfileImage());
+                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
-                imgid.add(bmd.getBitmap());//imgid.add(R.drawable.cht_profile_list_icon);
+                imgid.add(bmd.getBitmap());
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -196,12 +200,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        try {
-            chatManager.createSelfIdentities();
-        }catch(CantCreateSelfIdentityException e)
-        {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {

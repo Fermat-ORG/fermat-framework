@@ -186,13 +186,13 @@ public class ChatAdapterView extends LinearLayout {
             }
 
             if(chatId !=null){
-                messSize=chatManager.getMessageByChatId(chatId).size();
+                //messSize=chatManager.getMessageByChatId(chatId).size();
                 List<Message> messL=  chatManager.getMessageByChatId(chatId);
-                messSize= messL.size();
+                //messSize= messL.size();
                 //for (int i = 0; i < messSize; i++) {
                 for(Message mess : messL){
                     msg = new ChatMessage();
-                    message = mess.getMessage();
+                    message = mess.getMessage();//19:22 Receive//19.26 r//19.26 r//
                     inorout = mess.getType().toString();
                     msg.setId(mess.getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
