@@ -240,6 +240,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 Toast.makeText(getActivity(), "This is selected by the Broker", Toast.LENGTH_SHORT).show();
                 break;
 
+            case BROKER_BANK_ACCOUNT:
+                Toast.makeText(getActivity(), "This is selected by the Broker", Toast.LENGTH_SHORT).show();
+                break;
+
+            case BROKER_PLACE_TO_DELIVER:
+                Toast.makeText(getActivity(), "This is selected by the Broker", Toast.LENGTH_SHORT).show();
+                break;
+
             case BROKER_PAYMENT_METHOD:
                 actionListenerBrokerPaymentMethod(clause, clauses);
                 break;

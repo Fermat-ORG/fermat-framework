@@ -243,11 +243,11 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
                 break;
             //CASH CLAUSES
             case CUSTOMER_PLACE_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes, R.string.ccw_cash_place_to_deliver_title);
                 clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_PLACE_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.ccw_cash_place_to_deliver_title);
                 clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //DATE CLAUSES

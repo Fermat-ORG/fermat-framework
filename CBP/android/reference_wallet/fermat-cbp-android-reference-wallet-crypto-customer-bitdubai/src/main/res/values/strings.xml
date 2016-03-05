@@ -29,8 +29,8 @@
     <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
     <string name="ccw_bank_name">Bank Name</string>
-    <string name="ccw_bank_account_customer">Bank Account Customer</string>
-    <string name="ccw_bank_account_broker">Bank Account Broker</string>
+    <string name="ccw_bank_account_customer">Customer\'s Bank Account</string>
+    <string name="ccw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="ccw_bank_account_title">Bank Account:</string>
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
@@ -38,11 +38,11 @@
     <string name="ccw_cancellation_negotiation">Cancellation Negotiation:</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
-    <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
-    <string name="ccw_cash_place_to_delivery_customer">Place To Delivery Customer</string>
-    <string name="ccw_cash_place_to_delivery_title">Place To Delivery:</string>
-    <string name="ccw_date_to_delivery_broker">Date To Delivery Broker</string>
-    <string name="ccw_date_to_delivery_customer">Date To Delivery Customer</string>
+    <string name="ccw_cash_place_to_delivery_broker">Payment\'s Delivery Place</string>
+    <string name="ccw_cash_place_to_delivery_customer">Merchandise\'s Reception Place</string>
+    <string name="ccw_cash_place_to_deliver_title">Selected Location:</string>
+    <string name="ccw_date_to_delivery_broker">Date To Deliver Broker</string>
+    <string name="ccw_date_to_delivery_customer">Date To Deliver Customer</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
