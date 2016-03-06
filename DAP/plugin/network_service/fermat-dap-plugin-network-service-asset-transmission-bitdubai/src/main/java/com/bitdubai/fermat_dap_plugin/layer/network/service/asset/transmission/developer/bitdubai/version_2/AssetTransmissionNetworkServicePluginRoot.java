@@ -35,18 +35,16 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16. - Jose Briceño josebricenor@gmail.com (22/02/16)
@@ -70,7 +68,10 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
 
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
 
+    private ExecutorService executorService;
+
     //CONSTRUCTORS
+
     /**
      * Constructor without parameters
      */
@@ -101,7 +102,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
             communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             dataBase = communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
             dapMessageDAO = new DAPMessageDAO(dataBase);
-
+            executorService = Executors.newFixedThreadPool(3);
             /*
              * Set the new status
             */
@@ -239,7 +240,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
      * @throws CantSendMessageException
      */
     @Override
-    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+    public void sendMessage(final DAPMessage dapMessage) throws CantSendMessageException {
 
         try {
             DAPActor actorSender = dapMessage.getActorSender();
@@ -253,26 +254,21 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
              * If not null
              */
             System.out.println("AssetTransmissionNetworkServicePluginRoot - Sending message.....");
-
-            FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorSender.getActorPublicKey(),  //Sender NetworkService
-                    actorReceiver.getActorPublicKey(),   //Receiver
-                    dapMessage.toXML(),                //Message Content
-                    FermatMessageContentType.TEXT);//Type
-
-            /*
-             * Configure the correct status
-             */
-            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
             /*
              * Save to the data base table
              */
-            dapMessageDAO.create(dapMessage, MessageStatus.PENDING_TO_SEND);
-            getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().create(fermatMessage);
-            PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, senderType);
-            PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorReceiver.getActorPublicKey(), NetworkServiceType.UNDEFINED, receiverType);
-            getCommunicationNetworkServiceConnectionManager().connectTo(sender, getNetworkServiceProfile(), receiver);
-
+            final PlatformComponentProfile sender = getProfileSenderToRequestConnection(actorSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, senderType);
+            final PlatformComponentProfile receiver = getProfileSenderToRequestConnection(actorReceiver.getActorPublicKey(), NetworkServiceType.UNDEFINED, receiverType);
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(sender, receiver, dapMessage.toXML());
+                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+                }
+            });
 
             System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
         } catch (Exception e) {
