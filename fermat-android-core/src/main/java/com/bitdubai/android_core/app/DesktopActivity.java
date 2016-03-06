@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
@@ -46,6 +47,7 @@ import io.codetail.widget.RevealFrameLayout;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
@@ -292,7 +294,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             WalletNavigationStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
             intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-            intent.putExtra(WalletActivity.INSTALLED_WALLET, installedWallet);
+            intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP ,installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             removecallbacks();
             finish();
@@ -401,7 +403,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
                 intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
-                intent.putExtra(SubAppActivity.INSTALLED_SUB_APP, installedSubApp);
+                intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 resetThisActivity();
                 finish();
@@ -467,6 +469,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+                    addRecentToScreen();
                     initialisePaging();
                 } else {
 
@@ -496,6 +499,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void addRecentToScreen(){
+        View view = findViewById(R.id.btn_recents);
+        view.setVisibility(View.VISIBLE);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRecentsScreen();
+            }
+        });
+
     }
 
     private void paintScreen(Activity activity) {
