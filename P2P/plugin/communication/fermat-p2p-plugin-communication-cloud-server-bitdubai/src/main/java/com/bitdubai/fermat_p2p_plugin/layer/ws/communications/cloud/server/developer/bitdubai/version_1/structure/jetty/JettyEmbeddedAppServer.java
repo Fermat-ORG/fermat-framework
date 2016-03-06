@@ -19,10 +19,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-import org.fourthline.cling.UpnpService;
-import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.support.igd.PortMappingListener;
-import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
 import java.io.IOException;
@@ -173,7 +169,7 @@ public class JettyEmbeddedAppServer {
             throw new Error(e);
         }
 
-        PortMapping desiredMapping = new PortMapping(
+       /* PortMapping desiredMapping = new PortMapping(
                 DEFAULT_PORT,
                 address.getHostAddress(),
                 PortMapping.Protocol.TCP
@@ -183,7 +179,7 @@ public class JettyEmbeddedAppServer {
                 new PortMappingListener(desiredMapping)
         );
 
-        upnpService.getControlPoint().search();
+        upnpService.getControlPoint().search();*/
 
         this.initialize();
         LOG.info("Starting the internal server");
