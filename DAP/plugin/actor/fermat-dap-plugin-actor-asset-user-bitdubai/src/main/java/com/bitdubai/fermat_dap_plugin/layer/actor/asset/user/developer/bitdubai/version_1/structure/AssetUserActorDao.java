@@ -982,11 +982,11 @@ public class AssetUserActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
-//            for (ActorAssetUser record : list)
-//            {
-//                if (record.getCryptoAddress() != null)
-//                    auxList.add(record);
-//            }
+            for (ActorAssetUser record : list)
+            {
+                if (record.getCryptoAddress() != null)
+                    auxList.add(record);
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -996,7 +996,8 @@ public class AssetUserActorDao implements Serializable {
             throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         }
         // Return the list values.
-        return list;
+        //return list;
+        return auxList;
     }
 
     /**
