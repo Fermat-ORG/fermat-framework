@@ -77,6 +77,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private LinearLayout emptyView;
 
     private List<Actor> actors;
+    private List<Actor> actorsConnecting;
     private Actor actor;
     private int MAX = 1;
     private int offset = 0;
@@ -86,6 +87,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
+    private MenuItem menuItemCancel;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -137,13 +139,26 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 boolean someSelected = false;
                 int cantSelected=0;
                 List<Actor> actorsSelected = new ArrayList<>();
+                actorsConnecting = new ArrayList<>();
 
                 for (Actor actor : actors) {
                     if (actor.selected) {
                         actorsSelected.add(actor);
+                        if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))
+                        {
+                            actorsConnecting.add(actor);
+                        }
                         someSelected = true;
                         cantSelected++;
                     }
+                }
+
+                if (actorsConnecting.size() > 0)
+                {
+                    menuItemCancel.setVisible(true);
+                }
+                else {
+                    menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
@@ -358,20 +373,24 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         //}else if(actor.getDapConnectionState() == DAPConnectionState.CONNECTING){
         menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 0, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemSelect = menu.getItem(2);
-        menuItemUnselect = menu.getItem(3);
-        menuItemUnselect.setVisible(false);
+        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(5, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
         menuItemConnect = menu.getItem(0);
         menuItemDisconnect = menu.getItem(1);
+        menuItemCancel = menu.getItem(2);
+        menuItemSelect = menu.getItem(3);
+        menuItemUnselect = menu.getItem(4);
+        menuItemUnselect.setVisible(false);
         menuItemDisconnect.setVisible(false);
+        menuItemCancel.setVisible(false);
 
     }
 
@@ -629,6 +648,77 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         }
 
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING) {
+                DisconnectDialog disconnectDialog;
+
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+                        if (i == R.id.positive_button) {
+
+                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Canceling, please wait...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            FermatWorker worker = new FermatWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+
+
+                                    for(ActorAssetUser actor: actorsConnecting) {
+                                        //TODO revisar si esto es asi
+                                        //manager.cancelActorAssetUser(actor.getActorPublicKey(), manager.getActiveAssetUserIdentity().getPublicKey());
+                                    }
+
+                                    /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);*/
+                                    return true;
+                                }
+                            };
+                            worker.setContext(getActivity());
+                            worker.setCallBack(new FermatWorkerCallBack() {
+                                @Override
+                                public void onPostExecute(Object... result) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                    if (swipeRefreshLayout != null)
+                                        swipeRefreshLayout.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                onRefresh();
+                                            }
+                                        });
+                                }
+
+                                @Override
+                                public void onErrorOccurred(Exception ex) {
+                                    dialog.dismiss();
+                                    /*TODO aun no se que error deberia ir aqui*/
+//                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Can't cancel connection to selected users", Toast.LENGTH_LONG).show();
+//                                ex.printStackTrace();
+                                }
+                            });
+                            worker.execute();
+
+
+                            dismiss();
+                        } else if (i == R.id.negative_button) {
+                            dismiss();
+                        }
+                    }
+                };
+                disconnectDialog.setTitle("Cancel request");
+                disconnectDialog.setDescription("Do you want to cancel connection with ");
+                disconnectDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                        " Users" : actorsConnecting.get(0).getName());
+                //connectDialog.setSecondDescription("a connection request");
+                disconnectDialog.show();
+                return true;
+        }
+
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
@@ -776,32 +866,31 @@ Sample AsyncTask to fetch the notifications count
     private boolean ableToDisconnect(List<Actor> actors){
         List <Actor> allActors = actors;
         for (Actor actor : allActors){
-            String connectionState = actor.getDapConnectionState().toString();
-            switch (connectionState){
-                case "BLOCKED_LOCALLY":
-                case "BLOCKED_REMOTELY":
-                case "CANCELLED_LOCALLY":
-                case "CANCELLED_REMOTELY": {
+            switch (actor.getDapConnectionState()){
+                case BLOCKED_LOCALLY:
+                case BLOCKED_REMOTELY:
+                case CANCELLED_LOCALLY:
+                case CANCELLED_REMOTELY: {
                     return false;
                 }
-                case "CONNECTED_ONLINE":
-                case "CONNECTED_OFFLINE":
-                case "CONNECTING":
-                case "CONNECTED":{
-
+                case CONNECTED_ONLINE:
+                case CONNECTED_OFFLINE:
+                case CONNECTED:{
+                    if (actor.getCryptoAddress() != null)
                     continue;
                 }
-                case "DENIED_LOCALLY":
-                case "DENIED_REMOTELY":
-                case "DISCONNECTED_LOCALLY":
-                case "DISCONNECTED_REMOTELY":
-                case "ERROR_UNKNOWN":
-                case "PENDING_LOCALLY":
-                case "PENDING_REMOTELY":
-                case "REGISTERED_LOCALLY":
-                case "REGISTERED_REMOTELY":
-                case "REGISTERED_ONLINE":
-                case "REGISTERED_OFFLINE": {
+                case CONNECTING:
+                case DENIED_LOCALLY:
+                case DENIED_REMOTELY:
+                case DISCONNECTED_LOCALLY:
+                case DISCONNECTED_REMOTELY:
+                case ERROR_UNKNOWN:
+                case PENDING_LOCALLY:
+                case PENDING_REMOTELY:
+                case REGISTERED_LOCALLY:
+                case REGISTERED_REMOTELY:
+                case REGISTERED_ONLINE:
+                case REGISTERED_OFFLINE: {
                     return false;
                 }
             }
@@ -811,32 +900,31 @@ Sample AsyncTask to fetch the notifications count
     private boolean ableToConnect(List<Actor> actors){
         List <Actor> allActors = actors;
         for (Actor actor : allActors){
-            String connectionState = actor.getDapConnectionState().toString();
-            switch (connectionState){
-                case "BLOCKED_LOCALLY":
-                case "BLOCKED_REMOTELY":
-                case "CANCELLED_LOCALLY":
-                case "CANCELLED_REMOTELY": {
+            switch (actor.getDapConnectionState()){
+                case BLOCKED_LOCALLY:
+                case BLOCKED_REMOTELY:
+                case CANCELLED_LOCALLY:
+                case CONNECTING:
+                case CANCELLED_REMOTELY: {
                     continue;
                 }
-                case "CONNECTED_ONLINE":
-                case "CONNECTED_OFFLINE":
-                case "CONNECTING":
-                case "CONNECTED":{
-
+                case CONNECTED_ONLINE:
+                case CONNECTED_OFFLINE:
+                case CONNECTED:{
+                    if (actor.getCryptoAddress() != null)
                     return false;
                 }
-                case "DENIED_LOCALLY":
-                case "DENIED_REMOTELY":
-                case "DISCONNECTED_LOCALLY":
-                case "DISCONNECTED_REMOTELY":
-                case "ERROR_UNKNOWN":
-                case "PENDING_LOCALLY":
-                case "PENDING_REMOTELY":
-                case "REGISTERED_LOCALLY":
-                case "REGISTERED_REMOTELY":
-                case "REGISTERED_ONLINE":
-                case "REGISTERED_OFFLINE": {
+                case DENIED_LOCALLY:
+                case DENIED_REMOTELY:
+                case DISCONNECTED_LOCALLY:
+                case DISCONNECTED_REMOTELY:
+                case ERROR_UNKNOWN:
+                case PENDING_LOCALLY:
+                case PENDING_REMOTELY:
+                case REGISTERED_LOCALLY:
+                case REGISTERED_REMOTELY:
+                case REGISTERED_ONLINE:
+                case REGISTERED_OFFLINE: {
                     continue;
                 }
             }
