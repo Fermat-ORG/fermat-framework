@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.config;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.

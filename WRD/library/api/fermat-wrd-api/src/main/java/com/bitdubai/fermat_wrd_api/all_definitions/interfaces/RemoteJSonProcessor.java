@@ -2,6 +2,7 @@ package com.bitdubai.fermat_wrd_api.all_definitions.interfaces;
 
 import com.bitdubai.fermat_wrd_api.layer.api.tokenly.exceptions.CantGetJSonObjectException;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public abstract class RemoteJSonProcessor {
      * @return
      * @throws CantGetJSonObjectException
      */
-    public static JsonElement getJsonElement(
+    public static JsonElement getJSonElement(
             String requestURL)
             throws CantGetJSonObjectException {
         try{
@@ -52,6 +53,18 @@ public abstract class RemoteJSonProcessor {
             jSonString += scanner.nextLine();
         scanner.close();
         return jSonString;
+    }
+
+    /**
+     * This method returns a JSonElement from a requested URL.
+     * @param requestURL
+     * @return
+     * @throws CantGetJSonObjectException
+     */
+    public static JsonObject getJSonObject(
+            String requestURL)
+            throws CantGetJSonObjectException {
+        return getJSonElement(requestURL).getAsJsonObject();
     }
 
 }
