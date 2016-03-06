@@ -5,10 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.01.06..
  */
-public interface FermatStructure {
+public interface FermatStructure extends Serializable{
 
     FermatApps getFermatApp();
     FermatAppType getFermatAppType();

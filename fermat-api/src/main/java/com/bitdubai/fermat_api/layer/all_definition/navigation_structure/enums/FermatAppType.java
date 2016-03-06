@@ -41,5 +41,8 @@ public enum FermatAppType implements FermatEnum{
         //return null;
     }
 
+    public static int size(){
+        return values().length;
+    }
 
 }

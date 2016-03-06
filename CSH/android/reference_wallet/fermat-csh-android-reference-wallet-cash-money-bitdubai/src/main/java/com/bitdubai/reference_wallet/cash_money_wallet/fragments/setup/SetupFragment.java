@@ -10,7 +10,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,8 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
@@ -30,9 +30,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
+import org.glassfish.tyrus.core.frame.Frame;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
@@ -53,7 +54,9 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
 
 
     //UI
-    LinearLayout setupContainer;
+    FrameLayout setupContainer;
+    LinearLayout setupHeader;
+    LinearLayout setupBody;
     Spinner currencySpinner;
     ArrayAdapter<String> currencySpinnerAdapter;
     Button okBtn;
@@ -110,7 +113,9 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
 
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
 
-        setupContainer = (LinearLayout) layout.findViewById(R.id.setup_container);
+        setupContainer = (FrameLayout) layout.findViewById(R.id.csh_setup_container);
+        setupHeader = (LinearLayout) layout.findViewById(R.id.csh_setup_header);
+        setupBody = (LinearLayout) layout.findViewById(R.id.csh_setup_body);
 
         okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
         okBtn.setOnClickListener(this);
@@ -131,10 +136,12 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
                 if(moduleManager.cashMoneyWalletExists(appSession.getAppPublicKey()))
                     changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
                 else {  //otherwise, fade in setup page
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-                    setupContainer.setVisibility(View.VISIBLE);
-                    setupContainer.startAnimation(fadeInAnimation);
+                    Animation headerAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.csh_setup_header);
+                    Animation bodyAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.csh_setup_body);
 
+                    setupHeader.startAnimation(headerAnim);
+                    setupBody.setVisibility(View.VISIBLE);
+                    setupBody.startAnimation(bodyAnim);
                 }
             }
         }, 500);
