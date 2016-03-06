@@ -5,71 +5,97 @@
     android:layout_height="match_parent"
     android:background="@color/sub_app_background">
 
-    <FrameLayout
-        android:id="@+id/img_container"
-        android:layout_width="182dp"
-        android:layout_height="182dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp">
 
-        <ImageView
-            android:id="@+id/crypto_broker_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="1dp"
-            android:src="@drawable/img_new_user_camera" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/crypto_broker_image"
+        android:isScrollContainer="true"
+        android:hapticFeedbackEnabled="false"
+        android:src="@drawable/img_new_user_camera"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:layout_above="@+id/update_crypto_broker_button" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/circular_shape" />
-    </FrameLayout>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
         android:id="@+id/crypto_broker_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/img_container"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:gravity="center"
-        android:textColor="@color/broker_name_text_color"
-        android:textSize="30sp"
-        tools:text="Broker Name" />
+        android:textColor="#ffffff"
+        android:layout_above="@+id/sw"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:selectAllOnFocus="true"
+        android:background="#7d000000"
+        android:padding="12dp"
+        android:hint="Enter name"
+        android:textSize="22dp">
+        <requestFocus />
+    </EditText>
 
-    <LinearLayout
+    <Switch
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@+id/crypto_broker_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:text="@string/publish_identity"
+        android:id="@+id/publish_identity"
+        android:textColor="#000000"
+        android:visibility="invisible"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/update_crypto_broker_button"
+        android:layout_centerHorizontal="true" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/is_published"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="4dp"
-            android:gravity="center_vertical"
-            android:text="@string/publish_identity"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-
-    <Button
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:id="@+id/update_crypto_broker_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:text="@string/update"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="#292929"
+        android:textColor="#ffffff" />
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/update_identity_button"
-        android:text="@string/update"
-        android:textColor="@android:color/white" />
+        android:id="@+id/sw"
+        android:src="@drawable/not_visible2"
+        android:scaleType="fitXY"
+        android:alpha="1"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/update_crypto_broker_button"
+        android:layout_alignTop="@+id/publish_identity" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:id="@+id/camara"
+        android:src="@drawable/camera_icon_2"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#64000000" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:id="@+id/galeria"
+        android:src="@drawable/galery_icon_2"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#64000000" />
 
 </RelativeLayout>

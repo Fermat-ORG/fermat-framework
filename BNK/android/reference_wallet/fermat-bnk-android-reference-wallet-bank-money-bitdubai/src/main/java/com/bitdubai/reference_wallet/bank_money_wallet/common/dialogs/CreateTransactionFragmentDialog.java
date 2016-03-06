@@ -17,9 +17,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
@@ -66,6 +69,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     Button cancelBtn;
     String account;
     FiatCurrency fiatCurrency;
+    ErrorManager errorManager;
 
     /**
      * Allow the zxing engine use the default argument for the margin variable
@@ -81,7 +85,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      */
 
 
-    public CreateTransactionFragmentDialog(Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account,FiatCurrency fiatCurrency) {
+    public CreateTransactionFragmentDialog(ErrorManager errorManager,Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account,FiatCurrency fiatCurrency) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -90,6 +94,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
         this.resources = resources;
         this.account=account;
         this.fiatCurrency =fiatCurrency;
+        this.errorManager = errorManager;
     }
 
 
@@ -112,13 +117,13 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             amountText = (EditText) findViewById(R.id.bnk_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.bnk_ctd_memo);
             applyBtn = (Button) findViewById(R.id.bnk_ctd_apply_transaction_btn);
-            cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
+            //cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
 
-            dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
+            //dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
-            cancelBtn.setOnClickListener(this);
+            //cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
         }catch (Exception e){
@@ -149,9 +154,10 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.bnk_ctd_cancel_transaction_btn) {
+        /*if (i == R.id.bnk_ctd_cancel_transaction_btn) {
             dismiss();
-        }else if( i == R.id.bnk_ctd_apply_transaction_btn){
+        }*/
+        if( i == R.id.bnk_ctd_apply_transaction_btn){
             applyTransaction();
         }
     }
@@ -218,7 +224,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeWithdraw(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
@@ -265,9 +271,10 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeDeposit(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncDeposit(t);
             }
         } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
             return;

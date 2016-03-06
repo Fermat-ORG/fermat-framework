@@ -20,11 +20,19 @@ public class ProvisoryData {
     public static List<Item> getBottomNavigationProvisoryData(){
         List<Item> lst = new ArrayList<>();
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.Scanner, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+
+        //settings
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.SETTINGS,null,null,"settings","Settings","public_key_settings","settings",new Version(1,0,0));
         Item item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.ic_04);
-        item2.setPosition(1);
+        item2.setIconResource(R.drawable.icon_settings_menu);
+        item2.setPosition(0);
         lst.add(item2);
+
+//        installedSubApp = new InstalledSubApp(SubApps.Scanner, null, null, "intra_user_identity_sub_app", "Scanner", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0));
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.ic_04);
+//        item2.setPosition(5);
+//        lst.add(item2);
 
 
         //Identities
@@ -113,7 +121,7 @@ public class ProvisoryData {
         item1.setIconResource(R.drawable.asset_user_comunity);
         item1.setPosition(2);
         lstCommunities.add(item1);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Redeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Redeem Points", "public_key_dap_redeem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.reddem_point_community);
         item1.setPosition(3);
@@ -142,7 +150,7 @@ public class ProvisoryData {
                 null,
                 "sub_app_crypto_customer_community",
                 "Customers",
-                "sub_app_crypto_customer_community",
+                "public_key_crypto_customer_community",
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0));
 
@@ -174,11 +182,13 @@ public class ProvisoryData {
         lst.add(item2);
 
         //store
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet Store","public_key_store","wallet_store",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","App Store","public_key_store","wallet_store",new Version(1,0,0));
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.ic_03);
         item2.setPosition(4);
         lst.add(item2);
+
+
 
         return lst;
     }

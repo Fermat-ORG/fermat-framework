@@ -28,6 +28,7 @@ dependencies {
 
     compile project(':fermat-pip-plugin-module-developer-bitdubai')
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
+    compile project(':fermat-pip-plugin-android-core-module-developer-bitdubai')
 
     compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
 

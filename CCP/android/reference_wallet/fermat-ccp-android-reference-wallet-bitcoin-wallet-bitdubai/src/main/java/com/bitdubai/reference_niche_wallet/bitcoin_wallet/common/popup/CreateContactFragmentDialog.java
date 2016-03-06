@@ -21,8 +21,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
@@ -59,6 +65,8 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
     private ReferenceWalletSession referenceWalletSession;
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
     /**
      *  Contact member
@@ -106,6 +114,36 @@ public class CreateContactFragmentDialog extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
+        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+        BitcoinWalletSettings bitcoinWalletSettings = null;
+        try {
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(bitcoinWalletSettings != null) {
+
+            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        try {
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
 
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
@@ -210,7 +248,8 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             Actors.EXTRA_USER,
                             referenceWalletSession.getAppPublicKey(),
-                            toByteArray(contactImageBitmap)
+                            toByteArray(contactImageBitmap),
+                            blockchainNetworkType
                     );
                 }
                 else
@@ -221,7 +260,8 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            referenceWalletSession.getAppPublicKey()
+                            referenceWalletSession.getAppPublicKey(),
+                            blockchainNetworkType
                     );
                 }
 

@@ -1,21 +1,25 @@
 package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by jorge on 30-09-2015.
@@ -27,7 +31,7 @@ public interface Wallet {
      * @return StockBalance
      * @exception CantGetStockCryptoBrokerWalletException
      */
-    StockBalance getStockBalance()  throws CantGetStockCryptoBrokerWalletException;
+    StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException, CantStartPluginException;
     /**
      * This method load the instance the CryptoBrokerWalletSetting
      * @return StockBalance
@@ -37,23 +41,23 @@ public interface Wallet {
     /**
      * This method load the list CryptoBrokerStockTransaction
      * @param merchandise
-     * @param currencyType
+     * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
      * @exception CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
      * @param merchandise
      * @param fiatCurrency
-     * @param currencyType
+     * @param moneyType
      * @return FiatIndex
      * @exception CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
@@ -63,5 +67,19 @@ public interface Wallet {
      * @return Quote
      * @exception CantGetCryptoBrokerQuoteException
      */
-    Quote getQuote(FermatEnum merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException;
+    Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
+
+    /**
+     * This method load the update the transaction mark field seen in true
+     * @return void
+     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
+
+    /**
+     * This method load the list CurrencyMatching
+     * @return CurrencyMatching
+     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException;
 }

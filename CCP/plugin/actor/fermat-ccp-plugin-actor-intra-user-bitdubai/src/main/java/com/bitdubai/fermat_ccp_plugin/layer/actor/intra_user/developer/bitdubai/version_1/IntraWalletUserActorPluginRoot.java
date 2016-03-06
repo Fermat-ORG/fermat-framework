@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -32,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
@@ -109,6 +112,9 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserManager intraUserNetworkServiceManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -448,6 +454,21 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUserException {
+
+        try {
+
+            return intraWalletUserActorDao.getLastNotification(intraUserConnectedPublicKey);
+
+        } catch (CantGetIntraWalletUsersListException e) {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER LAST NOTIFICATION", e, "Error get database info", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+
+    @Override
     public ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUsersConnectedStateException {
 
         try {
@@ -456,10 +477,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             intraWalletUserActor = intraWalletUserActorDao.getIntraUserConnectedInfo(intraUserConnectedPublicKey);
 
-                    if(intraWalletUserActor != null)
-                        return intraWalletUserActor.getContactState();
-                    else
-                        return ConnectionState.NO_CONNECTED;
+            if(intraWalletUserActor != null)
+                return intraWalletUserActor.getContactState();
+            else
+                return ConnectionState.NO_CONNECTED;
 
 
         } catch (CantGetIntraWalletUsersListException e) {
@@ -468,7 +489,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetIntraUsersConnectedStateException("CAN'T GET INTRA USER CONNECTED STATUS", FermatException.wrapException(e), "", "");
         }
     }
-
 
 
     private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
@@ -691,6 +711,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 //                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
 //                         */
 //                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
+                        //notify android view
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW,"ACCEPTED_CONEXION");
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONACCEPT_" + intraUserToConnectPublicKey);
+
                         break;
                     case DISCONNECTED:
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
@@ -718,6 +742,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                  */
                 //TODO: VER PORQUE TIRA ERROR
                 intraUserNetworkServiceManager.confirmNotification(notification.getId());
+
             }
 
 

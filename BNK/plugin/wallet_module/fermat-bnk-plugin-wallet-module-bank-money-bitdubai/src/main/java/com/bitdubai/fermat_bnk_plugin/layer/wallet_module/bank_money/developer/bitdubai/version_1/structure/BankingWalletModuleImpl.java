@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
@@ -18,29 +23,41 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by memo on 08/12/15.
  */
-public class BankingWalletModuleImpl implements BankingWallet {
+public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransactionParametersImpl> implements BankingWallet {
 
     private final BankMoneyWalletManager bankMoneyWalletManager;
     private final DepositManager depositManager;
     private final WithdrawManager withdrawManager;
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
+    private PluginFileSystem pluginFileSystem;
+    private final Broadcaster broadcaster;
+    private UUID pluginId;
 
     private String publicKey = "banking_wallet";
+    private BankTransactionParametersImpl tempLastParameter;
 
-    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager) {
+    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId,Broadcaster broadcaster) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.depositManager = depositManager;
         this.withdrawManager = withdrawManager;
         this.holdManager = holdManager;
         this.unholdManager = unholdManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -67,6 +84,18 @@ public class BankingWalletModuleImpl implements BankingWallet {
             transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.UNHOLD, 100, 0, account));
             */
             //TODO: mostrar los hold y unhold???
+            Collections.sort(transactionRecords, new Comparator<BankMoneyTransactionRecord>() {
+                @Override
+                public int compare(BankMoneyTransactionRecord o1, BankMoneyTransactionRecord o2) {
+                    if(o1.getTimestamp()>o2.getTimestamp()){
+                        return -1;
+                    }
+                    if(o1.getTimestamp()<=o2.getTimestamp()){
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
         }catch (Exception e){
             System.out.println("module error cargando transacciones  "+e.getMessage() );
         }
@@ -123,5 +152,54 @@ public class BankingWalletModuleImpl implements BankingWallet {
             System.out.println("exception "+e.getMessage());
         }
         return null;
+    }
+
+
+    @Override
+    public void processTransaction(BankTransactionParametersImpl transaction) {
+        try{
+            if(transaction.getTransactionType() == TransactionType.CREDIT)
+                this.makeDeposit(transaction);
+            else
+                this.makeWithdraw(transaction);
+            //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
+        }catch(FermatException e){
+            //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
+        }
+    }
+
+    @Override
+    public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters)  {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.CREDIT);
+        tempLastParameter = parameters;
+        this.queueNewTransaction(parameters);
+    }
+
+    @Override
+    public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.DEBIT);
+        tempLastParameter = parameters;
+        this.queueNewTransaction(parameters);
+    }
+
+    @Override
+    public List<BankMoneyTransactionRecord> getPendingTransactions() {
+        List<BankMoneyTransactionRecord> list = new ArrayList<>();
+        for(BankTransactionParametersImpl data:getQueuedTransactions()){
+            list.add(new BankTransactionRecordImpl(data.getAmount().floatValue(),data.getMemo(),new Date().getTime(),data.getTransactionType(), BankTransactionStatus.PENDING));
+        }
+        return list;
+    }
+
+    @Override
+    public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(transaction.getBankTransactionId(),tempLastParameter.getPublicKeyPlugin(),tempLastParameter.getPublicKeyWallet(),tempLastParameter.getPublicKeyActor(),new BigDecimal(transaction.getAmount()),transaction.getBankAccountNumber(),transaction.getCurrencyType(),transaction.getMemo(),TransactionType.DEBIT);
+        try{
+            this.cancelTransaction(parameters);
+        }catch (Exception e){
+            System.out.println(" exception trying to cancel async transaction");
+        }
+
     }
 }

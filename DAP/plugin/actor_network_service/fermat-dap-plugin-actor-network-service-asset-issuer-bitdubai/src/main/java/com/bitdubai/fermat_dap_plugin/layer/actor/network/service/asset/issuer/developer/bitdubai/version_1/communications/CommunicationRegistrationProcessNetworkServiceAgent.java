@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
  * Created by franklin on 17/10/15.
@@ -98,8 +97,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 }
 
             }catch (Exception e){
-                try {
-                    System.out.println(e.getMessage());
+                try {//TODO Null pointer exc
+//                    System.out.println(e.getMessage());
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
                     System.out.println(e1.getMessage());

@@ -122,7 +122,8 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWith
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
-        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME);
+
         /**
          * Table Crypto Customer addition.
          */
@@ -170,13 +171,10 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWith
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
             return returnedRecords;
         } catch (Exception e){
-            database.closeDatabase();
             return returnedRecords;
         }
-        database.closeDatabase();
         return returnedRecords;
     }
 

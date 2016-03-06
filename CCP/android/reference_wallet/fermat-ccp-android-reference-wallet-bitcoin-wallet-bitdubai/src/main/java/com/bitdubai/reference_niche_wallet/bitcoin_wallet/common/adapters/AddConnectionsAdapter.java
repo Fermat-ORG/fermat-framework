@@ -1,11 +1,9 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
@@ -49,70 +47,60 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
 
     @Override
     protected void bindHolder(final IntraUserInfoViewHolder holder, final CryptoWalletIntraUserActor data, final int position) {
-        holder.getName().setText(data.getAlias());
-        RoundedBitmapDrawable roundedBitmap = null;
+        holder.thumbnail.setVisibility(View.VISIBLE);
+        holder.container_data.setVisibility(View.VISIBLE);
+        holder.checkbox_connection.setVisibility(View.VISIBLE);
+        holder.name.setVisibility(View.VISIBLE);
+
+        holder.name.setText(data.getAlias());
+        RoundedBitmapDrawable roundedBitmap;
         byte[] profileImage = data.getProfileImage();
         try {
             if (profileImage != null) {
                 if (profileImage.length > 0) {
                     roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), profileImage);
-                    holder.getThumbnail().setImageDrawable(roundedBitmap);
+                    holder.thumbnail.setImageDrawable(roundedBitmap);
                 } else {
-                    Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
+                    Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.thumbnail);
                 }
             } else {
-                Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
-                //roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male);
+                Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.thumbnail);
             }
         }catch (Exception e){
-            Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
+            Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.thumbnail);
         }
-
-
-
-        holder.getContainer_data().setOnClickListener(new View.OnClickListener() {
+        holder.container_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean selected =  !data.isSelected();
+                boolean selected = !data.isSelected();
                 data.setSelected(selected);
                 addConnectionCallback.setSelected(data, selected);
-                if(selected==true) {
-                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.TRANSPARENT, Color.parseColor("#dcf6f7")).setDuration(1500);
-                    animator.setEvaluator(new ArgbEvaluator());
-                    animator.start();
-                    holder.getCheckbox_connection().setChecked(true);
-                    FermatAnimationsUtils.showEmpty(context,true,holder.getCheckbox_connection());
+                if (selected) {
+                    holder.checkbox_connection.setChecked(true);
+                    FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
                     addConnectionCallback.addMenuEnabled();
+                    holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
+                    holder.container_data.getBackground().setAlpha(50);
 
-
-                }else {
-                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.TRANSPARENT).setDuration(1500);
-                    animator.setEvaluator(new ArgbEvaluator());
-                    animator.start();
-                    holder.getCheckbox_connection().setChecked(false);
-                    FermatAnimationsUtils.showEmpty(context, false, holder.getCheckbox_connection());
+                } else {
+                    holder.checkbox_connection.setChecked(false);
+                    FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
                     addConnectionCallback.addMenuDisabled();
+                    holder.container_data.getBackground().setAlpha(0);
                 }
-//                TransitionDrawable transition = (TransitionDrawable) v.getBackground();
-//                if(selected==false){
-//                    transition.startTransition(300);
-//                }else{
-//                    transition.reverseTransition(300);
-//                }
-                //v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
             }
         });
         if(data.isSelected()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                holder.getContainer_data().setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+                holder.container_data.setBackground(ContextCompat.getDrawable(context, R.drawable.add_connection_rounded_rectangle_shape));
             }
-        }else{
-            holder.getContainer_data().setBackgroundColor(Color.parseColor("#ffffff"));
-
         }
+        //else{
+            //holder.container_data.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-        holder.getCheckbox_connection().setChecked(false);
-        holder.getCheckbox_connection().setEnabled(false);
+        //}
+        holder.checkbox_connection.setChecked(false);
+        holder.checkbox_connection.setEnabled(false);
     }
 
 }

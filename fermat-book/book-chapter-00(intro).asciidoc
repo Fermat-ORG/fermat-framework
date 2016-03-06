@@ -1,13 +1,48 @@
 :numbered!:
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
 == Introduction
+In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash in form of paper money. Even with all the advancements in electronic management of money (ATMs, payment processors, wire transfers, credit cards, debit cards, direct deposit and online billpay, etc) they are just the digital representation of fiat money. + 
+It was not until the sucessful implementation of Bitcoin and its underlying blockchain technology that a replacement for the entire *concept money*[1] appeared to be possible. This invention of a digital money which bases its stregth and validation in math, cryptography and distributed consensus intends to solve the limitations of the current monetary system, which no longer seems to be "safely backed-up" in gold, silver or some commodity but depends only on the trust of a legal system that enforces it. + 
+This digital money based in blockchain technology simplifies the exchange of goods and services as paper money did once when it replaced barter in early markets, but in this case, in the new context of modern living in a digital age based on internet. It also appears to be the forerunner of the rising of a completely new paradigm in the way that people perform *exchange of value* between them. A new paradigm based on opennes, decentralization and privacy.
+The technology is becoming more popular in the last years as a considerable amount of fin tech venture capital has been flowing into startups dealing with it. Nevertheles at present time mass adoption seems to be too far away in the future, despite of all money, time and effort devoted to achieve it. +
+This is precisely the starting point of Fermat as a community of developers, graphic designers, academics, artists, and people of the industry who is addressing this big challenge of achieving the mass adoption of crypto currencies and blockchain technology. To accomplish that, Fermat has began building the necessary tools to bridge the technology with the end users, including in the process startups, brands and institutions worldwide.
 
-=== What is Fermat?
+[1] See a short description of Fiat money and cryptocurrency in link:book-z-appendix-03-money.asciidoc[Appendix-03]
+
+=== The Vision
+
+The Fermat Community believes that the upcoming decade will witness *crypto currencies* going mainstream and governments issuing digital currency as well. They expect that *paper money* is going to _disappear_ within the next years. Thus a strong consumer demand for *digital wallets* and for *financial applications* will inevitably emerge. In order to meet this demand thousands of different apps should be available, differentiating themselves not only in terms of their funtionalities and their level of abstraction (some of them managing directly crypto currencies while others fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the end user, tailored to his culture, customs and way of living. +
+The Fermat Community is contributing to this future building a software system that makes easier the creation of new digital wallets and financial apps, and it opens this fascinating emerging industry beyond the scope of very skilled developers but to include also "cryptography profane" developers and even non-developers.
+
+=== Fermat's Purpose
+
+  * To empower every person in the world with the appropriate tools to hold, save and move their money digitally in a more efficient, secure and private way.
+
+  * To give back to each person the sovereignty over his own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
+
+
+=== Fermat Community
+
+Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it, beyond bitDubai, a network of teams that are the project's main maintainer.
+
+The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there on, as the concept began spreading, many more developers, graphic and UX designers, and some industry related people joined in.
+
+Today Fermat is a vibrant community spanning several countries and disciplines.
+
+
+=== Fermat's Mission
+
+ *  To get crypto currencies mass adopted as soon as possible.
+ *  To allow end users, startups,  brands or institutions to have their financials applications.
+ *  To build the best possible integrated system able to handle the finances not just of all the human world population but also of companies and machines in the context of the link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#IoT[IoT] (Internet of Things).
+
+
+=== What is Fermat as a software system ?
 Fermat is a *peer-to-peer financial application framework*. +
 
 It consists of three main parts: +
 
-.  a p2p network for interconnecting devices
+.  a P2P network for interconnecting devices
 .  a plug-in framework for developing and running distributed financial applications and link:https://github.com/bitDubai/fermat/blob/master/fermat-book/book-glossary.asciidoc#wallet[wallets]. +
 .  a system of integrated apps
 
@@ -20,45 +55,18 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/MediaKit/Slid
 
 In this way Fermat builds a *full stack* of decentralized applications from the existing blockchain protocols up to the end user.
 The existing gap between the available but complex crypto networks technology  and the end user is bridged by consecutive abstraction layers, beginning with a first layer of _reference financial applications and wallets_ that are programmed to solve only a specific set of tasks. Then, these simple "bricks"  are combined to offer together a set of functionalities to a second layer of  _niche financial applications and wallets_ that are developed to address different use cases, one at a time. A third layer of  _branded financial applications and wallets_ combine niche fin apps/niche wallets and reuse their components in a sort of "WordPress for fin apps" making possible that non developers add their own touch and create a new fin app/wallet of their unique style. (*brand*). +
-The joint service of Fermat network connecting devices and Fermat framework running on the user's devices act as a _back-end_ for a fourth layer of distributed trust-less applications that manage crypto currencies and digital assets and are fully decentralized and for this, censonship resistant and hard to attack.
+The joint service of Fermat network connecting devices and Fermat framework running on the user's devices act as a _back-end_ for a fourth layer of distributed trust-less applications that manage crypto currencies and digital assets and are fully decentralized and for this, also censorship resistant and hard to attack.
 
-The goal of Fermat is to allow any company, big or small, brand or institution to have their financial application or digital wallet with *any* subset of the whole functionality built collectively by the entire software industry community. +
-Fermat's architecture includes the possibility of interconnecting the trust-less financial applications developed within its framework to the existent legacy financial system.
+The goal of Fermat is to allow any company, big or small, brand or institution to have their financial application or digital wallet with *any* subset of the whole functionality built collectively by the entire community. +
+Fermat's architecture includes also the possibility of interconnecting Fermat Apps to the existent legacy financial system.
 
-=== Fermat Community
-
-Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it, beyond bitDubai, the project's main maintainer community.
-
-The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there, many more developers, graphic and UX designers, and some industry related people joined in.
-
-Today Fermat is a vibrant community spanning several countries and disciplines.
-
-=== The Vision
-
-The Fermat Community believes that the upcoming decade will witness *crypto currencies* going mainstream and governments issuing digital currency as well. They expect that *paper money* is going to _disappear_ within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of different wallets and financials apps should be available, differentiating not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differentiating in their functionalities.
-
-The Fermat Community is contributing to that future with a system that builds and runs any kind of digital wallet easily by any developer or even non-developers.
-
-=== Fermat's Purpose
-
-  * Empower every person in the world with the appropriate tools to save and move their money digitally in a more efficient, secure and private way.
-
-  * Give back the sovereignty over to each person’s own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
-
-=== Fermat's Mission
-
- *  To get crypto currencies mass adopted as soon as possible.
-
- *  To build the best possible integrated system able to handle the finances not just of all the human world population but also of companies and machines in the context of the IoT.
-
- *  To allow end users, startups,  brand or institution to have their financials applications.
 
 === The challenge
 
-After the pioneer step of Nakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, there has been a lot of fin tech investment money given to a myriad of startups initiating in this industry in the last years. This fostered the next evolutionary step, *"crypto currency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and efforts needed to master this technology plus the results they are bringing up. Furthermore, isolated projects trying to build something useful starting form zero have it difficult to obtain the necessary support and the persistent endurance needed to succeed... +
-Precisely acknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as a starting point, its how the Fermat community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+After the pioneer step of Satoshi Nakamoto who in 2009 gave rise to *Bitcoin* and its revolutionary blockchain technology, there has been a lot of fin tech investment funds given to a myriad of startups initiating in this industry in the last years. A big spawn of new ideas and projects to expand the initial benefits of the blockchain to others areas beyond money transactiones has been created. A new industry flourished around *"crypto currency 2.0"* but despite of all efforts, the technology and the new products and services have still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and effort needed to master this technology and the results they are bringing up. Furthermore, isolated projects trying to build something useful starting form scratch have it difficult to obtain the necessary support and sometimes they lack the persistent endurance needed to succeed... +
+Precisely acknowledging this weak points in the industry, and choosing *collaboration* instead of competition, the Fermat community believes to achieve success in attaining mass adoption of this technology by building the solution collectively. To do this, a *master plan for development* has been laid out to create a complete new framework that solves at the same time the major obstacles in an efficient, inclusive and attractive way.
 
-The design of Fermat addressed the answers to the following questions:
+The design of Fermat contemplates the following questions:
 
   *  How can the perception of complexity on crypto currencies be isolated from common people?
   *  How can the collective intelligence of the developer community be used?
@@ -68,7 +76,6 @@ The design of Fermat addressed the answers to the following questions:
   *  How can non-developers be allowed to create digital wallets without programming anything at all?
 
 The answers to each of these questions are addressed within Fermat.
-
 
 
 === Fermat's Principles

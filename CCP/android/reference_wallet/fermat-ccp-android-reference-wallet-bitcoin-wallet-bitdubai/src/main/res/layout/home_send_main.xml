@@ -22,7 +22,6 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -35,7 +34,6 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
@@ -47,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No transactions"
+            android:text="@string/no_transactions_text"
             android:textColor="#fff"
             android:textSize="20sp"/>
 

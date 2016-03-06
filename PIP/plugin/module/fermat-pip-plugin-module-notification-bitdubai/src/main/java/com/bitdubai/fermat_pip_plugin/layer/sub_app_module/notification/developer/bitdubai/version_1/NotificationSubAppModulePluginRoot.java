@@ -121,17 +121,18 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     private void setUpEventListeners(){
 
-        FermatEventListener fermatEventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
-        FermatEventHandler fermatEventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
-        fermatEventListenerNewNotification.setEventHandler(fermatEventHandlerNewNotification);
-        eventManager.addListener(fermatEventListenerNewNotification);
-        listenersAdded.add(fermatEventListenerNewNotification);
-
         FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         FermatEventHandler CloudClietNotificationHandler = new CloudClientNotificationHandler(this);
         fermatEventListenerCloudClientConnectedNotification.setEventHandler(CloudClietNotificationHandler);
         eventManager.addListener(fermatEventListenerCloudClientConnectedNotification);
         listenersAdded.add(fermatEventListenerCloudClientConnectedNotification);
+
+      /*  FermatEventListener fermatEventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
+        FermatEventHandler fermatEventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
+        fermatEventListenerNewNotification.setEventHandler(fermatEventHandlerNewNotification);
+        eventManager.addListener(fermatEventListenerNewNotification);
+        listenersAdded.add(fermatEventListenerNewNotification);
+
 
         FermatEventListener fermatEventListenerIncomingRequestConnectionNotification = eventManager.getNewListener(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
         FermatEventHandler incomingRequestConnectionNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingRequestConnectionNotificationHandler(this);
@@ -157,7 +158,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         FermatEventHandler deniedPaymentRequestNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.DeniedPaymentRequestNotificationHandler(this);
         deniedPaymentRequestNotificationEventListener.setEventHandler(deniedPaymentRequestNotificationHandler);
         eventManager.addListener(deniedPaymentRequestNotificationEventListener);
-        listenersAdded.add(deniedPaymentRequestNotificationEventListener);
+        listenersAdded.add(deniedPaymentRequestNotificationEventListener);*/
 
         //close connection server
         FermatEventListener clientConnectionCloseNotificationEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
@@ -345,7 +346,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
 
-            notificationListener.notificate(notification);
+            //notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
@@ -384,7 +385,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("A Payment Request was received for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
+            notification.setTextBody("You have received a Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
             notification.setNotificationType(NotificationType.RECEIVE_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -407,7 +408,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("Your Payment Request for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
+            notification.setTextBody("Your Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + ", was deny.");
             notification.setNotificationType(NotificationType.DENIED_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);

@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 22/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 30/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -80,9 +80,10 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_LAST_NEGOTIATION_UPDATE_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_FIRST_KEY_COLUMN);
 

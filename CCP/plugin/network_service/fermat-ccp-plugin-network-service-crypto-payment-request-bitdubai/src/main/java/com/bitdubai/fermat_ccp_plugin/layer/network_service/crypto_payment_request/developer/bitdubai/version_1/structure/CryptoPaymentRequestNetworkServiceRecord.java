@@ -34,6 +34,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     private final BlockchainNetworkType networkType;
     private final ReferenceWallet referenceWallet;
     private final int sentNumber;
+    private final String messageType;
 
     public CryptoPaymentRequestNetworkServiceRecord(final UUID requestId,
                                                     final String identityPublicKey,
@@ -49,7 +50,8 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                                                     final RequestProtocolState protocolState,
                                                     final BlockchainNetworkType networkType,
                                                     final ReferenceWallet referenceWallet,
-                                                    final int sentNumber) {
+                                                    final int sentNumber,
+                                                    final String messageType) {
 
         this.requestId = requestId;
         this.identityPublicKey = identityPublicKey;
@@ -66,6 +68,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         this.networkType = networkType;
         this.referenceWallet = referenceWallet;
         this.sentNumber = sentNumber;
+        this.messageType = messageType;
     }
 
     @Override
@@ -141,6 +144,11 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     @Override
     public int getSentNumber() {
         return sentNumber;
+    }
+
+    @Override
+    public String getMessageType() {
+        return this.messageType;
     }
 
 

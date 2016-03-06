@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 
 import java.util.UUID;
@@ -13,11 +13,11 @@ import java.util.UUID;
 public class CryptoBrokerWalletAssociatedSettingMock implements CryptoBrokerWalletAssociatedSetting {
 
     String walletPublicKey;
-    CurrencyType currencyType;
+    MoneyType moneyType;
 
-    public CryptoBrokerWalletAssociatedSettingMock(String walletPublicKey, CurrencyType currencyType) {
+    public CryptoBrokerWalletAssociatedSettingMock(String walletPublicKey, MoneyType moneyType) {
         this.walletPublicKey = walletPublicKey;
-        this.currencyType = currencyType;
+        this.moneyType = moneyType;
     }
 
     @Override
@@ -61,22 +61,22 @@ public class CryptoBrokerWalletAssociatedSettingMock implements CryptoBrokerWall
     }
 
     @Override
-    public FermatEnum getMerchandise() {
+    public Currency getMerchandise() {
         return null;
     }
 
     @Override
-    public void setMerchandise(FermatEnum merchandise) {
+    public void setMerchandise(Currency merchandise) {
 
     }
 
     @Override
-    public CurrencyType getCurrencyType() {
-        return this.currencyType;
+    public MoneyType getMoneyType() {
+        return this.moneyType;
     }
 
     @Override
-    public void setCurrencyType(CurrencyType currencyType) {
+    public void setMoneyType(MoneyType moneyType) {
 
     }
 

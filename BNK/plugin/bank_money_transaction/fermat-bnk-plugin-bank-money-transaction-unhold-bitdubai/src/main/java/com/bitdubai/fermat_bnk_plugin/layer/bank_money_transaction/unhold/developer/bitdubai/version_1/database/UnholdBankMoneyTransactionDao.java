@@ -52,7 +52,7 @@ public class UnholdBankMoneyTransactionDao {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + pluginId.toString(), "");
             }
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + pluginId.toString(), "");
         } catch (Exception e) {
@@ -69,7 +69,8 @@ public class UnholdBankMoneyTransactionDao {
         newUnholdTransactionRecord(newRecord, holdParameters);        //Insertar valores en el record
         try {
             transactionTable.insertRecord(newRecord);
-        }catch (CantInsertRecordException e) {
+        } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant insert new record in table");
         }
 
@@ -82,19 +83,23 @@ public class UnholdBankMoneyTransactionDao {
         try {
             record = getRecordByPrimaryKey(transactionId);
             HoldTransaction = constructUnholdTransactionFromRecord(record);
-        } catch (CantLoadTableToMemoryException e){
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Cannot load table into memory");
         } catch (UnholdBankMoneyTransactionInconsistentTableStateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Inconsistent number of fetched records, should be between 0 and 1.");
         } catch (CantCreateUnholdTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
+        } catch (Exception e) {
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
         }
-
         return HoldTransaction;
     }
 
-    public List<BankTransaction> getUnholdTransactionList(DatabaseTableFilter filter) throws CantGetUnholdTransactionException
-    {
+    public List<BankTransaction> getUnholdTransactionList(DatabaseTableFilter filter) throws CantGetUnholdTransactionException {
         List<BankTransaction> transactions = new ArrayList<>();
         try {
             for (DatabaseTableRecord record : getRecordsByFilter(filter)) {
@@ -102,15 +107,16 @@ public class UnholdBankMoneyTransactionDao {
                 transactions.add(transaction);
             }
         } catch (CantCreateUnholdTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetUnholdTransactionException(CantGetUnholdTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
-        }catch (CantLoadTableToMemoryException e) {
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetUnholdTransactionException(CantGetUnholdTransactionException.DEFAULT_MESSAGE, e, "Failed to get Cash Hold Transaction list. Filter: " + filter.toString(), "");
         }
         return transactions;
     }
 
-    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetUnholdTransactionException
-    {
+    public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetUnholdTransactionException {
         DatabaseTableFilter filter = getEmptyHoldTableFilter();
         filter.setColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME);
         filter.setValue(BankTransactionStatus.ACKNOWLEDGE.getCode());
@@ -119,30 +125,29 @@ public class UnholdBankMoneyTransactionDao {
         return getUnholdTransactionList(filter);
     }
 
-    public void updateUnholdTransactionStatus(UUID transactionId, BankTransactionStatus status) throws CantUpdateUnholdTransactionException
-    {
+    public void updateUnholdTransactionStatus(UUID transactionId, BankTransactionStatus status) throws CantUpdateUnholdTransactionException {
         DatabaseTableRecord record;
         try {
             record = getRecordByPrimaryKey(transactionId);
             record.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, status.getCode());
-            if(status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
-                record.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
+            if (status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
+                record.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, new Date().getTime());
 
-            DatabaseTable table = database.getTable(pluginId.toString());
+            DatabaseTable table = database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
             table.updateRecord(record);
 
-        } catch (CantUpdateRecordException e){
+        } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update bank hold transaction status. Cant update the record");
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update bank hold transaction status. Cant load table into memory.");
         } catch (UnholdBankMoneyTransactionInconsistentTableStateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Cant update bank hold transaction status. Inconsistent table state.");
         }
 
     }
-
-
-
 
 
     /* INTERNAL HELPER FUNCTIONS */
@@ -158,10 +163,10 @@ public class UnholdBankMoneyTransactionDao {
         table.addStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
-
-        if (records.size() != 1)
+        //TODO: fix this
+        /*if (records.size() != 1)
             throw new UnholdBankMoneyTransactionInconsistentTableStateException("Inconsistent ("+ records.size() +") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId.toString(), "");
-
+        */
         return records.get(0);
     }
 
@@ -184,6 +189,7 @@ public class UnholdBankMoneyTransactionDao {
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
         //TODO: Colocar BigDecimal holdParameters.getAmount().floatValue()
+        newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME, holdParameters.getAccount());
         newRecord.setDoubleValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().floatValue());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
@@ -192,7 +198,7 @@ public class UnholdBankMoneyTransactionDao {
         newRecord.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, 0);
     }
 
-    private BankTransaction constructUnholdTransactionFromRecord(DatabaseTableRecord record) throws CantCreateUnholdTransactionException{
+    private BankTransaction constructUnholdTransactionFromRecord(DatabaseTableRecord record) throws CantCreateUnholdTransactionException {
 
         UUID transactionId = record.getUUIDValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME);
         String publicKeyWallet = record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME);
@@ -202,11 +208,12 @@ public class UnholdBankMoneyTransactionDao {
         String memo = record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME);
         long timestampAcknowledged = record.getLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         long timestampConfirmedRejected = record.getLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
-        String accountNumber="";
+        String accountNumber = record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME);
         FiatCurrency currency;
         try {
             currency = FiatCurrency.getByCode(record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME));
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid FiatCurrency value stored in table"
                     + UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME + " for id " + transactionId);
         }
@@ -215,10 +222,11 @@ public class UnholdBankMoneyTransactionDao {
         try {
             transactionStatus = BankTransactionStatus.getByCode(record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME));
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateUnholdTransactionException(e.getMessage(), e, "Hold Transaction", "Invalid CashTransactionStatus value stored in table"
                     + UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME + " for id " + transactionId);
         }
-        return new BankTransactionImpl(transactionId,publicKeyPlugin,publicKeyWallet,publicKeyActor,amount,accountNumber,currency,memo, BankOperationType.HOLD, TransactionType.HOLD,timestampAcknowledged,transactionStatus);
+        return new BankTransactionImpl(transactionId, publicKeyPlugin, publicKeyWallet, publicKeyActor, amount, accountNumber, currency, memo, BankOperationType.HOLD, TransactionType.HOLD, timestampAcknowledged, transactionStatus);
 
     }
 

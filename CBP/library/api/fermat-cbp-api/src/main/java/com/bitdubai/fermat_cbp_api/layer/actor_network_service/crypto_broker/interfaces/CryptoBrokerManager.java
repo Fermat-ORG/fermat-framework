@@ -2,7 +2,9 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.in
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
@@ -10,12 +12,15 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 
 import java.util.Collection;
 import java.util.List;
@@ -116,11 +121,13 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
      *
+     * @param actorType type of the actor whom wants to be new notifications
+     *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+    List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException;
 
     /**
      * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news
@@ -133,6 +140,59 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>requestQuotes</code> we can request the quotes that manages a crypto broker.
+     *
+     * @param requesterPublicKey     the public key of the actor that is requesting.
+     * @param requesterActorType     the actor type of the actor that is requesting.
+     * @param cryptoBrokerPublicKey  the public key of the crypto broker whom information i'm looking for.
+     *
+     * @return the created request.
+     *
+     * @throws CantRequestQuotesException if something goes wrong.
+     */
+    CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(String                  requesterPublicKey   ,
+                                                           Actors                  requesterActorType   ,
+                                                           String                  cryptoBrokerPublicKey) throws CantRequestQuotesException;
+
+    /**
+     * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
+     * We have to set a request type indicating:
+     * SENT    : All the Sent requests with a response.
+     * RECEIVED: All the Received request without a response.
+     *
+     * @param requestType SENT or RECEIVED
+     *
+     * @return a list of the pending quotes requests
+     *
+     * @throws CantListPendingQuotesRequestsException if something goes wrong.
+     */
+    List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
+
+    /**
+     * Through this method you can send the response of the quotes request to its requester.
+     *
+     * @param requestId   request id that we want to answer.
+     * @param updateTime  update time of the sending information
+     * @param quotes      list of quotes of the crypto broker.
+     *
+     * @throws CantAnswerQuotesRequestException  if something goes wrong.
+     * @throws QuotesRequestNotFoundException    if i cant find the request.
+     */
+    void answerQuotesRequest(UUID                    requestId ,
+                             long                    updateTime,
+                             List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException, QuotesRequestNotFoundException;
+
+    /**
+     * Through the method <code>confirmQuotesRequest</code> we can mark as done and confirmed a pending quotes request.
+     *
+     * @param requestId  id of the quotes request to confirm.
+     *
+     * @throws CantConfirmException                if something goes wrong.
+     * @throws QuotesRequestNotFoundException      if the quotes request cannot be found.
+     */
+    void confirmQuotesRequest(final UUID requestId) throws CantConfirmException, QuotesRequestNotFoundException;
 
     /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.

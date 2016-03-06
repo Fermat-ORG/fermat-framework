@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -67,17 +68,19 @@ class VaultKeyHierarchyGenerator implements Runnable{
     private PluginDatabaseSystem pluginDatabaseSystem;
     private BitcoinNetworkManager bitcoinNetworkManager;
     UUID pluginId;
+    ErrorManager errorManager;
 
     /**
      * Constructor
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId, ErrorManager errorManager) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
 
     }
 
@@ -97,32 +100,37 @@ class VaultKeyHierarchyGenerator implements Runnable{
      * Starting point of the agent
      */
     private void doTheMainTask() throws CantLoadHierarchyAccountsException {
-        /**
-         * I generate the rootKey (m) of the hierarchy.
-         */
-        rootKey = generateRootKeyFromSeed(seed);
-
-        /**
-         * I create the VaultKeyHierarchy from the master key
-         */
-        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId);
-
-        /**
-         * I will get from the database the list of accounts to create
-         * and add them to the hierarchy
-         */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
-            vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
-        }
-
-        /**
-         * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
-         */
-        vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
-            vaultKeyHierarchyMaintainer.start();
-        } catch (CantStartAgentException e) {
-            // I will log this error for now.
+            /**
+             * I generate the rootKey (m) of the hierarchy.
+             */
+            rootKey = generateRootKeyFromSeed(seed);
+
+            /**
+             * I create the VaultKeyHierarchy from the master key
+             */
+            vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId, errorManager);
+
+            /**
+             * I will get from the database the list of accounts to create
+             * and add them to the hierarchy
+             */
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
+                vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+            }
+
+            /**
+             * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
+             */
+            vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            try {
+                vaultKeyHierarchyMaintainer.start();
+            } catch (CantStartAgentException e) {
+                // I will log this error for now.
+                e.printStackTrace();
+            }
+
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

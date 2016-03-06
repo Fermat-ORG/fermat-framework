@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantG
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 
@@ -40,19 +41,15 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
                                                     final byte[] image) throws CantCreateCryptoBrokerIdentityException   ,
                                                                                CryptoBrokerIdentityAlreadyExistsException;
-
     /**
-     * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.
      *
-     * @param publicKey the public key of the crypto Broker to publish
-     *
-     * @return an instance of the recent created crypto broker identity.
-     *
-     * @throws CantGetCryptoBrokerIdentityException   if something goes wrong.
-     * @throws IdentityNotFoundException              if we cannot find an identity for the given public key.
+     * @param alias
+     * @param publicKey
+     * @param imageProfile
      */
-    CryptoBrokerIdentity getCryptoBrokerIdentity(final String publicKey) throws CantGetCryptoBrokerIdentityException,
-                                                                                IdentityNotFoundException           ;
+    void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateBrokerIdentityException;
+
+    CryptoBrokerIdentity getCryptoBrokerIdentity(String publicKey) throws CantGetCryptoBrokerIdentityException, IdentityNotFoundException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity

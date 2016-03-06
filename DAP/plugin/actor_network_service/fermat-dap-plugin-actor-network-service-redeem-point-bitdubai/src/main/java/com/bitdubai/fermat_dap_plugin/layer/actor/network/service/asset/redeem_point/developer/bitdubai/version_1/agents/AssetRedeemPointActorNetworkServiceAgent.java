@@ -6,9 +6,14 @@
 */
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.agents;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,9 +29,14 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.agents.AssetUserActorNetworkServiceAgent</code>
@@ -36,13 +46,14 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetRedeemPointActorNetworkServiceAgent {
+public class AssetRedeemPointActorNetworkServiceAgent extends FermatAgent {
 
     /*
     * Represent the sleep time for the  send (15000 milliseconds)
     */
-    private static final long SLEEP_TIME = 15000;
-
+    private static final long SEND_SLEEP_TIME = 15000;
+    private static final long RECEIVE_SLEEP_TIME = 15000;
+    private final ExecutorService threadPoolExecutor;
 
     private AssetRedeemPointActorNetworkServicePluginRoot assetRedeemPointActorNetworkServicePluginRoot;
 
@@ -54,7 +65,7 @@ public class AssetRedeemPointActorNetworkServiceAgent {
     /**
      * Represent is the tread is running
      */
-    private Boolean running;
+//    private Boolean running;
 
     /**
      * Represent the identity
@@ -85,7 +96,10 @@ public class AssetRedeemPointActorNetworkServiceAgent {
     /**
      * Represent the send cycle tread of this NetworkService
      */
-    private Thread toSend;
+    private Runnable toSend;
+    private Runnable toReceive;
+
+    private List<Future<?>> futures = new ArrayList<>();
 
     private boolean flag=true;
 
@@ -119,85 +133,106 @@ public class AssetRedeemPointActorNetworkServiceAgent {
         this.errorManager = errorManager;
         this.identity = identity;
         this.dataBase =dataBase;
+        this.status = AgentStatus.CREATED;
 
         outgoingMessageDao = new OutgoingMessageDao(this.dataBase);
 
         poolConnectionsWaitingForResponse = new HashMap<>();
 
-
+        threadPoolExecutor = Executors.newFixedThreadPool(1);
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running){
+                while (isRunning()) {
                     sendCycle();
                 }
             }
         });
-
-
     }
 
     /**
      * Start the internal threads to make the job
      */
-    public void start(){
+    public void start() throws CantStartAgentException {
+        try {
+            futures.add(threadPoolExecutor.submit(toSend));
+//            futures.add(threadPoolExecutor.submit(toReceive));
 
-        //Set to running
-        this.running  = Boolean.TRUE;
+            System.out.println("START READ IN THE TABLE TO SEND MESSAGE WITH STATE PENDING_TO_SEND ");
 
-        System.out.println("START READ IN THE TABLE TO SEND MESSAGE WITH STATE PENDING_TO_SEND ");
+            this.status = AgentStatus.STARTED;
+        } catch (Exception exception) {
 
-        //Start the Thread
-        toSend.start();
-
+            throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
     }
-
-
-    /**
-     * Pause the internal threads
-     */
-    public void pause(){ this.running  = Boolean.FALSE;  }
 
     /**
      * Resume the internal threads
      */
-    public void resume(){  this.running  = Boolean.TRUE; }
+    public void resume() throws CantStartAgentException {
+        try {
+            futures.add(threadPoolExecutor.submit(toSend));
+//            futures.add(threadPoolExecutor.submit(toReceive));
 
+            this.status = AgentStatus.STARTED;
+        } catch (Exception exception) {
+            throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
+
+    /**
+     * Pause the internal threads
+     */
+    public void pause() throws CantStopAgentException {
+        try {
+            Iterator<Future<?>> it = futures.iterator();
+
+            while (it.hasNext()) {
+                it.next().cancel(true);
+            }
+
+            this.status = AgentStatus.PAUSED;
+        } catch (Exception exception) {
+            throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
 
     /**
      * Stop the internal threads
      */
-    public void stop(){  toSend.interrupt(); }
+    public void stop() throws CantStopAgentException {
+        try {
+            Iterator<Future<?>> it = futures.iterator();
 
+            while (it.hasNext()) {
+                it.next().cancel(true);
+            }
+
+            this.status = AgentStatus.PAUSED;
+
+        } catch (Exception exception) {
+            throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+        }
+    }
 
     /**
-     *
      * Lifeclycle of the actornetworkService
-     *
      */
     public void sendCycle(){
-
         try{
-
             if(this.assetRedeemPointActorNetworkServicePluginRoot.isRegister()){
-
                 processMetadata();
             }
 
-            if(toSend.isInterrupted() == Boolean.FALSE){
-                //Sleep for a time
-                Thread.sleep(AssetRedeemPointActorNetworkServiceAgent.SLEEP_TIME);
-            }
-
-        }catch(InterruptedException e) {
-            running = false;
-            toSend.interrupt();
+            Thread.sleep(SEND_SLEEP_TIME);
+        } catch (InterruptedException e) {
+            status = AgentStatus.STOPPED;
             System.out.println(this.getClass().getSimpleName() + " - Thread Interrupted stopped ...  ");
+            reportUnexpectedError(FermatException.wrapException(e));
         }
-
     }
-
 
     private void processMetadata() {
 
@@ -207,23 +242,26 @@ public class AssetRedeemPointActorNetworkServiceAgent {
 
             if(listRecorMessageToSend != null && !listRecorMessageToSend.isEmpty()){
 
-
                     for (FermatMessage fm : listRecorMessageToSend) {
 
                         if(!poolConnectionsWaitingForResponse.containsKey(fm.getReceiver())) {
-
-
-
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getSender(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
-
+                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getReceiver(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
 
                             try {
                                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
@@ -235,22 +273,22 @@ public class AssetRedeemPointActorNetworkServiceAgent {
                             // pass the metada to a pool wainting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(fm.getReceiver(), fm);
                         }
-
                     }
-
             }
-
-
         } catch (CantReadRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send Message PENDING_TO_SEND"));
         }
-
-
-
     }
 
     public void connectionFailure(String identityPublicKey){
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
+    public Map<String, FermatMessage> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
+    }
+
+    private void reportUnexpectedError(FermatException e) {
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
 }

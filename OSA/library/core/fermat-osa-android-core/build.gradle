@@ -10,11 +10,12 @@ version = '1.0.0'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -33,26 +34,33 @@ android {
     lintOptions {
         abortOnError false
     }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core-api')
-
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
+    compile project(':fermat-osa-addon-android-broadcaster-system-bitdubai')
 
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:support-v13:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
-
     testCompile 'org.robolectric:robolectric:3.0+'
     testCompile 'junit:junit:4.11+'
+
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:design:23.1.1'
 }
 
 // Configuracion de PMD

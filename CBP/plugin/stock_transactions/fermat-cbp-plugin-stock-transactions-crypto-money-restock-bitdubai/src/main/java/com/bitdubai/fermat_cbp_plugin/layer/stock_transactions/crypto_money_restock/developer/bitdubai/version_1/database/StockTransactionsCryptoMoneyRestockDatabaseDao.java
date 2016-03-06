@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -75,7 +76,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         DatabaseTable databaseTable = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
+        record.setUUIDValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getTransactionId());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME, cryptoMoneyTransaction.getActorPublicKey());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoMoneyTransaction.getCryptoCurrency().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cryptoMoneyTransaction.getCbpWalletPublicKey());
@@ -87,17 +88,15 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
-
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransactionId());
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoMoneyTransaction.getBlockchainNetworkType().getCode());
         return record;
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getCryptoMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -127,7 +126,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         cryptoMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setPriceReference(new BigDecimal(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
-
+        cryptoMoneyRestockTransaction.setOriginTransactionId(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
+        cryptoMoneyRestockTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
         return cryptoMoneyRestockTransaction;
     }
 
@@ -138,6 +138,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cryptoMoneyTransaction.setPriceReference(new BigDecimal(0));
             DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyRestockRecord(cryptoMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();

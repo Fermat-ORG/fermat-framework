@@ -69,6 +69,7 @@ public class WalletContactsMiddlewareDatabaseFactory {
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME , DatabaseDataType.STRING      , 50, Boolean.TRUE );
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING      , 10, Boolean.FALSE);
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME     , DatabaseDataType.LONG_INTEGER,  0, Boolean.FALSE);
+            table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE               , DatabaseDataType.STRING      , 10, Boolean.FALSE);
 
             table.addIndex(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_FIRST_KEY_COLUMN);
 

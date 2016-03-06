@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -67,9 +68,9 @@ public interface ActorAssetIssuer extends DAPActor {
     Double getLocationLongitude();
 
     /**
-     * returns the crypto address to which it belongs
+     * returns the ExtendedPublicKey to which it belongs
      *
-     * @return CryptoAddress instance.
+     * @return ExtendedPublicKey instance.
      */
-//    CryptoAddress getCryptoAddress();
+    String getExtendedPublicKey();
 }

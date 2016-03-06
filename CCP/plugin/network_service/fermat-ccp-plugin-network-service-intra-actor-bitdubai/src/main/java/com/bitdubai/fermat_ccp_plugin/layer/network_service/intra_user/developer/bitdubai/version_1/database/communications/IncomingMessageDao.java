@@ -41,6 +41,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class IncomingMessageDao {
 
     /**
@@ -132,8 +133,6 @@ public class IncomingMessageDao {
         return incomingTemplateNetworkServiceMessage;
     }
 
-    ;
-
     /**
      * Method that list the all entities on the data base.
      *
@@ -187,8 +186,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -266,8 +263,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -360,8 +355,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that create a new entity in the data base.

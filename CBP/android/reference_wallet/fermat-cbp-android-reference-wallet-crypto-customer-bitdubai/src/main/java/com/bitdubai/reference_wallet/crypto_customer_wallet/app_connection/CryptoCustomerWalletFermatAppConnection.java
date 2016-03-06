@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection;
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -14,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
@@ -25,13 +25,10 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
  *
  * @since 2015.12.17
  */
-public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
+public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSession> {
 
-    ActorIdentity identity;
-
-    public CryptoCustomerWalletFermatAppConnection(Activity activity, ActorIdentity identity) {
+    public CryptoCustomerWalletFermatAppConnection(Context activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -58,12 +55,12 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getActivity(), identity);
+        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoCustomerWalletHeaderPainter();
+        return new CryptoCustomerWalletHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

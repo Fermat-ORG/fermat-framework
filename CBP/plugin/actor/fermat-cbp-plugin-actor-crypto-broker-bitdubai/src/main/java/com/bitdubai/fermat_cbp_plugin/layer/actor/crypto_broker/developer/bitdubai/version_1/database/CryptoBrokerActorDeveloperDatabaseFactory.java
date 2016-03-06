@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 19/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 16/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -128,6 +128,50 @@ public class CryptoBrokerActorDeveloperDatabaseFactory implements DealsWithPlugi
         DeveloperDatabaseTable cryptoBrokerActorRelationshipTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME, cryptoBrokerActorRelationshipColumns);
         tables.add(cryptoBrokerActorRelationshipTable);
 
+        /**
+         * Table Actor Extra Data columns.
+         */
+        List<String> actorExtraDataColumns = new ArrayList<String>();
+
+        actorExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+        /**
+         * Table Actor Extra Data addition.
+         */
+        DeveloperDatabaseTable actorExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME, actorExtraDataColumns);
+        tables.add(actorExtraDataTable);
+
+        /**
+         * Table Quote Extra Data columns.
+         */
+        List<String> quoteExtraDataColumns = new ArrayList<String>();
+
+        quoteExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
+        /**
+         * Table Quote Extra Data addition.
+         */
+        DeveloperDatabaseTable quoteExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME, quoteExtraDataColumns);
+        tables.add(quoteExtraDataTable);
+
+        /**
+         * Table Platforms Extra Data columns.
+         */
+        List<String> platformsExtraDataColumns = new ArrayList<String>();
+
+        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME);
+        /**
+         * Table Platforms Extra Data addition.
+         */
+        DeveloperDatabaseTable platformsExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME, platformsExtraDataColumns);
+        tables.add(platformsExtraDataTable);
+
 
 
         return tables;
@@ -139,43 +183,43 @@ public class CryptoBrokerActorDeveloperDatabaseFactory implements DealsWithPlugi
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+
+
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
-            List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
-                List<String> developerRow = new ArrayList<String>();
-                /**
-                 * for each row in the table list
-                 */
-                for (DatabaseRecord field : row.getValues()){
-                    /**
-                     * I get each row and save them into a List<String>
-                     */
-                    developerRow.add(field.getValue());
-                }
-                /**
-                 * I create the Developer Database record
-                 */
-                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-            }
-            /**
-             * return the list of DeveloperRecords for the passed table.
-             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
-            return returnedRecords;
-        } catch (Exception e){
-            database.closeDatabase();
             return returnedRecords;
         }
-        database.closeDatabase();
+
+        List<DatabaseTableRecord> records = selectedTable.getRecords();
+        for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
+            /**
+             * for each row in the table list
+             */
+            for (DatabaseRecord field : row.getValues()) {
+                /**
+                 * I get each row and save them into a List<String>
+                 */
+                developerRow.add(field.getValue().toString());
+            }
+            /**
+             * I create the Developer Database record
+             */
+            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+        }
+
+
+        /**
+         * return the list of DeveloperRecords for the passed table.
+         */
         return returnedRecords;
     }
 

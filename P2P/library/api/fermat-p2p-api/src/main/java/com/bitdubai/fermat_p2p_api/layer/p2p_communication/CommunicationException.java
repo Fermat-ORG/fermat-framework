@@ -2,8 +2,6 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
 import com.bitdubai.fermat_api.FermatException;
 
-import java.io.IOException;
-
 /**
  * Created by ciencias on 31.12.14.
  */

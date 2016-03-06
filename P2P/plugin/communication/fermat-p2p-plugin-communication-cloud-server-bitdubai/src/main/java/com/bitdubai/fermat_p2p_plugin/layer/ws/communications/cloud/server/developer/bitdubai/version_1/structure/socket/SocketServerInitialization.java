@@ -6,8 +6,6 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.socket;
 
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,14 +22,8 @@ public class SocketServerInitialization {
 
     private static final int PORT_SOCKET = 9001;
 
-    /**
-     * Represent the wsCommunicationCloudServer
-     */
-    private WsCommunicationCloudServer wsCommunicationCloudServer;
+    public SocketServerInitialization() throws IOException{
 
-    public SocketServerInitialization(WsCommunicationCloudServer wsCommunicationCloudServer) throws IOException{
-
-        this.wsCommunicationCloudServer = wsCommunicationCloudServer;
         ServerSocket serverSocket = new ServerSocket(PORT_SOCKET);
         Socket socket = null;
 
@@ -44,7 +36,7 @@ public class SocketServerInitialization {
                 System.out.println("I/O error: " + e);
             }
             // new thread for a client
-            new SocketMultiThreadHandle(socket,wsCommunicationCloudServer).start();
+            new SocketMultiThreadHandle(socket).start();
         }
 
 

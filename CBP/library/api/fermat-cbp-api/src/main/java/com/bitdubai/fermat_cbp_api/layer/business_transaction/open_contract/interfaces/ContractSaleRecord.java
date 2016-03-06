@@ -1,13 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
 import java.util.Collection;
@@ -19,12 +16,12 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
 
     Collection<ContractClause> contractClauses;
     long dayTime;
-    CurrencyType merchandiseCurrency;
+    MoneyType merchandiseCurrency;
     float merchandiseAmount;
     long merchandiseDeliveryExpirationDate;
     String negotiationId;
     float paymentAmount;
-    CurrencyType paymentCurrency;
+    MoneyType paymentCurrency;
     long paymentExpirationDate;
     String publicKeyBroker;
     String publicKeyCustomer;
@@ -61,7 +58,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return this.merchandiseAmount;
     }
 
-    public CurrencyType getMerchandiseCurrency() {
+    public MoneyType getMerchandiseCurrency() {
         return this.merchandiseCurrency;
     }
     
@@ -77,7 +74,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return this.paymentAmount;
     }
     
-    public CurrencyType getPaymentCurrency() {
+    public MoneyType getPaymentCurrency() {
         return this.paymentCurrency;
     }
     
@@ -133,7 +130,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.merchandiseAmount=merchandiseAmount;
     }
 
-    public void setMerchandiseCurrency(CurrencyType merchandiseCurrency) {
+    public void setMerchandiseCurrency(MoneyType merchandiseCurrency) {
         this.merchandiseCurrency=merchandiseCurrency;
     }
 
@@ -154,7 +151,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.paymentAmount=paymentAmount;
     }
 
-    public void setPaymentCurrency(CurrencyType paymentCurrency) {
+    public void setPaymentCurrency(MoneyType paymentCurrency) {
         this.paymentCurrency=paymentCurrency;
     }
 

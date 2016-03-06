@@ -42,6 +42,6 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME = "actor_to_type";
     public static final String OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME = "reference_wallet";
     public static final String OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME = "same_device";
-
+    public static final String OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE = "runningNetworkType";
     public static final String OUTGOING_INTRA_ACTOR_FIRST_KEY_COLUMN = "transaction_id";
 }

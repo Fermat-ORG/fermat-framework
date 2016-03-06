@@ -15,7 +15,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created by Yordin Alayn on 10.12.15.
@@ -34,12 +33,17 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     public CustomerBrokerNewServiceEventHandler(
         CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
         EventManager eventManager
-    ){
-        this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
-        this.eventManager                                       = eventManager;
+    )throws CantStartServiceException {
+        try {
+            setDatabaseDao(customerBrokerNewNegotiationTransactionDatabaseDao);
+            setEventManager(eventManager);
+        } catch (CantSetObjectException exception) {
+            throw new CantStartServiceException(exception,"Cannot set the Customer Broker New database handler","The database handler is null");
+        }
     }
 
     /*SERVICE*/
+    @Override
     public void start() throws CantStartServiceException {
         try {
         /**
@@ -55,15 +59,6 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
-
-            /*
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-            fermatEventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
-            ((IncomingCryptoOnCryptoNetworkEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-            */
 
         fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
         fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
@@ -92,30 +87,38 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     /*END SERVICE*/
 
     /*PUBLIC METHOD*/
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
 //        Logger LOG = Logger.getGlobal();
 //        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+        System.out.print("\n\n**** 16) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - SAVE NEW EVENT  " +
+                "\n - EventType = "+event.getEventType().getCode()+
+                "\n - Source = "+event.getSource().getCode()+
+                "****\n");
 
-        System.out.print("\n\n**** 16) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - EVENT HANDLER - SAVE NEW EVENT ****\n");
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTransaction(event.getEventType().getCode(), event.getSource().getCode());
 //        LOG.info("CHECK THE DATABASE");
-
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTransaction(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
+    }
 
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/
+    private void setDatabaseDao(CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao) throws CantSetObjectException {
+        if(customerBrokerNewNegotiationTransactionDatabaseDao==null){
+            throw new CantSetObjectException("The CustomerBrokerNewNegotiationTransactionDatabaseDao is null");
+        }
+        this.customerBrokerNewNegotiationTransactionDatabaseDao=customerBrokerNewNegotiationTransactionDatabaseDao;
+    }
+
     private void removeRegisteredListeners(){
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);

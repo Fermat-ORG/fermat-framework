@@ -56,29 +56,30 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             /**
              * Create Asset Factory
              */
-            table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
 
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, DatabaseDataType.STRING, 15, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN, DatabaseDataType.STRING, 150, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
 
-            table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
+            table.addIndex(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -90,17 +91,17 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             /**
              * Create Asset Factory Resource
              */
-            table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
 
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
-            table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FIRST_KEY_COLUMN);
+            table.addIndex(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -112,14 +113,14 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             /**
              * Create Asset Factory Contract
              */
-            table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
             //table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
-            table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN);
+            table.addIndex(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -131,14 +132,14 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             /**
              * Create Asset Identity Issuer Contract
              */
-            table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
-            table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN);
+            table.addIndex(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

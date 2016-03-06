@@ -509,8 +509,8 @@ public class BitcoinWatchOnlyCryptoVaultDao {
          * I will manually save the default value
          */
         if (networkTypes.size() == 0){
-            this.setActiveNetworkType(BlockchainNetworkType.DEFAULT);
-            networkTypes.add(BlockchainNetworkType.DEFAULT);
+            this.setActiveNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            networkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         return networkTypes;
@@ -565,8 +565,9 @@ public class BitcoinWatchOnlyCryptoVaultDao {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
         /**
          * If we are not allowed to save detailed information then we will exit
          */
@@ -595,6 +596,7 @@ public class BitcoinWatchOnlyCryptoVaultDao {
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
         record.setStringValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        record.setStringValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {

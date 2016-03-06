@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -8,7 +9,7 @@ import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.res.Resources;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
@@ -33,25 +34,16 @@ public class GrouperViewHolder extends ParentViewHolder {
     private static final float PIVOT_VALUE = 0.5f;
     private static final long DEFAULT_ROTATE_DURATION_MS = 200;
     private static final boolean HONEYCOMB_AND_ABOVE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-
-    private View itemView;
-
-
-    Resources res;
-
-
     public ColorDrawable background;
-
-
+    public ImageView mArrowExpandImageView;
+    Resources res;
+    private View itemView;
     private ImageView contactIcon;
     private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
     private TextView txt_time;
-
-
     private TextView txt_total_number_transactions;
-    public ImageView mArrowExpandImageView;
     private TextView txt_total_balance;
 
     /**
@@ -109,10 +101,9 @@ public class GrouperViewHolder extends ParentViewHolder {
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
-
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()) + " hs");
-        txt_total_number_transactions.setText(String.valueOf(childCount-1)+ " records");
+        txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
 
         //TODO me falta el total
         //txt_total_balance.setText();

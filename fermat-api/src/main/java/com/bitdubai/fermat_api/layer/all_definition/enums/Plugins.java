@@ -188,11 +188,14 @@ public enum Plugins implements FermatPluginsEnum {
 
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
+    ASSET_TRANSFER              ("ASTT"),
     ASSET_FACTORY               ("ASF"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
+    ASSET_SELLER("ASSE"),
+    ASSET_BUYER("ASBU"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
     ASSET_TRANSMISSION          ("AST"),
@@ -226,7 +229,9 @@ public enum Plugins implements FermatPluginsEnum {
     INTRA_IDENTITY_USER          ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
+    ISSUER_APPROPRIATION("ISAP"),
     NOTIFICATION                ("NOT"),
+    ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
     PUBLISHER                   ("PBL"),
@@ -274,6 +279,7 @@ public enum Plugins implements FermatPluginsEnum {
     NEGOTIATION_TRANSMISSION            ("NGTR"),
     OPEN_CONTRACT                       ("OPC"),
     TRANSACTION_TRANSMISSION            ("TRTX"),
+    MATCHING_ENGINE                     ("MAEN"),
     CLOSE_CONTRACT                      ("CLC"),
     CUSTOMER_ONLINE_PAYMENT             ("CONP"),
     CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
@@ -291,12 +297,13 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM");
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    //WRD
+    API_TOKENLY                         ("TOKAP")
 
     // End  new Plugins
-
     ;
-
     private final String code;
 
     Plugins(final String code) {
@@ -310,11 +317,16 @@ public enum Plugins implements FermatPluginsEnum {
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASTT"  :  return ASSET_TRANSFER           ;
             case "ASF"  :   return ASSET_FACTORY            ;
             case "ASI"  :   return ASSET_ISSUER             ;
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
+            case "ASSE":
+                return ASSET_SELLER;
+            case "ASBU":
+                return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -348,6 +360,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IWU"  :   return INTRA_WALLET_USER        ;
             case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
+            case "ISAP":    return ISSUER_APPROPRIATION     ;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
@@ -417,12 +430,15 @@ public enum Plugins implements FermatPluginsEnum {
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
+            case "MAEN":    return MATCHING_ENGINE;
 
             case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
+            case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
+            case "TOKAP":   return API_TOKENLY                      ;
 
             default:
                 throw new InvalidParameterException(

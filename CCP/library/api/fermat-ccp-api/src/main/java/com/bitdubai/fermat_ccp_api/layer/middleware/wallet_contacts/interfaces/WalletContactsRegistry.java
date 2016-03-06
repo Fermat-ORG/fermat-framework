@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +44,7 @@ public interface WalletContactsRegistry {
                                             String               actorFirstName,
                                             String               actorLastName,
                                             Actors               actorType,
-                                            List<CryptoAddress>  cryptoAddresses,
+                                            HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses,
                                             String               walletPublicKey) throws CantCreateWalletContactException;
 
     // create wallet contact without addresses
@@ -51,7 +53,8 @@ public interface WalletContactsRegistry {
                                             String actorFirstName,
                                             String actorLastName,
                                             Actors actorType,
-                                            String walletPublicKey) throws CantCreateWalletContactException;
+                                            String walletPublicKey,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException;
 
     /**
      * Through the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
@@ -63,7 +66,8 @@ public interface WalletContactsRegistry {
      * @throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException if i can't find the wallet contact.
      */
     void addCryptoAddressToWalletContact(UUID          contactId,
-                                         CryptoAddress cryptoAddress) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+                                         CryptoAddress cryptoAddress,
+                                         BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
      * Through the method <code>deleteCryptoAddressToWalletContact</code> you can delete a crypto address for an existent contact.
@@ -75,7 +79,8 @@ public interface WalletContactsRegistry {
      * @throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException if i can't find the wallet contact
      */
     void deleteCryptoAddressToWalletContact(UUID          contactId,
-                                            CryptoAddress cryptoAddress) throws CantDeleteCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+                                            CryptoAddress cryptoAddress,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantDeleteCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
      * Through the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.
@@ -89,7 +94,8 @@ public interface WalletContactsRegistry {
      */
     void addCryptoAddressToWalletContact(String        actorPublicKey,
                                          String        walletPublicKey,
-                                         CryptoAddress cryptoAddress) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+                                         CryptoAddress cryptoAddress,
+                                         BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
      * Through the method <code>updateWalletContact</code> you can update the modifiable fields of a wallet contact
@@ -106,7 +112,7 @@ public interface WalletContactsRegistry {
                              String              actorAlias,
                              String              actorFirstName,
                              String              actorLastName,
-                             List<CryptoAddress> cryptoAddresses) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
+                             HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses) throws com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException, com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 
     /**
      * Through the method <code>deleteWalletContact</code> you can delete a wallet contact

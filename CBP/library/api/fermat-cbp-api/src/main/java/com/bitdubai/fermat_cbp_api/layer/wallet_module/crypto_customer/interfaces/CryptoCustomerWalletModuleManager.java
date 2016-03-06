@@ -3,11 +3,12 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfac
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 
 /**
  * Created by angel on 17/9/15.
  */
-public interface CryptoCustomerWalletModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CryptoCustomerWalletModuleManager extends ModuleManager<CryptoCustomerWalletPreferenceSettings, ActiveActorIdentityInformation> {
 
     /**
      * @param walletPublicKey the public key of the wallet

@@ -30,6 +30,8 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
     CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT("CPPBWSFF"),
     CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT("CCPBWRFF"),
     CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT("CCPBWSF"),
+    CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS("CCPBWSFN"),
+    CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK("CCPBWSFMN"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT("CCPBWACF"),
     CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT("CCPBWNIF");
 
@@ -38,15 +40,6 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
 
     ReferenceFragmentsEnumType(String key) {
         this.key = key;
-    }
-
-    @Override
-    public String getKey()   { return this.key; }
-
-
-    @Override
-    public String toString(){
-        return key;
     }
 
     public static ReferenceFragmentsEnumType getValue(String name) {
@@ -59,6 +52,16 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
+    }
+
+    @Override
+    public String getKey() {
+        return this.key;
+    }
+
+    @Override
+    public String toString() {
+        return key;
     }
 
 

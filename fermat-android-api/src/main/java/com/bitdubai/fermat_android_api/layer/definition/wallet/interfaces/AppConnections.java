@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
-import android.app.Activity;
-
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -16,11 +16,11 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AppConnections<S extends FermatSession> implements FermatAppConnection{
 
-    WeakReference<Activity> activity;
+    WeakReference<Context> activity;
     ActiveActorIdentityInformation activeIdentity;
     S fullyLoadedSession;
 
-    public AppConnections(Activity activity) {
+    public AppConnections(Context activity) {
         this.activity = new WeakReference<>(activity);
         activeIdentity = null;
     }
@@ -38,7 +38,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
     protected abstract AbstractFermatSession getSession();
 
-    public Activity getActivity() {
+    public Context getContext() {
         return activity.get();
     }
 
@@ -60,7 +60,12 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
 
 
-    public void setActivity(WeakReference<Activity> activity) {
+    public void setActivity(WeakReference<Context> activity) {
         this.activity = activity;
+    }
+
+
+    public NotificationPainter getNotificationPainter(String code){
+        return null;
     }
 }

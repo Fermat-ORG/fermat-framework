@@ -43,6 +43,7 @@ public class UserRedemptionDatabaseConstants {
 
     public static final String USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME ="transaction_id";
     public static final String USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME="delivering_genesis_transaction";
+    public static final String USER_REDEMPTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME = "networkType";
     public static final String USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME ="asset_publickey";
     public static final String USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME ="repo_publickey";
     public static final String USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME ="start_time";

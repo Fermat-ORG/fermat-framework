@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
+import org.apache.commons.lang.time.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -71,7 +73,7 @@ public class DateHelper {
 
     }
 
-    public static long addDayToTimestamp(long timestamp){
+    public static long addDayToTimestamp(long timestamp) {
         return timestamp + 86400; //20*60*60
     }
 }

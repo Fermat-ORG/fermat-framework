@@ -1,11 +1,11 @@
 package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
-import static org.fest.assertions.api.Assertions.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class ConstructionServerTest extends

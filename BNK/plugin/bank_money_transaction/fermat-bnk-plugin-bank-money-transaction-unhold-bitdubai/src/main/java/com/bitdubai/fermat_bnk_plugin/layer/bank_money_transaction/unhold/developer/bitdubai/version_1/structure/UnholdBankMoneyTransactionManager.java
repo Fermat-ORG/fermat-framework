@@ -41,6 +41,7 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
@@ -68,6 +69,7 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
         try{
             return unholdBankMoneyTransactionDao.createUnholdTransaction(parameters);
         }catch (CantCreateUnholdTransactionException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeUnholdTransactionException(CantMakeUnholdTransactionException.DEFAULT_MESSAGE,e,null,null);
         }
 
@@ -76,5 +78,16 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
     @Override
     public BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException {
         return unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
+    }
+
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        BankTransactionStatus status= null;
+        try {
+            status = unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
+            return status != null;
+        }catch (FermatException e){
+            return false;
+        }
     }
 }

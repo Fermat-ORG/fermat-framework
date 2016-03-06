@@ -156,7 +156,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
             for (int i = 0; i < records.size(); ++i) {
 
-                if (records.get(i).getChange()) {
+                if (records.get(i).isChange()) {
 
                     if (strRecords.length() > 0)
                         strRecords.append(",");
@@ -252,19 +252,17 @@ public class AndroidDatabaseTable implements DatabaseTable {
             String queryString = "SELECT *" + makeOutputColumns() + " FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence;
             cursor = database.rawQuery(queryString, null);
             while (cursor.moveToNext()) {
-                DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
-                List<DatabaseRecord> recordValues = new ArrayList<>();
+                AndroidDatabaseRecord tableRecord = new AndroidDatabaseRecord();
 
                 for (String column : columns) {
-                    DatabaseRecord recordValue = new AndroidRecord();
-                    recordValue.setName(column);
-                    recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
-                    recordValue.setChange(false);
-                    recordValue.setUseValueofVariable(false);
-                    recordValues.add(recordValue);
+                    DatabaseRecord recordValue = new AndroidRecord(
+                            column,
+                            cursor.getString(cursor.getColumnIndex(column)),
+                            false
+                    );
+                    tableRecord.addValue(recordValue);
                 }
 
-                tableRecord.setValues(recordValues);
                 this.records.add(tableRecord);
             }
             cursor.close();
@@ -293,28 +291,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
             cursor = database.rawQuery(query, null);
             while (cursor.moveToNext()) {
-                DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
-                List<DatabaseRecord> recordValues = new ArrayList<>();
+                AndroidDatabaseRecord tableRecord = new AndroidDatabaseRecord();
 
                 if (customResult) {
                     for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        DatabaseRecord recordValue = new AndroidRecord();
-                        recordValue.setName("Column" + i);
-                        recordValue.setValue(cursor.getString(i));
-                        recordValues.add(recordValue);
+                        DatabaseRecord recordValue = new AndroidRecord(
+                                "Column" + i,
+                                cursor.getString(i),
+                                false
+                        );
+                        tableRecord.addValue(recordValue);
                     }
                 } else {
                     for (final String column : columns) {
-                        DatabaseRecord recordValue = new AndroidRecord();
-                        recordValue.setName(column);
-                        recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
-                        recordValue.setChange(false);
-                        recordValue.setUseValueofVariable(false);
-                        recordValues.add(recordValue);
+                        DatabaseRecord recordValue = new AndroidRecord(
+                                column,
+                                cursor.getString(cursor.getColumnIndex(column)),
+                                false
+                        );
+                        tableRecord.addValue(recordValue);
                     }
                 }
 
-                tableRecord.setValues(recordValues);
                 databaseTableRecords.add(tableRecord);
             }
             cursor.close();
@@ -657,23 +655,17 @@ public class AndroidDatabaseTable implements DatabaseTable {
             Cursor c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
             List<String> columns = getColumns(database);
-            DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
+            AndroidDatabaseRecord tableRecord1 = new AndroidDatabaseRecord();
             if (c.moveToFirst()) {
-                /**
-                 -                * Get columns name to read values of files
-                 *
-                 */
-
-                List<DatabaseRecord> recordValues = new ArrayList<>();
 
                 for (int i = 0; i < columns.size(); ++i) {
-                    DatabaseRecord recordValue = new AndroidRecord();
-                    recordValue.setName(columns.get(i));
-                    recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i))));
-                    recordValue.setChange(false);
-                    recordValues.add(recordValue);
+                    DatabaseRecord recordValue = new AndroidRecord(
+                            columns.get(i),
+                            c.getString(c.getColumnIndex(columns.get(i))),
+                            false
+                    );
+                    tableRecord1.addValue(recordValue);
                 }
-                tableRecord1.setValues(recordValues);
 
                 if (c.moveToNext()) {
                     //si pasa esto es porque hay algo mal

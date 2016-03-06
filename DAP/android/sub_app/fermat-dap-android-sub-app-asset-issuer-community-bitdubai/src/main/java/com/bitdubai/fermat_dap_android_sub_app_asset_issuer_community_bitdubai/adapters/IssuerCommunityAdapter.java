@@ -40,6 +40,31 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
     @Override
     protected void bindHolder(final IssuerViewHolder holder, final ActorIssuer data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getRecord().getName()));
+            if (data.getRecord().getExtendedPublicKey() != null) {
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.GONE);
+            } else {
+                switch (data.getRecord().getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
+            }
+
             if (data.getRecord().getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getRecord().getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
                 holder.status.setText(R.string.status_online);
                 holder.status.setBackgroundColor(holder.status.getResources().getColor(R.color.background_status_online));
@@ -52,9 +77,13 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                 holder.status.setText(R.string.status_connecting);
             }
 
+            if (data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
+            }
+
             holder.name.setText(data.getRecord().getName());
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -70,8 +99,8 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

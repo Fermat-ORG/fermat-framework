@@ -1,12 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_api.layer.world.interfaces.Index;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.UUID;
+
 
 /**
  * Created by nelson on 14/11/15.
@@ -15,29 +18,43 @@ public class CryptoBrokerWalletModuleIndexInfoSummary implements IndexInfoSummar
     private String currencyAndReferenceCurrency;
     private String salePriceAndCurrency;
     private String purchasePriceAndCurrency;
+    private String providerName;
+    private UUID providerId;
+    private ExchangeRate exchangeRateData;
 
-    public CryptoBrokerWalletModuleIndexInfoSummary(Index index) {
-        Currency currency = index.getCurrency();
-        Currency referenceCurrency = index.getReferenceCurrency();
-        currencyAndReferenceCurrency = currency.getCode() + " / " + referenceCurrency.getCode();
+    public CryptoBrokerWalletModuleIndexInfoSummary(ExchangeRate exchangeRate, CurrencyExchangeRateProviderManager provider) {
+        try {
+            providerName = provider.getProviderName();
+        } catch (CantGetProviderInfoException e) {
+            providerName = "Unknown Provider";
+        }
 
-        double purchasePrice = index.getPurchasePrice();
+        try {
+            providerId = provider.getProviderId();
+        } catch (CantGetProviderInfoException e) {
+            providerId = null;
+        }
+
+        this.exchangeRateData = exchangeRate;
+
+        Currency toCurrency = exchangeRate.getToCurrency();
+        currencyAndReferenceCurrency = exchangeRate.getFromCurrency().getCode() + " / " + toCurrency.getCode();
+
         NumberFormat numberFormat = DecimalFormat.getInstance();
-        purchasePriceAndCurrency = currency.getCode() + " " + numberFormat.format(purchasePrice);
+        purchasePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getPurchasePrice());
 
-        double salePrice = index.getSalePrice();
         numberFormat = DecimalFormat.getInstance();
-        salePriceAndCurrency = currency.getCode() + " " + numberFormat.format(salePrice);
+        salePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getSalePrice());
     }
 
-    public CryptoBrokerWalletModuleIndexInfoSummary(FermatEnum currency, FermatEnum referenceCurrency, double purchasePrice, double salePrice) {
-        currencyAndReferenceCurrency = currency.getCode() + " / " + referenceCurrency.getCode();
+    @Override
+    public String getProviderName() {
+        return providerName;
+    }
 
-        NumberFormat numberFormat = DecimalFormat.getInstance();
-        purchasePriceAndCurrency = currency.getCode() + " " + numberFormat.format(purchasePrice);
-
-        numberFormat = DecimalFormat.getInstance();
-        salePriceAndCurrency = currency.getCode() + " " + numberFormat.format(salePrice);
+    @Override
+    public ExchangeRate getExchangeRateData() {
+        return exchangeRateData;
     }
 
     @Override
@@ -53,5 +70,10 @@ public class CryptoBrokerWalletModuleIndexInfoSummary implements IndexInfoSummar
     @Override
     public String getPurchasePriceAndCurrency() {
         return purchasePriceAndCurrency;
+    }
+
+    @Override
+    public UUID getProviderId() {
+        return providerId;
     }
 }

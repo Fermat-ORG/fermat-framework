@@ -377,17 +377,21 @@ public class IncomingMessageDao {
 
         try {
 
-            /*
+            if(findById(String.valueOf(entity.getId())) == null)
+            {
+                /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+                DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /**
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+                /**
+                 * 2.- Create a new transaction and execute
+                 */
+                DatabaseTransaction transaction = getDataBase().newTransaction();
+                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+                getDataBase().executeTransaction(transaction);
+            }
+
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -398,6 +402,9 @@ public class IncomingMessageDao {
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantInsertRecordDataBaseException;
+        } catch (CantReadRecordDataBaseException e) {
+            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Cant Get record");
             throw cantInsertRecordDataBaseException;
         }
 
@@ -425,8 +432,13 @@ public class IncomingMessageDao {
             /**
              * 2.- Create a new transaction and execute
              */
+
+            DatabaseTable incomingTable = getDatabaseTable();
+            //set filter to id
+
+            incomingTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME,entity.getId(),DatabaseFilterType.EQUAL);
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            transaction.addRecordToUpdate(incomingTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

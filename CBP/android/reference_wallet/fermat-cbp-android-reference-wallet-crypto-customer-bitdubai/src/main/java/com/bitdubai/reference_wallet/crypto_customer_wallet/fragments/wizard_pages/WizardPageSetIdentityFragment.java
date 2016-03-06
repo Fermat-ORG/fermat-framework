@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
@@ -78,14 +79,21 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             @Override
             public void onClick(View view) {
                 if (selectedIdentity != null) {
-                    walletManager.associateIdentity(selectedIdentity.getPublicKey());
+                    try {
+                        walletManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
+                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
 
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
+                    } catch (FermatException e) {
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+                        Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), "Sorry, Can't associate the identity whit this wallet", Toast.LENGTH_LONG).show();
+                    }
+
                 } else {
-                    Toast.makeText(getActivity(), R.string.ccw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
-                }
+                    Toast.makeText(WizardPageSetIdentityFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
 
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
+                }
             }
         });
 

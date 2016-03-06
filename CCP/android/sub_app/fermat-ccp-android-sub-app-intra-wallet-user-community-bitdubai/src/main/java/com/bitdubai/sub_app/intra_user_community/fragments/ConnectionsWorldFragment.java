@@ -33,6 +33,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -53,9 +55,11 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -108,6 +112,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout searchEmptyView;
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
+    private Handler handler = new Handler();
 
     /**
      * Create a new instance of this fragment
@@ -137,7 +142,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 intraUserWalletSettings = null;
             }
 
-            if(intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (intraUserWalletSettings == null) {
                     intraUserWalletSettings = new IntraUserWalletSettings();
@@ -164,48 +169,66 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            rootView.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        worker.shutdownNow();
-                        return true;
-                    }
-                    return false;
-                }
-            });
             toolbar = getToolbar();
             toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
-            searchEditText = (EditText) searchView.findViewById(R.id.search);
-            closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
-            recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
-            noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
-            noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            if (intraUserWalletSettings.isPresentationHelpEnabled()) {
-                showDialogHelp();
-            } else {
-                showCriptoUsersCache();
+            setUpReferences();
+            switch (getFermatState().getFermatNetworkStatus()) {
+                case CONNECTED:
+                   // setUpReferences();
+                    break;
+                case DISCONNECTED:
+                    showErrorFermatNetworkDialog();
+                    break;
             }
+
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    public void setUpReferences() {
+        dataSet = new ArrayList<>();
+        rootView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    worker.shutdownNow();
+                    return true;
+                }
+                return false;
+            }
+        });
+        searchEditText = (EditText) searchView.findViewById(R.id.search);
+        closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        recyclerView.setAdapter(adapter);
+        adapter.setFermatListEventListener(this);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+        searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+        noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
+        noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
+        try {
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        }
+        if (intraUserWalletSettings.isPresentationHelpEnabled()) {
+            showDialogHelp();
+        } else {
+            showCriptoUsersCache();
+        }
     }
 
     public void showErrorNetworkDialog() {
@@ -227,18 +250,28 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void showErrorFermatNetworkDialog() {
-        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
         errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                errorConnectingFermatNetworkDialog.dismiss();
+                try {
+                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        //getActivity().onBackPressed();
+                    }
+                } catch (CantGetCommunicationNetworkStatusException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                errorConnectingFermatNetworkDialog.dismiss();
             }
         });
         errorConnectingFermatNetworkDialog.show();
@@ -461,15 +494,27 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (dataSet != null && !dataSet.isEmpty()) {
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
-                dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
+                /*dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
                     @Override
                     public boolean evaluate(Object object) {
                         IntraUserInformation intraUserInformation = (IntraUserInformation) object;
                         return intraUserInformation.getName().toLowerCase().contains(charSequence);
                     }
-                });
-            } else
+                });*/
+
+
+                dataSetFiltered = new ArrayList<IntraUserInformation>();
+                for (IntraUserInformation intraUser : dataSet) {
+
+                    if(intraUser.getName().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                        dataSetFiltered.add(intraUser);
+
+                }
+
+
+            } else {
                 dataSetFiltered = null;
+            }
         }
         return dataSetFiltered;
     }
@@ -477,8 +522,44 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-        try {
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+
+         try {
+            //verifico la cache para mostrar los que tenia antes y los nuevos
+
+            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             //dataSet.addAll(userList);
+
+            if(userCacheList.size() == 0)
+            {
+                dataSet.addAll(userList);
+            }
+            else
+            {
+                if(userList.size() == 0)
+                {
+                    dataSet.addAll(userCacheList);
+                }
+                else
+                {
+                    for (IntraUserInformation intraUserCache : userCacheList) {
+                        boolean exist = false;
+                        for (IntraUserInformation intraUser : userList) {
+                            if(intraUserCache.getPublicKey().equals(intraUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
+                            userList.add(intraUserCache);
+                    }
+                    //guardo el cache
+
+                    moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    dataSet.addAll(userList);
+                }
+            }
+
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
@@ -573,6 +654,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private void showCriptoUsersCache() {
+
+        IntraUserModuleManager moduleManager = intraUserSubAppSession.getModuleManager();
+        if(moduleManager==null){
+            getActivity().onBackPressed();
+        }else{
+            invalidate();
+        }
         if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {
@@ -633,6 +721,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }
     }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals("ACCEPTED_CONEXION"))
+              onRefresh();
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
 }
 

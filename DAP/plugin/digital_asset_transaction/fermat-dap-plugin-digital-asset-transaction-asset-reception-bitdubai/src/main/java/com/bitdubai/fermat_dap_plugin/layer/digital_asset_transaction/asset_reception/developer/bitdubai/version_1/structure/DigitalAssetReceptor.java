@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -9,12 +12,10 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
@@ -51,9 +52,9 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         this.assetReceptionDao = assetReceptionDao;
     }
 
-    public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
+    public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId, Actors actorType) throws CantReceiveDigitalAssetException {
         try {
-            persistDigitalAsset(digitalAssetMetadata, senderId);
+            persistDigitalAsset(digitalAssetMetadata, senderId, actorType);
             verifyAsset(digitalAssetMetadata);
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
@@ -85,20 +86,21 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
-
+            this.assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
+            persistInLocalStorage(digitalAssetMetadata);
         } catch (Exception e) {
             throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }
     }
 
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
+    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId, Actors actorType) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
         this.assetReceptionDao.persistDigitalAsset(
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
-                senderId);
-        persistInLocalStorage(digitalAssetMetadata);
+                senderId,
+                actorType);
     }
 
     /**
@@ -144,19 +146,12 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        UUID receptionId = UUID.randomUUID();
-        try {
-            this.assetReceptionDao.persistReceptionId(digitalAssetMetadata.getGenesisTransaction(), receptionId);
-            this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, receptionId.toString());
-        } catch (CantPersistsTransactionUUIDException exception) {
-            throw new CantCreateDigitalAssetFileException(exception, "Persisting Receiving digital asset metadata", "Cannot persists internal id in database");
-        }
-
+        this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());
     }
 
     @Override
     public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
-        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getGenesisTransaction();
         this.digitalAssetReceptionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
     }
 

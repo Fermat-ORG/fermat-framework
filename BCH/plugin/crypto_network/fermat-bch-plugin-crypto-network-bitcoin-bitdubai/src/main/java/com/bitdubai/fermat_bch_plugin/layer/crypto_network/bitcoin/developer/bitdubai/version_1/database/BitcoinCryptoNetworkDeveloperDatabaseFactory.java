@@ -123,6 +123,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
@@ -208,6 +209,22 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
          */
         DeveloperDatabaseTable broadcast_StatsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME, broadcast_StatsColumns);
         tables.add(broadcast_StatsTable);
+
+
+        /**
+         * Table ACTIVENETWORKS columns.
+         */
+        List<String> activeNetworksColumns = new ArrayList<String>();
+
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE);
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS);
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE);
+
+        /**
+         * Table ACTIVENETWORKS addition.
+         */
+        DeveloperDatabaseTable activeNetworksTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME, activeNetworksColumns);
+        tables.add(activeNetworksTable);
 
 
         return tables;

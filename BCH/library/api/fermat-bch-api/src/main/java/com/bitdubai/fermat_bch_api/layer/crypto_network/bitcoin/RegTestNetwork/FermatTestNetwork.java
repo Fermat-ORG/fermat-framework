@@ -31,6 +31,10 @@ public class FermatTestNetwork {
         FermatTestNetworkNode node6 = new FermatTestNetworkNode("52.26.116.72", 19050);  //bitcoinNode 6
         FermatTestNetworkNode node7 = new FermatTestNetworkNode("52.24.215.209", 19060);  //bitcoinNode 7
         FermatTestNetworkNode node8 = new FermatTestNetworkNode("52.11.159.154", 19070);  //bitcoinNode 8
+        FermatTestNetworkNode node9 = new FermatTestNetworkNode("54.69.92.107", 19080);  //bitcoinNode 9
+        FermatTestNetworkNode node10 = new FermatTestNetworkNode("54.68.133.89", 19090);  //bitcoinNode 10
+        FermatTestNetworkNode node11 = new FermatTestNetworkNode("52.26.37.10", 19100);  //bitcoinNode 11
+        FermatTestNetworkNode node12 = new FermatTestNetworkNode("52.33.107.247", 19110);  //bitcoinNode 12
 
         networkNodes.add(node1);
         networkNodes.add(node2);
@@ -40,10 +44,14 @@ public class FermatTestNetwork {
         networkNodes.add(node6);
         networkNodes.add(node7);
         networkNodes.add(node8);
+        networkNodes.add(node9);
+        networkNodes.add(node10);
+        networkNodes.add(node11);
+        networkNodes.add(node12);
     }
 
     /**
-     * will return a ranmon existing client.
+     * will return a randmon existing client.
      * @return
      */
     public FermatTestNetworkNode getRandomNetworkNode(){

@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -27,13 +29,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory;
@@ -42,6 +53,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offl
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentTransactionManager;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -81,8 +93,17 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION)
+    private DepositManager depositManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+
+    @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT)
+    private CashDepositTransactionManager CashDepositTransactionManager;
 
     /**
      * Represents the plugin manager.
@@ -215,7 +236,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao=
                     new BrokerAckOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init event recorder service.
@@ -223,12 +245,16 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOfflinePaymentRecorderService brokerAckOfflinePaymentRecorderService=
                     new BrokerAckOfflinePaymentRecorderService(
                             brokerAckOfflinePaymentBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
             brokerAckOfflinePaymentRecorderService.start();
 
             /**
              * Init Monitor Agent
              */
+            //TODO: mock manager only for testing, please, comment the following line when finish the test.
+            //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+            //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
             BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent=new BrokerAckOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
@@ -237,60 +263,111 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
+                    depositManager,
+                    cryptoBrokerWalletManager,
+                    CashDepositTransactionManager);
             brokerAckOfflinePaymentMonitorAgent.start();
 
             /**
              * Initialize plugin manager
              */
-        //TODO: mock manager only for testing, please, comment the following line when finish the test.
-            //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+
             this.brokerAckOfflinePaymentTransactionManager=new
                     BrokerAckOfflinePaymentTransactionManager(
                     brokerAckOfflinePaymentBusinessTransactionDao,
                     customerBrokerContractSaleManager,
-                    errorManager);
+                    errorManager,
+                    customerBrokerSaleNegotiationManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker Ack Offline Payment Starting");
             //Testing method
+            //newOpenedContractRaiseEventTest();
             //testAck();
         } catch (CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Offline Payment Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Unexpected error");
         }
     }
 
     @Override
     public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
+        try{
+            this.serviceStatus = ServiceStatus.PAUSED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
     public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
+
+        try{
+            this.serviceStatus = ServiceStatus.STARTED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
     public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
+        try{
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch(Exception e){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+        }
     }
 
     @Override
@@ -330,9 +407,21 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
         }
     }
 
+    private void newOpenedContractRaiseEventTest(){
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
+        NewContractOpened newContractOpened=(NewContractOpened) fermatEvent;
+        newContractOpened.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+        newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
+        eventManager.raiseEvent(fermatEvent);
+    }
+
     private void testAck(){
         try{
-            brokerAckOfflinePaymentTransactionManager.ackPayment("TestWalletPublicKey","888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+            brokerAckOfflinePaymentTransactionManager.ackPayment(
+                    "walletPublicKeyTest",
+                    "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2",
+                    "brokerPublicKey",
+                    "Fox Mulder");
         }catch (Exception e){
             System.out.println("Exception in ACK OFFLINE PAYMENT:");
             e.printStackTrace();

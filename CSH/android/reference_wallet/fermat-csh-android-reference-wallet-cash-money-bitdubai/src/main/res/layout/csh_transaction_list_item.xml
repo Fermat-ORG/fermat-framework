@@ -14,6 +14,13 @@
     android:paddingTop="8dp"
     android:visibility="visible">
 
+    <ProgressBar
+        android:id="@+id/cash_transaction_list_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"/>
+
     <ImageView
         android:id="@+id/imageView_deposit"
         android:layout_width="@dimen/csh_transaction_image_width_and_height"
@@ -58,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:layout_alignBottom="@id/textView_deposit_memo"
+        android:layout_alignBottom="@+id/textView_deposit_memo"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:singleLine="true"

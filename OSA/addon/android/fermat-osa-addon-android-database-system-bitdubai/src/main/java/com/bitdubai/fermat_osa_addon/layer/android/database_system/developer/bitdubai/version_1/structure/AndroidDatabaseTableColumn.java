@@ -4,118 +4,55 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataTyp
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 
 /**
- * Created by Natalia on 10/02/2015.
- */
-
-/**
  * This class define methods to get and set the properties of the columns in a table in the database.
  *
- * *
+ * Created by Natalia on 10/02/2015.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 03/02/2016.
+ *
+ *  @author  Natalia
+ *  @version 1.0.0
+ *  @since   10/02/15.
  */
 public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 4019;
     private static final int HASH_PRIME_NUMBER_ADD = 877;
 
-    /**
-     * DatabaseTableColumn Member Variables.
-     */
+    private final String           name        ;
+    private final DatabaseDataType dataType    ;
+    private final int              dataTypeSize;
+    private final boolean          isPrimaryKey;
 
-    String name ="";
-    DatabaseDataType type;
-    int dataTypeSize;
-    boolean primaryKey;
+    public AndroidDatabaseTableColumn(final String           name        ,
+                                      final DatabaseDataType dataType    ,
+                                      final int              dataTypeSize,
+                                      final boolean          isPrimaryKey) {
 
-    /**
-     * DatabaseTableColumn interface implementation.
-     */
-
-    /**
-     * <p>Get column name
-     *
-     * @return String column name
-     */
-    @Override
-    public String getName ()
-    {
-        return this.name;
-    }
-
-    /**
-     *<p>Set the column name
-     *
-     * @param name column name to set
-     */
-    @Override
-    public void setName (String name)
-    {
-        this.name = name;
-    }
-
-    /**
-     * <p>Gets the data type of the column
-     *
-     * @return DatabaseDataType enum
-     */
-    @Override
-    public DatabaseDataType getType ()
-    {
-        return this.type;
-    }
-
-
-    /**
-     * <p>Sets the data type of the column
-     * @param type DatabaseDataType enum
-     */
-    @Override
-    public void setType(DatabaseDataType type)
-    {
-        this.type = type;
-    }
-
-    /**
-     *<p>Sets the data size of the column
-     *
-     * @param dataTypeSize data size column
-     */
-    @Override
-    public void setDataTypeSize (int dataTypeSize){
+        this.name         = name        ;
+        this.dataType     = dataType    ;
         this.dataTypeSize = dataTypeSize;
+        this.isPrimaryKey = isPrimaryKey;
     }
 
-    /**
-     * <p>Gets the data size of the column
-     * @return int data size column
-     */
-    @Override
-    public int getDataTypeSize (){
-        return this.dataTypeSize;
+    public final String getName() {
+        return name;
     }
 
-    /**
-     * <p>Sets if the primary key column of the table
-     *
-     * @param primaryKey boolean if primary key
-     */
-    @Override
-    public void setPrimaryKey (boolean primaryKey){
-        this.primaryKey = primaryKey;
+    public final DatabaseDataType getDataType() {
+        return dataType;
     }
 
-    /**
-     * <p>Gets if the primary key column of the table
-     *
-     * @return boolean if primary key
-     */
-    @Override
-    public boolean getPrimaryKey (){
-        return primaryKey;
+    public final int getDataTypeSize() {
+        return dataTypeSize;
+    }
+
+    public final boolean isPrimaryKey() {
+        return isPrimaryKey;
     }
 
     @Override
     public String toString(){
-        String column = type.toString();
+        String column = dataType.toString();
         column += dataTypeSize > 0 ? "(" + dataTypeSize +")" : "";
         column += " ";
         column += name;
@@ -129,14 +66,14 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
             return false;
         DatabaseTableColumn compare = (DatabaseTableColumn) o;
 
-        return type.equals(compare.getType()) && name.equals(compare.getName());
+        return dataType.equals(compare.getDataType()) && name.equals(compare.getName());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        if(type != null)
-            c += type.hashCode();
+        if(dataType != null)
+            c += dataType.hashCode();
         if(name != null)
             c += name.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;

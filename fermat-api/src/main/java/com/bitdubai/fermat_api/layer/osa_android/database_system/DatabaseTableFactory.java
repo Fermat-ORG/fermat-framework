@@ -14,13 +14,17 @@ import java.util.ArrayList;
  * */
 public interface DatabaseTableFactory {
 
-    public void addIndex(String index);
+    void addIndex(String index);
 
-    public String getIndex();
+    @Deprecated //TODO MAYBE WE HAVE TO USE MULTIPLE INDEXES..
+    String getIndex();
 
-    public  String getTableName ();
+    String getTableName();
 
-    public void addColumn (String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey);
+    void addColumn(String           columnName  ,
+                   DatabaseDataType dataType    ,
+                   int              dataTypeSize,
+                   boolean          primaryKey  );
 
-    public ArrayList<DatabaseTableColumn> getColumns ();
+    ArrayList<DatabaseTableColumn> getColumns();
 }

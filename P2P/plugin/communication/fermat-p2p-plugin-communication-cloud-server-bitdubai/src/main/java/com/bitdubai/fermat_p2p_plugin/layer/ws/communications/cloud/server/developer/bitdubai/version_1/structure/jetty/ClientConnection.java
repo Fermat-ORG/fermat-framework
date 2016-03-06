@@ -24,7 +24,7 @@ public class ClientConnection {
 
     private static final int MAX_MESSAGE_SIZE = 3000000;
 
-    private static final int MAX_IDLE_TIMEOUT = 1200000;
+    private static final int MAX_IDLE_TIMEOUT = 60000;
 
     static final String SERVER_IDENTITY_ATT_NAME = "SI";
 

@@ -18,6 +18,14 @@
     <color name="secondary_text">#727272</color>
     <color name="primary_text">#212121</color>
 
+    <color name="dap_user_view_color">#381a5e</color>
+
     <color name="dap_wallet_asset_user_gradient_start_color">#381a5e</color>
     <color name="dap_wallet_asset_user_gradient_end_color">#381a5e</color>
+
+    <!-- dap asset user wallet colors -->
+    <color name="dap_user_wallet_principal">#381a5e</color>
+    <color name="dap_user_wallet_blue_text">#00aeef</color>
+    <color name="dap_user_wallet_black_text">#37474f</color>
+    <!-- -->
 </resources>

@@ -20,7 +20,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.Test;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/11/15.
@@ -55,7 +56,7 @@ public class LocalStorageTest {
         DigitalAsset mockedDigitalAsset=getDigitalAssetForTesting();
         DigitalAssetMetadata mockedDigitalAssetMetadata=new DigitalAssetMetadata();
         mockedDigitalAssetMetadata.setDigitalAsset(mockedDigitalAsset);
-        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+//        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
         String hash=mockedDigitalAssetMetadata.getDigitalAssetHash();
         System.out.println("DAM - HASH: " + hash);
         return mockedDigitalAssetMetadata;
@@ -115,7 +116,7 @@ public class LocalStorageTest {
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
-        //Expiration date - we choose 90 days from now, you can change for testing
+        Expiration date - we choose 90 days from now, you can change for testing
         Timestamp expirationDateTimestamp=getExpirationDate(90);
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         mockedDigitalAsset.setContract(contract);
@@ -165,7 +166,8 @@ public class LocalStorageTest {
     }
 
     private ActorAssetUser getActorAssetUserForTest(){
-        ActorAssetUser mockedActorAssetUser=new ActorAssetUser() {
+        ActorAssetUser mockedActorAssetUser=new ActorAssetUser()
+        {
             @Override
             public String getPublicLinkedIdentity() {
                 return new ECCKeyPair().getPublicKey();
@@ -203,6 +205,8 @@ public class LocalStorageTest {
              *
              * @return the Location of the Asset user
              */
+
+            /*
             @Override
             public Location getLocation() {
                 return null;

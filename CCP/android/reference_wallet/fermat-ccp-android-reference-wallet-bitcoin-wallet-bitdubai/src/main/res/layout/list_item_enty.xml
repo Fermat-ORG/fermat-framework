@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:paddingLeft="10dp"
-        android:src="@android:drawable/ic_menu_preferences"></ImageView>
+        android:src="@android:drawable/ic_menu_preferences"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -43,10 +43,6 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorSecondary"/>
-
-
-
         </RelativeLayout>
-
 
 </LinearLayout>

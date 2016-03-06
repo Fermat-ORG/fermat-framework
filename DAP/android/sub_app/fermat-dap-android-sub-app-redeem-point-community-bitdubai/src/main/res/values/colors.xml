@@ -13,6 +13,9 @@
     <color name="wallet_store_activities_background">#fbf7ed</color>
     <color name="green">#8bba9e</color>
     <color name="nav_drawer_color">#0072bb</color>
+
+    <color name="dap_community_redeem_view_color">#0072bb</color>
+
     <color name="background_status_online">#0072bb</color>
     <color name="background_status_offline">#d70407</color>
     <color name="color_black">#000000</color>

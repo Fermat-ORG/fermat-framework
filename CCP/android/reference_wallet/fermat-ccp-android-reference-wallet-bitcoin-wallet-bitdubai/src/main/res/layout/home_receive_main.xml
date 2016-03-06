@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_gradient"
     >
 
@@ -22,7 +21,6 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -46,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No transactions"
+            android:text="@string/no_transactions_text"
             android:textColor="#fff"
             android:textSize="20sp"/>
 

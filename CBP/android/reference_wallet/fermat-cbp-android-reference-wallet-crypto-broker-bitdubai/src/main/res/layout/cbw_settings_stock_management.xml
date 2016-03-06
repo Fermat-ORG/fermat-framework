@@ -20,10 +20,33 @@
         android:paddingTop="8dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_stock_settings_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cbw_select_stock_merchandise"
-            android:textColor="@color/cbw_wizard_color"/>
+            android:textColor="@color/cbw_wizard_color"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/cbw_wizard_color"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cbw_settings_current_merchandises"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="8dp"
+            tools:listitem="@layout/cbw_earnings_currency_pair_item"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cbw_associated_wallets"
+            android:textColor="@color/cbw_wizard_color"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"/>
 
         <View
             android:layout_width="match_parent"
@@ -80,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/cbw_automatic_restock"
-                android:textColor="@color/black"
+                android:textColor="@color/cbw_wizard_color"
                 android:textSize="14sp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
@@ -95,7 +118,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select the Spread"
+            android:text="Select the spread percentage"
             android:textColor="@color/cbw_wizard_color"/>
 
         <View
@@ -118,7 +141,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:textColor="@color/black"
+                android:textColor="@color/cbw_wizard_color"
                 android:textSize="16sp"
                 tools:text="15%"/>
 
@@ -152,15 +175,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="@string/cbw_next_step"
+            android:text="@string/cbw_save"
             android:textColor="@color/white"/>
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/arrow_right_selected"
-            tools:ignore="contentDescription"/>
     </LinearLayout>
 
 </LinearLayout>

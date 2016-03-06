@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -69,7 +70,7 @@ public class PurchaseNegotiationOnlineMock implements CustomerBrokerPurchaseNego
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                FiatCurrency.US_DOLLAR.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_DATE_TIME_TO_DELIVER,
                 "1000"));
@@ -78,7 +79,7 @@ public class PurchaseNegotiationOnlineMock implements CustomerBrokerPurchaseNego
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CRYPTO_MONEY.getCode()));
+                CryptoCurrency.BITCOIN.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));

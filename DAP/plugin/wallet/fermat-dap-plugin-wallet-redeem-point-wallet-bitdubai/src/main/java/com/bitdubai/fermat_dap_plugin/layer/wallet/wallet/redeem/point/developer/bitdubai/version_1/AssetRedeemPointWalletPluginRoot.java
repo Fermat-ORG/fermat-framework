@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -29,12 +30,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantInitializeRedeemPointWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
@@ -44,9 +47,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -65,6 +66,12 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    private ActorAssetIssuerManager issuerManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    private ActorAssetRedeemPointManager redeemPointManager;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
 
@@ -73,19 +80,20 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     public static final String PATH_DIRECTORY = "asset-redeem-point-swap/";
 
+    private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
+    private List<UUID> redeemWallets = new ArrayList<>();
+    private String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
+    private boolean existsWallet = false;
+    private AssetRedeemPointWallet redeemPointWallet;
+
     public AssetRedeemPointWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
-    private Map<String, UUID> walletRedeemPoint = new HashMap<>();
-    private boolean existsWallet = false;
-    private AssetRedeemPointWallet redeemPointWallet;
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         List<String> databasesNames = new ArrayList<>();
-        Collection<UUID> ids = this.walletRedeemPoint.values();
+        Collection<UUID> ids = this.redeemWallets;
         for (UUID id : ids)
             databasesNames.add(id.toString());
         DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
@@ -124,14 +132,15 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
-            loadWalletRedeemPointMap();
-
-            if (!existsWallet) {
-                createWalletAssetRedeemPoint("walletPublicKeyTest");
+            boolean existWallet = loadWalletRedeemList();
+            if (!existWallet) {
+                createWalletAssetRedeemPoint(walletPublicKey, BlockchainNetworkType.REG_TEST);
+                createWalletAssetRedeemPoint(walletPublicKey, BlockchainNetworkType.TEST_NET);
+                createWalletAssetRedeemPoint(walletPublicKey, BlockchainNetworkType.PRODUCTION);
             }
-            redeemPointWallet = loadAssetRedeemPointWallet("walletPublicKeyTest");
+            redeemPointWallet = loadAssetRedeemPointWallet(walletPublicKey, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Star Plugin AssetWalletRedeemPoint");
         } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
@@ -142,50 +151,45 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey) throws CantLoadWalletException {
+    public AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, assetUserActorNetworkServiceManager);
-
-            UUID internalAssetRedeemPointWalletId = walletRedeemPoint.get(walletPublicKey);
-            assetRedeemPointWallet.initialize(internalAssetRedeemPointWalletId);
-            return assetRedeemPointWallet;
-        } catch (CantInitializeRedeemPointWalletException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
+            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
+            UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
+            assetIssuerWallet.initialize(internalAssetIssuerWalletId);
+            return assetIssuerWallet;
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
         }
     }
 
     @Override
-    public void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException {
+    public void createWalletAssetRedeemPoint(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetRedeemPointWalletImpl assetRedeemPointWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, assetUserActorNetworkServiceManager);
-            UUID internalAssetRedeemPointWalletId = assetRedeemPointWallet.create(walletPublicKey);
-            walletRedeemPoint.put(walletPublicKey, internalAssetRedeemPointWalletId);
+            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
+            UUID walletId = assetIssuerWallet.create(walletPublicKey, networkType);
+            redeemWallets.add(walletId);
         } catch (CantCreateWalletException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", FermatException.wrapException(exception), "walletId: " + walletPublicKey, "");
         }
     }
 
-    private void loadWalletRedeemPointMap() throws CantStartPluginException {
-        PluginTextFile walletIssuerFile = getWalletIssuerFile();
-        String[] stringWalletIssuer = walletIssuerFile.getContent().split(";", -1);
-
-        for (String stringWalletId : stringWalletIssuer)
+    private boolean loadWalletRedeemList() throws CantStartPluginException {
+        PluginTextFile walletIssuerFile = getWalletRedeemFile();
+        boolean existWallet = false;
+        for (String stringWalletId : walletIssuerFile.getContent().split(";"))
             if (!stringWalletId.equals("")) {
-                String[] idPair = stringWalletId.split(",", -1);
-                walletRedeemPoint.put(idPair[0], UUID.fromString(idPair[1]));
-                existsWallet = true;
+                redeemWallets.add(UUID.fromString(stringWalletId));
+                existWallet = true;
             }
+        return existWallet;
     }
 
-    private PluginTextFile getWalletIssuerFile() throws CantStartPluginException {
+    private PluginTextFile getWalletRedeemFile() throws CantStartPluginException {
         try {
             PluginTextFile walletIssuerFile = pluginFileSystem.getTextFile(pluginId, "", WALLET_REDEEM_POINT_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletIssuerFile.loadFromMedia();

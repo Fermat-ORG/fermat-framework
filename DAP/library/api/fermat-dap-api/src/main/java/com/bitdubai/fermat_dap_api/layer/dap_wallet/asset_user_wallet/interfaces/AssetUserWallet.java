@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -21,6 +24,16 @@ public interface AssetUserWallet {
 
     AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
+    List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
+                                                     TransactionType transactionType,
+                                                     String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
                                                      int max,
@@ -36,11 +49,17 @@ public interface AssetUserWallet {
                                                                                 int max,
                                                                                 int offset) throws CantGetTransactionsException;
 
+    void lockFunds(DigitalAssetMetadata metadata) throws RecordsNotFoundException, CantExecuteLockOperationException;
+
+    void unlockFunds(DigitalAssetMetadata metadata) throws RecordsNotFoundException, CantExecuteLockOperationException;
+
     void setTransactionDescription(UUID transactionID,
                                    String description) throws CantFindTransactionException, CantStoreMemoException;
 
     AssetUserWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                  BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
+
+    DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 }

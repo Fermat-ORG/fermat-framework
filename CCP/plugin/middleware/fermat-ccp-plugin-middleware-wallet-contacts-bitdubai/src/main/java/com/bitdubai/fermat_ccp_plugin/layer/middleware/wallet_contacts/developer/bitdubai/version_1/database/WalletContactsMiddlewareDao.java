@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -32,8 +33,13 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRecord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Iterator;
+import java.util.Map;
+
 
 /**
  * The interface <code>WalletContactsMiddlewareDao</code>
@@ -134,8 +140,8 @@ public class WalletContactsMiddlewareDao {
                                                    String              actorFirstName ,
                                                    String              actorLastName  ,
                                                    Actors              actorType      ,
-                                                   List<CryptoAddress> cryptoAddresses,
-                                                   String walletPublicKey             ) throws CantCreateWalletContactException {
+                                                   HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses,
+                                                   String walletPublicKey) throws CantCreateWalletContactException {
 
         try {
             DatabaseTable walletContactTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
@@ -367,7 +373,7 @@ public class WalletContactsMiddlewareDao {
     }
 
     public void addCryptoAddress(UUID          contactId,
-                                 CryptoAddress cryptoAddress) throws CantAddCryptoAddressException {
+                                 CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantAddCryptoAddressException {
         try {
             DatabaseTable cryptoAddressesTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
 
@@ -375,10 +381,10 @@ public class WalletContactsMiddlewareDao {
 
             long unixTime = System.currentTimeMillis() / 1000L;
 
-            record.setUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     , contactId                                  );
-            record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME , cryptoAddress.getAddress()                 );
+            record.setUUIDValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME, contactId);
+            record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
             record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
-            record.setLongValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME     , unixTime                                   );
+            record.setLongValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME, unixTime);
 
 
             cryptoAddressesTable.insertRecord(record);
@@ -391,7 +397,8 @@ public class WalletContactsMiddlewareDao {
     }
 
     public void deleteCryptoAddress(UUID          contactId,
-                                    CryptoAddress cryptoAddress) throws CantDeleteCryptoAddressException {
+                                    CryptoAddress cryptoAddress,
+                                    BlockchainNetworkType blockchainNetworkType) throws CantDeleteCryptoAddressException {
 
         try {
             DatabaseTable cryptoAddressesTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
@@ -399,6 +406,7 @@ public class WalletContactsMiddlewareDao {
             cryptoAddressesTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
             cryptoAddressesTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
             cryptoAddressesTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+            cryptoAddressesTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoAddressesTable.loadToMemory();
 
@@ -420,19 +428,27 @@ public class WalletContactsMiddlewareDao {
     }
 
     private void insertCryptoAddresses(UUID                contactId      ,
-                                       List<CryptoAddress> cryptoAddresses) throws CantInsertCryptoAddressesException {
+                                       HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses) throws CantInsertCryptoAddressesException {
         try {
             DatabaseTable cryptoAddressesTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
 
-            for(CryptoAddress cryptoAddress : cryptoAddresses) {
+
                 DatabaseTableRecord record = cryptoAddressesTable.getEmptyRecord();
+
+                Set set = cryptoAddresses.entrySet();
+                Iterator iterator = set.iterator();
+                while(iterator.hasNext()) {
+                    Map.Entry mentry = (Map.Entry)iterator.next();
+                    CryptoAddress cryptoAddress =(CryptoAddress) mentry.getValue();
+                    BlockchainNetworkType blockchainNetworkType = (BlockchainNetworkType) mentry.getKey();
 
                 long unixTime = System.currentTimeMillis() / 1000L;
 
                 record.setUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     , contactId                                  );
-                record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME , cryptoAddress.getAddress()                 );
+                record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                 record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
-                record.setLongValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME     , unixTime                                   );
+                record.setLongValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME, unixTime);
+                record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE, blockchainNetworkType.getCode());
 
                 cryptoAddressesTable.insertRecord(record);
             }
@@ -463,25 +479,28 @@ public class WalletContactsMiddlewareDao {
         }
     }
 
-    private List<CryptoAddress> getCryptoAddresses(UUID contactId) throws CantGetWalletContactException {
+    private  HashMap<BlockchainNetworkType,CryptoAddress> getCryptoAddresses(UUID contactId) throws CantGetWalletContactException {
         try {
             DatabaseTable cryptoAddressesTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
             cryptoAddressesTable.addUUIDFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
             cryptoAddressesTable.loadToMemory();
             List<DatabaseTableRecord> records = cryptoAddressesTable.getRecords();
 
-            List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+
+            HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddressHashMap = new HashMap<>();
 
             for(DatabaseTableRecord record : records) {
                 try {
                     String address = record.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME);
                     CryptoCurrency currency = CryptoCurrency.getByCode(record.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME));
-                    cryptoAddresses.add(new CryptoAddress(address, currency));
+                    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE));
+
+                    cryptoAddressHashMap.put(blockchainNetworkType,new CryptoAddress(address, currency));
                 } catch (InvalidParameterException e) {
                     throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "CryptoCurrency not found. Invalid Parameter Exception.");
                 }
             }
-            return cryptoAddresses;
+            return cryptoAddressHashMap;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -489,19 +508,19 @@ public class WalletContactsMiddlewareDao {
 
     private WalletContactRecord buildRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException, CantGetWalletContactException {
 
-        UUID   contactId           = databaseTableRecord.getUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME       );
+        UUID   contactId           = databaseTableRecord.getUUIDValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME);
         String actorPublicKey      = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME );
         String actorTypeString     = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME       );
         String actorAlias          = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME      );
         String actorFirstName      = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME );
         String actorLastName       = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME  );
         String walletPublicKey     = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        String compatibilityString = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME    );
+        String compatibilityString = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME);
 
         Actors        actorType     = Actors       .getByCode(actorTypeString);
         Compatibility compatibility = Compatibility.getByCode(compatibilityString);
 
-        List<CryptoAddress> cryptoAddresses = getCryptoAddresses(contactId);
+        HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = getCryptoAddresses(contactId);
 
         return new WalletContactsMiddlewareRecord(
                 contactId      ,

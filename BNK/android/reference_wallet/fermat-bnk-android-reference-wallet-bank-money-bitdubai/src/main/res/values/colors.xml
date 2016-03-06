@@ -12,7 +12,9 @@
     <color name="fab_normal">#6633B5E5</color>
     <color name="white">#ffffff</color>
     <color name="black">#400F4D</color>
-    <color name="fab_black_semi_transparent">#B2000000</color>
+    <color name="soft_purple">#7A63A7</color>
+    <color name="dark_purple">#391459</color>
+    <color name="fab_black_semi_transparent">#00000000</color>
 
     <color name="bnk_fab_color_normal_w">#FD0018</color>
     <color name="bnk_fab_color_normal_d">#00B8FE</color>
@@ -27,4 +29,14 @@
     <color name="faded_navy_20">#33074264</color>
     <color name="faded_black_60">#a3000000</color>
     <color name="faded_black_20">#82000000</color>
+
+    <color name="bnk_transaction_deposit_color">#42a5f5</color>
+    <color name="bnk_transaction_withdrawal_color">#ef5350</color>
+    <color name="bnk_transaction_date_text_color">#6b7378</color>
+
+    <color name="bnk_gradient_start_background">#391459</color>
+    <color name="bnk_gradient_end_background">#462685</color>
+
+    <color name="fab_button_color">#eeeff1</color>
+
 </resources>

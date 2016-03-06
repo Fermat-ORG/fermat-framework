@@ -28,17 +28,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerIdentityPrivateKeyException;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerIdentityProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetIdentityException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerIdentityPrivateKeyException;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerIdentitiesException;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerIdentityProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
@@ -52,10 +53,9 @@ import java.util.UUID;
 public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseSystem {
 
     private PluginDatabaseSystem pluginDatabaseSystem;
-
     private PluginFileSystem pluginFileSystem;
-
     private UUID pluginId;
+    private Database database;
 
     public CryptoBrokerIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -63,9 +63,6 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         this.pluginId = pluginId;
     }
 
-    Database database;
-
-    /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoBrokerIdentityDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
@@ -85,15 +82,11 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    /*CREATE NEW IDENTITY*/
     public void createNewCryptoBrokerIdentity (final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
-
         try {
-
             if (aliasExists (cryptoBroker.getAlias())) {
                 throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
             }
-
             persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -103,107 +96,89 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             record.setFermatEnum (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME        , cryptoBroker.getExposureLevel());
             table.insertRecord(record);
             persistNewCryptoBrokerIdentityProfileImage(cryptoBroker.getPublicKey(), cryptoBroker.getProfileImage());
-
         } catch (CantInsertRecordException e){
-
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
-
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity,persist private key error.");
         } catch (Exception e) {
-
             throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant create new Crypto Broker Identity, unknown failure.");
         }
     }
 
-    /*GENERATE LIST IDENTITY*/
-    public final List<CryptoBrokerIdentity> listIdentitiesFromDeviceUser(final DeviceUser deviceUser) throws CantListCryptoBrokerIdentitiesException {
-
+    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateBrokerIdentityException {
         try {
+            DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias);
+            table.updateRecord(record);
+            updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
+        } catch (CantPersistProfileImageException e) {
+            throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
+        }
+    }
 
+    public final List<CryptoBrokerIdentity> listIdentitiesFromDeviceUser(final DeviceUser deviceUser) throws CantListCryptoBrokerIdentitiesException {
+        try {
             final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
-
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
-
             final List<CryptoBrokerIdentity> list = new ArrayList<>();
-
             for (DatabaseTableRecord record : table.getRecords ())
                 list.add(getIdentityFromRecord(record));
-
             return list;
         } catch (final CantGetCryptoBrokerIdentityProfileImageException e) {
-
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Problem trying to get the profile image of the identity.");
         } catch (final CantLoadTableToMemoryException e) {
-
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
         } catch (final CantGetCryptoBrokerIdentityPrivateKeyException e) {
-
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Can't get private key.");
         } catch (final InvalidParameterException e) {
-
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Error trying to identify some enum.");
         }
     }
 
     public final void changeExposureLevel(final String        publicKey    ,
                                           final ExposureLevel exposureLevel) throws CantChangeExposureLevelException, IdentityNotFoundException {
-
         try {
-
             final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
-
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-
                 record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel);
-
                 table.updateRecord(record);
-
             } else
                 throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
-
         } catch (final CantUpdateRecordException e) {
-
             throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
-
             throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
     public final CryptoBrokerIdentity getIdentity(final String publicKey) throws CantGetIdentityException, IdentityNotFoundException {
-
         try {
-
-            final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
-
+            final DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
-
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
                 throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
-
         } catch (final CantGetCryptoBrokerIdentityProfileImageException |
                        CantGetCryptoBrokerIdentityPrivateKeyException   |
                        InvalidParameterException                        e) {
-
             throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
-
             throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
-    /*GET PROFILE IMAGE PRIVATE KEY*/
     private byte[] getCryptoBrokerIdentityProfileImagePrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityProfileImageException {
         byte[] profileImage;
         try {
@@ -224,14 +199,12 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
         return profileImage;
     }
-    
-    /*INTERFACE IMPLEMENTATION*/
+
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    /*CREATE FILE THE PRIVATE KEY*/
     private void  persistNewCryptoBrokerIdentityPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
@@ -249,7 +222,6 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    /*CREATE FILE THE PROFILE IMEAGE*/
     private void  persistNewCryptoBrokerIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
@@ -267,11 +239,8 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    /*GET PRIVATE KEY*/
     private String getCryptoBrokerIdentityPrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityPrivateKeyException {
-
         try {
-
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
@@ -279,47 +248,59 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
                     FileLifeSpan.PERMANENT
             );
             file.loadFromMedia();
-
             return file.getContent();
-
         } catch (CantLoadFileException e) {
-
             throw new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
         } catch (CantCreateFileException e) {
-
             throw new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
-
         } catch (FileNotFoundException e) {
             throw new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", "File not found.");
         }
-
     }
 
-    /*GET ALIAS IDENTITY*/
-    private boolean aliasExists (String alias) throws CantCreateNewDeveloperException {
-
+    private boolean aliasExists(String alias) throws CantCreateNewDeveloperException {
         try {
-            DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
-
+            DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             return table.getRecords ().size () > 0;
         } catch (CantLoadTableToMemoryException em) {
-
             throw new CantCreateNewDeveloperException (em.getMessage(), em, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
         }
     }
 
     private CryptoBrokerIdentity getIdentityFromRecord(final DatabaseTableRecord record) throws CantGetCryptoBrokerIdentityPrivateKeyException, CantGetCryptoBrokerIdentityProfileImageException, InvalidParameterException {
-
         String alias = record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME);
         String privateKey = getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
         byte[] profileImage = getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
-
         ExposureLevel published = ExposureLevel.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME));
         KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
-
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published);
+    }
+
+    private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+        try {
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT);
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.setContent(profileImage);
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+        } catch (FileNotFoundException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error removing file.", null);
+        }
     }
 
 }

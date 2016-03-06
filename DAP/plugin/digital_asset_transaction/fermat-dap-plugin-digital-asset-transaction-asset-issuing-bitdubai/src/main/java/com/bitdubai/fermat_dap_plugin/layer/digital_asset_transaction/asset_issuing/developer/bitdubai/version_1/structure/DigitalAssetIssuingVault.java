@@ -1,22 +1,28 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
@@ -47,100 +53,91 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
 
     }
 
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{
-        if(errorManager==null){
+    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
+        if (errorManager == null) {
             throw new CantSetObjectException("ErrorManager is null");
         }
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     //TODO: method that update genesisTransaction
+
     /**
      * This method checks if the OP_return from Crypto Transaction is equals to DigitalAssetMetadata hash.
      */
-    private boolean isDigitalAssetMetadataHashValid(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction){
-        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-        String cryptoTransactionOP_return=genesisTransaction.getOp_Return();
+    private boolean isDigitalAssetMetadataHashValid(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction) {
+        String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
+        String cryptoTransactionOP_return = genesisTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(cryptoTransactionOP_return);
     }
 
-    public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
-        try{
-            DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(internalId);
+    public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, String internalId, BalanceType balanceType) throws CantDeliverDigitalAssetToAssetWalletException {
+        try {
+            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
             /**
              * Added by Rodrigo. This might not be the right place to do this.
              */
-            digitalAssetMetadataToDeliver.setGenesisBlock(genesisTransaction.getBlockHash());
+            digitalAssetMetadataToDeliver.addNewTransaction(genesisTransaction.getTransactionHash(), genesisTransaction.getBlockHash());
 
             /**
              * Saving the Digital Asset metadata on disk because we might have a not null genesis block
              */
             this.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadataToDeliver, internalId);
 
-            if(!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver,genesisTransaction)){
+            if (!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver, genesisTransaction)) {
                 throw new CantDeliverDigitalAssetToAssetWalletException("The Digital Asset Metadata Hash is not valid:\n" +
-                        "Hash: "+digitalAssetMetadataToDeliver.getDigitalAssetHash()+"\n"+
-                        "OP_return: "+genesisTransaction.getOp_Return());
+                        "Hash: " + digitalAssetMetadataToDeliver.getDigitalAssetHash() + "\n" +
+                        "OP_return: " + genesisTransaction.getOp_Return());
             }
-            BalanceType balanceType;
-            switch (assetBalanceType.getCode()){
-                case "BOOK":
-                    balanceType=BalanceType.BOOK;
-                    break;
-                case "AVAI":
-                    balanceType=BalanceType.AVAILABLE;
-                    break;
-                default:
-                    throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
-            }
-            System.out.println("ASSET ISSUING - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
-            creditIssuerWallet(digitalAssetMetadataToDeliver, genesisTransaction, balanceType);
+            System.out.println("ASSET ISSUING - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
+            updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, null, null, WalletUtilities.DEFAULT_MEMO_ISSUING);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
-        } catch (CantGetTransactionsException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
+        } catch (CantGetTransactionsException | CantRegisterCreditException exception) {
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot load the Asset Wallet");
-        } catch (CantRegisterCreditException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot load the Asset Wallet");
         } catch (CantGetAssetIssuerActorsException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Actor Asset Issuer");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Actor Asset Issuer");
         } catch (CantCreateDigitalAssetFileException e) {
             throw new CantDeliverDigitalAssetToAssetWalletException(e, "Delivering DigitalAssetMetadata to Asset Wallet", "saving to disk the digital asset metadata");
+        } catch (CantAssetUserActorNotFoundException | CantGetAssetUserActorsException | CantRegisterDebitException e) {
+            e.printStackTrace();
         }
     }
 
-    private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
+    private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, BlockchainNetworkType networkType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
         /////////////////////////////////////////////
         // TODO: Coloque esto porque es la wallet que tengo hardcore para la wallet y para hacer las pruebas
-        this.walletPublicKey = "walletPublicKeyTest";
+        this.walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
         /////////////////////////////////////////////
-        System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
-        AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+        System.out.println("ASSET ISSUING Before delivering - Wallet public key is:" + this.walletPublicKey);
+        AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
         AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBalance();
-        String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-        System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);
-        System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
-        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
+        String actorToPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+        System.out.println("ASSET ISSUING Actor Issuer public key:" + actorToPublicKey);
+        System.out.println("ASSET ISSUING Transaction to deliver: " + genesisTransaction.getTransactionHash());
+        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 "ActorFromPublicKey",
                 actorToPublicKey
         );
-        System.out.println("ASSET ISSUING AssetIssuerWalletTransactionRecordWrapper: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
-        System.out.println("ASSET ISSUING Balance Type: "+ balanceType);
+        System.out.println("ASSET ISSUING AssetIssuerWalletTransactionRecordWrapper: " + assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET ISSUING Balance Type: " + balanceType);
         assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 
-    public void setGenesisTransaction(String internalId, String genesisTransaction) throws CantPersistsGenesisTransactionException {
-        try{
-            DigitalAssetMetadata digitalAssetMetadata=getDigitalAssetMetadataFromLocalStorage(internalId);
-            digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
+    public DigitalAssetMetadata setGenesisTransaction(String internalId, String genesisTransaction) throws CantPersistsGenesisTransactionException {
+        try {
+            DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(internalId);
+            digitalAssetMetadata.addNewTransaction(genesisTransaction, null);
             persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, internalId);
+            return digitalAssetMetadata;
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata","Cannot get the Digital Asset metadata from local storage");
+            throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata", "Cannot get the Digital Asset metadata from local storage");
         } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata","Cannot persists the Digital Asset metadata in local storage");
+            throw new CantPersistsGenesisTransactionException(exception, "Set genesis transaction in Digital Asset Metadata", "Cannot persists the Digital Asset metadata in local storage");
         }
     }
 

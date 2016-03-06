@@ -1,6 +1,8 @@
 
 package com.bitdubai.fermat_dap_api.layer.all_definition.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 
@@ -8,6 +10,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -144,6 +147,18 @@ public final class Validate {
         if (isObjectNull(objectToGet)) {
             return Collections.EMPTY_LIST;
         } else return objectToGet;
+    }
+
+    public static boolean isValidTransaction(DraftTransaction signedTransaction, DraftTransaction generatedTransaction) {
+        Map<CryptoAddress, Long> signedFunds = signedTransaction.getFundsDistribution();
+        Map<CryptoAddress, Long> generatedFunds = generatedTransaction.getFundsDistribution();
+
+        for (Map.Entry<CryptoAddress, Long> entry : generatedFunds.entrySet()) {
+            if (!signedFunds.entrySet().contains(entry)) {
+                return false;
+            }
+        }
+        return signedTransaction.getValue() == generatedTransaction.getValue();
     }
 
     private static Date today() {

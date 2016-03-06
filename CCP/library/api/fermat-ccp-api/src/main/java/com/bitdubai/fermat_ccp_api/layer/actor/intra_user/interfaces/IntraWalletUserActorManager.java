@@ -154,4 +154,13 @@ public interface IntraWalletUserActorManager extends FermatManager {
      * @throws CantGetIntraUsersConnectedStateException
      */
     ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUsersConnectedStateException;
+
+    /**
+     *The method <code>getLastNotification</code> get the last notification received by actor public key
+     * @param intraUserConnectedPublicKey
+     * @return IntraWalletUserActor notification object
+     * @throws CantGetIntraUserException
+     */
+    IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUserException;
+
 }

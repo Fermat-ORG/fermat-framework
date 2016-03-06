@@ -12,6 +12,14 @@ import com.bitdubai.android_api.BuildConfig;
 
 
 /**
+ * Chat List Adapter
+ *
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16
+ * @version 1.0
+ *
+ */
+
+/**
  * This class holds our bitmap caches (memory and disk).
  */
 public class ImageCache {

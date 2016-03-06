@@ -7,27 +7,27 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * The class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor</code> define
+ * The class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processor.FermatMessageProcessor</code> define
  * the method that have to implements a fermat messages processor class, side of the server
  * <p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
- *
+ * Implemented by Gabriel Araujo to CHT
  * @version 1.0
  * @since Java JDK 1.7
  */
 public abstract class FermatMessageProcessor {
 
     /**
-     * Represent the assetTransmissionNetworkServicePluginRoot
+     * Represent the ChatNetworkServicePluginRoot
      */
-    private ChatPluginRoot chatPluginRoot;
+    private ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
 
     /**
      * Represent the gson
@@ -36,11 +36,11 @@ public abstract class FermatMessageProcessor {
 
     /**
      * Constructor with parameters
-     * @param chatPluginRoot
+     * @param chatNetworkServicePluginRoot
      */
-    public FermatMessageProcessor(ChatPluginRoot chatPluginRoot){
+    public FermatMessageProcessor(ChatNetworkServicePluginRoot chatNetworkServicePluginRoot){
         super();
-        this.chatPluginRoot = chatPluginRoot;
+        this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
         this.gson = new Gson();
     }
 
@@ -57,11 +57,11 @@ public abstract class FermatMessageProcessor {
 
 
     /**
-     * Get the ChatPluginRoot
-     * @return chatPluginRoot
+     * Get the ChatNetworkServicePluginRoot
+     * @return chatNetworkServicePluginRoot
      */
-    public ChatPluginRoot getChatPluginRoot() {
-        return chatPluginRoot;
+    public ChatNetworkServicePluginRoot getChatNetworkServicePluginRoot() {
+        return chatNetworkServicePluginRoot;
     }
 
 

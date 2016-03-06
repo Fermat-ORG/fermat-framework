@@ -127,7 +127,7 @@ public final class CryptoBrokerConnectionRequest {
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + Arrays.toString(senderImage) +
+                ", senderImage=" + (senderImage != null )+
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
                 ", requestType=" + requestType +
                 ", protocolState=" + protocolState +

@@ -1,12 +1,11 @@
 package com.bitdubai.sub_app.intra_user_community.navigation_drawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -14,21 +13,26 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by mati on 2015.12.24..
  */
 public class IntraUserCommunityNavigationViewPainter implements NavigationViewPainter {
 
-    private Activity activity;
+    private WeakReference<Context> activity;
+    private final ActiveActorIdentityInformation intraUserLoginIdentity;
 
-    public IntraUserCommunityNavigationViewPainter(Activity activity) {
-        this.activity = activity;
+    public IntraUserCommunityNavigationViewPainter(Context activity,ActiveActorIdentityInformation intraUserLoginIdentity) {
+        this.activity = new WeakReference(activity);
+        this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, intraUserLoginIdentity);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserLoginIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
             return null;
@@ -37,7 +41,7 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new AppNavigationAdapter(activity, null);
+        return new AppNavigationAdapter(activity.get(), null);
     }
 
     @Override
@@ -67,6 +71,6 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
 
     @Override
     public boolean hasClickListener() {
-        return false;
+        return true;
     }
 }

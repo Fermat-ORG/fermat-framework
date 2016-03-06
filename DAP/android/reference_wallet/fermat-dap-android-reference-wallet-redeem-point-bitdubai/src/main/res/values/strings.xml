@@ -3,6 +3,56 @@
     <string name="action_new">New Action</string>
     <string name="dap_identity_alias_default_text">Redeem Point</string>
 
-    <string name="no_assets">No Assets</string>
+    <!-- toolbar -->
+    <string name="help">Help</string>
+    <string name="dap_redeem_point_wallet_search">Search</string>
+    <string name="dap_redeem_point_wallet_search_hint">Asset name</string>
+    <string name="dap_redeem_point_wallet_show_no_balance">Hide empty assets</string>
+    <string name="dap_redeem_point_wallet_show_all">Show empty assets</string>
+    <!-- -->
+
+    <!-- empty list views -->
+    <string name="no_assets_issuer">No Assets?</string>
+    <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
+    <string name="no_assets_user">No Assets?</string>
+    <string name="no_assets_user_message">Don\'t worry, as an Asset User you are able to receive assets from many Asset Owners. You are already eligible to receive them and store them at this wallet.</string>
+    <string name="no_assets_redeem_point">No Assets?</string>
+    <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_users">No Users</string>
+    <string name="no_transactions">No Transactions</string>
+    <!-- -->
+
+    <!-- error messages -->
+    <string name="dap_redeem_point_wallet_system_error">Asset Redeem Point system error</string>
+    <string name="dap_redeem_point_wallet_exception">Fermat Has detected an exception</string>
+    <string name="dap_redeem_point_wallet_exception_retry">Fermat Has detected an exception. Please retry again.</string>
+    <string name="dap_redeem_point_wallet_opps_system_error">Oooops! recovering from system error</string>
+    <!-- -->
+
+    <!-- validation messages -->
+    <string name="dap_redeem_point_wallet_identity">Identity must be created</string>
+    <!-- -->
+
+    <!-- app messages -->
+    <string name="dap_redeem_point_wallet_wait">Please wait...</string>
+    <string name="dap_redeem_point_wallet_remaining_assets">Assets Remaining</string>
+    <!-- -->
+
+    <!-- app strings -->
+    <string name="dap_redeem_point_wallet_confirmed">CONFIRMED</string>
+    <string name="dap_redeem_point_wallet_pending">PENDING</string>
+    <!-- -->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_wallet_welcome_subTitle">Welcome to the RedeemPoint Wallet.</string>
+    <string name="dap_redeem_wallet_welcome_body">From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.</string>
+    <string name="dap_redeem_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to edit this information at the Redeem Point Identity application.</string>
+    <string name="dap_redeem_wallet_welcome_name_left">Redeem Point</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_wallet_detail_subTitle">Asset detail section.</string>
+    <string name="dap_redeem_wallet_detail_body">You can review in more detail the asset that has been redeemed by an user.\n\nAn asset might be redeemed by many users so statistics and tracking of the users is shown here.\n\nEvery asset redeem at you, is also notified to the original creator of the Asset.</string>
+    <!--Dialog Help - End-->
+
 </resources>

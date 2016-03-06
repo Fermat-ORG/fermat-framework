@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
@@ -76,7 +77,6 @@ public class OpenContractTransactionManager implements OpenContractManager{
         this.transactionTransmissionManager=transactionTransmissionManager;
         this.openContractBusinessTransactionDao=openContractBusinessTransactionDao;
         this.errorManager=errorManager;
-
     }
 
 
@@ -93,6 +93,14 @@ public class OpenContractTransactionManager implements OpenContractManager{
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
 
@@ -102,17 +110,34 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
-                openContractBusinessTransactionDao);
+                openContractBusinessTransactionDao,
+                errorManager);
         try {
             Object[] arguments={customerBrokerSaleNegotiation, fiatIndex};
             ObjectChecker.checkArguments(arguments);
             openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantOpenContractException(e,
                     "Creating Open Contract Business Transaction",
                     "Invalid input to this manager");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantOpenContractException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
         //openContract(negotiationId);
     }
@@ -123,20 +148,50 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 transactionTransmissionManager,
-                openContractBusinessTransactionDao);
+                openContractBusinessTransactionDao,
+                errorManager);
         try {
             Object[] arguments={customerBrokerPurchaseNegotiation, fiatIndex};
             ObjectChecker.checkArguments(arguments);
             openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantOpenContractException(e,
                     "Creating Open Contract Business Transaction",
                     "Invalid input to this manager");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantOpenContractException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
         //openContract(negotiationId);
+    }
+
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        //TODO to implement
+        return 0;
     }
 
 }

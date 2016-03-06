@@ -1,0 +1,183 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/csh_transaction_detail_background"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Type:"
+            android:textColor="@color/csh_text_lightblue"
+            android:textSize="@dimen/csh_regular_text_size" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/csh_transaction_details_transaction_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/csh_transaction_detail_hr_color" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Amount:"
+            android:textColor="@color/csh_text_lightblue"
+            android:textSize="@dimen/csh_regular_text_size" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/csh_transaction_details_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.039 USD"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/csh_transaction_detail_hr_color" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Date:"
+            android:textColor="@color/csh_text_lightblue"
+            android:textSize="@dimen/csh_regular_text_size" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/csh_transaction_details_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2015-01-03"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/csh_transaction_detail_hr_color" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Memo:"
+            android:textColor="@color/csh_text_lightblue"
+            android:textSize="@dimen/csh_regular_text_size" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/csh_transaction_details_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is a memo"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/csh_transaction_detail_hr_color" />
+
+    <LinearLayout
+        android:id="@+id/csh_transaction_detail_btn_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/csh_transaction_detail_delete_btn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/csh_button_background_selector"
+            android:text="Delete"
+            android:textColor="@color/csh_text_white"
+            android:textSize="14sp" />
+
+
+        <Button
+            android:id="@+id/csh_transaction_detail_update_btn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/csh_button_background_selector"
+            android:text="Update"
+            android:textColor="@color/csh_text_white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+</LinearLayout>

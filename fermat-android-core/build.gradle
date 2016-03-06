@@ -8,7 +8,8 @@ android {
 
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '21.1.2'
+
 
     packagingOptions {
         exclude 'LICENSE.txt'
@@ -27,17 +28,18 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.bitdubai.fermat"
-        minSdkVersion 16
+        applicationId "org.fermat"
+        minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 11
+        versionName "1.1"
         multiDexEnabled true
     }
 
     dexOptions {
         javaMaxHeapSize "2g"
         incremental true
+        jumboMode=true
         preDexLibraries = false
     }
 
@@ -53,17 +55,15 @@ android {
         }
     }
     buildTypes {
-
         release {
             minifyEnabled false
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
-
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -78,12 +78,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:multidex:1.0.1'
     compile project(':fermat-api')
     compile project(':fermat-core')
     compile project(':fermat-osa-android-core')
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
-
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
@@ -96,8 +94,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     /*
-                    Sub APPs on the pipeline
-                    */
+                                        Sub APPs on the pipeline
+                                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -111,6 +109,7 @@ dependencies {
     // CBP Projects
     compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
     compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
     // DAP Projects
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
@@ -127,24 +126,42 @@ dependencies {
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
-//    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //CHT
+    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.1'
     //compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:support-v13:23.0.1'
-    compile 'com.google.android.gms:play-services:6.5.87'
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5+'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-v13:23.1.1'
+    //compile 'com.google.android.gms:play-services:6.5.87'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
 
+    //widget
+    compile project(':bitcoin_exchange_widget')
+    compile 'ch.acra:acra:4.6.2'
     configurations {
         all {
             exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
         }
     }
+//    compile files('src/main/libs/activation.jar')
+//    compile files('src/main/libs/additionnal.jar')
+//    compile files('src/main/libs/mail.jar')
+    compile 'com.sun.mail:android-mail:1.5.5'
+    compile 'com.sun.mail:android-activation:1.5.5'
 
+
+    compile project(':horizontalscrollview')
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
+
+
+
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
 }

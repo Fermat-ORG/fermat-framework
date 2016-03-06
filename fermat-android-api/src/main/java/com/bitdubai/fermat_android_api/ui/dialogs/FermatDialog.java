@@ -1,12 +1,11 @@
 package com.bitdubai.fermat_android_api.ui.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
@@ -22,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
 
 
-    private final Activity activity;
+    private final Context activity;
     private S fermatSession;
 
     private R resources;
@@ -38,14 +37,14 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources parent class of WalletResources and SubAppResources
      */
-    public FermatDialog(Activity activity,S fermatSession,R resources) {
+    public FermatDialog(Context activity,S fermatSession,R resources) {
         super(activity);
         this.activity = activity;
         this.fermatSession = fermatSession;
         this.resources = resources;
     }
 
-    public FermatDialog(Activity activity, int themeResId,S fermatSession,R resources) {
+    public FermatDialog(Context activity, int themeResId,S fermatSession,R resources) {
         super(activity, themeResId);
         this.activity = activity;
         this.fermatSession = fermatSession;
@@ -119,11 +118,13 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         return (FermatScreenSwapper) activity;
     }
 
-    protected Activity getActivity(){
+    protected Context getActivity(){
         return activity;
     }
 
     protected void toastDefaultError() {
         Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
     }
+
+
 }

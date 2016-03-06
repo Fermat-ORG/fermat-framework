@@ -17,10 +17,12 @@ public class InformationMessage extends NetworkServiceMessage {
     private final RequestAction action   ;
 
     public InformationMessage(final UUID          requestId,
-                              final RequestAction action   ) {
+                              final RequestAction action ,
+                              String identitySender,
+                              String actorDestination) {
 
-        super(MessageTypes.INFORMATION);
 
+        super(MessageTypes.INFORMATION,identitySender,actorDestination);
         this.requestId = requestId;
         this.action    = action   ;
     }

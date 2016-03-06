@@ -38,4 +38,11 @@ public abstract class AbstractEvent implements FermatEvent {
         return this.eventSource;
     }
 
+    @Override
+    public String toString() {
+        return "AbstractEvent{" +
+                "eventType=" + eventType +
+                ", eventSource=" + eventSource +
+                '}';
+    }
 }

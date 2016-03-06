@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -65,22 +65,22 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
             } else if (choice instanceof Currency) {
                 final Currency currency = (Currency) choice;
-                data.add(currency.getFriendlyName());
+                data.add(currency.getFriendlyName()+" ("+ currency.getCode()+")");
 
-            } else if (choice instanceof CurrencyType) {
-                CurrencyType currencyType = (CurrencyType) choice;
+            } else if (choice instanceof MoneyType) {
+                MoneyType moneyType = (MoneyType) choice;
 
-                switch (currencyType) {
-                    case BANK_MONEY:
+                switch (moneyType) {
+                    case BANK:
                         data.add("Bank Money");
                         break;
-                    case CASH_DELIVERY_MONEY:
+                    case CASH_DELIVERY:
                         data.add("Cash Delivery");
                         break;
-                    case CASH_ON_HAND_MONEY:
+                    case CASH_ON_HAND:
                         data.add("Cash on Hand");
                         break;
-                    case CRYPTO_MONEY:
+                    case CRYPTO:
                         data.add("Crypto Money");
                         break;
                 }

@@ -72,6 +72,13 @@ public class WebSocketVpnServerChannel {
      */
     private VpnClientConnection vpnClientConnection;
 
+    /*
+     * We use messageComplete to handle the packets that are sent in parts
+     * we set the messageComplete to empty because
+     * if we do with null the messageComplete after will concat like a word and show exception in its handle
+     */
+     private String messageComplete = "";
+
     /**
      * Constructor
      */
@@ -157,62 +164,89 @@ public class WebSocketVpnServerChannel {
      * @param fermatPacketEncode value
      */
     @OnMessage
-    public void fermatPacketReceive(String fermatPacketEncode){
+    public void fermatPacketReceive(String fermatPacketEncode, boolean lastPacket, Session session){
 
-        LOG.info("-----------------------------------------------------------");
-        LOG.info("Received TEXT message: " + fermatPacketEncode);
+        /*
+         *  if fermatPacketEncode is the las Packet then
+         *  the messageComplete concats the string and handle packet correctly
+         */
+        if(lastPacket) {
+
+            messageComplete = messageComplete + fermatPacketEncode;
+
+            LOG.info("-----------------------------------------------------------");
+            LOG.info("Received TEXT message: " + messageComplete);
 
         /*
          * Decode the fermatPacketEncode into a fermatPacket
          */
-        FermatPacket receiveFermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, vpnServerIdentity.getPrivateKey());
+            FermatPacket receiveFermatPacket = FermatPacketDecoder.decode(messageComplete, vpnServerIdentity.getPrivateKey());
 
 
-        if (receiveFermatPacket.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT){
+            if (receiveFermatPacket.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT) {
 
             /*
              * Get the FermatMessage from the message content and decrypt
              */
-            String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
+                String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
             /*
              * Construct the fermat message object
              */
-            FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+                FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
 
-            LOG.info("fermatMessage = " + fermatMessage);
+                LOG.info("fermatMessage = " + fermatMessage);
 
             /*
             * Construct a new fermat packet whit the same message and different destination
             */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
-                                                                                                                        vpnServerIdentity.getPublicKey(),           //Sender
-                                                                                                                        fermatMessage.toJson(),                     //Message Content
-                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
-                                                                                                                        vpnServerIdentity.getPrivateKey());         //Sender private key
+                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
+                        vpnServerIdentity.getPublicKey(),           //Sender
+                        fermatMessage.toJson(),                     //Message Content
+                        FermatPacketType.MESSAGE_TRANSMIT,          //Packet type
+                        vpnServerIdentity.getPrivateKey());         //Sender private key
+
+                String key = fermatMessage.getReceiver() + fermatMessage.getSender();
+
             /*
              * Get the connection of the destination
              */
-            VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection);
+                VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection.getNetworkServiceType(), key);
 
             /*
              * If the connection to client destination available
              */
-            if (clientConnectionDestination != null && clientConnectionDestination.getSession().isOpen()){
+                if (clientConnectionDestination != null && clientConnectionDestination.getSession().isOpen()) {
 
-                LOG.info("Sending msg to: " + clientConnectionDestination.getParticipant().getAlias());
+                    LOG.info("Sending msg to: " + clientConnectionDestination.getParticipant().getAlias());
 
                /*
                 * Send the encode packet to the destination
                 */
-                clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
+                    clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
+                }
+
+            } else {
+                LOG.warn("Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
             }
 
-        }else {
-            LOG.warn("Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
+            /*
+             * we set the messageComplete to empty because if we do with null the messageComplete after will concat like a word
+             * and show exception in its handle
+             */
+            messageComplete = "";
+
+        }else{
+
+            /*
+             * the messageComplete concats the string
+             */
+            messageComplete = messageComplete + fermatPacketEncode;
+
         }
+
     }
 
     /**

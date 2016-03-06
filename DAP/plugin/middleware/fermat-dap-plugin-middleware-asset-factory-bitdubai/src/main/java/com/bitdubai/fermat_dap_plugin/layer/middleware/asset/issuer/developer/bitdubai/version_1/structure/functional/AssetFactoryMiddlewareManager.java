@@ -31,8 +31,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interface
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -117,7 +117,7 @@ public final class AssetFactoryMiddlewareManager {
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             if (assetFactory.getResources() != null) {
                 for (Resource resource : assetFactory.getResources()) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                     imageFile.setContent(resource.getResourceBinayData());
                     imageFile.persistToMedia();
                 }
@@ -176,7 +176,7 @@ public final class AssetFactoryMiddlewareManager {
 
     public AssetFactory getAssetFactoryByAssetPublicKey(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         // I define the filter to search for the public Key
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
+        DatabaseTableFilter publicKeyFilter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
 
@@ -194,7 +194,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -210,11 +210,45 @@ public final class AssetFactoryMiddlewareManager {
 
         List<AssetFactory> assetFactories;
         try {
-            assetFactories = getAssetFactories(filter);
+            assetFactories = getAssetFactories(publicKeyFilter);
             return assetFactories.get(0);
         } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByAssetPublicKey()", "PublicKey " + publicKey);
         }
+    }
+
+    public DatabaseTableFilter getNetworkTypeFilter(final BlockchainNetworkType networkType) {
+        return new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE;
+            }
+
+            @Override
+            public String getValue() {
+                return networkType.getCode();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
     }
 
 
@@ -238,7 +272,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -270,7 +304,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -313,7 +347,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
             }
 
             @Override
@@ -356,7 +390,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -399,7 +433,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -431,7 +465,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
             }
 
             @Override
@@ -473,7 +507,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -505,7 +539,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -527,9 +561,9 @@ public final class AssetFactoryMiddlewareManager {
         }
     }
 
-    public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException, CantCreateFileException {
+    public List<AssetFactory> getAssetFactoryByState(final State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
         // I define the filter to search for the state
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
+        DatabaseTableFilter stateFilter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
 
@@ -547,7 +581,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -563,16 +597,16 @@ public final class AssetFactoryMiddlewareManager {
 
         List<AssetFactory> assetFactories;
         try {
-            assetFactories = getAssetFactories(filter);
+            assetFactories = getAssetFactories(stateFilter, getNetworkTypeFilter(networkType));
             return assetFactories;
         } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByState()", "State " + state.getCode());
         }
     }
 
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
+    public List<AssetFactory> getAssetFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
         // I define the filter to null for all
-        DatabaseTableFilter filter = null;
+        DatabaseTableFilter filter = getNetworkTypeFilter(networkType);
 
         List<AssetFactory> assetFactories;
         try {
@@ -584,7 +618,7 @@ public final class AssetFactoryMiddlewareManager {
     }
 
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
-        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
     }
 
     public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException {
@@ -620,17 +654,15 @@ public final class AssetFactoryMiddlewareManager {
         }
     }
 
-    public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
+    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException {
         try {
             if (assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-                redeemable.setValue(assetFactory.getIsRedeemable());
-                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
-                expirationDate.setValue(assetFactory.getExpirationDate());
-                digitalAssetContract.setContractProperty(redeemable);
-                digitalAssetContract.setContractProperty(expirationDate);
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
@@ -640,7 +672,7 @@ public final class AssetFactoryMiddlewareManager {
                 digitalAsset.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
                 digitalAsset.setResources(assetFactory.getResources());
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getAssetPublicKey());
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
             } else {
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }

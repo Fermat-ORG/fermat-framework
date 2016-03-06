@@ -32,6 +32,11 @@ public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent 
     private PlatformComponentProfile remoteParticipant;
 
     /**
+     * this member will be true if the close is for normal reasons
+     */
+    private boolean isCloseNormal;
+
+    /**
      * Constructor with parameter
      * @param p2pEventType
      */
@@ -75,5 +80,16 @@ public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent 
     @Override
     public NetworkServiceType getNetworkServiceTypeApplicant() {
         return networkServiceApplicant;
+    }
+
+    public void setIsCloseNormal(boolean isCloseNormal) {
+        this.isCloseNormal = isCloseNormal;
+    }
+
+    /**
+     * this member will be true if the close is for normal reasons
+     */
+    public boolean isCloseNormal() {
+        return isCloseNormal;
     }
 }

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
@@ -21,7 +22,8 @@ public class AssetDeliverySelectGroupsHolder extends FermatViewHolder {
     private Resources res;
 
     private FermatTextView nameText;
-    private ImageView selectUserButton;
+    private ImageView selectGroupButton;
+    private ImageView imageViewGroup;
 
     /**
      * Constructor
@@ -35,27 +37,31 @@ public class AssetDeliverySelectGroupsHolder extends FermatViewHolder {
         res = itemView.getResources();
 
         nameText = (FermatTextView) itemView.findViewById(R.id.groupName);
-        selectUserButton = (ImageView) itemView.findViewById(R.id.selectGroupButton);
+        selectGroupButton = (ImageView) itemView.findViewById(R.id.selectGroupButton);
+        imageViewGroup = (ImageView) itemView.findViewById(R.id.imageView_group_avatar);
     }
 
     public void bind(final Group group) {
-        nameText.setText(group.getName());
+        int users = group.getUsers().size();
+        nameText.setText(group.getName() + " (" + users + " " + (users == 1 ? "user" : "users") + ")");
         if (group.isSelected()) {
-            selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
+            selectGroupButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
         } else {
-            selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
+            selectGroupButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
         }
 
-        selectUserButton.setOnClickListener(new View.OnClickListener() {
+        selectGroupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!group.isSelected()) {
                     group.setSelected(true);
-                    selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
+                    selectGroupButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
                 } else {
                     group.setSelected(false);
-                    selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
+                    selectGroupButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
                 }
             }
         });
+
+        imageViewGroup.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_group_image));
     }
 }

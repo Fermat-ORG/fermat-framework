@@ -1,5 +1,5 @@
 /*
- * @#TemplateNetworkServiceLocal.java - 2015
+ * @#CommunicationNetworkServiceConnectionManager.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -11,36 +11,37 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingMessageDao;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communication.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 04/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+
 
     /**
      * Represent the profile of the remote network service
@@ -52,10 +53,6 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      */
     private NetworkServiceType networkServiceTypePluginRoot;
 
-    /**
-     * Network service root
-     */
-    private AbstractNetworkService networkServicePluginRoot;
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -98,14 +95,14 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     /**
      * (non-javadoc)
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey, final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String pk, final String messageContent) {
 
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    receiverPublicKey,   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
+                    pk,   //Receiver
+                    messageContent,                //Message Content
+                    FermatMessageContentType.TEXT);//Type
             /*
              * Configure the correct status
              */
@@ -118,7 +115,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
     }
@@ -144,7 +141,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
          * Put the message on a event and fire new event
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource(networkServicePluginRoot.getEventSource());
+        fermatEvent.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
         eventManager.raiseEvent(fermatEvent);

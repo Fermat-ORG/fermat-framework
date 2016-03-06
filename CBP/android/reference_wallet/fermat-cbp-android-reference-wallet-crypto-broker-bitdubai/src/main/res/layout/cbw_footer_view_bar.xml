@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="#aaaaaa"
-    android:gravity="center_vertical"
+    android:layout_height="@dimen/cbw_footer_bar_height"
+    android:orientation="horizontal"
+    android:background="@color/cbw_background_stock_chart_container"
+    android:paddingEnd="16dp"
     android:paddingLeft="16dp"
-    android:text="Bitcoin: 120 BTC"
-    android:textColor="@color/black"
-    android:textSize="16sp"/>
+    android:paddingRight="16dp"
+    android:paddingStart="16dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_footer_bar_stock_currency"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        tools:text="Bitcoins"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_footer_bar_stock_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:gravity="center_vertical"
+        tools:text="12,00 BTC"
+        android:textColor="#ffffff"
+        android:textSize="22sp"/>
+</LinearLayout>

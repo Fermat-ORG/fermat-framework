@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
+
+
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
@@ -25,6 +27,14 @@ public class DigitalAsset {
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
     private byte[] image;
+    int lockedAssets;
+
+
+
+
+
+
+    private UserAssetNegotiation userAssetNegotiation;
 
     private int redeemed;
     private int appropriated;
@@ -163,8 +173,22 @@ public class DigitalAsset {
     public int getUnused() {
         return unused;
     }
+    public int getLockedAssets() {
+        return lockedAssets;
+    }
+
+    public void setLockedAssets(int lockedAssets) {
+        this.lockedAssets = lockedAssets;
+    }
 
     public void setUnused(int unused) {
         this.unused = unused;
+    }
+    public void setUserAssetNegotiation(UserAssetNegotiation userAssetNegotiation) {
+        this.userAssetNegotiation = userAssetNegotiation;
+    }
+
+    public UserAssetNegotiation getUserAssetNegotiation() {
+        return userAssetNegotiation;
     }
 }

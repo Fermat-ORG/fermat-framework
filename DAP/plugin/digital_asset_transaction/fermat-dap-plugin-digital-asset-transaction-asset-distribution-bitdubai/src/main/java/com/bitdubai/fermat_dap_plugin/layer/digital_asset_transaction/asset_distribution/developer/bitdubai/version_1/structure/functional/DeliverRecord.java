@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 
@@ -20,6 +21,7 @@ public class DeliverRecord {
     private DistributionStatus state;
     private String genesisTransactionSent;
     private long attemptNumber;
+    private BlockchainNetworkType networkType;
 
     //CONSTRUCTORS
 
@@ -27,7 +29,7 @@ public class DeliverRecord {
     public DeliverRecord() {
     }
 
-    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent, int attemptNumber) {
+    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent, long attemptNumber, BlockchainNetworkType networkType) {
         this.transactionId = transactionId;
         this.genesisTransaction = genesisTransaction;
         this.digitalAssetMetadata = digitalAssetMetadata;
@@ -37,9 +39,10 @@ public class DeliverRecord {
         this.state = state;
         this.genesisTransactionSent = genesisTransactionSent;
         this.attemptNumber = attemptNumber;
+        this.networkType = networkType;
     }
 
-    //PUBLIC METHODS
+//PUBLIC METHODS
 
     @Override
     public String toString() {
@@ -157,6 +160,14 @@ public class DeliverRecord {
 
     public void setAttemptNumber(long attemptNumber) {
         this.attemptNumber = attemptNumber;
+    }
+
+    public BlockchainNetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public void setNetworkType(BlockchainNetworkType networkType) {
+        this.networkType = networkType;
     }
 
     //INNER CLASSES

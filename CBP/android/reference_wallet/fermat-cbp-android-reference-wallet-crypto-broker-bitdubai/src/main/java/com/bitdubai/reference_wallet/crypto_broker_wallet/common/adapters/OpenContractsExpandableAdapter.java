@@ -53,7 +53,7 @@ public class OpenContractsExpandableAdapter
      */
     @Override
     public ContractExpandableListViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbw_open_contract_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.cbw_open_negotiation_and_contract_list_item, parent, false);
         return new ContractExpandableListViewHolder(view);
     }
 

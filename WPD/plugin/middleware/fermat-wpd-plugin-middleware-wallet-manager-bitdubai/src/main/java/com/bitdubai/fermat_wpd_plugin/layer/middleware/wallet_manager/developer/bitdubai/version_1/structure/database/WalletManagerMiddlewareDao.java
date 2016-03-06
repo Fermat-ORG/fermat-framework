@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
@@ -95,7 +96,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
 
                 lstInstalledWallet.add(installedWallet);
@@ -147,7 +149,9 @@ public class WalletManagerMiddlewareDao {
                         databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         databaseTableRecord.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME));
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
+                        );
             }
 
 
@@ -205,7 +209,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
             }
 
@@ -258,7 +263,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
                 //LOG.info("record:"+record);
             }
@@ -275,7 +281,7 @@ public class WalletManagerMiddlewareDao {
     }
 
 
-    public void persistWallet(String walletPublicKey, String walletPrivateKey, String deviceUserPublicKey, WalletCategory walletCategory, String walletName, String walletIconName, String walletIdentifier, UUID walletCatalogueId, Version walletVersion, String developerName, String screenSize, String navigationVersion) throws CantPersistWalletException {
+    public void persistWallet(String walletPublicKey, String walletPrivateKey, String deviceUserPublicKey, WalletCategory walletCategory, String walletName, String walletIconName, String walletIdentifier, UUID walletCatalogueId, Version walletVersion, String developerName, String screenSize, String navigationVersion, BlockchainNetworkType blockchainNetworkType) throws CantPersistWalletException {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
@@ -292,6 +298,7 @@ public class WalletManagerMiddlewareDao {
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME, developerName);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME, screenSize);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME, navigationVersion);
+            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
             //Logger LOG = Logger.getGlobal();
             //LOG.info("RECORD:" + record);
             databaseTable.insertRecord(record);

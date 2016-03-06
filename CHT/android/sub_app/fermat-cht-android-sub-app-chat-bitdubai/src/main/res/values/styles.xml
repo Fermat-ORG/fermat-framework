@@ -1,27 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (C) 2013 The Android Open Source Project
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
-<!-- This file defines various styles for the application. As this file is located in the /values
-     subdirectory the styles defined here will be used by default unless the styles are redefined
-     inside a more specific resource directory such as /values-sw600dp. -->
-
 <resources>
 
     <style name="AppTheme" parent="@android:style/Theme"/>
+
+    <style name="customAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorAccent">@color/background_action_bar</item>
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="color">#f9f9f9</item>
+        <item name="android:actionMenuTextColor">#3d3d3d</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+        <item name="android:autoCompleteTextViewStyle">@style/cursorColor</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#000</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="closeIcon">@drawable/cht_ic_close_white</item>
+        <item name="navigationIcon">@drawable/cht_ic_back</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+        <item name="color">#000</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="customAppTheme">
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="colorAccent">#000</item>
+        <item name="colorControlNormal">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/cht_cursor</item>
+        <item name="android:textColor">#000</item>
+    </style>
+
 
     <style name="ContactListView">
         <item name="android:verticalScrollbarPosition">right</item>
@@ -31,10 +55,6 @@
 
     <style name="listViewActivatedStyle"/>
 
-    <style name="quickContactBadgeStyle">
-        <item name="android:background">@drawable/quickcontact_badge_small</item>
-    </style>
-
     <style name="searchTextHiglight">
         <item name="android:textColor">@color/holo_blue</item>
         <item name="android:textStyle">bold</item>
@@ -42,7 +62,8 @@
 
     <style name="addressHeader" parent="@android:style/TextAppearance.Small">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="addressDetail" parent="@android:style/TextAppearance.Medium">
@@ -51,8 +72,8 @@
     </style>
 
     <style name="contactNameTitle" parent="@android:style/TextAppearance.Large">
-        <item name="android:textSize">38sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textIsSelectable">true</item>
     </style>
 

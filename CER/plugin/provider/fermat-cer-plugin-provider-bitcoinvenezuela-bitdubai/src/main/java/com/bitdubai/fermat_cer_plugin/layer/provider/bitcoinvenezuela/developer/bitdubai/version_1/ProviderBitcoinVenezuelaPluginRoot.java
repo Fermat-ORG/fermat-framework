@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -196,7 +197,9 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        long timestamp = calendar.getTimeInMillis() / 1000L;
 
         if(DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
@@ -221,11 +224,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
                 currencyFrom = currencyPair.getFrom();
                 currencyTo = currencyPair.getTo();
-                invertExchange = false;
+                invertExchange = true;
             } else {
                 currencyFrom = currencyPair.getTo();
                 currencyTo = currencyPair.getFrom();
-                invertExchange = true;
+                invertExchange = false;
             }
 
             //Query API
@@ -253,7 +256,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        long startTimestamp = startCalendar.getTimeInMillis() / 1000L;
+        long endTimestamp = endCalendar.getTimeInMillis() / 1000L;
+
 
         if(DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
@@ -282,11 +289,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
             currencyFrom = currencyPair.getFrom();
             currencyTo = currencyPair.getTo();
-            invertExchange = false;
+            invertExchange = true;
         } else {
             currencyFrom = currencyPair.getTo();
             currencyTo = currencyPair.getFrom();
-            invertExchange = true;
+            invertExchange = false;
         }
 
         //Query API
@@ -295,7 +302,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         queryBitcoinVenezuelaExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
 
         //Find requiredExchangeRate
-        List<ExchangeRate> aux = (invertExchange ? exchangeRates : inverseExchangeRates);
+        List<ExchangeRate> aux = (invertExchange ? inverseExchangeRates : exchangeRates);
         for(ExchangeRate er : aux) {
             if (er.getTimestamp() >= stdStartTimestamp && er.getTimestamp() <= stdEndTimestamp)
                 requiredExchangeRates.add(er);

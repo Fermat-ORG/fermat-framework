@@ -1,7 +1,5 @@
 package com.bitdubai.android_core.app.common.version_1.util;
 
-import android.app.Application;
-
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
@@ -28,6 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -46,19 +45,19 @@ public class FermatSystemUtils {
      * @return reference of ErrorManager
      */
 
-    public static ErrorManager getErrorManager(Application application) {
+    public static ErrorManager getErrorManager() {
         try {
-            return ((ApplicationSession) application).getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
+            return ApplicationSession.getInstance().getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
         } catch (ErrorManagerNotFoundException |
                 CantGetErrorManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -70,10 +69,10 @@ public class FermatSystemUtils {
      * @return reference of SubAppRuntimeManager
      */
 
-    public static SubAppRuntimeManager getSubAppRuntimeMiddleware(Application application) {
+    public static SubAppRuntimeManager getSubAppRuntimeMiddleware() {
 
         try {
-            return (SubAppRuntimeManager) ((ApplicationSession) application).getFermatSystem().getRuntimeManager(
+            return (SubAppRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.ENGINE,
@@ -85,13 +84,13 @@ public class FermatSystemUtils {
         } catch (RuntimeManagerNotFoundException |
                 CantGetRuntimeManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -103,10 +102,10 @@ public class FermatSystemUtils {
      * @return reference of WalletRuntimeManager
      */
 
-    public static WalletRuntimeManager getWalletRuntimeManager(Application application) {
+    public static WalletRuntimeManager getWalletRuntimeManager() {
 
         try {
-            return (WalletRuntimeManager) ((ApplicationSession) application).getFermatSystem().getRuntimeManager(
+            return (WalletRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager(
                     new PluginVersionReference(
                             Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.ENGINE,
@@ -118,13 +117,13 @@ public class FermatSystemUtils {
         } catch (RuntimeManagerNotFoundException |
                 CantGetRuntimeManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -137,10 +136,10 @@ public class FermatSystemUtils {
      * @return reference of WalletManagerManager
      */
 
-    public static WalletManager getWalletManager(Application application) {
+    public static WalletManager getWalletManager() {
 
         try {
-            return (WalletManager) ((ApplicationSession) application).getFermatSystem().getModuleManager(
+            return (WalletManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.CRYPTO_CURRENCY_PLATFORM,
                             Layers.DESKTOP_MODULE,
@@ -149,16 +148,9 @@ public class FermatSystemUtils {
                             new Version()
                     )
             );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -170,10 +162,10 @@ public class FermatSystemUtils {
      * @return reference of WalletManagerManager
      */
 
-    public static SubAppManager getSubAppManager(Application application) {
+    public static SubAppManager getSubAppManager() {
 
         try {
-            return (SubAppManager) ((ApplicationSession) application).getFermatSystem().getModuleManager(
+            return (SubAppManager) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
                     new PluginVersionReference(
                             Platforms.CRYPTO_CURRENCY_PLATFORM,
                             Layers.DESKTOP_MODULE,
@@ -188,13 +180,13 @@ public class FermatSystemUtils {
             //TODO: Provisory
             return new SubAppManagerProvisory();
 
-//            System.out.println(e.getMessage());
-//            System.out.println(e.toString());
+//            System.err.println(e.getMessage());
+//            System.err.println(e.toString());
 
 //            return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -203,9 +195,9 @@ public class FermatSystemUtils {
     /**
      * Get WalletResourcesProvider
      */
-    public static WalletResourcesProviderManager getWalletResourcesProviderManager(Application application) {
+    public static WalletResourcesProviderManager getWalletResourcesProviderManager() {
         try {
-            return (WalletResourcesProviderManager) ((ApplicationSession) application).getFermatSystem().getResourcesManager(
+            return (WalletResourcesProviderManager) ApplicationSession.getInstance().getFermatSystem().getResourcesManager(
                     new PluginVersionReference(
                             Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.NETWORK_SERVICE,
@@ -217,13 +209,13 @@ public class FermatSystemUtils {
         } catch (ResourcesManagerNotFoundException |
                 CantGetResourcesManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -232,10 +224,10 @@ public class FermatSystemUtils {
     /**
      * Get SubAppResourcesProvider
      */
-    public static SubAppResourcesProviderManager getSubAppResourcesProviderManager(Application application) {
+    public static SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
 
         try {
-            return (SubAppResourcesProviderManager) ((ApplicationSession) application).getFermatSystem().getResourcesManager(
+            return (SubAppResourcesProviderManager) ApplicationSession.getInstance().getFermatSystem().getResourcesManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.NETWORK_SERVICE,
@@ -247,13 +239,13 @@ public class FermatSystemUtils {
         } catch (ResourcesManagerNotFoundException |
                 CantGetResourcesManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -262,9 +254,9 @@ public class FermatSystemUtils {
     /**
      * Get NotificationManager
      */
-    public static NotificationManagerMiddleware getNotificationManager(Application application) {
+    public static NotificationManagerMiddleware getNotificationManager() {
         try {
-            return (NotificationManagerMiddleware) ((ApplicationSession) application).getFermatSystem().startAndGetPluginVersion(
+            return (NotificationManagerMiddleware) ApplicationSession.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.SUB_APP_MODULE,
@@ -276,13 +268,13 @@ public class FermatSystemUtils {
         } catch (VersionNotFoundException |
                 CantStartPluginException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -291,10 +283,10 @@ public class FermatSystemUtils {
     /**
      * Get DesktopRuntimeManager
      */
-    public static DesktopRuntimeManager getDesktopRuntimeManager(Application application) {
+    public static DesktopRuntimeManager getDesktopRuntimeManager() {
 
         try {
-            return (DesktopRuntimeManager) ((ApplicationSession) application).getFermatSystem().getRuntimeManager(
+            return (DesktopRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.ENGINE,
@@ -306,13 +298,13 @@ public class FermatSystemUtils {
         } catch (RuntimeManagerNotFoundException |
                 CantGetRuntimeManagerException e) {
 
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
 
             return null;
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
             return null;
         }
@@ -323,9 +315,9 @@ public class FermatSystemUtils {
      * @return
      */
 
-    public static WsCommunicationsCloudClientManager getCloudClient(Application application) {
+    public static WsCommunicationsCloudClientManager getCloudClient() {
         try {
-            return (WsCommunicationsCloudClientManager) ((ApplicationSession)application).getFermatSystem().startAndGetPluginVersion(
+            return (WsCommunicationsCloudClientManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.COMMUNICATION_PLATFORM,
                             Layers.COMMUNICATION,
@@ -344,9 +336,9 @@ public class FermatSystemUtils {
     /**
      * Return instance of the bitcoin network
      */
-    public static BitcoinNetworkManager getNetwork(Application application) {
+    public static BitcoinNetworkManager getNetwork() {
         try {
-            return (BitcoinNetworkManager) ((ApplicationSession)application).getFermatSystem().startAndGetPluginVersion(
+            return (BitcoinNetworkManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.BLOCKCHAINS,
                             Layers.CRYPTO_NETWORK,
@@ -362,5 +354,37 @@ public class FermatSystemUtils {
         return null;
     }
 
+
+    /**
+     * Get Android core module from the fermat platform
+     *
+     * @return reference of AndroidCoreModule
+     */
+
+    public static AndroidCoreModule getAndroidCoreModule() {
+
+        try {
+            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.PLUG_INS_PLATFORM,
+                            Layers.SUB_APP_MODULE,
+                            Plugins.ANDROID_CORE,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (CantGetModuleManagerException e) {
+
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.err.println(e.toString());
+
+            return null;
+        }
+    }
 
 }

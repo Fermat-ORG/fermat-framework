@@ -5,13 +5,12 @@ package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_re
  */
 public class IssuerRedemptionDatabaseConstants {
     public static final String ASSET_ISSUER_REDEMPTION_DATABASE = "assetIssuerRedemptionDatabase";
-    /**
-     * Asset reception database table definition.
-     */
+
     public static final String ASSET_ISSUER_REDEMPTION_TABLE_NAME = "asset_issuer_redemption";
 
     public static final String ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
     public static final String ASSET_ISSUER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
+    public static final String ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME = "networkType";
     public static final String ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_USER_ID_COLUMN_NAME = "user_id";
     public static final String ASSET_ISSUER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";

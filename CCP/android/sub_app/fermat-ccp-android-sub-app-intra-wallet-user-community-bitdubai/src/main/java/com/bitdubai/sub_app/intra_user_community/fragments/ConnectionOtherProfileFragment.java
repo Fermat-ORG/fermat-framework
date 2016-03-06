@@ -28,7 +28,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
@@ -86,8 +85,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
-
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -115,6 +112,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connectionRequestSend.setOnClickListener(this);
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
+        accept.setOnClickListener(this);
 
         switch (intraUserInformation.getConnectionState()) {           
                 case BLOCKED_LOCALLY:
@@ -176,7 +174,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(intraUserInformation.getName());
@@ -197,7 +195,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(intraUserInformation.getName());
@@ -215,7 +213,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -278,14 +276,16 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void conectionAccept(){
-        connectionRequestSend.setVisibility(View.VISIBLE);
+        connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
-        accept.setVisibility(View.GONE);
+        accept.setVisibility(View.VISIBLE);
+        accept.setBackgroundResource(R.drawable.bg_shape_blue);
 
     }
 
@@ -294,6 +294,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.VISIBLE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void disconnectRequest() {
@@ -301,6 +302,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.VISIBLE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void connectionRejected() {
@@ -308,6 +310,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.VISIBLE);
+        accept.setVisibility(View.GONE);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

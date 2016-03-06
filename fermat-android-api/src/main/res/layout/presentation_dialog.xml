@@ -8,6 +8,7 @@
     android:background="@drawable/rounded_corners">
 
     <View
+        android:id="@+id/view_color"
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
@@ -100,6 +101,7 @@
                 android:textColor="#1d1d26"
                 android:paddingRight="30dp"
                 />
+
 
             <View
                 android:layout_width="match_parent"

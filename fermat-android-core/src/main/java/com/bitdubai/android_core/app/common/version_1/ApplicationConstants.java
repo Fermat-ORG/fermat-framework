@@ -9,4 +9,8 @@ public class ApplicationConstants {
     public static final String START_ACTIVITY_INIT = "Init";
     public static final String ACTIVE_PLATFORMS = "active";
     public static final String CLOSE_APP = "close";
+
+    public static final String SETTINGS_CORE = "settings_core";
+    public static final String SETTINGS_FERMAT_NETWORK = "settings fermat network";
+    public static final String ACTIVITY_CODE_TO_OPEN = "activity_code_to_open";
 }

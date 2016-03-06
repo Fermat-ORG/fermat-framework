@@ -4,41 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashWithdrawalTransactionParametersImpl;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
-
-import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/15/2015.
@@ -61,7 +36,8 @@ public class HomeTutorialFragmentDialog extends Dialog implements
     /**
      * Data
      */
-    boolean isHomeTutorialDialogEnabled = true;
+    private CashMoneyWalletPreferenceSettings walletSettings;
+
 
     /**
      *  UI components
@@ -101,11 +77,6 @@ public class HomeTutorialFragmentDialog extends Dialog implements
             e.printStackTrace();
         }
 
-        /*boolean showHomeTutorial = false;
-        try{
-            showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
-        } catch (CantGetSettingsException | SettingsNotFoundException e){}*/
-
     }
 
 
@@ -114,13 +85,15 @@ public class HomeTutorialFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.csh_dont_show_again_checkbox) {
-            /*isHomeTutorialDialogEnabled = !isHomeTutorialDialogEnabled;
-            settingsManager.loadAndGetSettings()*/
 
-        }else if( i == R.id.csh_dismiss_button){
+        if( i == R.id.csh_dismiss_button){
+            try{
+                walletSettings = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+                walletSettings.setIsHomeTutorialDialogEnabled(!dontShowCheckbox.isChecked());
+                settingsManager.persistSettings(walletSession.getAppPublicKey(), walletSettings);
+            } catch (Exception e){}
+
             dismiss();
-
         }
     }
 

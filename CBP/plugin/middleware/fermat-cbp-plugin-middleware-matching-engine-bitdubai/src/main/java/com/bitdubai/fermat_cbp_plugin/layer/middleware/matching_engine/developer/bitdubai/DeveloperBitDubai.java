@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.MatchingEngineMiddlewarePluginRoot;
@@ -12,6 +15,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
  * contains all the functionality to return plug-ins related with Developer BitDubai.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/01/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 

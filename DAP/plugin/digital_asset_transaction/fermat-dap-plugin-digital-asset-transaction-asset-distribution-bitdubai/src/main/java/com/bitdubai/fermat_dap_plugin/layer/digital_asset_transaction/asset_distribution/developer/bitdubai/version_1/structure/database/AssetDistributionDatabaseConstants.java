@@ -43,6 +43,7 @@ public class AssetDistributionDatabaseConstants {
 
     public static final String ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME = "networkType";
     public static final String ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME = "asset_publickey";
     public static final String ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME = "user_publickey";
     public static final String ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME = "start_time";

@@ -24,6 +24,14 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
+    private String contactInformation;
+    private String countryName;
+    private String provinceName;
+    private String cityName;
+    private String postalCode;
+    private String streetName;
+    private String houseNumber;
+
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -52,10 +60,46 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         this.pluginId = pluginId;
     }
 
+    @Override
+    public String getContactInformation() {
+        return contactInformation;
+    }
+
+    @Override
+    public String getCountryName() {
+        return countryName;
+    }
+
+    @Override
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    @Override
+    public String getCityName() {
+        return cityName;
+    }
+
+    @Override
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    @Override
+    public String getStreetName() {
+        return streetName;
+    }
+
+    @Override
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
     /**
      * Constructor
      */
-    public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,
+                                        PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -68,6 +112,41 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
+    }
+    public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,
+                                        PluginFileSystem pluginFileSystem, UUID pluginId,String contactInformation,
+                                         String countryName, String provinceName, String cityName,
+                                        String postalCode, String streetName, String houseNumber) {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.privateKey = privateKey;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.contactInformation = contactInformation;
+        this.countryName = countryName;
+        this.provinceName = provinceName;
+        this.cityName = cityName;
+        this.postalCode = postalCode;
+        this.streetName = streetName;
+        this.houseNumber = houseNumber;
+
+
+    }
+    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage, String contactInformation,
+                                        String countryName, String provinceName, String cityName,
+                                        String postalCode, String streetName, String houseNumber) {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.contactInformation = contactInformation;
+        this.countryName = countryName;
+        this.provinceName = provinceName;
+        this.cityName = cityName;
+        this.postalCode = postalCode;
+        this.streetName = streetName;
+        this.houseNumber = houseNumber;
+
     }
 
     @Override

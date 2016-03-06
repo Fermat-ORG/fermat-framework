@@ -8,22 +8,28 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.RedeemPointIdentitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.SessionConstants;
@@ -32,11 +38,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,11 +71,21 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
 
     private Button createButton;
-    private EditText mIdentityName;
+    private TextView mIdentityName;
+    private TextView mIdentityContactInformation;
+    private TextView mIdentityAddressCountryName;
+    private TextView mIdentityAddressProvinceName;
+    private TextView mIdentityAddressCityName;
+    private TextView mIdentityAddressPostalCode;
+    private TextView mIdentityAddressStreetName;
+    private TextView mIdentityAddressHouseNumber;
     private ImageView mIdentityImage;
 
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
+
+    SettingsManager<RedeemPointSettings> settingsManager;
+    RedeemPointSettings redeemPointSettings = null;
 
     public static CreateRedeemPointIdentityFragment newInstance() {
         return new CreateRedeemPointIdentityFragment();
@@ -75,18 +94,112 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-//            if(moduleManager.getRedeemPointsFromCurrentDeviceUser().isEmpty()){
-//                moduleManager.createNewRedeemPoint("Asset Redeem Point John Doe", null);
-//            }
+            try {
+                if (appSession.getAppPublicKey() != null) {
+                    redeemPointSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                }
+            } catch (Exception e) {
+                redeemPointSettings = null;
+            }
+
+            if (redeemPointSettings == null) {
+                redeemPointSettings = new RedeemPointSettings();
+                redeemPointSettings.setIsPresentationHelpEnabled(true);
+                if (appSession.getAppPublicKey() != null) {
+                    settingsManager.persistSettings(appSession.getAppPublicKey(), redeemPointSettings);
+                }
+            }
+
+            if(moduleManager.getIdentityAssetRedeemPoint() == null) {
+
+                final RedeemPointSettings redeemPointSettingsTemp = redeemPointSettings;
+
+                Handler handlerTimer = new Handler();
+                handlerTimer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
+                            setUpPresentation(false);
+                        }
+                    }
+                }, 500);
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    private void setUpPresentation(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setIconRes(R.drawable.redeem_point)
+                    .setVIewColor(R.color.dap_identity_redeem_view_color)
+                    .setTitleTextColor(R.color.dap_identity_redeem_view_color)
+                    .setSubTitle(R.string.dap_redeem_identity_welcome_subTitle)
+                    .setBody(R.string.dap_redeem_identity_welcome_body)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    IdentityAssetIssuer identityAssetIssuer = null;
+//                    try {
+//                        identityAssetIssuer = moduleManager.getIdentityAssetIssuer();
+//                    } catch (CantGetAssetIssuerIdentitiesException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (identityAssetIssuer == null) {
+//                        getActivity().onBackPressed();
+//                    } else {
+//                        invalidate();
+//                    }
+//                }
+//            });
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_redeem_identity_menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            if (item.getItemId() == R.id.action_identity_redeem_help) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Identity User system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -107,12 +220,28 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
      */
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.dap_redeem_point_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.dap_redeem_point_name);
         mIdentityImage = (ImageView) layout.findViewById(R.id.dap_redeem_point_image);
+        mIdentityName = (TextView) layout.findViewById(R.id.dap_redeem_point_name);
+        mIdentityContactInformation = (TextView) layout.findViewById(R.id.dap_redeem_point_contact_information);
+        mIdentityAddressCountryName = (TextView) layout.findViewById(R.id.dap_redeem_point_country_name);
+        mIdentityAddressProvinceName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_province_name);
+        mIdentityAddressCityName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_city_name);
+        mIdentityAddressPostalCode = (TextView) layout.findViewById(R.id.dap_redeem_point_address_postal_code);
+        mIdentityAddressStreetName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_street_name);
+        mIdentityAddressHouseNumber = (TextView) layout.findViewById(R.id.dap_redeem_point_address_house_number);
+
+
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mIdentityName.requestFocus();
+//        mIdentityContactInformation.requestFocus();
+//        mIdentityAddressCountryName.requestFocus();
+//        mIdentityAddressProvinceName.requestFocus();
+//        mIdentityAddressCityName.requestFocus();
+//        mIdentityAddressPostalCode.requestFocus();
+//        mIdentityAddressStreetName.requestFocus();
+//        mIdentityAddressHouseNumber.requestFocus();
 
         mIdentityImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +310,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redeem_point_identity);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
@@ -190,6 +319,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mIdentityName.setText(identitySelected.getAlias());
+        mIdentityContactInformation.setText(identitySelected.getContactInformation());
+        mIdentityAddressCountryName.setText(identitySelected.getCountryName());
+        mIdentityAddressProvinceName.setText(identitySelected.getProvinceName());
+        mIdentityAddressCityName.setText(identitySelected.getCityName());
+        mIdentityAddressPostalCode.setText(identitySelected.getPostalCode());
+        mIdentityAddressStreetName.setText(identitySelected.getStreetName());
+        mIdentityAddressHouseNumber.setText(identitySelected.getHouseNumber());
     }
 
     @Override
@@ -261,15 +397,25 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private int createNewIdentity() {
 
         String brokerNameText = mIdentityName.getText().toString();
+        String brokerContactInformation = mIdentityContactInformation.getText().toString();
+        String brokerAddressProvinceName = mIdentityAddressProvinceName.getText().toString();
+        String brokerAddressStreetName = mIdentityAddressStreetName.getText().toString();
+        String brokerAddressPostalCode = mIdentityAddressPostalCode.getText().toString();
+        String brokerAddressCityName = mIdentityAddressCityName.getText().toString();
+        String brokerAddressCountryName = mIdentityAddressCountryName.getText().toString();
+        String brokerAddressHouseNumber = mIdentityAddressHouseNumber.getText().toString();
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
+                                brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,
+                                brokerAddressStreetName,brokerAddressHouseNumber);
                     else
-                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
+                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray,brokerContactInformation,
+                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,brokerAddressStreetName,brokerAddressHouseNumber);
                 } catch (CantCreateNewRedeemPointException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 } catch (CantUpdateIdentityRedeemPointException e) {
@@ -303,7 +449,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private void loadImageFromGallery() {
         Log.i(TAG, "Loading Image from Gallery...");
 
-        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 

@@ -1,11 +1,18 @@
+/*
+ * @#CommunicationNetworkServiceConnectionManager.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.IncomingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
@@ -28,7 +35,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communication.CommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -36,58 +43,81 @@ import java.util.Observable;
  *
  * <p/>
  *
- * Created by Roberto Requena - (rart3001@gmail.com) on 13/06/15.
- * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 04/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public final class CommunicationNetworkServiceRemoteAgent extends Observable {
+public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
-    // Represent the sleep time for the read or send (2000 milliseconds)
+    /*
+     * Represent the sleep time for the read or send (2000 milliseconds)
+     */
     private static final long SLEEP_TIME = 2000;
 
-    private final ECCKeyPair eccKeyPair;
-    private final CommunicationsVPNConnection communicationsVPNConnection;
-    private final ErrorManager                errorManager               ;
-    private final EventManager                eventManager               ;
-    private final IncomingMessageDao incomingMessageDao         ;
-    private final OutgoingMessageDao outgoingMessageDao         ;
-    private final EventSource                 eventSource                ;
-    private final PluginVersionReference      pluginVersionReference     ;
+    /**
+     * Represent the communicationsVPNConnection
+     */
+    private CommunicationsVPNConnection communicationsVPNConnection;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
+     * Represent the incomingMessageDao
+     */
+    private IncomingMessageDao incomingMessageDao;
+
+    /**
+     * Represent the outgoingMessageDao
+     */
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent is the tread is running
      */
     private Boolean running;
 
-    //Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
-    private final Thread toReceive;
-    //Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
-    private final Thread toSend;
+    /**
+     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
+     */
+    private Thread toReceive;
 
     /**
-     * Constructor with parameters.
+     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
      */
-    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair eccKeyPair,
-                                                  final CommunicationsVPNConnection communicationsVPNConnection,
-                                                  final ErrorManager errorManager,
-                                                  final EventManager eventManager,
-                                                  final IncomingMessageDao incomingMessageDao,
-                                                  final OutgoingMessageDao outgoingMessageDao,
-                                                  final EventSource eventSource,
-                                                  final PluginVersionReference pluginVersionReference) {
+    private Thread toSend;
+
+    /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
+    /**
+     * Constructor with parameters
+     *
+     * @param eccKeyPair from the plugin root
+     * @param errorManager  instance
+     * @param incomingMessageDao instance
+     * @param outgoingMessageDao instance
+     */
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
-        this.eccKeyPair                  = eccKeyPair                 ;
-        this.errorManager                = errorManager               ;
-        this.eventManager                = eventManager               ;
-        this.running                     = Boolean.FALSE              ;
-        this.incomingMessageDao          = incomingMessageDao         ;
-        this.outgoingMessageDao          = outgoingMessageDao         ;
-        this.communicationsVPNConnection = communicationsVPNConnection;
-        this.eventSource                 = eventSource                ;
-        this.pluginVersionReference      = pluginVersionReference     ;
+        this.eccKeyPair                          = eccKeyPair;
+        this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
+        this.running                             = Boolean.FALSE;
+        this.incomingMessageDao                  = incomingMessageDao;
+        this.outgoingMessageDao                  = outgoingMessageDao;
+        this.communicationsVPNConnection         = communicationsVPNConnection;
 
 
         //Create a thread to receive the messages
@@ -125,12 +155,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         toSend.start();
     }
     /**
-     * Check if it is running
-     */
-     public boolean isRunning(){
-         return this.running;
-     }
-    /**
      * Pause the internal threads
      */
     public void pause(){
@@ -152,7 +176,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Stop the Threads
         toReceive.interrupt();
         toSend.interrupt();
-        this.running = false;
+
         //Disconnect from the service
         communicationsVPNConnection.close();
     }
@@ -185,7 +209,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-
                     /*
                      * Validate the message signature
                      */
@@ -216,26 +239,20 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     setChanged();
                     notifyObservers(message);
-
                 }
-
             }
-
-            if(!toReceive.isInterrupted()){
+            if(toReceive.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
                 Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-
-            this.running=false;
-
+            running = false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
-
     }
 
     /**
@@ -247,77 +264,72 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-                try {
+            try {
 
-                    Map<String, Object> filters = new HashMap<>();
-                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
 
                     /*
                      * Read all pending message from database
                      */
-                    List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
+                List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
                     /*
                      * For each message
                      */
-                    for (FermatMessage message: messages){
+                for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                    if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
                              */
-                            ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
+                        ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message
                              */
-                            String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
-                            ((FermatMessageCommunication) message).setSignature(signature);
+                        String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                        ((FermatMessageCommunication) message).setSignature(signature);
 
                             /*
                              * Send the message
                              */
-                            communicationsVPNConnection.sendMessage(message);
+                        communicationsVPNConnection.sendMessage(message);
 
                             /*
                              * Change the message and update in the data base
                              */
-                            ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
-                            outgoingMessageDao.update(message);
+                        ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                        outgoingMessageDao.update(message);
 
 
                             /*
                              * Put the message on a event and fire new event
                              */
-                            FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(eventSource);
-                            ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
-                            eventManager.raiseEvent(fermatEvent);
-                        }
+                        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+                        fermatEvent.setSource(TransactionTransmissionPluginRoot.EVENT_SOURCE);
+                        ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
+                        eventManager.raiseEvent(fermatEvent);
                     }
-
-                } catch(CantUpdateRecordDataBaseException |
-                        CantReadRecordDataBaseException           e) {
-
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
+            } catch (CantUpdateRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+            } catch (CantReadRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+            }
 
-            if(!toSend.isInterrupted()){
+            if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
                 Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-
-            this.running=false;
-
+            running = false;
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
-
     }
-
 }

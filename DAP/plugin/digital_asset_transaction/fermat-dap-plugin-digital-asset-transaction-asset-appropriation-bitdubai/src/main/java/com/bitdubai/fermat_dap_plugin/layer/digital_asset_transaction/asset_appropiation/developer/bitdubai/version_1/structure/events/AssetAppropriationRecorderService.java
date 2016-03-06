@@ -74,18 +74,6 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
         String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
 
         try {
-
-            //TODO CHANGE THESE EVENTS TO THE NEW ONES!!
-
-            FermatEventListener onCryptoNetwork = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
-            onCryptoNetwork.setEventHandler(new AssetAppropriationEventHandler(this));
-            addListener(onCryptoNetwork);
-
-            FermatEventListener onBlockChain = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
-            onBlockChain.setEventHandler(new AssetAppropriationEventHandler(this));
-            addListener(onBlockChain);
-
-
             FermatEventListener newNetworkServiceMessageListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
             newNetworkServiceMessageListener.setEventHandler(new AssetAppropriationEventHandler(this));
             addListener(newNetworkServiceMessageListener);

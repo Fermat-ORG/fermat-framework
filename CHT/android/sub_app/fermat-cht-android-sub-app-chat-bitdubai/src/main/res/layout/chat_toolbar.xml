@@ -1,0 +1,9 @@
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="@color/background_action_bar"
+    android:theme="@style/ToolbarStyle"
+    tools:showIn="@layout/chats_act">
+
+</android.support.v7.widget.Toolbar>

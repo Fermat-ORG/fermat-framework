@@ -5,24 +5,21 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -34,7 +31,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment {
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment implements AbstractFermatFragmentInterface<S,R>{
 
     /**
      * FLAGS
@@ -58,6 +55,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -232,7 +230,55 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final FermatRuntime getRuntimeManager(){
-        return (FermatRuntime)getActivity();
+        return ((FermatActivityManager)getActivity()).getRuntimeManager();
     }
 
+    protected final AndroidCoreManager getFermatState(){
+        return ((FermatStates)getActivity()).getFermatStates();
+    }
+
+
+    public final void onUpdateViewHandler(final String appCode,final String code){
+        if(appSession.getAppPublicKey().equals(appCode)){
+            onUpdateView(code);
+        }
+
+    }
+
+    public final void onUpdateViewUIThred(final String code){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onUpdateViewOnUIThread(code);
+            }
+        });
+    }
+
+    /**
+     * This class have to be ovverride if someone wants to get broadcast
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+    public void onUpdateView(String code) {
+        return;
+    }
+
+    /**
+     * This class have to be ovverride if someone wants to get broadcast on UI Thread
+     * ONLY FOR VIEW UPDATE
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+
+
+    public void onUpdateViewOnUIThread(String code) {
+        return;
+    }
+
+    /**
+     * This method will be called when the user press the back button
+     */
+    public void onBackPressed() {
+
+    }
 }

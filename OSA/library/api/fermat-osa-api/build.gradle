@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'eclipse'
+
+
+group = "com.bitdubai.fermat.osa.api"
+sourceCompatibility = 1.7
+version = '2.0.1'
+
+configurations {
+    deployerJars
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'fermat-osa-api',
+                'Implementation-Version': '1.0.0'
+    }
+}
+
+repositories {
+    mavenCentral ()
+}
+
+pmd {
+    toolVersion = '5.1.3'
+}
+
+dependencies {
+    compile project(':fermat-api')
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}

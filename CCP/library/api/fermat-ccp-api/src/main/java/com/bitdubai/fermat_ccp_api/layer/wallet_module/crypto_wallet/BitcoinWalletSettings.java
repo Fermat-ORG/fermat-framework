@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
@@ -18,6 +19,8 @@ public class BitcoinWalletSettings implements WalletSettings {
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
+    private BlockchainNetworkType blockchainNetworkType;
+    private boolean notificationEnabled;
 
     public BitcoinWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -71,7 +74,25 @@ public class BitcoinWalletSettings implements WalletSettings {
         this.isContactsHelpEnabled = isContactsHelpEnabled;
     }
 
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
+    }
+
     public void setRunningDailyBalance(Map<Long, Long>  runningDailyBalance) {
         this.runningDailyBalance = runningDailyBalance;
+
+
+    }
+
+    public boolean getNotificationEnabled() {
+        return this.notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 }

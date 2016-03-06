@@ -22,6 +22,10 @@
     <color name="csh_setup_background">#00b9ff</color>
 
 
+    <!-- Transaction detail -->
+    <color name="csh_transaction_detail_background">#FFFFFF</color>
+    <color name="csh_transaction_detail_hr_color">#bdbdbd</color>
+
     <!-- FAB -->
     <color name="csh_fab_plus_icon_color">#808080</color>
     <color name="csh_fab_color_normal">#fafafa</color>
@@ -37,6 +41,7 @@
     <!-- Text Colors -->
     <color name="csh_text_lightblue">#04a2e1</color>
     <color name="csh_text_white">#ffffff</color>
+    <color name="csh_text_black">#000000</color>
 
 
     <!-- Misc -->

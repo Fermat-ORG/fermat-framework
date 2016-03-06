@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Empty transactions"
+            android:text="@string/empty_transactions_text"
             android:textColor="#000"
             android:textSize="20sp"/>
 

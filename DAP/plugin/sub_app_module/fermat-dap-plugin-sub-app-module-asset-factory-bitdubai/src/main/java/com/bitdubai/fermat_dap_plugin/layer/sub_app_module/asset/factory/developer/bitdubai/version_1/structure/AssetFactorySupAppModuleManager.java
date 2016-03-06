@@ -57,20 +57,20 @@ public class AssetFactorySupAppModuleManager  {
         assetFactoryManager.removeAssetFactory(publicKey);
     }
 
-    public void publishAssetFactory(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType)  throws CantSaveAssetFactoryException {
-        assetFactoryManager.publishAsset(assetFactory, blockchainNetworkType);
+    public void publishAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactoryManager.publishAsset(assetFactory);
     }
 
     public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
-    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryManager.getAssetFactoryByState(state);
+    public List<AssetFactory> getAssetsFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryManager.getAssetFactoryByState(state, networkType);
     }
 
-    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryManager.getAssetFactoryAll();
+    public List<AssetFactory> getAssetsFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryManager.getAssetFactoryAll(networkType);
     }
 
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {

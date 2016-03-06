@@ -15,6 +15,8 @@ public class RedeemPointNavigationHolder extends FermatViewHolder {
 
     private TextView label;
     private ImageView icon;
+    private View badge;
+
     /**
      * Constructor
      *
@@ -25,9 +27,8 @@ public class RedeemPointNavigationHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
+        badge = itemView.findViewById(R.id.badge);
     }
-
-
 
     public TextView getLabel() {
         return label;
@@ -36,4 +37,9 @@ public class RedeemPointNavigationHolder extends FermatViewHolder {
     public ImageView getIcon() {
         return icon;
     }
+
+    public View getBadge() {
+        return badge;
+    }
+
 }

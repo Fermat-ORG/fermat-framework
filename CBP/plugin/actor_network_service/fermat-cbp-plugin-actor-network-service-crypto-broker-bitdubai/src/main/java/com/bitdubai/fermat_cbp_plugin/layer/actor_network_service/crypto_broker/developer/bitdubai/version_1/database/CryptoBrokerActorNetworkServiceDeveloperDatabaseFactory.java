@@ -14,8 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +158,43 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                 DeveloperDatabaseTable connectionNewsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME, connectionNewsColumns);
                 tables.add(connectionNewsTable);
 
+                /**
+                 * Table Quotes Request columns.
+                 */
+                List<String> quotesRequestColumns = new ArrayList<>();
+
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUEST_ID_COLUMN_NAME              );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME    );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME             );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TYPE_COLUMN_NAME                    );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME                   );
+
+                /**
+                 * Table Quotes Request addition.
+                 */
+                DeveloperDatabaseTable quotesRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TABLE_NAME, quotesRequestColumns);
+                tables.add(quotesRequestTable);
+
+                /**
+                 * Table Quotes columns.
+                 */
+                List<String> quotesColumns = new ArrayList<>();
+
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
+
+                /**
+                 * Table Quotes addition.
+                 */
+                DeveloperDatabaseTable quotesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME, quotesColumns);
+                tables.add(quotesTable);
+
                 break;
 
             case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
@@ -170,11 +207,11 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                );
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         );
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              );
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
                 incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            );
+                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
                 /**
                  * Table incoming messages addition.
                  */
@@ -188,12 +225,17 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                );
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME       );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME    );
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME     );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME  );
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              );
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME        );
                 outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            );
+                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
                 /**
                  * Table outgoing messages addition.
                  */
@@ -242,7 +284,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
 
         } catch (Exception e) {
 
-            System.err.println(e);
+            System.err.println(e.toString());
             return new ArrayList<>();
         }
     }

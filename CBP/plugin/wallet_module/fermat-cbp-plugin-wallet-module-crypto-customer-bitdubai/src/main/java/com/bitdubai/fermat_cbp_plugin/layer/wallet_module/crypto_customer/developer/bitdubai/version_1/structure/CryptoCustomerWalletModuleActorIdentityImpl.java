@@ -9,10 +9,18 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
  */
 public class CryptoCustomerWalletModuleActorIdentityImpl implements ActorIdentity {
 
+    private String publicKey;
     private String alias;
     private byte[] img;
 
     public CryptoCustomerWalletModuleActorIdentityImpl(String alias, byte[] img) {
+        this.publicKey = "54as65d4a8sd4ds8fv2vr3as2df6a85";
+        this.alias = alias;
+        this.img = img;
+    }
+
+    public CryptoCustomerWalletModuleActorIdentityImpl(String publicKey, String alias, byte[] img) {
+        this.publicKey = publicKey;
         this.alias = alias;
         this.img = img;
     }
@@ -24,7 +32,7 @@ public class CryptoCustomerWalletModuleActorIdentityImpl implements ActorIdentit
 
     @Override
     public String getPublicKey() {
-        return "54as65d4a8sd4ds8fv2vr3as2df6a85";
+        return publicKey;
     }
 
     @Override

@@ -10,13 +10,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -62,7 +62,8 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
 
-        try (AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId)) {
+        try {
+            AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
             rprDao.saveNewEvent(event);
         } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
             throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);
@@ -76,7 +77,7 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     public void start() throws CantStartServiceException {
 
         FermatEventHandler handler = new RedeemPointRedemptionEventHandler(this);
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVE_NEW_DAP_MESSAGE);
         fermatEventListener.setEventHandler(handler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);

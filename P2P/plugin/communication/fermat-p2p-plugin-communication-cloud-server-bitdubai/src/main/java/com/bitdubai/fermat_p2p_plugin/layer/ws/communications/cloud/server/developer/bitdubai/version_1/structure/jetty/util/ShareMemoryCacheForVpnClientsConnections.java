@@ -119,4 +119,20 @@ public class ShareMemoryCacheForVpnClientsConnections {
 
         return null;
     }
+
+
+    /**
+     * Get the vpn client connection remote
+     * @param networkServiceType
+     * @param key
+     * @return VpnClientConnection
+     */
+    public synchronized  static VpnClientConnection getMyRemote(NetworkServiceType networkServiceType, String key){
+
+        if(instance.connectionMap.containsKey(networkServiceType)){
+            return instance.connectionMap.get(networkServiceType).get(key);
+        }
+
+        return null;
+    }
 }

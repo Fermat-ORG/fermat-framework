@@ -19,29 +19,42 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.UserViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
+
 /**
- * Home Fragment
+ * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
+ *
  */
 public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -63,6 +76,8 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
     private MenuItem menuItemAdd;
     private Menu menu;
 
+    SettingsManager<AssetUserSettings> settingsManager;
+
     /**
      * Flags
      */
@@ -80,6 +95,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
             group = (Group) appSession.getData("group_selected");
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -95,7 +111,13 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new UserCommunityAdapter(getActivity());
+        adapter = new UserCommunityAdapter(getActivity()) {
+            @Override
+            protected void bindHolder(UserViewHolder holder, Actor data, int position) {
+                super.bindHolder(holder, data, position);
+                holder.connect.setVisibility(View.VISIBLE);
+            }
+        };
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
@@ -128,60 +150,55 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         getToolbar().setTitle("Add users to " + group.getGroupName());
         onRefresh();
 
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetUserSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetUserSettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_users_menu, menu);
-        this.menu = menu;
-        menuItemAdd = menu.findItem(R.id.action_add_to_group);
+
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menuItemAdd = menu.getItem(0);
         menuItemAdd.setVisible(false);
-        menuItemAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Adding users to group...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
+    }
 
-                        for (Actor actor : actors) {
-                            if (actor.selected)
-                            {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                                actorGroup.setGroupId(group.getGroupId());
-                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                                manager.addActorAssetUserToGroup(actorGroup);
-                            }
-                        }
+    private void setUpPresentation(boolean checkButton) {
 
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
-                        appSession.setData("group_selected", group);
-                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
-                    }
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner_asset_user_community)
+                .setIconRes(R.drawable.asset_user_comunity)
+                .setVIewColor(R.color.dap_community_user_view_color)
+                .setTitleTextColor(R.color.dap_community_user_view_color)
+                .setSubTitle(R.string.dap_user_community_group_users_subTitle)
+                .setBody(R.string.dap_user_community_group_users_body)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIsCheckEnabled(checkButton)
+                .build();
 
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-                return false;
-            }
-        });
+        presentationDialog.show();
+
     }
 
 
@@ -273,27 +290,73 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
 
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
-        usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
+
+        result = manager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId());
+
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                if (!userInGroup(record.getActorPublicKey(),usersInGroup) && record.getCryptoAddress() != null)
-                {
                     dataSet.add((new Actor(record)));
-                }
-
             }
         }
         return dataSet;
     }
 
-    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
-        for (ActorAssetUser record : usersInGroup) {
-            if (record.getActorPublicKey().equals(actorPublicKey))
-            {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        try {
+            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
+            else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Adding users to group...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+
+                        for (Actor actor : actors) {
+                            if (actor.selected) {
+                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                actorGroup.setGroupId(group.getGroupId());
+                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                manager.addActorAssetUserToGroup(actorGroup);
+                            }
+                        }
+
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
+                        appSession.setData("group_selected", group);
+                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+                return false;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset User system error",
+                    Toast.LENGTH_SHORT).show();
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
+
 }

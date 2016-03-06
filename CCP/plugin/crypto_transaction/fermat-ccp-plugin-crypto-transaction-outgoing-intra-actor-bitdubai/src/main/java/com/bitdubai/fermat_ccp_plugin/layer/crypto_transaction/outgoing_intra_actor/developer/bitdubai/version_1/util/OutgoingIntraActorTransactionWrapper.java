@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -31,6 +32,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     private long          timestamp;
     private String        memo;
     private boolean sameDevice;
+    private BlockchainNetworkType blockchainNetworkType;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -125,6 +127,13 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
 
     @Override
     public Actors getActorFromType() { return this.actorFromType;}
+
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
+    }
 
     public void setActorFromType(Actors actorFromType){ this.actorFromType = actorFromType; }
 

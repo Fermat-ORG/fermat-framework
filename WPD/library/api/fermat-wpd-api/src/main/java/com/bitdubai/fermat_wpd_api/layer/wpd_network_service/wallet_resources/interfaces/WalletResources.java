@@ -20,7 +20,7 @@ public interface WalletResources {
      *
      * @return the Id of resources being represented
      */
-    public UUID getResourcesId();
+    UUID getResourcesId();
 
 
     /**
@@ -30,7 +30,7 @@ public interface WalletResources {
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName) throws CantGetSkinFileException;
+    Skin getSkinFile(String fileName) throws CantGetSkinFileException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -39,7 +39,7 @@ public interface WalletResources {
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    String getLanguageFile(String fileName) throws CantGetLanguageFileException;
 
 
     /**
@@ -49,7 +49,7 @@ public interface WalletResources {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException;
+    byte[] getImageResource(String imageName, ScreenOrientation orientation) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
@@ -58,7 +58,7 @@ public interface WalletResources {
      * @return the video represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getVideoResource(String videoName) throws CantGetResourcesException;
+    byte[] getVideoResource(String videoName) throws CantGetResourcesException;
 
     /**
      * This method let us get a sound referenced by a name
@@ -67,7 +67,7 @@ public interface WalletResources {
      * @return the sound represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getSoundResource(String soundName) throws CantGetResourcesException;
+    byte[] getSoundResource(String soundName) throws CantGetResourcesException;
 
     /**
      * This method let us get a font style referenced by a name
@@ -76,7 +76,7 @@ public interface WalletResources {
      * @return the font style represented as the content of a ttf file
      * @throws CantGetResourcesException
      */
-    public String getFontStyle(String styleName);
+    String getFontStyle(String styleName);
 
     /**
      * This method let us get a layout referenced by a name
@@ -85,5 +85,5 @@ public interface WalletResources {
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName) throws CantGetResourcesException;
+    String getLayoutResource(String layoutName) throws CantGetResourcesException;
 }

@@ -15,7 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,24 +43,17 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     private static final int TOTAL_CONTACTS_SECTION_POSITION = 0;
     private final FermatListViewFragment contactsFragment;
     private final ErrorManager errorManager;
-
-    private String constrainStr = null;
-
     LayoutInflater mLayoutInflater;
     int mCurrentSectionPosition = 0, mNextSectionPosition = 0;
-
     // array list to store section positions
     ArrayList<Integer> mListSectionPos;
-
     // array list to store list view data
     ArrayList<Object> mListItems;
-
     // context object
     Context mContext;
     //Type face font
     Typeface tf;
-
-
+    private String constrainStr = null;
     // posiscionamiento de los contactos
     private Map<Integer,CryptoWalletWalletContact> contactPositionItem;
 
@@ -151,11 +143,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         int type = getItemViewType(position);
 
         try {
-            if (convertView == null) {
+//            if (convertView == null) {
                 holder = new ViewHolder();
-
-
-
                 switch (type) {
                     case TYPE_ITEM:
                         convertView = mLayoutInflater.inflate(R.layout.row_view, null);
@@ -188,9 +177,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder.textView.setTypeface(tf);
 
                 convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
             if (text.equals("")) {
                 Object o = mListItems.get(0);
                 if (o instanceof CryptoWalletWalletContact) {
@@ -242,11 +231,11 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     public void configurePinnedHeader(View v, int position) {
         try
         {
-            // set text in pinned header
+            /*// Este metodo setea la inicial de cada lista segun el orden alfabetico
             LinearLayout linearLayout =(LinearLayout)v;
             TextView header = (TextView) linearLayout.getChildAt(0);
             mCurrentSectionPosition = getCurrentSectionPosition(position);
-            header.setText(mListItems.get(mCurrentSectionPosition).toString());
+            header.setText(mListItems.get(mCurrentSectionPosition).toString());*/
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -257,14 +246,14 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (view instanceof PinnedHeaderListView) {
+       /* if (view instanceof PinnedHeaderListView) {
             ((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
-        }
+        }*/
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -302,7 +291,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     public int getCurrentSectionPosition(int position) {
         final boolean searchMode = constrainStr != null;
 
-
+/*
             if (searchMode) {
                 return TOTAL_CONTACTS_SECTION_POSITION;
             }
@@ -317,7 +306,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
             if (listChar.matches(HeaderTypes.NUMBER.getRegex())) {
                 return mListItems.indexOf(HeaderTypes.NUMBER.getCode());
-            }
+            }*/
 
         return mListItems.indexOf(HeaderTypes.SYMBOL.getCode());
 

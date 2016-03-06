@@ -1,50 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/fragment_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background_gradient"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/search_contacts_container"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        >
+        android:background="@drawable/search_contacts_container"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_contact_search"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:layout_gravity="center_vertical"/>
+            android:paddingTop="3dp"
+            android:src="@drawable/ic_contact_search" />
 
         <EditText
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:layout_gravity="center"
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
-            android:paddingLeft="20dp"
-            android:hint="@string/search_hint"
-            android:textColorHint="#fff"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_gravity="center"
-            android:singleLine="true"
             android:background="@null"
-            />
+            android:hint="@string/search_hint"
+            android:paddingLeft="20dp"
+            android:singleLine="true"
+            android:textColor="#ffffff"
+            android:textColorHint="#fff"
+            android:textSize="14sp" />
 
         <ImageButton
 
@@ -55,22 +51,18 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/search_view"
-            android:src="@drawable/ic_action_cancel_grey"
             android:contentDescription="@string/clear_text_button"
-            android:visibility="gone"/>
-
+            android:src="@drawable/ic_action_cancel_grey"
+            android:visibility="gone" />
     </LinearLayout>
 
-
     <FrameLayout
+        android:id="@+id/contacts_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:id="@+id/contacts_container"
-        >
+        android:orientation="vertical">
 
-
-        <include layout="@layout/loading_empty_view"/>
+        <include layout="@layout/loading_empty_view" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -80,57 +72,37 @@
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollingCache="false"
                 android:drawSelectorOnTop="true"
-                />
-
-
+                android:scrollingCache="false" />
 
             <LinearLayout
+                android:id="@+id/empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/empty_view"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:visibility="gone">
 
                 <ImageView
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    android:src="@drawable/contacts_empty_icon"
-                    />
-
+                    android:src="@drawable/contacts_empty_icon" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
                     android:padding="15dp"
-                    app:typeface="ROBOTO_REGULAR"
-                    android:text="Click me to\nsearch contacts!"
+                    android:text="@string/click_me_to_search_text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="#fff"
-                    />
+                    app:typeface="ROBOTO_REGULAR" />
 
             </LinearLayout>
 
-
-
         </FrameLayout>
 
-
-
-
-
-
-
     </FrameLayout>
-
-
-
-
-
 
 </LinearLayout>

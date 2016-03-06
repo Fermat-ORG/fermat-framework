@@ -1,11 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,9 +23,14 @@ import java.util.List;
 public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
 
     private final List<IndexInfoSummary> summaryList;
+    private final Activity activity;
+    private CryptoBrokerWalletSession session;
 
-    public MarketExchangeRatesPageAdapter(FragmentManager fragmentManager, Collection<IndexInfoSummary> summaryList) {
-        super(fragmentManager);
+    public MarketExchangeRatesPageAdapter(Activity activity, CryptoBrokerWalletSession session, Collection<IndexInfoSummary> summaryList) {
+        super(activity.getFragmentManager());
+
+        this.activity = activity;
+        this.session = session;
         this.summaryList = new ArrayList<>();
         this.summaryList.addAll(summaryList);
     }
@@ -38,7 +44,7 @@ public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         MarketRateStatisticsFragment fragment = MarketRateStatisticsFragment.newInstance();
         IndexInfoSummary summary = summaryList.get(position);
-        fragment.bind(summary);
+        fragment.bind(summary, session, activity);
 
         return fragment;
     }

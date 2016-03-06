@@ -1,16 +1,15 @@
 apply plugin: 'com.android.library'
-
 android {
     lintOptions {
         abortOnError false
     }
 
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -23,8 +22,14 @@ android {
     lintOptions {
         abortOnError false
     }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
-
 dependencies {
     dependencies {
         // Fermat
@@ -33,10 +38,11 @@ dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
 
         // Android
-        compile 'com.android.support:support-v4:21.0.3'
-        compile 'com.android.support:appcompat-v7:21.0.3'
-        compile 'com.android.support:recyclerview-v7:21.0.3'
-        compile 'com.android.support:support-v13:21.0.3'
+        compile 'com.android.support:support-v4:23.1.1'
+        compile 'com.android.support:appcompat-v7:23.1.1'
+        compile 'com.android.support:recyclerview-v7:23.1.1'
+        compile 'com.android.support:support-v13:23.1.1'
+
         compile 'com.melnykov:floatingactionbutton:1.3.0'
         compile 'com.squareup.picasso:picasso:2.3.2'
 
@@ -46,5 +52,10 @@ dependencies {
         testCompile 'org.easytesting:fest-assert-core:2.0M10'
         testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     }
+
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
 
 }

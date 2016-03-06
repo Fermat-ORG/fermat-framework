@@ -9,25 +9,36 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 
 public enum ContractStatus implements FermatEnum {
-    CANCELLED ("CAN"),
-    COMPLETED("COM"),
-    MERCHANDISE_SUBMIT("MES"),
-    PAUSED("PSD"),
-    PENDING_MERCHANDISE("PEM"),
-    PENDING_PAYMENT("PEN"),
-    PAYMENT_SUBMIT("PYS"),
-    READY_TO_CLOSE("RTC"),
+    CANCELLED ("CAN", "Cancelled"),
+    COMPLETED("COM", "Completed"),
+    MERCHANDISE_SUBMIT("MES", "Merchandise submitted"),
+    PAUSED("PSD", "Paused"),
+    PENDING_MERCHANDISE("PEM", "Pending merchandise"),
+    PENDING_PAYMENT("PEN", "Pending payment"),
+    PAYMENT_SUBMIT("PYS", "Payment submitted"),
+    READY_TO_CLOSE("RTC", "Ready to close"),
     ;
 
-    private String code;
+    private final String code;
+    private final String friendlyName;
 
-    ContractStatus(String code) {
+    ContractStatus(String code, String friendlyName) {
+
         this.code = code;
+        this.friendlyName=friendlyName;
     }
 
     @Override
     public String getCode() {
         return this.code;
+    }
+
+    /**
+     * This method returns the enum friendly name.
+     * @return
+     */
+    public String getFriendlyName(){
+        return this.friendlyName;
     }
 
     public static ContractStatus getByCode(String code) throws InvalidParameterException {

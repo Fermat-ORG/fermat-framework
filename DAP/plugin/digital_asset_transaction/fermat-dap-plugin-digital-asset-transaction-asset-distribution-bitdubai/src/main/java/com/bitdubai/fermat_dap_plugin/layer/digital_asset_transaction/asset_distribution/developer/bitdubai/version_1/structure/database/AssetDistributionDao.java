@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -65,7 +67,8 @@ public class AssetDistributionDao {
     //PUBLIC METHODS
     public void startDelivering(String genesisTransaction,
                                 String assetPublicKey,
-                                String userPublicKey) throws CantStartDeliveringException {
+                                String userPublicKey,
+                                BlockchainNetworkType networkType) throws CantStartDeliveringException {
         String context = "Genesis Transaction: " + genesisTransaction + " - Asset Public Key: " + assetPublicKey + " - User Public Key: " + userPublicKey;
 
         String transactionId = UUID.randomUUID().toString();
@@ -77,6 +80,7 @@ public class AssetDistributionDao {
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME, networkType != null ? networkType.getCode() : BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode());
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, assetPublicKey);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME, userPublicKey);
             record.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, startTime);
@@ -90,7 +94,7 @@ public class AssetDistributionDao {
         }
     }
 
-    public void persistDigitalAsset(String genesisTransaction,
+    public void persistDigitalAsset(String transactionHash,
                                     String localStoragePath,
                                     String digitalAssetHash,
                                     String actorReceiverPublicKey,
@@ -99,7 +103,7 @@ public class AssetDistributionDao {
 
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
-            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, transactionHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorReceiverPublicKey);
@@ -237,6 +241,9 @@ public class AssetDistributionDao {
         }
     }
 
+    public DistributionStatus getDistributionStatusForGenesisTx(String genesisTx) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException, InvalidParameterException {
+        return DistributionStatus.getByCode(getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME, genesisTx, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME));
+    }
 
     public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {
@@ -615,8 +622,9 @@ public class AssetDistributionDao {
             DeliverRecord recordToReturn = new DeliverRecord();
             recordToReturn.setTransactionId(transactionId);
             recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME));
+            recordToReturn.setNetworkType(BlockchainNetworkType.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME)));
             recordToReturn.setActorAssetUserPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME));
-            recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
+            recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromWallet(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME), BlockchainNetworkType.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME))));
             recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME)));
             recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME)));
             recordToReturn.setState(DistributionStatus.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME)));

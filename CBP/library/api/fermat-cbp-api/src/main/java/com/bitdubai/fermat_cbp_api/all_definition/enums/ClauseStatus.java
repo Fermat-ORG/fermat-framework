@@ -13,7 +13,10 @@ public enum ClauseStatus implements FermatEnum {
     SENT_TO_CUSTOMER("STC"),
     WAITING_FOR_CUSTOMER("WFC"),
     AGREED("AGR"),
-    REJECTED("REJ");
+    REJECTED("REJ"),
+    ACCEPTED("ACCEPT"),
+    CHANGED("CHANGE"),
+    CONFIRM("CONFIR");
 
     private String code;
 
@@ -35,6 +38,10 @@ public enum ClauseStatus implements FermatEnum {
             case "WFC": return WAITING_FOR_CUSTOMER;
             case "AGR": return AGREED;
             case "REJ": return REJECTED;
+            case "ACCEPT": return ACCEPTED;
+            case "CHANGE":  return CHANGED;
+            case "CONFIR":  return CONFIRM;
+
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseStatus enum");
         }
     }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_conne
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory.AssetFactoryFragmentFactory;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.navigation_drawer.AssetFactoryNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 
 /**
@@ -22,7 +24,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.A
  */
 public class AssetFactoryFermatAppConnection extends AppConnections {
 
-    public AssetFactoryFermatAppConnection(Activity activity) {
+    public AssetFactoryFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -47,10 +49,9 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
         return new AssetFactorySession();
     }
 
-
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new AssetFactoryNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override

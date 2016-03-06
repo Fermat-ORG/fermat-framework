@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class RuntimeSubApp implements SubApp {
 
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    private List<Activities> startActivities = new ArrayList<>();;
+    private List<Activities> startActivities = new ArrayList<>();
     private int actualStart = 0;
 
     Activities lastActivity;
@@ -61,6 +62,16 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public SubApps getType() {
         return type;
+    }
+
+    @Override
+    public FermatApps getFermatApp() {
+        return null;
+    }
+
+    @Override
+    public FermatAppType getFermatAppType() {
+        return FermatAppType.SUB_APP;
     }
 
     @Override
@@ -119,5 +130,15 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.SUB_APP;
     }
 }

@@ -127,7 +127,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             case TYPE_PRESENTATION:
                 return R.layout.presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.presentation_dialog_without_identities;
+                return R.layout.presentation_bitcoin_wallet_without_identities;
         }
         return 0;
     }

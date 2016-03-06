@@ -139,30 +139,85 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/dap_asset_factory_editor_bitcoin_price_hint"
-                        android:textColor="@color/text_color_hint"
-                        android:textSize="12sp" />
-
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                        android:id="@+id/bitcoins"
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:ems="10"
-                        android:imeOptions="actionNext"
-                        android:inputType="numberDecimal"
-                        android:nextFocusDown="@+id/expiration_date"
-                        android:padding="8dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
                 </LinearLayout>
 
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/bitcoinsLabelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/dap_asset_factory_editor_bitcoin_price_hint"
+                    android:textColor="@color/text_color_hint"
+                    android:textSize="12sp" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/bitcoins"
+                    android:layout_width="100dp"
+                    android:layout_height="38dp"
+                    android:ems="10"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/expiration_date"
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/bitcoinsLabelText"/>
+
+                <Spinner
+                    android:id="@+id/bitcoinsSpinner"
+                    android:layout_width="100dp"
+                    android:layout_height="41dp"
+                    android:layout_toRightOf="@+id/bitcoins"
+                    android:layout_alignBottom="@+id/bitcoins"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/bitcoinsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_color_hint"
+                    android:layout_alignBottom="@+id/bitcoins"
+                    android:layout_marginBottom="3dp"
+                    android:layout_alignParentRight="true"
+                    android:text="0.111111 BTC"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/bitcoinBalanceLabelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_color_hint"
+                    android:text="bitcoin Wallet Balance:"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/bitcoinBalanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/fab_material_orange_500"
+                    android:layout_toRightOf="@id/bitcoinBalanceLabelText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="0.111111 BTC"/>
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -255,30 +310,19 @@
                 android:visibility="gone" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:padding="16dp">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/action_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:text="Delete" />
+                android:layout_marginTop="32dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/action_create"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_centerHorizontal="true"
                     android:text="Create" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

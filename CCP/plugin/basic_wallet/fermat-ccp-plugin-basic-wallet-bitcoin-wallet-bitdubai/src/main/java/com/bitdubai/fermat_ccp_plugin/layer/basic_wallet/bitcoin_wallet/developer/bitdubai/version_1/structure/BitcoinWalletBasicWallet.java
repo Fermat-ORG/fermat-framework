@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions.CantRevertTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
@@ -25,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
@@ -54,16 +59,19 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
+    private final Broadcaster broadcaster;
 
     public BitcoinWalletBasicWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
                                     final PluginFileSystem pluginFileSystem,
-                                    final UUID pluginId) {
+                                    final UUID pluginId,
+                                    final  Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     //metodo create para crear la base de datos
@@ -253,13 +261,14 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
         switch (balanceType) {
             case AVAILABLE:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
+                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
             case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance(database);
+                return new BitcoinWalletBasicWalletBookBalance(database,this.broadcaster);
             default:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
+                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
         }
     }
+
 
     @Override
     public BitcoinWalletTransactionSummary getActorTransactionSummary(final String actorPublicKey,
@@ -357,4 +366,34 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
+
+    @Override
+    public void revertTransaction(BitcoinWalletTransactionRecord transactionRecord, boolean credit) throws CantRevertTransactionException {
+        try {
+
+            //update transaction like reversed
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            bitcoinWalletBasicWalletDao.updateTransactionState(transactionRecord.getTransactionId(),TransactionState.REVERSED);
+            //change balance
+
+            if(credit)
+                this.getBalance(BalanceType.AVAILABLE).revertCredit(transactionRecord);
+            else
+                this.getBalance(BalanceType.BOOK).revertCredit(transactionRecord);
+
+        } catch (Exception exception) {
+            throw new CantRevertTransactionException("Could not revert transaction", exception, "Database error" , "");
+        }
+    }
+
+    @Override
+    public BitcoinWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException{
+        try {
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            return bitcoinWalletBasicWalletDao.selectTransaction(transactionID);
+        } catch (CantFindTransactionException e) {
+            throw new CantFindTransactionException("Could not get transaction information", e, "Database error" , "");
+        }
+    }
+
 }

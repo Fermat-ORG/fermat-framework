@@ -150,20 +150,28 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 break;
 
         }
+
+
         if(data.getType() == 0) //SEND
         {
-            if(data.getState() != null) {
-                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-                holder.getTxt_state().setText(state);
-                holder.getTxt_state().setTypeface(tf);
-            }
+            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_state().setText(state);
+            holder.getTxt_state().setTypeface(tf);
         }
         else
         {
-            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
+            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED) || data.getState().equals(CryptoPaymentState.ERROR)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+
+                holder.getTxt_state().setText(state);
+                holder.getTxt_state().setTypeface(tf);
+            }
+            else
+            {
+                holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+                holder.getLinear_layour_container_state().setVisibility(View.GONE);
 
                 holder.getTxt_state().setText(state);
                 holder.getTxt_state().setTypeface(tf);

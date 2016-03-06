@@ -142,7 +142,6 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory implement
 
         clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME);
         clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
-        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME);
         clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME);
         clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME);

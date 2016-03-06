@@ -39,13 +39,11 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.crypto_broker_community.common.views.Utils;
@@ -64,7 +62,7 @@ import static android.widget.Toast.makeText;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
+public class ConnectionsFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,
@@ -78,7 +76,6 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
     private static ErrorManager errorManager;
     protected final String TAG = "Recycler Base";
     private List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private int offset = 0;
 
     private int mNotificationsCount = 0;
@@ -116,9 +113,7 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
         try {
 
             setHasOptionsMenu(true);
-            // setting up  module
-            cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-            moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             mNotificationsCount = moduleManager.listCryptoBrokersPendingRemoteAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
@@ -152,7 +147,6 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
         try {
 
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
@@ -192,20 +186,6 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
 
 
         return rootView;
-    }
-
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetSelectedActorIdentityException, CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-
-//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-//        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
@@ -318,7 +298,7 @@ Updates the count of notifications in the ActionBar.
     public boolean onQueryTextSubmit(String alias) {
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch();
             cryptoBrokerCommunitySearch.addAlias(alias);
 
         } catch(Exception e) {
@@ -334,11 +314,7 @@ Updates the count of notifications in the ActionBar.
     @Override
     public boolean onQueryTextChange(String s) {
 
-        if (s.length() == 0 && isStartList) {
-
-            return true;
-        }
-        return false;
+        return s.length() == 0 && isStartList;
     }
 
     @Override
@@ -388,7 +364,7 @@ Updates the count of notifications in the ActionBar.
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
         try {
-            ConnectDialog connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
             connectDialog.show();
         } catch (CantGetSelectedActorIdentityException| ActorIdentityNotSelectedException e) {
             e.printStackTrace();

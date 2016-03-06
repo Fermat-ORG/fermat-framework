@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
  * CustomerAckOnlineMerchandiseManager plugins.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/12/15.
  */
-public interface CustomerAckMerchandiseManager extends FermatManager {
+public interface CustomerAckMerchandiseManager extends BusinessTransactionManager {
 
     /**
      * This method returns the ContractTransactionStatus by contractHash

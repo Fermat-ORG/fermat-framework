@@ -383,17 +383,21 @@ public class OutgoingMessageDao {
 
         try {
 
-            /*
+            if(findById(String.valueOf(entity.getId())) == null)
+            {
+                  /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+                DatabaseTableRecord entityRecord = constructFrom(entity);
 
             /*
              * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+                DatabaseTransaction transaction = getDataBase().newTransaction();
+                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+                getDataBase().executeTransaction(transaction);
+            }
+
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -406,6 +410,9 @@ public class OutgoingMessageDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
+        } catch (CantReadRecordDataBaseException e) {
+            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Cant get record");
+            throw cantInsertRecordDataBaseException;
         }
 
     }
@@ -432,8 +439,13 @@ public class OutgoingMessageDao {
             /*
              * 2.- Create a new transaction and execute
              */
+
+            DatabaseTable outgoingTable = getDatabaseTable();
+
+            //set filter by id key
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            outgoingTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME,entity.getId(), DatabaseFilterType.EQUAL);
+            transaction.addRecordToUpdate(outgoingTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

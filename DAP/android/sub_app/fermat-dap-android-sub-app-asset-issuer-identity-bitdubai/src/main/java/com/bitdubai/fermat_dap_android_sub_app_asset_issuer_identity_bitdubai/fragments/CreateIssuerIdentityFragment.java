@@ -8,11 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,10 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.IssuerIdentitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.SessionConstants;
@@ -32,11 +37,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +76,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
+    SettingsManager<IssuerIdentitySettings> settingsManager;
+    IssuerIdentitySettings issuerIdentitySettings = null;
+
     public static CreateIssuerIdentityFragment newInstance() {
         return new CreateIssuerIdentityFragment();
     }
@@ -75,18 +86,112 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         try {
             issuerIdentitySubAppSession = (IssuerIdentitySubAppSession) appSession;
             moduleManager = issuerIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-//            if(moduleManager.getIdentityAssetIssuersFromCurrentDeviceUser().isEmpty()){
-//                moduleManager.createNewIdentityAssetIssuer("Asset Issuer John Doe", null);
-//            }
+            settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            try {
+                if (appSession.getAppPublicKey() != null) {
+                    issuerIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                }
+            } catch (Exception e) {
+                issuerIdentitySettings = null;
+            }
+
+            if (issuerIdentitySettings == null) {
+                issuerIdentitySettings = new IssuerIdentitySettings();
+                issuerIdentitySettings.setIsPresentationHelpEnabled(true);
+                if (appSession.getAppPublicKey() != null) {
+                    settingsManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
+                }
+            }
+
+            if(moduleManager.getIdentityAssetIssuer() == null) {
+                final IssuerIdentitySettings issuerIdentitySettingsTemp = issuerIdentitySettings;
+
+                Handler handlerTimer = new Handler();
+                handlerTimer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (issuerIdentitySettingsTemp.isPresentationHelpEnabled()) {
+                            setUpPresentation(false);
+                        }
+                    }
+                }, 500);
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    private void setUpPresentation(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_issuer_identity)
+                    .setIconRes(R.drawable.asset_issuer)
+                    .setVIewColor(R.color.dap_identity_issuer_view_color)
+                    .setTitleTextColor(R.color.dap_identity_issuer_view_color)
+                    .setSubTitle(R.string.dap_issuer_identity_welcome_subTitle)
+                    .setBody(R.string.dap_issuer_identity_welcome_body)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+//            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                    if (o != null) {
+//                        if ((Boolean) (o)) {
+//                            //invalidate();
+//                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
+//                        }
+//                    }
+//                    IdentityAssetIssuer identityAssetIssuer = null;
+//                    try {
+//                        identityAssetIssuer = moduleManager.getIdentityAssetIssuer();
+//                    } catch (CantGetAssetIssuerIdentitiesException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (identityAssetIssuer == null) {
+//                        getActivity().onBackPressed();
+//                    } else {
+//                        invalidate();
+//                    }
+//                }
+//            });
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_issuer_identity_menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            if (item.getItemId() == R.id.action_identity_issuer_help) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Identity Issuer system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -181,7 +286,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.asset_issuer_identity);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
@@ -267,7 +372,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_issuer_identity) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetIssuerException e) {

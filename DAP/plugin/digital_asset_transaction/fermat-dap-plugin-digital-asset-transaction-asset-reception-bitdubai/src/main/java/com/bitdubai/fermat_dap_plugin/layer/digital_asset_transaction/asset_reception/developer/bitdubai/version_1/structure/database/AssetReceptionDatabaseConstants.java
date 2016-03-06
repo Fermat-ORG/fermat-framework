@@ -12,7 +12,8 @@ public class AssetReceptionDatabaseConstants {
 
     public static final String ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
     public static final String ASSET_RECEPTION_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
-    public static final String ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME = "issuer_id";
+    public static final String ASSET_RECEPTION_SENDER_ID_COLUMN_NAME = "sender_id";
+    public static final String ASSET_RECEPTION_SENDER_TYPE_COLUMN_NAME = "sender_type";
     public static final String ASSET_RECEPTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME = "digital_asset_storage_local_path";
     public static final String ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME = "reception_status";
     public static final String ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";

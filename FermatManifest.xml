@@ -34,6 +34,7 @@
         <layer name="Actor Network Service" language="java"></layer>
         <layer name="Network Service" language="java"></layer>
         <!-- separator or empty layer -->
+        <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
         <!-- separator or empty layer -->
         <layer name="Communication" language="java" super_layer="P2P"></layer>
@@ -2064,7 +2065,7 @@
             </layer>
             <layer name="Sub App">
                 <androids>
-                    <android name="Asset Factory" description="" difficulty="4" code-level="development">
+                    <android name="Asset Factory" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2075,7 +2076,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2086,7 +2087,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset User Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2097,7 +2098,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Redeem Point Community" description="" difficulty="4" code-level="development">
+                    <android name="Redeem Point Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2108,7 +2109,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2119,7 +2120,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset User Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2130,7 +2131,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="RedeemPoint Identity" description="" difficulty="3" code-level="development">
+                    <android name="Redeem Point Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2373,6 +2374,33 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Transfer" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Buyer" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Seller" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3412,7 +3440,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="100"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3987,13 +4015,37 @@
     </platforms>
     <super_layers>
         <super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
-            <layer name="Provider" language="java">
+            <layer name="Search" language="java">
                 <plugins>
-                    <plugin name="Dolar Today" description="" difficulty="5" code-level="development">
+                    <plugin name="Provider Filter" description="" difficulty="10" code-level="production">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="abicelis"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+            <layer name="Provider" language="java">
+            	<plugins>
+                    <plugin name="Bitcoin Venezuela" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>                    
+                    <plugin name="DolarToday" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4002,7 +4054,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4011,7 +4063,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4020,7 +4072,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4029,16 +4081,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </plugin>
-                    <plugin name="SurBitcoin" description="" difficulty="5" code-level="development">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4047,7 +4090,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="0"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4173,7 +4216,7 @@
             </layer>
             <layer name="Crypto Vault" language="java">
                 <plugins>
-                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4195,7 +4238,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4365,6 +4408,19 @@
                         </maintainers>
                         <certifications> </certifications>
                     </addon>
+                    <addon name="Broadcaster" description="Is the connection between the platform and the outside world" difficulty="7" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
+                        </certifications>
+                    </addon>
                     <addon name="Device Connectivity" description="" difficulty="0" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4408,58 +4464,267 @@
         </super_layer>
     </super_layers>
     <processes>
-        <process platform="DAP" name="Digital Asset Platform" description="" previous="">
-            <step id="0" type="start" title="Asset Issuer - Reference Wallet" description="Represents UI Android for job with wallet" platform="DAP" superlayer="" layer="Reference Wallet" name="Asset Issuer">
-                <next>
-                    <step id="1" type="direct call"></step>
-                </next>
-            </step>
-            <step id="1" type="activity" title="Asset Factory" description="Represents UI Android for creation the Asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="2" type="direct call"></step>
-                </next>
-            </step>
-            <step id="2" type="activity" title="Asset Issuer - Wallet Module" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Wallet Module" name="Asset Issuer">
-                <next>
-                    <step id="3" type="direct call"></step>
-                </next>
-            </step>
-            <step id="3" type="activity" title="Asset Factory" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Sub App Module" name="Asset Factory">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="4" type="activity" title="Asset Issuer - Actor" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Actor" name="Asset Issuer">
-                <next>
-                    <step id="5" type="direct call"></step>
-                </next>
-            </step>
-            <step id="5" type="activity" title="Asset Factory" description="" platform="DAP" superlayer="Interlayer for the implementation of the Asset Factory" component="Plugin" layer="Middleware" name="Asset Factory">
-                <next>
-                    <step id="6" type="direct call"></step>
-                </next>
-            </step>
-            <step id="6" type="activity" title="Asset Issuer - Wallet" description="" platform="DAP" superlayer="Implementation Logic the Wallet" component="Plugin" layer="Wallet" name="Asset Issuer Wallet">
-                <next>
-                    <step id="7" type="direct call"></step>
-                </next>
-            </step>
-            <step id="7" type="activity" title="Asset Issuer - Identity" description="" platform="DAP" superlayer="Implementation Logic the Identity" component="Plugin" layer="Identity" name="Asset Issuer Identity">
-                <next>
-                    <step id="8" type="direct call"></step>
-                </next>
-            </step>
-            <step id="8" type="activity" title="Asset Issuer - Actor Network Service" description="" platform="DAP" superlayer="Layer comunication" component="Plugin" layer="Actor Network Service" name="Asset Issuer Actor Network Service">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
-            <step id="9" type="activity" title="Asset Transmission - Network Service" description="" platform="DAP" superlayer="Layer comunication" component="Plugin" layer="Network Service" name="Asset Transmission Network Service">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
+        <process platform="DAP" name="Asset Issuing" description="Describes the process of issuing Assets by the actor Asset Issuer" previous="">
+            <steps>
+                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Asset parameters definition" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enough founds in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Transaction Asset Issuing" description="We validate the contract and properties defined are all valid for each asset." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Transaction Asset Issuing" description="We request the Genesis Address to the Asset Vault and register it in the Address Book." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Transaction Asset Issuing" description="We lock the asset and generate the Digital Asset Metadata with its asses hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Transaction Asset Issuing" description="We generate a Bitcoin transaction using the Outgoing Intra Actor plugin, which includes the op_return, the Genesis Amount and the Genesis Address." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Transaction Asset Issuing" description="We store the Genesis Transaction in the metadata, and wait for broadcasting of the transaction." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Transaction Asset Issuing" description="When transaction is registered to be On Block Chain, we finish the asset Issuing process." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="11" type="activity" title="End" description="The asset is received at the Asset Issuer Wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                    </next>
+                </step>
+                <step id="20" type="activity" title="Process Interrupted" description="A validation did not pass, or error was thrown. We rollback the process and Asset is again editable." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
         </process>
+
+        <process platform="DAP" name="Asset Distribution" description="Describes the process of distributing an issued asset to an user" previous="Asset Issuing">
+            <steps>
+                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Asset Issuer Wallet" description="Starts by opening the Asset Issuer Wallet with positive balance of an asset" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Asset User Selection" description="The Asset Issuer selects the previously connected asset user to distribute" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Asset Distribution" description="We generate a Bitcoin Transaction using the genesis Transaction of this asset" platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Asset Distribution" description="The Digital Asset Metadata information containing asset and asset transaction is sent to user." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Asset Distribution" description="The digital asset metadata is received by the user" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Asset Distribution" description="User validated metadata by requesting to BCH the Genesis Transaction op_return. Is compated with hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Reception">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Asset Distribution" description="The contract info is validated. OK or fail response is sent back to issuer" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Asset Distribution" description="If user is ok, we broadcast the previously generated transaction to the Genesis Address. If not, we cancel the transaction and free the founds." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                        <step id="21" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Asset Distribution" description="Once the transaction is confirmed, we generate the debit in the issuer wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="11" type="activity" title="Asset Distribution" description="Once the transaction is confirmed, we generate the debit in the User wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="19" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="19" type="activity" title="End" description="End of proccess." platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                    </next>
+                </step>
+                <step id="20" type="activity" title="Process Interrupted" description="Transaction is rollbacked, and Asset is available again in the Issuer Wallet." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="21" type="activity" title="Asset not accepted" description="Due to poor network or invalidate contract, the asset is not accepted and rollbacked." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
+        </process>
+
+        <process platform="DAP" name="Asset Redemption" description="Describes the process of redeeming an issued asset to a redeem point" previous="Asset Distribution">
+            <steps>
+                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Asset User Wallet" description="Starts by opening the Asset User Wallet with positive balance of an asset" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Asset User Identity" description="Asset User Identity is created and User Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset User">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Redeem Point Selection" description="The Asset User selects the previously connected redeem point to redeeem to" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Asset Redemption" description="We generate a Bitcoin Transaction using the genesis Transaction of this asset" platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Asset Redemption" description="The Digital Asset Metadata information containing asset and asset transaction is sent to the Redeem Point." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Asset Redemption" description="The digital asset metadata is received by the Redeem Point" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Asset Redemption" description="Redeem Points validated metadata by requesting to BCH the Genesis Transaction op_return. Is compared with hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Redeem Point Redemption">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Asset Redemption" description="The contract info is validated and the assets is from an Issuer we redeem from. OK or fail response is sent back to issuer" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Asset Redemption" description="If redeem point is ok, we broadcast the previously generated transaction to the Genesis Address. If not, we cancel the transaction and free the founds." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                        <step id="21" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the debit in the User wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="11" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the credit in the Redeem point wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Redeem Point Wallet">
+                    <next>
+                        <step id="12" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="12" type="activity" title="Asset Redemption" description="Since Issuer shares public Key, Issuer also received the transaction and update stats." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Issuer Redemption">
+                    <next>
+                        <step id="13" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="13" type="activity" title="Asset Redemption" description="Asset is recicled and available again in the Issuer Wallet to restart the process" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
+                    <next>
+                        <step id="19" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="19" type="activity" title="End" description="End of process." platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                    </next>
+                </step>
+                <step id="20" type="activity" title="Process Interrupted" description="Transaction is rollbacked, and Asset is available again in the Issuer Wallet." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="21" type="activity" title="Asset not accepted" description="Due to poor network or invalidate contract, the asset is not accepted and rollbacked." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
+        </process>
+
         <process platform="CBP" name="Crypto Broker Reference Wallet Installation" description="Wallet Store installation procedure for the Crypto Broker Reference Wallet" previous="">
             <steps>
                 <step id="0" title="User selects the Broker Wallet on the Wallet Store" description="The user enters the Wallet Store and selects the Crypto Broker Reference Wallet to install it" type="start" component="" name="Wallet Store" layer="Sub App" platform="WPD" superlayer="">
@@ -4847,17 +5112,17 @@
                         <step id="3" type="direct call" name="Bank Money Restock"></step>
                     </next>
                 </step>
-                <step id="4" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
+                <step id="3" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
                     <next>
-                        <step id="5" type="direct call" name="Hold"></step>
+                        <step id="4" type="direct call" name="Hold"></step>
                     </next>
                 </step>
-                <step id="5" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
+                <step id="4" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
                     <next>
-                        <step id="6" type="direct call" name="Crypto Broker"></step>
+                        <step id="5" type="direct call" name="Crypto Broker"></step>
                     </next>
                 </step>
-                <step id="6" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
+                <step id="5" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
             </steps>
         </process>
         <process platform="CBP" name="Bank Account Destock">
@@ -6701,7 +6966,7 @@
          component="Plugin"
          >
          <next>
-             <step id="3" type="direct call"></step>
+             <step id="4" type="direct call"></step>
          </next>
      </step>
      <step id="4"	title="Creates the Intra User Identity"

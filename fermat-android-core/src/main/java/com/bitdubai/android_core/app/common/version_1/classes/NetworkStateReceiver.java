@@ -18,7 +18,13 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     protected List<NetworkStateReceiverListener> listeners;
     protected Boolean connected;
 
-    public NetworkStateReceiver() {
+    private static final NetworkStateReceiver instance = new NetworkStateReceiver();
+
+    public static NetworkStateReceiver getInstance(){
+        return instance;
+    }
+
+    private NetworkStateReceiver() {
         listeners = new ArrayList<NetworkStateReceiverListener>();
         connected = null;
     }
@@ -83,7 +89,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     public interface NetworkStateReceiverListener {
-        public void networkAvailable();
-        public void networkUnavailable();
+        void networkAvailable();
+        void networkUnavailable();
     }
 }

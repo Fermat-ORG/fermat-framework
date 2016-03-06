@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.InsufficientFundsException;
 
@@ -17,5 +18,6 @@ public interface TransactionManager {
               String deliveredByActorPublicKey,
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
-              Actors deliveredToActorType) throws InsufficientFundsException, com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
+              Actors deliveredToActorType,
+              BlockchainNetworkType blockchainNetworkType) throws InsufficientFundsException, com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
 }

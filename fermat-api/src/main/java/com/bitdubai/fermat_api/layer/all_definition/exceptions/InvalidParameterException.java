@@ -14,6 +14,10 @@ public class InvalidParameterException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
+    public InvalidParameterException(final Exception cause, final String context, final String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public InvalidParameterException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

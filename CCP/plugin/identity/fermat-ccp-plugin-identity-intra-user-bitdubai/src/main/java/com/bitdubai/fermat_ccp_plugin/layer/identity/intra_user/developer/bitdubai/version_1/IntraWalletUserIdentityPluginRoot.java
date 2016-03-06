@@ -210,10 +210,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
-                return true;
-            else
-                return false;
+            return intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
         } catch (CantListIntraWalletUserIdentitiesException e) {
@@ -272,13 +269,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             this.intraWalletUserIdentityDao = new IntraWalletUserIdentityDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
             this.intraWalletUserIdentityDao.initializeDatabase();
 
-        } catch (CantInitializeIntraWalletUserIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
-        }
-
-        try {
+            // Register identities
             registerIdentities();
+
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }

@@ -25,12 +25,13 @@ public class CashMoneyRestockTransactionImpl implements CashMoneyTransaction {
     BigDecimal amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                           priceReference;
+    BigDecimal                      priceReference;
     OriginTransaction               originTransaction;
+    String                          originTransactionId;
 
     public CashMoneyRestockTransactionImpl(){
 
-    };
+    }
 
     public CashMoneyRestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,
@@ -44,7 +45,8 @@ public class CashMoneyRestockTransactionImpl implements CashMoneyTransaction {
                                            Timestamp timeStamp,
                                            TransactionStatusRestockDestock transactionStatus,
                                            BigDecimal priceReference,
-                                           OriginTransaction originTransaction){
+                                           OriginTransaction originTransaction,
+                                           String originTransactionId){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.fiatCurrency       = fiatCurrency;
@@ -58,6 +60,7 @@ public class CashMoneyRestockTransactionImpl implements CashMoneyTransaction {
         this.transactionStatus  = transactionStatus;
         this.priceReference     = priceReference;
         this.originTransaction  = originTransaction;
+        this.originTransactionId= originTransactionId;
     }
 
 
@@ -190,5 +193,20 @@ public class CashMoneyRestockTransactionImpl implements CashMoneyTransaction {
     @Override
     public void setOriginTransaction(OriginTransaction originTransaction) {
         this.originTransaction = originTransaction;
+    }
+
+    /**
+     * The property <code>OriginTransactionId</code>  represented the Origin Transaction
+     *
+     * @return the String
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    @Override
+    public void setOriginTransactionId(String originTransactionId) {
+        this.originTransactionId = originTransactionId;
     }
 }

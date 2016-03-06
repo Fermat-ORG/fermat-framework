@@ -41,9 +41,11 @@ public class RequestMessage extends NetworkServiceMessage {
                           final long                  startTimeStamp   ,
                           final RequestAction         action           ,
                           final BlockchainNetworkType networkType     ,
-                          final ReferenceWallet      referenceWallet) {
+                          final ReferenceWallet      referenceWallet,
+                          String identitySender,
+                          String actorDestination) {
 
-        super(MessageTypes.REQUEST);
+        super(MessageTypes.REQUEST,identitySender,actorDestination);
 
         this.requestId         = requestId        ;
         this.identityPublicKey = identityPublicKey;

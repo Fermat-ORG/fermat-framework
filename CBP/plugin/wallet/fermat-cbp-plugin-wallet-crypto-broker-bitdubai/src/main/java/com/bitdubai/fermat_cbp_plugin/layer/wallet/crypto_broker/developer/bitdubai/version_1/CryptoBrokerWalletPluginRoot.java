@@ -12,12 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -31,28 +29,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +53,7 @@ import java.util.UUID;
  */
 public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         CryptoBrokerWalletManager,
-        DatabaseManagerForDevelopers
-        {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -73,7 +61,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
@@ -92,6 +80,12 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
+    /**
+     * This method returns the Developer Database List of the crypto broker wallet plugin root
+     *
+     * @param developerObjectFactory
+     * @return a list of DeveloperDatabase
+     */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         List<String> databasesNames = new ArrayList<>();
@@ -102,11 +96,26 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
+    /**
+     * This method return the Developer Database Table List of the crypto broker wallet plugin root
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return a List of DeveloperDatabaseTable
+     */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         return CryptoBrokerWalletDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
+    /**
+     * This method return the Developer Database Table Record List of the crypto broker wallet plugin root
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return a list of DeveloperDatabaseTableRecord
+     */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
@@ -135,12 +144,17 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         return databaseTableRecords;
     }
 
+    /**
+     * Starts the plugin Crypto Broker Wallet
+     *
+     * @throws CantStartPluginException
+     */
     @Override
     public void start() throws CantStartPluginException {
-        try{
+        try {
             loadWalletMap();
 
-            if(!existWallet) {
+            if (!existWallet) {
                 createCryptoBrokerWallet(walletPublicKey);
             }
 
@@ -148,30 +162,45 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             System.out.println("Start Plugin Crypto Broker Wallet ");
             this.serviceStatus = ServiceStatus.STARTED;
             //testAddCredito();
-        }catch(CantStartPluginException exception){
+        } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
+    /**
+     * Pause the plugin Crypto Broker Wallet
+     */
     @Override
     public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
+    /**
+     * Resume the plugin Crypto Broker Wallet
+     */
     @Override
     public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
+    /**
+     * Stops the plugin Crypto Broker Wallet
+     */
     @Override
     public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    /**
+     * Creates the crypto broker wallet
+     *
+     * @param walletPublicKey
+     * @throws CantCreateCryptoBrokerWalletException
+     */
     @Override
     public void createCryptoBrokerWallet(String walletPublicKey) throws CantCreateCryptoBrokerWalletException {
         try {
@@ -180,7 +209,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             UUID internalWalletId = cryptoBrokerWalletImpl.create(walletPublicKey);
 
             cryptoBrokerWallet.put(walletPublicKey, internalWalletId);
-        }catch (CantCreateCryptoBrokerWalletException exception) {
+        } catch (CantCreateCryptoBrokerWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateCryptoBrokerWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
@@ -189,17 +218,25 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
+    /**
+     * Loads the Crypto Broker Wallet
+     *
+     * @param walletPublicKey
+     * @return CryptoBrokerWallet
+     * @throws CryptoBrokerWalletNotFoundException
+     */
     @Override
     public CryptoBrokerWallet loadCryptoBrokerWallet(String walletPublicKey) throws CryptoBrokerWalletNotFoundException {
 
         try {
             CryptoBrokerWalletImpl cryptoBrokerWalletImpl = new CryptoBrokerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, providerFilter);
 
+            walletPublicKey = "walletPublicKeyTest"; // TODO. solo para pruebas, hay que quitarlo despues
             UUID internalWalletId = cryptoBrokerWallet.get(walletPublicKey);
             cryptoBrokerWalletImpl.initialize(internalWalletId);
             return cryptoBrokerWalletImpl;
 
-        }catch (CryptoBrokerWalletNotFoundException exception) {
+        } catch (CryptoBrokerWalletNotFoundException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CryptoBrokerWalletNotFoundException("I can't initialize wallet", exception, "", "");
         } catch (Exception exception) {
@@ -236,8 +273,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
@@ -307,8 +344,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
@@ -363,6 +400,12 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //        }
 //    }
 
+    /**
+     * Loads the wallet map
+     *
+     * @return a boolean existWallet
+     * @throws CantStartPluginException
+     */
     private boolean loadWalletMap() throws CantStartPluginException {
         PluginTextFile walletFile = getWalletFile();
         String[] stringWallet = walletFile.getContent().split(";", -1);
@@ -376,25 +419,48 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         return existWallet;
     }
 
+    /**
+     * Returns the wallet file
+     *
+     * @return a PluginTextFile of the wallet file
+     * @throws CantStartPluginException
+     */
     private PluginTextFile getWalletFile() throws CantStartPluginException {
         try {
             PluginTextFile walletFile = pluginFileSystem.getTextFile(pluginId, "", CRYPTO_BROKER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletFile.loadFromMedia();
             return walletFile;
         } catch (FileNotFoundException | CantCreateFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             return createWalletFile();
         } catch (CantLoadFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
+        }
+         catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
 
+    /**
+     * Creates the wallet file
+     *
+     * @return a PluginTextFile of the wallet file
+     * @throws CantStartPluginException
+     */
     private PluginTextFile createWalletFile() throws CantStartPluginException {
         try {
             PluginTextFile walletFile = pluginFileSystem.createTextFile(pluginId, "", CRYPTO_BROKER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletFile.persistToMedia();
             return walletFile;
         } catch (CantCreateFileException | CantPersistFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
+     catch (Exception exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+        throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
+    }
     }
 }

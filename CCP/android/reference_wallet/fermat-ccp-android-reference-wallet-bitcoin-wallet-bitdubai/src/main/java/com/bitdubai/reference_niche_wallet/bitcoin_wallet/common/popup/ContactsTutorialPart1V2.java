@@ -12,6 +12,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.SpacesItemDecoration;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -57,7 +59,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
         add_fermat_user =(FermatButton) findViewById(R.id.add_fermat_user);
         add_extra_user = (FermatButton) findViewById(R.id.add_extra_user);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(!checkButton);
+        checkbox_not_show.setChecked(checkButton);
 
         add_fermat_user.setOnClickListener(this);
         add_extra_user.setOnClickListener(this);
@@ -81,8 +83,10 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
         if(id == R.id.add_fermat_user){
             try {
                 saveSettings();
-                Object[] object = new Object[2];
-                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
+//                Object[] object = new Object[2];
+//                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
+                changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
+                dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,6 +97,11 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
             dismiss();
         }
     }
+
+    private void changeActivity(Activities ccpBitcoinWalletAddConnectionActivity) {
+        ((FermatScreenSwapper)activity).changeActivity(ccpBitcoinWalletAddConnectionActivity.getCode(),getSession().getAppPublicKey());
+    }
+
 
     private void saveSettings(){
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())

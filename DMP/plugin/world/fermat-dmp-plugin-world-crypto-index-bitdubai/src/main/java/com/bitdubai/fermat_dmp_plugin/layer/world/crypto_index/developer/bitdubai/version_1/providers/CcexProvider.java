@@ -8,11 +8,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.HistoricalExchangeRateNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexProvider;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.InterfaceUrlAPI;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.HTTPJson;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -38,7 +37,12 @@ public class CcexProvider implements CryptoIndexProvider {
         HTTPJson jsonService = new HTTPJson();
         String pair = cryptoCurrency.getCode().toLowerCase() + "-" + fiatCurrency.getCode().toLowerCase();
         String urlApi = getUrlAPI(pair);
-        String stringMarketPrice = jsonService.getJSONFromUrl(urlApi).getJSONObject("ticker").get("lastprice").toString();
+        String stringMarketPrice ;
+        try {
+            stringMarketPrice = jsonService.getJSONFromUrl(urlApi).getJSONObject("ticker").get("lastprice").toString();
+        } catch (JSONException ex) {
+            throw new CantGetMarketPriceException("Cant get the Market Price for this Bitfinex Provider", ex, ex.getMessage(), "Maybe the JSON response is null or part of this JSON is missing");
+        }
         return Double.valueOf(stringMarketPrice);
     }
 
@@ -62,7 +66,7 @@ public class CcexProvider implements CryptoIndexProvider {
                 list.add(ExchangeRate);
         }
         }catch (Exception e){
-            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,e,"Crypto Index CcexProvider ","Cant Ge tHistorical ExchangeRate Exception");
+            throw new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,e,"Crypto Index CcexProvider ","Cant Ge tHistorical ExchangeRate Exception");
         }
         System.out.println(marketPrice.getBestMarketPrice(list));
         return marketPrice.getBestMarketPrice(list);

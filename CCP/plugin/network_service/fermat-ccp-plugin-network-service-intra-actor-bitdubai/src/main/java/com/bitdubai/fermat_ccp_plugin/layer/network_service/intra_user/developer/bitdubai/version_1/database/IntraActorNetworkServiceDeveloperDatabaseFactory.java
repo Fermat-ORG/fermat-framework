@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId,IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -82,7 +83,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
                   /*
                    * We create the new database
                    */
-                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -93,12 +94,44 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
     }
 
 
+    public void initializeDatabaseCommunication() throws CantInitializeTemplateNetworkServiceDatabaseException {
+
+        try {
+
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
+
+        } catch (DatabaseNotFoundException e) {
+
+            IntraActorNetworkServiceDatabaseFactory cryptoPaymentRequestNetworkServiceDatabaseFactory = new IntraActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                database = cryptoPaymentRequestNetworkServiceDatabaseFactory.createDatabase(
+                        pluginId,
+                        CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
+                );
+
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+
+                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
+
+            }
+        }
+    }
+
+
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(pluginId.toString(), this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+
         return databases;
     }
 
@@ -107,6 +140,54 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
 
+        /**
+         * Table incoming_notification columns.
+         */
+        List<String> intraUsersIncomingColumns = new ArrayList<String>();
+
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+
+        /**
+         * Table incoming messages addition.
+         */
+        DeveloperDatabaseTable intraUsersIncomingTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, intraUsersIncomingColumns);
+        tables.add(intraUsersIncomingTable);
+
+
+        /**
+         * Table outgoing_notification columns.
+         */
+        List<String> intraUsersOutgoingColumns = new ArrayList<String>();
+
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+        /**
+         * Table incoming messages addition.
+         */
+        DeveloperDatabaseTable intraUsersOutgoingTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, intraUsersOutgoingColumns);
+        tables.add(intraUsersOutgoingTable);
         /**
          * Table intra users online cache columns.
          */
@@ -125,20 +206,29 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
         DeveloperDatabaseTable intraUsersOnlineTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TABLE_NAME, intraUsersOnlineColumns);
         tables.add(intraUsersOnlineTable);
 
+
         return tables;
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase,DeveloperDatabaseTable developerDatabaseTable) {
+
         /**
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+        try {
+            if(!developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+                initializeDatabaseCommunication();
+            else
+                initializeDatabase();
+
+
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
-        try {
+
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             for (DatabaseTableRecord row: records){
@@ -172,6 +262,49 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
         }
         database.closeDatabase();
         return returnedRecords;
+    }
+
+    public List<DeveloperDatabaseTable> getDatabaseTableListCommunication(final DeveloperObjectFactory developerObjectFactory) {
+
+
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
+
+        /**
+         * Table Crypto Address Request columns.
+         */
+        List<String> cryptoIncomingColumns = new ArrayList<>();
+
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME         );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME         );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
+        cryptoIncomingColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME    );
+        /**
+         * Table Crypto Address Request addition.
+         */
+        DeveloperDatabaseTable cryptoIncomingTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, cryptoIncomingColumns);
+        tables.add(cryptoIncomingTable);
+
+        List<String> cryptoOutgoingColumns = new ArrayList<>();
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME         );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME      );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME   );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME         );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME     );
+        cryptoOutgoingColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME    );
+        /**
+         * Table Crypto Address Request addition.
+         */
+        DeveloperDatabaseTable cryptoOutgoingTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, cryptoOutgoingColumns);
+        tables.add(cryptoOutgoingTable);
+
+
+        return tables;
     }
 
     @Override

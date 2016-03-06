@@ -145,7 +145,7 @@ public class IssueDigitalAssetsTest {
         digitalAsset.setContract(digitalAssetContract);
         digitalAsset.setResources(resources);
 
-        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "digitalAsset").set(digitalAssetCryptoTransactionFactory, digitalAsset);
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "bitcoinWalletBalance").set(digitalAssetCryptoTransactionFactory, bitcoinWalletBalance);

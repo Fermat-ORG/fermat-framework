@@ -1,18 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -22,22 +17,18 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,30 +43,25 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
 
     /**
-     * MANAGERS
-     */
-    private CryptoWallet cryptoWallet;
-
-    /**
      * Session
      */
     ReferenceWalletSession referenceWalletSession;
-
+    String walletPublicKey = "reference_wallet";
+    /**
+     * MANAGERS
+     */
+    private CryptoWallet cryptoWallet;
     /**
      * DATA
      */
     private List<PaymentRequest> lstPaymentRequest;
     private PaymentRequest selectedItem;
-
     /**
      * Executor Service
      */
     private ExecutorService executor;
-
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
-
-    String walletPublicKey = "reference_wallet";
     private View rootView;
     private LinearLayout empty;
 
@@ -101,11 +87,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+//                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                        //                      getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
                     }
                 });
             }
@@ -142,37 +128,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     private void setUp(){
 
-        FrameLayout frameLayout = new FrameLayout(getActivity());
-
-        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-
-        frameLayout.setLayoutParams(lbs);
-
-        //ImageView icon = new ImageView(getActivity());  Create an icon
-        //icon.setImageResource(R.drawable.btn_request_selector);
-        //icon.setImageResource(R.drawable.ic_contact_newcontact);
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
-            }
-        };
-        View view = new View(getActivity());
-        view.setLayoutParams(lbs);
-
-        frameLayout.addView(view);
-        frameLayout.setOnClickListener(onClickListener);
-        view.setOnClickListener(onClickListener);
-
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
-                .build();
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
-                .attachTo(actionButton)
-                .build();
-
 
     }
 
@@ -196,7 +151,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.fragment_transaction_main;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 
-import static org.fest.assertions.api.Assertions.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class ConstructCloudServerAddressTest {
 	

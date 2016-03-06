@@ -1,9 +1,14 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -11,6 +16,9 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
  */
 public class ChatMock implements Chat {
+
+    private String localActorPubKey;
+    private String remoteActorPubKey;
     @Override
     public UUID getChatId() {
         return UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f");
@@ -32,43 +40,43 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public String getLocalActorType() {
-        return "TestLocalActorType";
+    public PlatformComponentType getLocalActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setLocalActorType(String localActorType) {
+    public void setLocalActorType(PlatformComponentType localActorType) {
 
     }
 
     @Override
     public String getLocalActorPublicKey() {
-        return "TestLocalActorPublicKey";
+        return this.localActorPubKey;
     }
 
     @Override
     public void setLocalActorPublicKey(String localActorPublicKey) {
-
+        this.localActorPubKey = localActorPublicKey;
     }
 
     @Override
-    public String getRemoteActorType() {
-        return "TestRemoteActorType";
+    public PlatformComponentType getRemoteActorType() {
+        return PlatformComponentType.NETWORK_SERVICE;
     }
 
     @Override
-    public void setRemoteActorType(String remoteActorType) {
+    public void setRemoteActorType(PlatformComponentType remoteActorType) {
 
     }
 
     @Override
     public String getRemoteActorPublicKey() {
-        return "RemoteActorPublicKey";
+        return this.remoteActorPubKey;
     }
 
     @Override
     public void setRemoteActorPublicKey(String remoteActorPublicKey) {
-
+        this.remoteActorPubKey = remoteActorPublicKey;
     }
 
     @Override
@@ -92,22 +100,47 @@ public class ChatMock implements Chat {
     }
 
     @Override
-    public Date getDate() {
-        return new Date(2001);
+    public Timestamp getDate() {
+        return new Timestamp(2001l);
     }
 
     @Override
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
 
     }
 
     @Override
-    public Date getLastMessageDate() {
-        return new Date(2001);
+    public Timestamp getLastMessageDate() {
+        return new Timestamp(2001l);
     }
 
     @Override
-    public void setLastMessageDate(Date lastMessageDate) {
+    public void setLastMessageDate(Timestamp lastMessageDate) {
+
+    }
+
+    @Override
+    public List<Contact> getContactAssociated() {
+        return null;
+    }
+
+    @Override
+    public void setContactAssociated(List<Contact> chatContacts) {
+
+    }
+
+    @Override
+    public void setContactAssociated(Contact contact) {
+
+    }
+
+    @Override
+    public String getContactListString() {
+        return null;
+    }
+
+    @Override
+    public void setContactAssociated(String chatContacts) throws CantGetContactListException {
 
     }
 }

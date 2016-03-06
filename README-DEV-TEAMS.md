@@ -42,6 +42,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | | Kabuto | | |
 | | Mordor | | |
 | | Skynet | | |
+| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -53,6 +54,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
 | Fermat ORG Charlie | | | |
+| | Fsociety | | |
 | Fermat ORG Sierra | | | |
 
 ## Compensation
@@ -100,18 +102,19 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 ### The following rules apply:
 
-1. Standard team size is of 5 full-time members.
-2. One full-time member can be replaced by 2 part-time members.
-3. Developers can go up the category list and they can also go down in certain circumstances.
-4. Going up or down a category is decided by the developers's team leader or parent team leader according to these rules.
-5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
-6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
-7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
-8. When a full team has a child sub-team leaded by one of the current members:<br>
+1. **Team Size** : Standard team size is of 5 full-time members.
+2. **Part-Time & Full-Time** : One full-time member can be replaced by 2 part-time members.
+3. **Up & Down** : Developers can go up the category list and they can also go down in certain circumstances.
+4. **Approval** : Going up or down a category is decided by the developers's team leader or parent team leader in case a the one moving is already a team leader. In all cases these rules and the project director must approve the move.
+5. **Cumulative Conditions** : To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. **Awards Needed** : To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. **When** : When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. **Replacement** : When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
-9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+9. **Removing Members** : Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+10. **Changing Parents** : Team leaders might move their team and decendence to other parent if they don't fell supported by their biological or current parent. They need an authoritation by the project director for this to happen.
 
 <br>
 ## Teams presentations and members
@@ -132,26 +135,30 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-    
-    
-* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
+
+* **Manuel Perez [Team Leader]**<br/>
+---
+    Email:   darkpriestrelative@gmail.com
+    Skype:   darkestpriest
+    Github:  https://github.com/darkestpriest
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Victor Mars [Veteran Developer]** <br/>
+* **Victor Mars [New Team Leader]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
-
-* **Frank Contreras [New Developer]** <br/>
----
-      Email:   contrerasfrank@gmail.com
-      Skype:   fcontreras1234
-      Github:  https://github.com/javafrank
-
 
 <br>
 
@@ -221,6 +228,7 @@ We would be grateful for any help received, and anyone interested in joining the
 <br/>
 ### Mordor Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_mordor_team.jpg "Logo Mordor Team")
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
 In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
@@ -235,7 +243,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo [New Developer]**<br/>
+* **Gabriel Araujo [Veteran Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
@@ -264,6 +272,7 @@ This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we re
 <br/>
 ### Kabuto Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_kabuto_team.jpg "Logo Kabuto Team")
 Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
 
 In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
@@ -294,9 +303,74 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+---
+      Email:   roygufo@gmail.com
+      Skype:   roy-epps
+      Github:  https://github.com/RoyGF
+
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
+<br>
+
+### Skynet Team:
+-----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/b3d2a45ba6cff999accae76ae30fdd41f160b90d/Logotype/FermatTeams/logo_skynet_team.jpg "Logo Skynet Team")
+From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
+We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
+
+#### Skynet Team Members:
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Penelope Quintero [New Developer]** <br/>
+---
+      Email:   pennyxz@gmail.com
+      Skype:   pennyxz
+      Github:  https://github.com/pennyxz
+
+* **Jinmy Bohorquez [New Developer]** <br/>
+---
+      Email:   jinmybohorquez@gmail.com
+      Skype:   jinmyb22
+      Github:  https://github.com/jinmyjbv
+
+
 <br/>
+
+### Team Yayo:
+-----------------------------------
+On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
+We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
+
+#### Team Members:
+
+* **Victor Mars [Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+
+* **José Briceño [New Developer]** <br/>
+---
+      Email:   josebricenor@gmail.com@gmail.com
+      Skype:   josebricenor
+      Github:  https://github.com/josebricenor
+
+* **Frank Contreras [New Developer]** <br/>
+---
+      Email:   contrerasfrank@gmail.com
+      Skype:   fcontreras1234
+      Github:  https://github.com/javafrank
+
+<br>
+We don't mean to make fun of everything, just about the serious things.
+<br>
+
 ### Code Butchers Team:
 -----------------------------------
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
@@ -379,7 +453,7 @@ Developers of dev.fermat.org on the client-side. We are responsible to show to t
     Github:  https://github.com/miguelcldn
     
     
-* **Ricardo Delgado [ORG Veteran Developer]**<br/>
+* **Ricardo Delgado [ORG New Team Leader]**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
       Skype:   ricardodelgado460
@@ -395,6 +469,28 @@ We welcome everyone who would like to join us. JavaScript is a hard language whe
 
 <br/>
 
+### Fsociety:
+-----------------------------------
+Here, in Fsociety, we are a team of developers who gets along well with programming and technology that surround us. We work in a diversity of enviroment and language of programming. Always looking for a better way to improve our code. We're a pasionate developers team in what we do and that counts with a diverse number of different abilities to support each other.
+
+#### Team Members:
+
+* **Ricardo Delgado [ORG New Team Leader]**<br/>
+---
+      Email:   ricardodelgado460@hotmail.com
+      Skype:   ricardodelgado460
+      Github:  https://github.com/ricardo460
+
+* **Daril Rodriguez [ORG Developer]**<br/>
+---
+    Email:   darilrodriguez.2@gmail.com
+    Skype:   mdmine90
+    Github:  https://github.com/DarilRodriguez
+
+About the group: We like anime, TV shows, movies and videogames. We always find a good moment to talk about what we like. If you're interested to form part of the group you'll be always welcome.
+
+<br/>
+
 ### Fermat ORG Sierra:
 -----------------------------------
 In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
@@ -404,7 +500,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 * **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar
+    Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
@@ -418,6 +514,12 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
+
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
 
 <br/>
 

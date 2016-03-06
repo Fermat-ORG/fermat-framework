@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@drawable/cbw_action_bar_gradient_colors"
+              android:paddingTop="16dp">
+
+    <LinearLayout
+        android:id="@+id/cbw_no_earnings_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sad_face"
+            android:layout_gravity="center"
+            tools:ignore="contentDescription"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:text="@string/cbw_no_earnings"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cbw_earnings_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cbw_earning_currency_pairs_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="12dp"
+            tools:listitem="@layout/cbw_earnings_currency_pair_item"/>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/cbw_earning_details_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.viewpagerindicator.LinePageIndicator
+            android:id="@+id/cbw_earning_details_view_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cbw_market_exchange_rate_indicator_height"
+            android:layout_margin="8dp"
+            app:lineWidth="25dp"
+            app:selectedColor="#2abff1"
+            app:strokeWidth="4dp"
+            app:unselectedColor="#052331"/>
+    </LinearLayout>
+</FrameLayout>

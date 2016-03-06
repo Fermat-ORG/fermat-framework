@@ -37,7 +37,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
-
+    private static final int TYPE_CHILD_LAST = 2;
     /**
      * A {@link List} of all currently expanded {@link ParentListItem} objects
      * and their children, in order. Changes to this list should be made through the add/remove methods
@@ -115,6 +115,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             throw new IllegalStateException("Incorrect ViewType found");
         }
     }
+
 
     /**
      * Implementation of Adapter.onBindViewHolder(RecyclerView.ViewHolder, int)
@@ -271,6 +272,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     public List<? extends ParentListItem> getParentItemList() {
         return mParentItemList;
     }
+
+
 
     /**
      * <p/>

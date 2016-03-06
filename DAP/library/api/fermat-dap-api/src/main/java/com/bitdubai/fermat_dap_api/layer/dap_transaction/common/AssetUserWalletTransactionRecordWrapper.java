@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 
 /**
@@ -28,7 +30,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         timeStamp = System.currentTimeMillis();
     }
 
-    private final String memo;
+    private String memo;
 
     {
         this.memo = "Digital Asset delivered at" + this.timeStamp;
@@ -51,7 +53,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = Actors.INTRA_USER;
         this.actorToType = Actors.DAP_ASSET_ISSUER;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
@@ -72,17 +74,19 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
-    public AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
+
+    public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
                                                    CryptoTransaction cryptoGenesisTransaction,
                                                    String actorFromPublicKey,
                                                    Actors actorFromType,
                                                    String actorToPublicKey,
-                                                   Actors actorToType) {
-        this.digitalAsset = digitalAsset;
+                                                   Actors actorToType,
+                                                   String memo) {
+        this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
         this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
         this.name = this.digitalAsset.getName();
         this.description = this.digitalAsset.getDescription();
@@ -92,11 +96,29 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
-        this.digitalAssetMetadata = new DigitalAssetMetadata(digitalAsset);
-        digitalAssetMetadata.setGenesisTransaction(cryptoGenesisTransaction.getTransactionHash());
-        digitalAssetMetadata.setGenesisBlock(cryptoGenesisTransaction.getBlockHash());
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        this.digitalAssetMetadata = digitalAssetMetadata;
+        this.memo = memo;
+    }
+
+    public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
+                                                   CryptoTransaction cryptoGenesisTransaction,
+                                                   DAPActor actorFrom,
+                                                   DAPActor actorTo) {
+        this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
+        this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
+        this.name = this.digitalAsset.getName();
+        this.description = this.digitalAsset.getDescription();
+        this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
+        this.addressTo = cryptoGenesisTransaction.getAddressTo();
+        this.actorFromPublicKey = actorFrom.getActorPublicKey();
+        this.actorToPublicKey = actorTo.getActorPublicKey();
+        this.actorFromType = ActorUtils.getActorType(actorFrom);
+        this.actorToType = ActorUtils.getActorType(actorTo);
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
     @Override
@@ -170,8 +192,8 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     }
 
     @Override
-    public String getDigitalAssetMetadataHash() {
-        return digitalAssetMetadata.getDigitalAssetHash();
+    public String getGenesisTransaction() {
+        return digitalAssetMetadata.getGenesisTransaction();
     }
 
     @Override

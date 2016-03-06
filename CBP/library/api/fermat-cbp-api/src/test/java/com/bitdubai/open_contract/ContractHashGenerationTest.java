@@ -1,7 +1,7 @@
 package com.bitdubai.open_contract;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
@@ -17,10 +17,10 @@ public class ContractHashGenerationTest {
     private ContractSaleRecord generateMockedContractRecord(){
         ContractSaleRecord contractRecord=new ContractSaleRecord();
         contractRecord.setMerchandiseAmount(10);
-        contractRecord.setMerchandiseCurrency(CurrencyType.CRYPTO_MONEY);
+        contractRecord.setMerchandiseCurrency(MoneyType.CRYPTO);
         contractRecord.setMerchandiseDeliveryExpirationDate(616);
         contractRecord.setPaymentAmount(10);
-        contractRecord.setPaymentCurrency(CurrencyType.BANK_MONEY);
+        contractRecord.setPaymentCurrency(MoneyType.BANK);
         contractRecord.setPaymentExpirationDate(161);
         contractRecord.setPublicKeyBroker("brokerPublicKey");
         contractRecord.setPublicKeyCustomer("customerPublicKey");
@@ -34,10 +34,10 @@ public class ContractHashGenerationTest {
     private ContractPurchaseRecord generateMockedContractPurchaseRecord(){
         ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
         contractRecord.setMerchandiseAmount(10);
-        contractRecord.setMerchandiseCurrency(CurrencyType.CRYPTO_MONEY);
+        contractRecord.setMerchandiseCurrency(MoneyType.CRYPTO);
         contractRecord.setMerchandiseDeliveryExpirationDate(616);
         contractRecord.setPaymentAmount(10);
-        contractRecord.setPaymentCurrency(CurrencyType.BANK_MONEY);
+        contractRecord.setPaymentCurrency(MoneyType.BANK);
         contractRecord.setPaymentExpirationDate(161);
         contractRecord.setPublicKeyBroker("brokerPublicKey");
         contractRecord.setPublicKeyCustomer("customerPublicKey");

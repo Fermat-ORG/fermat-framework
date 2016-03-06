@@ -17,11 +17,11 @@ public interface CryptoBrokerActorManager extends FermatManager {
     /**
      *
      * @param identity
-     * @param wallet
+     * @param walletPublicKey
      * @return
      * @throws CantCreateNewBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
     /**
      *
@@ -32,18 +32,18 @@ public interface CryptoBrokerActorManager extends FermatManager {
 
     /**
      *
-     * @param identity
+     * @param publicKey
      * @return
      * @throws CantGetListBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
 
     /**
      *
-     * @param wallet
+     * @param walletPublicKey
      * @return
      * @throws CantGetListBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
 
 }

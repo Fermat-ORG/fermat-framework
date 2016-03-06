@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -130,7 +132,7 @@ public class AssetReceptionDao {
     public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromSelectedTableTableByFieldCode(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME,
                 genesisTransaction,
-                AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_ID_COLUMN_NAME,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
@@ -184,10 +186,16 @@ public class AssetReceptionDao {
     public String getSenderIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromSelectedTableTableByFieldCode(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME,
                 genesisTransaction,
-                AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_ID_COLUMN_NAME,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
+    public Actors getSenderTypeByGenesisTransaction(String genesisTransaction) throws CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return Actors.getByCode(getStringValueFromSelectedTableTableByFieldCode(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME,
+                genesisTransaction,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_TYPE_COLUMN_NAME,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME));
+    }
     /**
      * This method returns a String value from the fieldCode, filtered by value in indexColumn
      *
@@ -351,7 +359,8 @@ public class AssetReceptionDao {
     public void persistDigitalAsset(String genesisTransaction,
                                     String localStoragePath,
                                     String digitalAssetHash,
-                                    String senderId) throws CantPersistDigitalAssetException {
+                                    String senderId,
+                                    Actors actorType) throws CantPersistDigitalAssetException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME);
@@ -359,14 +368,14 @@ public class AssetReceptionDao {
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
-            record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME, senderId);
+            record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_ID_COLUMN_NAME, senderId);
+            record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_TYPE_COLUMN_NAME, actorType.getCode());
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME, ReceptionStatus.RECEIVING.getCode());
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode());
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
+
             databaseTable.insertRecord(record);
-
         } catch (CantExecuteDatabaseOperationException exception) {
-
             throw new CantPersistDigitalAssetException(exception, "Persisting a receiving genesis digital asset", "Cannot open the Asset Reception database");
         } catch (CantInsertRecordException exception) {
             throw new CantPersistDigitalAssetException(exception, "Persisting a receiving genesis digital asset", "Cannot insert a record in the Asset Reception database");
@@ -381,6 +390,7 @@ public class AssetReceptionDao {
                 genesisTransaction,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
+
 
     private void updateStringValueByStringField(String value, String columnName, String filterValue, String filterColumn) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {

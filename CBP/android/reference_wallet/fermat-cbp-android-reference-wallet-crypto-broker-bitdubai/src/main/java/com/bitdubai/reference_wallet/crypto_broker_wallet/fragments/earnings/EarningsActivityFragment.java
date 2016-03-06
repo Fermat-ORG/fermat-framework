@@ -5,38 +5,56 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsDetailsPageAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.viewpagerindicator.LinePageIndicator;
 
-import static android.widget.Toast.makeText;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EarningsActivityFragment extends AbstractFermatFragment {
+public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager>
+        implements FermatListItemListeners<EarningsPair> {
 
     // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
-    private static final String TAG = "EarningsActivityFragment";
+    private static final String TAG = "EarningsActivity";
+
+    // Data
+    private List<EarningsPair> earningsPairs;
 
     // Fermat Managers
-    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+    private CryptoBrokerWalletManager walletManager;
+
+    private EarningsCurrencyPairsAdapter currencyPairsAdapter;
+    private EarningsDetailsPageAdapter earningDetailsAdapter;
+    private ViewPager earningDetailsViewPager;
 
 
     public static EarningsActivityFragment newInstance() {
@@ -48,37 +66,64 @@ public class EarningsActivityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-        }
 
+            earningsPairs = getEarningsPairs();
+
+        } catch (Exception ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View layout = inflater.inflate(R.layout.cbw_fragment_earnings_activity, container, false);
 
         configureToolbar();
 
-        return rootView;
+        if (earningsPairs.isEmpty()) {
+            layout.findViewById(R.id.cbw_no_earnings_container).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.cbw_earnings_container).setVisibility(View.GONE);
+        } else {
+            currencyPairsAdapter = new EarningsCurrencyPairsAdapter(getActivity(), earningsPairs);
+            currencyPairsAdapter.setFermatListEventListener(this);
+
+            final RecyclerView currencyPairsRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_earning_currency_pairs_recycler_view);
+            currencyPairsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
+
+
+            final EarningsPair earningsPair = earningsPairs.get(0);
+            earningDetailsAdapter = new EarningsDetailsPageAdapter(getFragmentManager(), earningsPair, appSession);
+
+            earningDetailsViewPager = (ViewPager) layout.findViewById(R.id.cbw_earning_details_view_pager);
+            earningDetailsViewPager.setOffscreenPageLimit(3);
+            earningDetailsViewPager.setAdapter(earningDetailsAdapter);
+
+            final LinePageIndicator indicator = (LinePageIndicator) layout.findViewById(R.id.cbw_earning_details_view_pager_indicator);
+            indicator.setViewPager(earningDetailsViewPager);
+
+            onItemClickListener(earningsPair, 0);
+        }
+
+        return layout;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onItemClickListener(EarningsPair selectedEarningsPair, int position) {
+        currencyPairsAdapter.setSelectedItem(position);
+        earningDetailsAdapter.changeDataSet(selectedEarningsPair);
+        earningDetailsViewPager.setCurrentItem(0);
+    }
 
-        try {
-            CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
+    @Override
+    public void onLongItemClickListener(EarningsPair data, int position) {
     }
 
     private void configureToolbar() {
@@ -92,5 +137,22 @@ public class EarningsActivityFragment extends AbstractFermatFragment {
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
+    private List<EarningsPair> getEarningsPairs() {
+        final List<EarningsPair> data = new ArrayList<>();
 
+        try {
+            final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
+            //final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(appSession.getAppPublicKey());
+            data.addAll(earningsPairs);
+        } catch (Exception ex) {
+            //final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
+            //data.addAll(earningsPairs);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
+        }
+
+        return data;
+    }
 }

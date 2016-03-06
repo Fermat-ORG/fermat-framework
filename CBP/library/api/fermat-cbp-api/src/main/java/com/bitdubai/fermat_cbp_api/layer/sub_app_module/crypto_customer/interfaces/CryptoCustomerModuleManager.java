@@ -25,7 +25,7 @@ public interface CryptoCustomerModuleManager {
      *
      * @return a searching interface
      */
-    public CryptoCustomerSearch searchCryptoCustomer();
+    CryptoCustomerSearch searchCryptoCustomer();
 
 
     /**
@@ -37,7 +37,7 @@ public interface CryptoCustomerModuleManager {
      * @param profileImage            The profile image that the crypto customer has
      * @throws CantAcceptRequestException
      */
-    public void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException;
+    void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException;
 
 
     /**
@@ -46,7 +46,7 @@ public interface CryptoCustomerModuleManager {
      * @param cryptoCustomerToRejectPublicKey the public key of the user to deny its connection request
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException
      */
-    public void denyConnection(String cryptoCustomerToRejectPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
+    void denyConnection(String cryptoCustomerToRejectPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
 
     /**
      * The method <code>disconnectCryptoCustomerr</code> disconnect an crypto Customer from the list managed by this
@@ -55,7 +55,7 @@ public interface CryptoCustomerModuleManager {
      * @param cryptoCustomerToDisconnectPublicKey the public key of the crypto Customer to disconnect
      * @throws CryptoCustomerDisconnectingFailedException
      */
-    public void disconnectCryptoCustomer(String cryptoCustomerToDisconnectPublicKey) throws CryptoCustomerDisconnectingFailedException;
+    void disconnectCryptoCustomer(String cryptoCustomerToDisconnectPublicKey) throws CryptoCustomerDisconnectingFailedException;
 
     /**
      * The method <code>cancelCryptoCustomer</code> cancels an crypto Customer from the list managed by this
@@ -71,7 +71,7 @@ public interface CryptoCustomerModuleManager {
      * @return the list of crypto Customer connected to the logged in broker
      * @throws CantGetCryptoCustomerListException
      */
-    public List<com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerInformation> getAllCryptoCustomers(int max, int offset) throws CantGetCryptoCustomerListException;
+    List<com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerInformation> getAllCryptoCustomers(int max, int offset) throws CantGetCryptoCustomerListException;
 
     /**
      * The method <code>getCryptoCustomersWaitingYourAcceptance</code> returns the list of crypto Customer waiting to be accepted
@@ -80,7 +80,7 @@ public interface CryptoCustomerModuleManager {
      * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in broker
      * @throws CantGetCryptoCustomerListException
      */
-    public List<com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
+    List<com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
 
 
     /**
@@ -88,7 +88,7 @@ public interface CryptoCustomerModuleManager {
      *
      * @param customerPublicKey the public key of the crypto broker to log in
      */
-    public void login(String customerPublicKey) throws CantLoginCustomerException;
+    void login(String customerPublicKey) throws CantLoginCustomerException;
 
 
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.engine.runtime;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager</code>
@@ -9,4 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/11/2015.
  */
 public interface RuntimeManager extends FermatManager {
+    void recordNAvigationStructure(FermatStructure fermatStructure);
+
+    FermatStructure getLastApp();
 }

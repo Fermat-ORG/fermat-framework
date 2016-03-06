@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 
 import java.util.UUID;
 
@@ -11,34 +13,38 @@ import java.util.UUID;
  */
 public interface BitcoinWalletTransaction {
 
-    public UUID getTransactionId();
+    UUID getTransactionId();
 
-    public String getTransactionHash();
+    String getTransactionHash();
 
-    public CryptoAddress getAddressFrom();
+    CryptoAddress getAddressFrom();
 
-    public CryptoAddress getAddressTo();
+    CryptoAddress getAddressTo();
 
-    public String getActorToPublicKey();
+    String getActorToPublicKey();
 
-    public String getActorFromPublicKey();
+    String getActorFromPublicKey();
 
-    public Actors getActorToType();
+    Actors getActorToType();
 
-    public Actors getActorFromType();
+    Actors getActorFromType();
 
-    public BalanceType getBalanceType();
+    BalanceType getBalanceType();
 
-    public com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType getTransactionType();
+    com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType getTransactionType();
 
-    public long getTimestamp();
+    long getTimestamp();
 
-    public long getAmount();
+    long getAmount();
 
-    public long getRunningBookBalance();
+    long getRunningBookBalance();
 
-    public long getRunningAvailableBalance();
+    long getRunningAvailableBalance();
 
-    public String getMemo();
+    String getMemo();
+
+    TransactionState getTransactionState();
+
+    BlockchainNetworkType getBlockchainNetworkType();
 
 }

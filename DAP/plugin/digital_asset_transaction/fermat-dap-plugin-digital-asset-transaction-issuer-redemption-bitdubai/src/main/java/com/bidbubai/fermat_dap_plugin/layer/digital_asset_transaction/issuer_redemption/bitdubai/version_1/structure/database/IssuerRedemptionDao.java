@@ -1,9 +1,12 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database;
 
+import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantLoadIssuerRedemptionEventListException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -15,14 +18,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -73,6 +81,20 @@ public class IssuerRedemptionDao {
         }
     }
 
+    public void assetReceived(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantInsertRecordException {
+        DatabaseTable databaseTable = this.database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+        DatabaseTableRecord redemptionRecord = databaseTable.getEmptyRecord();
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, digitalAssetMetadata.getGenesisTransaction());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetMetadata.getDigitalAssetHash());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME, networkType.getCode());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode());
+        databaseTable.insertRecord(redemptionRecord);
+    }
+
+    public void redemptionFinished(DigitalAssetMetadata digitalAssetMetadata) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateStringFieldByGenesisTx(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.APPLIED.getCode(), digitalAssetMetadata.getGenesisTransaction());
+    }
+
     //PRIVATE METHODS
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
@@ -98,6 +120,27 @@ public class IssuerRedemptionDao {
             throw new RecordsNotFoundException(null, context, "");
         }
         return databaseTable.getRecords().get(0).getStringValue(columnName);
+    }
+
+    private List<String> getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+        String context = "Event Type: " + eventType.getCode();
+
+        DatabaseTable eventsRecordedTable;
+        eventsRecordedTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+        eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType.getCode(), DatabaseFilterType.EQUAL);
+        eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+        eventsRecordedTable.addFilterOrder(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+        try {
+            eventsRecordedTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+        }
+        List<String> eventIdList = new ArrayList<>();
+        for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
+            eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME));
+        }
+        return eventIdList;
     }
 
     private List<String> getPendingDAPEventsByType(EventType eventType) throws CantLoadIssuerRedemptionEventListException {
@@ -144,6 +187,21 @@ public class IssuerRedemptionDao {
     }
 
 
+    private void updateStringFieldByGenesisTx(String columnName, String value, String genesisTx) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        String context = "Column Name: " + columnName + " - Genesis Transaction: " + genesisTx;
+        DatabaseTable issuerRedemptionTable;
+        issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+        issuerRedemptionTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
+        issuerRedemptionTable.loadToMemory();
+        if (issuerRedemptionTable.getRecords().isEmpty()) {
+            throw new RecordsNotFoundException(null, context, "");
+        }
+        for (DatabaseTableRecord record : issuerRedemptionTable.getRecords()) {
+            record.setStringValue(columnName, value);
+            issuerRedemptionTable.updateRecord(record);
+        }
+    }
+
     private void updateStringFieldByEventId(String columnName, String value, String id) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         String context = "Column Name: " + columnName + " - Id: " + id;
         DatabaseTable eventRecordedTable;
@@ -161,17 +219,36 @@ public class IssuerRedemptionDao {
 
     //GETTER AND SETTERS
 
+    public Map<BlockchainNetworkType, String> getToBeAppliedGenesisTransaction() throws CantCheckAssetIssuerRedemptionProgressException {
+        try {
+            DatabaseTable issuerRedemptionTable;
+            issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
+            issuerRedemptionTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode(), DatabaseFilterType.EQUAL);
+
+            issuerRedemptionTable.loadToMemory();
+            Map<BlockchainNetworkType, String> toReturn = new HashMap<>();
+            for (DatabaseTableRecord record : issuerRedemptionTable.getRecords()) {
+                toReturn.put(BlockchainNetworkType.getByCode(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME)), record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
+            }
+            return toReturn;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantCheckAssetIssuerRedemptionProgressException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantCheckAssetIssuerRedemptionProgressException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
     public List<String> getPendingCryptoRouterEvents() throws CantLoadIssuerRedemptionEventListException {
         return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
 
-    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
-        return com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
     public List<String> getPendingNewReceiveMessageActorEvents() throws CantLoadIssuerRedemptionEventListException {
-        return getPendingDAPEventsByType(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+        return getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
     }
     //INNER CLASSES
 }

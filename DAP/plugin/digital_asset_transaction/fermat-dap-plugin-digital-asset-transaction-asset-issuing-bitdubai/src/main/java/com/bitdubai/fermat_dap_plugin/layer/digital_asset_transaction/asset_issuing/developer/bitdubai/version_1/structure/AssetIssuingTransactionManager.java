@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.NotAvailableKeysToPublishAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -81,17 +82,23 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Check the cause");
         } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Cannot deliver the digital asset to the asset wallet");
+        } catch (NotAvailableKeysToPublishAssetsException exception){
+            throw new CantIssueDigitalAssetsException(exception, "Not enough available keys to generate assets.", "Too many assets to generate");
         } catch (Exception exception) {
             throw new CantIssueDigitalAssetsException(FermatException.wrapException(exception), "Issuing the Digital Asset required amount", "Unexpected Exception");
         }
     }
 
-    private void checkKeyCount(int assetsAmount) throws CantDeriveNewKeysException {
+    private void checkKeyCount(int assetsAmount) throws NotAvailableKeysToPublishAssetsException {
         int keyCount = assetVaultManager.getAvailableKeyCount();
         if (keyCount < assetsAmount) {
-            System.out.println("ASSET ISSUING - DERIVING MORE KEYS!");
-            int difference = assetsAmount - keyCount;
-            assetVaultManager.deriveKeys(Plugins.ASSET_ISSUING, difference);
+            StringBuilder output = new StringBuilder("The amount of assets to publish is more than available addresses.");
+            output.append(System.lineSeparator());
+            output.append("Available addresses are " + keyCount + ".");
+            output.append(System.lineSeparator());
+            output.append(System.lineSeparator());
+            output.append("Addresses are generated automatically when they are close to be exhausted.");
+            throw new NotAvailableKeysToPublishAssetsException(output.toString(), null, "Publishing assets", "Issue less amount of assets.");
         }
     }
 

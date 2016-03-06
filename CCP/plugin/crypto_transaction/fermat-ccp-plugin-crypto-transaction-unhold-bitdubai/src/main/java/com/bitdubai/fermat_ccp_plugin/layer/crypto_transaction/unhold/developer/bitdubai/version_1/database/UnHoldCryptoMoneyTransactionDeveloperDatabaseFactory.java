@@ -106,7 +106,7 @@ public class UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Dea
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME));
         return databases;
     }
 
@@ -129,6 +129,7 @@ public class UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Dea
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME);
+        holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
         /**
          * Table Hold addition.
          */

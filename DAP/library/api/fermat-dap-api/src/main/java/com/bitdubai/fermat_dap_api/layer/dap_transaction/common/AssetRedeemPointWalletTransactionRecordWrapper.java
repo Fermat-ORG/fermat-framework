@@ -5,10 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -33,10 +34,10 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.timeStamp = System.currentTimeMillis();
     }
 
-    private final String memo;
+    private String memo;
 
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateFormat sdf = DAPStandardFormats.DATETIME_FORMAT;
         this.memo = "Digital Asset Redeemed at:  " + sdf.format(new Date(timeStamp));
     }
 
@@ -89,7 +90,8 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
     public AssetRedeemPointWalletTransactionRecordWrapper(DigitalAssetMetadata assetMetadata,
                                                           CryptoTransaction cryptoTransaction,
                                                           String actorFromPublicKey,
-                                                          String actorToPublicKey) {
+                                                          String actorToPublicKey,
+                                                          String memo) {
         DigitalAsset asset = assetMetadata.getDigitalAsset();
         this.digitalAsset = asset;
         this.name = asset.getName();
@@ -101,8 +103,9 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.transactionId = cryptoTransaction.getTransactionHash();
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
-        this.amount = asset.getGenesisAmount();
+        this.amount = cryptoTransaction.getCryptoAmount() != 0 ? cryptoTransaction.getCryptoAmount() : assetMetadata.getDigitalAsset().getGenesisAmount();
         this.digitalAssetMetadata = assetMetadata;
+        this.memo = memo;
     }
     //PUBLIC METHODS
 

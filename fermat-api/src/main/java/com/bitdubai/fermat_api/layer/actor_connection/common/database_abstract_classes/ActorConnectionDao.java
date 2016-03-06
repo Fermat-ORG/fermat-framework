@@ -6,13 +6,17 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantChangeActorConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetConnectionStateException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -25,6 +29,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +57,21 @@ import java.util.UUID;
  */
 public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
 
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/actor_connections";
+    private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
+
     protected final PluginDatabaseSystem pluginDatabaseSystem;
+    protected final PluginFileSystem     pluginFileSystem    ;
     private   final UUID                 pluginId            ;
 
     protected Database database;
 
     public ActorConnectionDao(final PluginDatabaseSystem pluginDatabaseSystem,
+                              final PluginFileSystem     pluginFileSystem    ,
                               final UUID                 pluginId            ) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem     = pluginFileSystem    ;
         this.pluginId             = pluginId            ;
     }
 
@@ -150,65 +168,6 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
     }
 
     // TODO ADD UPDATETIME
-    public void changeConnectionState(final Z               linkedIdentity ,
-                                      final String          publicKey      ,
-                                      final Actors          actorType      ,
-                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
-                                                                                    ActorConnectionNotFoundException {
-
-        if (linkedIdentity == null)
-            throw new CantChangeActorConnectionStateException("", "The linkedIdentity is required, can not be null");
-
-        if (publicKey == null)
-            throw new CantChangeActorConnectionStateException("", "The publicKey is required, can not be null");
-
-        if (actorType == null)
-            throw new CantChangeActorConnectionStateException("", "The actorType is required, can not be null");
-
-        try {
-
-            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
-
-            actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-
-            actorConnectionsTable.loadToMemory();
-
-            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
-
-            if (!records.isEmpty()) {
-
-                final DatabaseTableRecord record = records.get(0);
-
-                record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
-
-                actorConnectionsTable.updateRecord(record);
-
-            } else
-                throw new ActorConnectionNotFoundException(
-                        "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
-                        "Cannot find an actor connection request with that requestId."
-                );
-
-        } catch (final CantUpdateRecordException e) {
-
-            throw new CantChangeActorConnectionStateException(
-                    e,
-                    "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
-                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
-            );
-        } catch (final CantLoadTableToMemoryException e) {
-
-            throw new CantChangeActorConnectionStateException(
-                    e,
-                    "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType
-                    , "Exception not handled by the plugin, there is a problem in database and i cannot load the table."
-            );
-        }
-    }
-
-    // TODO ADD UPDATETIME
     public void changeConnectionState(final UUID            connectionId   ,
                                       final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
                                                                                     ActorConnectionNotFoundException {
@@ -274,7 +233,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
             actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
             actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
 
@@ -336,6 +295,43 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
         }
     }
 
+    public Actors getLinkedIdentityActorType(final UUID connectionId) throws CantGetActorTypeException,
+                                                                        ActorConnectionNotFoundException {
+
+        if (connectionId == null)
+            throw new CantGetActorTypeException("", "The connectionId is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                return Actors.getByCode(record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME));
+
+            } else
+                throw new ActorConnectionNotFoundException(
+                        "connectionId: "+connectionId,
+                        "Cannot find an actor connection request with that requestId."
+                );
+
+        } catch (final CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+
+            throw new CantGetActorTypeException(
+                    cantLoadTableToMemoryException,
+                    "connectionId: "+connectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
     public List<T> listActorConnections(final DatabaseTable actorConnectionsTable) throws CantListActorConnectionsException {
 
         try {
@@ -367,18 +363,112 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
     protected DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord record         ,
                                                       final ActorConnection     actorConnection) {
 
-        record.setUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, actorConnection.getConnectionId());
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
-        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, actorConnection.getLinkedIdentity().getActorType());
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, actorConnection.getPublicKey());
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                        );
-        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , actorConnection.getConnectionState()              );
-        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                 );
-        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                   );
+        try {
 
-        return record;
+            record.setUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , actorConnection.getConnectionId()                 );
+            record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
+            record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, actorConnection.getLinkedIdentity().getActorType());
+            record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                    );
+            record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                        );
+            record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , actorConnection.getConnectionState()              );
+            record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                 );
+            record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                   );
+
+            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
+                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
+
+            return record;
+        } catch (final Exception e) {
+
+            // TODO add better error management, "throws CantBuildDatabaseRecordException".
+
+            System.err.println("error trying to persist image:"+e.getMessage());
+            return null;
+        }
     }
 
     protected abstract T buildActorConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException;
+
+    protected void persistNewUserProfileImage(final String publicKey   ,
+                                            final byte[] profileImage) throws CantPersistProfileImageException {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+            file.persistToMedia();
+
+        } catch (final CantPersistFileException e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "Error persist file.",
+                    null
+            );
+
+        } catch (final CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "Error creating file.",
+                    null
+            );
+        } catch (final Exception e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "",
+                    "Unhandled Exception."
+            );
+        }
+    }
+
+
+    protected byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
+            FileNotFoundException {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            return file.getContent();
+
+        } catch (final CantLoadFileException e) {
+
+            throw new CantGetProfileImageException(
+                    e,
+                    "Error loaded file.",
+                    null
+            );
+
+        } catch (final FileNotFoundException | CantCreateFileException e) {
+
+            throw new FileNotFoundException(e, "", null);
+        } catch (Exception e) {
+
+            throw new CantGetProfileImageException(
+                    e,
+                    "",
+                    "Unhandled Exception"
+            );
+        }
+    }
+
+    private String buildProfileImageFileName(final String publicKey) {
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+    }
 
 }

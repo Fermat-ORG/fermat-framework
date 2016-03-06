@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.verifyString;
+
 /**
  * Implementación básica de la intefaz Address,
  * utilizada para el RedeemPointActor.
@@ -63,14 +65,6 @@ public class RedeemPointActorAddress implements Address {
     @Override
     public String getHouseNumber() {
         return verifyString(houseNumber);
-    }
-
-    private String verifyString(String string) {
-        if (string == null) {
-            return "unknown";
-        } else {
-            return string;
-        }
     }
 
     public void setCountryName(String countryName) {

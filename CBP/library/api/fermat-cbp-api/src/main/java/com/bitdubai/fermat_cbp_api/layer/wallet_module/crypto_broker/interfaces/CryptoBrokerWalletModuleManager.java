@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 /**
  * Created by angel on 17/9/15.
  */
-public interface CryptoBrokerWalletModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CryptoBrokerWalletModuleManager extends ModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> {
 
     /**
      * @param walletPublicKey the public key of the wallet

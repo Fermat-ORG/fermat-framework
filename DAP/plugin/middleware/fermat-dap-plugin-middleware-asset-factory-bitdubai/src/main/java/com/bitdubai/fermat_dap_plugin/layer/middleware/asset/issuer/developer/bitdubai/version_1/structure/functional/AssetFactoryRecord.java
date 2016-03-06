@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -42,13 +43,14 @@ public class AssetFactoryRecord implements AssetFactory {
     private Timestamp expirationDate;
     private AssetBehavior assetBehavior;
     private IdentityAssetIssuer identityAssetIssuer;
+    private BlockchainNetworkType networkType;
 
     //CONSTRUCTORS
 
     public AssetFactoryRecord() {
     }
 
-    public AssetFactoryRecord(String factoryId, String walletPublicKey, String publicKey, String name, String description, List<Resource> resources, DigitalAssetContract digitalAssetContract, State state, List<ContractProperty> contractProperties, int quantity, int totalQuantity, long amount, long fee, Timestamp creationTimestamp, Timestamp lastModificationTimestamp, boolean isRedeemable, Timestamp expirationDate, AssetBehavior assetBehavior, IdentityAssetIssuer identityAssetIssuer) {
+    public AssetFactoryRecord(String factoryId, String walletPublicKey, String publicKey, String name, String description, List<Resource> resources, DigitalAssetContract digitalAssetContract, State state, List<ContractProperty> contractProperties, int quantity, int totalQuantity, long amount, long fee, Timestamp creationTimestamp, Timestamp lastModificationTimestamp, boolean isRedeemable, Timestamp expirationDate, AssetBehavior assetBehavior, IdentityAssetIssuer identityAssetIssuer, BlockchainNetworkType networkType) {
         this.factoryId = factoryId;
         this.walletPublicKey = walletPublicKey;
         this.publicKey = publicKey;
@@ -68,6 +70,7 @@ public class AssetFactoryRecord implements AssetFactory {
         this.expirationDate = expirationDate;
         this.assetBehavior = assetBehavior;
         this.identityAssetIssuer = identityAssetIssuer;
+        this.networkType = networkType;
     }
 
     //PUBLIC METHODS
@@ -80,6 +83,16 @@ public class AssetFactoryRecord implements AssetFactory {
     @Override
     public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
         this.identityAssetIssuer = identityAssetIssuer;
+    }
+
+    @Override
+    public BlockchainNetworkType getNetworkType() {
+        return networkType;
+    }
+
+    @Override
+    public void setNetworkType(BlockchainNetworkType networkType) {
+        this.networkType = networkType;
     }
 
     @Override

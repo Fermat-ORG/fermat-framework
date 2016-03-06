@@ -8,10 +8,12 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
 import java.util.List;
@@ -204,4 +206,21 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
     ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUserConnectionStatusException;
 
     boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
+
+    /**
+     * The method <code>getLastNotification</code> get the last notification received by actor public key
+     * @param intraUserConnectedPublicKey
+     * @return IntraWalletUserActor notification object
+     * @throws CantGetIntraUsersListException
+     */
+
+    IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUsersListException;
+
+
+    /**
+     *
+     * @param lstIntraUser
+     * @throws CantGetIntraUsersListException
+     */
+    void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantGetIntraUsersListException;
 }

@@ -77,7 +77,6 @@
                 android:handle="@+id/slide_container"
                 android:content="@+id/contentLayout"
                 android:layout_gravity="bottom"
-                android:padding="10dip"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -85,8 +84,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/slide_container"
-                    android:background="@drawable/ic_arrow_down_expanded">
+                    android:id="@+id/slide_container">
 
 
                 </FrameLayout>
@@ -96,8 +94,6 @@
                     android:id="@+id/contentLayout"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="17dip"
-                    android:background="#21ab23"
                     android:layout_height="wrap_content">
 
                     <RelativeLayout

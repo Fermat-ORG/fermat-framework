@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * This POJO was created to be used as a message content for pass information
@@ -10,21 +12,23 @@ import java.io.Serializable;
  * <p/>
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/11/15.
  */
-public class AssetAppropriationContentMessage implements Serializable, DAPContentMessage {
+public class AssetAppropriationContentMessage implements DAPContentMessage {
 
     //VARIABLE DECLARATION
 
-    private String digitalAssetAppropriated;
+    private UUID transactionId;
     private String userThatAppropriate;
+    private BlockchainNetworkType networkType;
 
     //CONSTRUCTORS
 
     public AssetAppropriationContentMessage() {
     }
 
-    public AssetAppropriationContentMessage(String digitalAssetAppropriated, String userThatAppropriate) {
-        this.digitalAssetAppropriated = digitalAssetAppropriated;
+    public AssetAppropriationContentMessage(UUID transactionId, String userThatAppropriate, BlockchainNetworkType networkType) {
+        this.transactionId = transactionId;
         this.userThatAppropriate = userThatAppropriate;
+        this.networkType = networkType;
     }
 
     //PUBLIC METHODS
@@ -53,12 +57,30 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
         this.userThatAppropriate = userThatAppropriate;
     }
 
-    public String getDigitalAssetAppropriated() {
-        return digitalAssetAppropriated;
+    public UUID getTransactionId() {
+        return transactionId;
     }
 
-    public void setDigitalAssetAppropriated(String digitalAssetAppropriated) {
-        this.digitalAssetAppropriated = digitalAssetAppropriated;
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public BlockchainNetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public void setNetworkType(BlockchainNetworkType networkType) {
+        this.networkType = networkType;
+    }
+
+    /**
+     * Every content message should have a unique type associate to it.
+     *
+     * @return {@link DAPMessageType} The message type that corresponds to this content message.
+     */
+    @Override
+    public DAPMessageType messageType() {
+        return DAPMessageType.ASSET_APPROPRIATION;
     }
 
     //INNER CLASSES

@@ -1,22 +1,25 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 
 import java.util.Date;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public class AssetAppropriationTransactionRecordImpl implements AssetAppropriationTransactionRecord {
+public class AssetAppropriationTransactionRecordImpl implements AppropriationTransactionRecord {
 
     //VARIABLE DECLARATION
 
     private String transactionId;
+
+    private BlockchainNetworkType networkType;
 
     private AppropriationStatus status;
 
@@ -38,6 +41,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
     //CONSTRUCTORS
 
     public AssetAppropriationTransactionRecordImpl(String transactionId,
+                                                   BlockchainNetworkType networkType,
                                                    AppropriationStatus status,
                                                    DigitalAssetMetadata digitalAssetMetadata,
                                                    String bitcoinWalletPublicKey,
@@ -47,6 +51,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
                                                    long endTime,
                                                    String genesisTransaction) {
         this.transactionId = transactionId;
+        this.networkType = networkType;
         this.status = status;
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.bitcoinWalletPublicKey = bitcoinWalletPublicKey;
@@ -112,6 +117,11 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
     }
 
     @Override
+    public BlockchainNetworkType networkType() {
+        return networkType;
+    }
+
+    @Override
     public String genesisTransaction() {
         return genesisTransaction;
     }
@@ -142,7 +152,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
     }
 
     @Override
-    public String userWalletPublicKey() {
+    public String walletPublicKey() {
         return userWalletPublicKey;
     }
 

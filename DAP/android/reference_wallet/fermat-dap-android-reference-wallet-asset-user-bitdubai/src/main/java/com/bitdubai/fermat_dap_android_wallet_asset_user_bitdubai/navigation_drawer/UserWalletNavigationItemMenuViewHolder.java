@@ -23,8 +23,8 @@ public class UserWalletNavigationItemMenuViewHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
-//        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
-
+        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
+        navigation_row_divider = itemView.findViewById(R.id.navigation_row_divider);
     }
 
     public TextView getLabel() {
@@ -35,13 +35,11 @@ public class UserWalletNavigationItemMenuViewHolder extends FermatViewHolder {
         return icon;
     }
 
-//    public LinearLayout getRow_container() {
-//        return row_container;
-//    }
-//
-//    public View getNavigation_row_divider() {
-//        return navigation_row_divider;
-//    }
+    public LinearLayout getRow_container() {
+        return row_container;
+    }
 
-
+    public View getNavigation_row_divider() {
+        return navigation_row_divider;
+    }
 }

@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_assets"
+            android:text="@string/no_assets_issuer"
             android:textColor="@color/fab_material_white"
             android:textSize="20sp"/>
 

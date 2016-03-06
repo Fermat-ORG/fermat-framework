@@ -60,7 +60,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     //UI
     private View noContractsView;
-    ;
 
 
     public static ContractsHistoryActivityFragment newInstance() {
@@ -182,17 +181,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        try {
-            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);} catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
-    }
-
     private void showOrHideNoContractsView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
@@ -207,6 +195,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData(CryptoCustomerWalletSession.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
+        //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -219,7 +208,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                data.addAll(TestData.getContractsHistory(filterContractStatus));
+//                data.addAll(TestData.getContractsHistory(filterContractStatus));
+                data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
                 //TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {

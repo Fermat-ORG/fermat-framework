@@ -29,6 +29,10 @@ public interface AssetRedeemPointWallet {
                                                             int max,
                                                             int offset, String assetPublicKey) throws CantGetTransactionsException;
 
+    List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetRedeemPointWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetRedeemPointWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                                    BalanceType balanceType,
                                                                    int max,
@@ -47,7 +51,7 @@ public interface AssetRedeemPointWallet {
 
     DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 
-    void newAssetRedeemed(String userPublicKey, String assetPublicKey) throws CantSaveRedeemPointStatisticException;
+    void newAssetRedeemed(DigitalAssetMetadata digitalAssetMetadata, String userPublicKey) throws CantSaveRedeemPointStatisticException;
 
     List<RedeemPointStatistic> getAllStatistics() throws CantGetRedeemPointStatisticsException, RecordsNotFoundException;
 

@@ -35,8 +35,8 @@ project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectD
 include ':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
 
-include ':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai'
-project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
+include ':fermat-ccp-plugin-network-service-crypto-transmission2-bitdubai'
+project(':fermat-ccp-plugin-network-service-crypto-transmission2-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-transmission2-bitdubai')
 
 include ':fermat-ccp-plugin-network-service-intra-actor-bitdubai'
 project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai')
@@ -55,6 +55,9 @@ project(':fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai').pr
 
 include ':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai'
 project(':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai')
+
+include ':fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction'
+project(':fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction')
 
 include ':fermat-ccp-plugin-crypto-transaction-hold-bitdubai'
 project(':fermat-ccp-plugin-crypto-transaction-hold-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-hold-bitdubai')

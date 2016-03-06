@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
@@ -134,7 +135,10 @@ public class IntraWalletUserActorDao {
 
 
             }else {
-                System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB");
+                System.out.println("THE INTRA WALLET USER IS ALREADY CREATED IN THE DB, I have to update it");
+
+                updateConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
+
             }
 
 
@@ -346,6 +350,61 @@ public class IntraWalletUserActorDao {
             // 2) Find all Intra Users.
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
 
+
+            table.loadToMemory();
+
+            // 3) Get Intra Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+
+                byte[] image;
+                try {
+                    image = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME));
+                } catch(FileNotFoundException e) {
+                    image = new  byte[0];
+                }
+
+                intraWalletUserActor =  new com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
+                        image,
+                        record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME)   );
+            }
+
+            return intraWalletUserActor;
+
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+
+            throw new CantGetIntraWalletUsersListException(e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get Instra User Actor list, unknown failure.");
+        }
+
+    }
+
+
+    public IntraWalletUserActor getLastNotification(String  intraUserConnectedPublicKey ) throws CantGetIntraWalletUsersListException {
+
+
+        try {
+
+            IntraWalletUserActor intraWalletUserActor = null;
+
+            /**
+             * 1) Get the table.
+             */
+            final DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
+
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+
+            // 2) Find all Intra Users.
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
+            table.setFilterTop("1");
+            table.addFilterOrder(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             table.loadToMemory();
 

@@ -43,51 +43,20 @@ public class RedeemPointWalletNavigationViewAdapter extends FermatAdapter<MenuIt
 
             holder.getLabel().setText(data.getLabel());
 
-            if (data.isSelected()) {
-
-//                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+            if (data.isSelected())
+                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
                 switch (position) {
                     case 0:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_home_active).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_active);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_history_active).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_active : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
                         break;
-                    case 2:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_active);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());
-                        break;
+//                    case 2:
+//                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());
+//                        break;
                 }
-            } else {
-                switch (position) {
-                    case 0:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_normal);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_home_normal).into(holder.getIcon());
-                        break;
-                    case 1:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_normal);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_history_normal).into(holder.getIcon());
-                        break;
-                    case 2:
-//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_active);
-
-                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_normal).into(holder.getIcon());
-                        break;
-                }
-            }
-
-//            if (position == 4) {
-//                holder.getNavigation_row_divider().setVisibility(View.GONE);
-//            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

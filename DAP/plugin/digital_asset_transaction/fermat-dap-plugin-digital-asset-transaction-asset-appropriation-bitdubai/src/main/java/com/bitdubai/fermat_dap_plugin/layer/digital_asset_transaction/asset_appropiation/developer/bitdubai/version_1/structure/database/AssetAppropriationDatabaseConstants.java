@@ -31,6 +31,7 @@ public class AssetAppropriationDatabaseConstants {
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME = "aa_transaction_metadata";
 
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME = "record_id";
+    public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_NETWORK_TYPE = "networkType";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME = "da_public_key"; //The path to the file where the Digital Asset is stored.
     public static final String ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME = "user_wallet";

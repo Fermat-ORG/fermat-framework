@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -63,8 +65,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                //byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), null/*imageByte*/));
+                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
             }
 
             return cryptoCustomerExposingDataList;

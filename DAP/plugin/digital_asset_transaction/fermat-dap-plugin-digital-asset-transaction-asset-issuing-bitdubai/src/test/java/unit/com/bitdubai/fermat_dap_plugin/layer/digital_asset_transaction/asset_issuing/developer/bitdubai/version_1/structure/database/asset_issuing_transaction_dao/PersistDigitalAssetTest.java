@@ -49,7 +49,7 @@ public class PersistDigitalAssetTest {
     String digitalAssetPublicKey = "digitalAssetPublicKey";
     String digitalAssetLocalStoragePath = "digitalAssetLocalStoragePath";
     int assetsAmount = 1;
-    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
     String walletPublickey = "walletPublickey";
 
     List<DatabaseTableRecord> records;

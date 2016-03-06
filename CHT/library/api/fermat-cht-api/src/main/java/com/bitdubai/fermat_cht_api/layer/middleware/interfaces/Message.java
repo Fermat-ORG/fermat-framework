@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
-import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -21,6 +20,8 @@ public interface Message {
     void setStatus(MessageStatus status);
     TypeMessage getType();
     void setType(TypeMessage type);
-    Date getMessageDate();
-    void setMessageDate(Date messageDate);
+    Timestamp getMessageDate();
+    void setMessageDate(Timestamp messageDate);
+    UUID getContactId();
+    void setContactId(UUID contactId);
 }

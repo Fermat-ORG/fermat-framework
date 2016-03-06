@@ -14,5 +14,5 @@ public interface CashHoldTransactionManager extends FermatManager {
 
     CashHoldTransaction createCashHoldTransaction(CashHoldTransactionParameters holdParameters) throws CantCreateHoldTransactionException;
     CashTransactionStatus getCashHoldTransactionStatus(UUID transactionId) throws CantGetHoldTransactionException;
-
+    boolean isTransactionRegistered(UUID transactionId);
 }

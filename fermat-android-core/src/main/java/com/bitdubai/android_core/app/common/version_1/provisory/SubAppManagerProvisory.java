@@ -41,4 +41,14 @@ public class SubAppManagerProvisory implements SubAppManager{
     public InstalledSubApp getSubApp(String subAppCode) {
         return installedSubApps.get(subAppCode);
     }
+
+    @Override
+    public InstalledSubApp getInstalledSubApp(String platformIdentifier) {
+        for(InstalledSubApp installedSubApp : installedSubApps.values()){
+            if (installedSubApp.getSubAppPlatformIdentifier().equals(platformIdentifier)){
+                return installedSubApp;
+            }
+        }
+        return null;
+    }
 }

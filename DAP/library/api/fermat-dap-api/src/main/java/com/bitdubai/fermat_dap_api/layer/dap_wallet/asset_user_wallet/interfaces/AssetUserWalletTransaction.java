@@ -1,45 +1,36 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-
-import java.util.UUID;
 
 /**
  * Created by franklin on 05/10/15.
  */
 public interface AssetUserWalletTransaction {
-    public String getAssetPublicKey();
+    String getAssetPublicKey();
 
-    public String getTransactionId();
+    String getActualTransactionHash();
 
-    public String getTransactionHash();
+    String getGenesisTransaction();
 
-    public CryptoAddress getAddressFrom();
+    DAPActor getActorFrom();
 
-    public Actors getActorFromType();
+    DAPActor getActorTo();
 
-    public CryptoAddress getAddressTo();
+    BalanceType getBalanceType();
 
-    public Actors getActorToType();
+    TransactionType getTransactionType();
 
-    public String getActorToPublicKey();
+    long getTimestamp();
 
-    public String getActorFromPublicKey();
+    long getAmount();
 
-    public BalanceType getBalanceType();
+    long getRunningBookBalance();
 
-    public TransactionType getTransactionType();
+    long getRunningAvailableBalance();
 
-    public long getTimestamp();
+    String getMemo();
 
-    public long getAmount();
-
-    public long getRunningBookBalance();
-
-    public long getRunningAvailableBalance();
-
-    public String getMemo();
+    boolean isLocked();
 }

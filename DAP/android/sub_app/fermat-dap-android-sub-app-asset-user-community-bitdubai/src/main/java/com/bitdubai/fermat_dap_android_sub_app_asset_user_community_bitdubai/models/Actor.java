@@ -27,7 +27,10 @@ public class Actor extends AssetUserActorRecord
                 record.getCryptoAddress(),
                 record.getRegistrationDate(),
                 record.getLastConnectionDate(),
+                record.getBlockchainNetworkType(),
+                record.getType(),
                 record.getProfileImage()
+
         );
     }
 }

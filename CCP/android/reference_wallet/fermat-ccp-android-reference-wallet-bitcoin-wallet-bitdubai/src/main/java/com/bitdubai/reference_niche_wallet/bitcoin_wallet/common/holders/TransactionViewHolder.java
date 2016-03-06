@@ -1,17 +1,15 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.content.res.Resources;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -52,22 +50,17 @@ public class TransactionViewHolder extends ChildViewHolder {
 
     public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
 
-        if (cryptoWalletTransaction.getActorFromPublicKey() == null){
-            container_sub_item.getLayoutParams().height=120;
+        if (cryptoWalletTransaction.getActorFromPublicKey() != null){
             txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
-            txt_amount.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-            txt_amount.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            txt_amount.setGravity(Gravity.CENTER);
-            txt_notes.setVisibility(View.GONE);
-            txt_time.setVisibility(View.GONE);
-        }else {
-            txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
-
-            txt_notes.setText((cryptoWalletTransaction.getMemo()==null) ? "No information" : cryptoWalletTransaction.getMemo());
-
+            if(cryptoWalletTransaction.getTransactionState().equals(TransactionState.REVERSED))
+                txt_notes.setText((cryptoWalletTransaction.getMemo()==null) ? "No information" : cryptoWalletTransaction.getMemo() + "(Reversed)");
+                else
+                    txt_notes.setText((cryptoWalletTransaction.getMemo()==null) ? "No information" : cryptoWalletTransaction.getMemo());
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));
-
+        }else{
+            container_sub_item.setVisibility(View.GONE);
         }
     }
+
 }

@@ -7,11 +7,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliveryFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliverySelectGroupsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliverySelectUsersFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailActivityFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.IssuerHistoryActivityFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.IssuerStadisticsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailTransactionsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.SettingsAssetIssuerFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.SettingsAssetIssuerNetworkFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.SettingsAssetIssuerNotificationFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserAppropiateListFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserRedeemedListFragment;
@@ -36,14 +37,23 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                 case DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY:
                     currentFragment = new MyAssetsActivityFragment();
                     break;
-                case DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY:
-                    currentFragment = new IssuerHistoryActivityFragment();
+                case DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY:
+                    currentFragment = new SettingsAssetIssuerFragment();
                     break;
-                case DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY:
-                    currentFragment = new IssuerStadisticsActivityFragment();
+                case DAP_WALLET_ASSET_ISSUER_SETTINGS_MAIN_NETWORK_ACTIVITY:
+                    currentFragment = new SettingsAssetIssuerNetworkFragment();
                     break;
+                case DAP_WALLET_ASSET_ISSUER_SETTINGS_NOTIFICATIONS_ACTIVITY:
+                    currentFragment = new SettingsAssetIssuerNotificationFragment();
+                    break;
+//                case DAP_WALLET_ASSET_ISSUER_HISTORY_ACTIVITY:
+//                    currentFragment = new IssuerHistoryActivityFragment();
+//                    break;
+//                case DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY:
+//                    currentFragment = new IssuerStadisticsActivityFragment();
+//                    break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL:
-                    currentFragment = new AssetDetailActivityFragment();
+                    currentFragment = new AssetDetailTransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
                     currentFragment = new UserDeliveryListFragment();

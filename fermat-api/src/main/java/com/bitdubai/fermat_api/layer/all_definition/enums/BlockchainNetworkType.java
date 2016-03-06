@@ -7,19 +7,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * Represents the different Network Types available in Fermat.
  * <p/>
  * Created by rodrigo on 9/21/15.
- * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 public enum BlockchainNetworkType implements FermatEnum {
-
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    DEFAULT     ("DEF"),
-    PRODUCTION  ("PROD"),
-    REG_TEST    ("RTEST"),
-    TEST        ("TEST"),
+    PRODUCTION  ("mainnet"),
+    REG_TEST    ("rtest"),
+    TEST_NET    ("testnet");
 
-    ;
+    /**
+     * sets the default network that will be used at start up.
+     */
+    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.REG_TEST;
 
     private final String code;
 
@@ -30,10 +30,10 @@ public enum BlockchainNetworkType implements FermatEnum {
     public static BlockchainNetworkType getByCode(String code) {
 
         switch (code) {
-            case "PROD":  return BlockchainNetworkType.PRODUCTION;
-            case "RTEST": return BlockchainNetworkType.REG_TEST;
-            case "TEST":  return BlockchainNetworkType.TEST;
-            default:      return BlockchainNetworkType.DEFAULT;
+            case "mainnet":  return BlockchainNetworkType.PRODUCTION;
+            case "rtest": return BlockchainNetworkType.REG_TEST;
+            case "testnet": return BlockchainNetworkType.TEST_NET;
+            default:      return DEFAULT_BLOCKCHAIN_NETWORK_TYPE;
         }
     }
 
@@ -42,4 +42,11 @@ public enum BlockchainNetworkType implements FermatEnum {
         return this.code;
     }
 
+    /**
+     * Gets the default network type selected for this platform.
+     * @return the default BlockchainNetworkType
+     */
+    public static BlockchainNetworkType getDefaultBlockchainNetworkType(){
+        return DEFAULT_BLOCKCHAIN_NETWORK_TYPE;
+    }
 }

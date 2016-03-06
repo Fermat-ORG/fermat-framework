@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatPluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors.ChatMetadataTransmitMessageReceiverProcessor;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor;
@@ -37,15 +37,39 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
      */
     private JsonParser parser;
 
+    public Map<ChatMessageTransactionType, FermatMessageProcessor> getMessagesProcessorsRegistered() {
+        return messagesProcessorsRegistered;
+    }
+
+    public void setMessagesProcessorsRegistered(Map<ChatMessageTransactionType, FermatMessageProcessor> messagesProcessorsRegistered) {
+        this.messagesProcessorsRegistered = messagesProcessorsRegistered;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
+    }
+
+    public JsonParser getParser() {
+        return parser;
+    }
+
+    public void setParser(JsonParser parser) {
+        this.parser = parser;
+    }
+
     /**
-     * Constructor with parameter
      *
-     * @param
+     * @param chatNetworkServicePluginRoot
      */
-    public NewReceiveMessagesNotificationEventHandler(ChatPluginRoot chatPluginRoot) {
+    public NewReceiveMessagesNotificationEventHandler(ChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
-        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.META_DATA_TRANSMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatPluginRoot));
-        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(chatPluginRoot));
+        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.CHAT_METADATA_TRASMIT, new ChatMetadataTransmitMessageReceiverProcessor(chatNetworkServicePluginRoot));
+        //TODO TO IMPLEMENT MESSAGE PROCESSOR
+        this.messagesProcessorsRegistered.put(ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(chatNetworkServicePluginRoot));
         gson = new Gson();
         parser = new JsonParser();
     }
@@ -61,10 +85,10 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        if (platformEvent.getSource() == ChatPluginRoot.EVENT_SOURCE) {
+        if (platformEvent.getSource() == ChatNetworkServicePluginRoot.EVENT_SOURCE) {
 
-            System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
-            System.out.print("CHAT - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
+           // System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+          //  System.out.println("ChatNetworkServicePluginRoot  - NOTIFICACION EVENTO MENSAJE RECIBIDO!!!!");
 
             /*
              * Get the message receive
@@ -88,7 +112,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
             if (messagesProcessorsRegistered.containsKey(chatMessageTransactionType)) {
                 messagesProcessorsRegistered.get(chatMessageTransactionType).processingMessage(fermatMessageReceive, jsonMsjContent);
             }else{
-                System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
+                System.out.println("ChatNetworkServicePluginRoot - CompleteComponentConnectionRequestNotificationEventHandler - message type no supported = "+chatMessageTransactionType);
             }
 
         }

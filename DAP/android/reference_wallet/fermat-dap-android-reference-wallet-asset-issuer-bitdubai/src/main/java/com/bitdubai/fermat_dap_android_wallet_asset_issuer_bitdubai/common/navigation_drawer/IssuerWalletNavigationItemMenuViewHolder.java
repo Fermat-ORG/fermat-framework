@@ -23,8 +23,8 @@ public class IssuerWalletNavigationItemMenuViewHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
-//        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
-//        navigation_row_divider = (View) itemView.findViewById(R.id.navigation_row_divider);
+        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
+        navigation_row_divider = itemView.findViewById(R.id.navigation_row_divider);
     }
 
     public TextView getLabel() {

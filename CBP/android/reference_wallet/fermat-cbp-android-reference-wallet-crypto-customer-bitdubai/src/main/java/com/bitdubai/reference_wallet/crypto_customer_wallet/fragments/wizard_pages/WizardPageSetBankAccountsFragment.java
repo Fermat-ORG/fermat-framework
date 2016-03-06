@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -84,6 +85,17 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBody(R.string.cbw_wizard_accounts_dialog_body)
+                .setSubTitle(R.string.cbw_wizard_accounts_dialog_sub_title)
+                .setTextFooter(R.string.cbw_wizard_accounts_dialog_footer)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                .setIconRes(R.drawable.cbp_crypto_customer)
+                .build();
+
+        presentationDialog.show();
 
         View layout = inflater.inflate(R.layout.ccw_wizard_step_set_bank_accounts, container, false);
 

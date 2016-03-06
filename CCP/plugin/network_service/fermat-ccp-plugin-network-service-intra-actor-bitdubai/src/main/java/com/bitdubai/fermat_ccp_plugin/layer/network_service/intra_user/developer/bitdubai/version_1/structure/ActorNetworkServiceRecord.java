@@ -33,9 +33,11 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private boolean flagReadead;
     private int sentCount;
 
+    private UUID responseToNotificationId;
 
 
-    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount) {
+
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount,UUID responseToNotificationId) {
         this.id = id;
         this.actorSenderAlias = actorSenderAlias;
         this.actorSenderProfileImage = actorSenderProfileImage;
@@ -49,13 +51,14 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead = flagReadead;
         this.sentCount = sendCount;
         this.actorSenderPhrase = actorSenderPhrase;
+        this.responseToNotificationId = responseToNotificationId;
     }
 
 
     private ActorNetworkServiceRecord(JsonObject jsonObject, Gson gson) {
 
         this.id                        = UUID.fromString(jsonObject.get("id").getAsString());
-        this.actorSenderAlias          = jsonObject.get("actorSenderAlias").getAsString();
+        this.actorSenderAlias          = (jsonObject.get("actorSenderAlias")!=null)?jsonObject.get("actorSenderAlias").getAsString():null;
         this.actorSenderProfileImage   = Base64.decode(jsonObject.get("actorSenderProfileImage").getAsString(), Base64.DEFAULT);
         this.notificationDescriptor    = gson.fromJson(jsonObject.get("notificationDescriptor").getAsString(), NotificationDescriptor.class);
         this.actorDestinationType      = gson.fromJson(jsonObject.get("actorDestinationType").getAsString(), Actors.class);
@@ -67,8 +70,11 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead               = jsonObject.get("flagReadead").getAsBoolean();
         this.sentCount                 = jsonObject.get("sentCount").getAsInt();
         this.actorSenderPhrase         = jsonObject.get("actorSenderPhrase").getAsString();
+        if(jsonObject.get("responseToNotificationId")!=null)this.responseToNotificationId  = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
     }
+
+
 
     @Override
     public String getActorSenderAlias() {
@@ -82,7 +88,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
     @Override
     public byte[] getActorSenderProfileImage() {
-        return (actorSenderProfileImage!=null) ? (byte[] )this.actorSenderProfileImage.clone() : null;
+        return (actorSenderProfileImage!=null) ? this.actorSenderProfileImage.clone() : null;
     }
 
     @Override
@@ -164,6 +170,14 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.actorProtocolState = actorProtocolState;
     }
 
+    public UUID getResponseToNotificationId() {
+        return responseToNotificationId;
+    }
+
+    public void setResponseToNotificationId(UUID responseToNotificationId) {
+        this.responseToNotificationId = responseToNotificationId;
+    }
+
     public String toJson() {
 
         Gson gson = new Gson();
@@ -182,6 +196,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         jsonObject.addProperty("actorProtocolState",        actorProtocolState.toString());
         jsonObject.addProperty("flagReadead",               flagReadead);
         jsonObject.addProperty("sentCount",                 sentCount);
+        if(responseToNotificationId!=null)jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
         return gson.toJson(jsonObject);
 
     }

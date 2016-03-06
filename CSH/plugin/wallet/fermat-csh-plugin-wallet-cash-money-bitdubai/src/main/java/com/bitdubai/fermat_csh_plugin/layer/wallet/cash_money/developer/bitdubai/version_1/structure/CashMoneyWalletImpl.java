@@ -102,6 +102,11 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
         return dao.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
     }
 
+    @Override
+    public CashMoneyWalletTransaction getTransaction(UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        return dao.getTransaction(transactionId);
+    }
+
 
     @Override
     public BigDecimal getHeldFunds(String actorPublicKey) throws CantGetHeldFundsException {
@@ -113,7 +118,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     public void hold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterHoldException, CashMoneyWalletInsufficientFundsException {
 
         try {
-            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.HOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000));
+            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.HOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000), false);
             dao.debit(this.walletPublicKey, BalanceType.AVAILABLE, amount);
             dao.registerTransaction(transaction);
         }catch (CantRegisterCashMoneyWalletTransactionException | CantRegisterDebitException e) {
@@ -124,7 +129,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     @Override
     public void unhold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterUnholdException {
         try {
-            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.UNHOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000));
+            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.UNHOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000), false);
             dao.credit(this.walletPublicKey, BalanceType.AVAILABLE, amount);
             dao.registerTransaction(transaction);
         }catch (CantRegisterCashMoneyWalletTransactionException | CantRegisterCreditException e) {

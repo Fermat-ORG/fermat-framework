@@ -106,6 +106,7 @@ public class AssetDistributionDatabaseFactory implements DealsWithPluginDatabase
 
             assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 225500, Boolean.TRUE);
             assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
             assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
             assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
             assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);

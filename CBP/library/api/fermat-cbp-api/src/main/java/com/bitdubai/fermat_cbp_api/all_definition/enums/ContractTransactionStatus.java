@@ -49,6 +49,8 @@ public enum ContractTransactionStatus implements FermatEnum {
     PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION("PAFPN"),
     PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION("PAOPC"),
     PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION("PAOPN"),
+    PENDING_CREDIT_BANK_WALLET("PCBW"),
+    PENDING_CREDIT_CASH_WALLET("PCCW"),
     PENDING_OFFLINE_PAYMENT_CONFIRMATION("POFC"),
     PENDING_OFFLINE_DE_STOCK("PFDS"),
     PENDING_ONLINE_DE_STOCK("PODS"),
@@ -87,7 +89,7 @@ public enum ContractTransactionStatus implements FermatEnum {
 
     @Override
     public String toString() {
-        return "OpenContractStatus{" +
+        return "ContractTransactionStatus{" +
                 "code='" + code + '\'' +
                 '}';
     }

@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -22,38 +22,62 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private BalanceType balanceType;
     private TransactionType transactionType;
     private BigDecimal amount;
-    private CurrencyType currencyType;
-    private FermatEnum merchandise;
+    private MoneyType moneyType;
+    private Currency merchandise;
     private BigDecimal runningBookBalance;
     private BigDecimal runningAvailableBalance;
     private long timeStamp;
     private String memo;
     private OriginTransaction originTransaction;
     private BigDecimal priceReference;
+    private String originTransactionId;
+    private boolean seen;
 
+    /**
+     * Constructor for CryptoBrokerStockTransactionRecordImpl
+     *
+     * @param transactionId
+     * @param walletKeyPair
+     * @param ownerPublicKey
+     * @param balanceType
+     * @param transactionType
+     * @param moneyType
+     * @param merchandise
+     * @param amount
+     * @param runningBookBalance
+     * @param runningAvailableBalance
+     * @param timeStamp
+     * @param memo
+     * @param originTransaction
+     * @param priceReference
+     * @param originTransactionId
+     * @param seen
+     */
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
             KeyPair walletKeyPair,
             String ownerPublicKey,
             BalanceType balanceType,
             TransactionType transactionType,
-            CurrencyType currencyType,
-            FermatEnum merchandise,
+            MoneyType moneyType,
+            Currency merchandise,
             BigDecimal amount,
             BigDecimal runningBookBalance,
             BigDecimal runningAvailableBalance,
             long timeStamp,
             String memo,
             OriginTransaction originTransaction,
-            BigDecimal priceReference
-    ){
+            BigDecimal priceReference,
+            String originTransactionId,
+            boolean seen
+    ) {
         this.transactionId = transactionId;
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
-        this.currencyType = currencyType;
+        this.moneyType = moneyType;
         this.merchandise = merchandise;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
@@ -61,52 +85,136 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public UUID getTransactionId() { return this.transactionId; }
+    public UUID getTransactionId() {
+        return this.transactionId;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BalanceType getBalanceType() { return this.balanceType; }
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public TransactionType getTransactionType() { return this.transactionType; }
+    public TransactionType getTransactionType() {
+        return this.transactionType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
+    public String getWalletPublicKey() {
+        return this.walletKeyPair.getPublicKey();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getBrokerPublicKey() { return this.ownerPublicKey; }
+    public String getBrokerPublicKey() {
+        return this.ownerPublicKey;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public CurrencyType getCurrencyType() { return this.currencyType; }
+    public MoneyType getMoneyType() {
+        return this.moneyType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public FermatEnum getMerchandise() { return this.merchandise; }
+    public Currency getMerchandise() {
+        return this.merchandise;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getAmount() { return this.amount; }
+    public BigDecimal getAmount() {
+        return this.amount;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getRunningBookBalance() { return this.runningBookBalance; }
+    public BigDecimal getRunningBookBalance() {
+        return this.runningBookBalance;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getRunningAvailableBalance() { return this.runningAvailableBalance; }
+    public BigDecimal getRunningAvailableBalance() {
+        return this.runningAvailableBalance;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public long getTimestamp() { return this.timeStamp; }
+    public long getTimestamp() {
+        return this.timeStamp;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getMemo() { return this.memo; }
+    public String getMemo() {
+        return this.memo;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BigDecimal getPriceReference() {
         return this.priceReference;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OriginTransaction getOriginTransaction() {
         return this.originTransaction;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 
 }

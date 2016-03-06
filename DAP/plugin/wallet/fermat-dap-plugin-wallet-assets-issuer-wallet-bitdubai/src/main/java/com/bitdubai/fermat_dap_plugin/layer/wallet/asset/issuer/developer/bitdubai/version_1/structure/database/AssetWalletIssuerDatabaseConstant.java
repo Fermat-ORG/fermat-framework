@@ -44,6 +44,8 @@ public class AssetWalletIssuerDatabaseConstant {
     // ASSET STATISTIC TABLE.
 
     public static final String ASSET_STATISTIC_TABLE_NAME = "asset_statistics";
+    public static final String ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String ASSET_STATISTIC_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
     public static final String ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME = "asset_public_key";
     public static final String ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME = "user_public_key";
     public static final String ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "redeem_point_public_key";
@@ -52,5 +54,15 @@ public class AssetWalletIssuerDatabaseConstant {
     public static final String ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME = "asset_current_status";
     public static final String ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME = "asset_name";
 
+    // ASSET MOVEMENTS TABLE
+    public static final String ASSET_MOVEMENTS_TABLE_NAME = "asset_movements";
+    public static final String ASSET_MOVEMENTS_ENTRY_ID = "uniqueId";
+    public static final String ASSET_MOVEMENTS_ASSET_PUBLIC_KEY = "asset_public_key";
+    public static final String ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY = "actorFromPublicKey";
+    public static final String ASSET_MOVEMENTS_ACTOR_FROM_TYPE = "actorFromType";
+    public static final String ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY = "actorToPublicKey";
+    public static final String ASSET_MOVEMENTS_ACTOR_TO_TYPE = "actorToType";
+    public static final String ASSET_MOVEMENTS_TIMESTAMP = "timestamp";
+    public static final String ASSET_MOVEMENTS_TYPE = "movement_type";
 
 }

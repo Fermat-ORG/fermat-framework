@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_expand_receive_form"
-        android:text="receive"/>
+        android:text="@string/receive_text"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +22,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp">
+
             <ImageView
                 android:id="@+id/frame_tx_record"
                 android:layout_width="match_parent"
@@ -29,6 +30,7 @@
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:background="@drawable/object_frame_3x1_filled"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -41,12 +43,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-
                     <AutoCompleteTextView
                         android:id="@+id/contact_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="name"
+                        android:hint="@string/name_text"
                         android:textColor="#72af9c"
                         android:textColorHint="#BDBDBD"
                         android:textSize="22sp"
@@ -58,11 +59,7 @@
                         android:ems="10"
                         android:layout_weight="0.2"
                         android:background="@null"
-                        android:gravity="center"
-
-                        />
-
-
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -73,8 +70,8 @@
                     android:paddingTop="3dip"
                     android:paddingRight="7dip"
                     android:id="@+id/linear_send"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
+
                     <Button
                         android:id="@+id/btn_address"
                         android:layout_width="match_parent"
@@ -83,10 +80,8 @@
                         android:src="@drawable/ic_action_send_now_grey"
                         android:padding="3dp"
                         android:clickable="true"
-                        android:text="Give me an Address!"
-                        android:layout_weight="0.5"
-
-                        />
+                        android:text="@string/give_me_an_address_address_text"
+                        android:layout_weight="0.5" />
 
                     <Button
                         android:id="@+id/btn_share"
@@ -96,15 +91,14 @@
                         android:src="@drawable/ic_action_send_now_grey"
                         android:padding="3dp"
                         android:clickable="true"
-                        android:text="Share"
-                        android:layout_weight="0.5"
-
-                        />
+                        android:text="@string/action_share"
+                        android:layout_weight="0.5" />
                 </LinearLayout>
 
-
             </LinearLayout>
+
         </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -49,3 +49,6 @@ project(':fermat-pip-android-sub-app-developer-bitdubai').projectDir = new File(
 
 include ':fermat-pip-android-sub-app-sub-app-manager-bitdubai'
 project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai')
+
+include ':fermat-pip-plugin-android-core-module-developer-bitdubai'
+project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')

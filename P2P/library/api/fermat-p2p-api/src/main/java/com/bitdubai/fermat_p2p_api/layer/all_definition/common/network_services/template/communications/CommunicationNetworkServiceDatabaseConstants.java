@@ -15,6 +15,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class CommunicationNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "template_network_service_data_base";

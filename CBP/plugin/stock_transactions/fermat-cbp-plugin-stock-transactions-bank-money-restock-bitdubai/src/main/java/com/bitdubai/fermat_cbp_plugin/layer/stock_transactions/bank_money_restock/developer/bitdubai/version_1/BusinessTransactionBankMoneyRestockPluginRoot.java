@@ -92,14 +92,16 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
             database.closeDatabase();
         }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e)
+        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e)
         {
             try
             {
+                System.out.println("******* Init Bank Money Restock ****** CATCH");
+                startMonitorAgent();
                 BusinessTransactionBankMoneyRestockDatabaseFactory businessTransactionBankMoneyRestockDatabaseFactory = new BusinessTransactionBankMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 businessTransactionBankMoneyRestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
             }
-            catch(CantCreateDatabaseException cantCreateDatabaseException)
+            catch(CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException)
             {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
@@ -140,7 +142,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             businessTransactionBankMoneyRestockDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = businessTransactionBankMoneyRestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
@@ -163,7 +165,13 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             );
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
-        }else businessTransactionBankMoneyRestockMonitorAgent.start();
+        serviceStatus = ServiceStatus.STARTED;
+
+        }
+        else {
+            businessTransactionBankMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

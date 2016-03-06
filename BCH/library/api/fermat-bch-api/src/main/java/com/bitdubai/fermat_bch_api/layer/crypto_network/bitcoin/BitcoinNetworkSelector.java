@@ -17,7 +17,7 @@ public class BitcoinNetworkSelector {
         switch (blockchainNetworkType){
             case PRODUCTION:
                 return MainNetParams.get();
-            case TEST:
+            case TEST_NET:
                 return TestNet3Params.get();
             case REG_TEST:
                 return RegTestParams.get();
@@ -36,7 +36,7 @@ public class BitcoinNetworkSelector {
          * if this is the default network type, I will return it.
          */
         if (BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS == networkParameters){
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
 
         /**
@@ -48,7 +48,7 @@ public class BitcoinNetworkSelector {
         } else if(networkParameters == MainNetParams.get()){
             blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
         } else if(networkParameters == TestNet3Params.get()){
-            blockchainNetworkType = BlockchainNetworkType.TEST;
+            blockchainNetworkType = BlockchainNetworkType.TEST_NET;
         }
 
         return blockchainNetworkType;

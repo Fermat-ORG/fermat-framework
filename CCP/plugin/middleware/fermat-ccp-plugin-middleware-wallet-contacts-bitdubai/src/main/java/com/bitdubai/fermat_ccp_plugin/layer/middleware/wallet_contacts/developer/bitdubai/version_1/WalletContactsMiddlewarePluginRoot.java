@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -79,6 +80,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
     private CryptoAddressesManager cryptoAddressesManager;
 
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
     public WalletContactsMiddlewarePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -97,7 +101,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
     public WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException {
 
         try {
-            WalletContactsMiddlewareRegistry walletContactsRegistry = new WalletContactsMiddlewareRegistry(null, errorManager, logManager, pluginDatabaseSystem, pluginId);
+            WalletContactsMiddlewareRegistry walletContactsRegistry = new WalletContactsMiddlewareRegistry(null, errorManager, logManager, pluginDatabaseSystem, pluginId, broadcaster);
 
             walletContactsRegistry.initialize();
 
@@ -125,7 +129,8 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
                 errorManager          ,
                 logManager            ,
                 pluginDatabaseSystem  ,
-                pluginId
+                pluginId,
+                broadcaster
         );
 
         try {
@@ -162,6 +167,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
 
                 if (request.getAction().equals(RequestAction.DENY))
                     walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
+//
+//                if(request.getAction().equals(RequestAction.NONE))
+//                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
 
             }
 

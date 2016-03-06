@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -33,10 +33,10 @@ public class CryptoBrokerWalletSettingMock implements CryptoBrokerWalletSetting 
     @Override
     public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings() throws CantGetCryptoBrokerWalletSettingException {
         List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList=new ArrayList<>();
-        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CashOnHandWalletPublicKey", CurrencyType.CASH_ON_HAND_MONEY));
-        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CryptoWalletPublicKey", CurrencyType.CRYPTO_MONEY));
-        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("BankWalletPublicKey", CurrencyType.BANK_MONEY));
-        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CashWalletPublicKey", CurrencyType.CASH_DELIVERY_MONEY));
+        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CashOnHandWalletPublicKey", MoneyType.CASH_ON_HAND));
+        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CryptoWalletPublicKey", MoneyType.CRYPTO));
+        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("BankWalletPublicKey", MoneyType.BANK));
+        cryptoBrokerWalletAssociatedSettingList.add(new CryptoBrokerWalletAssociatedSettingMock("CashWalletPublicKey", MoneyType.CASH_DELIVERY));
         return cryptoBrokerWalletAssociatedSettingList;
     }
 

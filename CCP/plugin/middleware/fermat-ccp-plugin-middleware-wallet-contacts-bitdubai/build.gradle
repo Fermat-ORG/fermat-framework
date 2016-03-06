@@ -48,6 +48,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+    compile 'com.ibm.icu:icu4j:53.1'
 }
 
 test {

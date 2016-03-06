@@ -11,15 +11,16 @@ public class UserRedeemed {
     private String userName;
     private Timestamp redeemedDate;
     private String redeemedStatus;
+    private String redeemPoint;
 
     public UserRedeemed() {
-
     }
 
-    public UserRedeemed(String userName, Timestamp redeemedDate, String redeemedStatus) {
+    public UserRedeemed(String userName, Timestamp redeemedDate, String redeemedStatus, String redeemPoint) {
         this.userName = userName;
         this.redeemedDate = redeemedDate;
         this.redeemedStatus = redeemedStatus;
+        this.redeemPoint = redeemPoint;
     }
 
     public String getUserName() {
@@ -49,5 +50,13 @@ public class UserRedeemed {
 
     public void setRedeemedStatus(String redeemedStatus) {
         this.redeemedStatus = redeemedStatus;
+    }
+
+    public String getRedeemPoint() {
+        return redeemPoint;
+    }
+
+    public void setRedeemPoint(String redeemPoint) {
+        this.redeemPoint = redeemPoint;
     }
 }

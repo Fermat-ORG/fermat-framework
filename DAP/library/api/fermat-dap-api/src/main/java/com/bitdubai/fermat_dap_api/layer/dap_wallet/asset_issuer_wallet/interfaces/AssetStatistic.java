@@ -5,6 +5,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 01/12/15.
@@ -12,6 +14,22 @@ import java.util.Date;
  * @since version 1.0
  */
 public interface AssetStatistic {
+    /**
+     * The unique ID that identifies this statistic.
+     *
+     * @return an {@link UUID} instance.
+     */
+    UUID transactionId();
+
+    /**
+     * Even when this is not a value that is going to be shown to the user, this is needed
+     * to retrieve the DigitalAssetMetadata from the wallet.
+     *
+     * @return {@link String} instance representing the transaction hash of the genesis tx
+     * associated with the DigitalAssetMetadata.
+     */
+    String genesisTransaction();
+
     /**
      * This method returns the public key associated with the asset for this statistic, even
      * when this public key is not very useful for the statistic we'll have it in this object
@@ -68,4 +86,12 @@ public interface AssetStatistic {
      * @return {@link String} with the asset's name.
      */
     String getAssetName();
+
+    /**
+     * This method retrieves the list of the movements made for this asset, the actor whom send it
+     * and the actor who receives it. And probably most information will be added soon.
+     *
+     * @return {@link List<AssetMovement>} instance.
+     */
+    List<AssetMovement> movementHistory();
 }

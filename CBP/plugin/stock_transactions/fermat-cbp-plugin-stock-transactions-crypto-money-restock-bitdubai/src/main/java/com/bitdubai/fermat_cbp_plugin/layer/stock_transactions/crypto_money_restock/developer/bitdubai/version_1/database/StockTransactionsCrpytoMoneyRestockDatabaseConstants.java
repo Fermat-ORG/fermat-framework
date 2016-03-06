@@ -30,6 +30,8 @@ public class StockTransactionsCrpytoMoneyRestockDatabaseConstants {
     static final String CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME    = "transaction_status";
     static final String CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME    = "origin_transaction";
     static final String CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME       = "price_reference";
+    static final String CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME = "origin_transaction_id";
+    static final String CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME      = "block_chain_network_type";
 
     static final String CRYPTO_MONEY_RESTOCK_FIRST_KEY_COLUMN                    = "transaction_id";
 }

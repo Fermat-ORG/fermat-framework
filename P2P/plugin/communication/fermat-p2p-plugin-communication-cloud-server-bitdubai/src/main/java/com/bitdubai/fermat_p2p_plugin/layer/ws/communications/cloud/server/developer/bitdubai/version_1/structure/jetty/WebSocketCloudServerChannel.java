@@ -6,10 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
@@ -26,15 +23,10 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.websocket.CloseReason;
-import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -66,10 +58,16 @@ public class WebSocketCloudServerChannel {
     private ClientConnection activeClientConnection;
 
     /**
+     * Represent the messageComplete
+     */
+    private String messageComplete;
+
+    /**
      * Constructor
      */
     public WebSocketCloudServerChannel(){
         super();
+        messageComplete = "";
     }
 
     /**
@@ -151,80 +149,78 @@ public class WebSocketCloudServerChannel {
     }
 
     @OnMessage
-    public void onWebSocketText(String fermatPacketEncode)
-    {
-        LOG.info(" --------------------------------------------------------------------- ");
-        LOG.info("Starting method onWebSocketText");
+    public void onWebSocketText(String fermatPacketEncode, boolean lastPacket, Session session) {
 
         /*
-         * Get the server identity for this client connection
+         *  if fermatPacketEncode is the las Packet then
+         *  the messageComplete concat the string and handle packet correctly
          */
-        ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
+        if(lastPacket) {
 
-        /*
-         * Decode the fermatPacketEncode into a fermatPacket
-         */
-        FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
+            /*
+             * We use messageComplete to handle the packets that are sent in parts
+             * we set the messageComplete to empty because
+             * if we do with null the messageComplete after will concat like a word and show exception in its handle
+             */
+            messageComplete = messageComplete + fermatPacketEncode;
+
+            LOG.info(" --------------------------------------------------------------------- ");
+            LOG.info("Starting method onWebSocketText");
+
+            /*
+             * Get the server identity for this client connection
+             */
+            ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
+
+            /*
+             * Decode the fermatPacketEncode into a fermatPacket
+             */
+            FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(messageComplete, serverIdentity.getPrivateKey());
 
 
-        LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
+            LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
 
-        //verify is packet supported
-        if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())){
+            //verify is packet supported
+            if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())) {
 
 
             /*
              * Call the processors for this packet
              */
-            for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
+                for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
                  */
-                fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                    fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                }
+
+
+            } else {
+                LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
             }
 
+            /*
+             * we set the messageComplete to empty because if we do with null the messageComplete after will concat like a word
+             * and show exception in its handle
+             */
+            messageComplete = "";
 
-        } else {
-            LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+        }else{
+
+            /*
+             * the messageComplete concat the string
+             */
+            messageComplete = messageComplete + fermatPacketEncode;
+
         }
-    }
 
-    @OnMessage
-    public void onPingMessage(ByteBuffer buffer) {
-
-        try {
-
-            String pingString = new String(buffer.array());
-            LOG.debug("PingMessage = " + pingString);
-
-            if(pingString.equals("PING")){
-
-                String pongString = "PONG";
-                ByteBuffer pongData = ByteBuffer.allocate(pongString.getBytes().length);
-                pongData.put(pongString.getBytes()).flip();
-                activeClientConnection.getSession().getBasicRemote().sendPong(pongData);
-            }
-
-        } catch (IOException e) {
-            LOG.error("onPingMessage error = " + e.getMessage());
-        }
     }
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        try {
-
-            LOG.info("PongMessage = " + message);
-            String pingString = "PING";
-            ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
-            pingData.put(pingString.getBytes()).flip();
-            activeClientConnection.getSession().getBasicRemote().sendPing(pingData);
-
-        } catch (IOException e) {
-            LOG.error("onPongMessage error = " + e.getMessage());
-        }
+        LOG.debug("Pong message receive from server = " + message);
     }
 
     @OnClose

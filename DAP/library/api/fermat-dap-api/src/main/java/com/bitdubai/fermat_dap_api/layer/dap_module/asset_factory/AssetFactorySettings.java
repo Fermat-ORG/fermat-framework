@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
@@ -7,13 +8,38 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/20/16.
  */
 public class AssetFactorySettings implements WalletSettings {
+
     private boolean isPresentationHelpEnabled;
+    private boolean isContactsHelpEnabled;
+    private List<BlockchainNetworkType> blockchainNetwork;
+    private int blockchainNetworkPosition;
+
+    public int getBlockchainNetworkPosition() {
+        return blockchainNetworkPosition;
+    }
+
+    public void setBlockchainNetworkPosition(int blockchainNetworkPosition) {
+        this.blockchainNetworkPosition = blockchainNetworkPosition;
+    }
+
+    public List<BlockchainNetworkType> getBlockchainNetwork() {
+        return blockchainNetwork;
+    }
+
+    public void setBlockchainNetwork(List<BlockchainNetworkType> blockchainNetwork) {
+        this.blockchainNetwork = blockchainNetwork;
+    }
+
+    public boolean isContactsHelpEnabled() {
+        return isContactsHelpEnabled;
+    }
 
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
@@ -38,6 +64,11 @@ public class AssetFactorySettings implements WalletSettings {
 
     }
 
+    public void setIsContactsHelpEnabled(boolean isContactsHelpEnabled) {
+        this.isContactsHelpEnabled = isContactsHelpEnabled;
+    }
+
+    @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
     }

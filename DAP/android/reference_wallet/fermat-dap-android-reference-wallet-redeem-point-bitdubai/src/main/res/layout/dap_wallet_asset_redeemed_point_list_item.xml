@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="40dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/redeemedListUserName"
@@ -11,10 +11,8 @@
         android:textSize="16sp"
         android:fontFamily="regular"
         android:textColor="#2A3F52"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:layout_alignBottom="@+id/redeemedListRedeemedDate"
-        android:layout_alignParentLeft="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/redeemedListRedeemedDate"
@@ -24,11 +22,9 @@
         android:textSize="14sp"
         android:fontFamily="normal"
         android:textColor="#9E9E9E"
-        android:paddingLeft="10dp"
-        android:layout_marginRight="38dp"
-        android:paddingTop="10dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"/>
 
     <View
         android:layout_width="fill_parent"

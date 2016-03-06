@@ -2,13 +2,13 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
-import com.bitdubai.fermat_cbp_api.all_definition.events.AbstractCBPFermatEvent;
+import com.bitdubai.fermat_cbp_api.all_definition.events.GenericCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/12/15.
  */
-public class CustomerAckMerchandiseConfirmed extends AbstractCBPFermatEvent {
+public class CustomerAckMerchandiseConfirmed extends GenericCBPFermatEvent {
 
     PlatformComponentType destinationPlatformComponentType;
     String contractHash;

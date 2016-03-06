@@ -7,4 +7,11 @@
     <string name="create">CREATE</string>
     <string name="broker_name">Broker name</string>
     <string name="identity_img">identity_image</string>
+
+    <string name="help">Help</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_issuer_identity_welcome_subTitle">Welcome to the Asset Issuer Identity.</string>
+    <string name="dap_issuer_identity_welcome_body">From here you will be able to create an Asset Issuer type identity.\n\nThis Identity, will identify you in the system as an asset issuer, and give you access to all tasks and applications you need.\n\nOther Redeem Points will be able to request connection to you by finding you with the information you provide here.</string>
+    <!--Dialog Help - End-->
 </resources>

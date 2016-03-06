@@ -1,18 +1,14 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,24 +17,29 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -56,62 +57,89 @@ import static android.widget.Toast.makeText;
 public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
-
+    //Constants
     public static final String ACTOR_SELECTED = "actor_selected";
-
     private static final int MAX = 20;
-    /**
-     * MANAGERS
-     */
-    private static CryptoBrokerCommunitySubAppModuleManager moduleManager;
-    private static ErrorManager errorManager;
-
     protected final String TAG = "Recycler Base";
+
+    //Managers
+    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<CryptoBrokerCommunitySettings> settingsManager;
+
+    //Data
+    private CryptoBrokerCommunitySettings appSettings;
     private int offset = 0;
-
     private int mNotificationsCount = 0;
-    private SearchView mSearchView;
-
-    private AppListAdapter adapter;
-    private boolean isStartList = false;
-
-    // recycler
-    private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
-
-    private SwipeRefreshLayout swipeRefresh;
-
-    // flags
-    private boolean isRefreshing = false;
-    private View rootView;
-
-    private LinearLayout emptyView;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
-    /**
-     * Create a new instance of this fragment
-     *
-     * @return InstalledFragment instance object
-     */
+    //Flags
+    private boolean isRefreshing = false;
+    private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
+
+    //UI
+    private View rootView;
+    private LinearLayout emptyView;
+    private RecyclerView recyclerView;
+    private GridLayoutManager layoutManager;
+    private AppListAdapter adapter;
+    private SwipeRefreshLayout swipeRefresh;
+
+
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
     }
 
+
+
+    /**
+     * Fragment interface implementation.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             setHasOptionsMenu(true);
-            // setting up  module
+
+            //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = moduleManager.getSettingsManager();
+            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(),MAX, offset).size();
 
+            //Obtain Settings or create new Settings if first time opening subApp
+            appSettings = null;
+            try {
+                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            }catch (Exception e){ appSettings = null; }
 
-            // TODO: display unread notifications.
-            new FetchCountTask().execute();
+            if(appSettings == null){
+                appSettings = new CryptoBrokerCommunitySettings();
+                appSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            //Check if a default identity is configured
+            try{
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
+                launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
+            }
+
+            //Get notification requests count
+            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
+            //mNotificationsCount = 4;
+            //new FetchCountTask().execute();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -119,59 +147,80 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         }
     }
 
-    /**
-     * Fragment Class implementation.
-     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            setUpScreen(inflater);
+
+            //Set up RecyclerView
+            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
+            adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
+            recyclerView.setLayoutManager(layoutManager);
 
+            //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            onRefresh();
 
+
+            if(launchActorCreationDialog) {
+                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setIconRes(R.drawable.crypto_broker)
+                        .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                        .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                        .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
+                        .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
+                        .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setImageRight(R.drawable.ic_profile_male)
+                        .build();
+                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
+                presentationDialog.show();
+            }
+            else if(launchListIdentitiesDialog)
+            {
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                listIdentitiesDialog.show();
+                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
+                listIdentitiesDialog.show();
+            }
+            else
+            {
+                invalidate();
+                onRefresh();
+            }
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-
         return rootView;
     }
 
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-        }
-    }
-
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-    }
 
     @Override
     public void onRefresh() {
@@ -226,57 +275,29 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         }
     }
 
-    /*
-     * Updates the count of notifications in the ActionBar.
-     */
-    private void updateNotificationsBadge(int count) {
-        mNotificationsCount = count;
 
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-
-            int id = item.getItemId();
-
-            if(id == Constants.SELECT_IDENTITY){
-                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-                progressDialog.setTitle("Select an Identity");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                return true;
-            }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    Toast.LENGTH_SHORT).show();
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-
-            dataSet.addAll(cryptoBrokerCommunitySearch.getResult());
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            dataSet.addAll(result);
             offset = dataSet.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -284,38 +305,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         return dataSet;
     }
 
-
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
-    }
-
-
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            return mNotificationsCount;
-        }
-
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {}
 
 }
 

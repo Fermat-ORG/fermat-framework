@@ -134,7 +134,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
             for (String redeemPointPublicKey : redeemers){
                 try {
                     List<CryptoAddress> redeemPointCryptoAddresses;
-                    redeemPointCryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPointPublicKey);
+                    redeemPointCryptoAddresses = assetVaultManager.     getActiveRedeemPointAddresses(redeemPointPublicKey);
 
                     /**
                      * if I didn't get any keys, then I'll mark keysGenerated as false.

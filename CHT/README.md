@@ -97,7 +97,7 @@ Se utilizarán, al menos, los siguientes servicios:<br>
 #### Creación del Chat
 Este servicio se encargará de establecer el inicio de una conversacion entre 2 actores.<br>
 El servicio local de comunicación (NS Local) envía al NS remoto los parámetros necesarios para entablar el chat, conectando entre sí al actor local con el remoto. A continuación se establecen los mismos:<br>
-(idChat, idObjeto, localActorType, localActorPubKey, remoteActorType, remoteActorPubKey, chatName, chatStatus, date, idMensaje, message) <br>
+(idChat, idObjeto, localActorType, localActorPublicKey, remoteActorType, remoteActorPublicKey, chatName, chatStatus, date, idMensaje, message) <br>
 Este servicio espera la respuesta del actor remoto de que ha recibido el mensaje, si la misma no llega, el actor local intenta de nuevo enviar el mensaje hasta recibir respuesta del remoto. <br>
 El estatus del mensaje en este proceso queda como **Created**. <br>
 

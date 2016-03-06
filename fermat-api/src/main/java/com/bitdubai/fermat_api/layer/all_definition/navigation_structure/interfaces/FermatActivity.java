@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -18,42 +16,44 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public interface FermatActivity extends Serializable{
-    public void setColor(String color);
+    void setColor(String color);
 
-    public String getColor();
+    String getColor();
 
-    public Activities getType();
+    Activities getType();
 
-    public String getActivityType();
+    String getActivityType();
 
-    public Map<String, Fragment> getFragments();
+    Map<String, Fragment> getFragments();
 
-    public Fragment getLastFragment();
+    Fragment getLastFragment();
 
-    public Fragment getFragment(String fragment);
+    Fragment getFragment(String fragment);
 
-    public TitleBar getTitleBar() ;
+    TitleBar getTitleBar() ;
 
-    public SideMenu getSideMenu() ;
+    SideMenu getSideMenu() ;
 
-    public MainMenu getMainMenu() ;
+    MainMenu getMainMenu() ;
 
-    public TabStrip getTabStrip() ;
+    TabStrip getTabStrip() ;
 
-    public StatusBar getStatusBar();
+    StatusBar getStatusBar();
 
-    public Activities getBackActivity();
+    Activities getBackActivity();
 
-    public FermatHeader getHeader();
+    FermatHeader getHeader();
 
-    public FermatFooter getFooter();
+    FermatFooter getFooter();
 
-    public String getBackAppPublicKey();
+    String getBackAppPublicKey();
 
-    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException;
+    void changeBackActivity(String appPublicKeyback, String activityCode) throws InvalidParameterException;
 
-    public FermatWizard getWizard(String wizardCode);
+    FermatWizard getWizard(String wizardCode);
 
     String getBackgroundColor();
+
+    FermatBottomNavigation getBottomNavigationMenu();
 
 }

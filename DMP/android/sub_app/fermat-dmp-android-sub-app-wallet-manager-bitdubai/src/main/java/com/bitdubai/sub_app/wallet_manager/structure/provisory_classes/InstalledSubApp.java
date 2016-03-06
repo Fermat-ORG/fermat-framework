@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.wallet_manager.structure.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -25,6 +27,8 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private Version version;
     private int iconResource;
     private int position;
+    //TODO: completar
+    private AppsStatus appStatus;
 
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
@@ -150,6 +154,16 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return appStatus;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.SUB_APP;
     }
 
     @Override

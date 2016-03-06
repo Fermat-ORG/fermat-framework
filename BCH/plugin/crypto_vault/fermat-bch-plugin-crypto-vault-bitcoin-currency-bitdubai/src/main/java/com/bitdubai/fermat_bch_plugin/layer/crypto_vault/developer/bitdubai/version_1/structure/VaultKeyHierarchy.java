@@ -130,7 +130,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)){
+        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             setActiveNetwork(blockchainNetworkType);
         }
 
@@ -138,7 +138,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will update the detailed key maintenance information by adding this generated address to the table.
          */
         try {
-            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress, blockchainNetworkType);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -151,10 +151,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws UnexpectedResultReturnedFromDatabaseException {
         try {
-            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress, blockchainNetworkType);
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * will continue because this is not critical.

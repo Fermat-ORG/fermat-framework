@@ -23,9 +23,13 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -38,6 +42,7 @@ import java.util.Map;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 25/11/15.
+ * Updated by Gabriel Araujo (gabe_512@hotmail.com) on 10/02/16.
  */
 public class TransactionTransmissionAgent {
 
@@ -217,16 +222,21 @@ public class TransactionTransmissionAgent {
             try {
                 transactionTransmissionContractHashDao.initialize();
             } catch (CantInitializeNetworkServiceDatabaseException e) {
-                e.printStackTrace();
-        //Start the Thread
-        toSend.start();
-        toReceive.start();
-
-        System.out.println("CryptoTransmissionAgent - started ");
+                this.errorManager.reportUnexpectedPluginException(
+                        Plugins.TRANSACTION_TRANSMISSION,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
             }
+            //Start the Thread
+            toSend.start();
+            toReceive.start();
+            System.out.println("TransactionTransmissionAgent - started ");
         } catch (Exception exception){
             FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    ex);
         }
 
     }
@@ -277,7 +287,7 @@ public class TransactionTransmissionAgent {
             }
 
             //Sleep for a time
-            toSend.sleep(SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
@@ -299,14 +309,14 @@ public class TransactionTransmissionAgent {
          /*
          * Read all pending BusinessTransactionMetadata from database
          */
-            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAllToSend();
 
 
             for (BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList) {
 
-                String receiverPublicKey= businessTransactionMetadata.getReceiverId();
+                String receiverPublicKey = businessTransactionMetadata.getReceiverId();
 
-                if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
+                if (!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
 
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
 
@@ -316,8 +326,15 @@ public class TransactionTransmissionAgent {
 
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                /*
+                                 * Create the sender basic profile
+                                 */
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.TRANSACTION_TRANSMISSION, businessTransactionMetadata.getSenderType());
+
+                                /*
+                                 * Create the receiver basic profile
+                                 */
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.TRANSACTION_TRANSMISSION, businessTransactionMetadata.getReceiverType());
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
                                 // pass the businessTransactionMetadata to a pool waiting for the response of the other peer or server failure
@@ -326,46 +343,75 @@ public class TransactionTransmissionAgent {
 
                         }
                     }
-                }else{
+                } else {
 
-                    NetworkServiceLocal communicationNetworkServiceLocal = transactionTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
+                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey);
 
                     if (communicationNetworkServiceLocal != null) {
 
-                        try {
-                            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+                        businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+                        //Send the message
+                        System.out.print("-----------------------\n" +
+                                "SENDING BUSINESS TRANSACTION RECORD -----------------------\n" +
+                                "-----------------------\n To: " + receiverPublicKey);
+                        // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
+                        Gson gson = new Gson();
+                        String jsonBusinessTransaction = gson.toJson(businessTransactionMetadata);
 
-                            System.out.print("-----------------------\n" +
-                                    "SENDING BUSINESS TRANSACTION RECORD -----------------------\n" +
-                                    "-----------------------\n To: " + receiverPublicKey);
+                        transactionTransmissionContractHashDao.update(businessTransactionMetadata);
+                        communicationNetworkServiceLocal.sendMessage(businessTransactionMetadata.getSenderId(), businessTransactionMetadata.getReceiverId(), jsonBusinessTransaction);
 
-                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
-                            Gson gson = new Gson();
-                            String jsonBusinessTransaction =gson.toJson(businessTransactionMetadata);
+                    } else {
 
-                            // Envio el mensaje a la capa de comunicacion
+                        businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+                        Gson gson = new Gson();
+                        String jsonBusinessTransaction = gson.toJson(businessTransactionMetadata);
+                        transactionTransmissionContractHashDao.update(businessTransactionMetadata);
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinessTransaction);
+                        /*
+                         * Created the message
+                         */
+                        FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(businessTransactionMetadata.getSenderId(),//Sender
+                                businessTransactionMetadata.getReceiverId(), //Receiver
+                                jsonBusinessTransaction, //Message Content
+                                FermatMessageContentType.TEXT);//Type
+                        /*
+                         * Configure the correct status
+                         */
+                        ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
 
-                            transactionTransmissionContractHashDao.changeState(businessTransactionMetadata);
+                        /*
+                         * Save to the data base table
+                         */
+                        OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+                        outgoingMessageDao.create(fermatMessage);
 
-                            System.out.print("-----------------------\n" +
-                                    "BUSINESS TRANSACTION -----------------------\n" +
-                                    "-----------------------\n STATE: " + businessTransactionMetadata.getState());
+                        /*
+                         * Create the sender basic profile
+                         */
+                        PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getSenderId(), NetworkServiceType.TRANSACTION_TRANSMISSION, businessTransactionMetadata.getSenderType());
 
-                        } catch (CantUpdateRecordDataBaseException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        /*
+                         * Create the receiver basic profile
+                         */
+                        PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(businessTransactionMetadata.getReceiverId(), NetworkServiceType.TRANSACTION_TRANSMISSION, businessTransactionMetadata.getReceiverType());
+
+                        /*
+                         * Ask the client to connect
+                         */
+                        System.out.print("-----------------------\n" +
+                                "SENDING BUSINESS TRANSACTION RECORD -----------------------\n" +
+                                "-----------------------\n To: " + receiverPublicKey);
+                        communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
                     }
                 }
             }
-
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         } catch (CantEstablishConnectionException e) {
             e.printStackTrace();
+        } catch(Exception e){
+        e.printStackTrace();
         }
     }
 
@@ -390,7 +436,7 @@ public class TransactionTransmissionAgent {
             // function to process metadata received
             processReceive();
             //Sleep for a time
-            toSend.sleep(RECEIVE_SLEEP_TIME);
+            Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
@@ -409,7 +455,7 @@ public class TransactionTransmissionAgent {
          /*
          * Read all pending CryptoTransmissionMetadata from database
          */
-            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAll(filters);
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAllToReceive(filters);
 
 
             for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
@@ -438,13 +484,13 @@ public class TransactionTransmissionAgent {
                                 System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
 
                                 //this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
                                 this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
 
                             case CONFIRM_RESPONSE:
                                 System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_RESPONSE");
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
                                 this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
@@ -458,7 +504,7 @@ public class TransactionTransmissionAgent {
                                         "RECEIVING BUSINESS TRANSACTION -----------------------\n" +
                                         "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
 
                                 TransactionTransmissionResponseMessage cryptoTransmissionResponseMessage = new TransactionTransmissionResponseMessage(
                                         businessTransactionMetadata.getTransactionId(),
@@ -504,7 +550,7 @@ public class TransactionTransmissionAgent {
            // throw new ObjectNotSetException(ex, "CAN NOT SET THE OBJECT","");
             ex.printStackTrace();
             FermatException e = new ObjectNotSetException(FermatException.wrapException(ex), "","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
 
     }
@@ -526,10 +572,11 @@ public class TransactionTransmissionAgent {
         return running;
     }
 
-    private void launchNotification(){
+    private void launchNotification(Plugins remoteBusinessTransaction){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingNewContractStatusUpdate.setRemoteBusinessTransaction(remoteBusinessTransaction);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 

@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.navigation_drawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
@@ -20,7 +19,7 @@ import com.squareup.picasso.Picasso;
  */
 public class RedeemPointCommunityFragmentsCommons {
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identityAssetIssuer) throws CantGetIdentityAssetUserException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetIssuer) throws CantGetIdentityAssetUserException {
         View view = inflater.inflate(R.layout.dap_navigation_drawer_community_redeem_point_header, null, true);
         /**
          * Navigation view header
@@ -34,9 +33,9 @@ public class RedeemPointCommunityFragmentsCommons {
                 if (identityAssetIssuer.getImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetIssuer.getImage(), 0, identityAssetIssuer.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                    Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identityAssetIssuer.getAlias());
         }

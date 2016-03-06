@@ -2,10 +2,12 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.ap
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -17,13 +19,18 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.factory.CommunityUserFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer.UserCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetUserFermatAppConnection extends AppConnections {
+public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetUserCommunitySubAppSession> {
 
-    public CommunityAssetUserFermatAppConnection(Activity activity) {
+    private AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+
+    public CommunityAssetUserFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -50,7 +57,7 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new UserCommunityNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override
@@ -61,5 +68,42 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        NotificationPainter notification = null;
+        try {
+            this.assetUserCommunitySubAppSession = (AssetUserCommunitySubAppSession) this.getSession();
+            if (assetUserCommunitySubAppSession != null)
+                manager = assetUserCommunitySubAppSession.getModuleManager();
+            String[] params = code.split("_");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
+
+            switch (notificationType) {
+                case "CONNECTION-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
+                    }
+                    break;
+                case "CRYPTO-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+//                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return notification;
     }
 }

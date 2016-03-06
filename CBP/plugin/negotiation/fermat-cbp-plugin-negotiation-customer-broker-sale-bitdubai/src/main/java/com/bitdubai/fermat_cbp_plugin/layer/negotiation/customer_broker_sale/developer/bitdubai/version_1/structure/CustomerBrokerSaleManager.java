@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
@@ -28,6 +30,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,13 +44,21 @@ import java.util.UUID;
 public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationManager{
 
     private CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao;
+    private final ErrorManager errorManager;
+    private final PluginVersionReference pluginVersionReference;
 
     /*
        Builder
     */
 
-    public CustomerBrokerSaleManager(CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao){
+    public CustomerBrokerSaleManager(
+            final CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao,
+            final ErrorManager errorManager,
+            final PluginVersionReference pluginVersionReference
+    ){
         this.customerBrokerSaleNegotiationDao = customerBrokerSaleNegotiationDao;
+        this.errorManager = errorManager;
+        this.pluginVersionReference = pluginVersionReference;
     }
 
     /*
@@ -55,22 +67,42 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
 
     @Override
     public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
-        this.customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(negotiation);
+        try{
+            this.customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(negotiation);
+        } catch (CantCreateCustomerBrokerSaleNegotiationException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateCustomerBrokerSaleNegotiationException(e.getMessage(), e, "", "Cant Create Customer Broker Sale Negotiation");
+        }
     }
 
     @Override
     public void updateCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-        this.customerBrokerSaleNegotiationDao.updateCustomerBrokerSaleNegotiation(negotiation);
+        try{
+            this.customerBrokerSaleNegotiationDao.updateCustomerBrokerSaleNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
     }
 
     @Override
     public void updateNegotiationNearExpirationDatetime(UUID negotiationId, Boolean status) throws CantUpdateCustomerBrokerSaleException {
-        this.updateNegotiationNearExpirationDatetime(negotiationId, status);
+        try{
+            this.updateNegotiationNearExpirationDatetime(negotiationId, status);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
     }
 
     @Override
     public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-        this.customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
+        try{
+            this.customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
     }
 
     @Override
@@ -82,33 +114,79 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
             }
             return false;
         } catch (CantGetListClauseException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
+    public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try{
+            this.customerBrokerSaleNegotiationDao.sendToCustomer(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
+    }
+
+    @Override
+    public void waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try{
+            this.customerBrokerSaleNegotiationDao.waitForCustomer(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
+    }
+
+    @Override
     public void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-        this.customerBrokerSaleNegotiationDao.sendToBroker(negotiation);
+
     }
 
     @Override
     public void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-        this.customerBrokerSaleNegotiationDao.waitForBroker(negotiation);
+
     }
 
     @Override
     public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantGetListSaleNegotiationsException {
-        return this.customerBrokerSaleNegotiationDao.getNegotiations();
+        try{
+            return this.customerBrokerSaleNegotiationDao.getNegotiations();
+        } catch (CantGetListSaleNegotiationsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListSaleNegotiationsException(e.getMessage(), e, "", "Cant Get List Sale Negotiations");
+        }
     }
 
     @Override
     public CustomerBrokerSaleNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
-        return this.customerBrokerSaleNegotiationDao.getNegotiationsByNegotiationId(negotiationId);
+        try{
+            return this.customerBrokerSaleNegotiationDao.getNegotiationsByNegotiationId(negotiationId);
+        } catch (CantGetListSaleNegotiationsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListSaleNegotiationsException(e.getMessage(), e, "", "Cant Get List Sale Negotiations");
+        }
     }
 
     @Override
     public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByStatus(NegotiationStatus status) throws CantGetListSaleNegotiationsException {
-        return this.customerBrokerSaleNegotiationDao.getNegotiations(status);
+        try{
+            return this.customerBrokerSaleNegotiationDao.getNegotiations(status);
+        } catch (CantGetListSaleNegotiationsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListSaleNegotiationsException(e.getMessage(), e, "", "Cant Get List Sale Negotiations");
+        }
+    }
+
+    @Override
+    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListSaleNegotiationsException {
+        try{
+            return this.customerBrokerSaleNegotiationDao.getNegotiationsBySendAndWaiting(actorType);
+        } catch (CantGetListSaleNegotiationsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListSaleNegotiationsException(e.getMessage(), e, "", "Cant Get List Sale Negotiations");
+        }
     }
 
     @Override
@@ -132,18 +210,18 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
     }
 
     @Override
-    public ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+    public ClauseType getNextClauseTypeByCurrencyType(MoneyType paymentMethod) throws CantGetNextClauseTypeException {
         switch (paymentMethod) {
-            case CRYPTO_MONEY:
+            case CRYPTO:
                 return ClauseType.BROKER_CRYPTO_ADDRESS;
 
-            case BANK_MONEY:
+            case BANK:
                 return ClauseType.BROKER_BANK_ACCOUNT;
 
-            case CASH_ON_HAND_MONEY:
+            case CASH_ON_HAND:
                 return ClauseType.BROKER_PLACE_TO_DELIVER;
 
-            case CASH_DELIVERY_MONEY:
+            case CASH_DELIVERY:
                 return ClauseType.BROKER_PLACE_TO_DELIVER;
 
             default:
@@ -153,64 +231,123 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
 
     @Override
     public void createNewLocation(String location, String uri) throws CantCreateLocationSaleException {
-        this.customerBrokerSaleNegotiationDao.createNewLocation(location, uri);
+        try{
+            this.customerBrokerSaleNegotiationDao.createNewLocation(location, uri);
+        } catch (CantCreateLocationSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateLocationSaleException(e.getMessage(), e, "", "Cant Create Location Sale");
+        }
     }
 
     @Override
     public void updateLocation(NegotiationLocations location) throws CantUpdateLocationSaleException {
-        this.customerBrokerSaleNegotiationDao.updateLocation(location);
+        try{
+            this.customerBrokerSaleNegotiationDao.updateLocation(location);
+        } catch (CantUpdateLocationSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateLocationSaleException(e.getMessage(), e, "", "Cant Update Location Sale");
+        }
     }
 
     @Override
     public void deleteLocation(NegotiationLocations location) throws CantDeleteLocationSaleException {
-        this.customerBrokerSaleNegotiationDao.deleteLocation(location);
+        try{
+            this.customerBrokerSaleNegotiationDao.deleteLocation(location);
+        } catch (CantDeleteLocationSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDeleteLocationSaleException(e.getMessage(), e, "", "Cant Delete Location Sale");
+        }
     }
 
     @Override
     public Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsSaleException {
-        return this.customerBrokerSaleNegotiationDao.getAllLocations();
+        try{
+            return this.customerBrokerSaleNegotiationDao.getAllLocations();
+        } catch (CantGetListLocationsSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListLocationsSaleException(e.getMessage(), e, "", "Cant Get List Locations Sale");
+        }
     }
 
     @Override
     public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException {
-        this.customerBrokerSaleNegotiationDao.createNewBankAccount(bankAccount);
+        try{
+            this.customerBrokerSaleNegotiationDao.createNewBankAccount(bankAccount);
+        } catch (CantCreateBankAccountSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateBankAccountSaleException(e.getMessage(), e, "", "Cant Create Bank Account Sale");
+        }
     }
 
     @Override
     public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountSaleException {
-        this.customerBrokerSaleNegotiationDao.updateBankAccount(bankAccount);
+        try{
+            this.customerBrokerSaleNegotiationDao.updateBankAccount(bankAccount);
+        } catch (CantUpdateBankAccountSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateBankAccountSaleException(e.getMessage(), e, "", "Cant Update Bank Account Sale");
+        }
     }
 
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
-        this.customerBrokerSaleNegotiationDao.deleteBankAccount(bankAccount);
+        try{
+            this.customerBrokerSaleNegotiationDao.deleteBankAccount(bankAccount);
+        } catch (CantDeleteBankAccountSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDeleteBankAccountSaleException(e.getMessage(), e, "", "Cant Delete Bank Account Sale");
+        }
     }
 
     @Override
     public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException {
-        return this.customerBrokerSaleNegotiationDao.getBankAccountByCurrencyType(currency);
+        try{
+            return this.customerBrokerSaleNegotiationDao.getBankAccountByCurrencyType(currency);
+        } catch (CantGetListBankAccountsSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListBankAccountsSaleException(e.getMessage(), e, "", "Cant Get List Bank Accounts Sale");
+        }
     }
 
     @Override
     public void createNewPaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantCreatePaymentCurrencySaleException {
-        this.customerBrokerSaleNegotiationDao.createNewPaymentCurrency(paymentCurrency);
+        try{
+            this.customerBrokerSaleNegotiationDao.createNewPaymentCurrency(paymentCurrency);
+        } catch (CantCreatePaymentCurrencySaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreatePaymentCurrencySaleException(e.getMessage(), e, "", "Cant Create Payment Currency Sale");
+        }
     }
 
     @Override
     public void deletePaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantDeletePaymentCurrencySaleException {
-        this.customerBrokerSaleNegotiationDao.deletePaymentCurrency(paymentCurrency);
+        try{
+            this.customerBrokerSaleNegotiationDao.deletePaymentCurrency(paymentCurrency);
+        } catch (CantDeletePaymentCurrencySaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDeletePaymentCurrencySaleException(e.getMessage(), e, "", "Cant Delete Payment Currency Sale");
+        }
     }
 
     @Override
     public Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException {
-        return this.customerBrokerSaleNegotiationDao.getAllPaymentCurrencies();
+        try{
+            return this.customerBrokerSaleNegotiationDao.getAllPaymentCurrencies();
+        } catch (CantGetListPaymentCurrencySaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListPaymentCurrencySaleException(e.getMessage(), e, "", "Cant Get List Payment Currency Sale");
+        }
     }
 
     @Override
     public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
-        return this.customerBrokerSaleNegotiationDao.getCurrencyTypeAvailableBankAccount();
+        try{
+            return this.customerBrokerSaleNegotiationDao.getCurrencyTypeAvailableBankAccount();
+        } catch (CantGetListBankAccountsSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetListBankAccountsSaleException(e.getMessage(), e, "", "Cant Get List Bank Accounts Sale");
+        }
     }
-
 
     /*
     *   Private Methods
@@ -234,19 +371,19 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
             return false;
         }
 
-        if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+        if( clausesAgreed.containsValue(MoneyType.CRYPTO.getCode()) ){
             if( !clausesAgreed.containsKey(ClauseType.BROKER_CRYPTO_ADDRESS) ){
                 return false;
             }
         }
 
-        if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+        if( clausesAgreed.containsValue(MoneyType.BANK.getCode()) ){
             if( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) ){
                 return false;
             }
         }
 
-        if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+        if( clausesAgreed.containsValue(MoneyType.CASH_ON_HAND.getCode()) ){
             if(
                     ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
                             ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
@@ -255,7 +392,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
             }
         }
 
-        if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+        if( clausesAgreed.containsValue(MoneyType.CASH_DELIVERY.getCode()) ){
             if(
                     ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
                             ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )

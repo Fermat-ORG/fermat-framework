@@ -32,6 +32,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestNetworkServiceRecord;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.PaymentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +107,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                                                  final RequestProtocolState        protocolState    ,
                                                  final BlockchainNetworkType       networkType      ,
                                                  final ReferenceWallet              referenceWallet,
-                                                 final int sentNumber) throws CantCreateCryptoPaymentRequestException {
+                                                 final int                          sentNumber,
+                                                 final String                       messageType) throws CantCreateCryptoPaymentRequestException {
 
         try {
 
@@ -131,7 +133,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                         protocolState    ,
                         networkType,
                         referenceWallet,
-                        sentNumber
+                        sentNumber,
+                        messageType
                 );
 
                 cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
@@ -147,6 +150,88 @@ public final class CryptoPaymentRequestNetworkServiceDao {
 
         }
     }
+
+    public Actors getActorTypeFromRequest(String identityPublicKeySender) throws CantGetRequestException {
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildCryptoPaymentRequestRecord(records.get(0)).getIdentityType();
+            else{
+
+                cryptoPaymentRequestTable.clearAllFilters();
+                cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+                cryptoPaymentRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = cryptoPaymentRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildCryptoPaymentRequestRecord(records1.get(0)).getActorType();
+                else
+                    throw new CantGetRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    public Actors getActorTypeToRequest(String identityPublicKeyDestination) throws CantGetRequestException {
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildCryptoPaymentRequestRecord(records.get(0)).getActorType();
+            else{
+
+                cryptoPaymentRequestTable.clearAllFilters();
+                cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+                cryptoPaymentRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = cryptoPaymentRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildCryptoPaymentRequestRecord(records1.get(0)).getIdentityType();
+                else
+                    throw new CantGetRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+
+        }
+
 
     public boolean isPendingRequestByProtocolState(final RequestProtocolState protocolState) throws CantListRequestsException {
 
@@ -217,10 +302,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return true;
-            else
-                return false;
+            return !records.isEmpty();
 
         } catch (CantLoadTableToMemoryException exception) {
 
@@ -351,6 +433,38 @@ public final class CryptoPaymentRequestNetworkServiceDao {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, RequestProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME, PaymentConstants.OUTGOING_MESSAGE, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<CryptoPaymentRequest> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildCryptoPaymentRequestRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListRequestsException(exception);
+        }
+    }
+
+
+    public final List<CryptoPaymentRequest> listUncompletedRequest(String remoteIdentityKey) throws CantListRequestsException {
+
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, RequestProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, remoteIdentityKey, DatabaseFilterType.EQUAL);
+
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -483,13 +597,14 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     , cryptoPaymentRequestRecord.getCryptoAddress()    .getAddress()                 );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , cryptoPaymentRequestRecord.getCryptoAddress()    .getCryptoCurrency().getCode());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME          , cryptoPaymentRequestRecord.getDirection()        .getCode()                    );
-        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME     , cryptoPaymentRequestRecord.getProtocolState()    .getCode()                    );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, cryptoPaymentRequestRecord.getProtocolState().getCode());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME, cryptoPaymentRequestRecord.getAction().getCode());
         record.setLongValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME, cryptoPaymentRequestRecord.getAmount());
         record.setLongValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME, cryptoPaymentRequestRecord.getStartTimeStamp());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getNetworkType().getCode());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getReferenceWallet().getCode());
         record.setIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME, cryptoPaymentRequestRecord.getSentNumber());
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getMessageType());
 
         return record;
     }
@@ -512,6 +627,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         long   amount               = record.getLongValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME);
         long   startTimeStamp       = record.getLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
         int   sentNumber            = record.getIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME);
+        String   messageType        = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME);
 
 
         CryptoAddress        cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
@@ -539,7 +655,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                 protocolState    ,
                 networkType,
                 ReferenceWallet.getByCode(referenceWallet),
-                sentNumber
+                sentNumber,
+                messageType
         );
     }
 

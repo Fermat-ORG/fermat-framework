@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
@@ -14,11 +15,16 @@ public interface BitcoinWalletBalance {
     * amount of satoshis the user has.
    */
 
-    public long getBalance() throws CantCalculateBalanceException;
+    long getBalance() throws CantCalculateBalanceException;
 
-    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
+    long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException;
 
-    public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
+
+    void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
+
+    void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
+
+    void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
 
 }

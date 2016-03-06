@@ -44,12 +44,29 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
     @Override
     protected void bindHolder(final RedeemPointViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.GONE);
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+                switch (data.getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -63,8 +80,14 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
             if (data.getDapConnectionState() == DAPConnectionState.CONNECTING) {
                 holder.status.setText(R.string.status_connecting);
             }
+
+            if (data.getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
+            }
+
+
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -86,8 +109,8 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

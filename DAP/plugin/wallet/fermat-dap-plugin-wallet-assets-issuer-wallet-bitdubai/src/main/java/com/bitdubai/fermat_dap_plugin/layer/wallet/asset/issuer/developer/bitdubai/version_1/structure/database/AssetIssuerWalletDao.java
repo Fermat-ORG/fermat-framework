@@ -21,8 +21,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -33,16 +40,18 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletBalance;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletTransactionWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetIssuerTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetIssuerWalletBalance;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetIssuerWalletTransactionWrapper;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetMovementImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,15 +68,20 @@ public class AssetIssuerWalletDao {
     public static final String PATH_DIRECTORY = "asset-issuer-swap/";//digital-asset-swap/"
     PluginFileSystem pluginFileSystem;
     UUID plugin;
+    private ActorAssetUserManager actorAssetUserManager;
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     private Database database;
 
-    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = pluginId;
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
-
 
     /*
      * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
@@ -305,7 +319,7 @@ public class AssetIssuerWalletDao {
     }
 
     // Read record data and create transactions list
-    private List<AssetIssuerWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) {
+    private List<AssetIssuerWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException {
 
         List<AssetIssuerWalletTransaction> transactions = new ArrayList<>();
 
@@ -316,12 +330,12 @@ public class AssetIssuerWalletDao {
     }
 
 
-    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record) {
+    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         String transactionId = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME);
         String assetPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
         String transactionHash = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME);
-        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
+        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME));
         CryptoAddress addressFrom = new CryptoAddress();
         addressFrom.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME));
         CryptoAddress addressTo = new CryptoAddress();
@@ -330,14 +344,15 @@ public class AssetIssuerWalletDao {
         String actorToPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME);
         Actors actorFromType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_TYPE_COLUMN_NAME));
         Actors actorToType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_TYPE_COLUMN_NAME));
+        DAPActor actorFrom = ActorUtils.getActorFromPublicKey(actorFromPublicKey, actorFromType, actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+        DAPActor actorTo = ActorUtils.getActorFromPublicKey(actorToPublicKey, actorToType, actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
         BalanceType balanceType = BalanceType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
         long amount = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME);
         long runningBookBalance = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         long runningAvailableBalance = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long timeStamp = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME);
         String memo = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME);
-        return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
+        return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
 
     private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws CantExecuteAssetIssuerTransactionException {
@@ -364,10 +379,8 @@ public class AssetIssuerWalletDao {
             /**
              * I'm also saving to file the DigitalAssetMetadata of this digital Asset.
              */
-            String digitalAssetMetadataFilename = assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey() + "_metadata";
-            String digitalAssetMetadataXML = assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString();
-            pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, digitalAssetMetadataFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            pluginTextFile.setContent(digitalAssetMetadataXML);
+            pluginTextFile = pluginFileSystem.createTextFile(plugin, PATH_DIRECTORY, assetIssuerWalletTransactionRecord.getDigitalAssetMetadataHash(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(assetIssuerWalletTransactionRecord.getDigitalAssetMetadata().toString());
             pluginTextFile.persistToMedia();
 
             database.executeTransaction(transaction);
@@ -577,14 +590,16 @@ public class AssetIssuerWalletDao {
     // ************** ASSET STATISTIC TABLE METHODS ***************
 
     // PUBLIC METHODS
-    public void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException {
-        String context = "Asset: " + asset;
+    public void createdNewAsset(DigitalAssetMetadata metadata) throws CantSaveStatisticException {
+        String context = "Metadata: " + metadata;
         try {
             DatabaseTable databaseTable = this.database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
             DatabaseTableRecord assetStatisticRecord = databaseTable.getEmptyRecord();
 
-            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, asset.getPublicKey());
-            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME, asset.getName());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, metadata.getMetadataId().toString());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_HASH_COLUMN_NAME, metadata.getGenesisTransaction());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, metadata.getDigitalAsset().getPublicKey());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME, metadata.getDigitalAsset().getName());
             assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_CREATED.getCode());
 
             databaseTable.insertRecord(assetStatisticRecord);
@@ -593,27 +608,48 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    public void assetDistributed(String assetPublicKey, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_UNUSED.getCode(), assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserPublicKey, assetPublicKey);
-        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
+    public void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_UNUSED.getCode(), transactionId);
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, actorAssetUserPublicKey, transactionId);
+        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME, System.currentTimeMillis(), transactionId);
     }
 
     //Even when I already stored the user public key when I distributed the asset, there's a chance that the user that redeemed the asset is a different one.
-    public void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_REDEEMED.getCode(), assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, assetPublicKey);
+    public void assetRedeemed(UUID transactionId, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_REDEEMED.getCode(), transactionId);
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, transactionId);
         if (userPublicKey != null) {
-            updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
+            updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, transactionId);
         }
-        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
+        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), transactionId);
     }
 
     //Even when I already stored the user public key when I distributed the asset, there's a chance that the user that appropriated the asset is a different one.
-    public void assetAppropriated(String assetPublicKey, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_APPROPRIATED.getCode(), assetPublicKey);
-        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, assetPublicKey);
-        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), assetPublicKey);
+    public void assetAppropriated(UUID transactionId, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME, AssetCurrentStatus.ASSET_APPROPRIATED.getCode(), transactionId);
+        updateStringFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME, userPublicKey, transactionId);
+        updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), transactionId);
+    }
+
+    public void newMovement(String assetPk, String fromPk, Actors fromType, String toPk, Actors toType, AssetMovementType type) throws CantSaveStatisticException {
+        String context = "ASSET PK: " + assetPk;
+        try {
+            DatabaseTable databaseTable = this.database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            DatabaseTableRecord assetStatisticRecord = databaseTable.getEmptyRecord();
+
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, UUID.randomUUID().toString());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, assetPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, fromPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE, fromType.getCode());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, toPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE, toType.getCode());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, type.getCode());
+            assetStatisticRecord.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, System.currentTimeMillis());
+
+            databaseTable.insertRecord(assetStatisticRecord);
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveStatisticException(exception, context, "Cannot insert a record in Asset Statistic Table");
+        }
     }
 
     public DigitalAsset getAssetByPublicKey(String assetPublicKey) {
@@ -625,48 +661,108 @@ public class AssetIssuerWalletDao {
     }
 
     //Methods for construct the AssetStatistic object.
-    public String getUserPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME);
+    public String getUserPublicKey(UUID txId) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ACTOR_USER_PUBLIC_KEY_COLUMN_NAME);
     }
 
-    public String getRedeemPointPublicKey(String assetPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
-        return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
+    public String getRedeemPointPublicKey(UUID txId) throws RecordsNotFoundException, CantGetAssetStatisticException {
+        return getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
     }
 
-    public AssetCurrentStatus getStatus(String assetPublicKey) {
+    public AssetCurrentStatus getStatus(UUID txId) {
         try {
-            return AssetCurrentStatus.getByCode(getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME));
+            return AssetCurrentStatus.getByCode(getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME));
         } catch (InvalidParameterException | CantGetAssetStatisticException | RecordsNotFoundException e) {
             return AssetCurrentStatus.ASSET_CREATED;
         }
     }
 
-    public String getAssetName(String assetPublicKey) {
+    public String getGenesisTransaction(UUID txId) {
         try {
-            return getAssetStatisticStringFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME);
+            return getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_HASH_COLUMN_NAME);
         } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
             return Validate.DEFAULT_STRING;
         }
     }
 
-    public Date getDistributionDate(String assetPublicKey) {
+    public String getAssetName(UUID txId) {
         try {
-            return new Date(getAssetStatisticLongFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME));
+            return getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME);
+        } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return Validate.DEFAULT_STRING;
+        }
+    }
+
+    public String getAssetPublicKey(UUID txId) {
+        try {
+            return getAssetStatisticStringFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME);
+        } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
+            return Validate.DEFAULT_STRING;
+        }
+    }
+
+    public Date getDistributionDate(UUID txId) {
+        try {
+            return new Date(getAssetStatisticLongFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_DISTRIBUTION_DATE_COLUMN_NAME));
         } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
             return null;
         }
     }
 
-    public Date getUsageDate(String assetPublicKey) {
+    public Date getUsageDate(UUID txId) {
         try {
-            return new Date(getAssetStatisticLongFieldByPk(assetPublicKey, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME));
+            return new Date(getAssetStatisticLongFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME));
         } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
             return null;
+        }
+    }
+
+    public List<AssetMovement> getAllMovementsForAsset(String aseetPk) throws CantGetAssetStatisticException {
+        String context = "Asset PK: " + aseetPk;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, aseetPk, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseFilterOrder.DESCENDING);
+            assetStatisticTable.loadToMemory();
+            List<DatabaseTableRecord> records = assetStatisticTable.getRecords();
+            if (records.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+            List<AssetMovement> toReturn = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
+                toReturn.add(constructAssetMovementByRecord(record));
+            }
+            return toReturn;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, context, "Database error.");
+        }
+    }
+
+    public List<AssetMovement> getMovementsForType(AssetMovementType type) throws CantGetAssetStatisticException {
+
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, type.toString(), DatabaseFilterType.EQUAL);
+            assetStatisticTable.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseFilterOrder.DESCENDING);
+            assetStatisticTable.loadToMemory();
+            List<DatabaseTableRecord> records = assetStatisticTable.getRecords();
+            if (records.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+            List<AssetMovement> toReturn = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
+                toReturn.add(constructAssetMovementByRecord(record));
+            }
+            return toReturn;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, null, "Database error.");
         }
     }
 
     //Query Methods.
-    public List<String> getAllAssetPublicKeyForAssetName(String assetName) throws CantGetAssetStatisticException {
+    public List<UUID> getAllAssetPublicKeyForAssetName(String assetName) throws CantGetAssetStatisticException {
         String context = "Asset Name: " + assetName;
         try {
             DatabaseTable assetStatisticTable;
@@ -678,10 +774,10 @@ public class AssetIssuerWalletDao {
                 return Collections.EMPTY_LIST;
             }
 
-            List<String> returnList = new ArrayList<>();
+            List<UUID> returnList = new ArrayList<>();
 
             for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+                returnList.add(UUID.fromString(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME)));
             }
             return returnList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -689,7 +785,7 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    public List<String> getAllAssetPublicKeyForAssetNameAndStatus(String assetName, AssetCurrentStatus status) throws CantGetAssetStatisticException {
+    public List<UUID> getAllAssetPublicKeyForAssetNameAndStatus(String assetName, AssetCurrentStatus status) throws CantGetAssetStatisticException {
         String context = "Asset Name: " + assetName;
         try {
             DatabaseTable assetStatisticTable;
@@ -702,10 +798,10 @@ public class AssetIssuerWalletDao {
                 return Collections.EMPTY_LIST;
             }
 
-            List<String> returnList = new ArrayList<>();
+            List<UUID> returnList = new ArrayList<>();
 
             for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+                returnList.add(UUID.fromString(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME)));
             }
             return returnList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -713,7 +809,7 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    public List<String> getAllAssetPublicKey() throws CantGetAssetStatisticException {
+    public List<UUID> getAllTransactionIds() throws CantGetAssetStatisticException {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
@@ -723,10 +819,10 @@ public class AssetIssuerWalletDao {
                 return Collections.EMPTY_LIST;
             }
 
-            List<String> returnList = new ArrayList<>();
+            List<UUID> returnList = new ArrayList<>();
 
             for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+                returnList.add(UUID.fromString(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME)));
             }
             return returnList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -734,7 +830,7 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    public List<String> getAllAssetPublicKeyForStatus(AssetCurrentStatus status) throws CantGetAssetStatisticException {
+    public List<UUID> getAllAssetPublicKeyForStatus(AssetCurrentStatus status) throws CantGetAssetStatisticException {
         String context = "Asset Status: " + status.getCode();
         try {
             DatabaseTable assetStatisticTable;
@@ -746,10 +842,10 @@ public class AssetIssuerWalletDao {
                 return Collections.EMPTY_LIST;
             }
 
-            List<String> returnList = new ArrayList<>();
+            List<UUID> returnList = new ArrayList<>();
 
             for (DatabaseTableRecord record : assetStatisticTable.getRecords()) {
-                returnList.add(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME));
+                returnList.add(UUID.fromString(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME)));
             }
             return returnList;
         } catch (CantLoadTableToMemoryException exception) {
@@ -760,12 +856,12 @@ public class AssetIssuerWalletDao {
 
     //PRIVATE METHODS
 
-    private void updateLongFieldByAssetPublicKey(String columnName, long value, String assetPublicKey) throws CantGetAssetStatisticException, RecordsNotFoundException {
-        String context = "Column Name: " + columnName + " - Asset Public Key: " + assetPublicKey + " - Value: " + value;
+    private void updateLongFieldByAssetPublicKey(String columnName, long value, UUID transactionId) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "Column Name: " + columnName + " - Tx Id: " + transactionId + " - Value: " + value;
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
             assetStatisticTable.loadToMemory();
 
             if (assetStatisticTable.getRecords().isEmpty()) {
@@ -783,12 +879,12 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    private String getAssetStatisticStringFieldByPk(String assetPublicKey, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
-        String context = "assetPublicKey: " + assetPublicKey;
+    private String getAssetStatisticStringFieldByPk(UUID txId, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "Transaction ID: " + txId;
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
             assetStatisticTable.loadToMemory();
 
             if (assetStatisticTable.getRecords().isEmpty()) {
@@ -803,12 +899,12 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    private long getAssetStatisticLongFieldByPk(String assetPublicKey, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
-        String context = "assetPublicKey: " + assetPublicKey;
+    private long getAssetStatisticLongFieldByPk(UUID txId, String column) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "Transaction ID: " + txId;
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
             assetStatisticTable.loadToMemory();
             DatabaseTableRecord record = assetStatisticTable.getRecords().get(0);
 
@@ -824,12 +920,70 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    private void updateStringFieldByAssetPublicKey(String columnName, String value, String assetPublicKey) throws CantGetAssetStatisticException, RecordsNotFoundException {
-        String context = "Column Name: " + columnName + " - Asset Public Key: " + assetPublicKey + " - Value: " + value;
+    private AssetMovement constructAssetMovementByRecord(DatabaseTableRecord record) {
+        AssetMovementImpl assetMovement = new AssetMovementImpl();
+        String actorFromPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY);
+        Actors actorFromType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE));
+        String actorToPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY);
+        Actors actorToType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE));
+        DAPActor actorFrom = findActorByTypeAndPk(actorFromType, actorFromPublicKey);
+        DAPActor actorTo = findActorByTypeAndPk(actorToType, actorToPublicKey);
+        Date timeStamp = new Date(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP));
+        assetMovement.setActorFrom(actorFrom);
+        assetMovement.setActorTo(actorTo);
+        assetMovement.setTimestamp(timeStamp);
+        return assetMovement;
+    }
+
+    private DAPActor findActorByTypeAndPk(final Actors type, final String publicKey) {
+        try {
+            switch (type) {
+                case DAP_ASSET_ISSUER:
+                    return actorAssetIssuerManager.getActorByPublicKey(publicKey);
+                case DAP_ASSET_USER:
+                    return actorAssetUserManager.getActorByPublicKey(publicKey);
+                case DAP_ASSET_REDEEM_POINT:
+                    return actorAssetRedeemPointManager.getActorByPublicKey(publicKey);
+                default:
+                    throw new RuntimeException("UNKNOWN TYPE!!!");
+            }
+        } catch (Exception e) {
+            return constructUnknownActor(type, publicKey);
+        }
+    }
+
+
+    private DAPActor constructUnknownActor(final Actors type, final String publicKey) {
+        return new DAPActor() {
+            @Override
+            public String getActorPublicKey() {
+                return publicKey;
+            }
+
+            @Override
+            public String getName() {
+                return Validate.DEFAULT_STRING + " " + type.getCode();
+            }
+
+            @Override
+            public Actors getType() {
+                return Actors.DAP_ASSET_ISSUER;
+            }
+
+            @Override
+            public byte[] getProfileImage() {
+                return new byte[0];
+            }
+        };
+    }
+
+
+    private void updateStringFieldByAssetPublicKey(String columnName, String value, UUID transactionId) throws CantGetAssetStatisticException, RecordsNotFoundException {
+        String context = "Column Name: " + columnName + " - Transaction Id: " + transactionId + " - Value: " + value;
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
             assetStatisticTable.loadToMemory();
 
             if (assetStatisticTable.getRecords().isEmpty()) {

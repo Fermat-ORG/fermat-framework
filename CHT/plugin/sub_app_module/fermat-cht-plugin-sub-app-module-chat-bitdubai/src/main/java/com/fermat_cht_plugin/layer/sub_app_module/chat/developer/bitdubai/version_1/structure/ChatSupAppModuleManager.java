@@ -1,22 +1,34 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,76 +37,76 @@ import java.util.UUID;
  */
 public class ChatSupAppModuleManager implements ChatManager {
 
-    private final com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatManager;
+    private final MiddlewareChatManager middlewareChatManager;
 
-    public ChatSupAppModuleManager(com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatManager chatManager)
+    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager)
     {
-        this.chatManager    = chatManager;
+        this.middlewareChatManager = middlewareChatManager;
     }
 
     @Override
     public List<Chat> getChats() throws CantGetChatException {
-        return chatManager.getChats();
+        return middlewareChatManager.getChats();
     }
 
     @Override
     public Chat getChatByChatId(UUID chatId) throws CantGetChatException {
-        return chatManager.getChatByChatId(chatId);
+        return middlewareChatManager.getChatByChatId(chatId);
     }
 
     @Override
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException {
-        return chatManager.newEmptyInstanceChat();
+        return middlewareChatManager.newEmptyInstanceChat();
     }
 
     @Override
     public void saveChat(Chat chat) throws CantSaveChatException {
-        chatManager.saveChat(chat);
+        middlewareChatManager.saveChat(chat);
     }
 
     @Override
     public void deleteChat(Chat chat) throws CantDeleteChatException {
-        chatManager.deleteChat(chat);
+        middlewareChatManager.deleteChat(chat);
     }
 
     @Override
     public List<Message> getMessages() throws CantGetMessageException {
-        return chatManager.getMessages();
+        return middlewareChatManager.getMessages();
     }
 
     @Override
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
-        return chatManager.getMessageByChatId(chatId);
+    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getMessageByChatId(chatId);
     }
 
     @Override
     public Message getMessageByMessageId(UUID messageId) throws CantGetMessageException {
-        return chatManager.getMessageByMessageId(messageId);
+        return middlewareChatManager.getMessageByMessageId(messageId);
     }
 
     @Override
     public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
-        return chatManager.newEmptyInstanceMessage();
+        return middlewareChatManager.newEmptyInstanceMessage();
     }
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
-        chatManager.saveMessage(message);
+        middlewareChatManager.saveMessage(message);
     }
 
     @Override
     public void deleteMessage(Message message) throws  CantDeleteMessageException {
-        chatManager.deleteMessage(message);
+        middlewareChatManager.deleteMessage(message);
     }
 
     @Override
     public List<Contact> getContacts() throws CantGetContactException {
-        return chatManager.getContacts();
+        return middlewareChatManager.getContacts();
     }
 
     @Override
     public Contact getContactByContactId(UUID contactId) throws CantGetContactException {
-        return chatManager.getContactByContactId(contactId);
+        return middlewareChatManager.getContactByContactId(contactId);
     }
 
     @Override
@@ -104,11 +116,93 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveContact(Contact contact) throws CantSaveContactException {
-        chatManager.saveContact(contact);
+        middlewareChatManager.saveContact(contact);
     }
 
     @Override
     public void deleteContact(Contact contact) throws CantDeleteContactException {
-        chatManager.deleteContact(contact);
+        middlewareChatManager.deleteContact(contact);
+    }
+
+    @Override
+    public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
+        return middlewareChatManager.discoverActorsRegistered();
+    }
+
+    /**
+     * This method returns the Network Service public key
+     * @return
+     * @throws CantGetNetworkServicePublicKeyException
+     */
+    @Override
+    public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
+        return middlewareChatManager.getNetworkServicePublicKey();
+    }
+
+    /**
+     * This method return a HashMap with the possible self identities.
+     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
+     * If there no identities created in any platform, this hashMaps contains the public chat Network
+     * Service.
+     * @return
+     */
+    @Override
+    public HashMap<PlatformComponentType, Object> getSelfIdentities()
+            throws CantGetOwnIdentitiesException {
+        return middlewareChatManager.getSelfIdentities();
+    }
+
+    /**
+     * This method returns the contact id by local public key.
+     *
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    @Override
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException {
+        return middlewareChatManager.getContactByLocalPublicKey(localPublicKey);
+    }
+
+    @Override
+    public void createSelfIdentities() throws CantCreateSelfIdentityException {
+        middlewareChatManager.createSelfIdentities();
+    }
+
+    @Override
+    public boolean isIdentityDevice() throws CantGetChatUserIdentityException {
+        if(middlewareChatManager.getChatUserIdentities().isEmpty())
+            return false;
+        else return true;
+    }
+
+    @Override
+    public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
+        return middlewareChatManager.getChatUserIdentities();
+    }
+
+    @Override
+    public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
+        return middlewareChatManager.getChatUserIdentity(publicKey);
+    }
+
+    @Override
+    public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
+        middlewareChatManager.saveContactConnection(contactConnection);
+    }
+
+    @Override
+    public void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException {
+        middlewareChatManager.deleteContactConnection(chatUserIdentity);
+    }
+
+    @Override
+    public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
+        return middlewareChatManager.getContactConnections();
+    }
+
+    @Override
+    public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
+        return middlewareChatManager.getContactConnection(contactId);
     }
 }

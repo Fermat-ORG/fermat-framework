@@ -4,10 +4,12 @@ apply plugin: 'jacoco'
 android {
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+
+    buildToolsVersion '21.1.2'
+
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -33,10 +35,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    dexOptions {
+        incremental true
+    }
 }
 
-repositories{
-    mavenCentral()
+repositories {
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {

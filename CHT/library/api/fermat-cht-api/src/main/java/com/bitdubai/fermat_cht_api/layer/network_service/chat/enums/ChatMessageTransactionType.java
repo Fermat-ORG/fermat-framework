@@ -21,7 +21,8 @@ public enum ChatMessageTransactionType {
     /**
      * Definition types
      */
-    META_DATA_TRANSMIT        ("MDT"),
+    CHAT_METADATA_TRASMIT("CMDT"),
+    MESSAGE_METADATA_TRANSMIT("MMDT"),
     TRANSACTION_STATUS_UPDATE ("TSU");
 
     /**
@@ -56,7 +57,7 @@ public enum ChatMessageTransactionType {
 
         switch (code) {
             case "MDT":
-                return ChatMessageTransactionType.META_DATA_TRANSMIT;
+                return ChatMessageTransactionType.CHAT_METADATA_TRASMIT;
             case "TSU":
                 return ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE;
         }

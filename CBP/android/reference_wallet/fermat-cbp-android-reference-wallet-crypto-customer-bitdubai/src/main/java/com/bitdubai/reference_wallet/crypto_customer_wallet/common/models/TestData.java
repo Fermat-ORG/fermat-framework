@@ -5,12 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.ContractBasicInformationImpl;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.CryptoCustomerWalletModuleBrokerIdentityBusinessInfo;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.ClauseInformationImpl;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.CustomerBrokerNegotiationInformationImpl;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -18,14 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 /**
  * Created by nelson on 07/01/16.
  */
 public class TestData {
-    public static final String CASH_IN_HAND = "Cash on Hand";
-    public static final String CASH_DELIVERY = "Cash Delivery";
-    public static final String BANK_TRANSFER = "Bank Transfer";
-    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
+    public static final String CASH_IN_HAND = MoneyType.CASH_ON_HAND.getFriendlyName();
+    public static final String CASH_DELIVERY = MoneyType.CASH_DELIVERY.getFriendlyName();
+    public static final String BANK_TRANSFER = MoneyType.BANK.getFriendlyName();
+    public static final String CRYPTO_TRANSFER = MoneyType.CRYPTO.getFriendlyName();
 
     private static final List<String> BROKER_BANK_ACCOUNTS = new ArrayList<>();
     public static final String BROKER_BANK_ACCOUNT_1 = "Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados";
@@ -47,6 +51,7 @@ public class TestData {
 
     private static List<ContractBasicInformation> contractsHistory;
     private static List<CustomerBrokerNegotiationInformation> openNegotiations;
+    private static List<BrokerIdentityBusinessInfo> connectedBrokers;
 
 
     public static List<CustomerBrokerNegotiationInformation> getOpenNegotiations(NegotiationStatus status) {
@@ -128,23 +133,23 @@ public class TestData {
         String timeInMillisStr = String.valueOf(timeInMillisVal);
 
         openNegotiations = new ArrayList<>();
-        CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation item;
+        CustomerBrokerNegotiationInformationImpl item;
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("nelsonalfo", NegotiationStatus.WAITING_FOR_BROKER);
+        item = new CustomerBrokerNegotiationInformationImpl("nelsonalfo", NegotiationStatus.WAITING_FOR_BROKER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
         item.setNote("Le dices al portero que vas a nombre del señor Bastidas");
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
         currencyQtyVal = random.nextFloat() * 100;
@@ -155,20 +160,20 @@ public class TestData {
         timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("jorgeegonzalez", NegotiationStatus.WAITING_FOR_BROKER);
+        item = new CustomerBrokerNegotiationInformationImpl("jorgeegonzalez", NegotiationStatus.WAITING_FOR_BROKER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_IN_HAND, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_IN_HAND, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
         currencyQtyVal = random.nextFloat() * 100;
@@ -179,20 +184,20 @@ public class TestData {
         timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Matias Furzyfer", NegotiationStatus.WAITING_FOR_BROKER);
+        item = new CustomerBrokerNegotiationInformationImpl("Matias Furzyfer", NegotiationStatus.WAITING_FOR_BROKER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.ARGENTINE_PESO.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, BROKER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PLACE_TO_DELIVER, CUSTOMER_LOCATION_2, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, FiatCurrency.ARGENTINE_PESO.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_BANK_ACCOUNT, BROKER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PLACE_TO_DELIVER, CUSTOMER_LOCATION_2, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
 
@@ -204,21 +209,21 @@ public class TestData {
         timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("neoperol", NegotiationStatus.WAITING_FOR_BROKER);
+        item = new CustomerBrokerNegotiationInformationImpl("neoperol", NegotiationStatus.WAITING_FOR_BROKER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
         item.setNote("Nos vemos cerca de la entrada principal. Voy vestido de franela amarílla y pantalón de Jean");
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
 
@@ -230,20 +235,21 @@ public class TestData {
         timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Nelson Orlando", NegotiationStatus.WAITING_FOR_CUSTOMER);
+        item = new CustomerBrokerNegotiationInformationImpl("Nelson Orlando", NegotiationStatus.WAITING_FOR_CUSTOMER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.setNote("Nos vemos cerca de la entrada principal. Voy vestido de franela amarílla y pantalón de Jean");
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PLACE_TO_DELIVER, CUSTOMER_LOCATION_1, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
         currencyQtyVal = random.nextFloat() * 100;
@@ -254,20 +260,45 @@ public class TestData {
         timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Customer 5", NegotiationStatus.WAITING_FOR_CUSTOMER);
+        item = new CustomerBrokerNegotiationInformationImpl("Customer 5", NegotiationStatus.WAITING_FOR_CUSTOMER);
         item.setLastNegotiationUpdateDate(timeInMillisVal);
         item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.LITECOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, CryptoCurrency.LITECOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        openNegotiations.add(item);
+
+
+        currencyQtyVal = random.nextFloat() * 100;
+        exchangeRateVal = random.nextFloat();
+        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
+        exchangeRate = decimalFormat.format(exchangeRateVal);
+        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
+        timeInMillisVal = System.currentTimeMillis();
+        timeInMillisStr = String.valueOf(timeInMillisVal);
+
+        item = new CustomerBrokerNegotiationInformationImpl("Customer 5", NegotiationStatus.WAITING_FOR_CUSTOMER);
+        item.setLastNegotiationUpdateDate(timeInMillisVal);
+        item.setExpirationDatetime(timeInMillisVal);
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, CryptoCurrency.LITECOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
         openNegotiations.add(item);
 
         return openNegotiations;
@@ -277,72 +308,72 @@ public class TestData {
         if (contractsHistory == null) {
             List<CustomerBrokerNegotiationInformation> openNegotiations = getOpenNegotiationsTestData();
 
-            CryptoBrokerWalletModuleContractBasicInformation contract;
+            ContractBasicInformationImpl contract;
             contractsHistory = new ArrayList<>();
 
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contract.setCancellationReason("No se entrego la mercancia en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contract.setCancellationReason("Tardo mucho para responder");
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contract.setCancellationReason("No llegamos a un acuerdo con respecto al precio de venta");
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
         }
@@ -353,5 +384,59 @@ public class TestData {
     // TODO Revisar Franklin
     public static EmptyCustomerBrokerNegotiationInformation newEmptyNegotiationInformation() {
         return new EmptyCustomerBrokerNegotiationInformation();
+    }
+
+    public static List<BrokerIdentityBusinessInfo> getBrokerListTestData() {
+        if (connectedBrokers == null) {
+            connectedBrokers = new ArrayList<>();
+
+            BrokerIdentityBusinessInfo broker;
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("elBrokerVerdugo", new byte[0], "elBrokerVerdugo", CryptoCurrency.BITCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("elBrokerVerdugo", new byte[0], "elBrokerVerdugo", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", FiatCurrency.AUSTRALIAN_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Brokers de Argentina", new byte[0], "BrokersDeArgentina", CryptoCurrency.CHAVEZCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.CHAVEZCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.BITCOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", CryptoCurrency.LITECOIN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("leonAcostaBroker", new byte[0], "leonAcostaBroker", FiatCurrency.EURO);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Nelson Ramirez", new byte[0], "NelsonRamirez", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Luis Molina", new byte[0], "LuisMolina", FiatCurrency.CHINESE_YUAN);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Luis Molina", new byte[0], "LuisMolina", FiatCurrency.ARGENTINE_PESO);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("Mayorista La Asuncion", new byte[0], "MayoristaLaAsuncion", FiatCurrency.BRITISH_POUND);
+            connectedBrokers.add(broker);
+            broker = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo("brokers_mcbo", new byte[0], "brokers_mcbo", FiatCurrency.US_DOLLAR);
+            connectedBrokers.add(broker);
+        }
+
+        return connectedBrokers;
+    }
+
+    //LIST OF BROKER CURRENCY QUOTATUION  TEST
+    public static List <BrokerCurrencyQuotationImpl> getMarketRateForCurrencyTest(){
+
+        List <BrokerCurrencyQuotationImpl> list = new ArrayList<>();
+
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
+
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
+
+        return list;
     }
 }

@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="95dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/ccw_negotiation_details_gradient_colors"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -69,7 +69,22 @@
             android:textColor="#fff"
             android:textSize="12sp"
             tools:text="03 Feb 2015"/>
+
     </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_expiration_date"
+        android:layout_width="match_parent"
+        android:background="#ff3437"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:textColor="#fff"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="Expiration Date. 03 Feb 2015"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ccw_open_negotiation_details_recycler_view"
