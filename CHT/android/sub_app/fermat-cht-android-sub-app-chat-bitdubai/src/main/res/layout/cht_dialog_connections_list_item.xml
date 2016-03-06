@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    style="@style/listViewActivatedStyle">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_width="?android:attr/listPreferredItemHeight"
+        android:scaleType="centerCrop"
+        android:padding="10dp"
+        style="@style/quickContactBadgeStyle"
+        android:src="@drawable/cht_profile_list_icon"/>
+
+    <TextView android:id="@+id/text1"
+        android:paddingLeft="1dp"
+        android:paddingRight="@dimen/listview_item_padding"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_toRightOf="@+id/icon"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textColor="@color/black"
+        android:layout_alignParentStart="false"
+        />
+
+    <CheckBox
+        android:id="@+id/checkBoxdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/text1" />
+
+</RelativeLayout>
