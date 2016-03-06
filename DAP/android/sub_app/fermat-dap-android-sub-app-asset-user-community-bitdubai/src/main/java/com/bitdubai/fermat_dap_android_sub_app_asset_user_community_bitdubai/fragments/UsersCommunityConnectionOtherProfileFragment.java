@@ -26,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CancelDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
@@ -78,6 +79,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
+    private Button connectionCancel;
     private DAPConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
 
@@ -124,6 +126,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connect = (Button) rootView.findViewById(R.id.btn_conect);
         accept = (Button) rootView.findViewById(R.id.btn_connection_accept);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
+        connectionCancel = (Button) rootView.findViewById(R.id.btn_connection_cancel);
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
@@ -132,6 +136,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connectionRequestSend.setOnClickListener(this);
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
+        connectionCancel.setOnClickListener(this);
 
         updateButton();
 
@@ -232,6 +237,26 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 //                e.printStackTrace();
 //            }
         }
+
+        if (i == R.id.btn_connection_cancel){
+            CancelDialog cancelDialog;
+            cancelDialog = new CancelDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
+            cancelDialog.setTitle("Cancel Request");
+            cancelDialog.setDescription("Want to cancel the request to");
+            cancelDialog.setUsername(actor.getName());
+            cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            cancelDialog.show();
+        }
+
         if (i == R.id.btn_connection_accept) {
 //            try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
@@ -310,12 +335,14 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 
     private void connectionSend() {
         //connectionRequestSend.setVisibility(View.VISIBLE);
+        connectionCancel.setVisibility(View.VISIBLE);
         connect.setVisibility(View.GONE);
-        disconnect.setVisibility(View.VISIBLE);
+        disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
     }
 
     private void connectionAccept() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
@@ -324,6 +351,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void connectRequest() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.VISIBLE);
         disconnect.setVisibility(View.GONE);
@@ -331,6 +359,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void disconnectRequest() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.VISIBLE);
@@ -338,6 +367,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void connectionRejected() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
