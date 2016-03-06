@@ -29,7 +29,6 @@ public class UserNavigationHolder extends FermatViewHolder {
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
         badge = itemView.findViewById(R.id.badge);
-
     }
 
     public TextView getLabel() {
