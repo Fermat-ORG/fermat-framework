@@ -104,7 +104,7 @@ public class IncomingNotificationDao {
                         flagRead,
                         0,
                         blockchainNetworkType,
-                        responseToNotificationId
+                        responseToNotificationId, null
 
                 );
 
@@ -564,7 +564,7 @@ public class IncomingNotificationDao {
                     read,
                     0,
                     blockchainNetworkType,
-                    responseToNotificationId
+                    responseToNotificationId, null
 
             );
         } catch (Exception e) {

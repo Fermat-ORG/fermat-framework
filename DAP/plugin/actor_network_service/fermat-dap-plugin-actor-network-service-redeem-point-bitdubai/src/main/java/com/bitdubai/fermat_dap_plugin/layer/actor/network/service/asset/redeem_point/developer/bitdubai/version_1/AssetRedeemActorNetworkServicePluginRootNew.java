@@ -887,7 +887,6 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
                                         byte[] profileImage,
                                         BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException {
 
-
         try {
             UUID newNotificationID = UUID.randomUUID();
             AssetNotificationDescriptor assetNotificationDescriptor = AssetNotificationDescriptor.ASKFORCONNECTION;
