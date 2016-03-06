@@ -35,8 +35,10 @@ public class AppsConfiguration {
             ioe.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+
         }
-        return null;
+        return new HashMap<>();
     }
 
     public void updateAppsCoreInstalled(){
