@@ -722,9 +722,8 @@ public class ChatMiddlewareMonitorAgent implements
                 if(!remotepk.equals(chat.getRemoteActorPublicKey())) {
                     chat.setLocalActorPublicKey(remotepk);
                 }
-
             }
-
+            chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
             chat.setStatus(ChatStatus.VISSIBLE);
 
             chatMiddlewareDatabaseDao.saveChat(chat);
