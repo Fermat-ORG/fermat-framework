@@ -52,7 +52,7 @@ public class EmptyCustomerBrokerNegotiationInformation implements CustomerBroker
 
             @Override
             public ClauseStatus getStatus() {
-                return ClauseStatus.SENT_TO_BROKER;
+                return ClauseStatus.DRAFT;
             }
         };
 

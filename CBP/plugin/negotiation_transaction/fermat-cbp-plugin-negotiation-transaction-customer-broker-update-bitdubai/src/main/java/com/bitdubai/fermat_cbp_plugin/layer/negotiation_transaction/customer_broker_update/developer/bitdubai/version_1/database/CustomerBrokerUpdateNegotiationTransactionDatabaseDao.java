@@ -104,19 +104,19 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
                 }
             }else{
                 if(negotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
-                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 }else{
-                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 }
             }
 
-            CustomerBrokerUpdate negotiationTransactionTest = getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiation.getNegotiationId());
-            System.out.print("\n**** 4.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION DATE OF DATEBASE****\n" +
-                    "\n - Customer: " + negotiationTransactionTest.getPublicKeyCustomer() +
-                    "\n - Broker: " + negotiationTransactionTest.getPublicKeyBroker() +
-                    "\n - negotiationId: " + negotiationTransactionTest.getNegotiationId() +
-                    "\n - transactionId: " + negotiationTransactionTest.getTransactionId() +
-                    "\n - Status: " + negotiationTransactionTest.getStatusTransaction());
+//            CustomerBrokerUpdate negotiationTransactionTest = getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiation.getNegotiationId());
+//            System.out.print("\n**** 4.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION DATE OF DATEBASE****\n" +
+//                    "\n - Customer: " + negotiationTransactionTest.getPublicKeyCustomer() +
+//                    "\n - Broker: " + negotiationTransactionTest.getPublicKeyBroker() +
+//                    "\n - negotiationId: " + negotiationTransactionTest.getNegotiationId() +
+//                    "\n - transactionId: " + negotiationTransactionTest.getTransactionId() +
+//                    "\n - Status: " + negotiationTransactionTest.getStatusTransaction());
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException (e.getMessage(), e, "Customer Broker Update Negotiation Transaction", "Cant create new Customer Broker Update Negotiation Transaction, insert database problems.");
@@ -238,7 +238,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
     }
 
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT
-    public List<CustomerBrokerUpdate> getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException{
+    public List<CustomerBrokerUpdate>   getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException{
 
         try {
 
@@ -396,6 +396,25 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
             String value=records.get(0).getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME);
+
+            return value;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+        }
+
+    }
+
+    //GET EVENT TYPE OF TRANSACTION
+    public String getEventStatus(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records.get(0).getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME);
 
             return value;
 

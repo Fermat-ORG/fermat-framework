@@ -78,7 +78,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE.getCode())) {
                 this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -101,7 +101,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
         try{
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction()== Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE) {
+            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE.getCode())) {
                 this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
@@ -169,7 +169,10 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
     }
 

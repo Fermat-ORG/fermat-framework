@@ -1,9 +1,11 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -94,28 +98,44 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void initViews(View layout) {
         actualizable = true;
+        TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_customer_button);
+
+        botonG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizable = false;
+                createNewIdentityInBackDevice("OnClick");
+            }
+        });
+
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
         mCustomerName.requestFocus();
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
-                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    createNewIdentityInBackDevice();
-                    actualizable = false;
+                    if(!mCustomerName.getText().toString().trim().equals("")) {
+                        if (cryptoCustomerBitmap != null) {
+                            /*
+                            new AlertDialog.Builder(v.getContext())
+                                .setTitle("Create Identity?")
+                                .setMessage("You want to create identity?")
+                                .setNegativeButton(android.R.string.no, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        createNewIdentityInBackDevice("onFocus");
+                                    }
+                                }).create().show();
+                             */
+                        }
+                    }
                 }
             }
         });
 
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerImage.setImageResource(R.drawable.img_new_user_camera);
-        mCustomerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerForContextMenu(mCustomerImage);
-                getActivity().openContextMenu(mCustomerImage);
-            }
-        });
 
         camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
@@ -193,16 +213,23 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     /**
      * Crea una nueva identidad para un crypto customer
      */
-    private void createNewIdentityInBackDevice() {
+    private void createNewIdentityInBackDevice(String donde) {
         String customerNameText = mCustomerName.getText().toString();
-        if (!customerNameText.trim().equals("")) {
-            if (cryptoCustomerBitmap != null) {
+        if(customerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+        }else{
+            if (cryptoCustomerBitmap == null) {
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
                 final CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
-                        Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+                        if( donde.equalsIgnoreCase("OnClick") ){
+                            Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
+                        }
                         new Thread() {
                             @Override
                             public void run() {

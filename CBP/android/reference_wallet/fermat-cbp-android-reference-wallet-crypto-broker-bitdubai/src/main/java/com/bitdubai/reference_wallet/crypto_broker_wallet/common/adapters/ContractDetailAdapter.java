@@ -46,7 +46,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     }
 
     protected int getCardViewResource() {
-        return R.layout.cbw_contract_detail_item;
+        return R.layout.cbw_contract_details_item;
     }
 /*
 

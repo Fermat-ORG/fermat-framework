@@ -85,7 +85,7 @@
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
     <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
-    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least TWO Wallet</string>
     <string name="cbw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
     <string name="cbw_add_location_warning_msg">Need to Select at least ONE Location</string>
     <string name="cbw_automatic_restock">Automatic Restock</string>
@@ -198,5 +198,7 @@
     <string name="cbw_value">value</string>
     <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
     <string name="cbw_reason">Reason</string>
+    <string name="cbw_earnings_title">Earnings</string>
+    <string name="cbw_no_earnings">No Earnings</string>
     <!--Dialog Help - End-->
 </resources>

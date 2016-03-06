@@ -112,6 +112,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connectionRequestSend.setOnClickListener(this);
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
+        accept.setOnClickListener(this);
 
         switch (intraUserInformation.getConnectionState()) {           
                 case BLOCKED_LOCALLY:
@@ -275,6 +276,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void conectionAccept(){
@@ -283,6 +285,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         accept.setVisibility(View.VISIBLE);
+        accept.setBackgroundResource(R.drawable.bg_shape_blue);
 
     }
 
@@ -291,6 +294,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.VISIBLE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void disconnectRequest() {
@@ -298,6 +302,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.VISIBLE);
         connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.GONE);
     }
 
     private void connectionRejected() {
@@ -305,6 +310,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.VISIBLE);
+        accept.setVisibility(View.GONE);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

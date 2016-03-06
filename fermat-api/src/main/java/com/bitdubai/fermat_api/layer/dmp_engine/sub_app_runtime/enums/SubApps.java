@@ -29,7 +29,8 @@ public enum SubApps {
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
     DAP_REDEEM_POINT_IDENTITY("DAPRPI"),
     CHT_CHAT("CHTCHAT"),
-    Scanner("S");
+    Scanner("S"),
+    SETTINGS("SET");
 
 
     private final String code;
@@ -87,6 +88,8 @@ public enum SubApps {
                 return SubApps.CHT_CHAT;
             case "S":
                 return Scanner;
+            case "SET":
+                return SETTINGS;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

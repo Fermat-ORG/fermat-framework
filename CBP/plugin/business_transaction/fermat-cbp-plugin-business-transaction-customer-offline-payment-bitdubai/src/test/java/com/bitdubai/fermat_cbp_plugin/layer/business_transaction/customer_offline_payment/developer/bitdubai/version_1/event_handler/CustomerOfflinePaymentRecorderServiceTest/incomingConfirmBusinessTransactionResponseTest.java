@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderServiceTest;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -16,6 +16,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,14 +33,19 @@ public class incomingConfirmBusinessTransactionResponseTest {
     ErrorManager errorManager;
     @Mock
     FermatEventListener mockFermatEventListener;
-    IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse;
+    @Mock
+    IncomingConfirmBusinessTransactionResponse mockIncomingConfirmBusinessTransactionResponse;
+    @Mock
+    FermatEventEnum fermatEventEnum;
+    EventSource eventSource = EventSource.ACTOR_ASSET_ISSUER;
     CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService;
 
     public void setUpGeneralMockitoRules() throws Exception{
-        when(eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE)).thenReturn(mockFermatEventListener);
-        when(eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE)).thenReturn(mockFermatEventListener);
-
-
+        when(mockIncomingConfirmBusinessTransactionResponse.getRemoteBusinessTransaction()).
+                thenReturn(Plugins.CUSTOMER_OFFLINE_PAYMENT);
+        when(mockIncomingConfirmBusinessTransactionResponse.getSource()).thenReturn(eventSource);
+        doNothing().when(customerOfflinePaymentBusinessTransactionDao).saveNewEvent(
+                "Test",eventSource.getCode());
     }
     @Before
     public void setup()throws Exception{
@@ -45,25 +53,22 @@ public class incomingConfirmBusinessTransactionResponseTest {
         setUpGeneralMockitoRules();
     }
     @Test
-    public void incomingConfirmBusinessTransactionResponseTest_Should_Return_() throws Exception {
-        //when(incomingConfirmBusinessTransactionResponse.getRemoteBusinessTransaction()).thenReturn(Plugins.CUSTOMER_OFFLINE_PAYMENT);
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
-        //customerOfflinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(incomingConfirmBusinessTransactionResponse);
-    }
+    public void incomingConfirmBusinessTransactionResponseTest() throws Exception {
+        when(mockIncomingConfirmBusinessTransactionResponse.getEventType()).thenReturn(fermatEventEnum);
+        when(fermatEventEnum.getCode()).thenReturn("Test");
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(
+                customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOfflinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(
+                mockIncomingConfirmBusinessTransactionResponse);
+        verify(customerOfflinePaymentBusinessTransactionDao,times(1)).saveNewEvent("Test", eventSource.getCode());
 
-    @Test(expected = Exception.class)
-    public void incomingConfirmBusinessTransactionResponseTest_Should_Throw_Exception() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
-        customerOfflinePaymentRecorderService.setEventManager(eventManager);
-        customerOfflinePaymentRecorderService.start();
-        customerOfflinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(null);
     }
 
     @Test(expected = CantSaveEventException.class)
-    public void incomingConfirmBusinessTransactionResponseTest_Should_Throw_CantSaveEventException() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
-        customerOfflinePaymentRecorderService.setEventManager(eventManager);
-        customerOfflinePaymentRecorderService.start();
-        customerOfflinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(incomingConfirmBusinessTransactionResponse);
+    public void incomingConfirmBusinessTransactionResponseTest_Should_Throw_Exception() throws Exception {
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(
+                customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOfflinePaymentRecorderService.incomingConfirmBusinessTransactionResponse(
+                mockIncomingConfirmBusinessTransactionResponse);
     }
 }

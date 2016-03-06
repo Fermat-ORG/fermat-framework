@@ -2,9 +2,11 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.header;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -27,9 +29,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Mark
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.viewpagerindicator.LinePageIndicator;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -39,14 +41,14 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "CustomerWalletHeader";
 
     private final CryptoCustomerWalletSession session;
-    private final Activity activity;
+    private final WeakReference<Context> activity;
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
 
 
-    public CryptoCustomerWalletHeaderPainter(Activity activity, CryptoCustomerWalletSession session) {
+    public CryptoCustomerWalletHeaderPainter(Context activity, CryptoCustomerWalletSession session) {
         this.session = session;
-        this.activity = activity;
+        this.activity = new WeakReference<>(activity);
 
         try {
             errorManager = session.getErrorManager();
@@ -61,12 +63,14 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        View container = activity.getLayoutInflater().inflate(R.layout.ccw_header_layout, viewGroup, true);
+        LayoutInflater inflater =(LayoutInflater) activity.get()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View container = inflater.inflate(R.layout.ccw_header_layout, viewGroup, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             FrameLayout headerContainer = (FrameLayout) container.findViewById(R.id.ccw_header_layout_container);
             ViewGroup.MarginLayoutParams marginParams = new  ViewGroup.MarginLayoutParams(headerContainer.getLayoutParams());
-            marginParams.topMargin = SizeUtils.convertDpToPixels(55, activity);
-            marginParams.height = SizeUtils.convertDpToPixels(90, activity);
+            marginParams.topMargin = SizeUtils.convertDpToPixels(55, activity.get());
+            marginParams.height = SizeUtils.convertDpToPixels(90, activity.get());
 
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
             headerContainer.setLayoutParams(layoutParams);
@@ -80,7 +84,8 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
 
     private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
 
-        FermatWorker fermatWorker = new FermatWorker(activity) {
+        //TODO: hacerlo con el contexto
+        FermatWorker fermatWorker = new FermatWorker(activity.get()) {
             @Override
             protected Object doInBackground() throws Exception {
                 List<IndexInfoSummary> data = new ArrayList<>();
@@ -107,7 +112,7 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
                         View marketRateViewPagerContainer = container.findViewById(R.id.ccw_market_rate_view_pager_container);
                         marketRateViewPagerContainer.setVisibility(View.VISIBLE);
 
-                        final FragmentManager fragmentManager = activity.getFragmentManager();
+                        final FragmentManager fragmentManager = ((Activity)activity.get()).getFragmentManager();
                         MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(fragmentManager, summaries);
 
                         ViewPager viewPager = (ViewPager) container.findViewById(R.id.ccw_exchange_rate_view_pager);
@@ -136,6 +141,6 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
             }
         });
 
-        Executors.newSingleThreadExecutor().execute(fermatWorker);
+        fermatWorker.execute();
     }
 }

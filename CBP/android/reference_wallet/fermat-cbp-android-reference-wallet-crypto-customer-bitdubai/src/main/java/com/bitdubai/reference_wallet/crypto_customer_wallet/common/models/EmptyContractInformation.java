@@ -76,6 +76,16 @@ public class EmptyContractInformation implements ContractBasicInformation {
     }
 
     @Override
+    public String getCryptoBrokerAlias() {
+        return null;
+    }
+
+    @Override
+    public byte[] getCryptoBrokerImage() {
+        return new byte[0];
+    }
+
+    @Override
     public float getExchangeRateAmount() {
         return exchangeRateAmount;
     }

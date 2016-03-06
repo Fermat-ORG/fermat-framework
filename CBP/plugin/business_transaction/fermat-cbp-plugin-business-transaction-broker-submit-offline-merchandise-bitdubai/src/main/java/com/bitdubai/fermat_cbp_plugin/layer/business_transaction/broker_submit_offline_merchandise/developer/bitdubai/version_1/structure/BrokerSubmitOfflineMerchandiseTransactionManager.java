@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -300,7 +301,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_PAYMENT_METHOD)){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
                     clauseValue=clause.getValue();
                     if(clauseValue.equals(MoneyType.CRYPTO)){
                         throw new CantGetBrokerMerchandiseException(
@@ -337,7 +338,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CURRENCY)){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())){
                     clauseValue=clause.getValue();
                     return FiatCurrency.getByCode(clauseValue);
                 }
@@ -368,7 +369,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
@@ -444,5 +445,18 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     "Unexpected Result",
                     "Check the cause");
         }
+    }
+
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        //TODO to implement
+        return 0;
     }
 }

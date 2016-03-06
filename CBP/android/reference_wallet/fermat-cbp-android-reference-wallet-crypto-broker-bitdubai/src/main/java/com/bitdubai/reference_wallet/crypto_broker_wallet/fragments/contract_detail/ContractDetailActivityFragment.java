@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,18 +21,21 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -145,42 +148,39 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         negotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
-                String a = appSession.getAppPublicKey();
-
+                CustomerBrokerNegotiationInformation negotiationInfo;
                 try {
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, a);
-                }catch (Exception e)
-                {
-                    System.out.println(e+"");
+                    negotiationInfo = walletManager.getNegotiationInformation(data.getNegotiationId());
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, negotiationInfo);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
+
+                } catch (FermatException ex) {
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    else
+                        Log.e(TAG, ex.getMessage(), ex);
+
+                    // TODO Just for testing. Add a Toast later
+                    negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, negotiationInfo);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
                 }
-
-
-
-
             }
         });
-        String paymentCurrency=data.getPaymentCurrency();
+        String paymentCurrency = data.getPaymentCurrency();
         brokerName.setText(data.getCryptoCustomerAlias());
-        sellingSummary.setText("SELLING "+paymentCurrency);
-        Date date=new Date(data.getLastUpdate());
-        //TODO: we can introduce locale for date format
+        customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
+        sellingSummary.setText("SELLING " + paymentCurrency);
+        //TODO: averiguar el detailrate como escribirlo
+        //detailRate.setText("1 BTC @"+ data.getExchangeRateAmount() + " "+ data.getPaymentCurrency());
+        //detailRate.setText("1 BTC @ 254 USD");
+        Date date = new Date(data.getLastUpdate());
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
         detailDate.setText("Date:\n"+formatter.format(date));
-        //detailRate.setText("1 BTC @ 254 USD");
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
-
-
-        //Create adapter
-        adapter = new ContractDetailAdapter(
-                getActivity(),
-                contractInformation,
-                appSession,
-                walletManager);
-        //adapter.setFooterListener(this);
-        //adapter.setClauseListener(this);
-
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
         recyclerView.setAdapter(adapter);
     }
 
@@ -193,80 +193,64 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
         ContractDetail contractDetail;
-        //Testing Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.BROKER_DETAIL,
-                MoneyType.CRYPTO.getCode(),
-                CryptoCurrency.BITCOIN.getFriendlyName(),
-                12,
-                ContractStatus.PENDING_MERCHANDISE,
-                "BTC Broker",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-        //Customer Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.CUSTOMER_DETAIL,
-                MoneyType.BANK.getCode(),
-                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-                12,
-                ContractStatus.PAYMENT_SUBMIT,
-                "BTC Customer",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-
-        /**
-         * Get the wallet module manager
-         */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        CryptoBrokerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager=
                 appSession.getModuleManager();
-        if(cryptoCustomerWalletModuleManager!=null){
-
+        if(walletManager!=null){
             try{
-                CryptoBrokerWalletManager cryptoCustomerWalletManager=
-                        cryptoCustomerWalletModuleManager.getCryptoBrokerWallet(
-                                appSession.getAppPublicKey()
-                        );
+                CryptoBrokerWalletManager cryptoCustomerWalletManager= cryptoBrokerWalletModuleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 //ContractDetail contractDetail;
-                CustomerBrokerContractSale customerBrokerContractPurchase=
-                        cryptoCustomerWalletManager.
-                                getCustomerBrokerContractSaleByNegotiationId(
-                                        data.getNegotiationId().toString());
+                CustomerBrokerContractSale customerBrokerContractPurchase= cryptoCustomerWalletManager.getCustomerBrokerContractSaleByNegotiationId(data.getNegotiationId().toString());
                 //Customer
-                contractDetail=new ContractDetail(
-                        ContractDetailType.CUSTOMER_DETAIL,
+                ContractStatus mockedStatus = ContractStatus.PENDING_PAYMENT;
+
+
+                contractDetail = new ContractDetail(
+                        1,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        data.getAmount(),
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
-                        data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
                 contractDetails.add(contractDetail);
-                //Broker
-                contractDetail=new ContractDetail(
-                        ContractDetailType.BROKER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
+
+                //Payment Reception step
+                contractDetail = new ContractDetail(
+                        2,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail = new ContractDetail(
+                        3,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        0.0f,                               //TODO: getMerchandiseAmount() missing
+                        "Missing type of merchandise",      //TODO: getTypeOfMerchandise() missing
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail = new ContractDetail(
+                        4,
+                        data.getStatus(),                       //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        0.0f,                               //TODO: get merchandise amount?
+                        "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
+                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -285,6 +269,31 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     Toast.LENGTH_SHORT)
                     .show();
         }
+
+        /*try{
+
+            CustomerBrokerContractSale contract= walletManager.getCustomerBrokerContractSaleForContractId(data.getContractId().toString());
+            for (ContractClause clause:contract.getContractClause()){
+                contractDetail=new ContractDetail(
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        contract.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+            }
+        }catch (Exception e){
+            CommonLogger.exception(TAG, e.getMessage(), e);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }*/
 
         return contractDetails;
     }

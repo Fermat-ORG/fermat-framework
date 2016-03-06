@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -64,11 +65,13 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao,
             TransactionTransmissionManager transactionTransmissionManager,
-            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager){
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            ErrorManager errorManager){
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerOnlinePaymentBusinessTransactionDao=customerOnlinePaymentBusinessTransactionDao;
         this.transactionTransmissionManager=transactionTransmissionManager;
         this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -98,6 +101,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         try{
 
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
+
             for(Clause clause : negotiationClauses){
                 if(clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS)){
                     return clause.getValue();
@@ -125,7 +129,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
@@ -217,7 +221,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -226,7 +230,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (CantInsertRecordException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -235,7 +239,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (CantGetCryptoAddressException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -244,7 +248,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (CantGetListPurchaseNegotiationsException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -253,7 +257,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (CantGetCryptoAmountException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -262,7 +266,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         } catch (ObjectNotSetException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(
                     e,
@@ -271,7 +275,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantSendPaymentException(e,
                     "Sending online payment",
@@ -310,4 +314,16 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     public ContractStatus getContractStatus(String contractHash) {
         return null;
     }*/
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        //TODO to implement
+        return 0;
+    }
 }

@@ -29,9 +29,9 @@ android {
 
     defaultConfig {
         applicationId "org.fermat"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 23
-        versionCode 7
+        versionCode 12
         versionName "1.1"
         multiDexEnabled true
     }
@@ -137,7 +137,6 @@ dependencies {
     //compile 'com.google.android.gms:play-services:6.5.87'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
@@ -158,7 +157,11 @@ dependencies {
 
 
     compile project(':horizontalscrollview')
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
 
 
 
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
 }
