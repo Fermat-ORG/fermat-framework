@@ -361,31 +361,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetException {
-        try {
-            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
-                try {
-                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
-                            null,
-                            CryptoCurrency.BITCOIN,
-                            Actors.DAP_ASSET_ISSUER,
-                            Actors.DAP_ASSET_USER,
-                            requester.getActorPublicKey(),
-                            actorAssetUser.getActorPublicKey(),
-                            CryptoAddressDealers.DAP_ASSET,
-                            blockchainNetworkType);
-//                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
-
-                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworkService(actorAssetUser, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
-                } catch (CantUpdateAssetUserConnectionException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (CantSendAddressExchangeRequestException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+//                try {
+//                    cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
+//                            null,
+//                            CryptoCurrency.BITCOIN,
+//                            Actors.DAP_ASSET_ISSUER,
+//                            Actors.DAP_ASSET_USER,
+//                            requester.getActorPublicKey(),
+//                            actorAssetUser.getActorPublicKey(),
+//                            CryptoAddressDealers.DAP_ASSET,
+//                            blockchainNetworkType);
+////                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
+//
+//                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworkService(actorAssetUser, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+//                } catch (CantUpdateAssetUserConnectionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (CantSendAddressExchangeRequestException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void connectToActorAssetUser(String destinationActorPublicKey,
+    private void connectToActorAssetUser(String destinationActorPublicKey,
                                         Actors destinationActorType,
                                         String senderActorPublicKey,
                                         Actors senderActorType,

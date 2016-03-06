@@ -26,6 +26,9 @@ public class CommunityNotificationPainterBuilder {
                 case ACTOR_CONNECTED:
                     notification = new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.", "", "", R.drawable.cbc_ic_nav_connections);
                     break;
+                case CONNECTION_REQUEST_RECEIVED:
+                    notification = new CommunityNotificationPainter("Crypto Broker Community", "A Broker wants to connect with you.", "", "", R.drawable.cbc_ic_nav_connections);
+                    break;
             }
 
         } catch (Exception e) {

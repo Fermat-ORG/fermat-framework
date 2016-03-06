@@ -104,7 +104,8 @@ public class IncomingNotificationDao {
                         flagRead,
                         0,
                         blockchainNetworkType,
-                        responseToNotificationId
+                        responseToNotificationId,
+                        null
 
                 );
 
@@ -496,6 +497,8 @@ public class IncomingNotificationDao {
                 dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, record.getBlockchainNetworkType().getCode());
             if (record.getResponseToNotificationId() != null)
                 dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, record.getResponseToNotificationId());
+            if (record.getMessageXML() != null)
+                dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_MESSAGE, record.getMessageXML());
 
             /**
              * Persist profile image on a file
@@ -528,6 +531,7 @@ public class IncomingNotificationDao {
             String flagRead = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
             String blockChainNetwork = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
             UUID responseToNotificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+            String messageXML = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_MESSAGE);
 
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.getByCode(protocolState);
             Boolean read = Boolean.valueOf(flagRead);
@@ -564,7 +568,8 @@ public class IncomingNotificationDao {
                     read,
                     0,
                     blockchainNetworkType,
-                    responseToNotificationId
+                    responseToNotificationId,
+                    messageXML
 
             );
         } catch (Exception e) {

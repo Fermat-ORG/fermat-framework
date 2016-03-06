@@ -31,8 +31,8 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
              /*
               *  Actor Asset Issuer make the job
               */
-                this.assetActorIssuerPluginRoot.handleNewReceiveMessageActorNotificationEvent(
-                        newReceiveMessageActorNotificationEvent.getMessage());
+//                this.assetActorIssuerPluginRoot.handleNewReceiveMessageActorNotificationEvent(
+//                        newReceiveMessageActorNotificationEvent.getMessage());
             }
         }
     }
