@@ -51,18 +51,48 @@ public class TokenlyBotJSonAttNames {
     public static final String SWAPS = "swaps";
 
     /**
-     * Represents the swap creation date.
+     * Represents the bot balances
+     */
+    public static final String BALANCES = "balances";
+
+    /**
+     * Represents the bot all balances by type
+     */
+    public static final String ALL_BALANCES_BY_TYPE = "allBalancesByType";
+
+    /**
+     * Represents the bot return fee.
+     */
+    public static final String RETURN_FEE = "returnFee";
+
+    /**
+     * Represents the bot state.
+     */
+    public static final String STATE = "state";
+
+    /**
+     * Represents the bot confirmations required.
+     */
+    public static final String CONFIRMATIONS_REQUIRED = "confirmationsRequired";
+
+    /**
+     * Represents the bot refund config
+     */
+    public static final String REFUND_CONFIG = "refundConfig";
+
+    /**
+     * Represents the bot refund after blocks
+     */
+    public static final String REFUND_AFTER_BLOCKS = "refundAfterBlocks";
+
+    /**
+     * Represents the bot created date
      */
     public static final String CREATED_AT = "createdAt";
 
     /**
-     * Represents the swap update date.
+     * Represents the bot hash.
      */
-    public static final String UPDATED_AT = "createdAt";
-
-    /**
-     * Represents the swap completion date.
-     */
-    public static final String COMPLETED_AT = "createdAt";
+    public static final String HASH = "hash";
 
 }

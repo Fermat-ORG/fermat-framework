@@ -98,7 +98,7 @@ public interface Bot {
     long getConfirmationsRequired();
 
     /**
-     * Thi method returns the refund after blocks
+     * This method returns the refund after blocks
      * @return
      */
     long getRefundAfterBlocks();
