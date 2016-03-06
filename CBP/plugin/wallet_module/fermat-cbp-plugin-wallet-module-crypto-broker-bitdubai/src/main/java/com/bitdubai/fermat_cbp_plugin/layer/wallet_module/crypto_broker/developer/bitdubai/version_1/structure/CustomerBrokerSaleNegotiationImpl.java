@@ -208,7 +208,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
-        
+
         this.status = NegotiationStatus.SENT_TO_CUSTOMER;
     }
 
@@ -232,3 +232,4 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
                 toString();
     }
 }
+z
