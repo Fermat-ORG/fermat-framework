@@ -260,7 +260,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String customerWalletPublicKey = "crypto_customer_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,customerWalletPublicKey ,CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -294,7 +297,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String customerWalletPublicKey = "crypto_customer_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,customerWalletPublicKey ,CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
