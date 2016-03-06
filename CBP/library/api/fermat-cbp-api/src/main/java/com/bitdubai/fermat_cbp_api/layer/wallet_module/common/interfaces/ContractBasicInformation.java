@@ -32,6 +32,16 @@ public interface ContractBasicInformation {
     byte[] getCryptoCustomerImage();
 
     /**
+     * @return the crypto broker name (or alias)
+     */
+    String getCryptoBrokerAlias();
+
+    /**
+     * @return the image of the crypto broker has a byte array
+     */
+    byte[] getCryptoBrokerImage();
+
+    /**
      * @return the exchange rate amount for the merchandise
      */
     float getExchangeRateAmount();

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -147,10 +148,22 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
         /* divide the list in two:
          *    list of sell transactions (linked currency)
          *    list of buy transactions  (linked currency)
-         *
-         * we will sort the list by the amount of linked currency descendant
-         *
-         * once we have the list split:
+         */
+        List<InputTransaction> sellTransactions = new ArrayList<>();
+        List<InputTransaction> buyTransactions  = new ArrayList<>();
+
+        for (InputTransaction transaction : inputTransactionList) {
+
+            if (transaction.getCurrencyGiving() == earningsPair.getLinkedCurrency())
+                sellTransactions.add(transaction);
+            else
+                buyTransactions.add(transaction);
+        }
+
+        int i = 0;
+        int j = 0;
+
+        /* once we have the list split:
          *    we get our first sell transaction
          *    we compare with a buy transaction
          *    if the amount of sell and buy the currency are equals:

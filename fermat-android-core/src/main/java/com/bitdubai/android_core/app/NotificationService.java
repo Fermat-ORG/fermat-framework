@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
+
 /**
  * Created by mati on 2016.03.01..
  */
@@ -81,7 +83,7 @@ public class NotificationService extends Service {
         if (fermatStructure != null) {
 //            notificationIdCount++;
 //            lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
@@ -91,7 +93,7 @@ public class NotificationService extends Service {
             if (notificationPainter != null) {
                 RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                 Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
-                intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
@@ -123,7 +125,7 @@ public class NotificationService extends Service {
                 notificationManager.notify(0, builder.build());
             }else{
                 Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
-                intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
                         .getActivity(this, 0, intent, 0);
@@ -169,7 +171,7 @@ public class NotificationService extends Service {
         mBuilder.setContentTitle("Downloading blockchain blocks")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.fermat_logo_310_x_310);
-// Start a lengthy operation in a background thread
+        // Start a lengthy operation in a background thread
         new Thread(
                 new Runnable() {
                     @Override

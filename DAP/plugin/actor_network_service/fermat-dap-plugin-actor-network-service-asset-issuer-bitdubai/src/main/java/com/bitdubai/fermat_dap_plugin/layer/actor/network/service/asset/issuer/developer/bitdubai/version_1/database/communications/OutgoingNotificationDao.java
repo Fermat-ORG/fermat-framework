@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
@@ -78,7 +79,8 @@ public class OutgoingNotificationDao {
                                                             boolean flagRea,
                                                             int sentCount,
                                                             BlockchainNetworkType blockchainNetworkType,
-                                                            UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
+                                                            UUID responseToNotificationId,
+                                                            String messageXML) throws CantCreateActorAssetNotificationException {
 
         try {
             ActorAssetNetworkServiceRecord connectionRequestRecord = null;
@@ -102,7 +104,8 @@ public class OutgoingNotificationDao {
                         flagRea,
                         sentCount,
                         blockchainNetworkType,
-                        responseToNotificationId
+                        responseToNotificationId,
+                        messageXML
                 );
 
                 outgoingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
@@ -460,6 +463,8 @@ public class OutgoingNotificationDao {
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
             if (connectionRequestRecord.getResponseToNotificationId() != null)
                 record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getResponseToNotificationId());
+            if (connectionRequestRecord.getMessageXML() != null)
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_MESSAGE, connectionRequestRecord.getMessageXML());
 
             /**
              * Persist profile image on a file
@@ -489,6 +494,7 @@ public class OutgoingNotificationDao {
             int sentCount = record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
             String blockchainNetwork = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
             UUID responseToNotificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+            String messageXML = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_MESSAGE);
 
 
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.getByCode(protocolState);
@@ -526,7 +532,8 @@ public class OutgoingNotificationDao {
                     read,
                     sentCount,
                     blockchainNetworkType,
-                    responseToNotificationId
+                    responseToNotificationId,
+                    messageXML
             );
 
         } catch (Exception e) {
