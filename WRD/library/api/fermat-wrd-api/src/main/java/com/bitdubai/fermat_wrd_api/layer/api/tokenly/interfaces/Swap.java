@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces;
 
+import java.sql.Date;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.
@@ -7,69 +8,45 @@ package com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces;
 public interface Swap {
 
     /**
-     * This method returns the strategy
+     * This method returns the swap id.
      * @return
      */
-    String getStrategy();
+    String getId();
 
     /**
-     * This method returns the direction
+     * This method returns the swap transaction id.
      * @return
      */
-    String getDirection();
+    String getTxId();
 
     /**
-     * This method returns the in.
+     * This method returns the swap state.
      * @return
      */
-    String getIn();
+    String getState();
 
     /**
-     * This method returns the out.
+     * This method returns the swap receipt.
      * @return
      */
-    String getOut();
+    Receipt getReceipt();
 
     /**
-     * This method returns the cost
+     * This method returns the swap creation date.
      * @return
      */
-    float getCost();
+    Date getCreatedAt();
 
     /**
-     * This method returns the divisible state
+     * This method returns the swap update date
      * @return
      */
-    boolean getDivisible();
+    Date getUpdatedAt();
 
     /**
-     * This method returns the min out.
+     * This method returns the swap completion date.
      * @return
      */
-    long getMinOut();
-
-    /**
-     * This method returns the swap type
-     * @return
-     */
-    String getType();
-
-    /**
-     * This method returns the fiat type
-     * @return
-     */
-    String getFiat();
-
-    /**
-     * This method returns the source
-     * @return
-     */
-    String getSource();
-
-    /**
-     * This method returns the swap rule ids.
-     * @return
-     */
-    String[] getSwapRuleIds();
+    Date getCompletedAt();
 
 }
