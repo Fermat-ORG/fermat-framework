@@ -107,16 +107,16 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
 
     @Override
     public boolean closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-        try {
-            if(verifyStatusClause(negotiation.getClauses())) {
+//        try {
+//            if(verifyStatusClause(negotiation.getClauses())) {
                 this.customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
                 return true;
-            }
-            return false;
-        } catch (CantGetListClauseException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
-        }
+//            }
+//            return false;
+//        } catch (CantGetListClauseException e) {
+//            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+//        }
     }
 
     @Override
@@ -146,7 +146,12 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
 
     @Override
     public void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
-
+        try{
+            this.customerBrokerSaleNegotiationDao.waitForBroker(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
     }
 
     @Override

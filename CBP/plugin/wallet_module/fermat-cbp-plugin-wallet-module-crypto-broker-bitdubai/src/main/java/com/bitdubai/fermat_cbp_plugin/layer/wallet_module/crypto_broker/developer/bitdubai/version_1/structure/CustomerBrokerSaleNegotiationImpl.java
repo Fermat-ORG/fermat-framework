@@ -188,7 +188,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
         dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
         memo = negotiationInfo.getMemo();
-        this.status = status;
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
         clauses = new ArrayList<>();
@@ -197,10 +196,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
 
-        if(dataHasChanged)
-            this.status = NegotiationStatus.WAITING_FOR_CUSTOMER;
-        else
-            this.status = NegotiationStatus.CLOSED;
+        this.status = NegotiationStatus.SENT_TO_CUSTOMER;
 
     }
 
