@@ -91,7 +91,7 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
 
     //@Override
     public void openContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                             FiatIndex fiatIndex) throws CantOpenContractException, UnexpectedResultReturnedFromDatabaseException {
+                             float referencePrice) throws CantOpenContractException, UnexpectedResultReturnedFromDatabaseException {
 
         contractType= ContractType.SALE;
         try{
@@ -99,7 +99,7 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
             ContractSaleRecord contractRecord=createSaleContractRecord(
                     negotiationClauses,
                     customerBrokerSaleNegotiation,
-                    fiatIndex
+                    referencePrice
                     );
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
             this.openContractBusinessTransactionDao.persistContractRecord(

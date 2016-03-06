@@ -322,7 +322,7 @@ public class CustomerBrokerCloseAgent  implements
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
-//                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+//                                customerBrokerPurchaseNegotiationManager.waitForCustomer(purchaseNegotiation);
                                 break;
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML,saleNegotiation);
@@ -331,7 +331,7 @@ public class CustomerBrokerCloseAgent  implements
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_CUSTOMER: send negotiation to customer, waiting confirm
-//                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
+//                                customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
                                 break;
                         }
 

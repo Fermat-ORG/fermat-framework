@@ -3634,7 +3634,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         final String publicKey = "cash_wallet";
-        final String statusBarColor = "#00b9ff";
+        //final String statusBarColor = "#00b9ff";
+        final String statusBarColor = "#11516F";
         final String titleBarLabelColor = "#FFFFFF";
         final String titleBarColor = "#00b9ff";
         final int titleBarLabelSize = 20;
