@@ -54,11 +54,13 @@ public class CryptoCustomerWalletSession
         setData(QUOTES, quotes);
     }
 
+    @SuppressWarnings("unchecked")
     public List<MerchandiseExchangeRate> getQuotes() {
         Object data = getData(QUOTES);
         return (data != null) ? (List<MerchandiseExchangeRate>) data : null;
     }
 
+    @SuppressWarnings("unchecked")
     public List<IndexInfoSummary> getActualExchangeRates() {
         Object data = getData(EXCHANGE_RATES);
         return (data != null) ? (List<IndexInfoSummary>) data : null;

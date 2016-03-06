@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 05/01/16.
  */
@@ -37,6 +38,17 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         this.negotiationId = negotiationId;
         clauses = new ArrayList<>();
         status = NegotiationStatus.WAITING_FOR_CUSTOMER;
+    }
+
+    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId, String brokerPublicKey, String customerPublicKey) {
+        dataHasChanged = false;
+
+        this.negotiationId = negotiationId;
+        clauses = new ArrayList<>();
+        status = NegotiationStatus.WAITING_FOR_CUSTOMER;
+
+        this.customerPublicKey = customerPublicKey;
+        this.brokerPublicKey = brokerPublicKey;
     }
 
     public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
@@ -136,6 +148,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     /**
      * @return the clauses that conform this negotiation
+     *
      * @throws CantGetListClauseException
      */
     @Override
@@ -195,9 +208,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
             clauses.add(new ClauseImpl(value, brokerPublicKey));
         }
-
+        
         this.status = NegotiationStatus.SENT_TO_CUSTOMER;
-
     }
 
     public boolean dataHasChanged() {
@@ -208,8 +220,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     public String toString() {
         return com.google.common.base.Objects.toStringHelper(this).
                 add("startDate", startDate).
-//                add("negotiationUpdateDatetime", negotiationUpdateDatetime).
-                add("lastNegotiationUpdateDate",lastNegotiationUpdateDate).
+                add("lastNegotiationUpdateDate", lastNegotiationUpdateDate).
                 add("nearExpirationDatetime", nearExpirationDatetime).
                 add("cancelReason", cancelReason).
                 add("memo", memo).

@@ -11,11 +11,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +66,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(yourExchangeRateValue, clause, clausePosition);
+            listener.onClauseClicked(yourExchangeRateValue, clause, clausePosition);
     }
 
     @Override

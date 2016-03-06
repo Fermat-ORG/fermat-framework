@@ -223,6 +223,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             case BROKER_PLACE_TO_DELIVER:
                 brokerLocationsEventAction(clause);
                 break;
+            case BROKER_PAYMENT_METHOD:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                break;
+            case CUSTOMER_BANK_ACCOUNT:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                break;
+            case CUSTOMER_PLACE_TO_DELIVER:
+                Toast.makeText(getActivity(), "This is selected by the Customer", Toast.LENGTH_SHORT).show();
+                break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 datetimeToPayEventAction(triggerView, clause);
                 break;
@@ -339,6 +348,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -406,10 +416,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(clause);
+                final BigDecimal exchangeRate = MathUtils.getBigDecimal(newValue);
                 final BigDecimal amountToSell = MathUtils.getBigDecimal(clauses.get(CUSTOMER_CURRENCY_QUANTITY));
                 final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
                 final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
+
                 negotiationWrapper.changeClauseValue(clause, newValue);
                 negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
 
@@ -427,7 +438,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToSell = MathUtils.getBigDecimal(clause);
+                final BigDecimal amountToSell = MathUtils.getBigDecimal(newValue);
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
                 final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
@@ -450,7 +461,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToReceive = MathUtils.getBigDecimal(clause);
+                final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
                 final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();

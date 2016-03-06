@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -97,7 +98,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void initViews(View layout) {
         actualizable = true;
-        Button botonG = (Button) layout.findViewById(R.id.create_crypto_customer_button);
+        TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_customer_button);
 
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +117,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 if (actualizable) {
                     if(!mCustomerName.getText().toString().trim().equals("")) {
                         if (cryptoCustomerBitmap != null) {
+                            /*
                             new AlertDialog.Builder(v.getContext())
                                 .setTitle("Create Identity?")
                                 .setMessage("You want to create identity?")
@@ -125,6 +127,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                                         createNewIdentityInBackDevice("onFocus");
                                     }
                                 }).create().show();
+                             */
                         }
                     }
                 }

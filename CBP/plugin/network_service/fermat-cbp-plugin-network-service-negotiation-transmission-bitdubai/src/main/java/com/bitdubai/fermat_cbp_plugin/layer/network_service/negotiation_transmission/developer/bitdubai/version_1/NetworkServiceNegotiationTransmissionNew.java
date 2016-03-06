@@ -378,7 +378,6 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
     private void receiveConfirm(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException, CantConfirmNotificationException {
 
         UUID transactionId = negotiationTransmission.getTransactionId();
-//        incomingNotificationDao.confirmReception(transmissionId);
         outgoingNotificationDao.confirmReception(transactionId);
 
     }
