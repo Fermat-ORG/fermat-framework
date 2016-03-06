@@ -133,7 +133,10 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             recordsToDelete.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
             PurchaseNegotiationClauseTable.deleteRecord(recordsToDelete);
 
+            System.out.print("\n**** 28.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n" +
+                    "\nClauses Date.");
             for(Clause _clause : negotiation.getClauses()) {
+                System.out.print("\n - "+_clause.getType()+""+_clause.getValue()+"\n");
                 addNewClause(negotiation.getNegotiationId(), _clause);
             }
 
@@ -246,6 +249,19 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
             PurchaseNegotiationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
             recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
+            PurchaseNegotiationTable.updateRecord(recordToUpdate);
+            waitForBrokerUpdateStatusClause(negotiation);
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        try {
+            DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
+            PurchaseNegotiationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_CUSTOMER.getCode());
             PurchaseNegotiationTable.updateRecord(recordToUpdate);
             waitForBrokerUpdateStatusClause(negotiation);
         } catch (CantUpdateRecordException e) {
