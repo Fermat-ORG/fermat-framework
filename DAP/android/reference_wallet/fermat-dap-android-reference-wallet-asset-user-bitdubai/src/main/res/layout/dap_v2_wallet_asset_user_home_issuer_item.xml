@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
-    android:background="@color/dap_user_wallet__home_issuer_item">
+    android:layout_height="85dp">
 
     <RelativeLayout
         android:id="@+id/homeIssuerImageLayout"
@@ -13,7 +12,7 @@
         android:background="@drawable/bg_circular_home_issuer"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="5dp">
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/homeIssuerImage"
@@ -30,21 +29,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Frank Contreras Issuer"
-        android:textColor="@color/fab_material_white"
+        android:textColor="@color/gray"
         android:textSize="16sp"
-        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/homeIssuerImageLayout"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/homeIssuerNumAssets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2 assets"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/homeIssuerArrow"
-        android:textColor="@color/fab_material_white"/>
+        android:textColor="@color/color_gray_light"
+        android:layout_toRightOf="@+id/homeIssuerImageLayout"
+        android:layout_below="@+id/homeIssuerNameText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"/>
 
     <ImageView
         android:id="@+id/homeIssuerArrow"
@@ -52,12 +52,15 @@
         android:layout_height="18dp"
         android:src="@drawable/ic_arrow_down_white"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"/>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/fab_material_white"
-        android:layout_alignParentBottom="true"/>
+        android:background="@color/gray"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
 </RelativeLayout>

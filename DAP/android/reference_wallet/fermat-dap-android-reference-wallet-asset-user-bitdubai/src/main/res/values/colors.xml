@@ -32,8 +32,10 @@
     <!-- asset user wallet v2 -->
     <color name="dap_user_wallet__home_issuer_principal">#0097A7</color>
     <color name="dap_user_wallet__home_issuer_item">#26A69A</color>
+    <color name="dap_user_wallet_home_asset_item_background">#F1F2F2</color>
     <color name="dap_user_wallet_detail_background">#000000</color>
     <color name="dap_user_wallet_detail_header">#0097A7</color>
+    <color name="dap_user_wallet_toolbar">#09274C</color>
     <color name="dap_user_wallet_dialog_body">#78909C</color>
     <color name="dap_user_wallet_dialog_text">#ECEFF1</color>
     <color name="dap_user_wallet_dialog_bar">#263238</color>

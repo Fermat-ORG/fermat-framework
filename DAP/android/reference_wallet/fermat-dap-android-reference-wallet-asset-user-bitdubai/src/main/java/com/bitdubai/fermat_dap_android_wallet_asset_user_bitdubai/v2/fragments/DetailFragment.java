@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -78,12 +79,12 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_toolbar));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_toolbar));
             }
         }
     }
@@ -91,7 +92,7 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_wallet_asset_user_asset_negotiation_detail, container, false);
+        rootView = inflater.inflate(R.layout.dap_v2_wallet_asset_user_detail, container, false);
         res = rootView.getResources();
 
         setupUI();
@@ -115,11 +116,9 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
         try {
             asset = dataManager.getIssuers().get(0).getAssets().get(0);
 
-            if (asset.getImage() != null) {
-                byte[] img = (asset.getImage() == null) ? new byte[0] : asset.getImage();
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(detailAssetImage, res, R.drawable.img_asset_without_image, false);
-                bitmapWorkerTask.execute(img);
-            }
+            byte[] img = (asset.getImage() == null) ? new byte[0] : asset.getImage();
+            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(detailAssetImage, res, R.drawable.img_asset_without_image, false);
+            bitmapWorkerTask.execute(img);
 
             detailAssetName.setText(asset.getName());
             detailAction.setText(res.getString(R.string.dap_user_wallet_v2_detail_received));
@@ -137,15 +136,20 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(0, IC_ACTION_USER_ASSET_REDEEM, 0, res.getString(R.string.dap_user_wallet_action_redeem))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.ic_redeem)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ASSET_TRANSFER, 0, res.getString(R.string.dap_user_wallet_action_transfer))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.ic_transfer)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ASSET_APPROPRIATE, 0, res.getString(R.string.dap_user_wallet_action_appropriate))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.ic_appropriate)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ITEM_SELL, 0, res.getString(R.string.dap_user_wallet_action_sell))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.ic_sell)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_HELP_DETAIL, 0, res.getString(R.string.help))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
     }
 
     @Override
@@ -153,7 +157,7 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
         try {
             int id = item.getItemId();
             if (id == IC_ACTION_USER_ASSET_REDEEM) {
-
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS, appSession.getAppPublicKey());
             } else if (id == IC_ACTION_USER_ASSET_TRANSFER) {
 
             } else if (id == IC_ACTION_USER_ASSET_APPROPRIATE) {

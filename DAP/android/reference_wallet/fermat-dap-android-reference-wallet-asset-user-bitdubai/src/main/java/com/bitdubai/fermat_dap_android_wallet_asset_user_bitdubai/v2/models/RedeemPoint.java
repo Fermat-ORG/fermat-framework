@@ -13,6 +13,10 @@ public class RedeemPoint {
     private String name;
     private String address;
 
+    public RedeemPoint(String name) {
+        this.name = name;
+    }
+
     public RedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPoint) {
         this.actorAssetRedeemPoint = actorAssetRedeemPoint;
         setImage(actorAssetRedeemPoint.getProfileImage());

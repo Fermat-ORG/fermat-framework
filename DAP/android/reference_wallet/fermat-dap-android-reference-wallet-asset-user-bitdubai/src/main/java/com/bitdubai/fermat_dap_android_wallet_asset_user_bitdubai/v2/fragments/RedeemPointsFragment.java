@@ -113,7 +113,7 @@ public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint>
         header.setVisibility(View.VISIBLE);
         View container = layoutInflater.inflate(R.layout.dap_v2_wallet_asset_user_redeem_points_header, header, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            container.getLayoutParams().height = SizeUtils.convertDpToPixels(428, getActivity());
+            container.getLayoutParams().height = SizeUtils.convertDpToPixels(50, getActivity());
         }
         return container;
     }
@@ -140,7 +140,7 @@ public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint>
             });
         }
 
-        noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_user_no_transactions);
+        noTransactionsView = layout.findViewById(R.id.dap_v2_wallet_asset_user_redeem_points_no_assets);
         showOrHideNoTransactionsView(redeemPoints.isEmpty());
     }
 

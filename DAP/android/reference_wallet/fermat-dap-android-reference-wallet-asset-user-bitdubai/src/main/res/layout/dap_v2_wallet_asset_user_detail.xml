@@ -101,9 +101,9 @@
 
                 <ImageView
                     android:id="@+id/detailCheck1"
+                    android:src="@drawable/detail_check"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
                     android:layout_centerVertical="true"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -128,9 +128,9 @@
 
                 <ImageView
                     android:id="@+id/detailCheck2"
+                    android:src="@drawable/detail_check"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
                     android:layout_centerVertical="true"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -155,9 +155,9 @@
 
                 <ImageView
                     android:id="@+id/detailCheck3"
+                    android:src="@drawable/detail_check"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
                     android:layout_centerVertical="true"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -181,9 +181,9 @@
 
                 <ImageView
                     android:id="@+id/detailCheck4"
+                    android:src="@drawable/detail_uncheck"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/black"
                     android:layout_centerVertical="true"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -224,7 +224,9 @@
                 android:text="1 Asset"
                 android:layout_below="@+id/detailDataAssetMemo"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:textSize="16sp"
+                android:layout_alignParentRight="true"
                 android:textColor="@color/dap_user_wallet_black_text"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -235,6 +237,8 @@
                 android:layout_below="@+id/detailDataAssetQuantity"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/dap_user_wallet_black_text"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
