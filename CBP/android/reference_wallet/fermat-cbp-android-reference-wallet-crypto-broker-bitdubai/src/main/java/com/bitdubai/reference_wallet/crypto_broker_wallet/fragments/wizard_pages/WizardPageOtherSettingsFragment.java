@@ -62,6 +62,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
          walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
          errorManager = appSession.getErrorManager();
 
+       //Delete potential previous configurations made by this wizard page
+       //So that they can be reconfigured cleanly
+       walletManager.clearWalletSetting(appSession.getAppPublicKey());
+
        } catch (FermatException ex) {
          Log.e(TAG, ex.getMessage(), ex);
        }
