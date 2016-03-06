@@ -29,11 +29,5 @@
         android:layout_alignParentStart="false"
         />
 
-    <CheckBox
-        android:id="@+id/checkBoxdialog"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/text1" />
 
 </RelativeLayout>

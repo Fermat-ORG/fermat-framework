@@ -63,6 +63,14 @@
                     android:paddingBottom="2dp"/>
 
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_corner_line_dialog"
+                android:layout_marginBottom="12dp"
+                />
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -83,14 +91,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             </FrameLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                android:layout_marginBottom="12dp"
-                />
+
 
 
 
@@ -103,17 +104,6 @@
                 android:textColor="#000"
                 android:background="@drawable/round_corner_line_dialog"
                 />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:textColor="#000"
-                android:background="@drawable/round_corner_line_dialog"
-                />
-
 
 
 
@@ -134,14 +124,6 @@
                 android:orientation="horizontal"
                 >
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_cancel"
-                    android:background="@drawable/cht_cancel_buttom"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    />
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
