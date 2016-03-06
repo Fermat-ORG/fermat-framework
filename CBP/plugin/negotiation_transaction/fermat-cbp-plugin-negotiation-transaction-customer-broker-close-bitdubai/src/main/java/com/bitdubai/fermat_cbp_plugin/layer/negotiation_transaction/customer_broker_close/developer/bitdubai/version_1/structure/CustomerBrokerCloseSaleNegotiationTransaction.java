@@ -6,6 +6,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -129,6 +131,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
             }
 
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            }
+
             //CLOSE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
 
@@ -161,7 +168,12 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
-                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
+                System.out.print("\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE" +
+                        " NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n" +
+                        "\nClauses Date.");
+                for (Clause item: customerBrokerSaleNegotiation.getClauses()){
+                    System.out.print("\n- "+item.getType()+" = "+item.getValue()+"\n");
+                }
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 

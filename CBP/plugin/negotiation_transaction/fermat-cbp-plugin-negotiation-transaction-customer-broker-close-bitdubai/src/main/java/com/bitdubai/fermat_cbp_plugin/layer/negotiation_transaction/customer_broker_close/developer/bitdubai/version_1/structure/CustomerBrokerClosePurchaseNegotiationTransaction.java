@@ -161,6 +161,11 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
             }
 
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            }
+
             System.out.print("\n\n**** 21.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
             customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
@@ -198,7 +203,11 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
 //            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
-                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
+                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****" +
+                        "\nClauses Date.");
+                for (Clause item: customerBrokerPurchaseNegotiation.getClauses()){
+                    System.out.print("\n- "+item.getType()+" = "+item.getValue()+"\n");
+                }
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
