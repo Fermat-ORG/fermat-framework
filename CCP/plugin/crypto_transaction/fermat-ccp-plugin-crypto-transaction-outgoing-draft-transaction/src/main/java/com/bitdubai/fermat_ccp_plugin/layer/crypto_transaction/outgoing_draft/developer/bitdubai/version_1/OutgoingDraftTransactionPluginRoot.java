@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1;
+package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1;
 
 /**
  * Created by ciencias on 2/16/15.
@@ -35,11 +35,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.OutgoingDraftManager;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database.OutgoingDraftTransactionDao;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantInsertRecordException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.structure.OutgoingDraftTransactionAgent;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database.OutgoingDraftTransactionDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.util.OutgoingDraftTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -76,7 +74,7 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
     private Broadcaster broadcaster;
 
 
-    private OutgoingDraftTransactionAgent outgoingDraftTransactionAgent;
+    private com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.structure.OutgoingDraftTransactionAgent outgoingDraftTransactionAgent;
 
 
 
@@ -138,7 +136,7 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
             outgoingDraftTransactionDao.initialize(pluginId);
 
 
-            outgoingDraftTransactionAgent = new OutgoingDraftTransactionAgent(
+            outgoingDraftTransactionAgent = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.structure.OutgoingDraftTransactionAgent(
                     errorManager,
                     cryptoVaultManager,
                     null,//network not used now
@@ -194,7 +192,7 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
                 outgoingDraftTransactionAgent.start();
             }
 
-        } catch (OutgoingIntraActorCantInsertRecordException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException e) {
             e.printStackTrace();
         } catch (CantStoreBitcoinTransactionException e) {
             e.printStackTrace();
