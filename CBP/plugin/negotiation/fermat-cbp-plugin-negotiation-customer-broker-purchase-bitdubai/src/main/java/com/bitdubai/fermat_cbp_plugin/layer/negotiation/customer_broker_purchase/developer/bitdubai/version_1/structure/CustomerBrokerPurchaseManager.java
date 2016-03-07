@@ -104,7 +104,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         @Override
         public boolean closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try {
-                    return this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+                return this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
             } catch (Exception e) {
                 this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
@@ -122,9 +122,9 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException{
             try{
-                this.customerBrokerPurchaseNegotiationDao.waitForCustomer(negotiation);
+                this.customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
             } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
                 this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.getMessage(), e, "", "Cant Update Customer Broker Purchase Negotiation");
@@ -132,9 +132,9 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException{
+        public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
             try{
-                this.customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
+                this.customerBrokerPurchaseNegotiationDao.waitForCustomer(negotiation);
             } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
                 this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.getMessage(), e, "", "Cant Update Customer Broker Purchase Negotiation");
