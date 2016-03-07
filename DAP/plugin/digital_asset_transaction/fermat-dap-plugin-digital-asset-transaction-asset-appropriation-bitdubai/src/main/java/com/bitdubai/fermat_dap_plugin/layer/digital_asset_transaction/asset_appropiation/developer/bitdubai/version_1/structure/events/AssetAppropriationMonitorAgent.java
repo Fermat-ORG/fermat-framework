@@ -345,7 +345,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
             AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), actorAssetUserManager.getActorAssetUser(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), networkType, AssetMovementType.ASSET_APPROPIATED);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
-            ActorAssetUser actorReceiver = (ActorAssetUser) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
+            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(),digitalAssetMetadata.getDigitalAsset().getPublicKey());
             DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
             assetTransmissionNetworkServiceManager.sendMessage(dapMessage);
         }
