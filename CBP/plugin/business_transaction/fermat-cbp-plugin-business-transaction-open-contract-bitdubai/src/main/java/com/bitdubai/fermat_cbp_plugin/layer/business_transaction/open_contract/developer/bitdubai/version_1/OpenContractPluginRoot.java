@@ -437,7 +437,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
         CustomerBrokerPurchaseNegotiation negotiationMock=new PurchaseNegotiationOfflineMock();
         FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openPurchaseContract(negotiationMock,fiatIndex);
+            openContractTransactionManager.openPurchaseContract(negotiationMock,1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();
@@ -449,7 +449,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
         CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationOfflineMock();
         FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openSaleContract(negotiationMock,fiatIndex);
+            openContractTransactionManager.openSaleContract(negotiationMock,1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();

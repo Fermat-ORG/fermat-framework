@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    style="@style/listViewActivatedStyle">
+    style="@style/listViewActivatedStyle"
+    android:id="@+id/rel">
 
     <!-- Use standard android.R class icon id instead of app specific id. This is just useful for
          consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
@@ -12,7 +13,8 @@
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
         android:padding="10dp"
-        android:src="@drawable/ic_contact_picture_holo_light"/>
+        android:src="@drawable/cht_profile_list_icon"
+       />
 
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
          consistency. This is secondary text and not always visible so by default is has its

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -16,12 +17,12 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
 
     Collection<ContractClause> contractClauses;
     long dayTime;
-    MoneyType merchandiseCurrency;
+    Currency merchandiseCurrency;
     float merchandiseAmount;
     long merchandiseDeliveryExpirationDate;
     String negotiationId;
     float paymentAmount;
-    MoneyType paymentCurrency;
+    Currency paymentCurrency;
     long paymentExpirationDate;
     String publicKeyBroker;
     String publicKeyCustomer;
@@ -59,7 +60,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         return this.merchandiseAmount;
     }
 
-    public MoneyType getMerchandiseCurrency() {
+    public Currency getMerchandiseCurrency() {
         return this.merchandiseCurrency;
     }
 
@@ -75,7 +76,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         return this.paymentAmount;
     }
 
-    public MoneyType getPaymentCurrency() {
+    public Currency getPaymentCurrency() {
         return this.paymentCurrency;
     }
 
@@ -134,7 +135,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         this.merchandiseAmount=merchandiseAmount;
     }
 
-    public void setMerchandiseCurrency(MoneyType merchandiseCurrency) {
+    public void setMerchandiseCurrency(Currency merchandiseCurrency) {
         this.merchandiseCurrency=merchandiseCurrency;
     }
 
@@ -155,7 +156,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         this.paymentAmount=paymentAmount;
     }
 
-    public void setPaymentCurrency(MoneyType paymentCurrency) {
+    public void setPaymentCurrency(Currency paymentCurrency) {
         this.paymentCurrency=paymentCurrency;
     }
 

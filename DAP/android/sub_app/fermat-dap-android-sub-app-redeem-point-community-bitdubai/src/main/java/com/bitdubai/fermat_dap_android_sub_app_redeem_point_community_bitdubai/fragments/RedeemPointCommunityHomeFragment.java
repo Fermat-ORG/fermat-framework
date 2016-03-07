@@ -401,13 +401,13 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                             toConnect.add(actor);
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
-//                                  manager.askActorAssetRedeemForConnection(toConnect);
+                                  manager.askActorAssetRedeemForConnection(toConnect);
 
-//                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                  sendLocalBroadcast(broadcast);
+                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
+                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                  sendLocalBroadcast(broadcast);
 
-                                    manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                                    manager.connectToActorAssetRedeemPoint(null, toConnect);
                                     return true;
                                 }
                             };
