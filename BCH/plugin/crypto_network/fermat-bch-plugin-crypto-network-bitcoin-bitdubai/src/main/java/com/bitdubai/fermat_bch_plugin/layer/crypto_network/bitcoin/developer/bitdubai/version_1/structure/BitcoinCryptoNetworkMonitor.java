@@ -119,8 +119,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * and start it
          */
-        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
         monitorAgentThread.start();
+        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
     }
 
     @Override
@@ -278,7 +278,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
 
                 System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
-
+                System.out.println("***CryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");
 
                 /**
                  * I will broadcast any transaction that might be in broadcasting status.
