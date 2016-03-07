@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai;
+package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,11 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.BitcoinWalletLossProtectedPluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.LossProtectedWalletModulePluginRoot;
 
 /**
- * Created by loui on 30/04/15.
- * Modified by lnacosta (laion.cj91@gmail.com) on 23/10/2015.
+ * Created Natalia Cortez on 07/03/2016.
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
@@ -24,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new BitcoinWalletLossProtectedPluginRoot());
+            this.registerVersion(new LossProtectedWalletModulePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 

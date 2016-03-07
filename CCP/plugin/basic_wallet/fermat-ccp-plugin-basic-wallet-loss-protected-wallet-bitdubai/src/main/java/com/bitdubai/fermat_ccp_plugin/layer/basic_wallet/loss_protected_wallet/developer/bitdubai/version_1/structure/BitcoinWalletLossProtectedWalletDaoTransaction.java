@@ -6,11 +6,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantExecuteLossProtectedBitcoinTransactionException;
 
 /**
  * Created by ciencias on 7/6/15.
  */
-public class BitcoinWalletBasicWalletDaoTransaction {
+public class BitcoinWalletLossProtectedWalletDaoTransaction {
 
     /**
      * CryptoAddressBook Interface member variables.
@@ -21,12 +22,12 @@ public class BitcoinWalletBasicWalletDaoTransaction {
      * Constructor
      */
 
-    public  BitcoinWalletBasicWalletDaoTransaction(Database database){
+    public  BitcoinWalletLossProtectedWalletDaoTransaction(Database database){
         this.database = database;
     }
 
 
-    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExecuteBitconTransactionException{
+    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExecuteLossProtectedBitcoinTransactionException{
         try {
             DatabaseTransaction dbTransaction = database.newTransaction();
 
@@ -36,9 +37,9 @@ public class BitcoinWalletBasicWalletDaoTransaction {
 
             database.executeTransaction(dbTransaction);
         }catch(DatabaseSystemException exception){
-            throw new CantExecuteBitconTransactionException("Error to insert and update transaction records",exception, null, "Error execute database transaction" );
+            throw new CantExecuteLossProtectedBitcoinTransactionException("Error to insert and update transaction records",exception, null, "Error execute database transaction" );
         }catch(Exception exception){
-            throw new CantExecuteBitconTransactionException(CantExecuteBitconTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteLossProtectedBitcoinTransactionException(CantExecuteLossProtectedBitcoinTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 

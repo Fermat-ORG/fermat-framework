@@ -9,27 +9,33 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 
 
 /**
  * Created by ciencias on 7/6/15.
  *
  */
-public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtectedWalletBalance {
+public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossProtectedWalletBalance {
 
     /**
      * BitcoinWalletBasicWallet member variables.
      */
     private Database database;
 
-    private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
+    private BitcoinWalletLossProtectedWalletDao bitcoinWalletBasicWalletDao;
 
     private Broadcaster broadcaster;
 
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletBookBalance(final Database database,final Broadcaster broadcaster){
+    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster){
         this.database = database;
         this.broadcaster = broadcaster;
     }
@@ -37,7 +43,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtected
     @Override
     public long getBalance() throws CantCalculateBalanceException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getBookBalance();
         } catch(CantCalculateBalanceException exception){
             database.closeDatabase();
@@ -51,7 +57,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtected
     @Override
     public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
         } catch(CantCalculateBalanceException exception){
             database.closeDatabase();
@@ -69,9 +75,9 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtected
         *  debería ignorar la transacción.
         */
     @Override
-    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
+    public void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
@@ -83,9 +89,9 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtected
     }
 
     @Override
-    public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+    public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
@@ -97,9 +103,9 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinLossProtected
     }
 
     @Override
-    public void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+    public void revertCredit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
         try {
             bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction,BalanceType.BOOK);
         } catch (CantRegisterDebitException e) {

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 06/07/15.
+ * Created by natalia on 23/02/16.
  */
-public class CantExecuteBitconTransactionException extends FermatException {
+public class CantRevertLossProtectedTransactionException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,8 @@ public class CantExecuteBitconTransactionException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantExecuteBitconTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantRevertLossProtectedTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
+

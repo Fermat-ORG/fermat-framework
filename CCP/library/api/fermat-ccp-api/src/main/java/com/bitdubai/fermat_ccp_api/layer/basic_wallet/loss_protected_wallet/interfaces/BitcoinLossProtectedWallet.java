@@ -1,13 +1,10 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces;
 
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions.CantRevertTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantRevertLossProtectedTransactionException;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +27,7 @@ public interface BitcoinLossProtectedWallet {
      *
      * @return an instance of BitcoinWalletBalance.
      */
-    BitcoinWalletBalance getBalance(BalanceType balanceType);
+    BitcoinLossProtectedWalletBalance getBalance(BalanceType balanceType);
 
 
 
@@ -45,7 +42,7 @@ public interface BitcoinLossProtectedWallet {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType, TransactionType transactionType,
+    List<BitcoinLossProtectedWalletTransaction> listTransactions(BalanceType balanceType, TransactionType transactionType,
                                                     int max,
                                                     int offset) throws CantListTransactionsException;
 
@@ -62,7 +59,7 @@ public interface BitcoinLossProtectedWallet {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listTransactionsByActor(String actorPublicKey,
+    List<BitcoinLossProtectedWalletTransaction> listTransactionsByActor(String actorPublicKey,
                                                            BalanceType balanceType,
                                                            int max,
                                                            int offset) throws CantListTransactionsException;
@@ -80,7 +77,7 @@ public interface BitcoinLossProtectedWallet {
      * @return
      * @throws CantListTransactionsException
      */
-    List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
+    List<BitcoinLossProtectedWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
                                                                   final BalanceType balanceType,
                                                                   final TransactionType transactionType,
                                                                   final int max,
@@ -98,7 +95,7 @@ public interface BitcoinLossProtectedWallet {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
+    List<BitcoinLossProtectedWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                               TransactionType transactionType,
                                                                               int max,
                                                                               int offset) throws CantListTransactionsException;
@@ -125,7 +122,7 @@ public interface BitcoinLossProtectedWallet {
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException if something goes wrong.
      */
-    BitcoinWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
+    BitcoinLossProtectedWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                BalanceType balanceType) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 
 
@@ -145,14 +142,14 @@ public interface BitcoinLossProtectedWallet {
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException
      */
-    BitcoinWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
+    BitcoinLossProtectedWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 
 
     /**
      *
      * @param transactionRecord
      * @param credit
-     * @throws CantRevertTransactionException
+     * @throws CantRevertLossProtectedTransactionException
      */
-    void revertTransaction(BitcoinWalletTransactionRecord transactionRecord, boolean credit) throws CantRevertTransactionException;
+    void revertTransaction(BitcoinLossProtectedWalletTransactionRecord transactionRecord, boolean credit) throws CantRevertLossProtectedTransactionException;
 }

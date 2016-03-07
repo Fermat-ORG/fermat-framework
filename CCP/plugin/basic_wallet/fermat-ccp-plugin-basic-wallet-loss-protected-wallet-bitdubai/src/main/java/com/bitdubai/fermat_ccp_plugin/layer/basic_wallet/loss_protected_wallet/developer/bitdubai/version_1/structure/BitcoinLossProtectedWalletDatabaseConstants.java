@@ -3,12 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.
 /**
  * Created by eze on 2015.06.23..
  */
-public class BitcoinWalletDatabaseConstants {
+public class BitcoinLossProtectedWalletDatabaseConstants {
 
     /**
      * Bitcoin Wallet database table definition.
      */
-    public static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinWalletWallet";
+    public static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinLossProtectedWallet";
     public static final String BITCOIN_WALLET_TABLE_ID_COLUMN_NAME = "Id";
     // This second Id is used to verify that that the same transaction is not applied twice.
     // We can't use the transaction hash because some credit/debit operations do not involve a hash

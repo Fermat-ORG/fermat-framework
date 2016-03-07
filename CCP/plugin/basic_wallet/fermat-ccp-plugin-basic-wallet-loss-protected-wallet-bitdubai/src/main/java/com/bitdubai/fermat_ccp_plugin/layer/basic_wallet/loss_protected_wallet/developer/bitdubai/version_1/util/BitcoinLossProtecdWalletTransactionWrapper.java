@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.loss_protected_wallet.bitcoin_wallet.developer.bitdubai.version_1.util;
+package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -7,13 +7,14 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 
 import java.util.UUID;
 
 /**
  * Created by jorgegonzalez on 2015.07.10..
  */
-public class BitcoinWalletTransactionWrapper implements BitcoinLossProtectedWalletTransaction {
+public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossProtectedWalletTransaction {
 
     private final UUID transactionId;
     private final String transactionHash;
@@ -33,7 +34,7 @@ public class BitcoinWalletTransactionWrapper implements BitcoinLossProtectedWall
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
     
-    public BitcoinWalletTransactionWrapper(final UUID transactionId,
+    public BitcoinLossProtecdWalletTransactionWrapper(final UUID transactionId,
                                            final String transactionHash,
                                            final TransactionType transactionType,
                                            final CryptoAddress addressFrom,

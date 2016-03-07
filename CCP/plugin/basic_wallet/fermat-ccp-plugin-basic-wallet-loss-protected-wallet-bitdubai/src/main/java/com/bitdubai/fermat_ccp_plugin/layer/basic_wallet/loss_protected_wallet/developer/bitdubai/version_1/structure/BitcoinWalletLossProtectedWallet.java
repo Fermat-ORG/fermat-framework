@@ -21,6 +21,21 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantInitializeBitcoinLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantRevertLossProtectedTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -34,7 +49,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
  * Created by eze on 2015.06.23..
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  */
-public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
+public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWallet {
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
 
@@ -46,7 +61,7 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     private final UUID pluginId;
     private final Broadcaster broadcaster;
 
-    public BitcoinWalletBasicWallet(final ErrorManager errorManager,
+    public BitcoinWalletLossProtectedWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
                                     final PluginFileSystem pluginFileSystem,
                                     final UUID pluginId,
@@ -66,18 +81,18 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
      * The wallet tries to open it's database. If it fails it is because the wallet was not
      * properly created before, so we end with an error in that case
      */
-    public void initialize(UUID walletId) throws CantInitializeBitcoinWalletBasicException {
+    public void initialize(UUID walletId) throws CantInitializeBitcoinLossProtectedWalletException {
         if (walletId == null)
-            throw new CantInitializeBitcoinWalletBasicException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
+            throw new CantInitializeBitcoinLossProtectedWalletException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeBitcoinWalletBasicException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
+            throw new CantInitializeBitcoinLossProtectedWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeBitcoinWalletBasicException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
+            throw new CantInitializeBitcoinLossProtectedWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
         } catch (Exception exception) {
-            throw new CantInitializeBitcoinWalletBasicException(CantInitializeBitcoinWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantInitializeBitcoinLossProtectedWalletException(CantInitializeBitcoinLossProtectedWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -114,15 +129,15 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
+    public List<BitcoinLossProtectedWalletTransaction> listTransactions(BalanceType balanceType,
                                                            TransactionType transactionType,
                                                            int max,
                                                            int offset) throws CantListTransactionsException {
 
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return bitcoinWalletBasicWalletDao.listTransactions(
+            return BitcoinWalletLossProtectedWalletDao.listTransactions(
                     balanceType,
                     transactionType,
                     max,
@@ -139,16 +154,16 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactionsByActor(final String actorPublicKey,
+    public List<BitcoinLossProtectedWalletTransaction> listTransactionsByActor(final String actorPublicKey,
                                                                   final BalanceType balanceType,
                                                                   final int max,
                                                                   final int offset) throws CantListTransactionsException {
 
         try {
 
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return bitcoinWalletBasicWalletDao.listTransactionsByActor(
+            return BitcoinWalletLossProtectedWalletDao.listTransactionsByActor(
                     actorPublicKey,
                     balanceType,
                     max,
@@ -167,7 +182,7 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
+    public List<BitcoinLossProtectedWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
                                                                          final BalanceType balanceType,
                                                                          final TransactionType transactionType,
                                                                          final int max,
@@ -175,9 +190,9 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
 
         try {
 
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return bitcoinWalletBasicWalletDao.listTransactionsByActorAndType(
+            return BitcoinWalletLossProtectedWalletDao.listTransactionsByActorAndType(
                     actorPublicKey,
                     balanceType,
                     transactionType,
@@ -197,15 +212,15 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType balanceType,
+    public List<BitcoinLossProtectedWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType balanceType,
                                                                                      final TransactionType transactionType,
                                                                                      final int max,
                                                                                      final int offset) throws CantListTransactionsException {
 
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return bitcoinWalletBasicWalletDao.listLastActorTransactionsByTransactionType(
+            return BitcoinWalletLossProtectedWalletDao.listLastActorTransactionsByTransactionType(
                     balanceType,
                     transactionType,
                     max,
@@ -225,9 +240,9 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
                                           final String memo) throws CantStoreMemoException,
             CantFindTransactionException {
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            bitcoinWalletBasicWalletDao.updateMemoFiled(
+            BitcoinWalletLossProtectedWalletDao.updateMemoFiled(
                     transactionID,
                     memo
             );
@@ -242,26 +257,26 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     }
 
     @Override
-    public BitcoinWalletBalance getBalance(final BalanceType balanceType) {
+    public BitcoinLossProtectedWalletBalance getBalance(final BalanceType balanceType) {
 
         switch (balanceType) {
             case AVAILABLE:
-                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster);
             case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster);
             default:
-                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster);
         }
     }
 
 
     @Override
-    public BitcoinWalletTransactionSummary getActorTransactionSummary(final String actorPublicKey,
+    public BitcoinLossProtectedWalletTransactionSummary getActorTransactionSummary(final String actorPublicKey,
                                                                       final BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return bitcoinWalletBasicWalletDao.getActorTransactionSummary(
+            return BitcoinWalletLossProtectedWalletDao.getActorTransactionSummary(
                     actorPublicKey,
                     balanceType
             );
@@ -279,7 +294,7 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
 
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletDatabaseFactory databaseFactory = new BitcoinWalletDatabaseFactory();
+            BitcoinLossProtectedWalletDatabaseFactory databaseFactory = new BitcoinLossProtectedWalletDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
@@ -345,20 +360,20 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
     @Override
     public void deleteTransaction(UUID transactionID) throws CantFindTransactionException {
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            bitcoinWalletBasicWalletDao.deleteTransaction(transactionID);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao.deleteTransaction(transactionID);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
-    public void revertTransaction(BitcoinWalletTransactionRecord transactionRecord, boolean credit) throws CantRevertTransactionException {
+    public void revertTransaction(BitcoinLossProtectedWalletTransactionRecord transactionRecord, boolean credit) throws CantRevertLossProtectedTransactionException {
         try {
 
             //update transaction like reversed
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            bitcoinWalletBasicWalletDao.updateTransactionState(transactionRecord.getTransactionId(),TransactionState.REVERSED);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
+            BitcoinWalletLossProtectedWalletDao.updateTransactionState(transactionRecord.getTransactionId(), TransactionState.REVERSED);
             //change balance
 
             if(credit)
@@ -367,15 +382,15 @@ public class BitcoinWalletBasicWallet implements BitcoinLossProtectedWallet {
                 this.getBalance(BalanceType.BOOK).revertCredit(transactionRecord);
 
         } catch (Exception exception) {
-            throw new CantRevertTransactionException("Could not revert transaction", exception, "Database error" , "");
+            throw new CantRevertLossProtectedTransactionException("Could not revert transaction", exception, "Database error" , "");
         }
     }
 
     @Override
-    public BitcoinWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException{
+    public BitcoinLossProtectedWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException{
         try {
-            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.selectTransaction(transactionID);
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
+            return BitcoinWalletLossProtectedWalletDao.selectTransaction(transactionID);
         } catch (CantFindTransactionException e) {
             throw new CantFindTransactionException("Could not get transaction information", e, "Database error" , "");
         }

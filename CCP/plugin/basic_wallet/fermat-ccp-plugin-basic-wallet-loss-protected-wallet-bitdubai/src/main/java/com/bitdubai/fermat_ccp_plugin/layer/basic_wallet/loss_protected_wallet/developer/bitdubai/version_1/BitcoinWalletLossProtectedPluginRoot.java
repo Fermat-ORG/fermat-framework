@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.loss_protected_wallet.bitcoin_wallet.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -31,6 +31,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantInitializeBitcoinLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinWalletLossProtectedWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -42,11 +51,11 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by loui on 30/04/15.
- * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
+ * Created by Natalia on 07/03/2013.
+ *
  */
-public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements
-        BitcoinLossProtectedWallet,
+public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin implements
+        BitcoinLossProtectedWalletManager,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -65,7 +74,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIds = new HashMap<>();
 
-    public BitcoinWalletBasicWalletPluginRoot() {
+    public BitcoinWalletLossProtectedPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -136,15 +145,15 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletException {
+    public BitcoinLossProtectedWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
 
             return bitcoinWallet;
-        } catch (CantInitializeBitcoinWalletBasicException exception) {
+        } catch (CantInitializeBitcoinLossProtectedWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
         } catch (Exception exception) {
@@ -156,7 +165,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 

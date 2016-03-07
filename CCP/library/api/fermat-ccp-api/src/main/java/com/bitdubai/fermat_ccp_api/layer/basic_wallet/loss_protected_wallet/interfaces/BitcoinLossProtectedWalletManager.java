@@ -7,7 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
 /**
  * Created by eze on 2015.06.17..
  */
-public interface BitcoinLossProtectedWalletWalletManager extends FermatManager {
+public interface BitcoinLossProtectedWalletManager extends FermatManager {
 
     BitcoinLossProtectedWallet loadWallet(String walletPublicKey) throws CantLoadWalletException;
 
