@@ -519,7 +519,8 @@ public final class MatchingEngineMiddlewareDao {
         return inputTransaction;
     }
 
-    public boolean existsInputTransaction(final String inputTransactionId) throws CantGetInputTransactionException {
+    public void markInputTransactionAsMatched(final DatabaseTransaction databaseTransaction,
+                                              final UUID                inputTransactionId ) throws CantGetInputTransactionException {
 
         if (inputTransactionId == null)
             throw new CantGetInputTransactionException(null, "", "The inputTransactionId is required, can not be null");
@@ -528,7 +529,41 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
 
-            inputTransactionsTable.addStringFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addUUIDFilter(INPUT_TRANSACTION_ID_COLUMN_NAME, inputTransactionId, DatabaseFilterType.EQUAL);
+
+            inputTransactionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = inputTransactionsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                DatabaseTableRecord record = records.get(0);
+
+                record.setFermatEnum(INPUT_TRANSACTION_STATE_COLUMN_NAME, InputTransactionState.MATCHED);
+
+                databaseTransaction.addRecordToUpdate(inputTransactionsTable, record);
+            } else {
+
+                throw new CantGetInputTransactionException("inputTransactionId: "+inputTransactionId, "A record with the given id cannot be found in database.");
+            }
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetInputTransactionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public boolean existsInputTransaction(final String originTransactionId) throws CantGetInputTransactionException {
+
+        if (originTransactionId == null)
+            throw new CantGetInputTransactionException(null, "", "The inputTransactionId is required, can not be null");
+
+        try {
+
+            final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
+
+            inputTransactionsTable.addStringFilter    (INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME, originTransactionId          , DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_TYPE_COLUMN_NAME                 , InputTransactionType.ORIGINAL, DatabaseFilterType.EQUAL);
 
             inputTransactionsTable.loadToMemory();
 

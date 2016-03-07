@@ -154,10 +154,6 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                 if (unmatchedBuyInputTransactions.isEmpty())
                     break;
 
-                List<InputTransaction> toMarkAsMatched     = new ArrayList<>();
-                List<InputTransaction> toCreateAsMatched   = new ArrayList<>();
-                List<InputTransaction> toCreateAsUnmatched = new ArrayList<>();
-
                 List<InputTransaction> matchedBuyTransactions = new ArrayList<>();
 
                 int i = 0;
@@ -172,7 +168,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     if (amountToMatch == amountMatchedTemp) {
 
                         amountMatched = amountMatchedTemp;
-                        toMarkAsMatched.add(buyTransaction);
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
                         matchedBuyTransactions.add(buyTransaction);
                         break;
 
@@ -201,17 +197,17 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                         );
 
                         dao.createPartialInputTransaction(
-                                databaseTransaction                    ,
+                                databaseTransaction,
                                 buyTransaction.getOriginTransactionId(),
-                                buyTransaction.getCurrencyGiving()     ,
-                                partialRestingAmountGiving             ,
-                                buyTransaction.getCurrencyReceiving()  ,
-                                partialRestingAmountReceiving          ,
-                                earningsPair.getId()                   ,
+                                buyTransaction.getCurrencyGiving(),
+                                partialRestingAmountGiving,
+                                buyTransaction.getCurrencyReceiving(),
+                                partialRestingAmountReceiving,
+                                earningsPair.getId(),
                                 InputTransactionState.UNMATCHED
                         );
 
-                        toMarkAsMatched.add(buyTransaction);
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
                         matchedBuyTransactions.add(partialToMatch);
                         amountMatched = amountToMatch;
                     }
@@ -220,7 +216,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     if (amountToMatch > amountMatchedTemp) {
 
                         amountMatched = amountMatchedTemp;
-                        toMarkAsMatched.add(buyTransaction);
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
                         matchedBuyTransactions.add(buyTransaction);
                     }
 
