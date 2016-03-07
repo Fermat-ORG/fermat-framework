@@ -48,6 +48,8 @@
                 android:layout_weight="20"
                 android:id="@+id/container_main">
 
+
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
@@ -79,6 +81,17 @@
                         android:layout_marginLeft="6dp"/>
 
                 </RadioGroup>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@drawable/icon_recent_app"
+                    android:id="@+id/btn_recents"
+                    android:visibility="visible"
+                    android:layout_marginRight="9dp"
+                    android:layout_marginTop="9dp"/>
+
 
                 <SlidingDrawer
                     android:layout_width="match_parent"

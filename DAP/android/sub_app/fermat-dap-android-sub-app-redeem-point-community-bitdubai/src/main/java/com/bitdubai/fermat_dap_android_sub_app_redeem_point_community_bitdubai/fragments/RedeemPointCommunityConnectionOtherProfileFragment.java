@@ -282,7 +282,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 break;
             case CONNECTED_ONLINE:
             case CONNECTED_OFFLINE:
-                disconnectRequest();
+                if (actorRedeem.getCryptoAddress() != null)
+                    disconnectRequest();
+                else
+                    connectRequest();
                 break;
             case DISCONNECTED_LOCALLY:
             case DISCONNECTED_REMOTELY:
@@ -290,7 +293,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             case DENIED_REMOTELY:
             case REGISTERED_ONLINE:
             case REGISTERED_OFFLINE:
-                connectRequest();
+                if (actorRedeem.getCryptoAddress() != null)
+                    disconnectRequest();
+                else
+                    connectRequest();
                 break;
             case PENDING_LOCALLY:
                 connectionAccept();

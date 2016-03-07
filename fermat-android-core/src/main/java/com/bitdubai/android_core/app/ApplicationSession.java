@@ -80,6 +80,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
+        instance = this;
         fermatSystem = FermatSystem.getInstance();
         fermatAppsManager = new FermatAppsManager();
 
@@ -138,7 +139,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
         super.onCreate();
-        instance = this;
     }
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

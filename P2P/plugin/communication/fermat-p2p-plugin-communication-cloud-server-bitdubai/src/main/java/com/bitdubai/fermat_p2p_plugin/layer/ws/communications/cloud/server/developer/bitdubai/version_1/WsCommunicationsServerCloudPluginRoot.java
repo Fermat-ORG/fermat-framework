@@ -11,10 +11,13 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.JettyEmbeddedAppServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.UUID;
 
 
@@ -94,6 +97,14 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, Plugin {
 
             LOG.info("Starting plugin");
 
+            /*
+             * Initialize the configuration file
+             */
+            initializeConfigurationFile();
+
+            /*
+             * Start the server
+             */
             JettyEmbeddedAppServer.getInstance().start();
 
         } catch (Exception e) {
@@ -105,6 +116,26 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, Plugin {
          * Set the new status of the service
          */
         this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
+    /**
+     * Initialize the configuration file
+     */
+    private void initializeConfigurationFile() throws ConfigurationException, IOException {
+
+        LOG.info("Starting initializeConfigurationFile()");
+
+        if(ConfigurationManager.isExist()){
+
+            ConfigurationManager.load();
+
+        }else {
+
+            LOG.info("Configuration file don't exit");
+            ConfigurationManager.create();
+            ConfigurationManager.load();
+        }
 
     }
 

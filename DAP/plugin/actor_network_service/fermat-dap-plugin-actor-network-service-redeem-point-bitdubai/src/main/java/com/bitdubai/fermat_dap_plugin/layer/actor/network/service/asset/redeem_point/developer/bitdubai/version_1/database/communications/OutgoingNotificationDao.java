@@ -102,7 +102,7 @@ public class OutgoingNotificationDao {
                         flagRea,
                         sentCount,
                         blockchainNetworkType,
-                        responseToNotificationId
+                        responseToNotificationId, null
                 );
 
                 outgoingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
@@ -527,7 +527,8 @@ public class OutgoingNotificationDao {
                     read,
                     sentCount,
                     blockchainNetworkType,
-                    responseToNotificationId
+                    responseToNotificationId,
+                    null
             );
 
         } catch (Exception e) {

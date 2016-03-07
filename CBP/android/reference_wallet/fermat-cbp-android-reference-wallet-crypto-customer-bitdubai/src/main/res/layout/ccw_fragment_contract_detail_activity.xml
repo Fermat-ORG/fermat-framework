@@ -57,7 +57,7 @@
             android:layout_toEndOf="@+id/ccw_contract_details_broker_image"
             android:layout_toRightOf="@+id/ccw_contract_details_broker_image"
             android:textColor="#b4b4b4"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="1 BTC @ 254 USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
