@@ -16,6 +16,7 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
 
 
     private final Context context;
+    private ItemClickListener itemClickListener;
 
     public RecentsAdapter(Context context,List<RecentApp> recentApps) {
         super(recentApps);
@@ -29,9 +30,20 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
     }
 
     @Override
-    public void onBindViewHolder(RecentHolder viewHolder) {
-        viewHolder.itemView.setBackgroundColor(viewHolder.model.getBackgroundColor());
+    public void onBindViewHolder(final RecentHolder viewHolder) {
+        viewHolder.itemView.setBackgroundColor(232);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClick(viewHolder.model);
+            }
+        });
         //viewHolder.getRoot().addView(View.inflate(context, R.layout.widgetlayout, null));
+    }
+
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
 

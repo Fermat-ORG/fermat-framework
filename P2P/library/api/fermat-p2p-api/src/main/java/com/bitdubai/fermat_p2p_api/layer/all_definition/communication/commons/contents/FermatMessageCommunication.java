@@ -43,10 +43,24 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      */
     private String sender;
 
+    /**
+     * Represent the senderType
+     */
     private transient PlatformComponentType senderType;
+
+    /**
+     * Represent the receiverType
+     */
     private transient PlatformComponentType receiverType;
 
+    /**
+     * Represent the senderNsType
+     */
     private transient NetworkServiceType senderNsType;
+
+    /**
+     * Represent the receiverNsType
+     */
     private transient NetworkServiceType receiverNsType;
 
     /**

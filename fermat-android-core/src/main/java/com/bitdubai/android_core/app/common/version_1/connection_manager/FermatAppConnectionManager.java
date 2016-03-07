@@ -144,11 +144,8 @@ public class FermatAppConnectionManager {
     }
 
 
-    public static AppConnections getFermatAppConnection(
-            String publicKey,
-            Activity activity,
-            FermatSession fermatSession) {
-        AppConnections fermatAppConnection = switchStatement(activity,publicKey);
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession fermatSession) {
+        AppConnections fermatAppConnection = switchStatement(context,publicKey);
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatAppConnection;
     }

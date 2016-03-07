@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -825,19 +826,19 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     }
 
-    @Override
-    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
-        switch (dapMessage.getMessageContent().messageType()) {
-            case ASSET_APPROPRIATION:
-                assetAppropriated(dapMessage);
-                break;
-            case EXTENDED_PUBLIC_KEY:
-                requestPublicKeyExtended(dapMessage);
-                break;
-            default:
-                throw new CantSendMessageException("This message is not registered or can't be handled by this network service..");
-        }
-    }
+//    @Override
+//    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+//        switch (dapMessage.getMessageContent().messageType()) {
+//            case ASSET_APPROPRIATION:
+//                assetAppropriated(dapMessage);
+//                break;
+//            case EXTENDED_PUBLIC_KEY:
+//                requestPublicKeyExtended(dapMessage);
+//                break;
+//            default:
+//                throw new CantSendMessageException("This message is not registered or can't be handled by this network service..");
+//        }
+//    }
 
     private void requestPublicKeyExtended(DAPMessage dapMessage) {
         DAPActor actorRedeemPointSender = dapMessage.getActorSender();
@@ -1113,12 +1114,12 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     @Override
-    public void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, String ActorAssetToAddPublicKey) throws CantAcceptConnectionActorAssetException {
+    public void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer ActorAssetAccepted) throws CantAcceptConnectionActorAssetException {
 
     }
 
     @Override
-    public void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToRejectPublicKey) throws CantDenyConnectionActorAssetException {
+    public void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetReject) throws CantDenyConnectionActorAssetException {
 
     }
 
@@ -1139,6 +1140,16 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     @Override
     public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException {
+
+    }
+
+    @Override
+    public void buildSendMessage(ActorNotification actorNotification) {
+
+    }
+
+    @Override
+    public void responseExtended(ActorNotification actorNotification, ExtendedPublicKey extendedPublicKey) {
 
     }
 
@@ -1554,15 +1565,15 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
     }
 
-    @Override
-    public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
-    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
-
-    }
+//    @Override
+//    public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
+//        return Collections.EMPTY_LIST;
+//    }
+//
+//    @Override
+//    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
+//
+//    }
 
     /**
      * Mark the message as read

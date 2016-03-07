@@ -1,6 +1,8 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -45,6 +48,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,7 +63,7 @@ import java.util.UUID;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment {
+public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -94,21 +98,21 @@ public class ContactsListFragment extends AbstractFermatFragment {
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
-    ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactname=new ArrayList<>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
+    ArrayList<UUID> contactid=new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     TextView text;
     View layout;
-    //public ContactsListFragment() {}
-    static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
+    Typeface tf;
 
     public static ContactsListFragment newInstance() {
-        initchatinfo();
         return new ContactsListFragment();}
+
+    @Override
+    public void onMethodCallback() {//solution to access to another activity clicking the photo icon of the list
+        changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                    moduleManager, errorManager, chatSession, appSession, this);
         }catch (Exception e)
         {
             if(errorManager!=null)
@@ -128,7 +134,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         //setHasOptionsMenu(true);
@@ -173,12 +179,35 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
     }
 
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        long viewId = view.getId();
+//        try{
+//            if (viewId == R.id.icon) {
+//                goToContactDetail(chatManager, moduleManager, chatSession,
+//                        appSession, errorManager, contactid.get(position));
+//            } else {
+//                appSession.setData("whocallme", "contact");
+//                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+//                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+//            }
+//        }catch(CantGetContactException e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
         text=(TextView) layout.findViewById(R.id.text);
+        //text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+
         try {
             List <Contact> con=  chatManager.getContacts();
             int size = con.size();
@@ -186,7 +215,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 for (int i=0;i<size;i++){
                     contactname.add(con.get(i).getAlias());
                     contactid.add(con.get(i).getContactId());
-                    contacticon.add(R.drawable.cht_profile_list_icon);
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
                 }
                 text.setVisibility(View.GONE);
             }else{
@@ -212,55 +243,32 @@ public class ContactsListFragment extends AbstractFermatFragment {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                moduleManager, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-//                Contact contactexist= chatSession.getSelectedContactToUpdate();
-//                if(contactexist!=null) {
-//                    if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-//                        UUID contactidnew = contactexist.getContactId();
-//                        contactexist=chatManager.getContactByContactId(contactid.get(position));
-//                        Chat chat=chatSession.getSelectedChat();
-//                        if(chat!=null) {
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew = chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            chatManager.deleteContact(contactexist);
-//                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//                            appSession.setData("whocallme", "contact");
-//                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//                        }
-//                    }
-//                }else {
-                    appSession.setData("whocallme", "contact");
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                //}
-            //}catch(CantSaveChatException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantDeleteContactException e) {
-                //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            //}catch(CantSaveContactException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                //public void onClick(View view) {
+                try {
+                    //Object selection =  parent.getItemAtPosition(position);
+
+                    //if (selection == R.id.icon) {
+                    //    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    //    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                    //} else {
+                        appSession.setData("whocallme", "contact");
+                        appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                   // }
+                } catch (CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -268,15 +276,15 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            try{
-                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
+                try{
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                }catch(CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                return true;
             }
         });
 
@@ -296,17 +304,19 @@ public class ContactsListFragment extends AbstractFermatFragment {
                         for (int i=0;i<con.size();i++){
                             contactname.add(con.get(i).getAlias());
                             contactid.add(con.get(i).getContactId());
-                            contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            contacticon.add(bmd.getBitmap());
                         }
                         final ContactListAdapter adaptador =
-                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                                        moduleManager, errorManager, chatSession, appSession, null);
                         adaptador.refreshEvents(contactname, contacticon, contactid);
-                        //adaptador.notifyDataSetChanged();
                         list.invalidateViews();
                         list.requestLayout();
                         text.setVisibility(View.GONE);
                     }else{
-                        Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                         text.setVisibility(View.VISIBLE);
                         text.setText(" ");
                         text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
@@ -330,9 +340,135 @@ public class ContactsListFragment extends AbstractFermatFragment {
         if (item.getItemId() == R.id.menu_add_contact) {
             changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
             return true;
-        }
+        }else if (item.getItemId() == R.id.menu_switch_profile) {
+            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+            return true;
+        }/*else if(item.getItemId()==R.id.menu_search)
+        {
+            getActivity().onSearchRequested();
+
+        }*/
         return super.onOptionsItemSelected(item);
     }
+
+    // This method uses APIs from newer OS versions than the minimum that this app supports. This
+    // annotation tells Android lint that they are properly guarded so they won't run on older OS
+    // versions and can be ignored by lint.
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        // Inflate the menu items
+        inflater.inflate(R.menu.contact_list_menu, menu);
+        // Locate the search item
+        //MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+        // In versions prior to Android 3.0, hides the search item to prevent additional
+        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
+        // Since the search doesn't create a new Activity to do the searching, the menu item
+        // doesn't need to be turned off.
+        // if (mIsSearchResultView) {
+        //    searchItem.setVisible(false);
+        //}
+
+        // Retrieves the system search manager service
+/*        final SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        // Retrieves the SearchView from the search menu item
+ /*       final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        // Assign searchable info to SearchView
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        // Set listeners for SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String queryText) {
+                // Nothing needs to happen when the user submits the search string
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Called when the action bar search text has changed.  Updates
+                // the search filter, and restarts the loader to do a new query
+                // using the new search string.
+                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
+
+                // Don't do anything if the filter is empty
+                if (mSearchTerm == null && newFilter == null) {
+                    return true;
+                }
+
+                // Don't do anything if the new filter is the same as the current filter
+                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
+                    return true;
+                }
+
+                // Updates current filter to new filter
+                mSearchTerm = newFilter;
+
+                // Restarts the loader. This triggers onCreateLoader(), which builds the
+                // necessary content Uri from mSearchTerm.
+                mSearchQueryChanged = true;
+                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                return true;
+            }
+        });
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                // Nothing to do when the action item is expanded
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                // When the user collapses the SearchView the current search string is
+                // cleared and the loader restarted.
+                if (!TextUtils.isEmpty(mSearchTerm)) {
+                    onSelectionCleared();
+                }
+                mSearchTerm = null;
+                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                return true;
+            }
+        });
+
+        if (mSearchTerm != null) {
+            // If search term is already set here then this fragment is
+            // being restored from a saved state and the search menu item
+            // needs to be expanded and populated again.
+
+            // Stores the search term (as it will be wiped out by
+            // onQueryTextChange() when the menu item is expanded).
+            final String savedSearchTerm = mSearchTerm;
+
+            // Expands the search menu item
+            searchItem.expandActionView();
+
+            // Sets the SearchView to the previous search string
+            searchView.setQuery(savedSearchTerm, false);
+        }
+*/
+    }
+
+//    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSession chatSession,
+//                                  FermatSession appSession, ErrorManager errorManager, UUID id){
+//        try{
+//            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(id));
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+//        }catch(CantGetContactException e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//    }
 
 //    public void setSearchQuery(String query) {
 //        if (TextUtils.isEmpty(query)) {
@@ -447,112 +583,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
         //getListView().clearChoices();
     }*/
 
-    // This method uses APIs from newer OS versions than the minimum that this app supports. This
-    // annotation tells Android lint that they are properly guarded so they won't run on older OS
-    // versions and can be ignored by lint.
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        //inflater.inflate(R.menu.contact_list_menu, menu);
-        // Locate the search item
-        //MenuItem searchItem = menu.findItem(R.id.menu_search);
-
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-       // if (mIsSearchResultView) {
-        //    searchItem.setVisible(false);
-        //}
-
-        // Retrieves the system search manager service
-/*        final SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-
-        // Retrieves the SearchView from the search menu item
- /*       final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        // Assign searchable info to SearchView
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        // Set listeners for SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String queryText) {
-                // Nothing needs to happen when the user submits the search string
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Called when the action bar search text has changed.  Updates
-                // the search filter, and restarts the loader to do a new query
-                // using the new search string.
-                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
-
-                // Don't do anything if the filter is empty
-                if (mSearchTerm == null && newFilter == null) {
-                    return true;
-                }
-
-                // Don't do anything if the new filter is the same as the current filter
-                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
-                    return true;
-                }
-
-                // Updates current filter to new filter
-                mSearchTerm = newFilter;
-
-                // Restarts the loader. This triggers onCreateLoader(), which builds the
-                // necessary content Uri from mSearchTerm.
-                mSearchQueryChanged = true;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                // Nothing to do when the action item is expanded
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                // When the user collapses the SearchView the current search string is
-                // cleared and the loader restarted.
-                if (!TextUtils.isEmpty(mSearchTerm)) {
-                    onSelectionCleared();
-                }
-                mSearchTerm = null;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        if (mSearchTerm != null) {
-            // If search term is already set here then this fragment is
-            // being restored from a saved state and the search menu item
-            // needs to be expanded and populated again.
-
-            // Stores the search term (as it will be wiped out by
-            // onQueryTextChange() when the menu item is expanded).
-            final String savedSearchTerm = mSearchTerm;
-
-            // Expands the search menu item
-            searchItem.expandActionView();
-
-            // Sets the SearchView to the previous search string
-            searchView.setQuery(savedSearchTerm, false);
-        }
-*/
-    }
 
 //    @Override
 //    public void onSaveInstanceState(Bundle outState) {

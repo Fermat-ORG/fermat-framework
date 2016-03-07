@@ -400,13 +400,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                             toConnect.add(actorIssuer.getRecord());
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
-//                                    manager.askActorAssetIssuerForConnection(toConnect);
+                                    manager.askActorAssetIssuerForConnection(toConnect);
 
-//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
+                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
 
-                                    manager.connectToActorAssetIssuer(null, toConnect);
+//                                    manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
                             };

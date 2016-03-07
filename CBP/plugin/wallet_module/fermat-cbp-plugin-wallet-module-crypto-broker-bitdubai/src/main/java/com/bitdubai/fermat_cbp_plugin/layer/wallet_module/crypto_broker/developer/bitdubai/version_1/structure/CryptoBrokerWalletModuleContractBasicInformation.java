@@ -106,8 +106,17 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
 
     @Override
     public byte[] getCryptoCustomerImage() {
-
         return imageBytes;
+    }
+
+    @Override
+    public String getCryptoBrokerAlias() {
+        return null;
+    }
+
+    @Override
+    public byte[] getCryptoBrokerImage() {
+        return new byte[0];
     }
 
     @Override

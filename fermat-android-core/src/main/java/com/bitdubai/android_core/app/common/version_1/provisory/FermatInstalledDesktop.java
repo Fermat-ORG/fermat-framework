@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 /**
  * Created by mati on 2016.02.22..
  */
-public class FermatDesktopManager implements DesktopManager{
+public class FermatInstalledDesktop implements InstalledDesktop {
 
 
     @Override
