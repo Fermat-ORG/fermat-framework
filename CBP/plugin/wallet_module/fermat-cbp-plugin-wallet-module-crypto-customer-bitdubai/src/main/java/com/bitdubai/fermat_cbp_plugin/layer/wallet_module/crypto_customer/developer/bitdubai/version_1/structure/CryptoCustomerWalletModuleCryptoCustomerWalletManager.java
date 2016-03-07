@@ -1475,6 +1475,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
 //            long expirationDate = new Date().getTime();
             String note = "";
+            String cancelReason = "";
 
             if (cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey) != null)
                 customerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey);
@@ -1485,6 +1486,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             if (customerBrokerSaleNegotiation.getMemo() != null)
                 note = customerBrokerSaleNegotiation.getMemo();
 
+            if (customerBrokerSaleNegotiation.getCancelReason() != null)
+                cancelReason = customerBrokerSaleNegotiation.getMemo();
+
             cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                     customerIdentity,
                     brokerIdentity,
@@ -1493,7 +1497,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     clauses,
                     note,
                     lastUpdateDate,
-                    expirationDate
+                    expirationDate,
+                    cancelReason
             );
 
             return cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
