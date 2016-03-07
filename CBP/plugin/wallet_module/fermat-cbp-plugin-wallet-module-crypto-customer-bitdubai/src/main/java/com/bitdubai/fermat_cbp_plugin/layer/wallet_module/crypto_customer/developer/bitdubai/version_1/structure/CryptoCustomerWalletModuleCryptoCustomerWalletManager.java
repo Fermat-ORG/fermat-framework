@@ -840,17 +840,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         boolean isChange = false;
 
-        String customerPaymentMethod = clause.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-        String brokerPaymentMethod = clause.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-
         for (ClauseInformation item : clause.values()) {
-//            if (validateClauseUsed(item,customerPaymentMethod, brokerPaymentMethod)) {
             if ((item.getStatus() != ClauseStatus.CHANGED) && (item.getStatus() != ClauseStatus.ACCEPTED))
                 return ClauseStatus.CONFIRM;
 
             if (item.getStatus().equals(ClauseStatus.CHANGED))
                 isChange = true;
-//            }
         }
 
         if (isChange)
