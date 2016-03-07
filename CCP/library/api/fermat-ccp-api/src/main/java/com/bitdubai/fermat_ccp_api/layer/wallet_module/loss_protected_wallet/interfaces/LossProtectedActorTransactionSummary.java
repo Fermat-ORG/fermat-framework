@@ -8,7 +8,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.in
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  * @version 1.0
  */
-public interface ActorTransactionSummary {
+public interface LossProtectedActorTransactionSummary {
 
     int getSentTransactionsNumber();
 

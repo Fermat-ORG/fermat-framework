@@ -26,6 +26,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedPaymentRequestDateOrderException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSentPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantUpdateLossProtectedWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedTransactionNotFoundException;
@@ -306,7 +308,7 @@ public interface LossProtectedWallet extends Serializable {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, InsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     /**
@@ -372,7 +374,7 @@ public interface LossProtectedWallet extends Serializable {
      *
      * @throws CantGetActorLossProtectedTransactionHistoryException if something goes wrong.
      */
-    ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
+    LossProtectedActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
                                                        String      walletPublicKey,
                                                        String      actorPublicKey) throws CantGetActorLossProtectedTransactionHistoryException;
 
@@ -449,7 +451,7 @@ public interface LossProtectedWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListReceivePaymentRequestException;
+    List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListLossProtectedReceivePaymentRequestException;
 
     /**
      * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
