@@ -685,6 +685,7 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
+                if(messageRecorded==null) return;
             }
 
             messageRecorded.setStatus(MessageStatus.RECEIVE);
@@ -772,6 +773,7 @@ public class ChatMiddlewareMonitorAgent implements
                 Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if(contact==null){
                     contact = createUnregisteredContact(chatMetadata);
+                    if (contact==null) return null;
                 }
 
                 //I'll associated the contact, message and chat with the following method
@@ -821,17 +823,20 @@ public class ChatMiddlewareMonitorAgent implements
             //Se trae de la tabla Contact Connection para forzarlo a guardar el contacto no registrado
             ContactConnection contactConnection;
             contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
-            Contact contact=new ContactImpl(
-                    UUID.randomUUID(),
-                    contactConnection.getRemoteName(),
-                    contactConnection.getAlias(),
-                    contactConnection.getRemoteActorType(),
-                    chatMetadata.getLocalActorPublicKey(),
-                    date.getTime(),
-                    contactConnection.getProfileImage(),
-                    contactConnection.getContactStatus()
-            );
-            chatMiddlewareDatabaseDao.saveContact(contact);
+            if (contactConnection==null) return null;
+
+                Contact contact = new ContactImpl(
+                        UUID.randomUUID(),
+                        contactConnection.getRemoteName(),
+                        contactConnection.getAlias(),
+                        contactConnection.getRemoteActorType(),
+                        chatMetadata.getLocalActorPublicKey(),
+                        date.getTime(),
+                        contactConnection.getProfileImage(),
+                        contactConnection.getContactStatus()
+                );
+                chatMiddlewareDatabaseDao.saveContact(contact);
+
             return contact;
         }
 
@@ -875,6 +880,7 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
+                if(messageRecorded==null) return;
             }
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
