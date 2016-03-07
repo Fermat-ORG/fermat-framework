@@ -42,7 +42,9 @@ public class AssetBuyerTransactionManager {
     public List<AssetNegotiation> getNewNegotiations(BlockchainNetworkType networkType) throws DAPException {
         List<AssetNegotiation> toReturn = new ArrayList<>();
         for (NegotiationRecord record : dao.getNewNegotiations(networkType)) {
-            toReturn.add(record.getNegotiation());
+            for (int i = 0; i < record.getForProcess(); i++) {
+                toReturn.add(record.getNegotiation());
+            }
         }
         return toReturn;
     }

@@ -125,6 +125,7 @@ public class AssetBuyerDeveloperDatabaseFactory {
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME);
         assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);

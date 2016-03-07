@@ -36,6 +36,7 @@ public class AssetBuyerDatabaseConstants {
     public static final String ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME = "btcWalletPublicKey";
     public static final String ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME = "networkType";
+    public static final String ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME = "for_process";
     public static final String ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME = "timeStamp";
 
     public static final String ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN = ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME;
