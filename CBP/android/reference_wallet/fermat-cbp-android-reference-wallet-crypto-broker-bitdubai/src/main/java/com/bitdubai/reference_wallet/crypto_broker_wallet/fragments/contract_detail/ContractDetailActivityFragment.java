@@ -171,16 +171,18 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         String paymentCurrency = data.getPaymentCurrency();
         brokerName.setText(data.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
-        sellingSummary.setText("SELLING " + paymentCurrency);
+        sellingSummary.setText("BUYING " + data.getMerchandise());
         //TODO: averiguar el detailrate como escribirlo
         //detailRate.setText("1 BTC @"+ data.getExchangeRateAmount() + " "+ data.getPaymentCurrency());
         //detailRate.setText("1 BTC @ 254 USD");
+
         Date date = new Date(data.getLastUpdate());
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
         detailDate.setText("Date:\n"+formatter.format(date));
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
         adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
+        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
         recyclerView.setAdapter(adapter);
     }
 
