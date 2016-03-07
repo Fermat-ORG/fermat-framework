@@ -73,7 +73,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance = true;
 
     public static RedeemPointMainActivityFragment newInstance() {
         return new RedeemPointMainActivityFragment();
@@ -141,8 +140,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 }
             }
         }, 500);
-
-        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -205,7 +202,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(s);
                 }
                 return false;
             }
@@ -223,10 +220,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == R.id.action_wallet_redeem_point_show_no_balance) {
-                showNoBalance = item.getTitle().equals(getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
-                item.setTitle((showNoBalance) ? getResources().getString(R.string.dap_redeem_point_wallet_show_all) : getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
-                ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(searchView.getQuery());
             }
 
         } catch (Exception e) {
@@ -343,7 +336,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 digitalAssets = (ArrayList) result[0];
                 if (adapter != null) {
                     adapter.changeDataSet(digitalAssets);
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
                 }
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
