@@ -58,12 +58,17 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     public void createCustomerBrokerNewPurchaseNegotiationTransaction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
 
-            System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - MANAGER - PURCHASE NEGOTIATION****\n");
-            customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
-                    customerBrokerPurchaseNegotiationManager,
-                    customerBrokerNewNegotiationTransactionDatabaseDao
-            );
-            customerBrokerNewPurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            //VALIDATE NOT REPEAT NEGOTIATION
+            if(customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasctionFromNegotiationId(customerBrokerPurchaseNegotiation.getNegotiationId()) == null) {
+
+                System.out.print("\n\n**** 2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - MANAGER - PURCHASE NEGOTIATION****\n");
+                customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
+                        customerBrokerPurchaseNegotiationManager,
+                        customerBrokerNewNegotiationTransactionDatabaseDao
+                );
+                customerBrokerNewPurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+
+            }
         } catch (CantNewPurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){

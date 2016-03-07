@@ -6,6 +6,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -86,7 +87,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
 
             //CREATE NEGOTIATION TRANSATION
-            this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
+            customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
@@ -122,6 +123,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
             }
 
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            }
+
             //CLOSE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
 
@@ -146,7 +152,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
     public void receiveSaleConfirm(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantReceiveConfirmNegotiationTransactionException {
 
         try {
-
+            System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     this.cryptoAddressBookManager,
                     this.cryptoVaultManager,
@@ -154,14 +160,20 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
-
+                System.out.print("\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE" +
+                        " NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n" +
+                        "\nClauses Date.");
+                for (Clause item: customerBrokerSaleNegotiation.getClauses()){
+                    System.out.print("\n- "+item.getType()+" = "+item.getValue()+"\n");
+                }
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             }
 
+            System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
-            customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(), e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");

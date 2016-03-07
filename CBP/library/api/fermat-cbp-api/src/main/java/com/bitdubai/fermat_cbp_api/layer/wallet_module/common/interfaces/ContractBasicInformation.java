@@ -75,4 +75,6 @@ public interface ContractBasicInformation {
      * @return the type of payment in a human readable way
      */
     String getTypeOfPayment();
+
+    Boolean getNearExpirationDatetime();
 }
