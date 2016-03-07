@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
@@ -104,6 +105,7 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -495,6 +497,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public void clearAssociatedIdentities(String brokerWalletPublicKey) throws CantClearBrokerIdentityWalletRelationshipException {
+        cryptoBrokerActorManager.clearBrokerIdentityWalletRelationship(brokerWalletPublicKey);
+    }
+
+    @Override
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException, CantCancelNegotiationException {
         CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(
                 negotiation.getNegotiationId(),
@@ -796,11 +803,27 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public void clearWalletSetting(String publicKeyWalletCryptoBrokerInstall) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletSpreadSetting();
+    }
+
+    @Override
     public void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantSaveCryptoBrokerWalletSettingException {
         //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
         publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
         cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().saveCryptoBrokerWalletAssociatedSetting(cryptoBrokerWalletAssociatedSetting);
     }
+
+    @Override
+    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting();
+    }
+
+
 
     @Override
     public boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
@@ -1256,6 +1279,22 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         walletPublicKey = "walletPublicKeyTest";
         cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().saveCryptoBrokerWalletProviderSetting(cryptoBrokerWalletProviderSetting);
     }
+
+    /**
+     * This method clears the instance CryptoBrokerWalletProviderSetting
+     *
+     * @return
+     *
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public void clearCryptoBrokerWalletProviderSetting(String walletPublicKey) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().clearCryptoBrokerWalletProviderSetting();
+    }
+
+
 
     /**
      * @param bankAccount
