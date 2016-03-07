@@ -213,7 +213,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getNegotiationId(),
                         data.getAmount(),
                         data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
+                        data.getMerchandise(),
                         data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
                 contractDetails.add(contractDetail);
 
@@ -225,7 +225,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getNegotiationId(),
                         data.getAmount(),
                         data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
+                        data.getMerchandise(),
                         data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
                 contractDetails.add(contractDetail);
 
@@ -237,7 +237,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getNegotiationId(),
                         0.0f,                               //TODO: getMerchandiseAmount() missing
                         "Missing type of merchandise",      //TODO: getTypeOfMerchandise() missing
-                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getPaymentCurrency(),              //TODO: refactor a getMerchandiseCurrency() ?
                         data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
                 contractDetails.add(contractDetail);
 
@@ -249,7 +249,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getNegotiationId(),
                         0.0f,                               //TODO: get merchandise amount?
                         "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
-                        data.getMerchandise(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        data.getPaymentCurrency(),              //TODO: refactor a getMerchandiseCurrency() ?
                         data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
@@ -269,31 +269,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     Toast.LENGTH_SHORT)
                     .show();
         }
-
-        /*try{
-
-            CustomerBrokerContractSale contract= walletManager.getCustomerBrokerContractSaleForContractId(data.getContractId().toString());
-            for (ContractClause clause:contract.getContractClause()){
-                contractDetail=new ContractDetail(
-                        ContractDetailType.BROKER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
-                        data.getAmount(),
-                        contract.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
-                contractDetails.add(contractDetail);
-            }
-        }catch (Exception e){
-            CommonLogger.exception(TAG, e.getMessage(), e);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-        }*/
 
         return contractDetails;
     }
