@@ -65,15 +65,20 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ListView list;
+    private AdapterCallbackContacts mAdapterCallback;
 
     Button btn_add, btn_cancel;
-    public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, ChatManager chatManager) {
+    public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,
+                                  ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
         super(activity , fermatSession, null);
         this.activity = activity;
         this.chatManager = chatManager;
+        this.mAdapterCallback = mAdapterCallback;
     }
 
-
+    public static interface AdapterCallbackContacts {
+        void onMethodCallbackContacts();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +160,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                             Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
                           //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
                             dismiss();
+
                         }
                     } else {
                         final int pos = position;
@@ -189,6 +195,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                                     dismiss();
                                                 } else {
                                                     Toast.makeText(getActivity(), "Contact already exist", Toast.LENGTH_SHORT).show();
+
                                                     //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                                                     dismiss();
                                                 }
@@ -199,6 +206,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                             }
                                             //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                                             dismiss();
+                                            mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
                                         }
                                     });
 
