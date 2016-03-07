@@ -56,9 +56,9 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
         status.setText(getStatusStringRes(contractStatus));
         contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
-        customerName.setText(itemInfo.getCryptoCustomerAlias());
+        customerName.setText(itemInfo.getCryptoBrokerAlias());
         typeOfPayment.setText(itemInfo.getTypeOfPayment());
-        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
