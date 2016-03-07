@@ -19,6 +19,10 @@ public class ExtendedPublicKey {
     byte[] pubKeyBytes;
     byte[] chainCode;
 
+    public ExtendedPublicKey() {
+
+    }
+
     public ExtendedPublicKey(String actorPublicKey, byte[] pubKeyBytes, byte[] chainCode) {
         this.actorPublicKey = actorPublicKey;
         this.pubKeyBytes = pubKeyBytes;

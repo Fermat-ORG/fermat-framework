@@ -8,7 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClaus
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
 import java.util.Calendar;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -32,10 +31,10 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private long date;
     private ContractStatus status;
     private String cancellationReason;
+    private boolean nearExpirationDatetime;
 
     public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, byte[] customerImage, String brokerAlias, byte[] brokerImage, String merchandise, String typeOfPayment,
-                                                            String paymentCurrency, ContractStatus status, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){
-        this.customerAlias = customerAlias;
+                                                            String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){        this.customerAlias = customerAlias;
         this.customerImage = customerImage;
 
         this.brokerAlias = brokerAlias;
@@ -46,16 +45,18 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.paymentCurrency = paymentCurrency;
         this.amount = 0;
         this.exchangeRateAmount = 0;
+        this.nearExpirationDatetime = nearExpirationDatetime;
+
         if (customerBrokerPurchaseNegotiation != null) {
             this.cancellationReason = customerBrokerPurchaseNegotiation.getCancelReason();
             negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
             date = customerBrokerPurchaseNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis();
             try {
                 for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                    if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
+                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY) {
                         amount = Float.valueOf(clause.getValue().replace(",",""));
                     }
-                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                    if (clause.getType()== ClauseType.EXCHANGE_RATE) {
                         exchangeRateAmount = Float.valueOf(clause.getValue().replace(",",""));
                     }
                 }
@@ -119,6 +120,11 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public String getTypeOfPayment() {
         return typeOfPayment;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return nearExpirationDatetime;
     }
 
     @Override

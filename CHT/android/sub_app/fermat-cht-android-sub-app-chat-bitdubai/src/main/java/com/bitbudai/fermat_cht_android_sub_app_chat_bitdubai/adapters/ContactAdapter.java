@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,11 @@ public class ContactAdapter extends ArrayAdapter<String> {
     ArrayList<UUID> contactUUID;
     String action;
     private ErrorManager errorManager;
+    Typeface tf;
 
     public ContactAdapter(Context context, ArrayList contactName, ArrayList contactAlias,ArrayList contactUUID, String action, ErrorManager errorManager) {
         super(context, R.layout.contact_detail_item, contactName);
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactAlias = contactAlias;
         this.contactName = contactName;
         this.contactUUID = contactUUID;
@@ -63,9 +66,11 @@ public class ContactAdapter extends ArrayAdapter<String> {
 
                     TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
                     name2.setText(" ");//name2.setText(contactName.get(0));
+                    //name2.setTypeface(tf, Typeface.NORMAL);
 
                     TextView alias2 = (TextView) item.findViewById(R.id.alias);
                     alias2.setText(contactName.get(0));
+                    //alias2.setTypeface(tf, Typeface.NORMAL);
                     break;
             }
         }catch (Exception e)

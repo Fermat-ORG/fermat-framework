@@ -27,6 +27,10 @@ public class DigitalAsset {
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
     private byte[] image;
+    int lockedAssets;
+
+
+
 
 
 
@@ -168,6 +172,13 @@ public class DigitalAsset {
 
     public int getUnused() {
         return unused;
+    }
+    public int getLockedAssets() {
+        return lockedAssets;
+    }
+
+    public void setLockedAssets(int lockedAssets) {
+        this.lockedAssets = lockedAssets;
     }
 
     public void setUnused(int unused) {
