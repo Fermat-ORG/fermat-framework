@@ -81,9 +81,13 @@ public class NotificationService extends Service {
         if (fermatStructure != null) {
 //            notificationIdCount++;
 //            lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
+
+
+             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
+
             NotificationPainter notificationPainter = null;
             try {
+
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
             }catch (Exception e){
 
