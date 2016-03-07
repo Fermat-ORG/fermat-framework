@@ -1540,7 +1540,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 note = customerBrokerSaleNegotiation.getMemo();
 
             if (customerBrokerSaleNegotiation.getCancelReason() != null)
-                cancelReason = customerBrokerSaleNegotiation.getMemo();
+                cancelReason = customerBrokerSaleNegotiation.getCancelReason();
 
             cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                     customerIdentity,
