@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -30,11 +31,18 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.BuildConfig;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
@@ -65,7 +73,7 @@ import java.util.UUID;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback {
+public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -300,8 +308,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 return true;
             }
         });
-/*
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+     /*   mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
             new Handler().postDelayed(new Runnable() {
@@ -348,10 +356,47 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
 
+
+    @Override
+    public void onMethodCallbackContacts() {//solution to access to update contacts view
+        try {
+            List <Contact> con=  chatManager.getContacts();
+            if (con.size() > 0) {
+                contactname.clear();
+                contactid.clear();
+                contacticon.clear();
+                for (int i=0;i<con.size();i++){
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
+                }
+                final ContactListAdapter adaptador =
+                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                                moduleManager, errorManager, chatSession, appSession, null);
+                adaptador.refreshEvents(contactname, contacticon, contactid);
+                list.invalidateViews();
+                list.requestLayout();
+                text.setVisibility(View.GONE);
+            }else{
+                //Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                text.setVisibility(View.VISIBLE);
+                text.setText(" ");
+                text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
+            }
+        } catch (CantGetContactException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+            cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            dialog_conn.show();
             return true;
         }else if (item.getItemId() == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
