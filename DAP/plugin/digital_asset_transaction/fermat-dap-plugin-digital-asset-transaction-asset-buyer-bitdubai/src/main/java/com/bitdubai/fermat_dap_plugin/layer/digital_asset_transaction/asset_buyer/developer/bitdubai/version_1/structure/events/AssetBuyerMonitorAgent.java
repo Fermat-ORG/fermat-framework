@@ -62,9 +62,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
+//    private final OutgoingDraftManager outgoingDraftManager;
     //CONSTRUCTORS
 
-    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager) {
+    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager/*, OutgoingDraftManager outgoingDraftManager*/) {
         this.errorManager = errorManager;
         this.dao = dao;
         this.transactionManager = transactionManager;
@@ -73,6 +74,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         this.assetTransmission = assetTransmission;
         this.cryptoVaultManager = cryptoVaultManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+//        this.outgoingDraftManager = outgoingDraftManager;
     }
 
     //PUBLIC METHODS
@@ -195,8 +197,18 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                         DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
+//                        UUID outgoingId = UUID.randomUUID();
+//                        dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
+//                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+//                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), buyingRecord.getSellerTransaction().getTxHash(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
+//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
                         break;
                     }
+//                    case ADDING_INPUTS:{
+//                        DraftTransaction signedTx = outgoingDraftManager.getPending(buyingRecord.getOutgoingId());
+//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
+//                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), signedTx);
+//                    }
                     case INPUTS_ADDED: {
                         System.out.println("Signing transaction...");
                         DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getBuyerTransaction());

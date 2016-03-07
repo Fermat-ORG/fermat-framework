@@ -22,7 +22,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -90,6 +92,9 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
+//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CCP_OUTGOING_DRAFT_TRANSACTION)
+//    private OutgoingDraftManager outgoingDraftManager;
+
     private AssetBuyerMonitorAgent agent;
     private AssetBuyerRecorderService recorderService;
     private AssetBuyerTransactionManager transactionManager;
@@ -141,7 +146,7 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     }
 
     private void initializeMonitorAgent() throws CantStartAgentException {
-        agent = new AssetBuyerMonitorAgent(errorManager, dao, transactionManager, assetUserWalletManager, actorAssetUserManager, assetTransmission, cryptoVaultManager, bitcoinNetworkManager);
+        agent = new AssetBuyerMonitorAgent(errorManager, dao, transactionManager, assetUserWalletManager, actorAssetUserManager, assetTransmission, cryptoVaultManager, bitcoinNetworkManager/*, outgoingDraftManager*/);
         agent.start();
     }
 
@@ -185,10 +190,10 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     }
 
     @Override
-    public void acceptAsset(UUID negotiationId) throws CantProcessBuyingTransactionException {
+    public void acceptAsset(UUID negotiationId, String btcWalletPublicKey) throws CantProcessBuyingTransactionException {
         try {
-            transactionManager.acceptAsset(negotiationId);
-        } catch (DAPException e) {
+            transactionManager.acceptAsset(negotiationId, btcWalletPublicKey);
+        } catch (DAPException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
             throw new CantProcessBuyingTransactionException(e);
         }
     }
@@ -197,7 +202,7 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     public void declineAsset(UUID negotiationId) throws CantProcessBuyingTransactionException {
         try {
             transactionManager.declineAsset(negotiationId);
-        } catch (DAPException e) {
+        } catch (DAPException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
             throw new CantProcessBuyingTransactionException(e);
         }
     }
