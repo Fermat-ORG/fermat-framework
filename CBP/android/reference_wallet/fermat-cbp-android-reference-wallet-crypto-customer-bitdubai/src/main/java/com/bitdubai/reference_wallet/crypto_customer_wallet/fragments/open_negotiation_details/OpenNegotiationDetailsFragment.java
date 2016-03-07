@@ -33,7 +33,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
@@ -48,8 +47,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.SingleTextDialog;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
@@ -405,6 +404,16 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CURRENCY
         putClause(clauses.get(ClauseType.BROKER_CURRENCY), ClauseStatus.ACCEPTED);
+
+        //VALUE STATUS ACCEPTED IN CLAUSE BROKER CRYPTO ADDRESS
+        if(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) != null){
+            putClause(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS), ClauseStatus.ACCEPTED);
+        }
+
+        //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CRYPTO ADDRESS
+        if(clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) != null){
+            putClause(clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS), ClauseStatus.ACCEPTED);
+        }
 
         //VALUE DEFAULT INFO PAYMENT
         putPaymentInfo(clauses);
