@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -231,14 +232,14 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         System.out.println("Negotiation partially signed...");
-//                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
-//                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
-//                            ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-//                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
-//                            //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
-//                            assetTransmission.sendMessage(message);
-//                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
-//                        }
+                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
+                            ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
+                            //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
+                            assetTransmission.sendMessage(message);
+                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
+                        }
                         DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
                         dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                         String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
