@@ -25,8 +25,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -45,9 +43,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -283,6 +284,16 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @Override
     public FermatStructure getLastApp() {
         return lstWalletNavigationStructureOpen.get(lastWalletPublicKey);
+    }
+
+    @Override
+    public FermatStructure getAppByPublicKey(String appPublicKey) {
+        return getNavigationStructure(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return lstWalletNavigationStructureOpen.keySet();
     }
 
     /**

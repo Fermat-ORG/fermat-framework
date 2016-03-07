@@ -28,7 +28,6 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
     public IssuerCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
         this.activity = new WeakReference<Context>(activity);
         this.activeIdentity = activeIdentity;
-
     }
 
     @Override
@@ -74,6 +73,6 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public boolean hasClickListener() {
-        return false;
+        return true;
     }
 }

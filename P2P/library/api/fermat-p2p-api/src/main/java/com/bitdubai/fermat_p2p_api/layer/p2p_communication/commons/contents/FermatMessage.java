@@ -43,12 +43,32 @@ public interface FermatMessage {
      */
     public String getReceiver();
 
+    /**
+     * Get the Sender PlatformComponentType
+     *
+     * @return PlatformComponentType
+     */
     PlatformComponentType getSenderType();
 
+    /**
+     * Get the Receiver PlatformComponentType
+     *
+     * @return PlatformComponentType
+     */
     PlatformComponentType getReceiverType();
 
+    /**
+     * Get the Sender NetworkServiceType
+     *
+     * @return NetworkServiceType
+     */
     NetworkServiceType getSenderNsType();
 
+    /**
+     * Get the Receiver NetworkServiceType
+     *
+     * @return NetworkServiceType
+     */
     NetworkServiceType getReceiverNsType();
 
     /**

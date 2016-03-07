@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.pop
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -323,5 +324,16 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     @Override
     public void onLongItemClickListener(Actor data, int position) {
 
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }
