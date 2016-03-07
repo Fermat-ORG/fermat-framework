@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -277,4 +278,15 @@ public interface CryptoCustomerWalletManager extends WalletManager {
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException;*/
+
+
+    /**
+     *
+     * @param brokerPublicKey
+     * @param customerPublicKey
+     * @return The basic information of the broker whose publickey equals the parameter passed as publickey.
+     * @throws CantListActorConnectionsException
+     */
+    ActorIdentity getBrokerInfoByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantListActorConnectionsException;
+
 }

@@ -86,15 +86,15 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
                         notification = new IssuerAssetCommunityNotificationPainter("Extended Key Arrive", "Was Received for: "+senderActorPublicKey, "", "");
                     }
                     break;
-//                case "CRYPTO-REQUEST":
-//                    if (manager != null) {
-//                        //find last notification by sender actor public key
-////                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
-//                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
-//                    } else {
-//                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
-//                    }
-//                    break;
+                case "EXTENDED-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "A new connection request was received.", "", "");
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

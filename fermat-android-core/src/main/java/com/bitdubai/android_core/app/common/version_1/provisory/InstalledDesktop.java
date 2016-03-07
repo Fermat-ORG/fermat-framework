@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 /**
  * Created by mati on 2016.02.22..
  */
-public interface DesktopManager extends FermatApp{
+public interface InstalledDesktop extends FermatApp{
 
 
 }

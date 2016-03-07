@@ -209,10 +209,6 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
                             assetRedeemPoint.getProfileImage(),
                             blockchainNetworkType);
 
-//                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
-                    //TODO SOLO DEBE ENVIARSE EL MENSAJE LUEGO DE RECIBIDA LA ACEPTACION POR EL ISSUER A CONECTAR
-//                actorAssetRedeemPointManager.sendMessage(actorAssetRedeemPoint, actorAssetIssuers);
-
                     if (this.actorAssetRedeemPointManager.getActorRedeemPointRegisteredDAPConnectionState(assetRedeemPoint.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                         System.out.println("The User you are trying to connect with is not connected" +
                                 "so we send the message to the assetRedeemPointActorNetworkService");

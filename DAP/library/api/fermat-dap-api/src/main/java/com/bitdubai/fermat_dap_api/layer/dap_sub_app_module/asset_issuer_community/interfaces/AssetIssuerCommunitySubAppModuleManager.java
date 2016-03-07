@@ -45,9 +45,9 @@ public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<A
 
     void askActorAssetIssuerForConnection(List<ActorAssetIssuer> actorAssetIssuers) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
-    void acceptActorAssetIssuer(String actorAssetIssuerPublicKey, String actorAssetIssuerAddPublicKey) throws CantAcceptActorAssetUserException;
+    void acceptActorAssetIssuer(String actorAssetIssuerPublicKey, ActorAssetIssuer actorAssetIssuer) throws CantAcceptActorAssetUserException;
 
-    void denyConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, String actorAssetIssuerToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+    void denyConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, ActorAssetIssuer actorAssetIssuer) throws CantDenyConnectionActorAssetException;
 
 //    void disconnectActorAssetIssuer(String actorIssuerLoggedPublicKey, String actorAssetIssuerToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 

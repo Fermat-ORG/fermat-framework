@@ -102,7 +102,7 @@ public class OutgoingNotificationDao {
                         flagRea,
                         sentCount,
                         blockchainNetworkType,
-                        responseToNotificationId
+                        responseToNotificationId, null
                 );
 
                 outgoingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
@@ -456,6 +456,7 @@ public class OutgoingNotificationDao {
             record.setStringValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorAssetProtocolState().getCode());
             record.setStringValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(connectionRequestRecord.isFlagRead()));
             record.setIntegerValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
+
             if (connectionRequestRecord.getBlockchainNetworkType() != null)
                 record.setStringValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, connectionRequestRecord.getBlockchainNetworkType().getCode());
             if (connectionRequestRecord.getResponseToNotificationId() != null)
@@ -526,7 +527,8 @@ public class OutgoingNotificationDao {
                     read,
                     sentCount,
                     blockchainNetworkType,
-                    responseToNotificationId
+                    responseToNotificationId,
+                    null
             );
 
         } catch (Exception e) {
