@@ -55,7 +55,6 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
 
         AssetIssuerWalletTransactionWrapper that = (AssetIssuerWalletTransactionWrapper) o;
 
-        if (!getTransactionId().equals(that.getTransactionId())) return false;
         if (!getTransactionHash().equals(that.getTransactionHash())) return false;
         return getAssetPublicKey().equals(that.getAssetPublicKey());
 

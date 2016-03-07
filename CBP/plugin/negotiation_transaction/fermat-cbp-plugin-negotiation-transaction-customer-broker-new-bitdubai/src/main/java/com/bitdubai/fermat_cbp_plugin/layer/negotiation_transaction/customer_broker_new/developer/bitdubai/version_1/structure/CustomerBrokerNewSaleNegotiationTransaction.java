@@ -35,7 +35,7 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
         try {
 
 
-            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION TRANSACTION  ****\n" +
+            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION  ****\n" +
                     "\n --- Negotiation Mock XML Date" +
                     "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                     "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
@@ -47,6 +47,7 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
             this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
             this.customerBrokerSaleNegotiationManager.waitForBroker(customerBrokerSaleNegotiation);
 
+            System.out.print("\n\n**** 20.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION CONFIRM ****\n");
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerNewNegotiationTransactionDatabaseDao.createCustomerBrokerNewNegotiationTransaction(
                     transactionId,

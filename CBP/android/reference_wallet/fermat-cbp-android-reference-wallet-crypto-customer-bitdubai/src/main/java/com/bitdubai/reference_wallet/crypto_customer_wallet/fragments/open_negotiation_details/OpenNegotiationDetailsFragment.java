@@ -284,7 +284,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
                     if (validateStatusClause(mapClauses)) {
 
-                        if(negotiationInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CUSTOMER)) {
+//                        if(negotiationInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CUSTOMER)) {
 
                             if (walletManager.updateNegotiation(negotiationInfo)) {
                                 Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
@@ -293,9 +293,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                                 Toast.makeText(getActivity(), "Error send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
                             }
 
-                        }else {
-                            Toast.makeText(getActivity(), "You must wait for the response Broker to close the Negotiation", Toast.LENGTH_LONG).show();
-                        }
+//                        }else {
+//                            Toast.makeText(getActivity(), "You must wait for the response Broker to close the Negotiation", Toast.LENGTH_LONG).show();
+//                        }
 
                     } else {
                         Toast.makeText(getActivity(), "All Clauses Must Be Confirmed.", Toast.LENGTH_LONG).show();
@@ -402,6 +402,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CURRENCY
         putClause(clauses.get(ClauseType.CUSTOMER_CURRENCY), ClauseStatus.ACCEPTED);
+
+        //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CURRENCY
+        putClause(clauses.get(ClauseType.BROKER_CURRENCY), ClauseStatus.ACCEPTED);
 
         //VALUE DEFAULT INFO PAYMENT
         putPaymentInfo(clauses);
@@ -740,13 +743,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 return true;
             else if (item.getType().equals(ClauseType.BROKER_PLACE_TO_DELIVER) && ((brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
                 return true;
-            else if (item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) && (brokerPaymentMethod.equals(MoneyType.CRYPTO.getCode())))
+            else if (item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) && (!brokerPaymentMethod.equals(MoneyType.BANK.getCode()))  && (!brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) && (!brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode())))
                 return true;
             else if (item.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && (customerPaymentMethod.equals(MoneyType.BANK.getCode())))
                 return true;
             else if (item.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) && ((customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
                 return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS) && (customerPaymentMethod.equals(MoneyType.CRYPTO.getCode())))
+            else if (item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS) && (!customerPaymentMethod.equals(MoneyType.BANK.getCode()))  && (!customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) && (!customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode())))
                 return true;
             else
                 return false;
@@ -824,17 +827,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if(currencyType != null) {
             if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) {
-                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+//                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, ClauseStatus.ACCEPTED);
+                    clauses.remove(ClauseType.BROKER_BANK_ACCOUNT);
+                    clauses.remove(ClauseType.BROKER_PLACE_TO_DELIVER);
+
                 }
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) {
                     putClause(ClauseType.BROKER_BANK_ACCOUNT, "The Bank Info is Intro For The Broker");
+                    clauses.remove(ClauseType.BROKER_CRYPTO_ADDRESS);
+                    clauses.remove(ClauseType.BROKER_PLACE_TO_DELIVER);
                 }
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) {
                     putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "The Delivery Info is Intro For The Broker");
+                    clauses.remove(ClauseType.BROKER_BANK_ACCOUNT);
+                    clauses.remove(ClauseType.BROKER_CRYPTO_ADDRESS);
                 }
             }
         }
@@ -848,7 +859,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if(currencyType != null) {
             if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
-                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+//                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.ACCEPTED);
+                    clauses.remove(ClauseType.CUSTOMER_BANK_ACCOUNT);
+                    clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
                 }
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
@@ -857,6 +871,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     if(bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).getAccount();
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
+                    clauses.remove(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+                    clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+
                 }
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
@@ -865,6 +882,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     if(locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);
+                    clauses.remove(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+                    clauses.remove(ClauseType.CUSTOMER_BANK_ACCOUNT);
                 }
             }
         }
@@ -913,6 +932,26 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             @Override
             public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
+        };
+
+        negotiationInfo.getClauses().put(clauseType, clauseInformation);
+    }
+
+    //PUT CLAUSE CLAUSE TYPE, VALUE
+    public void putClause(final ClauseType clauseType, final ClauseStatus status) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return status; }
         };
 
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
