@@ -23,14 +23,14 @@ public interface OpenContractManager extends FermatManager {
      * @param customerBrokerSaleNegotiation
      */
     void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                          FiatIndex fiatIndex) throws CantOpenContractException;
+                          float referencePrice) throws CantOpenContractException;
 
     /**
      * This method opens a new contract for a Customer Broker Purchase Transaction
      * @param customerBrokerPurchaseNegotiation
      */
     void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                              FiatIndex fiatIndex)throws CantOpenContractException;
+                              float referencePrice)throws CantOpenContractException;
 
     /**
      * This method returns the status from the Open Contract Business Transaction.

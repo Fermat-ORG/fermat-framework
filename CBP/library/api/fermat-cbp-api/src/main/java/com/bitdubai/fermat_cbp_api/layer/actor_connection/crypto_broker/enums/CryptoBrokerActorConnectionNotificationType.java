@@ -14,7 +14,8 @@ public enum CryptoBrokerActorConnectionNotificationType implements FermatEnum {
     /**
      * To do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ACTOR_CONNECTED  ("CBP_CRYBRO_CTD"),
+    ACTOR_CONNECTED             ("CBP_CRYBRO_CTD"),
+    CONNECTION_REQUEST_RECEIVED ("CBP_CRYBRO_CRR"),
 
     ;
 
@@ -28,7 +29,8 @@ public enum CryptoBrokerActorConnectionNotificationType implements FermatEnum {
 
         switch (code) {
 
-            case "CBP_CRYBRO_CTD": return ACTOR_CONNECTED;
+            case "CBP_CRYBRO_CTD": return ACTOR_CONNECTED            ;
+            case "CBP_CRYBRO_CRR": return CONNECTION_REQUEST_RECEIVED;
 
             default:
                 throw new InvalidParameterException(

@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
 
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
+import io.codetail.widget.RevealFrameLayout;
 
 
 /**
@@ -44,7 +45,7 @@ public class BottomMenuReveal {
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
 
-    public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
+    public BottomMenuReveal(final RevealFrameLayout mRevealView, final FermatActivity activity) {
         this.hidden = false;
         this.mRevealView = mRevealView;
         this.fermatActivity = new WeakReference<FermatActivity>(activity);

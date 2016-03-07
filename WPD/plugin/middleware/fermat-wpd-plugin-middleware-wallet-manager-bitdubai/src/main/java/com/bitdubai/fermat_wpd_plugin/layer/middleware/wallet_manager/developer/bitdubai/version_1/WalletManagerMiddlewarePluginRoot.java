@@ -337,6 +337,48 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         );
         lstInstalledWallet.add(installedWallet);
 
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Broker Wallet", // WALLET NAME
+                "crypto_broker_wallet", // PUBLIC KEY
+                "CBPCBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Customer Wallet", // WALLET NAME
+                "crypto_customer_wallet", // PUBLIC KEY
+                "CBPCCW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
         return lstInstalledWallet;
 
     }
