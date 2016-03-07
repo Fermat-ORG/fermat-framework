@@ -6,6 +6,7 @@ import com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces.Swap;
 import com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces.TokenlyBalance;
 
 import java.sql.Date;
+import java.util.Arrays;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/03/16.
@@ -20,7 +21,7 @@ public class SwapBotRecord implements Bot {
     private String descriptionHtml;
     private ImageDetails backgroundImageDetails;
     private ImageDetails logoImageDetails;
-    private String[] backgroudOverlaySettings;
+    private String backgroundOverlaySettings;
     private Swap[] swaps;
     private TokenlyBalance[] tokenlyBalances;
     private TokenlyBalance[] allTokenlyBalancesByType;
@@ -40,7 +41,7 @@ public class SwapBotRecord implements Bot {
             String descriptionHtml,
             ImageDetails backgroundImageDetails,
             ImageDetails logoImageDetails,
-            String[] backgroudOverlaySettings,
+            String backgroudOverlaySettings,
             Swap[] swaps,
             TokenlyBalance[] tokenlyBalances,
             TokenlyBalance[] allTokenlyBalancesByType,
@@ -58,7 +59,7 @@ public class SwapBotRecord implements Bot {
         this.descriptionHtml = descriptionHtml;
         this.backgroundImageDetails = backgroundImageDetails;
         this.logoImageDetails = logoImageDetails;
-        this.backgroudOverlaySettings = backgroudOverlaySettings;
+        this.backgroundOverlaySettings = backgroundOverlaySettings;
         this.swaps = swaps;
         this.tokenlyBalances = tokenlyBalances;
         this.allTokenlyBalancesByType = allTokenlyBalancesByType;
@@ -147,8 +148,8 @@ public class SwapBotRecord implements Bot {
      * @return
      */
     @Override
-    public String[] getBackgroundOverlaySettings() {
-        return this.backgroudOverlaySettings;
+    public String getBackgroundOverlaySettings() {
+        return this.backgroundOverlaySettings;
     }
 
     /**
@@ -230,5 +231,29 @@ public class SwapBotRecord implements Bot {
     @Override
     public String getHash() {
         return this.hash;
+    }
+
+    @Override
+    public String toString() {
+        return "SwapBotRecord{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", username='" + username + '\'' +
+                ", description='" + description + '\'' +
+                ", descriptionHtml='" + descriptionHtml + '\'' +
+                ", backgroundImageDetails=" + backgroundImageDetails +
+                ", logoImageDetails=" + logoImageDetails +
+                ", backgroundOverlaySettings=" + backgroundOverlaySettings +
+                ", swaps=" + Arrays.toString(swaps) +
+                ", tokenlyBalances=" + Arrays.toString(tokenlyBalances) +
+                ", allTokenlyBalancesByType=" + Arrays.toString(allTokenlyBalancesByType) +
+                ", returnFee=" + returnFee +
+                ", state='" + state + '\'' +
+                ", confirmationsRequired=" + confirmationsRequired +
+                ", refundsAfterBlocks=" + refundsAfterBlocks +
+                ", createdAt=" + createdAt +
+                ", hash='" + hash + '\'' +
+                '}';
     }
 }
