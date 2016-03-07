@@ -86,7 +86,7 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
     }*/
 
     public void openContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                             FiatIndex fiatIndex) throws
+                             float referencePrice) throws
             CantOpenContractException,
             UnexpectedResultReturnedFromDatabaseException {
 
@@ -97,7 +97,7 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
             ContractPurchaseRecord contractRecord=createPurchaseContractRecord(
                     negotiationClauses,
                     customerBrokerPurchaseNegotiation,
-                    fiatIndex);
+                    referencePrice);
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
             this.openContractBusinessTransactionDao.persistContractRecord(
                     contractRecord,

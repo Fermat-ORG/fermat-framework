@@ -47,6 +47,7 @@ import io.codetail.widget.RevealFrameLayout;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
@@ -468,6 +469,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+                    addRecentToScreen();
                     initialisePaging();
                 } else {
 
@@ -497,6 +499,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void addRecentToScreen(){
+        View view = findViewById(R.id.btn_recents);
+        view.setVisibility(View.VISIBLE);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRecentsScreen();
+            }
+        });
+
     }
 
     private void paintScreen(Activity activity) {

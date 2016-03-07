@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -288,6 +289,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @Override
     public FermatStructure getAppByPublicKey(String appPublicKey) {
         return getNavigationStructure(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return lstWalletNavigationStructureOpen.keySet();
     }
 
     /**
@@ -3628,7 +3634,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         final String publicKey = "cash_wallet";
-        final String statusBarColor = "#00b9ff";
+        //final String statusBarColor = "#00b9ff";
+        final String statusBarColor = "#11516F";
         final String titleBarLabelColor = "#FFFFFF";
         final String titleBarColor = "#00b9ff";
         final int titleBarLabelSize = 20;

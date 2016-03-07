@@ -60,6 +60,7 @@ import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatA
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
@@ -127,6 +128,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
@@ -1281,7 +1283,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     fermatApp = ((FermatApp) bundle.getSerializable(ApplicationConstants.INSTALLED_FERMAT_APP));
                 } else if (bundle.containsKey(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)) {
                     publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-                    fermatAppType = FermatAppType.getValueFromString(bundle.getString(ApplicationConstants.INTENT_APP_TYPE));
+                    fermatAppType = (FermatAppType) bundle.get(ApplicationConstants.INTENT_APP_TYPE);
                 }
                 if (fermatApp == null) {
                     fermatApp = getFermatAppManager().getApp(publicKey, fermatAppType);
@@ -1318,9 +1320,6 @@ public abstract class FermatActivity extends AppCompatActivity
         return fermatSession;
     }
 
-    protected FermatAppsManager getFermatAppManager(){
-        return getApplicationSession().getFermatAppsManager();
-    }
 
 
     //TODO: esto es un plugin más para el manejo de los desktops
@@ -1696,6 +1695,15 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
+    public void openRecentsScreen(){
+        Intent resultIntent = new Intent(getApplicationContext(),RecentsActivity.class);
+        // TODO Add extras or a data URI to this intent as appropriate.
+        setResult(android.app.Activity.RESULT_OK, resultIntent);
+        //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivityForResult(resultIntent, TASK_MANAGER_STACK);
+    }
+
+
     /**
      *
      */
@@ -1710,17 +1718,14 @@ public abstract class FermatActivity extends AppCompatActivity
                 if (resultCode == android.app.Activity.RESULT_OK) {
                     // TODO Extract the data returned from the child Activity. and open the app
                     Toast.makeText(this,"yes",Toast.LENGTH_SHORT).show();
-                    String appPublicKey = data.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-                    FermatAppType fermatAppType = (FermatAppType) data.getSerializableExtra(ApplicationConstants.INTENT_APP_TYPE);
-
-
-
+                    data.setAction("org.fermat.APP_LAUNCHER");
+                    sendBroadcast(data);
+                    //finish();
                 }
                 break;
             }
         }
     }
-
 
 
 //    private BoundService mBoundService;

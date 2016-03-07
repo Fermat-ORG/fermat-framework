@@ -38,15 +38,18 @@
         <requestFocus />
     </EditText>
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/create"
+        android:layout_height="50dp"
         android:id="@+id/create_crypto_broker_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:padding="0dp"
-        android:layout_margin="0dp" />
+        android:layout_margin="0dp"
+        android:text="@string/create"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="#292929"
+        android:textColor="#ffffff" />
 
     <ImageView
         android:layout_width="80dp"
