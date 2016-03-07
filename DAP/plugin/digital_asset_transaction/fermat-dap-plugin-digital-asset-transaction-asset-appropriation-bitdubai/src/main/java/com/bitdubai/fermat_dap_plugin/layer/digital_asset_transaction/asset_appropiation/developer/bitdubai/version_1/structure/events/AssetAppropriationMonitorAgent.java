@@ -32,9 +32,6 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
@@ -343,6 +340,19 @@ public class AssetAppropriationMonitorAgent implements Agent {
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
             DAPMessage message = new DAPMessage(new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer, DAPMessageSubject.ASSET_APPROPRIATED);
             assetTransmissionNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
+        }
+
+        private void sendActorInformation(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
+            //Storing Users
+            ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
+            ActorAssetUser actorReceiver = (ActorAssetUser) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
+
+            //Creating AssetMovementContentMessage
+            AssetMovementContentMessage content = new AssetMovementContentMessage(actorSender, actorReceiver, digitalAssetMetadata.getDigitalAsset().getPublicKey(), networkType);
+
+            //Creating and sending DAPMessage
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
+            assetTransmissionNetworkServiceManager.sendMessage(dapMessage);
         }
 
         private IntraWalletUserIdentity getIntraUserIdentity(AppropriationTransactionRecord record) throws CantListIntraWalletUsersException, CantCreateNewIntraWalletUserException {
