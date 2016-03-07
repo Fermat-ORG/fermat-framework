@@ -241,7 +241,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
             CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
-            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller());
+            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
         }
 
