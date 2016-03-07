@@ -141,6 +141,7 @@ public class MatchingEngineMiddlewareDatabaseFactory {
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , DatabaseDataType.MONEY ,   0, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TYPE_COLUMN_NAME                   , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME                  , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , DatabaseDataType.STRING, 100, Boolean.FALSE);

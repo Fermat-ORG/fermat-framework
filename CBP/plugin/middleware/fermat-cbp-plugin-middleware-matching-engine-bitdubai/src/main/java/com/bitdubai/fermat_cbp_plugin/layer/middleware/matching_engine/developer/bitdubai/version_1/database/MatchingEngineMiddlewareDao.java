@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyHelper;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
@@ -42,29 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ID_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TABLE_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.MATCHING_ENGINE_MIDDLEWARE_DATABASE_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME;
-import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME;
-
+import static com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDatabaseConstants.*;
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao</code>
  * contains all the methods that interact with the database.
@@ -464,24 +444,28 @@ public final class MatchingEngineMiddlewareDao {
         );
     }
 
-
-    public final InputTransaction createInputTransaction(final CurrencyMatching currencyMatching,
-                                                         final UUID             earningsPairId  ) throws CantCreateInputTransactionException {
+    public final InputTransaction createInputTransaction(final CurrencyMatching      currencyMatching,
+                                                         final UUID                  earningsPairId  ) throws CantCreateInputTransactionException {
 
         try {
 
+            final UUID                  newId = UUID.randomUUID();
+
+            final InputTransactionType  type  = InputTransactionType .ORIGINAL ;
             final InputTransactionState state = InputTransactionState.UNMATCHED;
 
             final InputTransaction inputTransaction = new MatchingEngineMiddlewareInputTransaction(
-                    currencyMatching.getOriginTransactionId()             ,
-                    currencyMatching.getCurrencyGiving(),
-                    currencyMatching.getAmountGiving(),
-                    currencyMatching.getCurrencyReceiving(),
-                    currencyMatching.getAmountReceiving(),
+                    newId                                    ,
+                    currencyMatching.getOriginTransactionId(),
+                    currencyMatching.getCurrencyGiving()     ,
+                    currencyMatching.getAmountGiving()       ,
+                    currencyMatching.getCurrencyReceiving()  ,
+                    currencyMatching.getAmountReceiving()    ,
+                    type                                     ,
                     state
             );
 
-            final DatabaseTable inputTransactionTable = database.getTable(EARNING_PAIR_TABLE_NAME);
+            final DatabaseTable inputTransactionTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
 
             DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
 
@@ -495,6 +479,44 @@ public final class MatchingEngineMiddlewareDao {
 
             throw new CantCreateInputTransactionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
+    }
+
+    public final DatabaseTransaction getNewDatabaseTransaction() {
+
+        return database.newTransaction();
+    }
+
+    public final InputTransaction createPartialInputTransaction(final DatabaseTransaction   databaseTransaction,
+                                                                final String                originTransactionId,
+                                                                final Currency              currencyGiving     ,
+                                                                final float                 amountGiving       ,
+                                                                final Currency              currencyReceiving  ,
+                                                                final float                 amountReceiving    ,
+                                                                final UUID                  earningsPairId     ,
+                                                                final InputTransactionState state              ) {
+
+        final InputTransactionType  type  = InputTransactionType .PARTIAL  ;
+
+        final InputTransaction inputTransaction = new MatchingEngineMiddlewareInputTransaction(
+                UUID.randomUUID()  ,
+                originTransactionId,
+                currencyGiving     ,
+                amountGiving       ,
+                currencyReceiving  ,
+                amountReceiving    ,
+                type               ,
+                state
+        );
+
+        final DatabaseTable inputTransactionTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
+
+        DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
+
+        entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction);
+
+        databaseTransaction.addRecordToInsert(inputTransactionTable, entityRecord);
+
+        return inputTransaction;
     }
 
     public boolean existsInputTransaction(final String inputTransactionId) throws CantGetInputTransactionException {
@@ -520,7 +542,7 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public final List<InputTransaction> listUnmatchedInputTransactions(final UUID earningPairId) throws CantListInputTransactionsException {
+    public final InputTransaction getNextUnmatchedSellInputTransaction(final EarningsPair earningsPair) throws CantGetInputTransactionException {
 
         try {
 
@@ -528,14 +550,45 @@ public final class MatchingEngineMiddlewareDao {
 
             final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
 
-            inputTransactionsTable.addUUIDFilter      (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningPairId, DatabaseFilterType.EQUAL);
-            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_STATE_COLUMN_NAME          , state        , DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addUUIDFilter      (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningsPair.getId()            , DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME, earningsPair.getLinkedCurrency(), DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_STATE_COLUMN_NAME, state, DatabaseFilterType.EQUAL);
 
             inputTransactionsTable.loadToMemory();
 
             final List<DatabaseTableRecord> records = inputTransactionsTable.getRecords();
 
-            final List<InputTransaction> inputTransactionList = new ArrayList<>();
+            if (records.isEmpty())
+                return null;
+            else
+                return buildInputTransactionRecord(records.get(0));
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetInputTransactionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantGetInputTransactionException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
+    public final List<InputTransaction> listUnmatchedBuyInputTransactions(final EarningsPair earningsPair) throws CantListInputTransactionsException {
+
+        try {
+
+            final InputTransactionState state = InputTransactionState.UNMATCHED;
+
+            final DatabaseTable inputTransactionsTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
+
+            inputTransactionsTable.addUUIDFilter      (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME   , earningsPair.getId()            , DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME, earningsPair.getLinkedCurrency(), DatabaseFilterType.EQUAL);
+            inputTransactionsTable.addFermatEnumFilter(INPUT_TRANSACTION_STATE_COLUMN_NAME             , state                           , DatabaseFilterType.EQUAL);
+
+            inputTransactionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = inputTransactionsTable.getRecords();
+
+            List<InputTransaction> inputTransactionList = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records)
                 inputTransactionList.add(buildInputTransactionRecord(record));
@@ -555,13 +608,15 @@ public final class MatchingEngineMiddlewareDao {
                                                                     final UUID                earningPairId   ,
                                                                     final InputTransaction    inputTransaction) {
 
-        record.setStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
-        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        , inputTransaction.getCurrencyGiving()             );
+        record.setUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
+        record.setStringValue(INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getOriginTransactionId());
+        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME, inputTransaction.getCurrencyGiving());
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
-        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          , inputTransaction.getAmountGiving()               );
+        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME, inputTransaction.getAmountGiving());
         record.setFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
+        record.setFermatEnum (INPUT_TRANSACTION_TYPE_COLUMN_NAME                   , inputTransaction.getType()                       );
         record.setFermatEnum (INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
 
         record.setUUIDValue  (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
@@ -571,7 +626,8 @@ public final class MatchingEngineMiddlewareDao {
 
     private InputTransaction buildInputTransactionRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        String id                          = record.getStringValue(INPUT_TRANSACTION_ID_COLUMN_NAME                     );
+        UUID id                            = record.getUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     );
+        String originTransactionId         = record.getStringValue(INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME  );
 
         String currencyGivingString        = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        );
         String currencyGivingTypeString    = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   );
@@ -581,19 +637,23 @@ public final class MatchingEngineMiddlewareDao {
         float  amountGiving                = record.getFloatValue (INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          );
         float  amountReceiving             = record.getFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       );
 
+        String typeString                  = record.getStringValue(INPUT_TRANSACTION_TYPE_COLUMN_NAME                   );
         String stateString                 = record.getStringValue(INPUT_TRANSACTION_STATE_COLUMN_NAME                  );
 
+        InputTransactionType  type  = InputTransactionType .getByCode(typeString );
         InputTransactionState state = InputTransactionState.getByCode(stateString);
 
         Currency currencyGiving  = CurrencyHelper.getCurrency(currencyGivingString, currencyGivingTypeString);
         Currency currencyReceiving = CurrencyHelper.getCurrency(currencyReceivingString, currencyReceivingTypeString);
 
         return new MatchingEngineMiddlewareInputTransaction(
-                id               ,
-                currencyGiving   ,
-                amountGiving     ,
-                currencyReceiving,
-                amountReceiving  ,
+                id                 ,
+                originTransactionId,
+                currencyGiving     ,
+                amountGiving       ,
+                currencyReceiving  ,
+                amountReceiving    ,
+                type               ,
                 state
         );
     }
