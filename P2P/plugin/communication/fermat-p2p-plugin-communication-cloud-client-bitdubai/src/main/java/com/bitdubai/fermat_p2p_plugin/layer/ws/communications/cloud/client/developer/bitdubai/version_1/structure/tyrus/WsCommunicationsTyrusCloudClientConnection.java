@@ -1004,67 +1004,6 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         return wsCommunicationsTyrusCloudClientChannel.isRegister();
     }
 
-
-
-    public void springTest(){
-
-        System.out.println("Iniciando springTest() = ");
-
-        List<PlatformComponentProfile> resultList = new ArrayList<>();
-
-        try {
-
-             /*
-             * Construct a jsonObject whit the parameters
-             */
-            Gson gson = new Gson();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
-            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, "{\"networkServiceType\":\"UNDEFINED\",\"platformComponentType\":\"ACTOR_INTRA_USER\"}");
-
-            // Create a new RestTemplate instance
-            HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.set("Connection", "Close");
-            requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
-
-            HttpEntity<?> requestEntity = new HttpEntity<Object>(jsonObject.toString(), requestHeaders);
-            RestTemplate restTemplate = new RestTemplate(true);
-            restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-
-            ResponseEntity<String> responseEntity = restTemplate.exchange(getWebServiceURL(), HttpMethod.POST, requestEntity, String.class);
-
-            String respond = responseEntity.getBody();
-            //System.out.println("responseEntity = " + respond);
-
-            /*
-             * if respond have the result list
-             */
-            if (respond.contains(JsonAttNamesConstants.RESULT_LIST)){
-
-                /*
-                 * Decode into a json object
-                 */
-                JsonParser parser = new JsonParser();
-                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
-
-                 /*
-                 * Get the receivedList
-                 */
-                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
-                }.getType());
-
-                System.out.println("WsCommunicationsCloudClientConnection - resultList.size() = " + resultList.size());
-
-            }else {
-                System.out.println("WsCommunicationsCloudClientConnection - Requested list is not available, resultList.size() = " + resultList.size());
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
     /*
      * get the WebService URL of the Server Cloud
      */

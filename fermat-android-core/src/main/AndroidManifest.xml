@@ -136,5 +136,14 @@
             android:launchMode="singleInstance"
             />
 
+        <receiver android:name="com.bitdubai.android_core.app.AppLauncherReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.APP_LAUNCHER">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
     </application>
 </manifest>
