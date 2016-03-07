@@ -337,6 +337,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         if (adapter == null) {
             adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
             adapter.setFermatListEventListener(this);
+        } else {
+            adapter.changeDataSet(digitalAssets);
         }
         return adapter;
     }
