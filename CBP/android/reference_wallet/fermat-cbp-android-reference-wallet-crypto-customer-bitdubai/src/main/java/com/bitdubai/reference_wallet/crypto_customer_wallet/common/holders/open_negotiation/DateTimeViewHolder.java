@@ -54,7 +54,7 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked((Button) view, clause, clausePosition);
+            listener.onClauseClicked((Button) view, clause, clausePosition);
     }
 
     @Override

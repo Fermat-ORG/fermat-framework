@@ -21,6 +21,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.notifications
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
 
@@ -80,6 +81,8 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
                 return new CryptoCustomerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             case CCW_WAITING_FOR_CUSTOMER_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
+            case CCW_CANCEL_NEGOTIATION_NOTIFICATION:
+                return new CryptoCustomerNotificationPainter("Negotiation Canceled","Check the Contract Story, a broker has canceled a negotiation.","");
             default:
                 return super.getNotificationPainter(code);
         }
