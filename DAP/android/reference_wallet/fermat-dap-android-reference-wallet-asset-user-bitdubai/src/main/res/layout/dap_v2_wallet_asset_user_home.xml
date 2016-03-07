@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fab_material_blue_grey_500">
+    android:background="@color/fab_material_white">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/dap_v2_wallet_asset_user_home_swipe_refresh"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_assets_user"
-            android:textColor="@color/fab_material_white"
+            android:textColor="@color/dap_user_wallet_black_text"
             android:textSize="20sp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_assets_user_message"
-            android:textColor="@color/fab_material_white"
+            android:textColor="@color/dap_user_wallet_black_text"
             android:textSize="15sp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"

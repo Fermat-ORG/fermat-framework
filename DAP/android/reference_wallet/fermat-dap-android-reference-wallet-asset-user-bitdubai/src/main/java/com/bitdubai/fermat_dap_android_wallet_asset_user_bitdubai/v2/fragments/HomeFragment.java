@@ -91,12 +91,12 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_toolbar));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet__home_issuer_principal));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_toolbar));
             }
         }
     }
