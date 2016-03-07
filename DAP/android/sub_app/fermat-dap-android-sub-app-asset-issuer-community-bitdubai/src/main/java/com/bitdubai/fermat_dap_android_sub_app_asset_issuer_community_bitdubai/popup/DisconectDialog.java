@@ -26,28 +26,28 @@ public class DisconectDialog extends FermatDialog<AssetIssuerCommunitySubAppSess
     /**
      * UI components
      */
-    private FermatButton   positiveBtn ;
-    private FermatButton   negativeBtn ;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
     private FermatTextView mDescription;
-    private FermatTextView mUsername   ;
-    private FermatTextView mTitle      ;
-    private CharSequence   description ;
-    private CharSequence   username    ;
-    private CharSequence   title       ;
+    private FermatTextView mUsername;
+    private FermatTextView mTitle;
+    private CharSequence description;
+    private CharSequence username;
+    private CharSequence title;
 
     private final ActorIssuer actorIssuer;
-    private final IdentityAssetIssuer identity            ;
+    private final IdentityAssetIssuer identity;
 
-    public DisconectDialog(final Activity                       activity              ,
-                           final AssetIssuerCommunitySubAppSession         actorIssuerUserSubAppSession,
-                           final SubAppResourcesProviderManager subAppResources       ,
-                           final ActorIssuer           actorIssuer  ,
-                           final IdentityAssetIssuer         identity              ) {
+    public DisconectDialog(final Activity activity,
+                           final AssetIssuerCommunitySubAppSession actorIssuerUserSubAppSession,
+                           final SubAppResourcesProviderManager subAppResources,
+                           final ActorIssuer actorIssuer,
+                           final IdentityAssetIssuer identity) {
 
         super(activity, actorIssuerUserSubAppSession, subAppResources);
 
         this.actorIssuer = actorIssuer;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
 
 
@@ -111,7 +111,7 @@ public class DisconectDialog extends FermatDialog<AssetIssuerCommunitySubAppSess
 //                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
 //                    sendLocalBroadcast(broadcast);
 //
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.disconnected, Toast.LENGTH_SHORT).show();
 //
 //                } else {
 //                    super.toastDefaultError();
@@ -125,7 +125,7 @@ public class DisconectDialog extends FermatDialog<AssetIssuerCommunitySubAppSess
 //            }
 
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }

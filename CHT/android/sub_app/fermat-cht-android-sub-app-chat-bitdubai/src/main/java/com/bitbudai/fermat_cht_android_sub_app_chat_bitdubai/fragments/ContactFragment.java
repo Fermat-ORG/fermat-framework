@@ -13,6 +13,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +47,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -96,18 +99,13 @@ public class ContactFragment extends AbstractFermatFragment {
     String TAG = "CHT_ContactFragment";
 
     ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
-    //public ContactsListFragment() {}
-    static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
+    Typeface tf;
 
     public static ContactFragment newInstance() {
-        initchatinfo();
         return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -130,8 +128,6 @@ public class ContactFragment extends AbstractFermatFragment {
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
-            //CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
-            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             if(errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -188,6 +184,7 @@ public class ContactFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
@@ -195,19 +192,24 @@ public class ContactFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            contacticon.add(bmd.getBitmap());
+
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(contactalias.get(0));
+            //name.setTypeface(tf, Typeface.NORMAL);
             FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
             id.setText(contactid.get(0).toString());
+            //id.setTypeface(tf, Typeface.NORMAL);
 
             // create bitmap from resource
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+            //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
 
             // set circle bitmap
             ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(getCircleBitmap(bm));
+            mImage.setImageBitmap(getCircleBitmap(contacticon.get(0)));
 
             LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -532,10 +534,13 @@ public class ContactFragment extends AbstractFermatFragment {
                                     for (int i=0;i<cont.size();i++){
                                         contactname.add(cont.get(i).getAlias());
                                         contactid.add(cont.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        contacticon.add(bmd.getBitmap());
                                     }
                                     final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
+                                                    moduleManager, errorManager, chatSession, appSession, null);
                                     adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
                             }catch(CantGetContactException e) {

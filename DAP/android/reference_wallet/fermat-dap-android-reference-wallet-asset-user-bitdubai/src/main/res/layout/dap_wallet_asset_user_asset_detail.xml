@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="130dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetDetailNameText"
@@ -68,6 +68,19 @@
                 android:layout_below="@+id/assetAvailable1"
                 android:paddingLeft="15dp"
                 android:paddingTop="0dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetUserDetailLockedAssets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="light"
+                android:textColor="#FF0000"
+                android:text="0 Locked Assets"
+                android:layout_below="@+id/assetAvailable2"
+                android:paddingLeft="15dp"
+                android:paddingTop="0dp"
+                android:visibility="gone"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView7"

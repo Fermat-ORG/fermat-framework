@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -74,7 +75,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private Menu menu;
+    private MenuItem menuItemSelect;
+    private MenuItem menuItemUnselect;
 
     private List<ActorIssuer> actors;
     private ActorIssuer actor;
@@ -126,19 +128,28 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actors = dataSet;
 
                 boolean someSelected = false;
+                int cantSelected=0;
                 for (ActorIssuer actor : actors) {
                     if (actor.selected) {
                         someSelected = true;
-                        break;
+                        cantSelected++;
+
                     }
                 }
 
                 if (someSelected) {
-                    menu.getItem(2).setVisible(true);
+                    menuItemUnselect.setVisible(true);
+                    if (cantSelected == actors.size())
+                    {
+                        menuItemSelect.setVisible(false);
+                    } else {
+                        menuItemSelect.setVisible(true);
+                    }
                 }
                 else
                 {
-                    menu.getItem(2).setVisible(false);
+                    menuItemUnselect.setVisible(false);
+                    menuItemSelect.setVisible(true);
                 }
 
             }
@@ -315,20 +326,22 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        this.menu = menu;
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
+
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 0, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.getItem(2).setVisible(false);
+        menuItemSelect = menu.getItem(1);
+        menuItemUnselect = menu.getItem(2);
+        menuItemUnselect.setVisible(false);
     }
 
     @Override
@@ -343,18 +356,20 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(true);
+            menuItemSelect.setVisible(false);
+            menuItemUnselect.setVisible(true);
 
         }
 
-        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL){
+        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL){
 
             for (ActorIssuer actorIssuer : actors)
             {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menu.getItem(2).setVisible(false);
+            menuItemSelect.setVisible(true);
+            menuItemUnselect.setVisible(false);
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
@@ -373,7 +388,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         int i = v.getId();
                         if (i == R.id.positive_button) {
                             final ProgressDialog dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage("Connecting please wait...");
+                            dialog.setMessage(getString(R.string.connecting));
                             dialog.setCancelable(false);
                             dialog.show();
                             FermatWorker worker = new FermatWorker() {
@@ -385,7 +400,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                             toConnect.add(actorIssuer.getRecord());
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
-                                    manager.connectToActorAssetIssuer(null, toConnect);
+                                    manager.askActorAssetIssuerForConnection(toConnect);
+
+                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
+
+//                                    manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
                             };
@@ -394,7 +415,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 @Override
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
-                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
                                             @Override
@@ -407,7 +428,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 @Override
                                 public void onErrorOccurred(Exception ex) {
                                     dialog.dismiss();
-                                    Toast.makeText(getActivity(), "Redeem Point or Asset Issuer Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.create_before_action, Toast.LENGTH_LONG).show();
 
                                 }
                             });
@@ -419,16 +440,16 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                     }
                 };
-                connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send to");
+                connectDialog.setTitle(R.string.connection_request_title);
+                connectDialog.setDescription(getString(R.string.connection_request_desc));
                 connectDialog.setUsername((toConnect.size() > 1) ? "" + toConnect.size() +
                         " Issuers" : toConnect.get(0).getName());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
                 connectDialog.show();
                 return true;
             }
             else{
-                Toast.makeText(getActivity(), "No Issuers selected to Connect", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
                 return false;
             }
         }
@@ -440,7 +461,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Community Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_community_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

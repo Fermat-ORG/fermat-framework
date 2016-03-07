@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_sel
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.AssetSellerDigitalAssetTransactionPluginRoot;
 
 import java.util.Date;
 
@@ -13,13 +15,16 @@ public class NegotiationRecord {
     //VARIABLE DECLARATION
     private AssetNegotiation negotiation;
     private AssetSellStatus negotiationStatus;
-    private Date timeStamp;
+    private ActorAssetUser buyer;
+    private long startTime;
+
     //CONSTRUCTORS
 
-    public NegotiationRecord(AssetNegotiation negotiation, AssetSellStatus negotiationStatus, Date timeStamp) {
+    public NegotiationRecord(AssetNegotiation negotiation, AssetSellStatus negotiationStatus, long startTime, ActorAssetUser buyer) {
         this.negotiation = negotiation;
         this.negotiationStatus = negotiationStatus;
-        this.timeStamp = timeStamp;
+        this.startTime = startTime;
+        this.buyer = buyer;
     }
 
     //PUBLIC METHODS
@@ -32,8 +37,16 @@ public class NegotiationRecord {
         return negotiationStatus;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    public Date getStartTime() {
+        return new Date(startTime);
+    }
+
+    public boolean isExpired(){
+        return new Date().after(new Date(startTime + AssetSellerDigitalAssetTransactionPluginRoot.SELL_TIMEOUT));
+    }
+
+    public ActorAssetUser getBuyer() {
+        return buyer;
     }
 
     //PRIVATE METHODS
