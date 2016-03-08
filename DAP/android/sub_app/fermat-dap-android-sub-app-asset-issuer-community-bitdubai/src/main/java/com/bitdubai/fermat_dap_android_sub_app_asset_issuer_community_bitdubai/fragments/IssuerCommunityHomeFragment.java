@@ -66,7 +66,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager manager;
-    private int IssuerNotificationsCount = 0;
+    private int issuerNotificationsCount = 0;
 
     ErrorManager errorManager;
 
@@ -82,6 +82,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
+    private MenuItem menuItemConnect;
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
@@ -110,7 +111,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            IssuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            issuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
             new FetchCountTask().execute();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -134,11 +135,14 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                 actors = dataSet;
                 boolean someSelected = false;
-                int cantSelected=0;
+                int selectedActors=0;
+                int cheackeableActors = 0;
                 List<ActorIssuer> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
 
                 for (ActorIssuer actor : actors) {
+                    if (actor.getRecord().getExtendedPublicKey() == null)
+                        cheackeableActors++;
                     if (actor.selected) {
 
                         actorsSelected.add(actor);
@@ -148,7 +152,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         }
 
                         someSelected = true;
-                        cantSelected++;
+                        selectedActors++;
 
                     }
                 }
@@ -161,8 +165,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
 
                 if (someSelected) {
+                    menuItemConnect.setVisible(true);
                     menuItemUnselect.setVisible(true);
-                    if (cantSelected == actors.size())
+                    if (selectedActors == cheackeableActors)
                     {
                         menuItemSelect.setVisible(false);
                     } else {
@@ -171,8 +176,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
                 else
                 {
-                    menuItemUnselect.setVisible(false);
-                    menuItemSelect.setVisible(true);
+                    restartButtons();
                 }
 
 
@@ -368,12 +372,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 
-
+        menuItemConnect = menu.getItem(0);
+        menuItemCancel = menu.getItem(1);
         menuItemSelect = menu.getItem(2);
         menuItemUnselect = menu.getItem(3);
-        menuItemUnselect.setVisible(false);
-        menuItemCancel = menu.getItem(1);
-        menuItemCancel.setVisible(false);
+        restartButtons();
     }
 
     @Override
@@ -381,14 +384,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         int id = item.getItemId();
 
-
         if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL){
 
             for (ActorIssuer actorIssuer : actors)
             {
-                actorIssuer.selected = true;
+                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
+                    actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
+            menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
 
@@ -401,8 +405,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menuItemSelect.setVisible(true);
-            menuItemUnselect.setVisible(false);
+            restartButtons();
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
@@ -449,6 +452,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
                                     Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+                                    restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
                                             @Override
@@ -522,6 +526,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                             public void onPostExecute(Object... result) {
                                 dialog.dismiss();
                                 Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                restartButtons();
                                 if (swipeRefreshLayout != null)
                                     swipeRefreshLayout.post(new Runnable() {
                                         @Override
@@ -572,7 +577,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     }
 
     private void updateNotificationsBadge(int count) {
-        IssuerNotificationsCount = count;
+        issuerNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
     }
 
@@ -601,7 +606,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         protected Integer doInBackground(Void... params) {
             // example count. This is where you'd
             // query your data store for the actual count.
-            return IssuerNotificationsCount;
+            return issuerNotificationsCount;
         }
 
         @Override
@@ -700,6 +705,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
+    
+    private void restartButtons()
+    {
+        menuItemCancel.setVisible(false);
+        menuItemSelect.setVisible(true);
+        menuItemUnselect.setVisible(false);
+        menuItemConnect.setVisible(false);
+        
     }
 
 
