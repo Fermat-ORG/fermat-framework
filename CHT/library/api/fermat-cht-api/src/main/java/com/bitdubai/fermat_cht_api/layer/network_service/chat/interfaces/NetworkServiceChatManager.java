@@ -30,11 +30,10 @@ public interface NetworkServiceChatManager extends FermatManager, TransactionPro
      * @param remoteActorPubKey
      * @param receiverType
      * @param newDistributionStatus
-     * @param chatId
-     * @param messageID
+     * @param transactionID
      * @throws CantSendChatMessageNewStatusNotificationException
      */
-    void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, UUID chatId, UUID messageID) throws CantSendChatMessageNewStatusNotificationException;
+    void sendChatMessageNewStatusNotification(String localActorPubKey, PlatformComponentType senderType, String remoteActorPubKey, PlatformComponentType receiverType, DistributionStatus newDistributionStatus, String transactionID) throws CantSendChatMessageNewStatusNotificationException;
 
     /**
      *
