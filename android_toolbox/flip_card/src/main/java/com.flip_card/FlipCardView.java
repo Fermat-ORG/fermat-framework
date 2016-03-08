@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.customviews.clelia.triangleshape.R;
 
 /**
  * Created by mati on 2016.03.08..
