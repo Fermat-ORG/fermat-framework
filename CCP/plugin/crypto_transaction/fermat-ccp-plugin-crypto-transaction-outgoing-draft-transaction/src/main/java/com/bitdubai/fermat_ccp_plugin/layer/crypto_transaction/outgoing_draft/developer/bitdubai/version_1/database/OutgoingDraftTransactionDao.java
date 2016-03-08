@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -22,14 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.enums.TransactionState;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantInsertRecordException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.util.OutgoingDraftTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -52,7 +46,7 @@ public class OutgoingDraftTransactionDao {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    public void initialize(UUID pluginId) throws CantInitializeOutgoingIntraActorDaoException {
+    public void initialize(UUID pluginId) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException {
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
@@ -64,16 +58,16 @@ public class OutgoingDraftTransactionDao {
                 this.database = databaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeOutgoingIntraActorDaoException("I couldn't create the database", cantCreateDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
+                throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException("I couldn't create the database", cantCreateDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
             } catch (Exception exception) {
-                throw new CantInitializeOutgoingIntraActorDaoException(CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+                throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
             }
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeOutgoingIntraActorDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
         } catch (Exception exception) {
-            throw new CantInitializeOutgoingIntraActorDaoException(CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -91,20 +85,20 @@ public class OutgoingDraftTransactionDao {
                                         Actors          deliveredToActorType,
                                         ReferenceWallet referenceWallet,
                                         boolean sameDevice,
-                                        BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantInsertRecordException {
+                                        BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             loadRecordAsNew(recordToInsert, transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice,blockchainNetworkType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
-            throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantInsertRecordException(OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
-    public void registerNewTransaction(DraftTransaction bitcoinWalletTransaction, String walletPublicKey,ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
+    public void registerNewTransaction(DraftTransaction bitcoinWalletTransaction, String walletPublicKey,ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException {
 //        try {
 //            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
 //            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
@@ -119,73 +113,73 @@ public class OutgoingDraftTransactionDao {
 //        }
     }
 
-    public List<OutgoingDraftTransactionWrapper> getNewTransactions() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingDraftTransactionWrapper> getNewTransactions() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException {
         try {
-            return getAllInState(TransactionState.NEW);
+            return getAllInState(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.NEW);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
-    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactions() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactions() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException {
         try {
-            return getAllInState(TransactionState.SENT_TO_CRYPTO_VOULT);
+            return getAllInState(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.SENT_TO_CRYPTO_VOULT);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
-    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactionsAndNotRead() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactionsAndNotRead() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException {
         try {
-            return getAllInStateAndNotRead(TransactionState.SENT_TO_CRYPTO_VOULT);
+            return getAllInStateAndNotRead(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.SENT_TO_CRYPTO_VOULT);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
-    public void cancelTransaction(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void cancelTransaction(OutgoingDraftTransactionWrapper bitcoinTransaction) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException {
         try {
-            setToState(bitcoinTransaction, TransactionState.CANCELED);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
+            setToState(bitcoinTransaction, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.CANCELED);
+        } catch (CantUpdateRecordException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
-    public void setToNew(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToNew(OutgoingDraftTransactionWrapper bitcoinTransaction) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException {
         try {
-            setToState(bitcoinTransaction, TransactionState.NEW);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
+            setToState(bitcoinTransaction, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.NEW);
+        } catch (CantUpdateRecordException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
 
-    public void setToDIW(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToDIW(OutgoingDraftTransactionWrapper bitcoinTransaction) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException {
         try {
-            setToState(bitcoinTransaction, TransactionState.DEBITED_IN_WALLET);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
+            setToState(bitcoinTransaction, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.DEBITED_IN_WALLET);
+        } catch (CantUpdateRecordException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
-    public void setToSTCV(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToSTCV(OutgoingDraftTransactionWrapper bitcoinTransaction) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException {
         try {
-            setToState(bitcoinTransaction, TransactionState.SENT_TO_CRYPTO_VOULT);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
+            setToState(bitcoinTransaction, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.SENT_TO_CRYPTO_VOULT);
+        } catch (CantUpdateRecordException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -228,7 +222,7 @@ public class OutgoingDraftTransactionDao {
         databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
         if (op_Return != null)
             databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME, op_Return);
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.NEW.getCode());
 
         // TODO: This have to be changed for the tinestamp when the network recognize the transaction
 
@@ -248,7 +242,7 @@ public class OutgoingDraftTransactionDao {
     }
 
 
-    private void setToState(OutgoingDraftTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
+    private void setToState(OutgoingDraftTransactionWrapper bitcoinTransaction, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState status) throws CantUpdateRecordException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
         DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getRequestId());
 
@@ -259,7 +253,7 @@ public class OutgoingDraftTransactionDao {
     }
 
 
-    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
+    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
 
         transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
@@ -268,14 +262,14 @@ public class OutgoingDraftTransactionDao {
         List<DatabaseTableRecord> records = transactionTable.getRecords();
 
         if (records.size() != 1)
-            throw new OutgoingIntraActorInconsistentTableStateException("The number of records with a primary key is different thatn one ", null, "The id is: " + id.toString(), "");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException("The number of records with a primary key is different thatn one ", null, "The id is: " + id.toString(), "");
 
         transactionTable.clearAllFilters();
 
         return records.get(0);
     }
 
-    public List<OutgoingDraftTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
+    public List<OutgoingDraftTransactionWrapper> getAllInState(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
         transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
@@ -286,7 +280,7 @@ public class OutgoingDraftTransactionDao {
         return mapConvertToBT(records);
     }
 
-    public List<OutgoingDraftTransactionWrapper> getAllInStateAndNotRead(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
+    public List<OutgoingDraftTransactionWrapper> getAllInStateAndNotRead(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
         transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
@@ -336,7 +330,7 @@ public class OutgoingDraftTransactionDao {
 
 
 
-    public void setToCryptoStatus(OutgoingDraftTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
+    public void setToCryptoStatus(OutgoingDraftTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
             DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getRequestId());
@@ -346,7 +340,7 @@ public class OutgoingDraftTransactionDao {
 
             transactionTable.updateRecord(recordToUpdate);
 
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -371,7 +365,7 @@ public class OutgoingDraftTransactionDao {
 //            requestId          = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_REQUEST_ID_COLUMN_NAME);
 //        }
 
-        TransactionState state              = TransactionState.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME));
+        com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState state              = com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME));
         long             timestamp          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME);
         String           memo               = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME);
         CryptoStatus     cryptoStatus       = CryptoStatus.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME));

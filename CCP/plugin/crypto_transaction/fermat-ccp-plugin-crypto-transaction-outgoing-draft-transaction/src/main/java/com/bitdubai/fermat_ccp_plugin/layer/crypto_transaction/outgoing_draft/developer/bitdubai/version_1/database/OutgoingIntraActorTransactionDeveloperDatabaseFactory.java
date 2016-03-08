@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
 
         try {
             initializeDatabase();
-        } catch (CantInitializeOutgoingIntraActorTransactionDatabaseException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException e) {
             e.printStackTrace();
         }
     }
@@ -67,9 +66,9 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeOutgoingIntraActorTransactionDatabaseException
+     * @throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeOutgoingIntraActorTransactionDatabaseException {
+    public void initializeDatabase() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException {
         try {
 
              /*
@@ -82,7 +81,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeOutgoingIntraActorTransactionDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -101,7 +100,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeOutgoingIntraActorTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
