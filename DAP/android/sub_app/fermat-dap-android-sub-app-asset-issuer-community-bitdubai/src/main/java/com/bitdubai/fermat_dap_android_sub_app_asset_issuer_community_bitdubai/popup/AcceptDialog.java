@@ -99,7 +99,8 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                         identity.getPublicKey(),//USER LOCAL
                         toConnect.get(0));// USER OUTSIDE
                 getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
-                Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_accepted, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_accepted, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),"Connection has been acepted" , Toast.LENGTH_SHORT).show();
                 dismiss();
             } catch (final CantAcceptActorAssetUserException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -112,9 +113,11 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                 //&& identity != null)
                 getSession().getModuleManager().denyConnectionActorAssetIssuer(
                         identity.getPublicKey(),
-                        (ActorAssetIssuer) actorIssuer);// USER OUTSIDE
-                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
-                Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_deny, Toast.LENGTH_LONG).show();
+                        actorIssuer.getRecord());// USER OUTSIDE
+//                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
+//                Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_deny, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext()," Connection has been denied" , Toast.LENGTH_SHORT).show();
+
                 dismiss();
             } catch (final CantDenyConnectionActorAssetException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);

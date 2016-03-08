@@ -64,6 +64,8 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     private IssuerCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private static AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+
     private ErrorManager errorManager;
     private int offset = 0;
     private ActorIssuer actorInformation;
@@ -86,12 +88,14 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+
         manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
-//        intraUserInformation = (IntraUserInformation) appSession.getData(USER_SELECTED);
-//        moduleManager = intraUserSubAppSession.getModuleManager();
+        actorInformation = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
+
         errorManager = appSession.getErrorManager();
         listActorInformation = new ArrayList<>();
     }
@@ -277,16 +281,9 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     @Override
     public void onItemClickListener(ActorIssuer data, int position) {
         try {
-//            ConnectDialog notificationAcceptDialog = new ConnectDialog(
-//                    getActivity(),
-//                    (AssetUserCommunitySubAppSession) appSession,
-//                    null,
-//                    data,
-//                    manager.getActiveAssetUserIdentity());
-
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    (AssetIssuerCommunitySubAppSession) appSession,
+                    assetIssuerCommunitySubAppSession,
                     null,
                     data,
                     manager.getActiveAssetIssuerIdentity());
@@ -296,10 +293,11 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
                 public void onDismiss(DialogInterface dialog) {
                     Object o = appSession.getData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED);
                     try {
-                        if ((Boolean) o) {
-                            onRefresh();
-                            appSession.removeData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED);
-                        }
+                        if (o != null)
+                            if ((Boolean) o) {
+                                appSession.removeData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED);
+                            }
+                        onRefresh();
                     } catch (Exception e) {
                         e.printStackTrace();
                         onRefresh();

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
@@ -298,6 +299,7 @@ public class ChatMiddlewareMonitorAgent implements
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
+                    //deleteActorConnections();
                     contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
                         for(ContactConnection contact : contactList){
@@ -974,6 +976,43 @@ public class ChatMiddlewareMonitorAgent implements
                     DistributionStatus.OUTGOING_MSG
             );
             return chatMetadata;
+        }
+
+
+        /**
+         * This method delete all contacts connections.
+         * @return void
+         */
+        private void deleteActorConnections() throws CantDeleteContactException
+        {
+            try
+            {
+                List<ContactConnection> contactConnections = chatMiddlewareDatabaseDao.getContactConnections(null);
+
+                for (ContactConnection contactConnection : contactConnections)
+                {
+                    chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
+                }
+
+        } catch (CantGetContactException e) {
+                throw new CantDeleteContactException(
+                        e,
+                        "delete contact connections",
+                        "Cannot get the contact connection"
+                );
+        } catch (DatabaseOperationException e) {
+                throw new CantDeleteContactException(
+                        e,
+                        "delete contact connections",
+                        "Cannot Database operation"
+                );
+        } catch (CantDeleteContactException e) {
+                throw new CantDeleteContactException(
+                        e,
+                        "delete contact connections",
+                        "Cannot delete contact connections"
+                );
+            }
         }
 
     }

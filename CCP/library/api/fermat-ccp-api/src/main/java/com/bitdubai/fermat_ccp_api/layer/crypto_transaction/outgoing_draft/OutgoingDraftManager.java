@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by mati on 2016.02.13..
  */
-public interface OutgoingDraftManager {
+public interface OutgoingDraftManager extends FermatManager {
 
 
     void addInputsToDraftTransaction (

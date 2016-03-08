@@ -16,13 +16,17 @@ public class NegotiationRecord {
     private AssetSellStatus negotiationStatus;
     private ActorAssetUser seller;
     private Date timeStamp;
+    private String btcWalletPublicKey;
+    private long forProcess;
 
     //CONSTRUCTORS
-    public NegotiationRecord(AssetNegotiation negotiation, AssetSellStatus negotiationStatus, ActorAssetUser seller, Date timeStamp) {
+    public NegotiationRecord(AssetNegotiation negotiation, AssetSellStatus negotiationStatus, ActorAssetUser seller, Date timeStamp, String btcWalletPk, long forProcess) {
         this.negotiation = negotiation;
         this.negotiationStatus = negotiationStatus;
         this.seller = seller;
         this.timeStamp = timeStamp;
+        this.btcWalletPublicKey = btcWalletPk;
+        this.forProcess = forProcess;
     }
 
     //PUBLIC METHODS
@@ -57,6 +61,22 @@ public class NegotiationRecord {
 
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getBtcWalletPublicKey() {
+        return btcWalletPublicKey;
+    }
+
+    public void setBtcWalletPublicKey(String btcWalletPublicKey) {
+        this.btcWalletPublicKey = btcWalletPublicKey;
+    }
+
+    public long getForProcess() {
+        return forProcess;
+    }
+
+    public void setForProcess(long forProcess) {
+        this.forProcess = forProcess;
     }
 
     //PRIVATE METHODS

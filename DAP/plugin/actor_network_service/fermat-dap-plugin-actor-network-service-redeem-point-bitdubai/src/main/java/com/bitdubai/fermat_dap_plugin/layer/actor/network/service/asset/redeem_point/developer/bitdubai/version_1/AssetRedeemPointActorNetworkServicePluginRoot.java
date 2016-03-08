@@ -83,9 +83,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_p
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.AssetRedeemNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.AssetRedeemNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.AssetRedeemNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -199,7 +199,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private AssetRedeemNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -346,7 +346,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             /*
              * Initialize Developer Database Factory
              */
-                    communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+                    communicationNetworkServiceDeveloperDatabaseFactory = new AssetRedeemNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
                     communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
                         /*
              * Initialize listeners
@@ -389,7 +389,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
                     contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                    contextBuffer.append("Database Name: " + AssetRedeemNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                     String context = contextBuffer.toString();
                     String possibleCause = "The Asset RedeemPoint Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -1263,7 +1263,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
     }
 
     /**
@@ -1276,7 +1276,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetRedeemNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /*
@@ -1290,13 +1290,13 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            AssetRedeemNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new AssetRedeemNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetRedeemNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
                 /*
