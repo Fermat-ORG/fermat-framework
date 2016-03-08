@@ -48,6 +48,7 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
@@ -56,11 +57,11 @@ import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.android_core.app.common.version_1.provisory.DesktopManager;
-import com.bitdubai.android_core.app.common.version_1.provisory.FermatDesktopManager;
+import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
+import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
@@ -68,6 +69,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -89,7 +91,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -98,6 +99,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
@@ -126,10 +128,9 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
@@ -151,6 +152,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
     private static final String TAG = "fermat-core";
+    public static final int TASK_MANAGER_STACK = 100;
     private MainMenu mainMenu;
 
     /**
@@ -687,12 +689,11 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory) {
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession fermatSession) {
 
         try {
             FermatStructure fermatStructure = getAppInUse();
             String appPublicKey = fermatStructure.getPublicKey();
-            FermatSession fermatSession = getFermatSessionInUse(appPublicKey);
             String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
 
             if (fermatFragmentFactory != null) {
@@ -743,6 +744,10 @@ public abstract class FermatActivity extends AppCompatActivity
                 setContentView(R.layout.new_wallet_runtime);
             } else {
                 setContentView(R.layout.base_layout_desktop);
+                if(activityType != ActivityType.ACTIVITY_TYPE_DESKTOP){
+                    findViewById(R.id.reveal_bottom_container).setVisibility(View.GONE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
+                }
             }
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
@@ -1162,7 +1167,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                         fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
-                                createOrGetSession(getDesktopManager()),
+                                createOrOpenApp(getDesktopManager()),
                                 null
                         );
 
@@ -1267,37 +1272,59 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
+    protected FermatSession createOrOpenApplication() {
+        try {
+            Bundle bundle = getIntent().getExtras();
+            FermatApp fermatApp = null;
+            FermatAppType fermatAppType = null;
+            String publicKey = null;
+            if (bundle != null) {
+                if (bundle.containsKey(ApplicationConstants.INSTALLED_FERMAT_APP)) {
+                    fermatApp = ((FermatApp) bundle.getSerializable(ApplicationConstants.INSTALLED_FERMAT_APP));
+                } else if (bundle.containsKey(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)) {
+                    publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
+                    fermatAppType = (FermatAppType) bundle.get(ApplicationConstants.INTENT_APP_TYPE);
+                }
+                if (fermatApp == null) {
+                    fermatApp = getFermatAppManager().getApp(publicKey, fermatAppType);
+                }
+                if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
+                    String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
+                    if (activityCode != null)
+                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey(), fermatApp.getAppType()).getActivity(Activities.valueOf(activityCode));
+                }
+            }
+            return createOrOpenApp(fermatApp);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     /**
      * Method to create or get a session in the session manager
      *
      * @param fermatApp
      * @return
      */
-    protected FermatSession createOrGetSession(FermatApp fermatApp){
+    private FermatSession createOrOpenApp(FermatApp fermatApp){
         FermatSession fermatSession = null;
-        AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
-        if (getFermatSessionManager().isSessionOpen(fermatApp.getAppPublicKey())) {
-            fermatSession = getFermatSessionManager().getAppsSession(fermatApp.getAppPublicKey());
-        } else {
-            ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
-            fermatSession = getFermatSessionManager().openAppSession(fermatApp,getErrorManager(),moduleManager,fermatAppConnection);
+        FermatAppsManager fermatAppsManager = getFermatAppManager();
+        if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
+            fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
+        }else{
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
+            fermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
         }
         return fermatSession;
-    }
-
-    /**
-     *  Get app session manager
-     */
-    @Deprecated
-    public FermatSessionManager getFermatSessionManager() {
-        return ApplicationSession.getInstance().getFermatSessionManager();
     }
 
 
 
     //TODO: esto es un plugin más para el manejo de los desktops
-    protected DesktopManager getDesktopManager(){
-        return new FermatDesktopManager();
+    protected InstalledDesktop getDesktopManager(){
+        return new FermatInstalledDesktop();
     }
 
     /**
@@ -1414,7 +1441,7 @@ public abstract class FermatActivity extends AppCompatActivity
     public void invalidate() {
         FermatStructure fermatStructure = getAppInUse();
         Activity activity = fermatStructure.getLastActivity();
-        FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+        FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
         AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
         try {
             appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
@@ -1430,7 +1457,7 @@ public abstract class FermatActivity extends AppCompatActivity
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
             final FermatStructure fermatStructure = getAppInUse();
-            FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+            FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
             AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
             final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
             final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
@@ -1592,27 +1619,13 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    public String searchAppFromPlatformIdentifier(FermatApps fermatApps) {
-        String appPublicKey = null;
-        try {
-            appPublicKey = getWalletManager().getInstalledWallet(fermatApps.getCode()).getWalletPublicKey();
-        }catch (NullPointerException i){
-            appPublicKey = getSubAppManager().getInstalledSubApp(fermatApps.getCode()).getAppPublicKey();
-        }catch (Exception e){
-
-        }
-        return appPublicKey;
-    }
-
-
-
     private FermatListItemListeners getLisItemListenerMenu(){
         return this;
     }
 
-    private FermatSession getFermatSessionInUse(String appPublicKey){
-        return getFermatSessionManager().getAppsSession(appPublicKey);
-    }
+//    private FermatSession getFermatSessionInUse(String appPublicKey){
+//        return getFermatSessionManager().getAppsSession(appPublicKey);
+//    }
 
     /**
      * Abstract methods
@@ -1679,6 +1692,39 @@ public abstract class FermatActivity extends AppCompatActivity
 
 //        networkStateReceiver.removeListener(this);
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
+    }
+
+
+    public void openRecentsScreen(){
+        Intent resultIntent = new Intent(getApplicationContext(),RecentsActivity.class);
+        // TODO Add extras or a data URI to this intent as appropriate.
+        setResult(android.app.Activity.RESULT_OK, resultIntent);
+        //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivityForResult(resultIntent, TASK_MANAGER_STACK);
+    }
+
+
+    /**
+     *
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("APP", "requestCode" + String.valueOf(requestCode));
+        Log.i("APP","resultcode"+ String.valueOf(resultCode));
+        Log.i("APP", "data" + String.valueOf(data));
+        switch(requestCode) {
+            case (TASK_MANAGER_STACK) : {
+                if (resultCode == android.app.Activity.RESULT_OK) {
+                    // TODO Extract the data returned from the child Activity. and open the app
+                    Toast.makeText(this,"yes",Toast.LENGTH_SHORT).show();
+                    data.setAction("org.fermat.APP_LAUNCHER");
+                    sendBroadcast(data);
+                    //finish();
+                }
+                break;
+            }
+        }
     }
 
 

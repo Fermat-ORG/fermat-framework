@@ -22,7 +22,7 @@
     <dimen name="csh_home_titlebar_margin_bottom">15dp</dimen>
 
     <!-- Setup -->
-    <dimen name="csh_setup_titlebar_margin_top">40dp</dimen>
+    <dimen name="csh_setup_titlebar_margin_top">20dp</dimen>
     <dimen name="csh_setup_titlebar_margin_bottom">10dp</dimen>
 
 

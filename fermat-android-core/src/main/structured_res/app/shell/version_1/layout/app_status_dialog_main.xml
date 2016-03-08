@@ -205,7 +205,7 @@
         android:id="@+id/linear_develop"
         android:paddingLeft="16dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingBottom="16dp">
 
         <ImageView
             android:layout_width="48dp"

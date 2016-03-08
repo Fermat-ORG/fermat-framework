@@ -105,10 +105,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You sent:");
                     Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
-
-
-                    //updateBackground(contractDetail.getContractId().toString(), ContractDetailType.CUSTOMER_DETAIL);
                     break;
+
                 case 4:
                     //Confirm the reception of the broker's merchandise
                     //TODO: this.walletManager.ackMerchandise(contractDetail.getContractId().toString());
@@ -116,8 +114,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You received:");
                     Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
-
-                    //updateBackground(this.contractId.toString(), ContractDetailType.BROKER_DETAIL);
                     break;
             }
         } catch (Exception ex) {
@@ -134,6 +130,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
     }
 
+    //TODO: not needed, kill this when done testing
     private void updateBackground(String contractHash, ContractDetailType contractDetailType){
         try{
             ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);

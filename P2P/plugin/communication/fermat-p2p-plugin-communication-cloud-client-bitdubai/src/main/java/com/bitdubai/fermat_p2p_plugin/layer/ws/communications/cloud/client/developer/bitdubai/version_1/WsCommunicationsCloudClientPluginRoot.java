@@ -271,11 +271,17 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      *
      * @throws URISyntaxException
      */
-    public void connectClient() throws URISyntaxException, IOException, DeploymentException {
+    @Override
+    public void reloadConnectClient() throws Exception {
 
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
+
+        /*
+         * reset Url to server
+         */
+        uri = new URI(ServerConf.WS_PROTOCOL + SERVER_IP + ":" + PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();

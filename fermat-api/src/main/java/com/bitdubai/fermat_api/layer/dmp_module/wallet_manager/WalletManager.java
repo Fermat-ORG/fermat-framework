@@ -2,16 +2,14 @@ package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 
 import java.util.List;
 
 /**
  * Created by ciencias on 25.01.15.
  */
-public interface WalletManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface WalletManager extends AppManager {
 
 
     void loadUserWallets (String deviceUserPublicKey) throws CantLoadWalletsException;

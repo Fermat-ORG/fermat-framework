@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
@@ -81,8 +80,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
+        instance = this;
         fermatSystem = FermatSystem.getInstance();
-        fermatAppsManager = new FermatAppsManager(this);
+        fermatAppsManager = new FermatAppsManager();
 
     }
 
@@ -96,18 +96,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             fermatSystem = FermatSystem.getInstance();
         }
         return fermatSystem;
-    }
-
-    /**
-     * Method to get FermatSessionManager which can manipulate the active session of apps
-     * @return WalletSessionManager
-     */
-    @Deprecated
-    public FermatSessionManager getFermatSessionManager() {
-        if(fermatAppsManager==null){
-            fermatAppsManager = new FermatAppsManager(this);
-        }
-        return fermatAppsManager.getFermatSessionManager();
     }
 
     /**
@@ -151,7 +139,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
         super.onCreate();
-        instance = this;
     }
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

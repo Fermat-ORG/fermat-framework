@@ -70,10 +70,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
 
-        list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",false));
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-
-        bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
 
         if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
             blockchainNetworkType =  bitcoinWalletSettings.getBlockchainNetworkType();
@@ -108,9 +107,19 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         try {
 
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
+            bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+
 
             if (preferenceSettingsItem.getId() == 1){
-                //enable notifications settings not implemented
+                //enable notifications settings
+                bitcoinWalletSettings.setNotificationEnabled(((PreferenceSettingsSwithItem)preferenceSettingsItem).getSwitchChecked());
             }
             else {
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
@@ -142,15 +151,6 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                 System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
                 System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
-
-                try {
-                    bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                } catch (CantGetSettingsException e) {
-                    e.printStackTrace();
-                } catch (SettingsNotFoundException e) {
-                    e.printStackTrace();
-                }
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                 if (blockchainNetworkType == null) {
                     if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
                         blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
@@ -158,12 +158,46 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                         blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                     }
                 }
+
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                try {
-                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-                } catch (CantPersistSettingsException e) {
-                    e.printStackTrace();
-                }
+
+            }
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e){
+        }
+
+    }
+
+    @Override
+    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
+
+        try {
+
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+            if (preferenceSettingsItem.getId() == 1){
+                //enable notifications settings
+                bitcoinWalletSettings.setNotificationEnabled(isChecked);
+            }
+
+
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
             }
         } catch (Exception e){
         }
@@ -178,7 +212,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
     @Override
     public int getBackgroundAlpha() {
-        return 90;
+        return 95;
     }
 
 

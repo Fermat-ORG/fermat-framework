@@ -31,7 +31,7 @@ android {
         applicationId "org.fermat"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 10
+        versionCode 12
         versionName "1.1"
         multiDexEnabled true
     }
@@ -157,8 +157,11 @@ dependencies {
 
 
     compile project(':horizontalscrollview')
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
+
 
 
 
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
 }
