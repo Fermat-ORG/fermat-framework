@@ -2,8 +2,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,20 +24,24 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
     private final UUID                    id               ;
     private final Currency                earningCurrency  ;
     private final float                   amount           ;
-    private final List<InputTransaction>  inputTransactions;
+    private       List<InputTransaction>  inputTransactions;
     private final EarningTransactionState state            ;
 
-    public MatchingEngineMiddlewareEarningTransaction(final UUID                    id               ,
-                                                      final Currency                earningCurrency  ,
-                                                      final float                   amount           ,
-                                                      final List<InputTransaction>  inputTransactions,
-                                                      final EarningTransactionState state            ) {
+    private final MatchingEngineMiddlewareDao dao;
+
+    public MatchingEngineMiddlewareEarningTransaction(final UUID                        id               ,
+                                                      final Currency                    earningCurrency  ,
+                                                      final float                       amount           ,
+                                                      final EarningTransactionState     state            ,
+
+                                                      final MatchingEngineMiddlewareDao dao              ) {
 
         this.id                = id               ;
         this.earningCurrency   = earningCurrency  ;
         this.amount            = amount           ;
-        this.inputTransactions = inputTransactions;
         this.state             = state            ;
+
+        this.dao               = dao              ;
     }
 
     @Override
@@ -53,8 +59,9 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
         return amount;
     }
 
-    public List<InputTransaction> listInputTransactions() {
-        return inputTransactions;
+    public List<InputTransaction> listInputTransactions() throws CantListInputTransactionsException {
+
+        return dao.listInputsTransactionByEarningTransaction(id);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public interface EarningTransaction {
     /**
      * @return a list of the input transactions where we define the earning.
      */
-    List<InputTransaction> listInputTransactions();
+    List<InputTransaction> listInputTransactions() throws CantListInputTransactionsException;
 
     /**
      * @return the state of the earning transaction.

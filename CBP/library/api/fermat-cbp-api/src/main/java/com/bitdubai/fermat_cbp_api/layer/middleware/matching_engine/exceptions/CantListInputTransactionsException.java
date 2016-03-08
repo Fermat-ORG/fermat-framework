@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListInputTransactionsException</code>
+ * The exception <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException</code>
  * is thrown when there is an error trying to BLABLABLA.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/03/2016.
