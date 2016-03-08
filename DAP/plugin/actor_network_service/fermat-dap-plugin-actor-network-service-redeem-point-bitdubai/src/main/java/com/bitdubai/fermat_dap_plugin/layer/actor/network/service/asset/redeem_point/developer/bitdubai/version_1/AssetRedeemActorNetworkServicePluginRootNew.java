@@ -778,7 +778,8 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
 
                     String profileImage = "";
                     List<String> registeredIssuers = new ArrayList<>();
-                    if (!platformComponentProfile.getExtraData().equals("")) {
+                    byte[] imageByte = null;
+                    if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
                         try {
                             JsonParser jParser = new JsonParser();
                             JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
@@ -790,9 +791,9 @@ public class AssetRedeemActorNetworkServicePluginRootNew extends AbstractNetwork
                         } catch (Exception e) {
                             profileImage = platformComponentProfile.getExtraData();
                         }
+                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
                     }
 
-                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
 
                     ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
                             platformComponentProfile.getIdentityPublicKey(),
