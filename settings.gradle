@@ -75,4 +75,3 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
-
