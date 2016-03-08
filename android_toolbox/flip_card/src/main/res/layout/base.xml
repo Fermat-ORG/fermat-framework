@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" >
 
-</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_activity_card_face"
+        android:layout_width="300dp"
+        android:layout_height="407dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:onClick="onCardClick"
+        android:padding="5dp" >
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_activity_card_back"
+        android:layout_width="300dp"
+        android:layout_height="407dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:onClick="onCardClick"
+        android:visibility="gone" >
+    </RelativeLayout>
+
+
+</RelativeLayout>
