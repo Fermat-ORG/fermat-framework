@@ -88,7 +88,6 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     private AssetVaultManager assetVaultManager;
 

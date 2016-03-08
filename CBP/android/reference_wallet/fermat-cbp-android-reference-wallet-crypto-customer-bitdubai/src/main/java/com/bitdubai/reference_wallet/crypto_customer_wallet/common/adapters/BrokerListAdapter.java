@@ -19,11 +19,9 @@ import java.util.List;
  * @since 24/11/2015
  */
 public class BrokerListAdapter extends FermatAdapter<BrokerIdentityBusinessInfo, BrokerListViewHolder> {
-    private final CryptoCustomerWalletManager walletManager;
 
-    public BrokerListAdapter(Context context, List<BrokerIdentityBusinessInfo> dataSet, CryptoCustomerWalletManager walletManager) {
+    public BrokerListAdapter(Context context, List<BrokerIdentityBusinessInfo> dataSet) {
         super(context, dataSet);
-        this.walletManager = walletManager;
     }
 
     @Override

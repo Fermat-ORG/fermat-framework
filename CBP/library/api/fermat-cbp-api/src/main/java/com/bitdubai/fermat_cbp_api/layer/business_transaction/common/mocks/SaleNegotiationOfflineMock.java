@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -80,16 +80,19 @@ public class SaleNegotiationOfflineMock implements CustomerBrokerSaleNegotiation
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+                FiatCurrency.US_DOLLAR.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_PAYMENT_METHOD,
-                ContractClauseType.CASH_ON_HAND.getCode()));
+                ContractClauseType.BANK_TRANSFER.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_PAYMENT_METHOD,
                 ContractClauseType.BANK_TRANSFER.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_BANK_ACCOUNT,
+                "2001"));
         return clauses;
     }
 

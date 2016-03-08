@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -47,7 +48,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerId
  * A simple {@link Fragment} subclass.
  */
 public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, DialogInterface.OnDismissListener {
+        implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener{
 
     // Constants
     private static final String TAG = "BrokerIdentityList";
@@ -65,7 +66,9 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     private PresentationDialog presentationDialog;
 
-    private IdentityBrokerPreferenceSettings walletSettings;
+    private IdentityBrokerPreferenceSettings subappSettings;
+
+    private View layout;
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -81,13 +84,12 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(
-                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
-                        ex);
+                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    ex
+                );
             }
         }
     }
@@ -95,6 +97,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        this.layout = layout;
 
         noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
 
@@ -105,26 +109,24 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         }
 
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.bw_banner)
-                .setBody(R.string.dialog_identity_body)
-                .setTitle("prueba Title")
-                .setSubTitle(R.string.dialog_identity_subtitle)
-                .setTextFooter(R.string.dialog_identity_footer)
+                .setBannerRes(R.drawable.banner_identity)
+                .setBody(R.string.cbp_broker_identity_welcome_body)
+                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .build();
 
-        walletSettings = null;
+        subappSettings = null;
         try {
-            walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-        }catch (Exception e){ walletSettings = null; }
+            subappSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){ subappSettings = null; }
 
-        if(walletSettings == null){
-            walletSettings = new IdentityBrokerPreferenceSettings();
-            walletSettings.setIsPresentationHelpEnabled(true);
+        if(subappSettings == null){
+            subappSettings = new IdentityBrokerPreferenceSettings();
+            subappSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
             }catch (Exception e){
-                e.printStackTrace();
+
             }
         }
 
@@ -138,9 +140,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -152,6 +153,9 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
+        }
+        if (item.getItemId() == R.id.action_help) {
+            presentationDialog.show();
         }
         return true;
     }
@@ -260,7 +264,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if (filter == null) {
             CryptoBrokerIdentityInfoAdapter infoAdapter = (CryptoBrokerIdentityInfoAdapter) this.adapter;
 
-            filter = (CryptoBrokerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
 
@@ -270,7 +274,21 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        System.out.println("Dialogo cerrado");
+    public void onUpdateViewOnUIThread(String code) {
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_creado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_editado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 }

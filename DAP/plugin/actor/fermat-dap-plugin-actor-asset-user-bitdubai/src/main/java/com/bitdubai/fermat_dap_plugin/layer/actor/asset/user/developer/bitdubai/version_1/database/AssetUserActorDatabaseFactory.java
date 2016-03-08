@@ -65,6 +65,7 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
 
@@ -94,6 +95,7 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_FIRST_KEY_COLUMN);
@@ -169,6 +171,26 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
 //            } catch (CantCreateTableException cantCreateTableException) {
 //                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
 //            }
+
+            /**
+             * Create Crypo Address Database table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
 
         } catch (InvalidOwnerIdException exception) {
             /**

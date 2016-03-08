@@ -48,7 +48,7 @@ import java.util.UUID;
  * Created by nelson on 22/12/15.
  */
 public class WizardPageSetProvidersFragment extends AbstractFermatFragment
-        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyExchangeRateProviderManager>, AdapterView.OnItemSelectedListener {
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider>, AdapterView.OnItemSelectedListener {
 
     // Constants
     private static final String TAG = "WizardPageSetEarning";
@@ -165,10 +165,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private void showProvidersDialog() {
 
         try {
+
+            List<String> temp = new ArrayList<>();
+            String tempS = "";
+
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
-
             Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
-
 
             for (Map.Entry<String, CurrencyPair> e : map.entrySet()) {
 
@@ -176,9 +178,21 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 Currency currencyTo = e.getValue().getTo();
 
                 Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-                if (providerManagers != null)
-                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
-                        providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
+                if (providerManagers != null){
+                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers) {
+
+                        tempS = currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName();
+
+                        if (!temp.contains(tempS)) {
+
+                            temp.add(currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName());
+
+                            CurrencyPairAndProvider CPAP = new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager);
+                            providers.add(CPAP);
+                        }
+                    }
+                }
+
             }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
@@ -238,7 +252,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     }
 
     @Override
-    public void deleteButtonClicked(CurrencyExchangeRateProviderManager data, final int position) {
+    public void deleteButtonClicked(CurrencyPairAndProvider data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.cbw_delete_provider_dialog_title).setMessage(R.string.cbw_delete_provider_dialog_msg);
@@ -278,9 +292,16 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 UUID providerId = provider.getProvider().getProviderId();
                 UUID selectedProviderId = selectedProvider.getProvider().getProviderId();
 
-                if (providerId.equals(selectedProviderId))
+                Currency providerFrom = provider.getCurrencyFrom();
+                Currency providerTo = provider.getCurrencyTo();
+
+                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+                Currency SelectedTo = selectedProvider.getCurrencyTo();
+
+                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
                     return true;
             }
+
         } catch (CantGetProviderInfoException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)

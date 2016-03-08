@@ -16,7 +16,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return Wallet in use
      */
 
-    public SubApp getLastSubApp ();
+    SubApp getLastApp();
 
     /**
      *  Search SubApp in the subApp installed list
@@ -33,7 +33,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return SubApp HomeScreen
      */
 
-    public SubApp getSubAppByPublicKey(String subAppPublicKey);
+    SubApp getSubAppByPublicKey(String subAppPublicKey);
 
 
     void recordNAvigationStructure(FermatStructure fermatStructure);

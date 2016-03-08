@@ -51,10 +51,8 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
             return false;
         if( !this.wallet.equals(compare.getWallet()) )
             return false;
-        if( !this.relationshipId.equals(compare.getRelationshipId()) )
-            return false;
+        return this.relationshipId.equals(compare.getRelationshipId());
 
-        return true;
     }
 
     @Override
@@ -63,5 +61,14 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
         c += identity.hashCode();
         c += wallet.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerIdentityWalletRelationshipInformation{" +
+                "relationshipId=" + relationshipId +
+                ", identity='" + identity + '\'' +
+                ", wallet='" + wallet + '\'' +
+                '}';
     }
 }

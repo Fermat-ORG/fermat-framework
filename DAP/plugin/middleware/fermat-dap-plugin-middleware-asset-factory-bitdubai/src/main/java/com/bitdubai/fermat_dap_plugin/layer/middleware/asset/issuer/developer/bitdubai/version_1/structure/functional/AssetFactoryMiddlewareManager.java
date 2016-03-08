@@ -117,7 +117,7 @@ public final class AssetFactoryMiddlewareManager {
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             if (assetFactory.getResources() != null) {
                 for (Resource resource : assetFactory.getResources()) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                     imageFile.setContent(resource.getResourceBinayData());
                     imageFile.persistToMedia();
                 }
@@ -618,7 +618,7 @@ public final class AssetFactoryMiddlewareManager {
     }
 
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
-        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
     }
 
     public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException {
@@ -659,12 +659,10 @@ public final class AssetFactoryMiddlewareManager {
             if (assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-                redeemable.setValue(assetFactory.getIsRedeemable());
-                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
-                expirationDate.setValue(assetFactory.getExpirationDate());
-                digitalAssetContract.setContractProperty(redeemable);
-                digitalAssetContract.setContractProperty(expirationDate);
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());

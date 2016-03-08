@@ -109,7 +109,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME, DatabaseDataType.REAL, 0,false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME, DatabaseDataType.REAL, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
@@ -117,7 +117,8 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 0, false);
-
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
 
         return table;
     }
@@ -126,7 +127,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.MONEY, 0, false);
 
@@ -148,7 +149,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MONEY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);

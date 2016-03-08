@@ -70,16 +70,34 @@ public class MatchingEngineMiddlewareDatabaseFactory {
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
+             * Create Wallets table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME);
+
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE );
+
+            table.addIndex(MatchingEngineMiddlewareDatabaseConstants.WALLETS_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            /**
              * Create Earning Pair table.
              */
             table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME);
 
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                   , DatabaseDataType.STRING, 100, Boolean.TRUE );
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                        , DatabaseDataType.STRING, 100, Boolean.TRUE );
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME          , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                     , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_FIRST_KEY_COLUMN);
 
@@ -88,7 +106,9 @@ public class MatchingEngineMiddlewareDatabaseFactory {
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create Earning Transaction table.
              */
             table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TABLE_NAME);
@@ -106,7 +126,9 @@ public class MatchingEngineMiddlewareDatabaseFactory {
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create Input Transaction table.
              */
             table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TABLE_NAME);

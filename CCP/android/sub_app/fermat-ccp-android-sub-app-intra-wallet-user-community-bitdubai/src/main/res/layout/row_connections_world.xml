@@ -47,6 +47,8 @@
             android:visibility="gone"
             tools:ignore="ContentDescription,RtlHardcoded" />
 
+
+
     </RelativeLayout>
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/connection_state_user"

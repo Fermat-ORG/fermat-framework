@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
 
 import java.math.BigDecimal;
@@ -14,7 +14,7 @@ public class CryptoBrokerWalletBalanceRecordImpl implements CryptoBrokerWalletBa
     private FermatEnum merchandise;
     private BigDecimal bookBalance;
     private BigDecimal availableBalance;
-    private CurrencyType currencyType;
+    private MoneyType moneyType;
     private String brokerPublicKey;
 
     public CryptoBrokerWalletBalanceRecordImpl() {
@@ -88,15 +88,15 @@ public class CryptoBrokerWalletBalanceRecordImpl implements CryptoBrokerWalletBa
      * {@inheritDoc}
      */
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setCurrencyType(CurrencyType currencyType) {
-        this.currencyType = currencyType;
+    public void setMoneyType(MoneyType moneyType) {
+        this.moneyType = moneyType;
     }
 }

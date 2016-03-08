@@ -1,38 +1,37 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
@@ -74,7 +73,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         try {
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
@@ -97,15 +95,38 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_broker_button);
+
+        botonG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizable = false;
+                createNewIdentityInBackDevice("onClick");
+            }
+        });
+
         mBrokerName.requestFocus();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mBrokerName.performClick();
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 if (actualizable) {
-                    createNewIdentityInBackDevice();
-                    actualizable = false;
+                    /*
+                    if(!mBrokerName.getText().toString().trim().equals("")) {
+                        if (cryptoBrokerBitmap != null) {
+                            new AlertDialog.Builder(v.getContext())
+                                    .setTitle("Create Identity?")
+                                    .setMessage("You want to create identity?")
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            createNewIdentityInBackDevice("onFocus");
+                                        }
+                                    }).create().show();
+                        }
+                    }
+                    */
                 }
             }
         });
@@ -126,20 +147,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.getItem(0).setVisible(false);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(actualizable) {
-            createNewIdentityInBackDevice();
-            actualizable = false;
-        }
     }
 
     @Override
@@ -172,74 +179,25 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle(R.string.title_photo_context_menu);
-        menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, R.string.camera_option_context_menu);
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, R.string.gallery_option_context_menu);
-
-        super.onCreateContextMenu(menu, view, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_CAMERA:
-                dispatchTakePictureIntent();
-                break;
-            case CONTEXT_MENU_GALLERY:
-                loadImageFromGallery();
-                break;
-        }
-        return super.onContextItemSelected(item);
-    }
-
-    private void createNewIdentityInBackDevice(){
+    private void createNewIdentityInBackDevice(String donde){
         String brokerNameText = mBrokerName.getText().toString();
         if(brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
         }else{
-            if (cryptoBrokerBitmap != null){
+            if (cryptoBrokerBitmap == null) {
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            }else{
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
-                        Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+                        if( donde.equalsIgnoreCase("onClick") ){
+                            Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
+                        }
                     break;
                 }
-            }
-        }
-    }
-
-    /**
-     * Crea una nueva identidad para un crypto broker
-     */
-    private void createNewIdentity() {
-        String brokerNameText = mBrokerName.getText().toString();
-        if(brokerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a profile name for the identity.", Toast.LENGTH_LONG).show();
-        }else{
-            if (cryptoBrokerBitmap != null){
-                byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-                CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        break;
-                    case EXCEPTION_THROWN:
-                        Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();
-                        break;
-                    case INVALID_ENTRY_DATA:
-                        Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
-                        break;
-                    case MISSING_IMAGE:
-                        Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }else{
-                Toast.makeText(getActivity(), "Please select a profile image for the identity.", Toast.LENGTH_LONG).show();
             }
         }
     }

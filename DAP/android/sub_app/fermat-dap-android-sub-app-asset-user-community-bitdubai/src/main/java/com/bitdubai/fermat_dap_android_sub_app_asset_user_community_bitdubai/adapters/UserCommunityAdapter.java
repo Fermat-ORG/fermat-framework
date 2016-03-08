@@ -40,12 +40,15 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
     @Override
     protected void bindHolder(final UserViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+                holder.connectionState.setVisibility(View.VISIBLE);
+                holder.connect.setVisibility(View.GONE);
+                //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+                holder.connectionState.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
+                //holder.crypto.setText("CryptoAddress: NO");
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -61,7 +64,7 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
             }
 
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -73,18 +76,13 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
             byte[] profileImage = data.getProfileImage();
 
-            //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
-//            if (profileImage != null && profileImage.length > 0) {
-//                holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
-//                        BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
-//            }
 
             if (profileImage != null) {
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

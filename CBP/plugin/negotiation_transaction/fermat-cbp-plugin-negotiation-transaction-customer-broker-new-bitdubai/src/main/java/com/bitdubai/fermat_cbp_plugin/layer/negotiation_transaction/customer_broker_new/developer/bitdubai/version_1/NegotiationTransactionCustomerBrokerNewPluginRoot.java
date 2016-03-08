@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -31,11 +32,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
@@ -56,9 +56,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewExecutorService;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewServiceEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBromerNewEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -106,6 +104,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
     private NegotiationTransmissionManager negotiationTransmissionManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     /*Represent the dataBase*/
     private Database                                                        dataBase;
@@ -192,8 +193,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerPurchaseNegotiation,
                     customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
-                    customerBrokerSaleNegotiationManager
-
+                    customerBrokerSaleNegotiationManager,
+                    broadcaster
             );
             customerBrokerNewAgent.start();
 
@@ -343,7 +344,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
         try {
 
-            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTransaction() ****\n");
 
             CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
             System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION ****\n" +
@@ -364,7 +365,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
 
             //CREATE CUSTOMER BROKER NEW NEGOTIATION.
-            customerBrokerNewManagerImpl.createCustomerBrokerNewPurchaseNegotiationTranasction(negotiationMock);
+            customerBrokerNewManagerImpl.createCustomerBrokerNewPurchaseNegotiationTransaction(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
@@ -406,15 +407,15 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
         try {
 
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTransaction() ****\n");
             //LIST CUSTOMER BROKER NEW TRANSACTION.
-            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
+            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTransaction();
             if (!list.isEmpty()) {
 
-                System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
+                System.out.print("\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
                 for (CustomerBrokerNew ListNegotiation : list) {
 
-                    System.out.print("\n\n --- Negotiation Transaction Date" +
+                    System.out.print("\n --- Negotiation Transaction Date" +
                                     "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
                                     "\n- TransactionId = " + ListNegotiation.getTransactionId() +
                                     "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
@@ -429,7 +430,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                         System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
                         purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationXML);
                         if (purchaseNegotiationXML.getNegotiationId() != null) {
-                            System.out.print("\n\n\n --- NegotiationXML Date" +
+                            System.out.print("\n --- NegotiationXML Date" +
                                             "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
                                             "\n- CustomerPublicKey" + purchaseNegotiationXML.getCustomerPublicKey() +
                                             "\n- BrokerPublicKey" + purchaseNegotiationXML.getBrokerPublicKey() +
@@ -581,7 +582,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
@@ -589,13 +591,13 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                MoneyType.BANK.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY_QUANTITY,
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                MoneyType.BANK.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_DATE_TIME_TO_DELIVER,
                 "1000"));
@@ -604,7 +606,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+                MoneyType.CASH_ON_HAND.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));

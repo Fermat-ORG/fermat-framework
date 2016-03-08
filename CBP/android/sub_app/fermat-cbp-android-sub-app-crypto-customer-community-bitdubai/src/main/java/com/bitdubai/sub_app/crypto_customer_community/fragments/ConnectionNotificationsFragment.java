@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -39,7 +40,7 @@ import java.util.List;
  * Created by Alejandro Bicelis on 02/02/2016.
  */
 public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager>
-        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity> {
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity>, AcceptDialog.OnDismissListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";
 
@@ -75,7 +76,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoCustomerCommunitySubAppSession = ((CryptoCustomerCommunitySubAppSession) appSession);
+        cryptoCustomerCommunitySubAppSession = appSession;
         cryptoCustomerInformation = (CryptoCustomerCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = cryptoCustomerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
@@ -208,6 +209,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
             //moduleManager.acceptCryptoCustomer(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             //TODO: Note, subAppResourcesProviderManager is badly casted as a WalletResourcesNetworkServicePluginRoot.. sending null, for now. so it doesnt throw a classCastException
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoCustomerCommunitySubAppSession, null, data, moduleManager.getSelectedActorIdentity());
+            notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
             e.printStackTrace();
@@ -236,5 +238,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        onRefresh();
     }
 }

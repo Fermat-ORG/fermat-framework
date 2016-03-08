@@ -7,6 +7,8 @@
     <string name="help">Help</string>
     <string name="dap_redeem_point_wallet_search">Search</string>
     <string name="dap_redeem_point_wallet_search_hint">Asset name</string>
+    <string name="dap_redeem_point_wallet_show_no_balance">Hide empty assets</string>
+    <string name="dap_redeem_point_wallet_show_all">Show empty assets</string>
     <!-- -->
 
     <!-- empty list views -->
@@ -17,6 +19,7 @@
     <string name="no_assets_redeem_point">No Assets?</string>
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_users">No Users</string>
+    <string name="no_transactions">No Transactions</string>
     <!-- -->
 
     <!-- error messages -->
@@ -33,6 +36,11 @@
     <!-- app messages -->
     <string name="dap_redeem_point_wallet_wait">Please wait...</string>
     <string name="dap_redeem_point_wallet_remaining_assets">Assets Remaining</string>
+    <!-- -->
+
+    <!-- app strings -->
+    <string name="dap_redeem_point_wallet_confirmed">CONFIRMED</string>
+    <string name="dap_redeem_point_wallet_pending">PENDING</string>
     <!-- -->
 
     <!--Dialog Help - Init-->

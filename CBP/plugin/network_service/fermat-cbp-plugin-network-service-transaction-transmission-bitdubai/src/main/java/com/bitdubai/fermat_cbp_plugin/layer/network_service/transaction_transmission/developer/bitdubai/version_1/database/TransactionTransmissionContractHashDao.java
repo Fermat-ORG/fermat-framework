@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -37,6 +38,7 @@ import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
+ * Updated by Gabriel Araujo (gabe_512@hotmail.com) on 10/02/16.
  */
 public class TransactionTransmissionContractHashDao {
 
@@ -143,6 +145,7 @@ public class TransactionTransmissionContractHashDao {
         record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, Boolean.FALSE.toString());
 
         return record;
     }
@@ -254,6 +257,20 @@ public class TransactionTransmissionContractHashDao {
         PlatformComponentType recordSenderType=PlatformComponentType.getByCode(senderType);
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
+        Plugins remoteBusinessTransaction;
+        String pluginCode=record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
+        if(pluginCode==null||pluginCode.isEmpty()){
+            //For now, I'll put transaction transmission
+            remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+        }else{
+            try{
+                remoteBusinessTransaction=Plugins.getByCode(pluginCode);
+            } catch (InvalidParameterException exception){
+                //If the code is invalid, I''l set the Default.
+                remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+            }
+        }
+
 
         return new BusinessTransactionMetadataRecord(
                 contractHash,
@@ -267,7 +284,8 @@ public class TransactionTransmissionContractHashDao {
                 recordTransactionType,
                 timestamp,
                 transactionId,
-                transactionTransmissionStates
+                transactionTransmissionStates,
+                remoteBusinessTransaction
                 );
 
     }
@@ -312,8 +330,16 @@ public class TransactionTransmissionContractHashDao {
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(businessTransactionMetadata.getTransactionId().toString());
+            filter.setColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
 
+            /*
+             * 2.- Create a new transaction and execute
+             */
             DatabaseTransaction transaction = getDataBase().newTransaction();
+            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 

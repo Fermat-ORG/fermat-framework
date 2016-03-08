@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -27,20 +26,20 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public final class CommunicationNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public final class CommunicationNetworkServiceDatabaseFactory {
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
+     * Plugin Database System reference.
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Constructor with parameters to instantiate class
      * .
-     *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public CommunicationNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CommunicationNetworkServiceDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -49,10 +48,13 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
      *
      * @param ownerId      the owner id
      * @param databaseName the database name
-     * @return Database
-     * @throws CantCreateDatabaseException
+     *
+     * @return created Database
+     *
+     * @throws CantCreateDatabaseException  if something goes wrong.
      */
-    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(final UUID   ownerId     ,
+                                   final String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -71,6 +73,7 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
          * Next, I will add the needed tables.
          */
         try {
+
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -79,14 +82,14 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
              */
             table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING,  36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.TEXT, 0, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.TEXT  ,   0, Boolean.FALSE);
 
             table.addIndex(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
 
@@ -95,19 +98,27 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create outgoing messages table.
              */
             table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.TEXT, 0, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING ,  36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING , 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME       , DatabaseDataType.STRING ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME    , DatabaseDataType.STRING ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING , 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME     , DatabaseDataType.STRING ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME  , DatabaseDataType.STRING ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING , 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING , 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING , 255, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING , 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.TEXT   ,   0, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME        , DatabaseDataType.INTEGER,   6, Boolean.FALSE);
+
 
             table.addIndex(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
 
@@ -117,60 +128,9 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
-            /*
-            * Create outgoing notification table.
-            */
-            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
 
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 59, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-             table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, DatabaseDataType.STRING, 6, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, DatabaseDataType.INTEGER, 6, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            return database;
 
-
-            table.addIndex(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-            /*
-            * Create incoming messages table.
-            */
-            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME);
-
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, DatabaseDataType.STRING, 6, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, DatabaseDataType.STRING, 6, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
@@ -178,14 +138,7 @@ public final class CommunicationNetworkServiceDatabaseFactory implements DealsWi
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
-        return database;
+
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
 }

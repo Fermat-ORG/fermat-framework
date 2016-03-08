@@ -9,4 +9,16 @@ public class ApplicationConstants {
     public static final String START_ACTIVITY_INIT = "Init";
     public static final String ACTIVE_PLATFORMS = "active";
     public static final String CLOSE_APP = "close";
+
+    public static final String SETTINGS_CORE = "settings_core";
+    public static final String SETTINGS_FERMAT_NETWORK = "settings fermat network";
+    public static final String ACTIVITY_CODE_TO_OPEN = "activity_code_to_open";
+
+
+    /**
+     * Intent data used to open a apps
+     */
+    public static final String INTENT_DESKTOP_APP_PUBLIC_KEY = "publicKey";
+    public static final String INSTALLED_FERMAT_APP = "installedFermatApp";
+    public static final String INTENT_APP_TYPE = "appType";
 }

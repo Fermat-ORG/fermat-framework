@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.math.BigDecimal;
 
@@ -74,17 +74,17 @@ public interface CryptoBrokerWalletBalanceRecord {
     void setAvailableBalance(BigDecimal availableBalance);
 
     /**
-     * The method <code>getCurrencyType</code> returns the currency type of the CryptoBrokerWalletBalanceRecord
+     * The method <code>getMoneyType</code> returns the currency type of the CryptoBrokerWalletBalanceRecord
      *
-     * @return CurrencyType
+     * @return MoneyType
      */
-    CurrencyType getCurrencyType();
+    MoneyType getMoneyType();
 
     /**
-     * The method <code>setCurrencyType</code> sets the currency type of the CryptoBrokerWalletBalanceRecord
+     * The method <code>setMoneyType</code> sets the currency type of the CryptoBrokerWalletBalanceRecord
      *
-     * @param currencyType
+     * @param moneyType
      */
-    void setCurrencyType(CurrencyType currencyType);
+    void setMoneyType(MoneyType moneyType);
 
 }

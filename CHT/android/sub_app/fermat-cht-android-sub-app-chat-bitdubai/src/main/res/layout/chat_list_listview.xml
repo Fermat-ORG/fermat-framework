@@ -5,25 +5,25 @@ android:layout_height="wrap_content">
 
 <ImageView
     android:id="@+id/image"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:layout_centerVertical="true"
-    android:layout_margin="5dp"
-    android:background="#444"
-    android:padding="3dp" />
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_width="?android:attr/listPreferredItemHeight"
+    android:scaleType="centerCrop"
+    android:padding="10dp"
+    style="@style/quickContactBadgeStyle"
+    android:src="@drawable/ic_contact_picture_holo_light"/>
+
 
 <TextView
     android:id="@+id/tvtitle"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dip"
+    android:layout_marginTop="15dip"
     android:layout_toLeftOf="@+id/tvdate"
     android:layout_toRightOf="@+id/image"
     android:maxLines="1"
     android:text="title"
     android:textColor="@color/black"
-    android:textSize="15dip"
-    android:textStyle="bold" />
+    android:textSize="15dip" />
 
 <TextView
     android:id="@+id/tvdesc"
@@ -34,18 +34,18 @@ android:layout_height="wrap_content">
     android:ellipsize="end"
     android:maxLines="3"
     android:text="desc"
-    android:textColor="@color/black"
-    android:textSize="13dip" />
+    android:textColor="#757575"
+    android:textSize="12dip" />
 
 <TextView
     android:id="@+id/tvdate"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dip"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="25dp"
     android:text="date"
-    android:textColor="@color/black"
-    android:textSize="12dip" />
+    android:textColor="#000000"
+    android:textSize="10dip" />
 
 </RelativeLayout>

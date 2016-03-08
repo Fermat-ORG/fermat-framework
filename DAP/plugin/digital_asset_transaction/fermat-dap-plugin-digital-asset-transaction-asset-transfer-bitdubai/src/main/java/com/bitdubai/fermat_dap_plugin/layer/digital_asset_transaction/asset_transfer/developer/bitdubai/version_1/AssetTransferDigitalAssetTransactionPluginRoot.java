@@ -33,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.interfaces.AssetTransfer;
@@ -40,7 +41,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.developer_utils.AssetTransferDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseConstants;
@@ -76,16 +79,16 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     protected PluginFileSystem pluginFileSystem;
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
     AssetUserWalletManager assetUserWalletManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    AssetIssuerWalletManager assetIssuerWalletManager;
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
     AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     BitcoinNetworkManager bitcoinNetworkManager;
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     AssetVaultManager assetVaultManager;
-    DigitalAssetTransferVault digitalAssetTransferVault;
-    AssetTransferTransactionManager assetTransferTransactionManager;
-    AssetTransferMonitorAgent assetTransferMonitorAgent;
-    Database assetDistributionDatabase;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
+    AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -97,6 +100,10 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    DigitalAssetTransferVault digitalAssetTransferVault;
+    AssetTransferTransactionManager assetTransferTransactionManager;
+    AssetTransferMonitorAgent assetTransferMonitorAgent;
+    Database assetDistributionDatabase;
     public AssetTransferDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -198,7 +205,10 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
                     bitcoinNetworkManager,
                     logManager,
                     digitalAssetTransferVault,
-                    assetTransmissionNetworkServiceManager);
+                    assetTransmissionNetworkServiceManager,
+                    assetIssuerActorNetworkServiceManager,
+                    actorAssetUserManager,
+                    assetIssuerWalletManager);
         }
         this.assetTransferMonitorAgent.start();
     }
@@ -206,7 +216,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     @Override
     public void transferAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantTransferDigitalAssetsException {
         printSomething("The Wallet public key is hardcoded");
-        walletPublicKey = "walletPublicKeyTest";
+        walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
         this.assetTransferTransactionManager.transferAssets(digitalAssetsToDistribute, walletPublicKey);
     }
 

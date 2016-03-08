@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -16,14 +15,13 @@ import java.util.UUID;
 /**
  * Created by franklin on 27/09/15.
  */
-public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class AssetIssuerWalletDatabaseFactory {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetIssuerWalletDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -34,8 +32,7 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
             createAssetIssuerWalletTable(ownerId, database.getDatabaseFactory());
             createAssetIssuerWalletBalancesTable(ownerId, database.getDatabaseFactory());
             createAssetStatisticTable(ownerId, database.getDatabaseFactory());
-            //insertInitialBalancesRecord(database);
-
+            createAssetMovementsTable(ownerId, database.getDatabaseFactory());
             return database;
         } catch (CantCreateTableException exception) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
@@ -68,6 +65,15 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
     private void createAssetStatisticTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
         try {
             DatabaseTableFactory tableFactory = createAssetStatisticTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch (InvalidOwnerIdException exception) {
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createAssetMovementsTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try {
+            DatabaseTableFactory tableFactory = createAssetMovementTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         } catch (InvalidOwnerIdException exception) {
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
@@ -125,18 +131,15 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
         return table;
     }
 
-//    private void insertInitialBalancesRecord(final Database database) throws CantInsertRecordException{
-//        DatabaseTable balancesTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);
-//        DatabaseTableRecord initialRecord = constructBalanceInitialRecord(balancesTable);
-//        balancesTable.insertRecord(initialRecord);
-//    }
+    private DatabaseTableFactory createAssetMovementTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, DatabaseDataType.STRING, 255, true);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, DatabaseDataType.STRING, 255, false);
 
-//    private DatabaseTableRecord constructBalanceInitialRecord(final DatabaseTable balancesTable){
-//        DatabaseTableRecord balancesRecord = balancesTable.getEmptyRecord();
-//        UUID balanceRecordId = UUID.randomUUID();
-//        balancesRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME, "");
-//        balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-//        balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-//        return balancesRecord;
-//    }
+        return table;
+    }
 }

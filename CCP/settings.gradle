@@ -56,6 +56,9 @@ project(':fermat-ccp-plugin-crypto-transaction-outgoing-extra-user-bitdubai').pr
 include ':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai'
 project(':fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-intra-actor-bitdubai')
 
+include ':fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction'
+project(':fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-outgoing-draft-transaction')
+
 include ':fermat-ccp-plugin-crypto-transaction-hold-bitdubai'
 project(':fermat-ccp-plugin-crypto-transaction-hold-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-crypto-transaction-hold-bitdubai')
 
@@ -79,3 +82,9 @@ project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai').proj
 
 include ':fermat-ccp-plugin-module-intra-user-identity-bitdubai'
 project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+
+include ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai'
+project(':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai')
+
+include ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai'
+project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai').projectDir = new File('CCP/plugin/basic_wallet/fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')

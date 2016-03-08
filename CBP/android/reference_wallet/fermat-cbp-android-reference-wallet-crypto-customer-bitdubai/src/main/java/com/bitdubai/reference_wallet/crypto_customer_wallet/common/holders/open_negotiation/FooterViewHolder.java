@@ -33,6 +33,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
         } else if (view.getId() == R.id.send_button) {
             listener.onSendButtonClicked();
+
         }
     }
 

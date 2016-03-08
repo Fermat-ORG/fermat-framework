@@ -11,8 +11,6 @@ import java.util.List;
  * Created by rodrigo on 9/4/15.
  */
 public class DigitalAssetContract implements Contract {
-    ContractProperty redeemable;
-    ContractProperty expirationDate;
     List<ContractProperty> properties;
 
     /**
@@ -20,10 +18,10 @@ public class DigitalAssetContract implements Contract {
      */
     public DigitalAssetContract() {
         properties = new ArrayList<>();
-        redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-        expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
-        properties.add(redeemable);
-        properties.add(expirationDate);
+        properties.add(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, true));
+        properties.add(new ContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE, true));
+        properties.add(new ContractProperty(DigitalAssetContractPropertiesConstants.SALEABLE, true));
+        properties.add(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null));
     }
 
     @Override
@@ -32,27 +30,27 @@ public class DigitalAssetContract implements Contract {
     }
 
     @Override
-    public void setContractProperty(ContractProperty contractProperty) throws CantDefineContractPropertyException {
-        boolean isExistingProperty = false;
-        for (ContractProperty property : properties){
-            if (property.getName().equals(contractProperty.getName())){
-                property.setValue(contractProperty.getValue());
-                isExistingProperty = true;
-            }
-        }
-        if (!isExistingProperty)
-            throw new CantDefineContractPropertyException(CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + contractProperty.toString() + " does not exists in the contract.", null);
-    }
-
-    @Override
     public ContractProperty getContractProperty(String propertyName) {
         ContractProperty returnedContractProperty = null;
-        for (ContractProperty contractProperty : properties){
+        for (ContractProperty contractProperty : properties) {
             if (contractProperty.getName().equals(propertyName))
                 returnedContractProperty = contractProperty;
         }
 
         return returnedContractProperty;
+    }
+
+    @Override
+    public void addPropertyValue(String propertyName, Object propertyValue) throws CantDefineContractPropertyException {
+        boolean isExistingProperty = false;
+        for (ContractProperty property : properties) {
+            if (property.getName().equals(propertyName)) {
+                property.setValue(propertyValue);
+                isExistingProperty = true;
+            }
+        }
+        if (!isExistingProperty)
+            throw new CantDefineContractPropertyException(CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + propertyName + " does not exists in the contract.", null);
     }
 
 }

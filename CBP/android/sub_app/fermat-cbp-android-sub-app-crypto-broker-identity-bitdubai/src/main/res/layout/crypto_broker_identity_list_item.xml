@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/identity_img"
         android:padding="0dp"
-        tools:src="@drawable/person"
         android:scaleType="centerCrop" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

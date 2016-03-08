@@ -10,6 +10,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
     }
 
     public AssetUserWallet getUserWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
-        return assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest", networkType);
+        return assetUserWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, networkType);
     }
 
 

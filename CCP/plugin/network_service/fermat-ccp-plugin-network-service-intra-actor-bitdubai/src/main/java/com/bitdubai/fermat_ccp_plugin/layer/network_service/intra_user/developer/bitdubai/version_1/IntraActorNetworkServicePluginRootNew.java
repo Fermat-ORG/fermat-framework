@@ -2,8 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -15,24 +13,19 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -57,7 +50,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.OutgoingNotificationDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantAddIntraWalletCacheUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletCacheUserException;
@@ -69,15 +61,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -88,7 +77,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -98,29 +86,6 @@ import java.util.concurrent.Executors;
 public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements IntraUserManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
 
     /**
      * Represent the intraActorDataBase
@@ -149,7 +114,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
     private long reprocessTimer =  300000; //five minutes
 
-    private Timer timer = new Timer();
+    private  Timer timer = new Timer();
 
     /**
      * Executor
@@ -196,12 +161,11 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
             executorService = Executors.newFixedThreadPool(3);
 
             // change message state to process again first time
-            reprocessMessages();
+            reprocessPendingMessage();
 
             //declare a schedule to process waiting request message
 
             this.startTimer();
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -243,7 +207,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONREQUEST_" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
@@ -264,6 +228,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     //NOTIFICATION LAUNCH
                     lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
 
                     break;
 
@@ -384,7 +349,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     protected void onNetworkServiceRegistered() {
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                 System.out.println("IntraActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
@@ -393,67 +358,48 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     }
 
     @Override
-    protected void onClientConnectionClose() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onClientSuccessfulReconnect() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onClientConnectionLoose() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
-    @Override
-    protected void onReceivePlatformComponentProfileRegisteredList(CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList) {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onCompleteActorProfileUpdate(PlatformComponentProfile platformComponentProfileUpdate) {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile) {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                        "destination_alias",
-                        "destionation_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-                                                                       .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                                                                               "sender_alias",
-                                                                               "sender_name",
-                                                                               NetworkServiceType.UNDEFINED,
-                                                                               PlatformComponentType.ACTOR_INTRA_USER,
-                                                                               "");
-    }
-
-    @Override
-    protected void reprocessMessages() {
+    private void reprocessPendingMessage()
+    {
         try {
-           outgoingNotificationDao.changeStatusNotSentMessage();
+            outgoingNotificationDao.changeStatusNotSentMessage();
+
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(
+                                            cpr.getActorSenderPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cpr.getActorDestinationPublicKey(),
+                                            NetworkServiceType.UNDEFINED,
+                                            PlatformComponentType.ACTOR_INTRA_USER
+                                    ),
+                                    cpr.toJson()
+                            );
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
+
+            System.out.println(" -----INTRA ACTOR NS REPROCESANDO MENSAJES ----");
 
         }
         catch(CantListIntraWalletUsersException e)
@@ -465,11 +411,69 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
             e.printStackTrace();
         }
     }
+    @Override
+    protected void reprocessMessages() {
+       /* try {
+           outgoingNotificationDao.changeStatusNotSentMessage();
+
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
+
+        }
+        catch(CantListIntraWalletUsersException e)
+        {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        }*/
+    }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
-        try {
+       /* try {
            outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
 
         }
         catch(CantListIntraWalletUsersException  e)
@@ -479,55 +483,13 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (Exception e) {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
-
-    @Override
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-    }
-
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-    @Override
-    public EventManager getEventManager() {
-        return eventManager;
-    }
-
-    @Override
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
-
-    @Override
-    public PluginDatabaseSystem getPluginDatabaseSystem() {
-        return pluginDatabaseSystem;
-    }
-
-    @Override
-    public PluginFileSystem getPluginFileSystem() {
-        return pluginFileSystem;
-    }
-
-    @Override
-    public Broadcaster getBroadcaster() {
-        return broadcaster;
-    }
-
-    @Override
-    public LogManager getLogManager() {
-        return logManager;
-    }
-
-
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-        this.getEventManager().raiseEvent(intraUserActorRequestConnectionEvent);
+        eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
     }
 
     private ActorNetworkServiceRecord changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -765,7 +727,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
             /* This is for test and example of how to use
                     * Construct the filter
             */
-            DiscoveryQueryParameters discoveryQueryParameters = getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
+            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
                     PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
                     NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
                     null,                     // alias
@@ -810,20 +772,21 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
             //Create a thread to save intra user cache list
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try
-                    {
-                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                    } catch (CantAddIntraWalletCacheUserException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            if(lstIntraUser.size() > 0) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                        } catch (CantAddIntraWalletCacheUserException e) {
+                            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
+                        }
                     }
-                }
-            },"Thread Cache");
+                }, "Thread Cache");
 
-            thread.start();
+                thread.start();
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -841,6 +804,19 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (CantListIntraWalletCacheUserException e) {
             throw new ErrorSearchingCacheSuggestionsException("CAN'T GET INTRA USER CACHE LIST",e,"","error get table records");
         }
+    }
+
+    @Override
+    public void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantInsertRecordException {
+
+            try
+            {
+                intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+            } catch (CantAddIntraWalletCacheUserException e) {
+
+                throw new CantInsertRecordException("CAN'T Save INTRA USER CACHE LIST",e,"","error saved table records");
+
+            }
     }
 
     @Override
@@ -882,8 +858,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(intraUserSelectedPublicKey),
-                                getProfileDestinationToRequestConnection(intraUserToAddPublicKey),
+                                getProfileSenderToRequestConnection(
+                                        intraUserSelectedPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        intraUserToAddPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         reportUnexpectedError(e);
@@ -947,8 +931,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     try {
                         // Sending message to the destination
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        messageToSend.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        messageToSend.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 messageToSend.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -987,8 +979,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1039,8 +1039,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1083,8 +1091,16 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                getProfileSenderToRequestConnection(
+                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        PlatformComponentType.ACTOR_INTRA_USER
+                                ),
                                 actorNetworkServiceRecord.toJson());
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
@@ -1104,7 +1120,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException {
 
         try {
-
+            if(incomingNotificationsDao==null) incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication,pluginFileSystem,pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
 
         } catch (CantListIntraWalletUsersException e) {
@@ -1202,8 +1218,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
@@ -1256,8 +1272,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
@@ -1284,16 +1300,6 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     }
 
 
-    private void startTimer(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessages();
-            }
-        },0, reprocessTimer);
-    }
-
 
     //DatabaseManagerForDevelopers Implementation
     /**
@@ -1313,7 +1319,10 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     /**
@@ -1323,7 +1332,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
 
@@ -1337,4 +1346,15 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
 
     }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        },0, reprocessTimer);
+    }
+
 }

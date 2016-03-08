@@ -77,7 +77,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     case 2:
                         Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_request_fluor : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
                         if(data.getNotifications()!=0){
-                            holder.badge.setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
+                            holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
                         }
                         break;
                     case 3:

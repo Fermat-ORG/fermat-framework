@@ -84,6 +84,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseFactory implements DealsWithPlu
             table.addColumn(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
             table.addIndex(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_FIRST_KEY_COLUMN);
 

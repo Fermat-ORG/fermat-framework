@@ -79,6 +79,16 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
     }
 
     @Override
+    public String getCryptoBrokerAlias() {
+        return null;
+    }
+
+    @Override
+    public byte[] getCryptoBrokerImage() {
+        return new byte[0];
+    }
+
+    @Override
     public UUID getContractId() {
         return negotiationId;
     }

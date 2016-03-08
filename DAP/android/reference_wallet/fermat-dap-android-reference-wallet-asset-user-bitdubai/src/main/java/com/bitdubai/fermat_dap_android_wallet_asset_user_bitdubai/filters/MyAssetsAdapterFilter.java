@@ -15,6 +15,7 @@ public class MyAssetsAdapterFilter extends Filter {
 
     private List<DigitalAsset> data;
     private MyAssetsAdapter adapter;
+    private boolean showNoBalance = false;
 
     public MyAssetsAdapterFilter(List<DigitalAsset> data, MyAssetsAdapter adapter) {
         this.data = data;
@@ -32,12 +33,17 @@ public class MyAssetsAdapterFilter extends Filter {
         int count = list.size();
         final ArrayList<DigitalAsset> nlist = new ArrayList<>(count);
 
-        String filterableString ;
+        String filterableString;
+        DigitalAsset digitalAsset;
 
         for (int i = 0; i < count; i++) {
-            filterableString = list.get(i).getName();
+            digitalAsset = list.get(i);
+            filterableString = digitalAsset.getName();
             if (filterableString.toLowerCase().contains(filterString)) {
-                nlist.add(list.get(i));
+                if (!showNoBalance) nlist.add(list.get(i));
+                else if (digitalAsset.getAvailableBalance() > 0) {
+                    nlist.add(list.get(i));
+                }
             }
         }
 
@@ -50,5 +56,10 @@ public class MyAssetsAdapterFilter extends Filter {
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
         adapter.changeDataSet((List<DigitalAsset>) filterResults.values);
+    }
+
+    public MyAssetsAdapterFilter setShowNoBalance(boolean showNoBalance) {
+        this.showNoBalance = showNoBalance;
+        return this;
     }
 }

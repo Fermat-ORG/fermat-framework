@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -53,6 +54,15 @@ public class DigitalAssetMetadata {
         transactionChain = new LinkedHashMap<>();
     }
 
+    /**
+     * The network type where this asset belongs.
+     */
+    private BlockchainNetworkType networkType;
+
+    {
+        networkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+    }
+
     private DAPActor lastOwner;
 
     //CONSTRUCTORS
@@ -65,13 +75,11 @@ public class DigitalAssetMetadata {
         this.digitalAsset = null;
     }
 
-    public DigitalAssetMetadata(UUID metadataId,
-                                DigitalAsset digitalAsset,
-                                LinkedHashMap<String, String> transactionChain,
-                                DAPActor lastOwner) {
+    public DigitalAssetMetadata(UUID metadataId, DigitalAsset digitalAsset, LinkedHashMap<String, String> transactionChain, BlockchainNetworkType networkType, DAPActor lastOwner) {
         this.metadataId = metadataId;
         this.digitalAsset = digitalAsset;
         this.transactionChain = transactionChain;
+        this.networkType = networkType;
         this.lastOwner = lastOwner;
     }
 
@@ -182,5 +190,13 @@ public class DigitalAssetMetadata {
 
     public void setLastOwner(DAPActor lastOwner) {
         this.lastOwner = lastOwner;
+    }
+
+    public BlockchainNetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public void setNetworkType(BlockchainNetworkType networkType) {
+        this.networkType = networkType;
     }
 }

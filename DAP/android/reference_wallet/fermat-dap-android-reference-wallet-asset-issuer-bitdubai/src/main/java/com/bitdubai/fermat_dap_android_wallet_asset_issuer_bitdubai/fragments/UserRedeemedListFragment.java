@@ -38,6 +38,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ses
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -139,8 +140,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_REDEEMED, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_REDEEMED, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -324,7 +325,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         if (moduleManager != null) {
             try {
                 if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-                users = Data.getUserRedeemedList("walletPublicKeyTest", digitalAsset, moduleManager);
+                users = Data.getUserRedeemedList(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

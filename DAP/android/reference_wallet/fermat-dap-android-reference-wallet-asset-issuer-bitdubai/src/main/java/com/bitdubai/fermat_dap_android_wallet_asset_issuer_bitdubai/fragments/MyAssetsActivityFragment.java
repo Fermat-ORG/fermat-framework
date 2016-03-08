@@ -15,12 +15,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.filters.MyAssetsAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
@@ -75,6 +76,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
     private SearchView searchView;
+    private boolean showNoBalance = true;
 
     public static MyAssetsActivityFragment newInstance() {
         return new MyAssetsActivityFragment();
@@ -135,6 +137,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
+
+        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -196,13 +200,13 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(s);
                 }
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);
 //        searchView = (SearchView) menu.getItem(1).getActionView();
@@ -216,6 +220,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+            } else if (id == R.id.action_wallet_issuer_show_no_balance) {
+                showNoBalance = item.getTitle().equals(getResources().getString(R.string.dap_issuer_wallet_show_no_balance));
+                item.setTitle((showNoBalance) ? getResources().getString(R.string.dap_issuer_wallet_show_all) : getResources().getString(R.string.dap_issuer_wallet_show_no_balance));
+                ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(searchView.getQuery());
             }
 
         } catch (Exception e) {

@@ -4,6 +4,7 @@ package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_re
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerifi
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -51,7 +53,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private AssetVaultManager assetVaultManager;
     private IssuerAppropriationManager issuerAppropriationManager;
     //TODO REMOVE HARDCODE!!!
-    private String issuerPublicKeyWallet = "walletPublicKeyTest";
+    private String issuerPublicKeyWallet = WalletUtilities.WALLET_PUBLIC_KEY;
     private String btcWallet;
 
     public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,
@@ -161,7 +163,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, Actors.DAP_ASSET_USER, publicKeyTo, Actors.DAP_ASSET_ISSUER, WalletUtilities.DEFAULT_MEMO_REDEMPTION);
                             issuerRedemptionDao.assetReceived(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
                             wallet.getBalance().credit(recordWrapper, BalanceType.BOOK);
                             notify = true;
@@ -189,7 +191,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                              * Notifies the Asset Vault that the address of this Redeem Point, has been used.
                              */
                             assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, Actors.DAP_ASSET_USER, publicKeyTo, Actors.DAP_ASSET_ISSUER, WalletUtilities.DEFAULT_MEMO_REDEMPTION);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             issuerRedemptionDao.redemptionFinished(digitalAssetMetadata);
                             if (cryptoTransactionOnBlockChain.getCryptoAmount() < DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT) {

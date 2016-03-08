@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -90,6 +91,9 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     public IncomingExtraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));    }
@@ -198,7 +202,7 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         /**
          * I will start the Relay Agent.
          */
-        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager, this.errorManager, eventManager,this.registry, this.cryptoAddressBookManager);
+        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager, this.errorManager, eventManager,this.registry, this.cryptoAddressBookManager, this.broadcaster);
         try {
             this.relay.start();
         }

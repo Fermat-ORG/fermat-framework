@@ -60,7 +60,7 @@ public class CreateGroupFragmentDialog extends Dialog implements
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.manager = manager;
+        CreateGroupFragmentDialog.manager = manager;
         this.group = group;
         
     }
@@ -166,5 +166,10 @@ public class CreateGroupFragmentDialog extends Dialog implements
             }
 
     }
+
+    public Group getGroup() {
+        return group;
+    }
+
 
 }

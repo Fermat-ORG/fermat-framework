@@ -1154,6 +1154,21 @@
                     </android>
                 </androids>
             </layer>
+            <layer name="Wallets">
+                <androids>
+                    <android name="Bitcoin wallet" description="" difficulty="4" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin name="Crypto Wallet" description="" difficulty="6" code-level="qa">
@@ -1329,6 +1344,20 @@
                         </maintainers>
                         <certifications>
                             <certification signed-by="EzequielPostan" type="implementation"></certification>
+                        </certifications>
+                    </plugin>
+                    
+                    <plugin name="Outgoing Draft Transaction" description="" difficulty="10" code-level="qa">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification signed-by="furszy" type="implementation"></certification>
                         </certifications>
                     </plugin>
                     <plugin name="Inter Account" description="" difficulty="0" code-level="concept">
@@ -2378,7 +2407,25 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Asset Transfer" description="" difficulty="3" code-level="development">
+                    <plugin name="Asset Transfer" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Buyer" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Seller" description="" difficulty="10" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -3422,7 +3469,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="100"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4366,6 +4413,19 @@
                         <certifications>
                             <certification type="implementation" signed-by="acostarodrigo"></certification>
                             <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                        </certifications>
+                    </addon>
+                    <addon name="Broadcaster" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
                         </certifications>
                     </addon>
                     <addon name="Logger" description="" difficulty="4" code-level="production">

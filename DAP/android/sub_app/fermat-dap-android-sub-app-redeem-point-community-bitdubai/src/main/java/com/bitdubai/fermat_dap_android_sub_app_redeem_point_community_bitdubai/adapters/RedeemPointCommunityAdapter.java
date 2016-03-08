@@ -44,12 +44,13 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
     @Override
     protected void bindHolder(final RedeemPointViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+                holder.connectionState.setVisibility(View.VISIBLE);
+                holder.connect.setVisibility(View.GONE);
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+                holder.connectionState.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -64,7 +65,7 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 holder.status.setText(R.string.status_connecting);
             }
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -86,8 +87,8 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -9,7 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
  */
 public interface BitcoinWalletManager extends FermatManager {
 
-    public BitcoinWalletWallet loadWallet (String walletPublicKey) throws CantLoadWalletException;
+    BitcoinWalletWallet loadWallet(String walletPublicKey) throws CantLoadWalletException;
 
-    public void createWallet (String walletPublicKey) throws CantCreateWalletException;
+    void createWallet(String walletPublicKey) throws CantCreateWalletException;
 }

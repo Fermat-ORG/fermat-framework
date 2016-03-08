@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantChangeEarningsWalletException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
 import java.util.UUID;
@@ -31,9 +33,12 @@ public interface EarningsPair {
     /**
      * @return the wallet information referencing the wallet where the plug-in will deposit the earnings.
      */
-    WalletReference getWalletReference();
+    WalletReference getEarningsWallet();
 
-    // TODO add all the information referencing the wallet that we have linked.
+    /**
+     * @return the state of the earning pair.
+     */
+    EarningPairState getState();
 
     /**
      * Through the method <code>getSearch</code> you can get a search object with the search functionality encapsulated.
@@ -41,5 +46,18 @@ public interface EarningsPair {
      * @return an instance of earning search for the selected wallet.
      */
     EarningsSearch getSearch();
+
+    /**
+     * Through the method <code>changeEarningsWallet</code> you can change the earnigs wallet of the respective pair.
+     *
+     * @param earningsWallet the information of the wallet that we're associating and where we will deposit the earnings.
+     *
+     * @throws CantChangeEarningsWalletException if something goes wrong.
+     */
+    void changeEarningsWallet(
+
+            WalletReference earningsWallet
+
+    ) throws CantChangeEarningsWalletException;
 
 }

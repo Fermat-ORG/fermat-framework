@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
@@ -288,6 +289,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
      * @return A list with the installed wallets information
      * @throws WalletsListFailedToLoadException
      */
+    @Override
     public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException{
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
 
@@ -456,6 +458,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     }
 
 
+
     //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
     /**
      * WalletManager Interface implementation.
@@ -464,25 +467,25 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
 
 
     //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
-        @Override
-        public List<InstalledWallet> getUserWallets() {
-        // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
-                WalletType.REFERENCE,
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "Bitcoin Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0),
-                AppsStatus.getDefaultStatus()
-        );
-
-        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
-        lstInstalledWallet.add(installedWallet);
-        return lstInstalledWallet;
-    }
+//        @Override
+//        public List<InstalledWallet> getUserWallets() {
+//        // Harcoded para testear el circuito más arriba
+//        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                WalletType.REFERENCE,
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "reference_wallet_icon",
+//                "Bitcoin Wallet",
+//                "reference_wallet",
+//                "wallet_platform_identifier",
+//                new Version(1,0,0),
+//                AppsStatus.getDefaultStatus()
+//        );
+//
+//        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+//        lstInstalledWallet.add(installedWallet);
+//        return lstInstalledWallet;
+//    }
 
     @Override
     public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
@@ -785,6 +788,15 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public FermatApp getApp(String publicKey) throws Exception {
+        try {
+            return getInstalledWallet(publicKey);
+        } catch (CantCreateNewWalletException e) {
+            throw new Exception(e);
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 package unit.CryptoBrokerWalletAssociatedSettingImpl;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletAssociatedSettingImpl;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class GetMerchandiseTest {
     @Test
     public void getMerchandise(){
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
-        when(cryptoBrokerWalletAssociatedSetting.getMerchandise()).thenReturn(CurrencyType.CRYPTO_MONEY);
+        when(cryptoBrokerWalletAssociatedSetting.getMerchandise()).thenReturn(MoneyType.CRYPTO);
         assertThat(cryptoBrokerWalletAssociatedSetting.getMerchandise()).isNotNull();
     }
 

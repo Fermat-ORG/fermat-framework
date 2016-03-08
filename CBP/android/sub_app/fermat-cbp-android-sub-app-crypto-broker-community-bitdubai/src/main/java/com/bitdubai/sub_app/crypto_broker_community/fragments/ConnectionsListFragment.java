@@ -29,7 +29,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -187,7 +186,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoBroker
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

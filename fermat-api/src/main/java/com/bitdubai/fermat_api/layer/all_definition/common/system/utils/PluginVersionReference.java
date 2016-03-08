@@ -49,7 +49,6 @@ public class PluginVersionReference {
         PluginReference pluginReference = new PluginReference(layerReference, pluginEnum);
 
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);
-        ;
         this.version = version;
     }
 

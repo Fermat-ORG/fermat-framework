@@ -40,11 +40,12 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         this.database = database;
         this.broadcaster = broadcaster;
     }
+
     @Override
     public long getBalance() throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getAvailableBalance();
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(BlockchainNetworkType.REG_TEST); //TODO red harcoder
         } catch(CantCalculateBalanceException exception){
             throw exception;
         } catch(Exception exception){
@@ -88,7 +89,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction,BalanceType.AVAILABLE);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE);
 
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
@@ -96,6 +97,18 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
             throw exception;
         } catch(Exception exception){
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction, BalanceType.AVAILABLE);
+
+
+        } catch(Exception exception){
+            throw new CantRegisterCreditException("CANT REVERT CREDIT EN AVAILABLE", FermatException.wrapException(exception), null, null);
         }
     }
 }

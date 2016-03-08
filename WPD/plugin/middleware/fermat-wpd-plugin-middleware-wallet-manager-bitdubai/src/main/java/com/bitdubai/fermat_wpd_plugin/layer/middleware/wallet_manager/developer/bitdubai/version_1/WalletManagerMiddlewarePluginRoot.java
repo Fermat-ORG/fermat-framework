@@ -35,8 +35,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_wpd_api.all_definition.events.WalletInstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantFindProcessException;
@@ -153,22 +153,10 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
             walletManagerDao.persistWalletLanguage(installedWallet.getWalletCatalogId(),installedWallet.getLanguagesId().get(0).getId(),installedWallet.getLanguagesId().get(0).getLanguage(),installedWallet.getLanguagesId().get(0).getLabel(),installedWallet.getLanguagesId().get(0).getVersion());
 
         }
-        catch (CantPersistWalletSkinException ex)
+        catch (CantPersistWalletSkinException | CantPersistWalletLanguageException | CantGetInstalledWalletsException | WalletResourcesInstalationException ex)
         {
             throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (CantPersistWalletLanguageException ex)
-        {
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (WalletResourcesInstalationException ex)
-        {
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (CantGetInstalledWalletsException e){
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
+        } catch (CantExecuteDatabaseOperationException e){
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         }
         catch (Exception exception){
@@ -282,7 +270,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
 
         // Harcoded para testear el circuito más arriba
-        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<>();
 
         //TODO: joaquin, a esta clase le tenes que agregar el blockCHain networkType que viene por default, acá solo se va a hardcodear
         InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
@@ -291,7 +279,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
-                "bitDubai bitcoin Wallet", // WALLET NAME
+                "Bitcoin Wallet", // WALLET NAME
                 "reference_wallet", // PUBLIC KEY
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
@@ -303,6 +291,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "",
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
+
+
         lstInstalledWallet.add(installedWallet);
 
         installedWallet= new WalletManagerMiddlewareInstalledWallet(
@@ -347,6 +337,48 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         );
         lstInstalledWallet.add(installedWallet);
 
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Broker Wallet", // WALLET NAME
+                "crypto_broker_wallet", // PUBLIC KEY
+                "CBPCBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Customer Wallet", // WALLET NAME
+                "crypto_customer_wallet", // PUBLIC KEY
+                "CBPCCW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
         return lstInstalledWallet;
 
     }
@@ -381,13 +413,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         catch (WalletResourcesInstalationException e){
             throw new CantInstallLanguageException("CAN'T INSTALL WALLET Language",e, null, null);
         }
-        catch (CantPersistWalletLanguageException e){
+        catch (CantPersistWalletLanguageException | CantExecuteDatabaseOperationException e){
             throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",e, null, null);
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",FermatException.wrapException(exception), null, null);
         }
     }
@@ -429,13 +457,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         catch (WalletResourcesInstalationException e){
             throw new CantInstallSkinException("CAN'T INSTALL WALLET SKIN",e, null, null);
         }
-        catch (CantPersistWalletSkinException e){
+        catch (CantPersistWalletSkinException | CantExecuteDatabaseOperationException e){
             throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",e, null, null);
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
      }
@@ -499,13 +523,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         } catch (WalletResourcesUnninstallException e){
             throw new CantUninstallLanguageException("CAN'T UNINSTALL WALLET LANGUAGE",e, null, null);
 
-        } catch (CantDeleteWalletLanguageException e){
+        } catch (CantDeleteWalletLanguageException | CantExecuteDatabaseOperationException e){
             throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
         }
     }
@@ -544,13 +564,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         } catch (WalletResourcesUnninstallException e){
             throw new CantUninstallSkinException("CAN'T UNINSTALL WALLET SKIN",e, null, null);
 
-        } catch (CantDeleteWalletSkinException e){
+        } catch (CantDeleteWalletSkinException | CantExecuteDatabaseOperationException e){
             throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",e, null, null);
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
     }
@@ -634,13 +650,9 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
             WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
             walletDao.changeWalletName(walletIdInTheDevice, newName);
 
-        } catch (CantUpdateWalletNameException e){
+        } catch (CantUpdateWalletNameException | CantExecuteDatabaseOperationException e){
             throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",e, null, null);
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",FermatException.wrapException(exception), null, null);
         }
 
@@ -649,7 +661,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
     /**
      * get Installed wallet
      *
-     * @return
+     * @return InstalledWallet
      */
     @Override
     public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
@@ -658,10 +670,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
             WalletManagerMiddlewareDao walletManagerMiddlewareDao = new WalletManagerMiddlewareDao(pluginDatabaseSystem,pluginId);
             return walletManagerMiddlewareDao.getInstalledWallet(walletPublicKey);
 
-        } catch (CantGetInstalledWalletsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
-        } catch (CantExecuteDatabaseOperationException e) {
+        } catch (CantGetInstalledWalletsException | CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         }

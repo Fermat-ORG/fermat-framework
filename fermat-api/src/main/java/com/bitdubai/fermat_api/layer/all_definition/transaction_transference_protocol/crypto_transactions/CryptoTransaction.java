@@ -5,8 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.params.RegTestParams;
@@ -35,6 +37,7 @@ public class CryptoTransaction{
     /**
      * Overloaded constructor
      * @param transactionHash
+     * @param blockchainNetworkType
      * @param addressFrom
      * @param addressTo
      * @param cryptoCurrency
@@ -42,14 +45,14 @@ public class CryptoTransaction{
      * @param cryptoStatus
      */
     public CryptoTransaction(String transactionHash,
+                             BlockchainNetworkType blockchainNetworkType,
                              CryptoAddress addressFrom,
                              CryptoAddress addressTo,
                              CryptoCurrency cryptoCurrency,
                              long cryptoAmount,
                              CryptoStatus cryptoStatus) {
         this.transactionHash = transactionHash;
-        // will create by default a transaction in the DEFAULT network.
-        this.blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        this.blockchainNetworkType = blockchainNetworkType;
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
         this.cryptoCurrency = cryptoCurrency;
@@ -144,13 +147,18 @@ public class CryptoTransaction{
      * @param transaction
      * @return
      */
-    private static CryptoStatus getTransactionCryptoStatus(Transaction transaction) {
+    public static CryptoStatus getTransactionCryptoStatus(Transaction transaction) {
         try{
-            int depth = transaction.getConfidence().getDepthInBlocks();
+            TransactionConfidence transactionConfidence = transaction.getConfidence();
+            int depth = transactionConfidence.getDepthInBlocks();
+            TransactionConfidence.ConfidenceType confidenceType = transactionConfidence.getConfidenceType();
+            int broadcasters = transactionConfidence.getBroadcastBy().size();
 
-            if (depth == 0)
+            if (broadcasters == 0 && transactionConfidence.getSource() == TransactionConfidence.Source.SELF)
+                return CryptoStatus.PENDING_SUBMIT;
+            else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
-            else if(depth == 1)
+            else if(depth > 0 && depth < 3)
                 return CryptoStatus.ON_BLOCKCHAIN;
             else if (depth >= 3)
                 return CryptoStatus.IRREVERSIBLE;

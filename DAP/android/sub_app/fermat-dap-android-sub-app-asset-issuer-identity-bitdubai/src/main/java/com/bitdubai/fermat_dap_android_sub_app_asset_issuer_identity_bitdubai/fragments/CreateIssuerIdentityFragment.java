@@ -131,7 +131,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_asset_issuer)
+                    .setBannerRes(R.drawable.banner_asset_issuer_identity)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_identity_issuer_view_color)
                     .setTitleTextColor(R.color.dap_identity_issuer_view_color)
@@ -286,7 +286,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.asset_issuer_identity);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
@@ -372,7 +372,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_issuer_identity) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetIssuerException e) {

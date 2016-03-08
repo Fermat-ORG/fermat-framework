@@ -135,7 +135,6 @@ public interface CryptoWallet extends Serializable {
                                                           String        walletPublicKey,
                                                           CryptoCurrency walletCryptoCurrency,
                                                           BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
-        ;
 
     /**
      *
@@ -153,15 +152,15 @@ public interface CryptoWallet extends Serializable {
      * @param blockchainNetworkType
      */
 
-    public void sendAddressExchangeRequest(String        actorAlias,
-                                           Actors        actorConnectedType,
-                                           String        actorConnectedPublicKey,
-                                           byte[]        actorPhoto,
-                                           Actors        actorWalletType ,
-                                           String        identityWalletPublicKey,
-                                           String        walletPublicKey,
-                                           CryptoCurrency walletCryptoCurrency,
-                                           BlockchainNetworkType blockchainNetworkType);
+    void sendAddressExchangeRequest(String actorAlias,
+                                    Actors actorConnectedType,
+                                    String actorConnectedPublicKey,
+                                    byte[] actorPhoto,
+                                    Actors actorWalletType,
+                                    String identityWalletPublicKey,
+                                    String walletPublicKey,
+                                    CryptoCurrency walletCryptoCurrency,
+                                    BlockchainNetworkType blockchainNetworkType);
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -265,7 +264,6 @@ public interface CryptoWallet extends Serializable {
                                             String walletPublicKey,
                                             ReferenceWallet walletType,
                                             BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
                                                Actors deliveredByActorType,
@@ -275,7 +273,7 @@ public interface CryptoWallet extends Serializable {
                                                String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+
 
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
@@ -498,7 +496,24 @@ public interface CryptoWallet extends Serializable {
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
-    public void registerIdentities();
+     void registerIdentities();
 
-    public CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+     CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+
+    /**
+     *
+     * @param transactionId
+     * @return
+     * @throws CantListTransactionsException
+     */
+    CryptoWalletTransaction getTransaction(UUID transactionId,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException;
+
+
+    /**
+     *
+     * @param requestId
+     * @return
+     * @throws CantListReceivePaymentRequestException
+     */
+    PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
 }

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorExtraDataIdentity;
@@ -16,7 +17,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,57 +36,51 @@ public class pruebaExtraData {
     }
 
     public void test(){
-        Collection<QuotesExtraData> quotes = null;
-        QuotesExtraData quote = null;
-        Collection<Platforms> pla = null;
         Map<Currency, Collection<Platforms>> currencies = null;
-        ActorIdentity broker = null;
-        ActorExtraData actorExtraData = null;
-
 
         KeyPair key = new ECCKeyPair();
-        broker = new ActorExtraDataIdentity("Pedro", key.getPublicKey(), null);
-        quotes = new ArrayList<>();
-        quote = new QuotesExtraDataInformation(UUID.randomUUID(), CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, 348000f); quotes.add(quote);
-        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 0.00034f); quotes.add(quote);
+        ActorIdentity broker_1 = new ActorExtraDataIdentity("Pedro", key.getPublicKey(), null);
+        Collection<QuotesExtraData> quotes_1 = new ArrayList<>();
+        QuotesExtraData quote = null;
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, 348000f); quotes_1.add(quote);
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 0.00034f); quotes_1.add(quote);
 
-        currencies = new HashMap<Currency, Collection<Platforms>>();
-        pla = new ArrayList<>();
-            pla.add(Platforms.BANKING_PLATFORM);
-            pla.add(Platforms.CASH_PLATFORM);
-        currencies.put(FiatCurrency.VENEZUELAN_BOLIVAR, pla);
-
-        actorExtraData = new ActorExtraDataInformation(customer, broker, quotes, currencies);
+        ActorExtraData actorExtraData_1 = new ActorExtraDataInformation(customer, broker_1, quotes_1, currencies);
 
         try {
-            this.dao.createCustomerExtraData(actorExtraData);
+            this.dao.createCustomerExtraData(actorExtraData_1);
+            this.dao.createActorQuotes(actorExtraData_1);
         } catch (CantCreateNewActorExtraDataException e) {
             System.out.println("VLZ: Error creando el registro 1");
         }
 
+        try {
+            this.dao.getActorExtraDataByPublicKey(customer, broker_1.getPublicKey());
+        } catch (CantGetListActorExtraDataException e) {
+            System.out.println("VLZ: Error obteniendo el registro 1");
+        }
+
         // ===========================================================================================================================================================
 
-        broker = new ActorExtraDataIdentity("Juan", key.getPublicKey(), null);
-        quotes = new ArrayList<>();
-        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR, 1000f); quotes.add(quote);
-        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 0.001f); quotes.add(quote);
+        ActorIdentity broker_2 = new ActorExtraDataIdentity("Juan", key.getPublicKey(), null);
+        Collection<QuotesExtraData> quotes_2 = new ArrayList<>();
+        QuotesExtraData quote_2 = null;
+        quote_2 = new QuotesExtraDataInformation(UUID.randomUUID(), CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, 348000f); quotes_2.add(quote_2);
+        quote_2 = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 0.00034f); quotes_2.add(quote_2);
 
-        currencies = new HashMap<Currency, Collection<Platforms>>();
-        pla = new ArrayList<>();
-        pla.add(Platforms.BANKING_PLATFORM);
-        currencies.put(FiatCurrency.US_DOLLAR, pla);
-
-        pla = new ArrayList<>();
-            pla.add(Platforms.BANKING_PLATFORM);
-            pla.add(Platforms.CASH_PLATFORM);
-        currencies.put(FiatCurrency.VENEZUELAN_BOLIVAR, pla);
-
-        actorExtraData = new ActorExtraDataInformation(customer, broker, quotes, currencies);
+        ActorExtraData actorExtraData_2 = new ActorExtraDataInformation(customer, broker_2, quotes_2, currencies);
 
         try {
-            this.dao.createCustomerExtraData(actorExtraData);
+            this.dao.createCustomerExtraData(actorExtraData_2);
+            this.dao.createActorQuotes(actorExtraData_2);
         } catch (CantCreateNewActorExtraDataException e) {
-            System.out.println("VLZ: Error creando el registro 2");
+            System.out.println("VLZ: Error creando el registro 1");
+        }
+
+        try {
+            this.dao.getActorExtraDataByPublicKey(customer, broker_2.getPublicKey());
+        } catch (CantGetListActorExtraDataException e) {
+            System.out.println("VLZ: Error obteniendo el registro 1");
         }
     }
 

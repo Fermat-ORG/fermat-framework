@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -136,8 +137,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -268,7 +269,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints), assetAmount);
+                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, Data.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };

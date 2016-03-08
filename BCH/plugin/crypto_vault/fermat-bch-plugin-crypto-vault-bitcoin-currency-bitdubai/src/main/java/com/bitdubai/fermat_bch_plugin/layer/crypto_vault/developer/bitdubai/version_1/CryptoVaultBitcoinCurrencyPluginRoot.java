@@ -23,11 +23,18 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -36,11 +43,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCry
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -156,12 +162,12 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
                     this.pluginFileSystem,
                     this.pluginDatabaseSystem,
                     deviceUserLoggedPublicKey,
-                    this.bitcoinNetworkManager);
+                    this.bitcoinNetworkManager,
+                    this.errorManager);
 
-        } catch (InvalidSeedException e) {
-            e.printStackTrace();
-        } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Error starting plugin Bitcoin Vault");
         }
 
         /**
@@ -262,6 +268,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         try {
             trHash = bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, fermatTrId, addressTo, satoshis, op_Return, false);
         } catch (CouldNotSendMoneyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CouldNotGenerateTransactionException(CouldNotGenerateTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't be stored at the cryptoNetwork", null);
         }
         return trHash;
@@ -276,5 +283,62 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     @Override
     public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
         return bitcoinCurrencyCryptoVaultManager.getMnemonicCode();
+    }
+
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    @Override
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return bitcoinCurrencyCryptoVaultManager.signTransaction(draftTransaction);
+    }
+
+    /**
+     * Adds more inputs and outputs to a draft transaction
+     * @param draftTransaction the incomplete draft transaction
+     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
+     * @param addressTo the address to that will receive the bitcoins.
+     * @return the draft transaction with the added values.
+     * @throws CantCreateDraftTransactionException
+     */
+    @Override
+    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        return bitcoinCurrencyCryptoVaultManager.addInputsToDraftTransaction(draftTransaction, valueToSend, addressTo);
+    }
+
+    /**
+     * Returns a stored draft transaction
+     * @param blockchainNetworkType
+     * @param txHash
+     * @return
+     * @throws CantGetDraftTransactionException
+     */
+    @Override
+    public DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException{
+        return bitcoinCurrencyCryptoVaultManager.getDraftTransaction(blockchainNetworkType, txHash);
+    }
+
+    /**
+     * Persists a draft transaction in the vault.
+     * @param draftTransaction the draft Transaction to store
+     * @throws CantStoreBitcoinTransactionException
+     */
+    @Override
+    public void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException {
+        try {
+            bitcoinCurrencyCryptoVaultManager.storeDraftTransaction(draftTransaction);
+        } catch (Exception e){
+            CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(
+                    CantStoreBitcoinTransactionException.DEFAULT_MESSAGE,
+                    e,
+                    "There was an error persisting the transaction on the vault",
+                    "IO Error");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 }

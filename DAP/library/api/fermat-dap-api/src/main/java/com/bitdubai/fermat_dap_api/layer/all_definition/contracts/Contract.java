@@ -9,5 +9,6 @@ import java.util.List;
 public interface Contract {
     List<ContractProperty> getContractProperties();
     ContractProperty getContractProperty(String propertyName);
-    void setContractProperty (ContractProperty contractProperty) throws com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+
+    void addPropertyValue(String propertyName, Object propertyValue) throws com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 }

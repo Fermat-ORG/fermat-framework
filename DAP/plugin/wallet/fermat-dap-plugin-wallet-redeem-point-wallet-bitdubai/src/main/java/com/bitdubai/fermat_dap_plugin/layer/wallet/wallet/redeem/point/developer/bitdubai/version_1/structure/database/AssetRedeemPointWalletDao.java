@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -24,10 +23,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -59,30 +62,27 @@ import java.util.UUID;
 /**
  * Created by franklin on 14/10/15.
  */
-public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
-    private PluginFileSystem pluginFileSystem;
-    private UUID plugin;
-    private Database database;
-    private ActorAssetUserManager actorAssetUserManager;
+public class AssetRedeemPointWalletDao {
 
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID plugin;
+    private final Database database;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final ActorAssetIssuerManager issuerManager;
+    private final ActorAssetRedeemPointManager redeemPointManager;
 
     public AssetRedeemPointWalletDao(Database database,
                                      PluginFileSystem pluginFileSystem,
                                      UUID plugin,
-                                     ActorAssetUserManager actorAssetUserManager) {
+                                     ActorAssetUserManager actorAssetUserManager,
+                                     ActorAssetIssuerManager issuerManager,
+                                     ActorAssetRedeemPointManager redeemPointManager) {
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = plugin;
         this.actorAssetUserManager = actorAssetUserManager;
-    }
-
-    public void setPlugin(UUID plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
+        this.issuerManager = issuerManager;
+        this.redeemPointManager = redeemPointManager;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException {
@@ -428,6 +428,24 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
+
+    public List<AssetRedeemPointWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+        try {
+            DatabaseTable redeemPointWalletTable = getAssetRedeemPointWalletTable();
+            redeemPointWalletTable.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            redeemPointWalletTable.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            redeemPointWalletTable.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+            redeemPointWalletTable.loadToMemory();
+            return createTransactionList(redeemPointWalletTable.getRecords());
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        } catch (Exception exception) {
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+
     public List<AssetRedeemPointWalletTransaction> getTransactionsByTransactionType(TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetRedeemPointWalletTable();
@@ -512,14 +530,15 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         String actorToPublicKey = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_TO_COLUMN_NAME);
         Actors actorFromType = Actors.getByCode(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_TYPE_COLUMN_NAME));
         Actors actorToType = Actors.getByCode(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_TO_TYPE_COLUMN_NAME));
+        DAPActor actorFrom = ActorUtils.getActorFromPublicKey(actorFromPublicKey, actorFromType, actorAssetUserManager, redeemPointManager, issuerManager);
+        DAPActor actorTo = ActorUtils.getActorFromPublicKey(actorToPublicKey, actorToType, actorAssetUserManager, redeemPointManager, issuerManager);
         BalanceType balanceType = BalanceType.getByCode(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME));
         long amount = record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_AMOUNT_COLUMN_NAME);
         long runningBookBalance = record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         long runningAvailableBalance = record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long timeStamp = record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME);
         String memo = record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_MEMO_COLUMN_NAME);
-        return new AssetRedeemPointWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
+        return new AssetRedeemPointWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
 
 
@@ -655,9 +674,9 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     private ActorAssetUser getActorAssetUser(final String userPublicKey) {
         ActorAssetUser actorAssetUser = null;
         try {
-            actorAssetUser = actorAssetUserManager.getActorRegisteredByPublicKey(userPublicKey);
+            actorAssetUser = actorAssetUserManager.getActorByPublicKey(userPublicKey);
         } catch (CantGetAssetUserActorsException | CantAssetUserActorNotFoundException e) {
-                System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
+            System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
             e.printStackTrace();
         }
         return actorAssetUser;

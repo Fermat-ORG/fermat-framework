@@ -23,7 +23,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -34,16 +40,18 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletBalance;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletTransactionWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetIssuerTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetIssuerWalletBalance;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetIssuerWalletTransactionWrapper;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetMovementImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,15 +68,20 @@ public class AssetIssuerWalletDao {
     public static final String PATH_DIRECTORY = "asset-issuer-swap/";//digital-asset-swap/"
     PluginFileSystem pluginFileSystem;
     UUID plugin;
+    private ActorAssetUserManager actorAssetUserManager;
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     private Database database;
 
-    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
         this.plugin = pluginId;
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
-
 
     /*
      * getBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
@@ -331,14 +344,15 @@ public class AssetIssuerWalletDao {
         String actorToPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME);
         Actors actorFromType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_TYPE_COLUMN_NAME));
         Actors actorToType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_TYPE_COLUMN_NAME));
+        DAPActor actorFrom = ActorUtils.getActorFromPublicKey(actorFromPublicKey, actorFromType, actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+        DAPActor actorTo = ActorUtils.getActorFromPublicKey(actorToPublicKey, actorToType, actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
         BalanceType balanceType = BalanceType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
         long amount = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME);
         long runningBookBalance = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         long runningAvailableBalance = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long timeStamp = record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME);
         String memo = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME);
-        return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
+        return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
 
     private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws CantExecuteAssetIssuerTransactionException {
@@ -617,6 +631,27 @@ public class AssetIssuerWalletDao {
         updateLongFieldByAssetPublicKey(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME, System.currentTimeMillis(), transactionId);
     }
 
+    public void newMovement(String assetPk, String fromPk, Actors fromType, String toPk, Actors toType, AssetMovementType type) throws CantSaveStatisticException {
+        String context = "ASSET PK: " + assetPk;
+        try {
+            DatabaseTable databaseTable = this.database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            DatabaseTableRecord assetStatisticRecord = databaseTable.getEmptyRecord();
+
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, UUID.randomUUID().toString());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, assetPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, fromPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE, fromType.getCode());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, toPk);
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE, toType.getCode());
+            assetStatisticRecord.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, type.getCode());
+            assetStatisticRecord.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, System.currentTimeMillis());
+
+            databaseTable.insertRecord(assetStatisticRecord);
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveStatisticException(exception, context, "Cannot insert a record in Asset Statistic Table");
+        }
+    }
+
     public DigitalAsset getAssetByPublicKey(String assetPublicKey) {
         try {
             return (DigitalAsset) XMLParser.parseXML(pluginFileSystem.getTextFile(plugin, PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent(), new DigitalAsset());
@@ -679,6 +714,50 @@ public class AssetIssuerWalletDao {
             return new Date(getAssetStatisticLongFieldByPk(txId, AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_USAGE_DATE_COLUMN_NAME));
         } catch (CantGetAssetStatisticException | RecordsNotFoundException e) {
             return null;
+        }
+    }
+
+    public List<AssetMovement> getAllMovementsForAsset(String aseetPk) throws CantGetAssetStatisticException {
+        String context = "Asset PK: " + aseetPk;
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, aseetPk, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseFilterOrder.DESCENDING);
+            assetStatisticTable.loadToMemory();
+            List<DatabaseTableRecord> records = assetStatisticTable.getRecords();
+            if (records.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+            List<AssetMovement> toReturn = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
+                toReturn.add(constructAssetMovementByRecord(record));
+            }
+            return toReturn;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, context, "Database error.");
+        }
+    }
+
+    public List<AssetMovement> getMovementsForType(AssetMovementType type) throws CantGetAssetStatisticException {
+
+        try {
+            DatabaseTable assetStatisticTable;
+            assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, type.toString(), DatabaseFilterType.EQUAL);
+            assetStatisticTable.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseFilterOrder.DESCENDING);
+            assetStatisticTable.loadToMemory();
+            List<DatabaseTableRecord> records = assetStatisticTable.getRecords();
+            if (records.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+            List<AssetMovement> toReturn = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
+                toReturn.add(constructAssetMovementByRecord(record));
+            }
+            return toReturn;
+        } catch (Exception e) {
+            throw new CantGetAssetStatisticException(e, null, "Database error.");
         }
     }
 
@@ -840,6 +919,64 @@ public class AssetIssuerWalletDao {
             throw new CantGetAssetStatisticException(e, context, "Database error.");
         }
     }
+
+    private AssetMovement constructAssetMovementByRecord(DatabaseTableRecord record) {
+        AssetMovementImpl assetMovement = new AssetMovementImpl();
+        String actorFromPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY);
+        Actors actorFromType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE));
+        String actorToPublicKey = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY);
+        Actors actorToType = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE));
+        DAPActor actorFrom = findActorByTypeAndPk(actorFromType, actorFromPublicKey);
+        DAPActor actorTo = findActorByTypeAndPk(actorToType, actorToPublicKey);
+        Date timeStamp = new Date(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP));
+        assetMovement.setActorFrom(actorFrom);
+        assetMovement.setActorTo(actorTo);
+        assetMovement.setTimestamp(timeStamp);
+        return assetMovement;
+    }
+
+    private DAPActor findActorByTypeAndPk(final Actors type, final String publicKey) {
+        try {
+            switch (type) {
+                case DAP_ASSET_ISSUER:
+                    return actorAssetIssuerManager.getActorByPublicKey(publicKey);
+                case DAP_ASSET_USER:
+                    return actorAssetUserManager.getActorByPublicKey(publicKey);
+                case DAP_ASSET_REDEEM_POINT:
+                    return actorAssetRedeemPointManager.getActorByPublicKey(publicKey);
+                default:
+                    throw new RuntimeException("UNKNOWN TYPE!!!");
+            }
+        } catch (Exception e) {
+            return constructUnknownActor(type, publicKey);
+        }
+    }
+
+
+    private DAPActor constructUnknownActor(final Actors type, final String publicKey) {
+        return new DAPActor() {
+            @Override
+            public String getActorPublicKey() {
+                return publicKey;
+            }
+
+            @Override
+            public String getName() {
+                return Validate.DEFAULT_STRING + " " + type.getCode();
+            }
+
+            @Override
+            public Actors getType() {
+                return Actors.DAP_ASSET_ISSUER;
+            }
+
+            @Override
+            public byte[] getProfileImage() {
+                return new byte[0];
+            }
+        };
+    }
+
 
     private void updateStringFieldByAssetPublicKey(String columnName, String value, UUID transactionId) throws CantGetAssetStatisticException, RecordsNotFoundException {
         String context = "Column Name: " + columnName + " - Transaction Id: " + transactionId + " - Value: " + value;

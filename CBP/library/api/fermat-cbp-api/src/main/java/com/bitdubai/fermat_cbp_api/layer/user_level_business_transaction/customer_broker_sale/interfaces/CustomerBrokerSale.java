@@ -70,7 +70,7 @@ public interface CustomerBrokerSale {
     void setTransactionStatus(TransactionStatus transactionStatus);
 
     /**
-     * The method <code>getCurrencyType</code> returns the currency type of the customer broker sale
+     * The method <code>getMoneyType</code> returns the currency type of the customer broker sale
      *
      * @return an String of the currency type
      */

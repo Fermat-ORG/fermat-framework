@@ -20,12 +20,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -34,8 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.In
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -48,11 +44,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_wpd_api.all_definition.events.WalletNavigationStructureDownloadedEvent;
+import com.bitdubai.fermat_wpd_api.all_definition.events.WalletUninstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
@@ -149,7 +149,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      *  Wallet instalation progress
      */
-    private InstalationProgress instalationProgress;;
+    private InstalationProgress instalationProgress;
 
     //para testear
    // private Map<String, byte[]> imagenes;
@@ -1010,7 +1010,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
                 String reponame = repository.getPath() + walletPublicKey +"/"; //+"skins/"+repository.getSkinName()+"/";
 
-                String filename = skinId.toString() + "_navigation_structure.xml";;
+                String filename = skinId.toString() + "_navigation_structure.xml";
 
                 //get Xml from disk
                 PluginTextFile layoutFile;

@@ -194,6 +194,8 @@ public enum Plugins implements FermatPluginsEnum {
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
+    ASSET_SELLER("ASSE"),
+    ASSET_BUYER("ASBU"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
     ASSET_TRANSMISSION          ("AST"),
@@ -295,11 +297,9 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM");
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
 
     // End  new Plugins
-
-    ;
 
     private final String code;
 
@@ -320,6 +320,10 @@ public enum Plugins implements FermatPluginsEnum {
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
+            case "ASSE":
+                return ASSET_SELLER;
+            case "ASBU":
+                return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -430,6 +434,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
+            case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
 
             default:
                 throw new InvalidParameterException(

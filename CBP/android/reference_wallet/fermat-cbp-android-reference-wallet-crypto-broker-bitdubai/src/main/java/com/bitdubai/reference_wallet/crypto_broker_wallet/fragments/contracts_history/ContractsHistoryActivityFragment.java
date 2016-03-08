@@ -101,19 +101,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        try {
-            CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.cbw_contract_history_menu, menu);
@@ -223,8 +210,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         if (moduleManager != null) {
             try {
                 data.addAll(TestData.getContractsHistory(filterContractStatus));
-                // TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
-
+                // TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 20, 0));
+                data.addAll(walletManager.getContractsHistory(filterContractStatus,20,0));
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)

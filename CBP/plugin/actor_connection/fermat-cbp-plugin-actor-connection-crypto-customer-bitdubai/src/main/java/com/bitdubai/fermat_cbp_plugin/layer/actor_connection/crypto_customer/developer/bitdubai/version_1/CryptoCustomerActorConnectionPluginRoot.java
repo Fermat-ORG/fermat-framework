@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.int
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorConnectionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorConnectionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -39,6 +41,10 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
@@ -54,6 +60,9 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin =  Plugins.CRYPTO_BROKER)
     private CryptoBrokerManager cryptoBrokerManagerNetworkService;
@@ -90,13 +99,19 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
                     cryptoBrokerManagerNetworkService,
                     dao,
                     errorManager,
+                    broadcaster,
                     this.getPluginVersionReference()
             );
 
-            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
-            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
+            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
+
+            FermatEventListener newListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            newListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            eventManager.addListener(newListener);
+            listenersAdded.add(newListener);
 
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,

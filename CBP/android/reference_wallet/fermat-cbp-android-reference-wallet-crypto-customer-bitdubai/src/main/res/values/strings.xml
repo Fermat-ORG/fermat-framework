@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_start_negotiation">Start Negotiation</string>
     <string name="add_a_note_button">ADD A NOTE</string>
+    <string name="add_cancel_negotiation_button">CANCEL NEGOTIATION</string>
     <string name="amount">Amount</string>
     <string name="arrow" translatable="false">arrow</string>
     <string name="at">\@</string>
@@ -17,12 +18,12 @@
     <string name="ccw_account_alias">Account Alias</string>
     <string name="ccw_account_number">Account Number</string>
     <string name="ccw_action_filter">Filter</string>
-    <string name="ccw_add_bank_account">Add Bank Account</string>
+    <string name="ccw_add_bank_account">+ Add Bank Account</string>
     <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
     <string name="ccw_automatic_restock">Automatic Restock</string>
     <string name="ccw_address_line_1">Address line 1</string>
     <string name="ccw_address_line_2">Address line 2</string>
-    <string name="ccw_add_location">Add a Location</string>
+    <string name="ccw_add_location">+ Add a Location</string>
     <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
     <string name="ccw_amount_to_buy">Amount to Buy</string>
     <string name="ccw_amount_title">Amount: </string>
@@ -34,6 +35,7 @@
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
     <string name="ccw_cancel_caps">CANCEL</string>
+    <string name="ccw_cancellation_negotiation">Cancellation Negotiation:</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
     <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
@@ -75,6 +77,7 @@
     <string name="ccw_no_selected_bank_account">No Selected Bank Accounts</string>
     <string name="ccw_no_selected_providers">No Selected Providers</string>
     <string name="ccw_no_selected_wallets">No Selected Wallets</string>
+    <string name="ccw_open_negotiation_details_cancel_negotiation_menu_text">Cancel Negotiation</string>
     <string name="ccw_price">Price</string>
     <string name="ccw_providers">Providers</string>
     <string name="ccw_save">Save</string>
@@ -114,8 +117,8 @@
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
     <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
 
-    <string name="delivery_date_title">Date To Delivery:</string>
-    <string name="delivery_date_text">Delivery Date </string>
+    <string name="delivery_date_title">Delivery Date</string>
+    <string name="delivery_date_text">Date To Deliver:</string>
 
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>

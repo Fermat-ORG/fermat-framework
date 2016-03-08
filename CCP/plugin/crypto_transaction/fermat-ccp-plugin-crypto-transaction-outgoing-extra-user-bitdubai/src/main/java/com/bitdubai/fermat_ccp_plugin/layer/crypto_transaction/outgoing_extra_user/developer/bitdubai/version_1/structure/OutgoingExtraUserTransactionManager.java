@@ -70,7 +70,7 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
         try {
             dao.initialize();
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
             if (cryptoAmount > funds) {
 
                 throw new InsufficientFundsException(

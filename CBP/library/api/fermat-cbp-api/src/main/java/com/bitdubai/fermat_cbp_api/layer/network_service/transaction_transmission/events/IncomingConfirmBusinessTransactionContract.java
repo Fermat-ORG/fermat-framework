@@ -7,20 +7,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
  */
-public class IncomingConfirmBusinessTransactionContract extends GenericCBPFermatEvent {
-
-    PlatformComponentType destinationPlatformComponentType;
+public class IncomingConfirmBusinessTransactionContract extends AbstractBusinessTransactionEvent {
 
     public IncomingConfirmBusinessTransactionContract(EventType eventType) {
         super(eventType);
     }
 
-    public PlatformComponentType getDestinationPlatformComponentType(){
-        return destinationPlatformComponentType;
-    }
-
-    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
-        this.destinationPlatformComponentType = destinationPlatformComponentType;
-    }
 
 }

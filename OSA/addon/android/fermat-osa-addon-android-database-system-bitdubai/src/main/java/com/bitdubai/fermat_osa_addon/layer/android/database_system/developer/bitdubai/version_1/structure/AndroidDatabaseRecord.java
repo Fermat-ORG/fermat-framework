@@ -60,7 +60,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     @Override
     public long getLongValue(String columnName) {
         try {
-            if (values.get(columnName) != null)
+            if (values.get(columnName).getValue() != null)
                 return Long.parseLong(values.get(columnName).getValue());
             else
                 return 0;
@@ -101,11 +101,14 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
      */
     @Override
     public double getDoubleValue(String columnName) {
-
-        if (values.get(columnName) != null)
-            return Double.parseDouble(values.get(columnName).getValue());
-        else
+        try {
+            if (values.get(columnName).getValue() != null)
+                return Double.parseDouble(values.get(columnName).getValue());
+            else
+                return 0;
+        } catch (Exception e) {
             return 0;
+        }
     }
 
     /**

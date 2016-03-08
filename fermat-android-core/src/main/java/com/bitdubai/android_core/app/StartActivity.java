@@ -80,7 +80,7 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
             fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +202,12 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
-        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
+
     }
 
     @Override
@@ -219,24 +224,7 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
-    @Override
-    protected void onStop() {
-        try {
-            super.onStop();
 
-            /**
-             * Service
-             */
-//            if (mServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mServiceConnected = false;
-//            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onStart() {

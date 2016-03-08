@@ -171,10 +171,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
             List<DatabaseTableRecord> records = metadataTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return true;
-            else
-               return false;
+              return !records.isEmpty();
 
         } catch (CantLoadTableToMemoryException exception) {
 
@@ -552,66 +549,64 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
         try {
 
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = getMetadata(transmission_id);
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
-            update(cryptoTransmissionMetadata);
+            DatabaseTable cryptoTransmissiontTable = getDatabaseTable();
 
-        } catch (CantUpdateRecordDataBaseException e) {
-              CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Error updating Transmission Record, protocol state");
-            throw cantUpdateRecordDataBaseException;
+            cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmission_id, DatabaseFilterType.EQUAL);
 
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoTransmissionMetadataException e) {
-            e.printStackTrace();
+            cryptoTransmissiontTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, cryptoTransmissionProtocolState.getCode());
+
+                cryptoTransmissiontTable.updateRecord(record);
+            }
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Error updating Transmission Record, protocol state");
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Error Load Transmission table");
+
         }
 
     }
 
-    public CryptoTransmissionMetadataRecord changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
+    public void changeCryptoTransmissionProtocolStateAndNotificationState(UUID transaction_id, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) throws CantUpdateRecordDataBaseException {
         if (transaction_id == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
         try {
 
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = getMetadata(transaction_id);
-            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
-            cryptoTransmissionMetadata.changeMetadataState(cryptoTransmissionMetadataState);
-            cryptoTransmissionMetadata.confirmRead();
 
-            update(cryptoTransmissionMetadata);
+            DatabaseTable cryptoTransmissiontTable = getDatabaseTable();
 
-            return cryptoTransmissionMetadata;
+            cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transaction_id, DatabaseFilterType.EQUAL);
 
-        } catch (CantUpdateRecordDataBaseException e) {
+            cryptoTransmissiontTable.loadToMemory();
 
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Error updating Transmission Record, protocol state");
-            throw cantUpdateRecordDataBaseException;
+            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
 
-        } catch (PendingRequestNotFoundException e) {
-            throw new PendingRequestNotFoundException(e,"not found","");
-        } catch (CantGetCryptoTransmissionMetadataException e) {
-            throw new PendingRequestNotFoundException(e,"not found","");
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, cryptoTransmissionProtocolState.getCode());
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, cryptoTransmissionMetadataState.getCode());
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, "true");
+
+                cryptoTransmissiontTable.updateRecord(record);
+            }
+
+
+        } catch (CantUpdateRecordException e) {
+           throw  new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e,"","Cant update transmission record");
+        } catch (CantLoadTableToMemoryException e) {
+            throw  new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e,"","Cant Load transmission table on memoru");
         }
 
 
-    }
-
-
-    public void changeTransactionStateAndProtocolState(UUID transactionId,CryptoTransmissionMetadataState cryptoTransmissionMetadataState, CryptoTransmissionProtocolState cryptoTransmissionProtocolState) {
-        try {
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = getMetadata(transactionId);
-            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(cryptoTransmissionProtocolState);
-            cryptoTransmissionMetadataRecord.changeMetadataState(cryptoTransmissionMetadataState);
-            update(cryptoTransmissionMetadataRecord);
-        } catch (CantGetCryptoTransmissionMetadataException e) {
-            e.printStackTrace();
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -721,30 +716,32 @@ public class CryptoTransmissionMetadataDAO_V2 {
     }
 
     //TODO: actualiza el estado de el flag de visto a true.
-    public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetCryptoTransmissionMetadataException {
+    public void confirmReception(UUID transactionID) throws CantGetCryptoTransmissionMetadataException {
         try {
 
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = getMetadata(transactionID);
+            DatabaseTable cryptoTransmissiontTable = getDatabaseTable();
 
-            cryptoTransmissionMetadataRecord.confirmRead();
+            cryptoTransmissiontTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
 
-            update(cryptoTransmissionMetadataRecord);
+            cryptoTransmissiontTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoTransmissiontTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, "true");
+
+                cryptoTransmissiontTable.updateRecord(record);
+            }
 
 
 
-        } catch (CantGetCryptoTransmissionMetadataException e) {
-            throw new CantGetCryptoTransmissionMetadataException("",e, "Check the cause.","");
-        } catch (PendingRequestNotFoundException e) {
-            throw new PendingRequestNotFoundException(null, "RequestID: "+transactionID.toString(), "Can not find an address exchange request with the given request id.");
-        } catch (CantUpdateRecordDataBaseException e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The record do not exist";
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
-            throw cantUpdateRecordDataBaseException;
-
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetCryptoTransmissionMetadataException(CantGetCryptoTransmissionMetadataException.DEFAULT_MESSAGE,e, "Load table Error","");
+        } catch (CantUpdateRecordException e) {
+            throw new CantGetCryptoTransmissionMetadataException(CantGetCryptoTransmissionMetadataException.DEFAULT_MESSAGE,e, "Update Table error","");
+        } catch (Exception e) {
+            throw new CantGetCryptoTransmissionMetadataException(CantGetCryptoTransmissionMetadataException.DEFAULT_MESSAGE,e, "Check the cause.","");
         }
     }
 
@@ -755,7 +752,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
 
 
-    public  List<CryptoTransmissionMetadataRecord> getNotSentRecord() throws CantReadRecordDataBaseException {
+    public  void changeStatusNotSentMessage() throws CantReadRecordDataBaseException {
 
         try {
 
@@ -770,55 +767,58 @@ public class CryptoTransmissionMetadataDAO_V2 {
 
 
             for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
-                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
-                list.add(outgoingTemplateNetworkServiceMessage);
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME,  CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
+                cryptoTransmissiontTable.updateRecord(record);
             }
 
-            return list;
+
 
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
-        } catch (InvalidParameterException e) {
+        } catch (CantUpdateRecordException e) {
             throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
 
         }
 
     }
 
-    public List<CryptoTransmissionMetadataRecord> getNotSentRecord(String remoteIdentityPublicKey) throws CantReadRecordDataBaseException {
+    public  void changeStatusNotSentMessage(String identityPublicKey) throws CantReadRecordDataBaseException {
+
         try {
 
             List<CryptoTransmissionMetadataRecord> list = new ArrayList<>();
 
-            DatabaseTable cryptoTransmissiontTable =getDatabaseTable();
+            DatabaseTable cryptoTransmissiontTable = getDatabaseTable();
 
-            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME,remoteIdentityPublicKey,DatabaseFilterType.EQUAL);
             cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
             cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            cryptoTransmissiontTable.addStringFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME,identityPublicKey,DatabaseFilterType.EQUAL);
+
 
             cryptoTransmissiontTable.loadToMemory();
 
 
             for (DatabaseTableRecord record : cryptoTransmissiontTable.getRecords()) {
-                CryptoTransmissionMetadataRecord outgoingTemplateNetworkServiceMessage = buildCryptoTransmissionRecord(record);
-                list.add(outgoingTemplateNetworkServiceMessage);
+                record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME,  CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
+                cryptoTransmissiontTable.updateRecord(record);
             }
 
-            return list;
+
 
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
-        } catch (InvalidParameterException e) {
+        } catch (CantUpdateRecordException e) {
             throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get crypto transmission record data.");
 
         }
+
     }
 
-    public void doneTransaction(UUID transactionId) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
+  public void doneTransaction(UUID transactionId) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException {
         changeCryptoTransmissionProtocolStateAndNotificationState(
                 transactionId,
                 CryptoTransmissionProtocolState.DONE,

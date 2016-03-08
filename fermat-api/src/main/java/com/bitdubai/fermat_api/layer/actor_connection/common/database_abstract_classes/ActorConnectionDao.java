@@ -168,65 +168,6 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
     }
 
     // TODO ADD UPDATETIME
-    public void changeConnectionState(final Z               linkedIdentity ,
-                                      final String          publicKey      ,
-                                      final Actors          actorType      ,
-                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
-                                                                                    ActorConnectionNotFoundException {
-
-        if (linkedIdentity == null)
-            throw new CantChangeActorConnectionStateException("", "The linkedIdentity is required, can not be null");
-
-        if (publicKey == null)
-            throw new CantChangeActorConnectionStateException("", "The publicKey is required, can not be null");
-
-        if (actorType == null)
-            throw new CantChangeActorConnectionStateException("", "The actorType is required, can not be null");
-
-        try {
-
-            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
-
-            actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-
-            actorConnectionsTable.loadToMemory();
-
-            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
-
-            if (!records.isEmpty()) {
-
-                final DatabaseTableRecord record = records.get(0);
-
-                record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
-
-                actorConnectionsTable.updateRecord(record);
-
-            } else
-                throw new ActorConnectionNotFoundException(
-                        "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
-                        "Cannot find an actor connection request with that requestId."
-                );
-
-        } catch (final CantUpdateRecordException e) {
-
-            throw new CantChangeActorConnectionStateException(
-                    e,
-                    "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
-                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
-            );
-        } catch (final CantLoadTableToMemoryException e) {
-
-            throw new CantChangeActorConnectionStateException(
-                    e,
-                    "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType
-                    , "Exception not handled by the plugin, there is a problem in database and i cannot load the table."
-            );
-        }
-    }
-
-    // TODO ADD UPDATETIME
     public void changeConnectionState(final UUID            connectionId   ,
                                       final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
                                                                                     ActorConnectionNotFoundException {

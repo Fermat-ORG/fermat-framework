@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 
@@ -36,11 +36,11 @@ public interface StockTransaction {
     TransactionType getTransactionType();
 
     /**
-     * The method <code>getCurrencyType</code> returns the currency type
+     * The method <code>getMoneyType</code> returns the currency type
      *
-     * @return CurrencyType
+     * @return MoneyType
      */
-    CurrencyType getCurrencyType();
+    MoneyType getMoneyType();
 
     /**
      * The method <code>getMerchandise</code> returns the merchandise
@@ -97,4 +97,18 @@ public interface StockTransaction {
      * @return OriginTransaction
      */
     OriginTransaction getOriginTransaction();
+
+    /**
+     * The method <code>getOriginTransactionId</code> returns the origin transaction
+     *
+     * @return String
+     */
+    String getOriginTransactionId();
+
+    /**
+     * The method <code>getSeen</code> returns the origin transaction
+     *
+     * @return boolean
+     */
+    boolean getSeen();
 }

@@ -18,6 +18,16 @@ public class MatchingEngineMiddlewareDatabaseConstants {
      */
     public static final String MATCHING_ENGINE_MIDDLEWARE_DATABASE_NAME              = "matching_engine_middleware";
 
+
+    /**
+     * Wallets database table definition.
+     */
+    public static final String WALLETS_TABLE_NAME                                    = "wallets"                   ;
+
+    public static final String WALLETS_PUBLIC_KEY_COLUMN_NAME                        = "public_key"                ;
+
+    public static final String WALLETS_FIRST_KEY_COLUMN                              = "public_key"                ;
+
     /**
      * Earning Pair database table definition.
      */
@@ -28,7 +38,9 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME        = "earning_currency_type"     ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME              = "linked_currency"           ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME         = "linked_currency_type"      ;
+    public static final String EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME   = "earnings_wallet_public_key"         ;
     public static final String EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME            = "wallet_public_key"         ;
+    public static final String EARNING_PAIR_STATE_COLUMN_NAME                        = "state"                     ;
 
     public static final String EARNING_PAIR_FIRST_KEY_COLUMN                         = "id"                        ;
 
@@ -51,6 +63,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String INPUT_TRANSACTION_TABLE_NAME                          = "input_transaction"         ;
 
     public static final String INPUT_TRANSACTION_ID_COLUMN_NAME                      = "id"                        ;
+    @Deprecated // todo this field will be used to reference the origin of the transaction i need a type too PURE_TRANSACTION / PARTIAL_TRANSACTION
     public static final String INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME   = "origin_transaction_id"     ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME         = "currency_giving"           ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME    = "currency_giving_type"      ;

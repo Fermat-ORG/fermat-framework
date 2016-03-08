@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkEventsAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -115,7 +117,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         /**
          * instantiate the network Manager
          */
-        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
+        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId, this.errorManager);
 
         /**
          * Start the agent that will search for pending transactions to be notified.
@@ -124,6 +126,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         try {
             bitcoinCryptoNetworkEventsAgent.start();
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant start BitcoinCryptoNetworkEventsAgent agent.", null);
         }
 
@@ -145,6 +148,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         try {
             bitcoinCryptoNetworkManager.monitorNetworkFromKeyList(cryptoVault, blockchainNetworkTypes, keyList);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantMonitorBitcoinNetworkException (CantMonitorBitcoinNetworkException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -178,24 +182,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         return bitcoinCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
-    }
-
-    @Override
-    public List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCryptoNetworkManager.getUnspentBitcoinTransactions(blockchainNetworkType);
-    }
-
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHash the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        return  bitcoinCryptoNetworkManager.getCryptoTransactionFromBlockChain(txHash, blockHash);
     }
 
     /**

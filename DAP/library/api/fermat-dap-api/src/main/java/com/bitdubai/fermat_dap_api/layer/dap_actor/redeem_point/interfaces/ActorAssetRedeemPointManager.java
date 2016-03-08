@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 
 import java.util.List;
@@ -23,7 +27,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantGetAssetRedeemPointActorsException
      * @throws CantAssetRedeemPointActorNotFoundException
      */
-    ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
+    ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity
@@ -33,7 +37,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @param assetRedeemPointActorprofileImage             Referred to the Identity profileImage
      * @throws CantCreateActorRedeemPointException
      */
-    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException;
+    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
@@ -64,6 +68,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      */
     ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException;
 
+    DAPConnectionState getActorRedeemPointRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
     /**
      * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
      * and used in Sub App Community
@@ -88,5 +93,9 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantConnectToActorAssetUserException
      */
     void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException;
+
+    void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws RedeemPointNotFoundException, CantUpdateRedeemPointException;
+
+    void updateRedeemPointDAPConnectionStateActorNetworService(String actorPublicKey, DAPConnectionState state) throws CantUpdateRedeemPointException, RedeemPointNotFoundException;
 
 }

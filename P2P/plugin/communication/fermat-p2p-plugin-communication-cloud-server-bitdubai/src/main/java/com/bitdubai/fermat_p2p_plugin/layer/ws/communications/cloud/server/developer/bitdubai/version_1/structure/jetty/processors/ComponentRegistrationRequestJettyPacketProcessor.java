@@ -32,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-import javax.websocket.CloseReason;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestJettyPacketProcessor</code> this
  * class process the FermatPacket of type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_REGISTRATION_REQUEST</code>
@@ -428,7 +426,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
         LOG.info(" Moving "+profilesInStandBy.size()+" references from StandBy cache To Registers Caches");
 
-        Iterator<PlatformComponentProfile> iterable = (Iterator<PlatformComponentProfile>) profilesInStandBy.iterator();
+        Iterator<PlatformComponentProfile> iterable = profilesInStandBy.iterator();
 
         while (iterable.hasNext()){
 

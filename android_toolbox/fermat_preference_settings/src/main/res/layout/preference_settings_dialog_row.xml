@@ -12,6 +12,7 @@
         android:textSize="15sp"
         android:paddingLeft="24dp"
         android:paddingTop="24dp"
-        android:id="@+id/txt_settings_name"/>
+        android:id="@+id/txt_settings_name"
+        android:textColor="@color/color_black"/>
 
 </LinearLayout>

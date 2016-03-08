@@ -6,4 +6,6 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="developer_sub_app_status_bar">#fbb336</color>
 
+    <color name="developer_sub_app_principal">#d07b62</color>
+
 </resources>

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -29,14 +30,17 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletImpl;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantDeliveryDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional.AssetUserWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -61,6 +65,15 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager userManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    private ActorAssetIssuerManager issuerManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    private ActorAssetRedeemPointManager redeemPointManager;
+
     public AssetUserWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -68,7 +81,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
     private List<UUID> userWallets = new ArrayList<>();
     public static final String PATH_DIRECTORY = "asset-user-swap/";
-    private static final String walletPublicKey = "walletPublicKeyTest";
+    private static final String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
     private boolean existsWallet = false;
     private AssetUserWallet assetUserWallet; //We will use this, I swear.
 
@@ -93,10 +106,10 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetUserWalletImpl assetIssuerWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, userManager, issuerManager, redeemPointManager);
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
-            assetIssuerWallet.initialize(internalAssetIssuerWalletId);
-            return assetIssuerWallet;
+            userWallet.initialize(internalAssetIssuerWalletId);
+            return userWallet;
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
@@ -106,8 +119,8 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetUserWalletImpl assetIssuerWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
-            UUID internalAssetIssuerWalletId = assetIssuerWallet.create(walletPublicKey, networkType);
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, userManager, issuerManager, redeemPointManager);
+            UUID internalAssetIssuerWalletId = userWallet.create(walletPublicKey, networkType);
             userWallets.add(internalAssetIssuerWalletId);
         } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

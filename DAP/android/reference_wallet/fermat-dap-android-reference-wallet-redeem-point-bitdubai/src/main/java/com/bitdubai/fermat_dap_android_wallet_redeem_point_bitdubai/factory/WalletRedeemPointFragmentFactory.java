@@ -5,6 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointDetailActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointDetailTransactionsFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointHistoryActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointStadisticsActivityFragment;
@@ -42,8 +43,11 @@ public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<Rede
                 case DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY:
                     currentFragment = new RedeemPointStadisticsActivityFragment();
                     break;
-                case DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY:
+                case DAP_WALLET_REDEEM_POINT_DETAILS_USERS_TAB:
                     currentFragment = new RedeemPointDetailActivityFragment();
+                    break;
+                case DAP_WALLET_REDEEM_POINT_DETAILS_TRANSACTIONS_TAB:
+                    currentFragment = new RedeemPointDetailTransactionsFragment();
                     break;
                 case DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK:
                     currentFragment = new SettingsMainNetworkFragment();

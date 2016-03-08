@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
@@ -10,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
@@ -75,7 +74,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -116,6 +115,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
             }
         }
     }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -157,7 +157,6 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
@@ -190,11 +189,11 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                     case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
 
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.CONFIRMED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.REJECTED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }
@@ -208,28 +207,32 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.CREDIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 cashMoneyTransaction.getTransactionId(),
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.CREDIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         //TODO:Solo para testear
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
@@ -237,6 +240,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+
 
 
                         break;
@@ -261,6 +265,8 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
         } catch (CantGetHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

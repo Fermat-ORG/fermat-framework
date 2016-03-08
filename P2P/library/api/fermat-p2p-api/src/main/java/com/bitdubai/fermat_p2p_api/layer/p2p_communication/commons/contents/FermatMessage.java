@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
@@ -42,6 +44,34 @@ public interface FermatMessage {
     public String getReceiver();
 
     /**
+     * Get the Sender PlatformComponentType
+     *
+     * @return PlatformComponentType
+     */
+    PlatformComponentType getSenderType();
+
+    /**
+     * Get the Receiver PlatformComponentType
+     *
+     * @return PlatformComponentType
+     */
+    PlatformComponentType getReceiverType();
+
+    /**
+     * Get the Sender NetworkServiceType
+     *
+     * @return NetworkServiceType
+     */
+    NetworkServiceType getSenderNsType();
+
+    /**
+     * Get the Receiver NetworkServiceType
+     *
+     * @return NetworkServiceType
+     */
+    NetworkServiceType getReceiverNsType();
+
+    /**
      * Get the Content
      *
      * @return String
@@ -61,6 +91,16 @@ public interface FermatMessage {
      * @return Timestamp
      */
     public Timestamp getShippingTimestamp();
+
+    /**
+     * Get the FailCount, this value indicate
+     * when try to send a message an fail
+     *
+     * Note: This is only for outgoing message
+     *
+     * @return
+     */
+    public int getFailCount();
 
     /**
      * Get the FermatMessagesStatus

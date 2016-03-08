@@ -51,8 +51,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
@@ -101,8 +100,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
@@ -140,7 +138,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
         BitcoinWalletWallet bitcoinWalletWallet = null;
         try {
             bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds) {
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balance");

@@ -7,4 +7,9 @@
         android:icon="@drawable/add_identity_icon"
         android:title="Add"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_help"
+        android:icon="@drawable/help_icon_identity_broker"
+        android:title="Add"
+        app:showAsAction="ifRoom" />
 </menu>

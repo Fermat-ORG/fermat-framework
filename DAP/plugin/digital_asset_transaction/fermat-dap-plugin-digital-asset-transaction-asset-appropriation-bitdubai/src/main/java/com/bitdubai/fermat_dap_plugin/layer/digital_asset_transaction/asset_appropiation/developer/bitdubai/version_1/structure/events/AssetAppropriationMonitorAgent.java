@@ -35,13 +35,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
@@ -54,6 +54,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -231,7 +232,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
                                 AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
                                 //TODO REMOVE HARDCODE.
-                                AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", contentMessage.getNetworkType());
+                                AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, contentMessage.getNetworkType());
                                 wallet.assetAppropriated(contentMessage.getTransactionId(), contentMessage.getUserThatAppropriate());
                             }
                         }
@@ -291,12 +292,14 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         if (cryptoTransaction == null) continue;
                         AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                         AssetUserWalletBalance balance = userWallet.getBalance();
+                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                 cryptoTransaction,
-                                record.digitalAsset().getPublicKey(),
+                                mySelf.getActorPublicKey(),
                                 Actors.DAP_ASSET_USER,
-                                record.addressTo().getAddress(),
-                                Actors.INTRA_USER);
+                                mySelf.getActorPublicKey(),
+                                Actors.DAP_ASSET_USER,
+                                WalletUtilities.DEFAULT_MEMO_APPROPRIATION);
                         balance.debit(walletRecord, BalanceType.AVAILABLE);
                         dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                         break;
@@ -307,14 +310,16 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             case IRREVERSIBLE:
                                 CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                                 if (cryptoTransaction == null) continue;
+                                ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                                 AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                                 AssetUserWalletBalance balance = userWallet.getBalance();
                                 AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                         cryptoTransaction,
-                                        record.digitalAsset().getPublicKey(),
+                                        mySelf.getActorPublicKey(),
                                         Actors.DAP_ASSET_USER,
-                                        record.addressTo().getAddress(),
-                                        Actors.INTRA_USER);
+                                        mySelf.getActorPublicKey(),
+                                        Actors.DAP_ASSET_USER,
+                                        WalletUtilities.DEFAULT_MEMO_APPROPRIATION);
                                 balance.debit(walletRecord, BalanceType.BOOK);
                                 dao.updateStatusSendingMessage(record.transactionRecordId());
                                 break;
@@ -338,7 +343,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     metadata.getDigitalAsset().getIdentityAssetIssuer().getPublicKey());
             CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, metadata);
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer);
+            DAPMessage message = new DAPMessage(new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer);
             assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         }
 

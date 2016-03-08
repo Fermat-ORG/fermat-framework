@@ -43,6 +43,7 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION);
         }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION);
         }
 
@@ -54,8 +55,8 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     public BankTransaction makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException {
         depositBankMoneyTransactionDao.registerDepositTransaction(bankTransactionParameters);
         try{
-            bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
-            bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+            bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+            bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
         }catch (CantRegisterCreditException e){
             throw new CantMakeDepositTransactionException(CantRegisterCreditException.DEFAULT_MESSAGE,e,null,null);
         }

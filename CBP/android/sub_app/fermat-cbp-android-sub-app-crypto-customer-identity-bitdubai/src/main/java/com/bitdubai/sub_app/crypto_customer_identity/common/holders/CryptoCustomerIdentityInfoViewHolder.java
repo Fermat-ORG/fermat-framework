@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.holders;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.text.SpannableString;
 import android.view.View;
@@ -10,9 +11,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 
+import java.io.ByteArrayInputStream;
+
 /**
  * Created by nelson on 01/09/15.
  */
+
 public class CryptoCustomerIdentityInfoViewHolder extends FermatViewHolder {
     private ImageView identityImage;
     private FermatTextView identityName;
@@ -25,13 +29,9 @@ public class CryptoCustomerIdentityInfoViewHolder extends FermatViewHolder {
     }
 
     public void setImage(byte[] imageInBytes) {
-        RoundedBitmapDrawable roundedBitmap;
-        if (imageInBytes != null)
-            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), imageInBytes);
-        else
-            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
-
-        identityImage.setImageDrawable(roundedBitmap);
+        ByteArrayInputStream bytes = new ByteArrayInputStream(imageInBytes);
+        BitmapDrawable bmd = new BitmapDrawable(bytes);
+        identityImage.setImageBitmap(bmd.getBitmap());
     }
 
     public void setText(String text) {

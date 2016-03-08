@@ -141,7 +141,8 @@ import java.util.UUID;
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
-
+        projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
         DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME, projectColumns);
         tables.add(bankMoneyRestockTable);
 

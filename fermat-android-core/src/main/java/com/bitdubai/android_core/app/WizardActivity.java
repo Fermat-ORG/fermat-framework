@@ -27,7 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -43,6 +43,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
+import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
  * Wizard Activity
@@ -167,7 +172,7 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                FermatSession fermatSession = getWalletSessionManager().getWalletSession(wallet.getPublicKey());
+                FermatSession fermatSession = getFermatAppManager().getAppsSession(wallet.getPublicKey());
 
 //                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
 
@@ -288,16 +293,16 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    protected FermatStructure getAppInUse() {
+    public FermatStructure getAppInUse() {
         //TODO: a implementar
         return null;
     }
 
     @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
-        //TODO: obtener la session de forma indistinta
+    public FermatStructure getAppInUse(String publicKey) throws Exception {
         return null;
     }
+
 
     @Override
     protected List<MenuItem> getNavigationMenu() {
@@ -348,11 +353,6 @@ public class WizardActivity extends FermatActivity
     @Override
     public void nextScreen() {
         doNext();
-    }
-
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
     }
 
     @Override

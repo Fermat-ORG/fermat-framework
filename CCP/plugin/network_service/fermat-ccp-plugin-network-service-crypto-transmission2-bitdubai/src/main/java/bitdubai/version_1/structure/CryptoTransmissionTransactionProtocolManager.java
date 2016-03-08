@@ -36,13 +36,9 @@ public class CryptoTransmissionTransactionProtocolManager implements Transaction
 
             cryptoTransmissionMetadataDAO.confirmReception(transactionID);
 
-
-
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
         } catch (CantGetCryptoTransmissionMetadataException e) {
+            e.printStackTrace();
+        }  catch (Exception e) {
             e.printStackTrace();
         }
     }

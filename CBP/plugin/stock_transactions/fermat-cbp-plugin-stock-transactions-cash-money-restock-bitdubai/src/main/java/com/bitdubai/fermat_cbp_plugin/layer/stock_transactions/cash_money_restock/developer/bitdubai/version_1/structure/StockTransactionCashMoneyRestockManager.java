@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -12,6 +14,8 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.i
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.MissingCashMoneyRestockDataException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -28,6 +32,7 @@ public class StockTransactionCashMoneyRestockManager implements
         CashMoneyRestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
+    private ErrorManager errorManager;
 
     /**
      * Constructor with params.
@@ -39,10 +44,11 @@ public class StockTransactionCashMoneyRestockManager implements
                                                    final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
+        this.errorManager = errorManager;
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyRestockException {
+    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId) throws CantCreateCashMoneyRestockException {
 
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
@@ -59,15 +65,19 @@ public class StockTransactionCashMoneyRestockManager implements
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION,
                 priceReference,
-                originTransaction);
+                originTransaction,
+                originTransactionId);
 
         try {
             StockTransactionCashMoneyRestockFactory stockTransactionCashMoneyRestockFactory = new StockTransactionCashMoneyRestockFactory(pluginDatabaseSystem, pluginId);
             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateCashMoneyRestockException("Database Operation.", FermatException.wrapException(e), null, null);
         } catch (MissingCashMoneyRestockDataException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateCashMoneyRestockException("Missing Cash Money Restock Data.", FermatException.wrapException(e), null, null);
+
         }
     }
 

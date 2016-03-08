@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
@@ -30,7 +31,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueRightSide;
     private TextView yourExchangeRateText;
     private FermatButton yourExchangeRateValue;
-    private List<BrokerCurrencyQuotationImpl> marketRateList;
+    private List<IndexInfoSummary> marketRateList;
 
 
     public ExchangeRateViewHolder(View itemView) {
@@ -91,7 +92,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return R.id.ccw_card_view_title;
     }
 
-    public void setMarketRateList(List<BrokerCurrencyQuotationImpl> marketRateList){
+    public void setMarketRateList(List<IndexInfoSummary> marketRateList){
         this.marketRateList = marketRateList;
     }
 

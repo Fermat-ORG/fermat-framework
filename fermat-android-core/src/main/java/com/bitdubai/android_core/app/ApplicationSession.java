@@ -4,11 +4,17 @@ package com.bitdubai.android_core.app;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
-import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
+import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -24,12 +30,16 @@ import java.util.HashMap;
  * -- Luis.
  */
 
+@ReportsCrashes(//formUri = "http://yourserver.com/yourscript",
+        mailTo = "matiasfurszyfer@gmail.com",
+        customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT},
+        mode = ReportingInteractionMode.TOAST,
+        resToastText = R.string.crash_toast_text)
 
 public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
 
 
     private static ApplicationSession instance;
-
     /**
      * Application states
      */
@@ -44,16 +54,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     private FermatSystem fermatSystem;
 
     /**
-     * Sub App session Manager
+     * Apps manager
      */
-
-    private SubAppSessionManager subAppSessionManager;
-
-    /**
-     * Wallet session manager
-     */
-
-    private WalletSessionManager walletSessionManager;
+    private FermatAppsManager fermatAppsManager;
 
     /**
      *  Application state
@@ -77,9 +80,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
+        instance = this;
         fermatSystem = FermatSystem.getInstance();
-        subAppSessionManager=new SubAppSessionManager();
-        walletSessionManager = new WalletSessionManager();
+        fermatAppsManager = new FermatAppsManager();
 
     }
 
@@ -89,25 +92,19 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      * @return FermatSystem
      */
     public FermatSystem getFermatSystem() {
+        if(fermatSystem==null){
+            fermatSystem = FermatSystem.getInstance();
+        }
         return fermatSystem;
     }
 
     /**
-     * Method to get subAppSessionManager which can manipulate the active session of subApps
-     * @return SubAppSessionManager
+     * Fermat app manager
+     *
+     * @return FermatAppsManager
      */
-
-    public SubAppSessionManager getSubAppSessionManager(){
-        return subAppSessionManager;
-    }
-
-    /**
-     * Method to get subWalletSessionManager which can manipulate the active session of wallets
-     * @return WalletSessionManager
-     */
-
-    public WalletSessionManager getWalletSessionManager(){
-        return walletSessionManager;
+    public FermatAppsManager getFermatAppsManager() {
+        return fermatAppsManager;
     }
 
     /**
@@ -117,7 +114,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
 
     public void changeApplicationState(int applicationState){
-        this.applicationState=applicationState;
+        ApplicationSession.applicationState =applicationState;
     }
 
     /**
@@ -130,12 +127,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return applicationState;
     }
 
-    /**
-     *  Add supApp fragment factory
-     */
-    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
-        subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
-    }
 
     @Override
     public void onTerminate(){
@@ -144,8 +135,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     @Override
     public void onCreate() {
+        ACRA.init(this);
+        YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
+        ACRA.getErrorReporter().setReportSender(yourSender);
         super.onCreate();
-        instance = this;
     }
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

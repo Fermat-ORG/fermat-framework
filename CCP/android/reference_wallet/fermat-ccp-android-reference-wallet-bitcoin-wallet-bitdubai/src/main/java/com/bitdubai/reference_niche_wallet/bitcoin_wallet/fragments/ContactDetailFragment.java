@@ -188,7 +188,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         int id = view.getId();
         try{
             if ( id == R.id.send_button) {
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size()>0) {
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
@@ -197,7 +197,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 }
             }
             else if( id == R.id.receive_button){
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size()>0) {
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
@@ -412,16 +412,19 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             //update contact address
             cryptoWalletManager = referenceWalletSession.getModuleManager();
 
-            CryptoWalletWalletContact walletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+            cryptoWalletWalletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
 
-            if(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+
+            if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
             {
-                text_view_address.setText(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
                 img_update.setVisibility(View.GONE);
                 receive_button.setVisibility(View.VISIBLE);
                 send_button.setVisibility(View.VISIBLE);
 
             }
+
+            referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
 
         }
         catch(Exception e)

@@ -12,4 +12,20 @@ public class CantGetListSaleNegotiationsException extends FermatException {
     public CantGetListSaleNegotiationsException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+    /**
+     * Constructor with parameters
+     * @param message
+     * @param cause
+     */
+    public CantGetListSaleNegotiationsException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    /**
+     * Constructor with parameters
+     * @param message
+     */
+    public CantGetListSaleNegotiationsException(final String message) {
+        this(message, null);
+    }
 }

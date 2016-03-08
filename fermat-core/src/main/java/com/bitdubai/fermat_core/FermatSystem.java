@@ -93,7 +93,7 @@ public final class FermatSystem {
             this.start(osContext, osaPlatform);
         } catch (FermatException e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,13 +128,13 @@ public final class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
-//            fermatSystemContext.registerPlatform(new BNKPlatform());
-//            fermatSystemContext.registerPlatform(new CBPPlatform());
+            fermatSystemContext.registerPlatform(new BNKPlatform());
+            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
-//            fermatSystemContext.registerPlatform(new CERPlatform());
-//            fermatSystemContext.registerPlatform(new CHTPlatform());
-//            fermatSystemContext.registerPlatform(new CSHPlatform());
-//            fermatSystemContext.registerPlatform(new DAPPlatform());
+            fermatSystemContext.registerPlatform(new CERPlatform());
+            fermatSystemContext.registerPlatform(new CHTPlatform());
+            fermatSystemContext.registerPlatform(new CSHPlatform());
+            fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
@@ -443,7 +443,7 @@ public final class FermatSystem {
             try {
                 fermatPluginManager.startPluginAndReferences(plugin.getKey());
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.err.println(e.toString());
             }
         }
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -43,11 +44,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendContractHash(UUID transactionId,
-                                                 String cryptoBrokerActorSenderPublicKey,
-                                                 String cryptoCustomerActorReceiverPublicKey,
-                                                 String transactionHash,
-                                                 String negotiationId) throws CantSendBusinessTransactionHashException {
+    public void sendContractHash(
+            UUID transactionId,
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String transactionHash,
+            String negotiationId,
+            Plugins remoteBusinessTransaction
+            ) throws CantSendBusinessTransactionHashException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
         Date date=new Date();
@@ -55,16 +59,17 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 ContractTransactionStatus.PENDING_CONFIRMATION,
-                cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
                 cryptoBrokerActorSenderPublicKey,
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerActorReceiverPublicKey,
                 PlatformComponentType.NETWORK_SERVICE,
                 null,
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
                 timestamp.getTime(),
                 transactionId,
-                TransactionTransmissionStates.PRE_PROCESSING_SEND
+                TransactionTransmissionStates.PRE_PROCESSING_SEND,
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -81,11 +86,13 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendContractStatusNotification(String cryptoBrokerActorSenderPublicKey,
-                                                               String cryptoCustomerActorReceiverPublicKey,
-                                                               String transactionHash,
-                                                               String transactionId,
-                                                               ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
+    public void sendContractStatusNotification(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String transactionHash,
+            String transactionId,
+            ContractTransactionStatus contractStatus,
+            Plugins remoteBusinessTransaction) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -101,7 +108,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
                 timestamp.getTime(),
                 uuidTransactionId,
-                TransactionTransmissionStates.PRE_PROCESSING_SEND
+                TransactionTransmissionStates.PRE_PROCESSING_SEND,
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -122,10 +130,12 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey,
-                                             String cryptoCustomerActorReceiverPublicKey,
-                                             String contractHash,
-                                             String transactionId) throws CantConfirmNotificationReception {
+    public void confirmNotificationReception(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String contractHash,
+            String transactionId,
+            Plugins remoteBusinessTransaction) throws CantConfirmNotificationReception {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
@@ -141,7 +151,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 BusinessTransactionTransactionType.CONFIRM_MESSAGE,
                 timestamp.getTime(),
                 uuidTransactionId,
-                TransactionTransmissionStates.PRE_PROCESSING_SEND
+                TransactionTransmissionStates.PRE_PROCESSING_SEND,
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -166,7 +177,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
         } catch (CantUpdateRecordDataBaseException e) {
             throw new CantConfirmTransactionException(
-                    e.DEFAULT_MESSAGE,
+                    CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,
                     e,
                     "Confirm reception",
                     "Cannot update the flag in database");
@@ -177,7 +188,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "Cannot find the transaction id in database\n"+transactionID);
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(
-                    e.DEFAULT_MESSAGE,
+                    CantGetTransactionTransmissionException.DEFAULT_MESSAGE,
                     e,
                     "Confirm reception",
                     "Cannot get the business transaction record from the database");
@@ -191,7 +202,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(
+            Specialist specialist) throws CantDeliverPendingTransactionsException {
         List<Transaction<BusinessTransactionMetadata>> pendingTransaction=new ArrayList<>();
         try {
 

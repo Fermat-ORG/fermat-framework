@@ -7,7 +7,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  */
 public enum FragmentFactoryEnumType implements FermatFragmentsEnumType<FragmentFactoryEnumType> {
 
-    DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM");
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT("DARPCCOPF"),
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT("DARPCCLF");
 
     private String key;
 

@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -30,7 +31,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
@@ -46,9 +47,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
@@ -106,6 +104,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM,     layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
     private NegotiationTransmissionManager negotiationTransmissionManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     /*Represent the dataBase*/
     private Database                                                            dataBase;
@@ -166,16 +167,15 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //Init monitor Agent
             customerBrokerUpdateAgent = new CustomerBrokerUpdateAgent(
-                pluginDatabaseSystem,
-                logManager,
-                errorManager,
-                eventManager,
-                pluginId,
-                negotiationTransmissionManager,
-                customerBrokerPurchaseNegotiation,
-                customerBrokerSaleNegotiation,
-                customerBrokerPurchaseNegotiationManager,
-                customerBrokerSaleNegotiationManager
+                    pluginDatabaseSystem,
+                    logManager, errorManager,
+                    eventManager, pluginId,
+                    negotiationTransmissionManager,
+                    customerBrokerPurchaseNegotiation,
+                    customerBrokerSaleNegotiation,
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerSaleNegotiationManager,
+                    broadcaster
             );
             customerBrokerUpdateAgent.start();
 
@@ -197,6 +197,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //TEST GET ALL EVENT
 //            getAllEvent();
+
+            //TEST GET ALL TRANSACTION
+//            customerBrokerUpdateManagerImpl.getAllTranasctionTest();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
@@ -641,7 +644,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
@@ -666,7 +670,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
@@ -674,13 +679,13 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                MoneyType.BANK.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY_QUANTITY,
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                CurrencyType.BANK_MONEY.getCode()));
+                MoneyType.BANK.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_DATE_TIME_TO_DELIVER,
                 "1000"));
@@ -689,7 +694,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+                MoneyType.CASH_ON_HAND.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));

@@ -34,10 +34,10 @@ public class CryptoBrokerIdentityInfoAdapter
 
     CryptoBrokerIdentityListFilter filter;
 
-    public CryptoBrokerIdentityInfoAdapter(Activity                                   context      ,
-                                           CryptoBrokerIdentityModuleManager          moduleManager,
-                                           ErrorManager                               errorManager ,
-                                           ArrayList<CryptoBrokerIdentityInformation> dataSet      ) {
+    public CryptoBrokerIdentityInfoAdapter(final Activity                                   context      ,
+                                           final CryptoBrokerIdentityModuleManager          moduleManager,
+                                           final ErrorManager                               errorManager ,
+                                           final ArrayList<CryptoBrokerIdentityInformation> dataSet      ) {
 
         super(context, dataSet);
 
@@ -51,8 +51,11 @@ public class CryptoBrokerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        filter = (CryptoBrokerIdentityListFilter) getFilter();
+    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder  ,
+                              final CryptoBrokerIdentityInformation    data    ,
+                              final int                                position) {
+
+        filter = getFilter();
 
         SpannableString spannedText = TextUtils.getSpannedText(
                 context.getResources(),
@@ -85,7 +88,7 @@ public class CryptoBrokerIdentityInfoAdapter
     }
 
     @Override
-    public Filter getFilter() {
+    public CryptoBrokerIdentityListFilter getFilter() {
         if (filter == null)
             filter = new CryptoBrokerIdentityListFilter(dataSet, this);
 

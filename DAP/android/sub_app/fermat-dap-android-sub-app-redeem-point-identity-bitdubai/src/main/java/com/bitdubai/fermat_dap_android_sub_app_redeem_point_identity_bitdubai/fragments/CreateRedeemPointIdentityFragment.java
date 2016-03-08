@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -70,7 +71,14 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
 
     private Button createButton;
-    private EditText mIdentityName;
+    private TextView mIdentityName;
+    private TextView mIdentityContactInformation;
+    private TextView mIdentityAddressCountryName;
+    private TextView mIdentityAddressProvinceName;
+    private TextView mIdentityAddressCityName;
+    private TextView mIdentityAddressPostalCode;
+    private TextView mIdentityAddressStreetName;
+    private TextView mIdentityAddressHouseNumber;
     private ImageView mIdentityImage;
 
     private RedeemPointIdentity identitySelected;
@@ -212,12 +220,28 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
      */
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.dap_redeem_point_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.dap_redeem_point_name);
         mIdentityImage = (ImageView) layout.findViewById(R.id.dap_redeem_point_image);
+        mIdentityName = (TextView) layout.findViewById(R.id.dap_redeem_point_name);
+        mIdentityContactInformation = (TextView) layout.findViewById(R.id.dap_redeem_point_contact_information);
+        mIdentityAddressCountryName = (TextView) layout.findViewById(R.id.dap_redeem_point_country_name);
+        mIdentityAddressProvinceName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_province_name);
+        mIdentityAddressCityName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_city_name);
+        mIdentityAddressPostalCode = (TextView) layout.findViewById(R.id.dap_redeem_point_address_postal_code);
+        mIdentityAddressStreetName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_street_name);
+        mIdentityAddressHouseNumber = (TextView) layout.findViewById(R.id.dap_redeem_point_address_house_number);
+
+
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mIdentityName.requestFocus();
+//        mIdentityContactInformation.requestFocus();
+//        mIdentityAddressCountryName.requestFocus();
+//        mIdentityAddressProvinceName.requestFocus();
+//        mIdentityAddressCityName.requestFocus();
+//        mIdentityAddressPostalCode.requestFocus();
+//        mIdentityAddressStreetName.requestFocus();
+//        mIdentityAddressHouseNumber.requestFocus();
 
         mIdentityImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,7 +310,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redeem_point_identity);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
@@ -295,6 +319,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mIdentityName.setText(identitySelected.getAlias());
+        mIdentityContactInformation.setText(identitySelected.getContactInformation());
+        mIdentityAddressCountryName.setText(identitySelected.getCountryName());
+        mIdentityAddressProvinceName.setText(identitySelected.getProvinceName());
+        mIdentityAddressCityName.setText(identitySelected.getCityName());
+        mIdentityAddressPostalCode.setText(identitySelected.getPostalCode());
+        mIdentityAddressStreetName.setText(identitySelected.getStreetName());
+        mIdentityAddressHouseNumber.setText(identitySelected.getHouseNumber());
     }
 
     @Override
@@ -366,15 +397,25 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private int createNewIdentity() {
 
         String brokerNameText = mIdentityName.getText().toString();
+        String brokerContactInformation = mIdentityContactInformation.getText().toString();
+        String brokerAddressProvinceName = mIdentityAddressProvinceName.getText().toString();
+        String brokerAddressStreetName = mIdentityAddressStreetName.getText().toString();
+        String brokerAddressPostalCode = mIdentityAddressPostalCode.getText().toString();
+        String brokerAddressCityName = mIdentityAddressCityName.getText().toString();
+        String brokerAddressCountryName = mIdentityAddressCountryName.getText().toString();
+        String brokerAddressHouseNumber = mIdentityAddressHouseNumber.getText().toString();
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
+                                brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,
+                                brokerAddressStreetName,brokerAddressHouseNumber);
                     else
-                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
+                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray,brokerContactInformation,
+                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,brokerAddressStreetName,brokerAddressHouseNumber);
                 } catch (CantCreateNewRedeemPointException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 } catch (CantUpdateIdentityRedeemPointException e) {
@@ -408,7 +449,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private void loadImageFromGallery() {
         Log.i(TAG, "Loading Image from Gallery...");
 
-        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 

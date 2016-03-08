@@ -114,17 +114,17 @@ public class WsCommunicationsTyrusCloudClientChannel {
         /**
          * if Packet is bigger than 1000 Send the message through of sendDividedChain
          */
-//        if(message.length() > 1000){
-//
-//            try {
-//                sendDividedChain(message);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }else{
+        if(message.length() > 1000){
+
+            try {
+                sendDividedChain(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }else{
             clientConnection.getAsyncRemote().sendText(message);
-//        }
+        }
 
     }
 
