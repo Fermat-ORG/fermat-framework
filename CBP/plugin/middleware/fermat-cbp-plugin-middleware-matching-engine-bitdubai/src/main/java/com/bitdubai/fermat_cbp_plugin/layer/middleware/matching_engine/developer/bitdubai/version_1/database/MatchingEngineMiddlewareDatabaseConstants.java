@@ -63,7 +63,6 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String INPUT_TRANSACTION_TABLE_NAME                          = "input_transaction"         ;
 
     public static final String INPUT_TRANSACTION_ID_COLUMN_NAME                      = "id"                        ;
-    @Deprecated // todo this field will be used to reference the origin of the transaction i need a type too PURE_TRANSACTION / PARTIAL_TRANSACTION
     public static final String INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME   = "origin_transaction_id"     ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME         = "currency_giving"           ;
     public static final String INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME    = "currency_giving_type"      ;
@@ -71,6 +70,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME      = "currency_receiving"        ;
     public static final String INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME = "currency_receiving_type"   ;
     public static final String INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME        = "amount_receiving"          ;
+    public static final String INPUT_TRANSACTION_TYPE_COLUMN_NAME                    = "type"                      ;
     public static final String INPUT_TRANSACTION_STATE_COLUMN_NAME                   = "state"                     ;
     public static final String INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME  = "earning_transaction_id"    ;
     public static final String INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME         = "earning_pair_id"           ;
