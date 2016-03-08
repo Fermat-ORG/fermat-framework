@@ -44,6 +44,8 @@ public interface CryptoBrokerManager extends FermatManager {
      */
     void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
 
+    void updateIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData);
+
     /**
      * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
      * The information given will be shown to all the crypto customers.
