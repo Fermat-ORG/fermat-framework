@@ -83,6 +83,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 holder.status.setText(R.string.status_denied);
             }
 
+            if (data.getDapConnectionState() == DAPConnectionState.CANCELLED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.CANCELLED_REMOTELY) {
+                holder.status.setText(R.string.status_canceled);
+            }
+
             holder.connect.setChecked(data.selected);
             holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
