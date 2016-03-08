@@ -19,8 +19,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
-import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
@@ -35,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 12/30/15.
  */
-public class BitcoinWatchOnlyCryptoVaultDao {
+public class BitcoinWatchOnlyCryptoVaultDao implements CryptoVaultDao {
 
     /**
      * Database instance of the plugin.
@@ -663,5 +665,10 @@ public class BitcoinWatchOnlyCryptoVaultDao {
     private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
         String outputMessage = "There was an error loading into memory table " + tableName + ".";
         throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
+
+    @Override
+    public int getPublicKeyPosition(String publicKey) throws CantExecuteDatabaseOperationException {
+        return 0;
     }
 }

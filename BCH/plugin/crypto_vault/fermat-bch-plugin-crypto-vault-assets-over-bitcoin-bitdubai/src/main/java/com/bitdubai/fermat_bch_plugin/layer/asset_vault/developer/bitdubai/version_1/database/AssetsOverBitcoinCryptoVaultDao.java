@@ -18,8 +18,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -42,7 +43,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetsOverBitcoinCryptoVaultDao {
+public class AssetsOverBitcoinCryptoVaultDao implements CryptoVaultDao {
     /**
      * Database instance of the plugin.
      */
@@ -146,7 +147,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
-    public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
+    public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException {
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         try {
@@ -704,5 +705,10 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         HierarchyAccount hierarchyAccount = new HierarchyAccount(id, publicKey, hierarchyAccountType);
         return hierarchyAccount;
+    }
+
+    @Override
+    public int getPublicKeyPosition(String publicKey) throws CantExecuteDatabaseOperationException {
+        return 0;
     }
 }
