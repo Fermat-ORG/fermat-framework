@@ -187,16 +187,16 @@ public final class MatchingEngineMiddlewareDao {
                                                    final Currency        earningCurrency       ,
                                                    final Currency        linkedCurrency        ,
                                                    final WalletReference earningWalletReference,
-                                                   final String          walletPublicKey       ) throws CantAssociatePairException     ,
+                                                   final WalletReference walletReference       ) throws CantAssociatePairException     ,
                                                                                                         PairAlreadyAssociatedException {
 
         try {
 
-            if (existsEarningsPair(earningCurrency, linkedCurrency, walletPublicKey))
-                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletPublicKey, "The pair already exists in database.");
+            if (existsEarningsPair(earningCurrency, linkedCurrency, walletReference.getPublicKey()))
+                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletReference, "The pair already exists in database.");
 
-            if (existsEarningsPair(linkedCurrency, earningCurrency, walletPublicKey))
-                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletPublicKey, "The pair already exists in database.");
+            if (existsEarningsPair(linkedCurrency, earningCurrency, walletReference.getPublicKey()))
+                throw new PairAlreadyAssociatedException("earningCurrency: "+earningCurrency+ " - linkedCurrency: "+linkedCurrency+" - walletReference: "+walletReference, "The pair already exists in database.");
 
             final EarningPairState state = EarningPairState.ASSOCIATED;
 
@@ -207,14 +207,15 @@ public final class MatchingEngineMiddlewareDao {
                     earningWalletReference,
                     state                 ,
 
-                    this
+                    this,
+                    walletReference
             );
 
             final DatabaseTable earningsPairTable = database.getTable(EARNING_PAIR_TABLE_NAME);
 
             DatabaseTableRecord entityRecord = earningsPairTable.getEmptyRecord();
 
-            entityRecord = buildEarningsPairDatabaseRecord(entityRecord, earningsPair, walletPublicKey);
+            entityRecord = buildEarningsPairDatabaseRecord(entityRecord, earningsPair, walletReference.getPublicKey());
 
             earningsPairTable.insertRecord(entityRecord);
 
@@ -352,7 +353,7 @@ public final class MatchingEngineMiddlewareDao {
             final List<EarningsPair> earningsPairList = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records)
-                earningsPairList.add(buildEarningPairRecord(record));
+                earningsPairList.add(buildEarningPairRecord(record, walletReference));
 
             return earningsPairList;
 
@@ -416,7 +417,8 @@ public final class MatchingEngineMiddlewareDao {
         return record;
     }
 
-    private EarningsPair buildEarningPairRecord(final DatabaseTableRecord record) throws InvalidParameterException {
+    private EarningsPair buildEarningPairRecord(final DatabaseTableRecord record         ,
+                                                final WalletReference     walletReference) throws InvalidParameterException {
 
         UUID   requestId                 = record.getUUIDValue  (EARNING_PAIR_ID_COLUMN_NAME                        );
         String earningCurrencyString     = record.getStringValue(EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME);
@@ -440,7 +442,8 @@ public final class MatchingEngineMiddlewareDao {
                 earningsWalletReference,
                 state                  ,
 
-                this
+                this           ,
+                walletReference
         );
     }
 
@@ -469,7 +472,7 @@ public final class MatchingEngineMiddlewareDao {
 
             DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
 
-            entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction);
+            entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction, null);
 
             inputTransactionTable.insertRecord(entityRecord);
 
@@ -486,14 +489,15 @@ public final class MatchingEngineMiddlewareDao {
         return database.newTransaction();
     }
 
-    public final InputTransaction createPartialInputTransaction(final DatabaseTransaction   databaseTransaction,
-                                                                final String                originTransactionId,
-                                                                final Currency              currencyGiving     ,
-                                                                final float                 amountGiving       ,
-                                                                final Currency              currencyReceiving  ,
-                                                                final float                 amountReceiving    ,
-                                                                final UUID                  earningsPairId     ,
-                                                                final InputTransactionState state              ) {
+    public final InputTransaction createPartialInputTransaction(final DatabaseTransaction   databaseTransaction ,
+                                                                final String                originTransactionId ,
+                                                                final Currency              currencyGiving      ,
+                                                                final float                 amountGiving        ,
+                                                                final Currency              currencyReceiving   ,
+                                                                final float                 amountReceiving     ,
+                                                                final UUID                  earningsPairId      ,
+                                                                final UUID                  earningTransactionId,
+                                                                final InputTransactionState state               ) {
 
         final InputTransactionType  type  = InputTransactionType .PARTIAL  ;
 
@@ -512,15 +516,16 @@ public final class MatchingEngineMiddlewareDao {
 
         DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
 
-        entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction);
+        entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction, earningTransactionId);
 
         databaseTransaction.addRecordToInsert(inputTransactionTable, entityRecord);
 
         return inputTransaction;
     }
 
-    public void markInputTransactionAsMatched(final DatabaseTransaction databaseTransaction,
-                                              final UUID                inputTransactionId ) throws CantGetInputTransactionException {
+    public void markInputTransactionAsMatched(final DatabaseTransaction databaseTransaction ,
+                                              final UUID                inputTransactionId  ,
+                                              final UUID                earningTransactionId) throws CantGetInputTransactionException {
 
         if (inputTransactionId == null)
             throw new CantGetInputTransactionException(null, "", "The inputTransactionId is required, can not be null");
@@ -539,7 +544,8 @@ public final class MatchingEngineMiddlewareDao {
 
                 DatabaseTableRecord record = records.get(0);
 
-                record.setFermatEnum(INPUT_TRANSACTION_STATE_COLUMN_NAME, InputTransactionState.MATCHED);
+                record.setUUIDValue (INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME, earningTransactionId         );
+                record.setFermatEnum(INPUT_TRANSACTION_STATE_COLUMN_NAME                 , InputTransactionState.MATCHED);
 
                 databaseTransaction.addRecordToUpdate(inputTransactionsTable, record);
             } else {
@@ -639,9 +645,10 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    private DatabaseTableRecord buildInputTransactionDatabaseRecord(final DatabaseTableRecord record          ,
-                                                                    final UUID                earningPairId   ,
-                                                                    final InputTransaction    inputTransaction) {
+    private DatabaseTableRecord buildInputTransactionDatabaseRecord(final DatabaseTableRecord record              ,
+                                                                    final UUID                earningPairId       ,
+                                                                    final InputTransaction    inputTransaction    ,
+                                                                    final UUID                earningTransactionId) {
 
         record.setUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
         record.setStringValue(INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getOriginTransactionId());
@@ -651,10 +658,11 @@ public final class MatchingEngineMiddlewareDao {
         record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
         record.setFloatValue(INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME, inputTransaction.getAmountGiving());
         record.setFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
-        record.setFermatEnum (INPUT_TRANSACTION_TYPE_COLUMN_NAME                   , inputTransaction.getType()                       );
+        record.setFermatEnum(INPUT_TRANSACTION_TYPE_COLUMN_NAME, inputTransaction.getType());
         record.setFermatEnum (INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
 
-        record.setUUIDValue  (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
+        record.setUUIDValue(INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningPairId);
+        record.setUUIDValue  (INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME , earningTransactionId                             );
 
         return record;
     }
@@ -693,6 +701,59 @@ public final class MatchingEngineMiddlewareDao {
         );
     }
 
+    private DatabaseTableRecord buildEarninsTransactionDatabaseRecord(final DatabaseTableRecord record          ,
+                                                                    final UUID                earningPairId   ,
+                                                                    final InputTransaction    inputTransaction) {
+
+        record.setUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     , inputTransaction.getId()                         );
+        record.setStringValue(INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME, inputTransaction.getOriginTransactionId());
+        record.setFermatEnum(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME, inputTransaction.getCurrencyGiving());
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   , inputTransaction.getCurrencyGiving().getType()   );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     , inputTransaction.getCurrencyReceiving()          );
+        record.setFermatEnum (INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME, inputTransaction.getCurrencyReceiving().getType());
+        record.setFloatValue(INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME, inputTransaction.getAmountGiving());
+        record.setFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       , inputTransaction.getAmountReceiving()            );
+        record.setFermatEnum (INPUT_TRANSACTION_TYPE_COLUMN_NAME                   , inputTransaction.getType()                       );
+        record.setFermatEnum (INPUT_TRANSACTION_STATE_COLUMN_NAME                  , inputTransaction.getState()                      );
+
+        record.setUUIDValue  (INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        , earningPairId                                    );
+
+        return record;
+    }
+
+    private InputTransaction buildEarningsTransactionRecord(final DatabaseTableRecord record) throws InvalidParameterException {
+
+        UUID id                            = record.getUUIDValue  (INPUT_TRANSACTION_ID_COLUMN_NAME                     );
+        String originTransactionId         = record.getStringValue(INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME  );
+
+        String currencyGivingString        = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        );
+        String currencyGivingTypeString    = record.getStringValue(INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   );
+        String currencyReceivingString     = record.getStringValue(INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     );
+        String currencyReceivingTypeString = record.getStringValue(INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME);
+
+        float  amountGiving                = record.getFloatValue (INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          );
+        float  amountReceiving             = record.getFloatValue (INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       );
+
+        String typeString                  = record.getStringValue(INPUT_TRANSACTION_TYPE_COLUMN_NAME                   );
+        String stateString                 = record.getStringValue(INPUT_TRANSACTION_STATE_COLUMN_NAME                  );
+
+        InputTransactionType  type  = InputTransactionType .getByCode(typeString );
+        InputTransactionState state = InputTransactionState.getByCode(stateString);
+
+        Currency currencyGiving  = CurrencyHelper.getCurrency(currencyGivingString, currencyGivingTypeString);
+        Currency currencyReceiving = CurrencyHelper.getCurrency(currencyReceivingString, currencyReceivingTypeString);
+
+        return new MatchingEngineMiddlewareInputTransaction(
+                id                 ,
+                originTransactionId,
+                currencyGiving     ,
+                amountGiving       ,
+                currencyReceiving  ,
+                amountReceiving    ,
+                type               ,
+                state
+        );
+    }
 
     private DatabaseTableRecord buildWalletReferenceDatabaseRecord(final DatabaseTableRecord record         ,
                                                                    final WalletReference     walletReference) {

@@ -9,7 +9,6 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.UUID;
 
@@ -30,7 +29,8 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair 
     private       WalletReference  earningsWallet ;
     private final EarningPairState state          ;
 
-    private final MatchingEngineMiddlewareDao dao;
+    private final MatchingEngineMiddlewareDao dao            ;
+    private final WalletReference             walletReference;
 
     public MatchingEngineMiddlewareEarningsPair(final UUID             id             ,
                                                 final Currency         earningCurrency,
@@ -38,7 +38,8 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair 
                                                 final WalletReference  earningsWallet ,
                                                 final EarningPairState state          ,
 
-                                                final MatchingEngineMiddlewareDao dao ) {
+                                                final MatchingEngineMiddlewareDao dao            ,
+                                                final WalletReference             walletReference) {
 
         this.id              = id             ;
         this.earningCurrency = earningCurrency;
@@ -46,7 +47,8 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair 
         this.earningsWallet  = earningsWallet ;
         this.state           = state          ;
 
-        this.dao = dao;
+        this.dao             = dao            ;
+        this.walletReference = walletReference;
     }
 
     @Override
@@ -92,7 +94,11 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair 
 
     @Override
     public EarningsSearch getSearch() {
-        return null;
+
+        return new MatchingEngineMiddlewareEarningsSearch(
+                dao            ,
+                walletReference
+        );
     }
 
     @Override
