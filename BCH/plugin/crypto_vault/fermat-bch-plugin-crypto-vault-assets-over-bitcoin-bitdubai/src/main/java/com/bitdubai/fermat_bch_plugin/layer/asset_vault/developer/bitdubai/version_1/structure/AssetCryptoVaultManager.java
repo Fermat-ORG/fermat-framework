@@ -1083,7 +1083,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         /**
          * I get a signed transaction from the abstract class CryptoVault.
          */
-        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        transaction = this.signTransaction(walletKeys, transaction);
         System.out.println("***AssetVault*** Transaction signed.");
         System.out.println(transaction.toString());
 

@@ -489,7 +489,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get a signed transaction from the abstract class CryptoVault.
          */
-        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        transaction = this.signTransaction(walletKeys, transaction);
         System.out.println("***CryptoVault*** Transaction signed.");
         System.out.println(transaction.toString());
 
@@ -687,5 +687,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
+    }
+
+    @Override
+    public ECKey getPrivateKey(byte[] publicKey) {
+        ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(publicKey);
+        return privateKey;
     }
 }

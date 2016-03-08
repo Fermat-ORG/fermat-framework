@@ -11,6 +11,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.KeyHierarchy;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -37,6 +38,11 @@ import java.util.UUID;
  * Created by rodrigo on 2/26/16.
  */
 public abstract class CryptoVault {
+
+    /**
+     * class variables
+     */
+    KeyHierarchy keyHierarchy;
 
     /**
      * Platform variables
@@ -72,9 +78,9 @@ public abstract class CryptoVault {
     }
 
 
-    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign, ECKey privateKey) throws CantSignTransactionException{
+    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign) throws CantSignTransactionException{
         //validate parameters
-        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null || privateKey == null)
+        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null)
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "SignTransaction parameters can't be null", "null parameters.");
 
         final NetworkParameters NETWORK_PARAMETERS = transactionToSign.getParams();
@@ -112,6 +118,11 @@ public abstract class CryptoVault {
             Sha256Hash sigHash = transactionToSign.hashForSignature(inputIndex, scriptToSign, Transaction.SigHash.ALL, false);
 
             /**
+             * I get the private key that I will use to sign the hash
+             */
+            ECKey privateKey = getPrivateKey(scriptToSign.getPubKey());
+
+            /**
              * I create the signature
              */
             ECKey.ECDSASignature signature = privateKey.sign(sigHash);
@@ -140,6 +151,15 @@ public abstract class CryptoVault {
          */
         return transactionToSign;
     }
+
+    /**
+     * Based on the public Key, I get the corresponding private key
+     * @param publicKey
+     * @return
+     */
+    public abstract ECKey getPrivateKey(byte[] publicKey);
+
+
 
     /**
      * Gets the transaction outputs referenced in the passed transaction Input outpoints that are mine.
