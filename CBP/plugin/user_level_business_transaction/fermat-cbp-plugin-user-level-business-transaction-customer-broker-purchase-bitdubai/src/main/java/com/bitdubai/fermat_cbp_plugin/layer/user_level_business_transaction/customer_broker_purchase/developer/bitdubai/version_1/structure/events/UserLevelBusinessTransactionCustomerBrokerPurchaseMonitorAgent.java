@@ -257,7 +257,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
-                    if (customerBrokerPurchase.getTransactionId() == customerBrokerContractPurchase.getNegotiatiotId()) {
+                    if (customerBrokerPurchase.getTransactionId().equals(customerBrokerContractPurchase.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
                         Date date = null;
                         long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
@@ -285,7 +285,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PAYMENT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
-                    if (customerBrokerPurchase.getTransactionId() == customerBrokerContractPurchase.getNegotiatiotId()) {
+                    if (customerBrokerPurchase.getTransactionId().equals(customerBrokerContractPurchase.getNegotiatiotId()) ) {
                         customerBrokerPurchase.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
                         userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
                     }
@@ -312,7 +312,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             {
 
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                    if (customerBrokerPurchase.getTransactionId() == customerBrokerContractPurchase.getNegotiatiotId()) {
+                    if (customerBrokerPurchase.getTransactionId().equals(customerBrokerContractPurchase.getNegotiatiotId()) ) {
                         customerBrokerPurchase.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
                     }
