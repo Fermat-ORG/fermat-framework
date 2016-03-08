@@ -51,4 +51,9 @@ public class RedeemAssetCommunityNotificationPainter implements NotificationPain
     public String getActivityCodeResult() {
         return null;
     }
+
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
 }
