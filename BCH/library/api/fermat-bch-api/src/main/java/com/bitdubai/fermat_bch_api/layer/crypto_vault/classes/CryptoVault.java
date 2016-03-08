@@ -97,6 +97,7 @@ public abstract class CryptoVault {
 
             /**
              * I need to get the index of the input I'm going to sign.
+             * Since the input class doesn't have an index selector, I need to check each one of them
              */
             int inputIndex = 0;
             for (TransactionInput intputToSign : transactionToSign.getInputs()){
