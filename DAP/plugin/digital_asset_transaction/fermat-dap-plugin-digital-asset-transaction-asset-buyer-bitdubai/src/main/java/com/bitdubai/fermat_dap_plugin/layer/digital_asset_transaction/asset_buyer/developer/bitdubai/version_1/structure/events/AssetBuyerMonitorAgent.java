@@ -4,9 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -48,8 +46,6 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buye
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -198,14 +194,14 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         System.out.println("Adding inputs...");
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
-//                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
-//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
-//                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
-                        UUID outgoingId = UUID.randomUUID();
-                        dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
-                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), buyingRecord.getSellerTransaction().getTxHash(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
-                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
+                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
+                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
+                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
+//                        UUID outgoingId = UUID.randomUUID();
+//                        dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
+//                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+//                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
+//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
                         break;
                     }
                     case INPUTS_ADDED: {
