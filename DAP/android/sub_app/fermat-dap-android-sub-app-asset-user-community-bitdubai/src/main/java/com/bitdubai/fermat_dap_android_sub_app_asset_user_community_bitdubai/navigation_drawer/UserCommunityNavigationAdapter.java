@@ -29,11 +29,11 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
+    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener) {
 
     }
 
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
+    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener) {
 
     }
 
@@ -72,7 +72,7 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
         try {
             holder.getLabel().setText(data.getLabel());
 
-            if(data.isSelected())
+            if (data.isSelected())
                 holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
             switch (position) {
@@ -84,7 +84,7 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
                     break;
                 case 2:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);
-                    if(data.getNotifications()!=0){
+                    if (data.getNotifications() != 0) {
                         holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
                     }
                     break;
@@ -95,7 +95,7 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
