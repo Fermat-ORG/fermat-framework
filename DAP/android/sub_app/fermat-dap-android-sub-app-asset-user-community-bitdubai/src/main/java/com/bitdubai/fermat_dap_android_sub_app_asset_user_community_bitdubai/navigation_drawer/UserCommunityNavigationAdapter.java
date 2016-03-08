@@ -71,6 +71,10 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
 
         try {
             holder.getLabel().setText(data.getLabel());
+
+            if(data.isSelected())
+                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+
             switch (position) {
                 case 0:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);
@@ -80,7 +84,9 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
                     break;
                 case 2:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);
-                    holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).setPosition(BadgeDrawable.Position.CENTER).build());
+                    if(data.getNotifications()!=0){
+                        holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
+                    }
                     break;
                 case 3:
                     holder.getIcon().setImageResource(R.drawable.ic_action_filters);

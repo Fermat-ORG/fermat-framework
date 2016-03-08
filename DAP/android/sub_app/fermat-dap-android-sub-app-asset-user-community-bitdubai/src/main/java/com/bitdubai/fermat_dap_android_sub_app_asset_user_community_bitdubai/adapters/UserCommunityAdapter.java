@@ -60,6 +60,9 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                         holder.connectedStateWaiting.setVisibility(View.GONE);
                         holder.connectedStateDenied.setVisibility(View.VISIBLE);
                         break;
+                    default:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
 
                 }
                 holder.connectedStateConnected.setVisibility(View.GONE);
