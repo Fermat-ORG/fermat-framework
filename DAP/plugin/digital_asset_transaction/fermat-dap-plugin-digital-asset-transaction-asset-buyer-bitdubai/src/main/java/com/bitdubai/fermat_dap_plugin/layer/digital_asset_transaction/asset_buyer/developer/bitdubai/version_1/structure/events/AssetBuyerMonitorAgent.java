@@ -16,6 +16,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.OutgoingDraftManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
@@ -62,9 +63,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final OutgoingDraftManager outgoingDraftManager;
     //CONSTRUCTORS
 
-    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager) {
+    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingDraftManager outgoingDraftManager) {
         this.errorManager = errorManager;
         this.dao = dao;
         this.transactionManager = transactionManager;
@@ -73,6 +75,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         this.assetTransmission = assetTransmission;
         this.cryptoVaultManager = cryptoVaultManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.outgoingDraftManager = outgoingDraftManager;
     }
 
     //PUBLIC METHODS
@@ -191,10 +194,14 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         System.out.println("Adding inputs...");
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
-                        //TODO USE CCP OUTGOING DRAFT PLUGIN
                         DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
                         dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
+//                        UUID outgoingId = UUID.randomUUID();
+//                        dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
+//                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+//                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
+//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
                         break;
                     }
                     case INPUTS_ADDED: {
@@ -215,6 +222,16 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         }
 
         private void checkPendingEvents() throws CantLoadTableToMemoryException, DAPException, InvalidParameterException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantGetCryptoTransactionException, CantUpdateRecordException {
+            for (String eventId : dao.getPendingOutgoingDraftEvents()) {
+                for (BuyingRecord buyingRecord : dao.getAddingInputsBuying()) {
+                    DraftTransaction signedTx = outgoingDraftManager.getPending(buyingRecord.getOutgoingId());
+                    outgoingDraftManager.markRead(buyingRecord.getOutgoingId());
+                    dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
+                    dao.updateBuyerTransaction(buyingRecord.getRecordId(), signedTx);
+                }
+                dao.notifyEvent(eventId);
+            }
+
             for (String eventId : dao.getPendingEvents()) {
                 switch (dao.getEventType(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
@@ -241,7 +258,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
             CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
-            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller());
+            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
         }
 

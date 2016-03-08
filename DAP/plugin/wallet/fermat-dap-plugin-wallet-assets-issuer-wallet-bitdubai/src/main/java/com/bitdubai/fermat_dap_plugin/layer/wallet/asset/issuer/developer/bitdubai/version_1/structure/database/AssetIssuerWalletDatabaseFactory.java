@@ -136,7 +136,9 @@ public class AssetIssuerWalletDatabaseFactory {
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, DatabaseDataType.STRING, 255, true);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE, DatabaseDataType.STRING, 15, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE, DatabaseDataType.STRING, 15, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, DatabaseDataType.STRING, 255, false);
 

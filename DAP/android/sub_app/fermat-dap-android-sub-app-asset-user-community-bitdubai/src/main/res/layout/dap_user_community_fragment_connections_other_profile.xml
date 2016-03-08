@@ -96,6 +96,17 @@
             android:textColor="#ffffff"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
+        <Button
+            android:id="@+id/btn_connection_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_blue"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Cancel Request"
+            android:textColor="#ffffff"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_connection_request_reject"

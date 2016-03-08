@@ -52,6 +52,13 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
         this.actorRedeem = actorRedeem;
         this.identity = identity;
     }
+    public DisconnectDialog(Activity a,
+                            final AssetRedeemPointCommunitySubAppSession intraUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources) {
+        super(a, intraUserSubAppSession, subAppResources);
+        this.actorRedeem = null;
+        this.identity = null;
+    }
 
 
     @SuppressLint("SetTextI18n")

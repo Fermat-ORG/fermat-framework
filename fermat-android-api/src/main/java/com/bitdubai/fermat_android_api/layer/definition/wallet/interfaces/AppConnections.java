@@ -54,7 +54,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         this.fullyLoadedSession = session;
     }
 
-    protected S getFullyLoadedSession(){
+    public S getFullyLoadedSession(){
         return fullyLoadedSession;
     }
 

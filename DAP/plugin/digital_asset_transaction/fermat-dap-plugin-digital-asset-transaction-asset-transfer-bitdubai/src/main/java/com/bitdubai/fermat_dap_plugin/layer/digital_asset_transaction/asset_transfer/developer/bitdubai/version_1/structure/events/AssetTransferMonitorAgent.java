@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -465,7 +466,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
         private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser newUser) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
             AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), newUser, digitalAssetMetadata.getDigitalAsset().getPublicKey(), digitalAssetMetadata.getNetworkType(), AssetMovementType.ASSET_TRANSFERRED);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
-            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
+            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(),digitalAssetMetadata.getDigitalAsset().getPublicKey());
             DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
             assetTransmissionManager.sendMessage(dapMessage);
         }
