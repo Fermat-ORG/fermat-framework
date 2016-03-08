@@ -1,43 +1,11 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications;
+package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications;
 
 /**
  * Created by franklin on 17/10/15.
  */
-public class CommunicationNetworkServiceDatabaseConstants {
+public class AssetIssuerNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "ActorNetworkServiceAssetRedeemPoint";
-
-    /**
-     * incoming messages database table definition.
-     */
-    public static final String INCOMING_MESSAGES_TABLE_NAME = "incoming_messages";
-
-    public static final String INCOMING_MESSAGES_ID_COLUMN_NAME = "id";
-    public static final String INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME = "sender_id";
-    public static final String INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME = "receiver_id";
-    public static final String INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME = "text_content";
-    public static final String INCOMING_MESSAGES_TYPE_COLUMN_NAME = "type";
-    public static final String INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME = "shipping_timestamp";
-    public static final String INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
-    public static final String INCOMING_MESSAGES_STATUS_COLUMN_NAME = "status";
-
-    public static final String INCOMING_MESSAGES_FIRST_KEY_COLUMN = INCOMING_MESSAGES_ID_COLUMN_NAME;
-
-    /**
-     * outgoing messages database table definition.
-     */
-    public static final String OUTGOING_MESSAGES_TABLE_NAME = "outgoing_messages";
-
-    public static final String OUTGOING_MESSAGES_ID_COLUMN_NAME = "id";
-    public static final String OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME = "sender_id";
-    public static final String OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME = "receiver_id";
-    public static final String OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME = "text_content";
-    public static final String OUTGOING_MESSAGES_TYPE_COLUMN_NAME = "type";
-    public static final String OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME = "shipping_timestamp";
-    public static final String OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
-    public static final String OUTGOING_MESSAGES_STATUS_COLUMN_NAME = "status";
-
-    public static final String OUTGOING_MESSAGES_FIRST_KEY_COLUMN = OUTGOING_MESSAGES_ID_COLUMN_NAME;
+    public static final String DATA_BASE_NAME  = "ActorNetworkServiceAssetIssuer";
 
     /**
      * incoming notifications database table definition.
@@ -56,6 +24,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME = "notification_read_mark";
     public static final String INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "notification_blockchain_network_type";
     public static final String INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME = "response_to_notification_id";
+    public static final String INCOMING_NOTIFICATION_MESSAGE = "incoming_message";
 
     public static final String INCOMING_NOTIFICATION_FIRST_KEY_COLUMN = INCOMING_NOTIFICATION_ID_COLUMN_NAME;
 
@@ -77,7 +46,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME = "notification_sent_count";
     public static final String OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "notification_blockchain_network_type";
     public static final String OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME = "response_to_notification_id";
+    public static final String OUTGOING_NOTIFICATION_MESSAGE = "outgoing_message";
 
     public static final String OUTGOING_NOTIFICATION_FIRST_KEY_COLUMN = OUTGOING_NOTIFICATION_ID_COLUMN_NAME;
-
 }

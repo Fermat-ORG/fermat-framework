@@ -10,21 +10,19 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
+
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
- * Added by Jinmy Bohorquez 11/02/2016
+ * Added by Jinmy Bohorquez 06/03/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -38,28 +36,27 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
     private CharSequence username;
     private CharSequence title;
 
-    private final Actor actorRedeem;
+    private final Actor actor;
     private final RedeemPointIdentity identity;
 
-    public DisconnectDialog(final Activity activity,
-                            final AssetRedeemPointCommunitySubAppSession intraUserSubAppSession,
-                            final SubAppResourcesProviderManager subAppResources,
-                            final Actor actorRedeem,
-                            final RedeemPointIdentity identity) {
+    public CancelDialog(final Activity activity,
+                        final AssetRedeemPointCommunitySubAppSession redeemPointCommunitySubAppSession,
+                        final SubAppResourcesProviderManager subAppResources,
+                        final Actor actor,
+                        final RedeemPointIdentity identity) {
 
-        super(activity, intraUserSubAppSession, subAppResources);
+        super(activity, redeemPointCommunitySubAppSession, subAppResources);
 
-        this.actorRedeem = actorRedeem;
+        this.actor = actor;
         this.identity = identity;
     }
-    public DisconnectDialog(Activity a,
-                            final AssetRedeemPointCommunitySubAppSession intraUserSubAppSession,
-                            final SubAppResourcesProviderManager subAppResources) {
-        super(a, intraUserSubAppSession, subAppResources);
-        this.actorRedeem = null;
+    public CancelDialog(Activity a,
+                        final AssetRedeemPointCommunitySubAppSession redeemPointCommunitySubAppSession,
+                        final SubAppResourcesProviderManager subAppResources) {
+        super(a, redeemPointCommunitySubAppSession, subAppResources);
+        this.actor = null;
         this.identity = null;
     }
-
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -95,7 +92,7 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dap_redeempoint_dialog_builder;
+        return R.layout.dialog_builder;
     }
 
     @Override
@@ -108,19 +105,19 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-            try {
-                //image null
-                if (actorRedeem != null) {
-                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(actorRedeem);
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    super.toastDefaultError();
-                }
-            } catch (CantDisconnectAssetActorException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            }
+//            try {
+//                //image null
+//                if (actor != null) {
+//                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
+                    Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
+//
+//                } else {
+//                    super.toastDefaultError();
+//                }
+//            } catch (CantDisconnectAssetActorException e) {
+//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                super.toastDefaultError();
+//            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();
