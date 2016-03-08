@@ -1,9 +1,9 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<!--<android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    >-->
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -65,8 +65,8 @@
                 android:background="@drawable/cht_buttom_send"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
-    </FrameLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout><!--
+</android.support.v4.widget.SwipeRefreshLayout>-->
 <!--
 android:layout_below="@+id/meLbl"
 

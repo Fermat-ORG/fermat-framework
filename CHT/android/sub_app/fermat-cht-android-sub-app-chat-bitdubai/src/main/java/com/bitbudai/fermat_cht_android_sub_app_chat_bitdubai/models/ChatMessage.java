@@ -15,6 +15,7 @@ public class ChatMessage {
     private UUID userId;
     private String dateTime;
     private String status;
+    private String type;
 
     public ChatMessage(/*String idm, boolean isMem, String messagem, String userIdm, String dateTimem*/) {
        /* id = idm;
@@ -22,6 +23,14 @@ public class ChatMessage {
         message = messagem;
         userId = userIdm;
         dateTime = dateTimem;*/
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getStatus() {

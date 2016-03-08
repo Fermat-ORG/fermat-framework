@@ -302,11 +302,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                 contactIcon =bmd.getBitmap();
                 //toolbar.setTitle(localUser.getAlias());
-                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
+                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 100));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
                 //getActivity().getActionBar().setLogo(contactIconCircular);
-            }else{
-                toolbar.setTitle("Fermat Chat");
             }
         }catch (CantGetChatUserIdentityException e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -345,7 +343,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 }
             }
         });
-
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -371,7 +369,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     }
                 }, 2500);
             }
-        });
+        });*/
         return layout;
     }
 

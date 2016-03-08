@@ -27,7 +27,7 @@ public class AssetBuyerEventHandler implements FermatEventHandler {
         if (fermatEvent == null)
             throw new CantSaveEventException(null, "Handling an asset buyer event", "Illegal Argument, this method takes an fermatEvent and was passed an null");
 
-        System.out.println("VAMM: ASSET SELLER RECEIVED A NEW EVENT!");
+        System.out.println("VAMM: ASSET BUYER RECEIVED A NEW EVENT!");
         System.out.println("VAMM: Type: " + fermatEvent.getEventType() + " - Source: " + fermatEvent.getSource());
 
         if (recorderService.getStatus() != ServiceStatus.STARTED) {

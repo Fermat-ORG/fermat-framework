@@ -19,6 +19,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.TransactionSignature;
@@ -96,9 +97,19 @@ public abstract class CryptoVault {
             Script scriptToSign = entry.getValue().getScriptPubKey();
 
             /**
+             * I need to get the index of the input I'm going to sign.
+             * Since the input class doesn't have an index selector, I need to check each one of them
+             */
+            int inputIndex = 0;
+            for (TransactionInput intputToSign : transactionToSign.getInputs()){
+                if (intputToSign.equals(entry.getKey()))
+                    inputIndex++;
+            }
+
+            /**
              * I get the signature hash for my output.
              */
-            Sha256Hash sigHash = transactionToSign.hashForSignature(0, scriptToSign, Transaction.SigHash.ALL, false);
+            Sha256Hash sigHash = transactionToSign.hashForSignature(inputIndex, scriptToSign, Transaction.SigHash.ALL, false);
 
             /**
              * I create the signature
@@ -111,7 +122,16 @@ public abstract class CryptoVault {
             /**
              * I will add the signature to the input script of the transaction
              */
-            entry.getKey().setScriptSig(inputScript);
+            transactionToSign.getInput(inputIndex).setScriptSig(inputScript);
+
+            /**
+             * Verify everything is ok
+             */
+            try{
+                transactionToSign.getInput(inputIndex).verify(entry.getValue());
+            } catch (VerificationException e){
+                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error during signing of transaction.", "incorrect signature");
+            }
         }
 
         /**

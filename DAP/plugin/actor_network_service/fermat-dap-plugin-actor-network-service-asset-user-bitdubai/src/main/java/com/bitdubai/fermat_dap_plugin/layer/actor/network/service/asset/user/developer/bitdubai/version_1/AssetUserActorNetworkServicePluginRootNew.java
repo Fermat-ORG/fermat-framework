@@ -108,11 +108,6 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
      */
     private Database dataBase;
 
-    /**
-     * Represent the EVENT_SOURCE
-     */
-//    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
-
     protected final static String DAP_IMG_USER = "DAP_IMG_USER";
 
     /**
@@ -435,7 +430,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 );
         }
     }
-//TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
+
     private void launchNotificationActorAsset() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         fermatEvent.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
@@ -514,14 +509,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            AssetUserNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new AssetUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            AssetUserNetworkServiceDatabaseFactory assetUserNetworkServiceDatabaseFactory = new AssetUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = assetUserNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -951,7 +946,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     changeActorAssetNotificationDescriptor(
                             ActorAssetToAddPublicKey,
                             AssetNotificationDescriptor.ACCEPTED,
-                            ActorAssetProtocolState.PENDING_ACTION);
+                            ActorAssetProtocolState.DONE);
 //TODO Evaluar diferencias en ActorAssetProtocolState.DONE y ActorAssetProtocolState.PENDING_ACTION para conocer diferencias
 
             Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
@@ -1074,7 +1069,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     changeActorAssetNotificationDescriptor(
                             actorAssetToDisconnectPublicKey,
                             AssetNotificationDescriptor.DISCONNECTED,
-                            ActorAssetProtocolState.PROCESSING_SEND);
+                            ActorAssetProtocolState.DONE);
 
             Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
 
@@ -1113,23 +1108,6 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     null
             );
 
-//            final AssetUserNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
-//                    UUID.randomUUID(),
-//                    actorAssetLoggedInPublicKey,
-//                    Actors.DAP_ASSET_ISSUER,
-//                    actorAssetToDisconnectPublicKey,
-//                    "",
-////                    "",
-//                    new byte[0],
-//                    Actors.DAP_ASSET_USER,
-//                    assetNotificationDescriptor,
-//                    System.currentTimeMillis(),
-//                    actorAssetProtocolState,
-//                    false,
-//                    1,
-//                    null
-//            );
-
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -1164,7 +1142,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
         try {
             final ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
-                            actorAssetLoggedInPublicKey,
+                            actorAssetToCancelPublicKey,
                             AssetNotificationDescriptor.CANCEL,
                             ActorAssetProtocolState.DONE);
 
@@ -1230,6 +1208,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
         try {
             incomingNotificationsDao.markNotificationAsRead(notificationID);
         } catch (final Exception e) {
+            reportUnexpectedError(e);
             throw new CantConfirmActorAssetNotificationException(e, "notificationID: " + notificationID, "Unhandled error.");
         }
     }

@@ -13,6 +13,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,19 +84,19 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 //        }
         if (data != null) {
             boolean myMsg = data.getIsme();
-            setAlignment(holder, myMsg);
-            holder.txtMessage.setText(data.getMessage());
+            setAlignment(holder, myMsg, data);
+            //holder.txtMessage.setText(data.getMessage());
             //holder.txtMessage.setTypeface(tf2, Typeface.NORMAL);
-            holder.txtInfo.setText(data.getDate());
+            //holder.txtInfo.setText(data.getDate());
             //holder.txtInfo.setTypeface(tf, Typeface.NORMAL);
-            if (data.getStatus() != null && myMsg==true) {
-                if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-                else if (data.getStatus() == MessageStatus.DELIVERED.toString() || data.getStatus() == MessageStatus.RECEIVE.toString())
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-                else if (data.getStatus() == MessageStatus.READ.toString())
-                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
-            }
+//            if (data.getStatus() != null && myMsg==true && data.getType()== TypeMessage.OUTGOING.toString()) {
+//                if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
+//                    holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
+//                else if (data.getStatus() == MessageStatus.DELIVERED.toString() || data.getStatus() == MessageStatus.RECEIVE.toString())
+//                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+//                else if (data.getStatus() == MessageStatus.READ.toString())
+//                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+//            }
         }
     }
 
@@ -172,7 +173,9 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         chatMessages.add(message);
     }
 
-    private void setAlignment(ChatHolder holder, boolean isMe) {
+    private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
+        holder.txtMessage.setText(data.getMessage());
+        holder.txtInfo.setText(data.getDate());
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
 
@@ -193,6 +196,12 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
+            if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
+                holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
+            else if (data.getStatus() == MessageStatus.DELIVERED.toString() || data.getStatus() == MessageStatus.RECEIVE.toString())
+                holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+            else if (data.getStatus() == MessageStatus.READ.toString())
+                holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_white_shadow);
 

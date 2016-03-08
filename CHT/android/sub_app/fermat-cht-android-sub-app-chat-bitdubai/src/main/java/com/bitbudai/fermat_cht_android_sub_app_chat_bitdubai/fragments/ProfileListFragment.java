@@ -340,7 +340,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
             }
         });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+       /* mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
             new Handler().postDelayed(new Runnable() {
@@ -381,7 +381,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                 }
             }, 2500);
             }
-        });
+        });*/
         // Inflate the list fragment layout
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
