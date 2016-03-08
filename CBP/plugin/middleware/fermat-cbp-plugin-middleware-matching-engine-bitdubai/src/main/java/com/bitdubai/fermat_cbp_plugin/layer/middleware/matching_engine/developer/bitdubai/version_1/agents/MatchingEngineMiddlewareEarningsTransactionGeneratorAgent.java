@@ -141,6 +141,8 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
             InputTransaction unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
 
+            InputTransaction sellTransactionToMatch = unmatchedSellInputTransaction;
+
             while (unmatchedSellInputTransaction != null) {
 
                 DatabaseTransaction databaseTransaction = dao.getNewDatabaseTransaction();
@@ -177,7 +179,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     // if the amount to match is lesser than the amount matched, i've to cut the buy transaction in parts
                     // the first part to match the needed amount, and the second part as unmatched amount
                     // i will mark the original buy transaction as matched as well.
-                    if (amountToMatch < amountMatchedTemp) {
+                    else if (amountToMatch < amountMatchedTemp) {
 
                         float partialToMatchAmountGiving    = amountToMatch - amountMatched;
                         float partialToMatchAmountReceiving = buyTransaction.getAmountGiving() / partialToMatchAmountGiving * buyTransaction.getAmountReceiving();
@@ -213,7 +215,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     }
 
                     // if the amount to match is bigger than the amount matched i've to keep looking buy transactions until i can.
-                    if (amountToMatch > amountMatchedTemp) {
+                    else {
 
                         amountMatched = amountMatchedTemp;
                         dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
@@ -222,6 +224,49 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
                     i++;
                 }
+
+                // if the amount to match is greater than the amount matched, i've to cut the sell transaction in parts
+                // the first part to match the needed amount, and the second part as unmatched amount
+                // i will mark the original sell transaction as matched as well.
+                if (amountToMatch > amountMatched) {
+
+                    float partialToMatchAmountGiving    = amountToMatch - amountMatched;
+                    float partialToMatchAmountReceiving = unmatchedSellInputTransaction.getAmountGiving() / partialToMatchAmountGiving * unmatchedSellInputTransaction.getAmountReceiving();
+
+                    float partialRestingAmountGiving    = unmatchedSellInputTransaction.getAmountGiving()    - partialToMatchAmountGiving   ;
+                    float partialRestingAmountReceiving = unmatchedSellInputTransaction.getAmountReceiving() - partialToMatchAmountReceiving;
+
+                    InputTransaction partialToMatch = dao.createPartialInputTransaction(
+                            databaseTransaction                    ,
+                            unmatchedSellInputTransaction.getOriginTransactionId(),
+                            unmatchedSellInputTransaction.getCurrencyGiving()     ,
+                            partialToMatchAmountGiving             ,
+                            unmatchedSellInputTransaction.getCurrencyReceiving()  ,
+                            partialToMatchAmountReceiving          ,
+                            earningsPair.getId()                   ,
+                            InputTransactionState.MATCHED
+                    );
+
+                    dao.createPartialInputTransaction(
+                            databaseTransaction,
+                            unmatchedSellInputTransaction.getOriginTransactionId(),
+                            unmatchedSellInputTransaction.getCurrencyGiving(),
+                            partialRestingAmountGiving,
+                            unmatchedSellInputTransaction.getCurrencyReceiving(),
+                            partialRestingAmountReceiving,
+                            earningsPair.getId(),
+                            InputTransactionState.UNMATCHED
+                    );
+
+                    dao.markInputTransactionAsMatched(databaseTransaction, unmatchedSellInputTransaction.getId());
+                    matchedBuyTransactions.add(partialToMatch);
+                    amountToMatch = amountMatched;
+                    sellTransactionToMatch = partialToMatch;
+                }
+
+                // generate the earning transaction with:
+                // sellTransactionToMatch as the sell transaction to match...
+                // matchedBuyTransactions as the buy transactions related to it...
 
                 unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
             }
