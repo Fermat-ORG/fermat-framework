@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -160,16 +161,17 @@ public class ChatListFragment extends AbstractFermatFragment{
                 name=cont.getRemoteName();
                 message=messl.get(messl.size() - 1).getMessage();
                 Chat chatl= chatManager.getChatByChatId(chatidtemp);
-                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatl.getLastMessageDate())))){
-                    datemessage= new SimpleDateFormat("HH:mm").format(chatl.getLastMessageDate());
+                long milliseconds = chatl.getLastMessageDate().getTime() + (chatl.getLastMessageDate().getNanos() / 1000000);
+                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds))))){
+                    datemessage= new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
                 }else{
-                    Date old=new Date(DateFormat.getDateTimeInstance().format(chatl.getLastMessageDate()));
+                    Date old=new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
                     Date today = new Date();
                     long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
                     if(dias==1) {
                         datemessage = "YESTERDAY";
                     }else
-                        datemessage= new SimpleDateFormat("dd/MM/yy").format(chatl.getLastMessageDate());//.toString();
+                        datemessage= new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds));//.toString();
                 }
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
@@ -386,19 +388,42 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        // Inflate the menu items
-        inflater.inflate(R.menu.chat_list_menu, menu);
-        // Locate the search item
-        //MenuItem searchItem = menu.findItem(R.id.menu_search);
+        try {
+            if(chatManager.isIdentityDevice() == false) {
+                menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            }else {
+                // Inflate the menu items
+                inflater.inflate(R.menu.chat_list_menu, menu);
+                // Locate the search item
+                //MenuItem searchItem = menu.findItem(R.id.menu_search);
+            }
+        } catch (CantGetChatUserIdentityException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_open_chat) {
+        int id = item.getItemId();
+        if(id == ChtConstants.CHT_ICON_HELP){
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setSubTitle(R.string.cht_chat_subtitle)
+                    .setBody(R.string.cht_chat_body)
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .build();
+            presentationDialog.show();
+            return true;
+        }
+        if (id == R.id.menu_open_chat) {
             changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
-        if (item.getItemId() == R.id.menu_switch_profile) {
+        if (id == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             return true;
         }
