@@ -74,7 +74,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         textButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_confirm_button);
         confirmButton.setOnClickListener(this);
-
+        confirmButton.setVisibility(View.INVISIBLE);
         /*customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
