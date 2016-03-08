@@ -47,7 +47,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="#666666"
                     android:textSize="9sp"
-                    android:text="fgfgfg"
                     />
 
                 <ImageView
