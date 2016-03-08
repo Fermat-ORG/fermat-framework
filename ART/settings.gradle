@@ -14,6 +14,12 @@ project(':fermat-art-core').projectDir = new File('ART/library/core/fermat-art-c
 //Android
 
 //Plugins
+//Actor Network Service
+include  ':fermat-art-plugin-actor-network-service-artist-bitdubai'
+project(':fermat-art-plugin-actor-network-service-artist-bitdubai').projectDir = new File('ART/plugin/actor_network_service/fermat-art-plugin-actor-network-service-artist-bitdubai')
+include ':fermat-art-plugin-actor-network-service-fan-bitdubai'
+project(':fermat-art-plugin-actor-network-service-fan-bitdubai').projectDir = new File('ART/plugin/actor_network_service/fermat-art-plugin-actor-network-service-fan-bitdubai')
+
 //Wallet Module
 include  ':fermat-art-plugin-wallet-module-fan-bitdubai'
 project(':fermat-art-plugin-wallet-module-fan-bitdubai').projectDir = new File('ART/plugin/wallet_module/fermat-art-plugin-wallet-module-fan-bitdubai')
