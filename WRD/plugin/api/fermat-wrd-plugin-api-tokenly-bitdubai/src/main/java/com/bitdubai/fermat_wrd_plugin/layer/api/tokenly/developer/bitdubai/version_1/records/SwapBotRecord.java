@@ -21,10 +21,10 @@ public class SwapBotRecord implements Bot {
     private String descriptionHtml;
     private ImageDetails backgroundImageDetails;
     private ImageDetails logoImageDetails;
-    private String backgroundOverlaySettings;
+    private String[] backgroundOverlaySettings;
     private Swap[] swaps;
     private TokenlyBalance[] tokenlyBalances;
-    private TokenlyBalance[] allTokenlyBalancesByType;
+    private TokenlyBalance[][] allTokenlyBalancesByType;
     private float returnFee;
     private String state;
     private long confirmationsRequired;
@@ -41,10 +41,10 @@ public class SwapBotRecord implements Bot {
             String descriptionHtml,
             ImageDetails backgroundImageDetails,
             ImageDetails logoImageDetails,
-            String backgroudOverlaySettings,
+            String[] backgroundOverlaySettings,
             Swap[] swaps,
             TokenlyBalance[] tokenlyBalances,
-            TokenlyBalance[] allTokenlyBalancesByType,
+            TokenlyBalance[][] allTokenlyBalancesByType,
             float returnFee,
             String state,
             long confirmationsRequired,
@@ -148,7 +148,7 @@ public class SwapBotRecord implements Bot {
      * @return
      */
     @Override
-    public String getBackgroundOverlaySettings() {
+    public String[] getBackgroundOverlaySettings() {
         return this.backgroundOverlaySettings;
     }
 
@@ -175,7 +175,7 @@ public class SwapBotRecord implements Bot {
      * @return
      */
     @Override
-    public TokenlyBalance[] getAllBalancesByType() {
+    public TokenlyBalance[][] getAllBalancesByType() {
         return this.allTokenlyBalancesByType;
     }
 

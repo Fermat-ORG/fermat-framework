@@ -29,7 +29,7 @@ public enum WorldApiType implements FermatEnum {
         throw new InvalidParameterException(
                 InvalidParameterException.DEFAULT_MESSAGE,
                 null, "Code Received: " + code,
-                "This Code Is Not Valid for the ContractTransactionStatus enum.");
+                "This Code Is Not Valid for the WorldApiType enum.");
     }
 
     @Override

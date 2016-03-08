@@ -77,7 +77,7 @@ public interface Bot {
      * This method returns the swap bot balances by type
      * @return
      */
-    TokenlyBalance[] getAllBalancesByType();
+    TokenlyBalance[][] getAllBalancesByType();
 
     /**
      * This method return the return fee.

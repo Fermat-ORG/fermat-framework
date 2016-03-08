@@ -22,41 +22,41 @@ public class TokenlyImageDetailsProcessor extends AbstractTokenlyProcessor{
 
         Gson gSonProcessor = new Gson();
         //Image Detail Id
-        String id = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.ID),
-                String.class);
+        String id = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.ID);
         //Image Detail full url.
-        String fullUrl = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.FULL_URL),
-                String.class);
+        String fullUrl = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.FULL_URL);
         //Image Detail medium url.
-        String mediumUrl = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.MEDIUM_URL),
-                String.class);
+        String mediumUrl = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.MEDIUM_URL);
         //Image Detail Thumb url.
-        String thumbUrl = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.THUMB_URL),
-                String.class);
+        String thumbUrl = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.THUMB_URL);
         //Image Detail Original url.
-        String originalUrl = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.ORIGINAL_URL),
-                String.class);
+        String originalUrl = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.ORIGINAL_URL);
         //Image Detail content type
-        String contentType = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.CONTENT_TYPE),
-                String.class);
+        String contentType = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.CONTENT_TYPE);
         //Image Detail size
-        long size = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.SIZE),
-                Long.class);
+        long size = getLongFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.SIZE);
         //Image Detail original file name
-        String originalFileName = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.ORIGINAL_FILE_NAME),
-                String.class);
+        String originalFileName = getStringFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.ORIGINAL_FILE_NAME);
         //Image Detail original file name.
-        Date updatedAt = gSonProcessor.fromJson(
-                getDateStringFromJsonObject(jSonObject, TokenlyImageDetailsJSonAttNames.ORIGINAL_FILE_NAME),
-                Date.class);
+        Date updatedAt = getDateFromJsonObject(
+                jSonObject,
+                TokenlyImageDetailsJSonAttNames.UPDATED);
         //Create Image Detail
         ImageDetails imageDetails = new ImageDetailsRecord(
                 id,

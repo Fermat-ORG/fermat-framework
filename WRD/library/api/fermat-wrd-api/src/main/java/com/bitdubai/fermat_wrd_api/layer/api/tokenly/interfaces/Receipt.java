@@ -17,7 +17,7 @@ public interface Receipt {
      * This method returns the receipt asset in.
      * @return
      */
-    String getAssteIn();
+    String getAssetIn();
 
     /**
      * This method returns the receipt quantity out.

@@ -4,6 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 07/03/16.
  */
@@ -31,12 +35,12 @@ public abstract class AbstractTokenlyProcessor {
      * @param field
      * @return
      */
-    protected static String getLongStringFromJsonObject(JsonObject jSonObject, String field){
+    protected static long getLongFromJsonObject(JsonObject jSonObject, String field){
         JsonElement jsonElement=jSonObject.get(field);
         if(jsonElement==null){
-            return "0";
+            return 0;
         }
-        return ""+jsonElement.getAsLong();
+        return jsonElement.getAsLong();
     }
 
     /**
@@ -46,12 +50,22 @@ public abstract class AbstractTokenlyProcessor {
      * @param field
      * @return
      */
-    protected static String getDateStringFromJsonObject(JsonObject jSonObject, String field){
+    protected static Date getDateFromJsonObject(JsonObject jSonObject, String field){
         JsonElement jsonElement=jSonObject.get(field);
         if(jsonElement==null){
-            return "2016-03-07T12:18:43.016Z";
+            return new Date(1961);
         }
-        return jsonElement.getAsString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+        String dateString = jsonElement.getAsString();
+        Date dateFromJson;
+        try {
+            java.util.Date birthDate = simpleDateFormat.parse(dateString);
+            dateFromJson = new Date(birthDate.getTime());
+        } catch (ParseException e) {
+            //Default date
+            return new Date(2016);
+        }
+        return dateFromJson;
     }
 
     /**
@@ -61,22 +75,29 @@ public abstract class AbstractTokenlyProcessor {
      * @param field
      * @return
      */
-    protected static String getDocubleStringFromJsonObject(JsonObject jSonObject, String field){
+    protected static double getDoubleFromJsonObject(JsonObject jSonObject, String field){
         JsonElement jsonElement=jSonObject.get(field);
         if(jsonElement==null){
-            return "0.0";
+            return 0.0;
         }
-        return ""+jsonElement.getAsDouble();
+        return jsonElement.getAsDouble();
     }
 
-    protected static String[] getArrayStringFromJsonObject(JsonObject jSonObject, String field){
+    protected static String[] getArrayStringFromJsonObject(
+            JsonObject jSonObject,
+            String field){
         JsonElement jsonElement = jSonObject.get(field);
         if(jsonElement==null){
             return new String[]{"null"};
         }
         JsonArray jsonArray = jsonElement.getAsJsonArray();
         String[] valuesArray = new String[jsonArray.size()];
-        return null;
+        int counter = 0;
+        for(JsonElement jsonElementFromArray : jsonArray){
+            valuesArray[counter] = jsonElementFromArray.getAsString();
+            counter++;
+        }
+        return valuesArray;
     }
 
 }

@@ -22,53 +22,53 @@ public class TokenlyReceiptProcessor extends AbstractTokenlyProcessor {
 
         Gson gSonProcessor = new Gson();
         //Receipt quantity in.
-        double quantityIn = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.QUANTITY_IN),
-                Long.class);
+        double quantityIn = getLongFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.QUANTITY_IN);
         //Receipt asset in
-        String assetIn = gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.ASSET_IN),
-                String.class);
+        String assetIn = getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.ASSET_IN);
         //Receipt quantity out
-        double quantityOut = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.QUANTITY_OUT),
-                Long.class);
+        double quantityOut = getLongFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.QUANTITY_OUT);
         //Receipt asset out
-        String assetOut = gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.ASSET_OUT),
-                String.class);
+        String assetOut = getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.ASSET_OUT);
         //Receipt type
-        String type = gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.TYPE),
-                String.class);
+        String type = getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.TYPE);
         //Receipt destination
-        String destination = gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.DESTINATION),
-                String.class);
+        String destination = getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.DESTINATION);
         //Receipt tx in.
-        String txIn = gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.TX_ID_IN),
-                String.class);
+        String txIn = getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.TX_ID_IN);
         //Receipt tx out.
-        String txOut= gSonProcessor.fromJson(
-                getStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.TX_ID_OUT),
-                String.class);
+        String txOut= getStringFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.TX_ID_OUT);
         //Receipt confirmations
-        int confirmations = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.CONFIRMATIONS),
-                Integer.class);
+        int confirmations = (int) getLongFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.CONFIRMATIONS);
         //Receipt confirmations out.
-        int confirmationsOut = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.CONFIRMATIONS),
-                Integer.class);
+        int confirmationsOut = (int) getLongFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.CONFIRMATIONS);
         //Receipt timestamp
-        long timestamp = gSonProcessor.fromJson(
-                getLongStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.TIMESTAMP),
-                Integer.class);
+        long timestamp = getLongFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.TIMESTAMP);
         //Receipt completed at
-        Date completedAt = gSonProcessor.fromJson(
-                getDateStringFromJsonObject(jsonObject, TokenlyReceiptJSonAttNames.COMPLETED_AT),
-                Date.class);
+        Date completedAt = getDateFromJsonObject(
+                jsonObject,
+                TokenlyReceiptJSonAttNames.COMPLETED_AT);
         //Create receipt record.
         Receipt receipt = new ReceiptRecord(
                 quantityIn,

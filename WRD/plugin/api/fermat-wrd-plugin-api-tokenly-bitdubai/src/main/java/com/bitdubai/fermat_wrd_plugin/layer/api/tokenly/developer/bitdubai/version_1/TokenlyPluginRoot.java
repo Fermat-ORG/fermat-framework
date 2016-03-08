@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wrd_api.all_definitions.interfaces.RemoteJSonProcessor;
+import com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces.Bot;
 import com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.structure.TokenlyManager;
 import com.google.gson.JsonElement;
@@ -42,6 +43,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             this.tokenlyManager = new TokenlyManager();
             //Test Method
             //testURL();
+            //testManagerByBotId();
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.API_TOKENLY,
@@ -69,6 +71,18 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             System.out.println("WRD: Test URL exception");
             e.printStackTrace();
         }
+    }
+
+    private void testManagerByBotId(){
+        String id="17d47db1-6115-485d-bd62-bb965bb31867";
+        try{
+            Bot bot = this.tokenlyManager.getBotURLByBotId(id);
+            System.out.println("WRD: Test response - " + bot);
+        } catch (Exception e) {
+            System.out.println("WRD: Test URL exception");
+            e.printStackTrace();
+        }
+
     }
 
 }

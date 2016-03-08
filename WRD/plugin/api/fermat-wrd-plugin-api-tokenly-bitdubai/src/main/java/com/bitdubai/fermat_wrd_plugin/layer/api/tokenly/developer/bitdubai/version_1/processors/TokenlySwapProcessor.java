@@ -30,6 +30,7 @@ public class TokenlySwapProcessor extends AbstractTokenlyProcessor {
         for(JsonElement jSonElementArray : jsonArray){
             JsonObject jsonObjectFromArray = jSonElementArray.getAsJsonObject();
             swaps[counter] = getSwapFromJsonObject(jsonObjectFromArray);
+            counter++;
         }
         return swaps;
     }
@@ -43,31 +44,31 @@ public class TokenlySwapProcessor extends AbstractTokenlyProcessor {
 
         Gson gSonProcessor = new Gson();
         //Swap id
-        String id = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.ID),
-                String.class);
+        String id = getStringFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.ID);
         //Swap transaction id
-        String txId = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.TX_ID),
-                String.class);
+        String txId = getStringFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.TX_ID);
         //Swap state
-        String state  = gSonProcessor.fromJson(
-                getStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.STATE),
-                String.class);
+        String state  = getStringFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.STATE);
         //Swap Receipt
         Receipt receipt = TokenlyReceiptProcessor.getReceiptFromJsonObject(jSonObject);
         //Swap created At
-        Date createdAt = gSonProcessor.fromJson(
-                getDateStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.CREATED_AT),
-                Date.class);
+        Date createdAt = getDateFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.CREATED_AT);
         //Swap updated at
-        Date updatedAt = gSonProcessor.fromJson(
-                getDateStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.UPDATED_AT),
-                Date.class);
+        Date updatedAt = getDateFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.UPDATED_AT);
         //Swap completed at.
-        Date completedAt = gSonProcessor.fromJson(
-                getDateStringFromJsonObject(jSonObject, TokenlySwapJSonAttNames.COMPLETED_AT),
-                Date.class);
+        Date completedAt = getDateFromJsonObject(
+                jSonObject,
+                TokenlySwapJSonAttNames.COMPLETED_AT);
         //Created swap
         Swap swap = new SwapRecord(
                 id,

@@ -41,6 +41,11 @@ public class TokenlyBotJSonAttNames {
     public static final String BACKGROUND_DETAILS = "backgroundImageDetails";
 
     /**
+     * Represents the bot logo image details.
+     */
+    public static final String LOGO_DETAILS = "logoImageDetails";
+
+    /**
      * Represents the background overlay settings.
      */
     public static final String BACKGROUND_OVERLAY_SETTINGS = "backgroundOverlaySettings";
