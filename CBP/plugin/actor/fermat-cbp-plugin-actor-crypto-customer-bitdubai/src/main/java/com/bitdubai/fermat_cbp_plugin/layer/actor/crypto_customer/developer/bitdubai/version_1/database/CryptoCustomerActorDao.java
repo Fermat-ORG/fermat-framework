@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
@@ -113,6 +114,25 @@ public class CryptoCustomerActorDao {
                 throw new CantCreateNewCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
                 throw new CantCreateNewCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public void clearAssociatedCustomerIdentityWalletRelationship(String walletPublicKey) throws CantClearAssociatedCustomerIdentityWalletRelationshipException {
+
+            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+
+            try {
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+
+                for (DatabaseTableRecord record : records)
+                    table.deleteRecord(record);
+
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantClearAssociatedCustomerIdentityWalletRelationshipException("Cant load table to memory", e, "", "");
+            } catch (CantDeleteRecordException e) {
+                throw new CantClearAssociatedCustomerIdentityWalletRelationshipException("Cant clear identities from wallet", e, "", "");
             }
         }
 

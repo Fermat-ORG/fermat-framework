@@ -67,6 +67,10 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearAllBankAccounts();
+
             Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
             if (data == null) {
                 bankAccountList = new ArrayList<>();
