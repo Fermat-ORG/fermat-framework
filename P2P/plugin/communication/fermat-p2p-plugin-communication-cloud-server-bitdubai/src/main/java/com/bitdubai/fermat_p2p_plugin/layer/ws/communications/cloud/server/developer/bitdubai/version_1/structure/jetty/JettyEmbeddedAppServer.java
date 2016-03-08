@@ -21,15 +21,14 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-import org.fourthline.cling.UpnpService;
-import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.support.igd.PortMappingListener;
-import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -39,6 +38,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.UnsupportedAddressTypeException;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
@@ -153,8 +153,20 @@ public class JettyEmbeddedAppServer {
         LOG.info("WebAppUri = "+webAppUri);
 
         if (webAppUri != null) {
-            resourceBase = webAppUri.toURI().toASCIIString();
+            resourceBase = webAppUri.toExternalForm();
         }
+
+        ProtectionDomain protectionDomain = JettyEmbeddedAppServer.class.getProtectionDomain();
+        URL location = protectionDomain.getCodeSource().getLocation();
+
+
+        LOG.info("resourceBase1 = "+resourceBase);
+        LOG.info("resourceBase2 = "+this.getClass().getResource("webapp"));
+        LOG.info("resourceBase3 = "+this.getClass().getResource("/webapp"));
+        LOG.info("resourceBase4 = "+this.getClass().getClassLoader().getResource("webapp"));
+        LOG.info("resourceBase5 = " + new ClassPathResource("webapp").getURI().toString());
+        LOG.info("resourceBase6 = "+location.toExternalForm());
+
 
         /*
          * Initialize web layer
@@ -166,7 +178,9 @@ public class JettyEmbeddedAppServer {
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
+        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         server.setHandler(webAppContext);
+
 
         /*
          * Initialize restful service layer

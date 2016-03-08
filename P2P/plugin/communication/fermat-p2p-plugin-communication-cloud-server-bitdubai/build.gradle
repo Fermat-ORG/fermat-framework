@@ -19,7 +19,8 @@ configurations {
 jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-cloud-server-bitdubai',
-                   'Implementation-Version': version
+                   'Implementation-Version': version,
+                   'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     }
 }
 
@@ -32,11 +33,21 @@ buildscript {
     }
 }
 
+ext.sharedManifest = manifest {
+    attributes 'One-Jar-URL-Factory': 'com.simontuffs.onejar.JarClassLoader$FileURLFactory'
+
+}
+
 
 task serverJar(type: OneJar) {
+
     mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+    manifest = project.manifest {
+        from sharedManifest
+    }
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
     additionalDir = file('src/main/resources/one-jar.properties')
+
 }
 
 
@@ -67,7 +78,6 @@ dependencies {
 	compile project(':fermat-p2p-api')
 	compile project(':fermat-pip-api')
 
-
     compile ('org.eclipse.jetty:jetty-server:9.2.14.v20151106')
     compile ('org.eclipse.jetty.websocket:websocket-server:9.2.14.v20151106')
     compile ('org.eclipse.jetty.websocket:websocket-api:9.2.14.v20151106')
@@ -86,6 +96,7 @@ dependencies {
     compile ('commons-codec:commons-codec:1.10')
     compile ('org.slf4j:slf4j-log4j12:1.7.13')
     compile ('org.jsoup:jsoup:1.8.3')
+    compile ('org.springframework:spring-core:4.2.5.RELEASE')
 
     compile files('src/main/libs/cling-core-2.1.0.jar')
     compile files('src/main/libs/cling-support-2.1.0.jar')
