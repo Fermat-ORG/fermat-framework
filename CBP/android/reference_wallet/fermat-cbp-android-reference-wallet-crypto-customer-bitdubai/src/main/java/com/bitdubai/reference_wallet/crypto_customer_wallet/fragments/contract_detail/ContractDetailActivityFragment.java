@@ -208,11 +208,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         if(clause.getType() == ClauseType.BROKER_CURRENCY){
                             try {
                                 if(FiatCurrency.codeExists(clause.getValue()))
-                                    merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                    paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
                                 else if(CryptoCurrency.codeExists(clause.getValue()))
-                                    merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                    paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
                             }catch(Exception e) {
-                                merchandiseCurrency = clause.getValue();
+                                paymentCurrency = clause.getValue();
                             }
                         }
                         if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
@@ -224,11 +224,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
                                 if (FiatCurrency.codeExists(clause.getValue()))
-                                    paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                    merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
                                 else if (CryptoCurrency.codeExists(clause.getValue()))
-                                    paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                    merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
                             }catch(Exception e) {
-                                paymentCurrency = clause.getValue();
+                                merchandiseCurrency = clause.getValue();
                             }
                         }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
