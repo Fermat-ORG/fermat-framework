@@ -147,6 +147,7 @@ public class AssetsOverBitcoinCryptoVaultDao implements CryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
+    @Override
     public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException {
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
@@ -709,6 +710,19 @@ public class AssetsOverBitcoinCryptoVaultDao implements CryptoVaultDao {
 
     @Override
     public int getPublicKeyPosition(String publicKey) throws CantExecuteDatabaseOperationException {
-        return 0;
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.size() != 0){
+            return databaseTableRecords.get(0).getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+        } else
+            return 0;
     }
 }

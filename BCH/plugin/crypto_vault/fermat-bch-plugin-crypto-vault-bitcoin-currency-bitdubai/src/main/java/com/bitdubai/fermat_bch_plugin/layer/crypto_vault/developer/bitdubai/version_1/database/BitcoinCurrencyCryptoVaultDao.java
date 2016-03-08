@@ -149,6 +149,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
+    @Override
     public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
@@ -675,6 +676,30 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
     @Override
     public int getPublicKeyPosition(String publicKey) throws com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException {
-        return 0;
+        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.size() != 0){
+            return databaseTableRecords.get(0).getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+        } else
+            return 0;
+    }
+
+    /**
+     * sets and thorws the error when we coundl't load a table into memory
+     * @param e
+     * @param tableName
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
+        String outputMessage = "There was an error loading into memory table " + tableName + ".";
+        throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
     }
 }

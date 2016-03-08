@@ -142,6 +142,7 @@ public class BitcoinWatchOnlyCryptoVaultDao implements CryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
+    @Override
     public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
@@ -669,6 +670,19 @@ public class BitcoinWatchOnlyCryptoVaultDao implements CryptoVaultDao {
 
     @Override
     public int getPublicKeyPosition(String publicKey) throws CantExecuteDatabaseOperationException {
-        return 0;
+        DatabaseTable databaseTable = database.getTable(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.size() != 0){
+            return databaseTableRecords.get(0).getIntegerValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+        } else
+            return 0;
     }
 }
