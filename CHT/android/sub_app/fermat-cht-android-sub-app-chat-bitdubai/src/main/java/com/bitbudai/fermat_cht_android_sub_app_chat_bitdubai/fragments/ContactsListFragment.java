@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
+import android.app.Presentation;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -29,11 +30,13 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
@@ -46,6 +49,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesExcepti
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.BuildConfig;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
@@ -394,11 +398,24 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_add_contact) {
+        int id = item.getItemId();
+        if(id == ChtConstants.CHT_ICON_HELP){
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setSubTitle(R.string.cht_chat_subtitle)
+                    .setBody(R.string.cht_chat_body)
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .build();
+            presentationDialog.show();
+            return true;
+        }
+        if (id == R.id.menu_add_contact) {
             cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
             dialog_conn.show();
             return true;
-        }else if (item.getItemId() == R.id.menu_switch_profile) {
+        }else if (id == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             return true;
         }/*else if(item.getItemId()==R.id.menu_search)
@@ -416,106 +433,114 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        // Inflate the menu items
-        inflater.inflate(R.menu.contact_list_menu, menu);
-        // Locate the search item
-        //MenuItem searchItem = menu.findItem(R.id.menu_search);
+        try {
+            if (chatManager.isIdentityDevice() == false) {
+                menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            } else {
+                // Inflate the menu items
+                inflater.inflate(R.menu.contact_list_menu, menu);
+                // Locate the search item
+                //MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-        // if (mIsSearchResultView) {
-        //    searchItem.setVisible(false);
-        //}
+                // In versions prior to Android 3.0, hides the search item to prevent additional
+                // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
+                // Since the search doesn't create a new Activity to do the searching, the menu item
+                // doesn't need to be turned off.
+                // if (mIsSearchResultView) {
+                //    searchItem.setVisible(false);
+                //}
 
-        // Retrieves the system search manager service
-/*        final SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+                // Retrieves the system search manager service
+    /*        final SearchManager searchManager =
+                    (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
-        // Retrieves the SearchView from the search menu item
- /*       final SearchView searchView = (SearchView) searchItem.getActionView();
+            // Retrieves the SearchView from the search menu item
+     /*       final SearchView searchView = (SearchView) searchItem.getActionView();
 
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+            final SearchView searchView = (SearchView) searchItem.getActionView();
 
-        // Assign searchable info to SearchView
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
+            // Assign searchable info to SearchView
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        // Set listeners for SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String queryText) {
-                // Nothing needs to happen when the user submits the search string
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Called when the action bar search text has changed.  Updates
-                // the search filter, and restarts the loader to do a new query
-                // using the new search string.
-                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
-
-                // Don't do anything if the filter is empty
-                if (mSearchTerm == null && newFilter == null) {
+            // Set listeners for SearchView
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String queryText) {
+                    // Nothing needs to happen when the user submits the search string
                     return true;
                 }
 
-                // Don't do anything if the new filter is the same as the current filter
-                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // Called when the action bar search text has changed.  Updates
+                    // the search filter, and restarts the loader to do a new query
+                    // using the new search string.
+                    String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
+
+                    // Don't do anything if the filter is empty
+                    if (mSearchTerm == null && newFilter == null) {
+                        return true;
+                    }
+
+                    // Don't do anything if the new filter is the same as the current filter
+                    if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
+                        return true;
+                    }
+
+                    // Updates current filter to new filter
+                    mSearchTerm = newFilter;
+
+                    // Restarts the loader. This triggers onCreateLoader(), which builds the
+                    // necessary content Uri from mSearchTerm.
+                    mSearchQueryChanged = true;
+                    //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                    return true;
+                }
+            });
+
+            searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                    // Nothing to do when the action item is expanded
                     return true;
                 }
 
-                // Updates current filter to new filter
-                mSearchTerm = newFilter;
-
-                // Restarts the loader. This triggers onCreateLoader(), which builds the
-                // necessary content Uri from mSearchTerm.
-                mSearchQueryChanged = true;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                // Nothing to do when the action item is expanded
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                // When the user collapses the SearchView the current search string is
-                // cleared and the loader restarted.
-                if (!TextUtils.isEmpty(mSearchTerm)) {
-                    onSelectionCleared();
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    // When the user collapses the SearchView the current search string is
+                    // cleared and the loader restarted.
+                    if (!TextUtils.isEmpty(mSearchTerm)) {
+                        onSelectionCleared();
+                    }
+                    mSearchTerm = null;
+                    //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+                    return true;
                 }
-                mSearchTerm = null;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
+            });
+
+            if (mSearchTerm != null) {
+                // If search term is already set here then this fragment is
+                // being restored from a saved state and the search menu item
+                // needs to be expanded and populated again.
+
+                // Stores the search term (as it will be wiped out by
+                // onQueryTextChange() when the menu item is expanded).
+                final String savedSearchTerm = mSearchTerm;
+
+                // Expands the search menu item
+                searchItem.expandActionView();
+
+                // Sets the SearchView to the previous search string
+                searchView.setQuery(savedSearchTerm, false);
             }
-        });
-
-        if (mSearchTerm != null) {
-            // If search term is already set here then this fragment is
-            // being restored from a saved state and the search menu item
-            // needs to be expanded and populated again.
-
-            // Stores the search term (as it will be wiped out by
-            // onQueryTextChange() when the menu item is expanded).
-            final String savedSearchTerm = mSearchTerm;
-
-            // Expands the search menu item
-            searchItem.expandActionView();
-
-            // Sets the SearchView to the previous search string
-            searchView.setQuery(savedSearchTerm, false);
+    */
+            }
+        } catch (CantGetChatUserIdentityException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-*/
     }
-
 //    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSession chatSession,
 //                                  FermatSession appSession, ErrorManager errorManager, UUID id){
 //        try{
