@@ -287,16 +287,22 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }
 
     private void updateButton() {
+        ActorAssetUser actorUser = null;
         try {
             connectionState = manager.getActorRegisteredDAPConnectionState(this.actor.getActorPublicKey());
+            actorUser =  manager.getActorUser(this.actor.getActorPublicKey());
+
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
+        } catch (CantAssetUserActorNotFoundException e) {
+            e.printStackTrace();
         }
-        updateStateConnection(connectionState);
+        updateStateConnection(connectionState, actorUser);
         onRefresh();
+
     }
 
-    private void updateStateConnection(DAPConnectionState dapConnectionState) {
+    private void updateStateConnection(DAPConnectionState dapConnectionState, ActorAssetUser actorUser) {
 
         switch (dapConnectionState) {
             case BLOCKED_LOCALLY:
@@ -307,7 +313,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 break;
             case CONNECTED_ONLINE:
             case CONNECTED_OFFLINE:
-                if (actor.getCryptoAddress() != null)
+                if (actorUser.getCryptoAddress() != null)
                     disconnectRequest();
                 else
                     connectRequest();
@@ -318,7 +324,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             case DENIED_REMOTELY:
             case REGISTERED_ONLINE:
             case REGISTERED_OFFLINE:
-                if (actor.getCryptoAddress() != null)
+                if (actorUser.getCryptoAddress() != null)
                     disconnectRequest();
                 else
                     connectRequest();
@@ -428,6 +434,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     actors.add((new Actor(record)));
                 }
             }
+
+
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
         } catch (CantAssetUserActorNotFoundException e) {
@@ -450,6 +458,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             @Override
             public void onPostExecute(Object... result) {
                 actors = (ArrayList<Actor>) result[0];
+                actor = actors.get(0);
                 if (actors.get(0).getCryptoAddress() != null) {
                     userCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
                     userCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());
