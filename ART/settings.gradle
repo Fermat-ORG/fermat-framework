@@ -10,3 +10,10 @@ project(':fermat-art-api').projectDir = new File('ART/library/api/fermat-art-api
 
 include ':fermat-art-core'
 project(':fermat-art-core').projectDir = new File('ART/library/core/fermat-art-core')
+
+//Android
+
+//Plugins
+//Wallet Module
+include  ':fermat-art-plugin-wallet-module-fan-bitdubai'
+project(':fermat-art-plugin-wallet-module-fan-bitdubai').projectDir = new File('ART/plugin/wallet_module/fermat-art-plugin-wallet-module-fan-bitdubai')

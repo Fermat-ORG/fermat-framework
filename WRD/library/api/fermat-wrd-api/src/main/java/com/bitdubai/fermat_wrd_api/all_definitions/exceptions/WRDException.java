@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class WRDException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "THE WORD LAYER HAS DETECTED AN EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "THE WORLD LAYER HAS DETECTED AN EXCEPTION";
 
     public WRDException(
             final String message,
