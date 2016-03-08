@@ -299,7 +299,7 @@ public class ChatMiddlewareMonitorAgent implements
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
-                    deleteActorConnections();
+                    //deleteActorConnections();
                     contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
                         for(ContactConnection contact : contactList){
