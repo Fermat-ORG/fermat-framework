@@ -11,7 +11,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  */
 public class AssetUserCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp, AssetUserCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
 
-    private AssetUserCommunitySubAppModuleManager manager;
+    public static final String BASIC_DATA = "catalog_item_user";
+    public static final String PREVIEW_IMGS = "preview_images_user";
+    public static final String DEVELOPER_NAME = "developer_name_user";
 
     public AssetUserCommunitySubAppSession() {
 
@@ -25,6 +27,8 @@ public class AssetUserCommunitySubAppSession extends AbstractFermatSession<Insta
 
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
+
+//    private AssetUserCommunitySubAppModuleManager manager;
 
 //    @Override
 //    public void setData(String key, Object object) {
