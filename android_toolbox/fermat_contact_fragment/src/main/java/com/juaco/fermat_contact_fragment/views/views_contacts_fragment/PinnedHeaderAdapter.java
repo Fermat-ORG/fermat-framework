@@ -24,8 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.juaco.fermat_contact_fragment.R;
+import com.juaco.fermat_contact_fragment.enums.HeaderTypes;
 import com.juaco.fermat_contact_fragment.interfaces.FermatListViewFragment;
 import com.juaco.fermat_contact_fragment.interfaces.IPinnedHeader;
 import com.squareup.picasso.Picasso;
@@ -226,8 +226,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         return PINNED_HEADER_VISIBLE;
     }
 
-
-    //TODO: ver si lo que cambie aca del toString está bien, estoy casao
     @Override
     public void configurePinnedHeader(View v, int position) {
         try
