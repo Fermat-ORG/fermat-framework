@@ -92,7 +92,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         imageBytes = customer.getProfileImage();
         negotiationId = saleNegotiation.getNegotiationId();
         cancellationReason = saleNegotiation.getCancelReason();
-        date = saleContract.getDateTime();
+        date = saleNegotiation.getLastNegotiationUpdateDate();
         status = saleContract.getStatus();
         nearExpirationDatetime = saleContract.getNearExpirationDatetime();
         merchandise = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
