@@ -52,4 +52,9 @@ public class DesktopNotificationPainter implements NotificationPainter {
     public String getActivityCodeResult() {
         return null;
     }
+
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
 }

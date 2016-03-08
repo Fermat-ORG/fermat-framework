@@ -64,4 +64,9 @@ public class CommunityNotificationPainter implements NotificationPainter {
         return null;
     }
 
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,11 +31,18 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.BuildConfig;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
@@ -45,6 +54,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -63,12 +73,12 @@ import java.util.UUID;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback {
+public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
     private ContactListAdapter adapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
+    //private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
 //    private String mSearchTerm; // Stores the current search query term
 //
 //    //private OnContactsInteractionListener mOnContactSelectedListener;
@@ -79,22 +89,23 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 // public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
 //    private ListView contactsContainer;
-    private Contact contactl;//= new Contact();
+    //private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
 
     // Whether or not this fragment is showing in a two-pane layout
-    private boolean mIsTwoPaneLayout;
+    //private boolean mIsTwoPaneLayout;
 
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-    private boolean mIsSearchResultView = false;
+    //private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    //private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
@@ -123,6 +134,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            //toolbar = getToolbar();
+            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
             adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                     moduleManager, errorManager, chatSession, appSession, this);
         }catch (Exception e)
@@ -243,6 +256,14 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+//            }
+//        });
+
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
                 moduleManager, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
@@ -288,7 +309,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             }
         });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+     /*   mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
             new Handler().postDelayed(new Runnable() {
@@ -330,15 +351,52 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 }
             }, 2500);
             }
-        });
+        });*/
         // Inflate the list fragment layout
         return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
+    }
+
+
+    @Override
+    public void onMethodCallbackContacts() {//solution to access to update contacts view
+        try {
+            List <Contact> con=  chatManager.getContacts();
+            if (con.size() > 0) {
+                contactname.clear();
+                contactid.clear();
+                contacticon.clear();
+                for (int i=0;i<con.size();i++){
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
+                }
+                final ContactListAdapter adaptador =
+                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                                moduleManager, errorManager, chatSession, appSession, null);
+                adaptador.refreshEvents(contactname, contacticon, contactid);
+                list.invalidateViews();
+                list.requestLayout();
+                text.setVisibility(View.GONE);
+            }else{
+                //Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                text.setVisibility(View.VISIBLE);
+                text.setText(" ");
+                text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
+            }
+        } catch (CantGetContactException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+            cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            dialog_conn.show();
             return true;
         }else if (item.getItemId() == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
