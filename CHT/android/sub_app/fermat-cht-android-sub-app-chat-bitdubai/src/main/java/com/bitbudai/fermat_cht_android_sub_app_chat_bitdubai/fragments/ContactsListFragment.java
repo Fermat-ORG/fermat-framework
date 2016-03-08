@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.graphics.Bitmap;
 import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -116,6 +117,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     ArrayList<UUID> contactid=new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     TextView text;
+    ImageView noData;
     View layout;
     Typeface tf;
 
@@ -228,6 +230,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
         text=(TextView) layout.findViewById(R.id.text);
+        noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
 
@@ -243,6 +246,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     contacticon.add(bmd.getBitmap());
                 }
                 text.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
             }else{
                 //Comentar, solo para pruebas
 //                ContactImpl cadded=new ContactImpl();
@@ -259,6 +263,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 //                chatManager.saveContact(cadded);
                 //Fin Comentar
                 text.setVisibility(View.VISIBLE);
+                noData.setVisibility(View.VISIBLE);
                 text.setText(" ");
                 text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
             }
