@@ -267,6 +267,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                 // generate the earning transaction with:
                 // sellTransactionToMatch as the sell transaction to match...
                 // matchedBuyTransactions as the buy transactions related to it...
+                // then execute the database transaction
 
                 unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
             }
