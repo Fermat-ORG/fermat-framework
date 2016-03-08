@@ -184,19 +184,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
 
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                         textDescription.setText("Send:");
@@ -217,20 +206,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
-
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment() );
                 confirmButton.setVisibility(View.INVISIBLE);
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
@@ -252,19 +228,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_03);
                 stepTitle.setText("Merchandise Delivery");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment() );
                 confirmButton.setVisibility(View.INVISIBLE);
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
@@ -287,19 +251,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_04);
                 stepTitle.setText("Merchandise reception");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment() );
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
@@ -405,8 +357,11 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 //    }
 
     @NonNull
-    private String getFormattedAmount(float amount, String currencyCode) {
-        return (decimalFormat.format(amount) + " " + currencyCode);
+    private String getFormattedAmount(String amount, String currencyCode) {
+        float aux = 0.0f;
+        try{ aux = Float.parseFloat(amount); } catch (Exception e){ }
+
+        return (decimalFormat.format(aux) + " " + currencyCode);
     }
 
     @NonNull

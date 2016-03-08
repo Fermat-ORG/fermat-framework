@@ -18,13 +18,13 @@ public class ContractDetail {
     private UUID contractId;
     private UUID negotiationId;
 
-    private float paymentOrMerchandiseAmount;
+    private String paymentOrMerchandiseAmount;
     private String paymentOrMerchandiseTypeOfPayment;
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
 
     public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId,
-                          float amount, String typeOfPayment, String currencyCode, long deliveryDate) {
+                          String amount, String typeOfPayment, String currencyCode, long deliveryDate) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
@@ -48,7 +48,7 @@ public class ContractDetail {
     //public void setNegotiationId(UUID negotiationId) {this.negotiationId = negotiationId;}
 
 
-    public float getPaymentOrMerchandiseAmount() {return paymentOrMerchandiseAmount;}
+    public String getPaymentOrMerchandiseAmount() {return paymentOrMerchandiseAmount;}
     //public void setPaymentOrMerchandiseAmount(float paymentOrMerchandiseAmount) {this.paymentOrMerchandiseAmount = paymentOrMerchandiseAmount;}
 
 

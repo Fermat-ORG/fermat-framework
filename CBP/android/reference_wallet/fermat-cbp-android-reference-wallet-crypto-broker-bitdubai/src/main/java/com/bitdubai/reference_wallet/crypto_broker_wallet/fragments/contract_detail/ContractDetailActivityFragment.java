@@ -235,13 +235,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                                 else if(CryptoCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
                             }catch(Exception e) {
-                                merchandiseCurrency = clause.getValue();
+                                paymentCurrency = clause.getValue();
                             }
                         }
                         if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
-                            merchandiseAmount = clause.getValue();
+                            paymentAmount = clause.getValue();
                         if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD)
-                            paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
 
 
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
@@ -251,13 +251,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                                 else if (CryptoCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
                             }catch(Exception e) {
-                                paymentCurrency = clause.getValue();
+                                merchandiseCurrency = clause.getValue();
                             }
                         }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
-                            paymentAmount = clause.getValue();
+                            merchandiseAmount = clause.getValue();
                         if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD)
-                            merchandisePaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                            paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                     }
 
                 }catch(Exception e) {e.printStackTrace();}
@@ -266,48 +266,48 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
                 contractDetail = new ContractDetail(
                         1,
-                        contractStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        contractStatus,
                         data.getContractId(),
                         data.getNegotiationId(),
-                        data.getAmount(),
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
+                        paymentAmount,
+                        paymentPaymentMethod,
+                        paymentCurrency,
                         data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
                 contractDetail = new ContractDetail(
                         2,
-                        contractStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        contractStatus,
                         data.getContractId(),
                         data.getNegotiationId(),
-                        data.getAmount(),
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
+                        paymentAmount,
+                        paymentPaymentMethod,
+                        paymentCurrency,
                         data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
                 contractDetail = new ContractDetail(
                         3,
-                        contractStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        contractStatus,
                         data.getContractId(),
                         data.getNegotiationId(),
-                        0.0f,                               //TODO: getMerchandiseAmount() missing
-                        "Missing type of merchandise",      //TODO: getTypeOfMerchandise() missing
-                        data.getPaymentCurrency(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        merchandiseAmount,
+                        merchandisePaymentMethod,
+                        merchandiseCurrency,
                         data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
                 contractDetail = new ContractDetail(
                         4,
-                        contractStatus,                       //customerBrokerContractPurchase.getStatus(),
+                        contractStatus,
                         data.getContractId(),
                         data.getNegotiationId(),
-                        0.0f,                               //TODO: get merchandise amount?
-                        "Missing type of merchandise",      //TODO: data.getTypeOfMerchandise???
-                        data.getPaymentCurrency(),              //TODO: refactor a getMerchandiseCurrency() ?
+                        merchandiseAmount,
+                        merchandisePaymentMethod,
+                        merchandiseCurrency,
                         data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
