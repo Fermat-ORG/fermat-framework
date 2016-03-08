@@ -35,6 +35,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.CancelDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
@@ -649,9 +650,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         }
 
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING) {
-                DisconnectDialog disconnectDialog;
+                CancelDialog cancelDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
+                cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -710,12 +711,12 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                         }
                     }
                 };
-                disconnectDialog.setTitle("Cancel request");
-                disconnectDialog.setDescription("Do you want to cancel connection with ");
-                disconnectDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                cancelDialog.setTitle("Cancel request");
+                cancelDialog.setDescription("Do you want to cancel connection with ");
+                cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
                         " Users" : actorsConnecting.get(0).getName());
                 //connectDialog.setSecondDescription("a connection request");
-                disconnectDialog.show();
+                cancelDialog.show();
                 return true;
         }
 

@@ -23,6 +23,7 @@ project(':fermat_preference_settings').projectDir = new File('android_toolbox/fe
 include ':image_slider'
 project(':image_slider').projectDir = new File('android_toolbox/image_slider')
 
+
 include ':toolbar_widgets'
 project(':toolbar_widgets').projectDir = new File('android_toolbox/toolbar_widgets')
 
@@ -38,12 +39,17 @@ project(':expandable_recycler_view').projectDir = new File('android_toolbox/expa
 include ':reveal_menu'
 project(':reveal_menu').projectDir = new File('android_toolbox/reveal_menu')
 
+include ':fermat_contact_fragment'
+project(':fermat_contact_fragment').projectDir = new File('android_toolbox/fermat_contact_fragment')
+
 include ':fermat_preference_settings'
 project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
 
 include ':fermat_navigator_drawer'
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
 
+include ':flip_card'
+project(':flip_card').projectDir = new File('android_toolbox/flip_card')
 
-
-
+include ':fermat_statistics'
+project(':fermat_statistics').projectDir = new File('android_toolbox/fermat_statistics')
