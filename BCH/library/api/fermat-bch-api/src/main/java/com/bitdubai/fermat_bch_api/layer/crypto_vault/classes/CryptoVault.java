@@ -96,9 +96,19 @@ public abstract class CryptoVault {
             Script scriptToSign = entry.getValue().getScriptPubKey();
 
             /**
+             * I need to get the index of the input I'm going to sign.
+             * Since the input class doesn't have an index selector, I need to check each one of them
+             */
+            int inputIndex = 0;
+            for (TransactionInput intputToSign : transactionToSign.getInputs()){
+                if (intputToSign.equals(entry.getKey()))
+                    inputIndex++;
+            }
+
+            /**
              * I get the signature hash for my output.
              */
-            Sha256Hash sigHash = transactionToSign.hashForSignature(0, scriptToSign, Transaction.SigHash.ALL, false);
+            Sha256Hash sigHash = transactionToSign.hashForSignature(inputIndex, scriptToSign, Transaction.SigHash.ALL, false);
 
             /**
              * I create the signature
