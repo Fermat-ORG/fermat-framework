@@ -567,7 +567,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
             }
             if(actorsSelected.size() > 0) {
 
-
                 DisconnectDialog disconnectDialog;
 
                 disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
@@ -665,7 +664,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                             FermatWorker worker = new FermatWorker() {
                                 @Override
                                 protected Object doInBackground() throws Exception {
-
 
                                     for(ActorAssetUser actor: actorsConnecting) {
                                         //TODO revisar si esto es asi

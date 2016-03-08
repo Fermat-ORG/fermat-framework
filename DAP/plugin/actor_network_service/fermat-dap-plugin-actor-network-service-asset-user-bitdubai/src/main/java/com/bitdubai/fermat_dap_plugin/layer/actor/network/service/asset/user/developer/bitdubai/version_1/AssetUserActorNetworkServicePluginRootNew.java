@@ -744,7 +744,8 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                 for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
                     String profileImage = "";
-                    if (!platformComponentProfile.getExtraData().equals("")) {
+                    byte[] imageByte = new byte[0];
+                    if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
                         try {
                             JsonParser jParser = new JsonParser();
                             JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
@@ -753,9 +754,8 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                         } catch (Exception e) {
                             profileImage = platformComponentProfile.getExtraData();
                         }
+                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
                     }
-
-                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
 
                     ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(
                             platformComponentProfile.getIdentityPublicKey(),

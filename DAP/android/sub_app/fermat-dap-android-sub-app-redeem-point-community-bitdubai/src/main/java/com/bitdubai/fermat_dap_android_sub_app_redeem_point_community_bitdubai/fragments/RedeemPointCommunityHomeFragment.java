@@ -510,7 +510,6 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             }
             if(actorsSelected.size() > 0) {
 
-
                 DisconnectDialog disconnectDialog;
 
                 disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null){
