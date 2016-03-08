@@ -248,7 +248,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        preConfigureWallet();
+        //preConfigureWallet();
     }
 
     private void preConfigureWallet() {
