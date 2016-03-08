@@ -262,16 +262,24 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void updateButton() {
+        ActorAssetRedeemPoint actorAssetRedeemPoint = null;
         try {
             connectionState = manager.getActorRedeemRegisteredDAPConnectionState(this.actorRedeem.getActorPublicKey());
+            actorAssetRedeemPoint =  manager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
+
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         }
-        updateStateConnection(connectionState);
+        catch (CantAssetRedeemPointActorNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        updateStateConnection(connectionState, actorAssetRedeemPoint);
         onRefresh();
+
     }
 
-    private void updateStateConnection(DAPConnectionState dapConnectionState) {
+    private void updateStateConnection(DAPConnectionState dapConnectionState, ActorAssetRedeemPoint actorAssetRedeemPoint) {
 
         switch (dapConnectionState) {
             case BLOCKED_LOCALLY:
@@ -282,7 +290,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 break;
             case CONNECTED_ONLINE:
             case CONNECTED_OFFLINE:
-                if (actorRedeem.getCryptoAddress() != null)
+                if (actorAssetRedeemPoint.getCryptoAddress() != null)
                     disconnectRequest();
                 else
                     connectRequest();
@@ -293,7 +301,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             case DENIED_REMOTELY:
             case REGISTERED_ONLINE:
             case REGISTERED_OFFLINE:
-                if (actorRedeem.getCryptoAddress() != null)
+                if (actorAssetRedeemPoint.getCryptoAddress() != null)
                     disconnectRequest();
                 else
                     connectRequest();
@@ -396,6 +404,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                     actors.add((new Actor(record)));
                 }
             }
+
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         } catch (CantAssetRedeemPointActorNotFoundException e) {
@@ -418,6 +427,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             @Override
             public void onPostExecute(Object... result) {
                 actors = (ArrayList<Actor>) result[0];
+                actorRedeem = actors.get(0);
                 if (actors.get(0).getCryptoAddress() != null) {
                     redeemCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
                     redeemCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());
