@@ -26,12 +26,13 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityNotificationAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -39,7 +40,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserS
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private UserCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private static AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
@@ -71,6 +72,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private ProgressDialog dialog;
 
     SettingsManager<AssetUserSettings> settingsManager;
+
     /**
      * Create a new instance of this fragment
      *
@@ -84,12 +86,14 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+
         manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
-//        intraUserInformation = (IntraUserInformation) appSession.getData(USER_SELECTED);
-//        moduleManager = intraUserSubAppSession.getModuleManager();
+        actorInformation = (Actor) appSession.getData(USER_SELECTED);
+
         errorManager = appSession.getErrorManager();
         listActorInformation = new ArrayList<>();
     }
@@ -139,7 +143,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
             if (manager == null)
                 throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-            if(manager.getActiveAssetUserIdentity() != null) {
+            if (manager.getActiveAssetUserIdentity() != null) {
                 result = manager.getWaitingYourConnectionActorAssetUser(manager.getActiveAssetUserIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
                     for (ActorAssetUser record : result) {
@@ -234,7 +238,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_NOTIFICATIONS, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -269,6 +273,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
 
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * onItem click listener event
      *
@@ -278,16 +283,9 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     @Override
     public void onItemClickListener(Actor data, int position) {
         try {
-//            ConnectDialog notificationAcceptDialog = new ConnectDialog(
-//                    getActivity(),
-//                    (AssetUserCommunitySubAppSession) appSession,
-//                    null,
-//                    data,
-//                    manager.getActiveAssetUserIdentity());
-
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    (AssetUserCommunitySubAppSession) appSession,
+                    assetUserCommunitySubAppSession,
                     null,
                     data,
                     manager.getActiveAssetUserIdentity());
@@ -323,5 +321,16 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     @Override
     public void onLongItemClickListener(Actor data, int position) {
 
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }

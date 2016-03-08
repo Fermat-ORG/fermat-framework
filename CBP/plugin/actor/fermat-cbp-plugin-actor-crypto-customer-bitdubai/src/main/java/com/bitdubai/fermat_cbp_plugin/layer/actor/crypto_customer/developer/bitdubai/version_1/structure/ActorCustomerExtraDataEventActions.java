@@ -82,8 +82,14 @@ public final class ActorCustomerExtraDataEventActions {
                 for(CryptoBrokerActorConnection broker : connections){
 
                     if( !this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey()) ) {
-                        ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
-                        this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+
+                        if( !this.cryptoCustomerActorDao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer()) ){
+
+                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
+
+                            this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+                        }
+
                         this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
                     }
                 }

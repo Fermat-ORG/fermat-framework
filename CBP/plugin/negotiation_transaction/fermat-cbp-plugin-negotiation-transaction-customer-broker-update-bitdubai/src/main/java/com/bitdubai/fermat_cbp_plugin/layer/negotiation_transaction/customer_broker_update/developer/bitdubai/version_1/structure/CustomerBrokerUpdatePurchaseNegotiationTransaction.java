@@ -102,6 +102,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
 
             //UPDATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            this.customerBrokerPurchaseNegotiationManager.waitForCustomer(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(

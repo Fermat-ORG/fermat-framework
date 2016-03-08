@@ -17,7 +17,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -105,8 +104,6 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
 
             System.out.print("\n\n**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
-            //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -152,18 +149,28 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
 //            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
+                System.out.print("\n\n**** 21.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
+                System.out.print("\n\n**** 21.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
             }
 
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            }
+
+            System.out.print("\n\n**** 21.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            CustomerBrokerPurchaseNegotiation nego = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(customerBrokerPurchaseNegotiation.getNegotiationId());
+            System.out.print("\n\n**** 21.3) Status: "+nego.getStatus().getCode()+" ****\n");
 
             //CREATE NEGOTIATION TRANSATION
-            this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
+            customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                     transactionId,
                     customerBrokerPurchaseNegotiation,
                     NegotiationType.PURCHASE,
@@ -184,6 +191,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
+            System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     this.cryptoAddressBookManager,
                     this.cryptoVaultManager,
@@ -192,11 +200,19 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
 //            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
-
+                System.out.print("\n\n**** 28.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****" +
+                        "\nClauses Date.");
+                for (Clause item: customerBrokerPurchaseNegotiation.getClauses()){
+                    System.out.print("\n- "+item.getType()+" = "+item.getValue()+"\n");
+                }
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             }
+
+            System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION****\n");
+            //CLOSE NEGOTIATION
+            customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(),e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");

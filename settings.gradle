@@ -2,6 +2,7 @@
  * Please keep the elements ordered alphabetically.
  */
 
+apply from: 'ART/settings.gradle'
 apply from: 'BCH/settings.gradle'
 apply from: 'BNK/settings.gradle'
 apply from: 'CBP/settings.gradle'
@@ -15,9 +16,10 @@ apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
+apply from: 'WRD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':triangle-shape', ':triangle-shape', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -75,4 +77,3 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
-

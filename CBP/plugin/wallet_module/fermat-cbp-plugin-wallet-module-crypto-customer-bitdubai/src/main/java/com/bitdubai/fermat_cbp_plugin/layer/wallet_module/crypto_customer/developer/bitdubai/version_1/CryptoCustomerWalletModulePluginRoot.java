@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_online_merchandise.interfaces.CustomerAckOnlineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
@@ -115,6 +116,10 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
     CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
+    private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
+
+
     //TODO Change for actorExtraDataManager
 //    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_CUSTOMER_ACTOR)
 //    CryptoCustomerActorManager cryptoCustomerActorManager;
@@ -138,6 +143,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
         try {
             if (walletManager == null)
                 walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager(walletManagerManager,
+                        cryptoBrokerActorConnectionManager,
                         customerBrokerPurchaseNegotiationManager,
                         cryptoCustomerIdentityManager,
                         customerBrokerContractPurchaseManager,

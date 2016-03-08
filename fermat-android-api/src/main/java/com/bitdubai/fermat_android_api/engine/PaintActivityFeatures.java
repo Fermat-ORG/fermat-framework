@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_android_api.engine;
 
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 
@@ -22,7 +21,6 @@ public interface PaintActivityFeatures {
     // Esto no deberia estar acá
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);
 
-    void setMenuSettings(View viewGroup, View container_title);
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
 

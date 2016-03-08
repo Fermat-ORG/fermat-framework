@@ -38,6 +38,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEW_CONTRACT_UPDATE_VIEW;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -165,17 +168,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-                //TODO: kill testdata!
                 waitingForCustomer.addAll(wallet.getContractsWaitingForCustomer(10, 0));
-                waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
+                //waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(grouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_broker);
                 List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                //TODO: kill testdata!
                 waitingForBroker.addAll(wallet.getContractsWaitingForBroker(10, 0));
-                waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
+                //waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
                 grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
@@ -228,6 +229,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code){
+            case CCW_NEW_CONTRACT_UPDATE_VIEW:
+                onRefresh();
+                break;
         }
     }
 }

@@ -19,6 +19,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantL
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
@@ -48,6 +50,7 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.e
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -106,6 +109,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param brokerPublicKey the Public Key of the Crypto Broker who is going to be associated with this wallet
      */
     boolean associateIdentity(ActorIdentity brokerPublicKey, String brokerWalletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
+
+    /**
+     * Clear any associated identities to this wallet
+     *
+     * @param brokerWalletPublicKey the Public Key of the wallet to be cleared of its identity
+     */
+    void clearAssociatedIdentities(String brokerWalletPublicKey) throws CantClearBrokerIdentityWalletRelationshipException;
 
     Quote getQuote(Currency merchandise, Currency currencyPayment, String brokerWalletPublicKey) throws CantGetCryptoBrokerQuoteException;
 
@@ -196,7 +206,11 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall) throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
+    void clearWalletSetting(String publicKeyWalletCryptoBrokerInstall) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+
     void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantSaveCryptoBrokerWalletSettingException;
+
+    void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException;
 
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
@@ -493,6 +507,14 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting, String walletPublicKey) throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     /**
+     * This method clears the instance CryptoBrokerWalletProviderSetting
+     *
+     * @return
+     * @throws CantClearCryptoBrokerWalletSettingException
+     */
+    void clearCryptoBrokerWalletProviderSetting(String walletPublicKey) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+
+    /**
      * @param bankAccount
      * @throws CantCreateBankAccountSaleException
      */
@@ -592,6 +614,17 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantLoadEarningSettingsException if something goes wrong trying to get the earning settings.
      */
     EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException;
+
+    /**
+     * The method <code>clearEarningPairsFromEarningSettings</code> clears (disassotiates) all earning pairs.
+     *
+     * @param brokerWalletPublicKey               the broker wallet's public key
+     * @throws CantDisassociatePairException      if something goes wrong.
+     * @throws CantLoadEarningSettingsException   if something goes wrong trying to get the earning settings.
+     */
+    void clearEarningPairsFromEarningSettings(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantDisassociatePairException;
+
+
 
     List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException, CantListEarningsPairsException;
 }

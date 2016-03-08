@@ -10,7 +10,7 @@ android:layout_height="wrap_content">
     android:scaleType="centerCrop"
     android:padding="10dp"
     style="@style/quickContactBadgeStyle"
-    android:src="@drawable/ic_contact_picture_holo_light"/>
+    android:src="@drawable/cht_profile_list_icon"/>
 
 
 <TextView

@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         >
 
+
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,11 +42,13 @@
 
 
 
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="20"
                 android:id="@+id/container_main">
+
+
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
@@ -78,6 +81,17 @@
                         android:layout_marginLeft="6dp"/>
 
                 </RadioGroup>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@drawable/icon_recent_app"
+                    android:id="@+id/btn_recents"
+                    android:visibility="visible"
+                    android:layout_marginRight="9dp"
+                    android:layout_marginTop="9dp"/>
+
 
                 <SlidingDrawer
                     android:layout_width="match_parent"
@@ -124,9 +138,6 @@
                 android:layout_height="wrap_content">
 
 
-
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="95dp"
@@ -142,17 +153,12 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/bottom_navigation_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="95dp"
                         android:overScrollMode="never"
                         android:layout_gravity="center"
                         />
 
                 </LinearLayout>
-
-                <include layout="@layout/reveal_bottom"
-                    android:visibility="gone"
-                    android:id="@+id/botom_menu"
-                    />
 
 
             </FrameLayout>
@@ -161,10 +167,24 @@
 
             </LinearLayout>
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/background_shadow_container"
+            android:background="#8859595B"
+            android:visibility="gone"/>
+
+
         <include layout="@layout/reveal_bottom"
+            android:id="@+id/reveal_bottom_container"
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:visibility="gone"/>
+
+
+
 
     </FrameLayout>
 

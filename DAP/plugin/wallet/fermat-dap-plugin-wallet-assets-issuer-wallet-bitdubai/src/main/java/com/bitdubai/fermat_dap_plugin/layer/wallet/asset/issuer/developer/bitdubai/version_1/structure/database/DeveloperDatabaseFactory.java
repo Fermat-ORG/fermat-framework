@@ -112,7 +112,9 @@ public class DeveloperDatabaseFactory {
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID);
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY);
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE);
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY);
+        assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE);
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP);
         assetMovementColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE);
 

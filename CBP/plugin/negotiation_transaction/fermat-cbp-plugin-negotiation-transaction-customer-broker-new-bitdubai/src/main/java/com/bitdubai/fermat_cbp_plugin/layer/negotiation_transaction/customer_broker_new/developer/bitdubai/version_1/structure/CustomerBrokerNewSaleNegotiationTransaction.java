@@ -1,11 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -38,7 +35,7 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
         try {
 
 
-            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION TRANSACTION  ****\n" +
+            System.out.print("\n\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION  ****\n" +
                     "\n --- Negotiation Mock XML Date" +
                     "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                     "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
@@ -48,7 +45,9 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
 
             //CREATE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForBroker(customerBrokerSaleNegotiation);
 
+            System.out.print("\n\n**** 20.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - SALE NEGOTIATION - CREATE SALE NEGOTIATION CONFIRM ****\n");
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerNewNegotiationTransactionDatabaseDao.createCustomerBrokerNewNegotiationTransaction(
                     transactionId,

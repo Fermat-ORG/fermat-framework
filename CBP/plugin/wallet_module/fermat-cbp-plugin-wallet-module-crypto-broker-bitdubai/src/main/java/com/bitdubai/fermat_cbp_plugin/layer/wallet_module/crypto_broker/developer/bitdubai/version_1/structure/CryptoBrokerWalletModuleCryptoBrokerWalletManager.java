@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
@@ -65,15 +66,20 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.Ident
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantUpdatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -102,6 +108,7 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -353,6 +360,18 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public Collection<Clause> getNegotiationClausesFromNegotiationId(UUID negotiationId) throws CantGetListClauseException
+    {
+        try{
+            CustomerBrokerSaleNegotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationId);
+            Collection<Clause> clauses = negotiation.getClauses();
+            return clauses;
+        }catch(CantGetListSaleNegotiationsException | CantGetListClauseException ex) {
+            throw new CantGetListClauseException("Cant get the negotiation clauses for the given negotiationId " + negotiationId.toString(), ex);
+        }
+    }
+
+    @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
         Collection<CustomerBrokerSaleNegotiation> saleNegotiations;
@@ -480,11 +499,21 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return cryptoBrokerActorManager.createNewBrokerIdentityWalletRelationship(brokerIdentity, brokerWalletPublicKey) != null;
     }
 
-    @Override //TODO: Implementar CustomerBrokerUpdateManager Negotiation Transaction
+    @Override
+    public void clearAssociatedIdentities(String brokerWalletPublicKey) throws CantClearBrokerIdentityWalletRelationshipException {
+        cryptoBrokerActorManager.clearBrokerIdentityWalletRelationship(brokerWalletPublicKey);
+    }
+
+    @Override
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException, CantCancelNegotiationException {
-        CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(negotiation.getNegotiationId());
+        CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(
+                negotiation.getNegotiationId(),
+                negotiation.getBroker().getPublicKey(),
+                negotiation.getCustomer().getPublicKey()
+        );
         customerBrokerSaleNegotiation.setCancelReason(reason);
         customerBrokerUpdateManager.cancelNegotiation(customerBrokerSaleNegotiation);
+
         return negotiation;
     }
 
@@ -777,11 +806,27 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public void clearWalletSetting(String publicKeyWalletCryptoBrokerInstall) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletSpreadSetting();
+    }
+
+    @Override
     public void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantSaveCryptoBrokerWalletSettingException {
         //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
         publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
         cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().saveCryptoBrokerWalletAssociatedSetting(cryptoBrokerWalletAssociatedSetting);
     }
+
+    @Override
+    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting();
+    }
+
+
 
     @Override
     public boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
@@ -1239,6 +1284,22 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * This method clears the instance CryptoBrokerWalletProviderSetting
+     *
+     * @return
+     *
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public void clearCryptoBrokerWalletProviderSetting(String walletPublicKey) throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().clearCryptoBrokerWalletProviderSetting();
+    }
+
+
+
+    /**
      * @param bankAccount
      *
      * @throws CantCreateBankAccountSaleException
@@ -1627,24 +1688,64 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                          String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
 
         EarningsSettings earningsSettings;
+        EarningsPair earningsPair = null;
 
         try {
-
             earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
-
-        } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+        } catch (EarningsSettingsNotRegisteredException ex) {
 
             try {
-
                 earningsSettings = matchingEngineManager.registerEarningsSettings(new WalletReference(brokerWalletPublicKey));
-
-            } catch (CantRegisterEarningsSettingsException cantRegisterEarningsSettingsException) {
-
-                throw new CantAssociatePairException(cantRegisterEarningsSettingsException, "", "");
+            } catch (CantRegisterEarningsSettingsException e) {
+                throw new CantAssociatePairException(e, "", "");
             }
         }
-        return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
+
+        try{
+            earningsPair = earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
+        }catch(CantAssociatePairException | PairAlreadyAssociatedException e){
+
+            try {
+                for (EarningsPair ep : earningsSettings.listEarningPairs()) {
+                    if(ep.getEarningCurrency() == earningCurrency && ep.getLinkedCurrency() == linkedCurrency)
+                        earningsSettings.updateEarningsPair(ep.getId(), new WalletReference(brokerWalletPublicKey));
+                }
+            }catch(CantListEarningsPairsException | CantUpdatePairException | PairNotFoundException ex) {
+                throw new CantAssociatePairException(ex, "Cant update earnings pair", "");
+            }
+        }
+
+        return earningsPair;
     }
+
+    @Override
+    public void clearEarningPairsFromEarningSettings(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantDisassociatePairException {
+        EarningsSettings earningsSettings;
+
+        try {
+            earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
+        } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+            earningsSettings = null;
+        }
+
+        if(earningsSettings==null) {
+            try {
+                earningsSettings = matchingEngineManager.registerEarningsSettings(new WalletReference(brokerWalletPublicKey));
+            } catch (CantRegisterEarningsSettingsException e) {
+                throw new CantLoadEarningSettingsException(e, "", "");
+            }
+        }
+
+        try{
+            for (EarningsPair ep : earningsSettings.listEarningPairs()){
+                earningsSettings.disassociateEarningsPair(ep.getId());
+            }
+        }catch(CantListEarningsPairsException e) {
+        }catch (CantDisassociatePairException | PairNotFoundException e) {
+            throw new CantDisassociatePairException(e, "clearEarningPairsFromEarningSettings", "Cant disassociate earnings pair or pair not found");
+        }
+    }
+
 
     @Override
     public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException, CantListEarningsPairsException {
