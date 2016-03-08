@@ -42,8 +42,6 @@ import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 import java.util.List;
 import java.util.Objects;
 
-import io.codetail.widget.RevealFrameLayout;
-
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
@@ -391,7 +389,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 if(bottomMenuReveal ==null){
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                    bottomMenuReveal = new BottomMenuReveal((RevealFrameLayout) findViewById(R.id.reveal) ,this);
+                    bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
                     bottomMenuReveal.buildMenuSettings();
                 }
 

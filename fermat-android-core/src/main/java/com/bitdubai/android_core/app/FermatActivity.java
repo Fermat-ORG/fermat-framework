@@ -64,6 +64,7 @@ import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
+import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
@@ -747,6 +748,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 if(activityType != ActivityType.ACTIVITY_TYPE_DESKTOP){
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.GONE);
                     findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
+                    findViewById(R.id.btn_recents).setVisibility(View.GONE);
                 }
             }
 
@@ -979,6 +981,24 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+
+
+
+
+    private void setTranslucentStatusFlag(boolean on) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            Window win = getWindow();
+            WindowManager.LayoutParams winParams = win.getAttributes();
+            final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+            if (on) {
+                winParams.flags |= bits;
+            } else {
+                winParams.flags &= ~bits;
+            }
+            win.setAttributes(winParams);
+        }
+    }
+
     /**
      * Method to set status bar color in different version of android
      */
@@ -994,8 +1014,46 @@ public abstract class FermatActivity extends AppCompatActivity
                         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                         // finally change the color
-                        Color color_status = new Color();
                         window.setStatusBarColor(Color.parseColor(statusBar.getColor()));
+                    } catch (Exception e) {
+                        getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                    }
+                }else{
+                    try {
+                        Window window = this.getWindow();
+                        // clear FLAG_TRANSLUCENT_STATUS flag:
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+                        // finally change the color
+                        MainLayoutHelper.setTranslucentStatusBar(getWindow(),0);
+                        gc();
+
+
+                        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+                            //enable translucent statusbar via flags
+                            setTranslucentStatusFlag(true);
+                        }
+                        if (Build.VERSION.SDK_INT >= 19) {
+                            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                        }
+
+
+                        //add a padding to the content of the drawer (25dp on devices starting with api v19)
+                        //mDrawerContentRoot.setPadding(0, mActivity.getResources().getDimensionPixelSize(R.dimen.tool_bar_top_padding), 0, 0);
+
+                        // define the statusBarColor
+                        //mDrawerContentRoot.setInsetForeground(mStatusBarColor);
+
+
+                        if(collapsingToolbarLayout!=null) collapsingToolbarLayout.setFitsSystemWindows(true);
+                        if(coordinatorLayout!=null)coordinatorLayout.setFitsSystemWindows(true);
+                        if(mToolbar!=null)mToolbar.setFitsSystemWindows(true);
+                        if(mDrawerLayout!=null)mDrawerLayout.setFitsSystemWindows(true);
+                        if(appBarLayout!=null)appBarLayout.setFitsSystemWindows(true);
+
+
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1011,6 +1069,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     // finally change the color
                     if (Build.VERSION.SDK_INT > 20)
                         window.setStatusBarColor(Color.TRANSPARENT);
+                    MainLayoutHelper.setTranslucentStatusBar(getWindow(),0);
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
                     //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -1028,12 +1087,42 @@ public abstract class FermatActivity extends AppCompatActivity
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setStatusBarColor(Color.TRANSPARENT);
+
+                    MainLayoutHelper.setTranslucentStatusBar(getWindow(), 0);
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                 } catch (OutOfMemoryError outOfMemoryError) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, new Exception());
                     makeText(this, "out of memory exception", LENGTH_SHORT).show();
+                }
+            }else{
+                try {
+                    Window window = this.getWindow();
+                    // clear FLAG_TRANSLUCENT_STATUS flag:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }
+                    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    }
+                    // finally change the color
+                    if (Build.VERSION.SDK_INT > 20)
+                        window.setStatusBarColor(Color.TRANSPARENT);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }
+
+                    MainLayoutHelper.setTranslucentStatusBar(getWindow(), 0);
+
+                    gc();
+                    //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
+                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                } catch (Exception e) {
+                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                    Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                 }
             }
         }

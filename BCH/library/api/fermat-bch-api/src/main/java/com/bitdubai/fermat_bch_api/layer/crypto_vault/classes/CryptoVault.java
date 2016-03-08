@@ -19,6 +19,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.TransactionSignature;
@@ -121,7 +122,16 @@ public abstract class CryptoVault {
             /**
              * I will add the signature to the input script of the transaction
              */
-            entry.getKey().setScriptSig(inputScript);
+            transactionToSign.getInput(inputIndex).setScriptSig(inputScript);
+
+            /**
+             * Verify everything is ok
+             */
+            try{
+                transactionToSign.getInput(inputIndex).verify(entry.getValue());
+            } catch (VerificationException e){
+                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error during signing of transaction.", "incorrect signature");
+            }
         }
 
         /**

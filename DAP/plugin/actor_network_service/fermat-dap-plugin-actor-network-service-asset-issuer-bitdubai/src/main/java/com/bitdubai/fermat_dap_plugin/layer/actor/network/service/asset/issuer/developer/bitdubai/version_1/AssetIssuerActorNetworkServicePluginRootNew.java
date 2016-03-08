@@ -36,7 +36,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -44,12 +43,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerC
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
@@ -66,9 +61,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
@@ -85,7 +80,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -126,7 +120,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private AssetIssuerNetworkServiceDeveloperDatabaseFactory assetIssuerNetworkServiceDeveloperDatabaseFactory;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -190,8 +184,8 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
         /*
          * Initialize Developer Database Factory
          */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            assetIssuerNetworkServiceDeveloperDatabaseFactory = new AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            assetIssuerNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
             incomingNotificationsDao = new IncomingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
@@ -507,7 +501,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
         }
     }
 
-    //TODO REVISAR ESCUCHAR/LANZAR MISMO EVENTO PARA LOS 3 ACTORES PUEDA AFECTAR FUNCIONAMIENTO
     private void launchNotificationActorAsset() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         fermatEvent.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER);
@@ -570,7 +563,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -586,14 +579,14 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            AssetIssuerNetworkServiceDatabaseFactory assetIssuerNetworkServiceDatabaseFactory = new AssetIssuerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = assetIssuerNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -824,7 +817,8 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                 for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
 
                     String profileImage = "";
-                    if (!platformComponentProfile.getExtraData().equals("")) {
+                    byte[] imageByte = null;
+                    if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
                         try {
                             JsonParser jParser = new JsonParser();
                             JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
@@ -833,9 +827,9 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                         } catch (Exception e) {
                             profileImage = platformComponentProfile.getExtraData();
                         }
+                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
                     }
 
-                    byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
 
                     ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(
                             platformComponentProfile.getIdentityPublicKey(),
@@ -916,9 +910,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                 public void run() {
                     try {
                         sendNewMessage(
-//                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                assetIssuerNetworkServiceRecord.toJson());
                                 getProfileSenderToRequestConnection(
                                         assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -995,9 +986,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     try {
                         // Sending message to the destination
                         sendNewMessage(
-//                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
-//                                messageToSend.toJson());
                                 getProfileSenderToRequestConnection(
                                         messageToSend.getActorSenderPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1052,9 +1040,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-//                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                actorNetworkServiceRecord.toJson());
                                 getProfileSenderToRequestConnection(
                                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1086,7 +1071,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     changeActorAssetNotificationDescriptor(
                             actorAssetToDisconnectPublicKey,
                             AssetNotificationDescriptor.DISCONNECTED,
-                            ActorAssetProtocolState.PROCESSING_SEND);
+                            ActorAssetProtocolState.DONE);
 
             Actors actorSwap = assetIssuerNetworkServiceRecord.getActorSenderType();
 
@@ -1132,9 +1117,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-//                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                actorNetworkServiceRecord.toJson());
                                 getProfileSenderToRequestConnection(
                                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1164,7 +1146,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
         try {
             final ActorAssetNetworkServiceRecord assetIssuerNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
-                            actorAssetLoggedInPublicKey,
+                            actorAssetToCancelPublicKey,
                             AssetNotificationDescriptor.CANCEL,
                             ActorAssetProtocolState.DONE);
 
@@ -1188,9 +1170,6 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
                     // Sending message to the destination
                     try {
                         sendNewMessage(
-//                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                assetIssuerNetworkServiceRecord.toJson());
                                 getProfileSenderToRequestConnection(
                                         assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
                                         NetworkServiceType.UNDEFINED,
@@ -1216,8 +1195,10 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
     @Override
     public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException {
         try {
-
+            if(incomingNotificationsDao == null)
+                incomingNotificationsDao = new IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
+
 
         } catch (CantGetActorAssetNotificationException e) {
             reportUnexpectedError(e);
@@ -1231,9 +1212,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
     @Override
     public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException {
         try {
-
             incomingNotificationsDao.markNotificationAsRead(notificationID);
-
         } catch (final Exception e) {
             reportUnexpectedError(e);
             throw new CantConfirmActorAssetNotificationException(e, "notificationID: " + notificationID, "Unhandled error.");
@@ -1285,17 +1264,20 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return assetIssuerNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName().equals(AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME))
+            return new AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return assetIssuerNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
     }
 
     @Override
