@@ -134,23 +134,28 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
+
                 actors = dataSet;
-
-
                 boolean someSelected = false;
-                int cantSelected=0;
+                int selectedActors=0;
+                int cheackeableActors = 0;
                 List<Actor> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
 
                 for (Actor actor : actors) {
+                    if (actor.getCryptoAddress() == null){
+                        cheackeableActors++;
+                    }
+
                     if (actor.selected) {
+
                         actorsSelected.add(actor);
                         if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))
                         {
                             actorsConnecting.add(actor);
                         }
                         someSelected = true;
-                        cantSelected++;
+                        selectedActors++;
                     }
                 }
 
@@ -163,35 +168,36 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 }
 
                 if (someSelected) {
-
+                    menuItemConnect.setVisible(true);
                     menuItemUnselect.setVisible(true);
-                    if (cantSelected == actors.size())
+                    if (selectedActors == cheackeableActors)
                     {
                         menuItemSelect.setVisible(false);
                     } else {
                         menuItemSelect.setVisible(true);
                     }
 
-                  if(ableToDisconnect(actorsSelected)){
-                    menuItemConnect.setVisible(false);
-                    menuItemDisconnect.setVisible(true);
-                      /*TODO solucion temporal discutir*/
-                     /* if (cantSelected > 1){
-                          menuItemConnect.setVisible(false);
-                          menuItemDisconnect.setVisible(false);
-                      }*/
-                  }else if(!(ableToDisconnect(actorsSelected))&& cantSelected > 1 && !(ableToConnect(actorsSelected))){
-                      menuItemConnect.setVisible(false);
-                      menuItemDisconnect.setVisible(false);
-                  }
+//                  if(ableToDisconnect(actorsSelected)){
+//                    menuItemConnect.setVisible(false);
+//                    menuItemDisconnect.setVisible(true);
+//                      /*TODO solucion temporal discutir*/
+//                     /* if (cantSelected > 1){
+//                          menuItemConnect.setVisible(false);
+//                          menuItemDisconnect.setVisible(false);
+//                      }*/
+//                  }else if(!(ableToDisconnect(actorsSelected))&& selectedActors > 1 && !(ableToConnect(actorsSelected))){
+//                      menuItemConnect.setVisible(false);
+//                      menuItemDisconnect.setVisible(false);
+//                  }
 
                 }
                 else
                 {
-                    menuItemUnselect.setVisible(false);
-                    menuItemSelect.setVisible(true);
-                    menuItemConnect.setVisible(true);
-                    menuItemDisconnect.setVisible(false);
+                    restartButtons();
+//                    menuItemUnselect.setVisible(false);
+//                    menuItemSelect.setVisible(true);
+//                    menuItemConnect.setVisible(true);
+//                    menuItemDisconnect.setVisible(false);
                 }
 
             }
@@ -389,9 +395,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         menuItemCancel = menu.getItem(2);
         menuItemSelect = menu.getItem(3);
         menuItemUnselect = menu.getItem(4);
-        menuItemUnselect.setVisible(false);
-        menuItemDisconnect.setVisible(false);
-        menuItemCancel.setVisible(false);
+        restartButtons();
 
     }
 
@@ -404,9 +408,12 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
             for (Actor actorIssuer : actors)
             {
-                actorIssuer.selected = true;
+                if(actorIssuer.getCryptoAddress() == null) {
+                    actorIssuer.selected = true;
+                }
             }
             adapter.changeDataSet(actors);
+            menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
 
@@ -419,8 +426,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menuItemSelect.setVisible(true);
-            menuItemUnselect.setVisible(false);
+            restartButtons();
         }
 
 
@@ -462,7 +468,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);
 
-//                                    manager.connectToActorAssetUser(null, toConnect);
+                                    //manager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -472,6 +478,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
                                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
                                             @Override
@@ -682,6 +689,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
                                     Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                    restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
                                             @Override
@@ -862,7 +870,7 @@ Sample AsyncTask to fetch the notifications count
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
-    private boolean ableToDisconnect(List<Actor> actors){
+    /*private boolean ableToDisconnect(List<Actor> actors){
         List <Actor> allActors = actors;
         for (Actor actor : allActors){
             switch (actor.getDapConnectionState()){
@@ -929,6 +937,15 @@ Sample AsyncTask to fetch the notifications count
             }
         }
         return true;
+    }*/
+    private void restartButtons()
+    {
+        menuItemCancel.setVisible(false);
+        menuItemSelect.setVisible(true);
+        menuItemUnselect.setVisible(false);
+        menuItemConnect.setVisible(false);
+        menuItemDisconnect.setVisible(false);
+
     }
 
 
