@@ -4,29 +4,28 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
  * Created by francisco on 14/10/15.
  */
 public class AssetUserCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp, AssetUserCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
 
+    private AssetUserCommunitySubAppModuleManager manager;
+
     public AssetUserCommunitySubAppSession() {
 
     }
 
-    //    private AssetUserCommunitySubAppModuleManager manager;
-//
-//    private ErrorManager errorManager;
-//    private SubApps sessionType;
-//    private Map<String, Object> data;
-//
-//    public AssetUserCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, AssetUserCommunitySubAppModuleManager manager) {
-//        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
-//        this.errorManager = errorManager;
-//        this.manager = manager;
-//    }
-//
-//
+    public AssetUserCommunitySubAppSession(String publicKey,
+                                           InstalledSubApp fermatApp,
+                                           ErrorManager errorManager,
+                                           AssetUserCommunitySubAppModuleManager moduleManager,
+                                           SubAppResourcesProviderManager resourceProviderManager) {
+
+        super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
+    }
+
 //    @Override
 //    public void setData(String key, Object object) {
 //        if (data == null)
@@ -43,8 +42,33 @@ public class AssetUserCommunitySubAppSession extends AbstractFermatSession<Insta
 //    public ErrorManager getErrorManager() {
 //        return errorManager;
 //    }
-//
+
 //    public AssetUserCommunitySubAppModuleManager getManager() {
 //        return manager;
 //    }
+
+//    public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
+//        List<CryptoWalletIntraUserIdentity> lst =getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();
+//        return (lst.isEmpty()) ? null : lst.get(0);
+//    }
+//
+//    public String getCommunityConnection() {
+//        //return searchConnectionPublicKey(SubApps.CCP_INTRA_USER_COMMUNITY.getCode());
+//        return "public_key_intra_user_commmunity";
+//    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetUserCommunitySubAppSession that = (AssetUserCommunitySubAppSession) o;
+
+        return getFermatApp() == that.getFermatApp();
+    }
+
+    @Override
+    public int hashCode() {
+        return getFermatApp().hashCode();
+    }
 }
