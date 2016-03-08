@@ -18,6 +18,7 @@ public class UserNavigationHolder extends FermatViewHolder {
     private ImageView icon;
     private LinearLayout row_container;
     private View badge;
+    private View navigation_row_divider;
 
     /**
      * Constructor
@@ -29,7 +30,9 @@ public class UserNavigationHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
-//        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
+        row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
+        navigation_row_divider = itemView.findViewById(R.id.navigation_row_divider);
+
         badge = itemView.findViewById(R.id.badge);
     }
 
@@ -45,7 +48,10 @@ public class UserNavigationHolder extends FermatViewHolder {
         return badge;
     }
 
-//    public LinearLayout getRow_container() {
-//        return row_container;
-//    }
-}
+    public LinearLayout getRow_container() {
+        return row_container;
+    }
+
+    public View getNavigation_row_divider() {
+        return navigation_row_divider;
+    }}
