@@ -106,7 +106,7 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#fff"
+                    android:textColor="#000"
                     android:fontFamily="Helvetica Neue Regular"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -138,33 +138,6 @@
             android:gravity="center"
             android:layout_marginLeft="15dp"
             >
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_add"
-                    android:background="@drawable/cht_ok_buttom"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    />
-
-
-
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:textColor="#000"
-                android:background="@drawable/round_corner_line_dialog"
-                />
-
 
             <View
                 android:layout_width="match_parent"
@@ -207,11 +180,10 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_action_bank"
-                    android:text="Create"
+                    android:id="@+id/btn_add"
+                    android:background="@drawable/cht_ok_buttom"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
-
                     />
 
 
