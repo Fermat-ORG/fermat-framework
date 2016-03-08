@@ -146,18 +146,19 @@ public class AssetBuyerDAO {
     public void acceptNegotiation(UUID negotiationId, String btcWalletPk) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException {
         processNegotiation(negotiationId);
         updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME, btcWalletPk, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
-        updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_CONFIRMED.getCode(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
     }
 
     public void rejectNegotiation(UUID negotiationId) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException {
         processNegotiation(negotiationId);
-        updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_REJECTED.getCode(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
     }
 
     public void processNegotiation(UUID negotiationId) throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
         NegotiationRecord record = getNegotiationRecord(negotiationId);
         long forProcess = record.getForProcess() - 1;
         updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, forProcess, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
+        if (forProcess == 0) {
+            updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_FINISHED.getCode(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
+        }
     }
 
     public void updateOutgoingId(UUID transactionId, UUID outgoingId) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
