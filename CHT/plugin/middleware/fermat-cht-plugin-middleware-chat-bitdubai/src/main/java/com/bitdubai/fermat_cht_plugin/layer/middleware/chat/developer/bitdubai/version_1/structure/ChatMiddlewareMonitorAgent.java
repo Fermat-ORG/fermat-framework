@@ -17,19 +17,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -39,6 +43,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
@@ -91,6 +96,7 @@ public class ChatMiddlewareMonitorAgent implements
     NetworkServiceChatManager chatNetworkServiceManager;
     MiddlewareChatManager chatMiddlewareManager;
     private final Broadcaster broadcaster;
+    private PluginFileSystem pluginFileSystem;
 
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -98,8 +104,7 @@ public class ChatMiddlewareMonitorAgent implements
                                     ErrorManager errorManager,
                                     EventManager eventManager,
                                     UUID pluginId,
-                                    NetworkServiceChatManager chatNetworkServiceManager,
-                                      MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster) throws CantSetObjectException {
+                                    NetworkServiceChatManager chatNetworkServiceManager, MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -108,6 +113,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.chatNetworkServiceManager=chatNetworkServiceManager;
         this.chatMiddlewareManager = chatMiddlewareManager;
         this.broadcaster=broadcaster;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     @Override
@@ -282,19 +288,20 @@ public class ChatMiddlewareMonitorAgent implements
                         pluginDatabaseSystem,
                         pluginId,
                         database,
-                        errorManager);
+                        errorManager,
+                        pluginFileSystem);
 
                 /**
                  * Discover contact
                  */
-                List<Contact> contactList;
+                List<ContactConnection> contactList;
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
                     contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
-                        for(Contact contact : contactList){
-                            saveContact(contact);
+                        for(ContactConnection contact : contactList){
+                            saveContactConnection(contact);
                         }
                     }
                 }
@@ -378,14 +385,14 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the pending transaction from Network Service plugin"
                 );
-            } catch (CantGetContactException e) {
+            } catch (CantGetContactConnectionException e) {
                 //For now, I'm gonna handle this print the exception and continue the thread
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         e);
                 e.printStackTrace();
-            } catch (CantSaveContactException e) {
+            } catch (CantSaveContactConnectionException e) {
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -418,30 +425,30 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws CantSaveContactException
          * @throws DatabaseOperationException
          */
-        private void saveContact(Contact contact) throws
-                CantSaveContactException,
+        private void saveContactConnection(ContactConnection contact) throws
+                CantSaveContactConnectionException,
                 DatabaseOperationException {
             try{
-                ObjectChecker.checkArgument(contact, "The contact is null");
+                ObjectChecker.checkArgument(contact, "The contact connection is null");
                 String actorPublicKey=contact.getRemoteActorPublicKey();
-                Contact contactFromDatabase=
-                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey(
+                ContactConnection contactFromDatabase=
+                        chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey( //TODO:Modificar por un metodo getContactConnectionByLocalPublicKey
                                 actorPublicKey);
                 if(contactFromDatabase!=null){
                     //This contact already exists, so, I don't gonna save in database.
                     //TODO: I need to study if the contact must be updated.
                     return;
                 }
-                chatMiddlewareDatabaseDao.saveContact(contact);
+                chatMiddlewareDatabaseDao.saveContactConnection(contact);
             } catch (ObjectNotSetException e) {
-                throw new CantSaveContactException(
+                throw new CantSaveContactConnectionException(
                         e,
-                        "Saving the remote contact",
+                        "Saving the remote contact connection",
                         "The contact object is null");
-            } catch (CantGetContactException e) {
-                throw new CantSaveContactException(
+            } catch (CantSaveContactException e) {
+                throw new CantSaveContactConnectionException(
                         e,
-                        "Saving the remote contact",
+                        "Saving the remote contact connection",
                         "Unexpected error in database");
             }
         }
@@ -678,6 +685,7 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
+                if(messageRecorded==null) return;
             }
 
             messageRecorded.setStatus(MessageStatus.RECEIVE);
@@ -715,9 +723,8 @@ public class ChatMiddlewareMonitorAgent implements
                 if(!remotepk.equals(chat.getRemoteActorPublicKey())) {
                     chat.setLocalActorPublicKey(remotepk);
                 }
-
             }
-
+            chat.setLastMessageDate(new Timestamp(System.currentTimeMillis()));//updating date of last message arrived in chat
             chat.setStatus(ChatStatus.VISSIBLE);
 
             chatMiddlewareDatabaseDao.saveChat(chat);
@@ -765,6 +772,7 @@ public class ChatMiddlewareMonitorAgent implements
                 Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if(contact==null){
                     contact = createUnregisteredContact(chatMetadata);
+                    if (contact==null) return null;
                 }
 
                 //I'll associated the contact, message and chat with the following method
@@ -808,18 +816,26 @@ public class ChatMiddlewareMonitorAgent implements
         private Contact createUnregisteredContact(
                 ChatMetadata chatMetadata) throws
                 CantSaveContactException,
-                DatabaseOperationException {
+                DatabaseOperationException, CantGetContactException {
             Date date=new Date();
-            Contact contact=new ContactImpl(
-                    UUID.randomUUID(),
-                    "Not registered contact",
-                    "Not registered contact",
-                    //chatMetadata.getLocalActorType(),
-                    PlatformComponentType.NETWORK_SERVICE,
-                    chatMetadata.getLocalActorPublicKey(),
-                    date.getTime()
-            );
-            chatMiddlewareDatabaseDao.saveContact(contact);
+
+            //Se trae de la tabla Contact Connection para forzarlo a guardar el contacto no registrado
+            ContactConnection contactConnection;
+            contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
+            if (contactConnection==null) return null;
+
+                Contact contact = new ContactImpl(
+                        UUID.randomUUID(),
+                        contactConnection.getRemoteName(),
+                        contactConnection.getAlias(),
+                        contactConnection.getRemoteActorType(),
+                        chatMetadata.getLocalActorPublicKey(),
+                        date.getTime(),
+                        contactConnection.getProfileImage(),
+                        contactConnection.getContactStatus()
+                );
+                chatMiddlewareDatabaseDao.saveContact(contact);
+
             return contact;
         }
 
@@ -863,6 +879,7 @@ public class ChatMiddlewareMonitorAgent implements
                  */
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
+                if(messageRecorded==null) return;
             }
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);

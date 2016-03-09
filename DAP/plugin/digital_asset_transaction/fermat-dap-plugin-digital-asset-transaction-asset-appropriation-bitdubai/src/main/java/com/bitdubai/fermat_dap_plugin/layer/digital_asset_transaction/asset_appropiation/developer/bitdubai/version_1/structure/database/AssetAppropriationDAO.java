@@ -177,6 +177,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
         updateStatus(AppropriationStatus.SENDING_MESSAGE, transactionId);
     }
 
+    public void updateStatusCreatingMovement(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.CREATING_MOVEMENT, transactionId);
+    }
+
     public void completeAppropriationSuccessful(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         completeTransaction(AppropriationStatus.APPROPRIATION_SUCCESSFUL, transactionId);
     }

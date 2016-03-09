@@ -8,8 +8,9 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
 /**
  * Created by franklin on 06/01/16.
+ * Edited by Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  */
-public interface ChatModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface ChatModuleManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
     //TODO: Implementar y Documentar
 
     ChatManager getChatManager() throws CHTException;

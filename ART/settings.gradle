@@ -1,0 +1,12 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-art-api'
+project(':fermat-art-api').projectDir = new File('ART/library/api/fermat-art-api')
+
+include ':fermat-art-core'
+project(':fermat-art-core').projectDir = new File('ART/library/core/fermat-art-core')

@@ -1,8 +1,8 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<!--<android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent">-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,6 +47,17 @@
             android:textColor="@color/black"
               android:divider="@drawable/cht_list_divider"/>
 
+
+      <TextView android:id="@+id/text"
+          android:gravity="center"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:textColor="@android:color/black"
+          android:fontFamily="sans-serif-light"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          android:background="@drawable/cht_empty_chat_background"
+          />
+
     </FrameLayout>
 
 
@@ -59,5 +70,5 @@
         android:background="@drawable/message_icon_bg"
         android:src="@drawable/cht_floating_pencil" />-->
 </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
