@@ -299,6 +299,9 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
+    // ART
+
+    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
     //WRD
     API_TOKENLY                         ("TOKAP")
 
@@ -438,6 +441,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
             case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
+            case "ANSART":   return ACTOR_NETWORK_SERVICE_ARTIST;
             case "TOKAP":   return API_TOKENLY                      ;
 
             default:
