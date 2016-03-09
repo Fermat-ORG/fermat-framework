@@ -394,8 +394,11 @@ public class ChatListFragment extends AbstractFermatFragment{
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
             }else {
+
                 // Inflate the menu items
                 inflater.inflate(R.menu.chat_list_menu, menu);
+                menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 // Locate the search item
                 //MenuItem searchItem = menu.findItem(R.id.menu_search);
             }
