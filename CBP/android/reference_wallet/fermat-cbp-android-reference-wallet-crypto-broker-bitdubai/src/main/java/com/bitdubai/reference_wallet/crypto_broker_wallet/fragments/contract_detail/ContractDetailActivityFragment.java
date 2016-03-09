@@ -266,7 +266,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
                 contractDetail = new ContractDetail(
                         1,
-                        contractStatus,
+                        data.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         paymentAmount,
@@ -278,7 +278,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Payment Reception step
                 contractDetail = new ContractDetail(
                         2,
-                        contractStatus,
+                        data.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         paymentAmount,
@@ -290,7 +290,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Merchandise Delivery step
                 contractDetail = new ContractDetail(
                         3,
-                        contractStatus,
+                        data.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         merchandiseAmount,
@@ -302,7 +302,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 //Merchandise Reception step
                 contractDetail = new ContractDetail(
                         4,
-                        contractStatus,
+                        data.getStatus(),
                         data.getContractId(),
                         data.getNegotiationId(),
                         merchandiseAmount,
