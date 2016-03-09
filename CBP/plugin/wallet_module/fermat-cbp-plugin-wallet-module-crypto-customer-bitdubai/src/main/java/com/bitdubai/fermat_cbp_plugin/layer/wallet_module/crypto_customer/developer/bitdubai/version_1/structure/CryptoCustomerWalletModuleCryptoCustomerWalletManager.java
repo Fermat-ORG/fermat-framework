@@ -1250,8 +1250,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerContractPurchase =
                     this.customerBrokerContractPurchaseManager.
                             getCustomerBrokerContractPurchaseForContractId(contractHash);
-            /*//TODO: for testing
-            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
+            //TODO: for testing
+            /*CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
                     new CustomerBrokerContractPurchaseManagerMock();
             customerBrokerContractPurchase =
                     customerBrokerContractPurchaseManagerMock.
@@ -1262,13 +1262,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
                     this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
-            /*//TODO: remove this mock
-            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();*/
+
+            //TODO: remove this mock
+//            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();
             ContractClauseType contractClauseType = getContractClauseType(
                     customerBrokerPurchaseNegotiation);
             /**
              * Case: sending crypto payment.
              */
+
             if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
 
                 /**
