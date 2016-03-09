@@ -52,7 +52,8 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -259,8 +260,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
                     if (customerBrokerPurchase.getTransactionId().equals(customerBrokerContractPurchase.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
@@ -296,8 +297,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
                     if (Objects.equals(customerBrokerPurchase.getTransactionId(), customerBrokerContractPurchase.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractPurchase.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
