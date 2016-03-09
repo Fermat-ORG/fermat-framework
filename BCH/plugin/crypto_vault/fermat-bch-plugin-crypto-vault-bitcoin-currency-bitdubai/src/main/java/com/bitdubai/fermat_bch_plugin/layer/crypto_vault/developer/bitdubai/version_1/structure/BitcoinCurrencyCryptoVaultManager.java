@@ -691,8 +691,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     }
 
     @Override
-    public ECKey getPrivateKey(byte[] publicKey) {
-        ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(publicKey);
+    public ECKey getPrivateKey(Address address) {
+        ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
         return privateKey;
     }
 }
