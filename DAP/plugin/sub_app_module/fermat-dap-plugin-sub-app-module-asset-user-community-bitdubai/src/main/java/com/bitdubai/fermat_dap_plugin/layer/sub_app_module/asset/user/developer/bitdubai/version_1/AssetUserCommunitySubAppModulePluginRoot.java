@@ -436,10 +436,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException {
+    public void disconnectToActorAssetUser(String actorAssetLoggedInPublicKey, ActorAssetUser user) throws CantDisconnectAssetActorException {
         try {
 
-            this.actorAssetUserManager.disconnectToActorAssetUser(user.getActorPublicKey(), assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
+            this.actorAssetUserManager.disconnectToActorAssetUser(actorAssetLoggedInPublicKey, user.getActorPublicKey(), assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
 
             this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(user.getActorPublicKey(), user.getActorPublicKey());
 
@@ -475,7 +475,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
             this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
 
-            this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
+//            this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
 
         } catch (CantCancelConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
