@@ -88,6 +88,7 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
         return table;
     }
