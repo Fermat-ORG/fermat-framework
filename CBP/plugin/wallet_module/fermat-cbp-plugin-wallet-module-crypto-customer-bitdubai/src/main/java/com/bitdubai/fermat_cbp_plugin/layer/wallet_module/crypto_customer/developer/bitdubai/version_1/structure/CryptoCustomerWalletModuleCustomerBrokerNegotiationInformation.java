@@ -11,7 +11,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -157,6 +156,10 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.lastUpdateDate = negotiationInformation.getLastNegotiationUpdateDate();
         this.cancelReason   = cancelReason;
         this.expirationDatetime = negotiationInformation.getNegotiationExpirationDate();
+    }
+
+    public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerPurchaseNegotiation negotiation, ActorIdentity customerIdentity, ActorIdentity brokerIdentity) {
+
     }
 
     @Override
