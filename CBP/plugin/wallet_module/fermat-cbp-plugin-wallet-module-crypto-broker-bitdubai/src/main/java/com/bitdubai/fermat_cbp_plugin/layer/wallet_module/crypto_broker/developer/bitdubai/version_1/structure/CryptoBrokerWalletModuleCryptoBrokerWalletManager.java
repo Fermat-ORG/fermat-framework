@@ -1171,10 +1171,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
         CustomerBrokerContractSale customerBrokerContractSale;
         //TODO: This is the real implementation
-        //customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
-        //TODO: for testing
+        customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+        /*//TODO: for testing
         CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
-        customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);
+        customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);*/
         //End of testing
         return customerBrokerContractSale.getStatus();
 
@@ -1185,17 +1185,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             CustomerBrokerContractSale customerBrokerContractSale;
             //TODO: This is the real implementation
-            // customerBrokerContractSale=this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+            customerBrokerContractSale=this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             //TODO: for testing
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
-            customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);
+            /*CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);*/
             //End of Mock testing
             //I need to discover the merchandise type (online or offline)
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            //TODO: remove this mock
-            customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();
+            /*//TODO: remove this mock
+            customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation);
 
             // Case: sending crypto merchandise.
@@ -1228,16 +1228,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             CustomerBrokerContractSale customerBrokerContractSale;
             //TODO: This is the real implementation
-            //customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+            customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
             //TODO: for testing
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
-            customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);
+            /*CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale = customerBrokerContractSaleManagerMock.getCustomerBrokerContractSaleForContractId(contractHash);*/
             //End of Mock testing
             //System.out.println("From module:"+customerBrokerContractPurchase);
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
             CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            //TODO: remove this mock
-            customerBrokerPurchaseNegotiation = new SaleNegotiationOfflineMock();
+            /*//TODO: remove this mock
+            customerBrokerPurchaseNegotiation = new SaleNegotiationOfflineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(
                     customerBrokerPurchaseNegotiation);
 

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEW_CONTRACT_UPDATE_VIEW;
 
 
 /**
@@ -241,6 +242,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public void onUpdateViewOnUIThread(String code) {
         switch (code){
             case CCW_NEGOTIATION_UPDATE_VIEW:
+                onRefresh();
+                break;
+            case CCW_NEW_CONTRACT_UPDATE_VIEW:
                 onRefresh();
                 break;
         }

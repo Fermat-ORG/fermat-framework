@@ -1247,23 +1247,23 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         try {
             CustomerBrokerContractPurchase customerBrokerContractPurchase;
             //TODO: This is the real implementation
-            /*customerBrokerContractPurchase =
+            customerBrokerContractPurchase =
                     this.customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
-            //TODO: for testing
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+            /*//TODO: for testing
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
                     new CustomerBrokerContractPurchaseManagerMock();
             customerBrokerContractPurchase =
                     customerBrokerContractPurchaseManagerMock.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
             //End of Mock testing
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
                     this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
-            //TODO: remove this mock
-            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();
+            /*//TODO: remove this mock
+            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(
                     customerBrokerPurchaseNegotiation);
             /**
@@ -1356,23 +1356,23 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         try {
             CustomerBrokerContractPurchase customerBrokerContractPurchase;
             //TODO: This is the real implementation
-            /*customerBrokerContractPurchase =
+            customerBrokerContractPurchase =
                     this.customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
-            //TODO: for testing
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+            /*//TODO: for testing
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
                     new CustomerBrokerContractPurchaseManagerMock();
             customerBrokerContractPurchase =
                     customerBrokerContractPurchaseManagerMock.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
             //End of Mock testing
             //System.out.println("From module:"+customerBrokerContractPurchase);
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
                     this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
-            //TODO: remove this mock
-            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOfflineMock();
+            /*//TODO: remove this mock
+            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOfflineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(
                     customerBrokerPurchaseNegotiation);
             /**
@@ -1424,14 +1424,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         CustomerBrokerContractPurchase customerBrokerContractPurchase;
         //TODO: This is the real implementation
-        /*customerBrokerContractPurchase =
-                this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);*/
-        //TODO: for testing
+        customerBrokerContractPurchase =
+                this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+        /*//TODO: for testing
         CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
                 new CustomerBrokerContractPurchaseManagerMock();
         customerBrokerContractPurchase =
                 customerBrokerContractPurchaseManagerMock.
-                        getCustomerBrokerContractPurchaseForContractId(contractHash);
+                        getCustomerBrokerContractPurchaseForContractId(contractHash);*/
         //End of testing
         return customerBrokerContractPurchase.getStatus();
 
