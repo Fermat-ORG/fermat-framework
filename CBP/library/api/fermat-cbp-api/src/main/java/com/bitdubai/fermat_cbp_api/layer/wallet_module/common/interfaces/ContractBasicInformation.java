@@ -19,7 +19,7 @@ public interface ContractBasicInformation {
     /**
      * @return the contract ID
      */
-    UUID getContractId();
+    String getContractId();
 
     /**
      * @return the crypto customer name (or alias)
