@@ -1545,6 +1545,8 @@ public class ChatMiddlewareDatabaseDao {
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
         table.loadToMemory();
 
         return table.getRecords();
