@@ -66,11 +66,14 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.Ident
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantUpdatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
@@ -1685,24 +1688,64 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                          String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
 
         EarningsSettings earningsSettings;
+        EarningsPair earningsPair = null;
 
         try {
-
             earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
-
-        } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+        } catch (EarningsSettingsNotRegisteredException ex) {
 
             try {
-
                 earningsSettings = matchingEngineManager.registerEarningsSettings(new WalletReference(brokerWalletPublicKey));
-
-            } catch (CantRegisterEarningsSettingsException cantRegisterEarningsSettingsException) {
-
-                throw new CantAssociatePairException(cantRegisterEarningsSettingsException, "", "");
+            } catch (CantRegisterEarningsSettingsException e) {
+                throw new CantAssociatePairException(e, "", "");
             }
         }
-        return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
+
+        try{
+            earningsPair = earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
+        }catch(CantAssociatePairException | PairAlreadyAssociatedException e){
+
+            try {
+                for (EarningsPair ep : earningsSettings.listEarningPairs()) {
+                    if(ep.getEarningCurrency() == earningCurrency && ep.getLinkedCurrency() == linkedCurrency)
+                        earningsSettings.updateEarningsPair(ep.getId(), new WalletReference(brokerWalletPublicKey));
+                }
+            }catch(CantListEarningsPairsException | CantUpdatePairException | PairNotFoundException ex) {
+                throw new CantAssociatePairException(ex, "Cant update earnings pair", "");
+            }
+        }
+
+        return earningsPair;
     }
+
+    @Override
+    public void clearEarningPairsFromEarningSettings(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantDisassociatePairException {
+        EarningsSettings earningsSettings;
+
+        try {
+            earningsSettings = matchingEngineManager.loadEarningsSettings(brokerWalletPublicKey);
+        } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+            earningsSettings = null;
+        }
+
+        if(earningsSettings==null) {
+            try {
+                earningsSettings = matchingEngineManager.registerEarningsSettings(new WalletReference(brokerWalletPublicKey));
+            } catch (CantRegisterEarningsSettingsException e) {
+                throw new CantLoadEarningSettingsException(e, "", "");
+            }
+        }
+
+        try{
+            for (EarningsPair ep : earningsSettings.listEarningPairs()){
+                earningsSettings.disassociateEarningsPair(ep.getId());
+            }
+        }catch(CantListEarningsPairsException e) {
+        }catch (CantDisassociatePairException | PairNotFoundException e) {
+            throw new CantDisassociatePairException(e, "clearEarningPairsFromEarningSettings", "Cant disassociate earnings pair or pair not found");
+        }
+    }
+
 
     @Override
     public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException, CantListEarningsPairsException {
