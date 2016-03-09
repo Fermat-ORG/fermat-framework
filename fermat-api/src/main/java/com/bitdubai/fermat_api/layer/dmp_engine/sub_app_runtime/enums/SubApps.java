@@ -27,7 +27,7 @@ public enum SubApps {
     DAP_ASSETS_COMMUNITY_REDEEM_POINT("DAPCRP"),
     DAP_ASSETS_IDENTITY_ISSUER("DAPAII"),
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
-    DAP_REDEEM_POINT_IDENTITY("DAPRPI"),
+    DAP_ASSETS_REDEEM_POINT_IDENTITY("DAPRPI"),
     CHT_CHAT("CHTCHAT"),
     Scanner("S"),
     SETTINGS("SET");
@@ -83,7 +83,7 @@ public enum SubApps {
             case "DAPAIU":
                 return SubApps.DAP_ASSETS_IDENTITY_USER;
             case "DAPRPI":
-                return SubApps.DAP_REDEEM_POINT_IDENTITY;
+                return SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY;
             case "CHTCHAT":
                 return SubApps.CHT_CHAT;
             case "S":
