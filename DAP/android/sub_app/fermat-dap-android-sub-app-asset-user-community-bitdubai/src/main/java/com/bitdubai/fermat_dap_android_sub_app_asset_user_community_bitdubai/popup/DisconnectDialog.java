@@ -111,7 +111,7 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
                 //image null
                 if (actor != null) {
                     getSession().getModuleManager().disconnectToActorAssetUser(
-                            identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+//                            identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
                             actor // ACTOR OUTSIDE/EXTERNAL
                     );
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
