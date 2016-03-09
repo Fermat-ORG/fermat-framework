@@ -363,10 +363,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
     @NonNull
     private String getFormattedAmount(String amount, String currencyCode) {
-        float aux = 0.0f;
-        try{ aux = Float.parseFloat(amount); } catch (Exception e){ }
-
-        return (decimalFormat.format(aux) + " " + currencyCode);
+        return amount + " " + currencyCode;
     }
 
     @NonNull
