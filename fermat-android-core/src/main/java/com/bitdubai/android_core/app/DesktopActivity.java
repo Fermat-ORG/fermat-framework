@@ -66,51 +66,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
-
-//        if(getIntent().getExtras()!=null) {
-//            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
-//                System.out.println("EJECUTANDO START ALL");
-//
-//                Thread thread = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
-//                        } catch (CantStartAllRegisteredPlatformsException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                thread.start();
-//
-//
-//            }
-//        }
-
-//        Intent i= new Intent(this, NotificationService.class);
-//// potentially add data to the intent
-//        startService(i);
-
-
-//        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
-//        Notification notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
-//                .setPriority(Notification.PRIORITY_HIGH)
-//                .setAutoCancel(false)
-//                .setOngoing(true)
-//                .setContent(mContentView)
-//                .setWhen(System.currentTimeMillis()).build();
-//
-//        NotificationManager mNotificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.notify(3,notification);
         try {
-
+            getFermatAppManager().init();
             loadUI();
-
         } catch (Exception e) {
-
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null

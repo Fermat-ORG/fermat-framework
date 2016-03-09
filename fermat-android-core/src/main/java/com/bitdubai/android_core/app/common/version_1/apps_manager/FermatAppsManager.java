@@ -33,6 +33,7 @@ import java.util.Map;
 //TODO: esta clase es la cual se encargará de manejar la creación de una aplicación fermat, manejo de sesiones, ubicacion en la stack (para el back button o para ver la lista de apps activas),
     // obtener conexiones, etc
 //TODO: falta agregar el tema de cargar el AppsConfig cuando se incia la app por primera vez
+
 public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine.FermatAppsManager {
 
     private Map<String,RecentApp> recentsAppsStack;
@@ -43,7 +44,14 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     public FermatAppsManager() {
         this.recentsAppsStack = new HashMap<>();
         this.fermatSessionManager = new FermatSessionManager();
-        appsInstalledInDevice = new AppsConfiguration(this).readAppsCoreInstalled();
+    }
+
+    public void init(){
+        AppsConfiguration appsConfiguration = new AppsConfiguration(this);
+        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+        if(appsInstalledInDevice.isEmpty()){
+            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        }
     }
 
     public FermatStructure lastAppStructure() {
@@ -130,10 +138,25 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     }
 
     @Override
+    public FermatApp getApp(String appPublicKey) throws Exception {
+        FermatApp fermatApp = null;
+        if(recentsAppsStack.containsKey(appPublicKey)){
+            fermatApp = recentsAppsStack.get(appPublicKey).getFermatApp();
+        }else{
+            fermatApp = selectAppManager(appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey);
+        }
+        return fermatApp;
+    }
+
+    @Override
     public FermatStructure getAppStructure(String appPublicKey, FermatAppType appType) {
         return selectRuntimeManager(appType).getAppByPublicKey(appPublicKey);
     }
 
+    @Override
+    public FermatStructure getAppStructure(String appPublicKey) {
+        return selectRuntimeManager(appsInstalledInDevice.get(appPublicKey)).getAppByPublicKey(appPublicKey);
+    }
 
     /**
      * Search app in every app manager in fermat (module)

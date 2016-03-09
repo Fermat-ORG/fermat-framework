@@ -1478,7 +1478,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public void notificateBroadcast(String appPublicKey,String code){
         try {
             if(mNotificationServiceConnected){
-                notificationService.notificate(code,getAppInUse(appPublicKey));
+                notificationService.notificate(code,getFermatAppManager().getAppStructure(appPublicKey));
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback

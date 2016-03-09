@@ -65,8 +65,8 @@ public class NotificationService extends Service {
     public void notificate(String code,FermatStructure fermatStructure){
         Notification.Builder builder = null;
         if (fermatStructure != null) {
-// notificationIdCount++;
-// lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+            // notificationIdCount++;
+            // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
