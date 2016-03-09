@@ -226,8 +226,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                         draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo());
 
                         // just send the metadata in this place. This MUST be corrected.
+                        dao.updateTxHash(transaction.getRequestId(), draftTransaction.getTxHash());
                         dao.setToSTCV(transaction);
-
                     } catch (OutgoingIntraActorCantCancelTransactionException e) {
                         //If we cannot send the money at this moment then we'll keep trying.
                         reportUnexpectedException(e);
@@ -308,6 +308,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     this.bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).debit(transaction);
+                    this.bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.BOOK).debit(transaction);
                     break;
                 default:
                     throw new OutgoingIntraActorWalletNotSupportedException("The wallet is not supported", null, "ReferenceWallet enum value: " + walletPublicKey.toString(), "Missing case in switch statement");
@@ -364,7 +365,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             return new BitcoinWalletTransactionRecord() {
                 @Override
                 public CryptoAddress getAddressFrom() {
-                    return null;
+                    return addressTo;
                 }
 
                 @Override
@@ -374,7 +375,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
                 @Override
                 public UUID getRequestId() {
-                    return null;
+                    return transactionId;
                 }
 
                 @Override

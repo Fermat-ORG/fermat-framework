@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/settings_edit_text"
         android:hint="Edit this text"
+        android:textColorHint="#949393"
         android:layout_marginRight="24dp"
         android:paddingTop="16dp"
         android:layout_alignParentRight="true"

@@ -25,7 +25,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.util.OutgoingDraftTransactionWrapper;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -104,19 +106,21 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public void registerNewTransaction(DraftTransaction bitcoinWalletTransaction, String walletPublicKey, ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException {
-//        try {
-//            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-//            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-//            loadRecordAsNew(recordToInsert, bitcoinWalletTransaction.getTransactionId(), null, walletPublicKey, bitcoinWalletTransaction.getAddressTo(), bitcoinWalletTransaction.getAmount(), null, bitcoinWalletTransaction.getMemo(),
-//                    bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),
-//                    referenceWallet, true,bitcoinWalletTransaction.getBlockchainNetworkType());
-//            transactionTable.insertRecord(recordToInsert);
-//        } catch (CantInsertRecordException e) {
-//            throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
-//        } catch (Exception exception) {
-//            throw new OutgoingIntraActorCantInsertRecordException(OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-//        }
+    public void updateTxHash(UUID transactionId,
+                             String newHash) throws OutgoingIntraActorCantInsertRecordException {
+        try {
+            DatabaseTable transactionTable = this.database.getTable(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            transactionTable.addStringFilter(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+
+            if (transactionTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+
+            DatabaseTableRecord record = transactionTable.getRecords().get(0);
+            record.setStringValue(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME, newHash);
+            transactionTable.updateRecord(record);
+        } catch (Exception exception) {
+            throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
     }
 
     public List<OutgoingDraftTransactionWrapper> getNewTransactions() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException {
