@@ -249,7 +249,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
      * @param account
      * @return
      */
-    public List<ECKey> getDerivedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
+    public List<ECKey> getDerivedKeys(HierarchyAccount account){
        return getDerivedPrivateKeys(account);
     }
 
