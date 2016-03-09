@@ -286,6 +286,10 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             CouldNotSendMoneyException,
             CryptoTransactionAlreadySentException {
 
+        if (isDustySend(satoshis))
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+
+
         /**
          * I get the network for this address and validate that is active
          */
@@ -506,6 +510,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             throw exception;
         }
 
+        if (isDustySend(valueToSend))
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more bitcoins!");
 
         /**
          * I get the network for this address and validate that is active
@@ -611,6 +617,18 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CantCreateDraftTransactionException e = new CantCreateDraftTransactionException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**
