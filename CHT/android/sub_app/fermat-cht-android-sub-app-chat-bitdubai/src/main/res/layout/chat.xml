@@ -10,11 +10,11 @@
     android:background="#ffffff"
     android:windowSoftInputMode="stateVisible|adjustPan"
     >
-    <ScrollView
+   <!-- <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"
-        >
+        >-->
         <RelativeLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                     android:layout_marginBottom="30dp"
                     />
         </RelativeLayout>
-    </ScrollView>
+    <!--</ScrollView>-->
 
     <RelativeLayout
         android:id="@+id/inputContainer"
