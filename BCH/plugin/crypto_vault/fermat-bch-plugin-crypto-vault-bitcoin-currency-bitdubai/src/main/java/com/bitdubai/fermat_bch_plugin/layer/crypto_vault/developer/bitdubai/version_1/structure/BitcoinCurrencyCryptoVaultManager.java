@@ -415,6 +415,18 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CouldNotSendMoneyException e = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**
