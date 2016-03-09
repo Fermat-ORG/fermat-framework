@@ -118,6 +118,10 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
         this.adapterChangeListener = adapterChangeListener;
     }
 
+    public AdapterChangeListener<ActorIssuer> getAdapterChangeListener() {
+        return adapterChangeListener;
+    }
+
     public int getSize() {
         if (dataSet != null)
             return dataSet.size();

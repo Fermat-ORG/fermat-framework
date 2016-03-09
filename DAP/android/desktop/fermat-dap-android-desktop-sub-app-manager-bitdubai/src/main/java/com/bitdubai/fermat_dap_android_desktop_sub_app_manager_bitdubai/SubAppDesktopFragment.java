@@ -100,7 +100,7 @@ public class SubAppDesktopFragment extends Fragment {
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "public_key_dap_asset_user_identity", "sub-app-asset-identity-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
         mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
