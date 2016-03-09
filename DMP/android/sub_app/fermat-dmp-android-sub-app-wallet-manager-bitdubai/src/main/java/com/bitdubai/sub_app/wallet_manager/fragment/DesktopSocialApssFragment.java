@@ -1,7 +1,7 @@
-package com.bitdubai.sub_app.manager.fragment;
-
+package com.bitdubai.sub_app.wallet_manager.fragment;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,41 +21,45 @@ import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
+import com.bitdubai.fermat_dmp.wallet_manager.R;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.sub_app.manager.R;
-import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
-import com.bitdubai.sub_app.manager.fragment.session.DesktopSession;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
+import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
+import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
+import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
+import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
+import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import adapter.DesktopAdapter;
-import commons.EmptyItem;
-import commons.helpers.OnStartDragListener;
-import commons.helpers.SimpleItemTouchHelperCallback;
-
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Matias Furszyfer on 15/09/15.
+ * Created by mati on 2016.03.09..
  */
-
-
-public class DesktopSubAppFragment extends AbstractDesktopFragment implements SearchView.OnCloseListener,
+public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
         DesktopHolderClickCallback<Item> {
+
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -76,31 +80,29 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
     private View rootView;
 
     private String searchName;
-    private List<InstalledWallet> lstInstalledWallet;
-    private DesktopSession desktopSession;
-    //private SubAppManager moduleManager;
+    private List<FermatApp> lstInstalledApps;
+
 
     ArrayList<Item> lstItems;
 
     private boolean started=false;
+    private List<Item> lstItemsWithIcon;
 
     /**
      * Create a new instance of this fragment
      *
      * @return InstalledFragment instance object
      */
-    public static DesktopSubAppFragment newInstance() {
-        return new DesktopSubAppFragment();
+    public static DesktopSocialApssFragment newInstance() {
+        return new DesktopSocialApssFragment();
     }
 
     /**
      * Provisory method
      */
     @Deprecated
-    public static DesktopSubAppFragment newInstance(WalletManager manager) {
-        DesktopSubAppFragment desktopFragment = new DesktopSubAppFragment();
-        //desktopFragment.setModuleManager(manager);
-        return desktopFragment;
+    public static DesktopSocialApssFragment newInstance(WalletManagerModule manager) {
+        return new DesktopSocialApssFragment();
     }
 
     @Override
@@ -115,7 +117,8 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
 //            //get search name if
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
-           lstItems = new ArrayList<>();
+            lstItems = new ArrayList<>();
+
 
         } catch (Exception ex) {
             //errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -131,7 +134,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
         try {
 
-            rootView = inflater.inflate(R.layout.desktop_sub_app_1_main, container, false);
+            rootView = inflater.inflate(R.layout.desktop_main, container, false);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
@@ -143,21 +146,21 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recyclerView);
+
             //adapter.setFermatListEventListener(this);
 
         } catch(Exception ex) {
 //            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-   //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
-        } catch (OutOfMemoryError error){
-            System.gc();
-            error.printStackTrace();
+        }catch (OutOfMemoryError outOfMemoryError){
+            outOfMemoryError.printStackTrace();
         }
 
 
 
-
+        lstInstalledApps = new ArrayList<>();
 
         return rootView;
     }
@@ -168,27 +171,44 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
         onRefresh();
     }
 
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //getPaintActivtyFeactures().addDesktopCallBack(this);
+        getPaintActivtyFeactures().addDesktopCallBack(this);
     }
 
-    private void setUpData() {
-//        if (moduleManager != null)
+//    private void setUpData() {
+//        if (appSession.getModuleManager() != null)
 //            try {
-//                lstInstalledWallet = moduleManager.getUserWallets();
-//            } catch (CantGetUserWalletException e) {
+//                lstInstalledApps = appSession.getModuleManager().getInstalledWallets();
+//
+//            } catch (WalletsListFailedToLoadException e) {
+//                e.printStackTrace();
+//            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
-        if(lstInstalledWallet!=null)
-            for(InstalledWallet installedWallet: lstInstalledWallet){
-                Item item = new Item(installedWallet);
-//                item.setIconResource(R.drawable.bitcoin_wallet);
-                lstItems.add(item);
-            }
-
-    }
+//        if(lstInstalledApps !=null)
+//            for(InstalledWallet installedWallet: lstInstalledApps){
+//                if(installedWallet.getWalletPublicKey().equals("reference_wallet")) {
+//                    Item item = new Item(installedWallet);
+//                    item.setIconResource(R.drawable.bitcoin_wallet);
+//                    lstItems.add(item);
+//                }
+//
+//            }
+//
+//        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+//        Item item = new Item(installedSubApp);
+//        item.setIconResource(R.drawable.intra_user_identity);
+//        lstItems.add(item);
+//
+//        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+//        Item item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.intra_user_community);
+//        lstItems.add(item1);
+//    }
 
 
     @Override
@@ -295,39 +315,52 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
         try {
             lstItems = new ArrayList<>();
 
-            //lstInstalledWallet = moduleManager.getUserWallets();
-            List<Item> lstItemsWithIcon = new ArrayList<>();
+            //lstInstalledApps = appSession.getModuleManager().getInstalledWallets();
+            lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
 
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet Factory","public_key_factory","wallet_factory",new Version(1,0,0));
-            Item item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_factory);
+//            for(InstalledWallet installedWallet: lstInstalledApps) {
+//                if(installedWallet.getWalletPublicKey().equals("reference_wallet")) {
+//                    Item item = new Item(installedWallet);
+//                    item.setIconResource(R.drawable.bitcoin_wallet);
+//                    item.setPosition(0);
+//                    lstItemsWithIcon.add(item);
+//                }
+//            }
+            InstalledApp installedApp = new InstalledApp("Uber","uber_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+
+            lstInstalledApps.add(installedApp);
+            Item item = new Item(installedApp);
+            item.setIconResource(R.drawable.fermat);
             item.setPosition(0);
             lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet Publisher","public_key_publisher","wallet_publisher",new Version(1,0,0));
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.wallet_publisher);
+
+            installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+            lstInstalledApps.add(installedApp);
+            item = new Item(installedApp);
+            item.setIconResource(R.drawable.fermat);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.asset_factory);
+
+            installedApp = new InstalledApp("eBay","eBay_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+            lstInstalledApps.add(installedApp);
+            item = new Item(installedApp);
+            item.setIconResource(R.drawable.fermat);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer Tools","public_key_pip_developer_sub_app","developer_sub_app",new Version(1,0,0));
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.developer);
+
+            installedApp = new InstalledApp("Tinder","Tinder_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+            lstInstalledApps.add(installedApp);
+            item = new Item(installedApp);
+            item.setIconResource(R.drawable.fermat);
             item.setPosition(3);
             lstItemsWithIcon.add(item);
-            installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT,null,null,"chat_sub_app","Chat","public_key_cht_chat","chat_sub_app",new Version(1,0,0));
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.chat_subapp);
-            item.setPosition(4);
-            lstItemsWithIcon.add(item);
+
 
             for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
+                emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
@@ -346,7 +379,6 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
 
 
-
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -359,7 +391,9 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
                 case SUB_APP:
                     if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
                         Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
-                    }else selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    } else{
+                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    }
                     break;
                 case WALLET:
                     selectWallet((InstalledWallet) data.getInterfaceObject());
@@ -367,14 +401,17 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
                 case EMPTY:
                     break;
                 case FOLDER:
-//                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
-////                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-////                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-////                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
-////                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
-////                    folderDialog.getWindow().setAttributes(lp);
-//                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                    folderDialog.show();
+                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+//                    folderDialog.getWindow().setAttributes(lp);
+                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    folderDialog.show();
+                    break;
+                case P2P_APP:
+                    selectApp((InstalledApp) data.getInterfaceObject());
                     break;
                 default:
                     break;
@@ -383,8 +420,56 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             e.printStackTrace();
         }
     }
+
+    private void select(AppsStatus appsStatus){
+        List<Item> list = new ArrayList<>();
+        for (Item installedWallet : lstItemsWithIcon) {
+            if(appsStatus.isAppStatusAvailable(((InstalledWallet) installedWallet.getInterfaceObject()).getAppStatus())){
+                list.add(installedWallet);
+            }
+        }
+        Item[] arrItemsWithoutIcon = new Item[12];
+        for(int i=0;i<12;i++){
+            Item emptyItem = new Item(new EmptyItem(0,i));
+            emptyItem.setIconResource(-1);
+            arrItemsWithoutIcon[i] = emptyItem;
+        }
+
+        for(Item itemIcon: list){
+            arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+        }
+
+        if(adapter!=null) {
+            adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+
+        adapter = null;
+        mItemTouchHelper = null;
+        super.onDestroy();
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        AppsStatus appsStatus = AppsStatus.getByCode(code);
+        switch (appsStatus){
+            case RELEASE:
+                break;
+            case BETA:
+                break;
+            case ALPHA:
+                break;
+            case DEV:
+                break;
+        }
+
+        select(appsStatus);
+        super.onUpdateViewOnUIThread(code);
+    }
+
 }
-
-
-
-

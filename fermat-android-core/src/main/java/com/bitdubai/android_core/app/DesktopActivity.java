@@ -26,12 +26,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
@@ -52,7 +54,7 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 /**
  * Created by mati on 2015.11.19..
  */
-public class DesktopActivity extends FermatActivity implements FermatScreenSwapper {
+public class DesktopActivity extends FermatActivity implements FermatScreenSwapper,DesktopAppSelector {
 
 
 
@@ -197,7 +199,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             if(activity.getType() != Activities.CCP_DESKTOP){
                 String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
-                getCloudClient().changeIpAndPortProperties(ipPort[0],Integer.getInteger(ipPort[1]));
+                String ip = ipPort[0];
+                String port = ipPort[1];
+                getCloudClient().changeIpAndPortProperties(ip,Integer.getInteger(port));
             }
 
             if (fragment != null) frgBackType = fragment.getBack();
@@ -368,6 +372,22 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void selectApp(InstalledApp installedApp) {
+        Intent intent;
+        try {
+            Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
+//            intent = new Intent();
+//            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,installedApp.getAppPublicKey());
+//            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, installedApp.getAppType());
+//            intent.setAction("org.fermat.APP_LAUNCHER");
+//            sendBroadcast(intent);
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();

@@ -74,7 +74,6 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
 
 
     public List<RecentApp> getRecentsAppsStack() {
-        //falta ordenar esto por posicion
         ArrayList list = new ArrayList(recentsAppsStack.values());
         Collections.sort(list,new RecentAppComparator());
         return list;

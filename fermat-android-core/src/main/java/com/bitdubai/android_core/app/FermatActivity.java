@@ -116,6 +116,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentsEnumType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1213,7 +1214,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             List<AbstractFermatFragment> fragments = new Vector<>();
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
-            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[2];
+            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[4];
 
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops().values()) {
@@ -1235,11 +1236,26 @@ public abstract class FermatActivity extends AppCompatActivity implements
                                 null
                         );
 
+                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey()).getType();
+
+                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
+                                type,
+                                createOrOpenApp(getDesktopManager()),
+                                null
+                        );
+
+                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_SOCIAL_MAIN.getKey()).getType();
+
+                        fragmentsArray[2] = appConnections.getFragmentFactory().getFragment(
+                                type,
+                                createOrOpenApp(getDesktopManager()),
+                                null
+                        );
 
                         break;
                     case "WPD":
                             DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
-                            fragmentsArray[1] =  subAppDesktopFragment;
+                            fragmentsArray[3] =  subAppDesktopFragment;
                         break;
 
                 }
@@ -1347,15 +1363,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     fermatApp = ((FermatApp) bundle.getSerializable(ApplicationConstants.INSTALLED_FERMAT_APP));
                 } else if (bundle.containsKey(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)) {
                     publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-                    fermatAppType = (FermatAppType) bundle.get(ApplicationConstants.INTENT_APP_TYPE);
                 }
                 if (fermatApp == null) {
-                    fermatApp = getFermatAppManager().getApp(publicKey, fermatAppType);
+                    fermatApp = getFermatAppManager().getApp(publicKey);
                 }
                 if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
                     String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                     if (activityCode != null)
-                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey(), fermatApp.getAppType()).getActivity(Activities.valueOf(activityCode));
+                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                 }
             }
             return createOrOpenApp(fermatApp);
@@ -1756,7 +1771,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             case (TASK_MANAGER_STACK) : {
                 if (resultCode == android.app.Activity.RESULT_OK) {
                     // TODO Extract the data returned from the child Activity. and open the app
-                    Toast.makeText(this,"yes",Toast.LENGTH_SHORT).show();
                     data.setAction("org.fermat.APP_LAUNCHER");
                     sendBroadcast(data);
                     //finish();

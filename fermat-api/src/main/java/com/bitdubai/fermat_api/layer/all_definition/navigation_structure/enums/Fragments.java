@@ -327,7 +327,9 @@ public enum Fragments implements FermatFragments {
 
 
     DESKTOP_SETTINGS("DS"),
-    DESKTOP_APPS_MAIN("DAM")
+    DESKTOP_APPS_MAIN("DAM"),
+    DESKTOP_P2P_MAIN("DP2PM"),
+    DESKTOP_SOCIAL_MAIN("DSM"),
     ;
 
     private String code;

@@ -1,7 +1,6 @@
 package com.bitdubai.desktop.wallet_manager.fragments;
 
 
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -23,15 +22,14 @@ import android.widget.Toast;
 
 import com.bitdubai.desktop.wallet_manager.R;
 import com.bitdubai.desktop.wallet_manager.fragments.provisory_classes.InstalledWallet;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ import java.util.List;
  */
 
 
-public class WalletDesktopFragment extends Fragment {
+public class WalletDesktopFragment extends AbstractDesktopFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
@@ -192,7 +190,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                            selectWallet(installedWallet);
 
                         }
                     });
@@ -202,7 +200,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+                            selectWallet( installedWallet);
 
                         }
                     });
@@ -218,7 +216,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                            selectWallet(installedWallet);
 
                         }
                     });
@@ -228,7 +226,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+                            selectWallet( installedWallet);
 
                         }
                     });

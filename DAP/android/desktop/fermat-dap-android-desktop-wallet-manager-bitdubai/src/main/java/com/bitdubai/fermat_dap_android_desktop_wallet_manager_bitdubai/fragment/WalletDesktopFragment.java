@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment;
 
 
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -21,9 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -37,7 +36,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Iden
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,7 @@ import java.util.List;
  */
 
 
-public class WalletDesktopFragment extends Fragment {
+public class WalletDesktopFragment extends AbstractDesktopFragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -240,7 +238,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetIssuerManager.hasIntraIssuerIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
@@ -257,7 +255,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetIssuerManager.hasIntraIssuerIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
@@ -280,7 +278,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetUserManager.hasAssetUserIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need User Identity", Toast.LENGTH_SHORT).show();
 
@@ -297,7 +295,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetUserManager.hasAssetUserIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need User Identity", Toast.LENGTH_SHORT).show();
 
@@ -320,7 +318,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(redeemPointIdentityManager.hasRedeemPointIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need Redeem Point Identity", Toast.LENGTH_SHORT).show();
 
@@ -337,7 +335,7 @@ public class WalletDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(redeemPointIdentityManager.hasRedeemPointIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    selectWallet(installedWallet);
                                 else
                                     Toast.makeText(getActivity(), "Need Redeem Point Identity", Toast.LENGTH_SHORT).show();
 
