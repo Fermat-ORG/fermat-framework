@@ -286,6 +286,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             CouldNotSendMoneyException,
             CryptoTransactionAlreadySentException {
 
+        /**
+         * validates we are not sending less than permited.
+         */
         if (isDustySend(satoshis))
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
 
@@ -510,6 +513,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             throw exception;
         }
 
+        /**
+         * validates we are not sending less than permited.
+         */
         if (isDustySend(valueToSend))
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more bitcoins!");
 
