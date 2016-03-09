@@ -131,7 +131,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     }
 
     @Override
-    public void updateIdentity(CryptoBrokerExposingData actor) {
+    public void updateIdentity(CryptoBrokerExposingData actor) throws CantExposeIdentityException {
         try {
             if (isRegistered()) {
 
@@ -150,9 +150,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     @Override
                     public void run() {
                         try {
-                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
                             communicationsClientConnection.updateRegisterActorProfile(platformComponentProfile.getNetworkServiceType(), platformComponentProfile);
-                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
@@ -160,10 +158,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 });
 
                 thread.start();
-                System.out.println("----------\n Pasamos por el UPDATE robert\n --------------------");
             }
         }catch (Exception e){
-            e.printStackTrace();
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
         }
     }
 
