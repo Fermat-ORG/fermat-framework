@@ -12,6 +12,7 @@ import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
+import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;

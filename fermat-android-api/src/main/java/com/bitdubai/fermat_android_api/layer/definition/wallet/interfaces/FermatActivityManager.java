@@ -9,4 +9,7 @@ public interface FermatActivityManager {
 
 
     FermatRuntime getRuntimeManager();
+
+    //esto no va acá
+    void reportError(String userTo) throws Exception;
 }
