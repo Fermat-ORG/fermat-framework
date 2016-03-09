@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
@@ -273,19 +274,17 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     public void run() {
                         Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
                         try {
-                            List <Contact> con=  chatManager.getContacts();
+                            List <ContactConnection> con=  chatManager.getContactConnections();
                             if (con.size() > 0) {
                                 contactname.clear();
                                 contactid.clear();
                                 contacticon.clear();
                                 for (int i=0;i<con.size();i++){
-                                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
-                                        contactname.add(con.get(i).getAlias());
-                                        contactid.add(con.get(i).getContactId());
-                                        ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
-                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                        contacticon.add(bmd.getBitmap());
-                                    }
+                                    contactname.add(con.get(i).getAlias());
+                                    contactid.add(con.get(i).getContactId());
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    contacticon.add(bmd.getBitmap());
                                 }
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
@@ -295,7 +294,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             }else{
                                 Toast.makeText(getActivity(), "No Connections", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (CantGetContactException e) {
+                        } catch (CantGetContactConnectionException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 
 import java.util.UUID;
@@ -17,30 +18,40 @@ import java.util.UUID;
  */
 public final class MatchingEngineMiddlewareInputTransaction implements InputTransaction {
 
-    private final String                id               ;
-    private final Currency              currencyGiving   ;
-    private final float                 amountGiving     ;
-    private final Currency              currencyReceiving;
-    private final float                 amountReceiving  ;
-    private final InputTransactionState state            ;
+    private final UUID                  id                 ;
+    private final String                originTransactionId;
+    private final Currency              currencyGiving     ;
+    private final float                 amountGiving       ;
+    private final Currency              currencyReceiving  ;
+    private final float                 amountReceiving    ;
+    private final InputTransactionType  type               ;
+    private final InputTransactionState state              ;
 
-    public MatchingEngineMiddlewareInputTransaction(final String                 id               ,
-                                                    final Currency               currencyGiving   ,
-                                                    final float                  amountGiving     ,
-                                                    final Currency               currencyReceiving,
-                                                    final float                  amountReceiving  ,
-                                                    final InputTransactionState  state            ) {
+    public MatchingEngineMiddlewareInputTransaction(final UUID                   id                 ,
+                                                    final String                 originTransactionId,
+                                                    final Currency               currencyGiving     ,
+                                                    final float                  amountGiving       ,
+                                                    final Currency               currencyReceiving  ,
+                                                    final float                  amountReceiving    ,
+                                                    final InputTransactionType   type               ,
+                                                    final InputTransactionState  state              ) {
 
-        this.id                = id               ;
-        this.currencyGiving    = currencyGiving   ;
-        this.amountGiving      = amountGiving     ;
-        this.currencyReceiving = currencyReceiving;
-        this.amountReceiving   = amountReceiving  ;
-        this.state             = state            ;
+        this.id                  = id                 ;
+        this.originTransactionId = originTransactionId;
+        this.currencyGiving      = currencyGiving     ;
+        this.amountGiving        = amountGiving       ;
+        this.currencyReceiving   = currencyReceiving  ;
+        this.amountReceiving     = amountReceiving    ;
+        this.type                = type               ;
+        this.state               = state              ;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
+    }
+
+    public String getOriginTransactionId() {
+        return originTransactionId;
     }
 
     public Currency getCurrencyGiving() {
@@ -59,20 +70,25 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
         return amountReceiving;
     }
 
+    public InputTransactionType getType() {
+        return type;
+    }
+
     public InputTransactionState getState() {
         return state;
     }
 
     @Override
     public String toString() {
-        return "InputTransaction{" +
+        return "MatchingEngineMiddlewareInputTransaction{" +
                 "id=" + id +
+                ", originTransactionId='" + originTransactionId + '\'' +
                 ", currencyGiving=" + currencyGiving +
                 ", amountGiving=" + amountGiving +
                 ", currencyReceiving=" + currencyReceiving +
                 ", amountReceiving=" + amountReceiving +
+                ", type=" + type +
                 ", state=" + state +
                 '}';
     }
-
 }

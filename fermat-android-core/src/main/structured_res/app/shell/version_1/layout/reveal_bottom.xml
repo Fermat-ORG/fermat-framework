@@ -18,13 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp">
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/reveal_items"
                 android:layout_width="match_parent"

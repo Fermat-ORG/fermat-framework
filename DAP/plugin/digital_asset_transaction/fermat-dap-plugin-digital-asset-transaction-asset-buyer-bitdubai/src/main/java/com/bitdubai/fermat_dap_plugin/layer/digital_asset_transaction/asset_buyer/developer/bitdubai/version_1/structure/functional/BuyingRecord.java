@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.UUID;
@@ -23,10 +24,11 @@ public final class BuyingRecord {
     private String broadcastingTxHash;
     private UUID negotiationId;
     private CryptoAddress cryptoAddress;
+    private UUID outgoingId;
 
     //CONSTRUCTORS
 
-    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId, CryptoAddress cryptoAddress) {
+    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId, CryptoAddress cryptoAddress, String outgoingId) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.seller = seller;
@@ -36,6 +38,7 @@ public final class BuyingRecord {
         this.broadcastingTxHash = broadcastingTxHash;
         this.negotiationId = negotiationId;
         this.cryptoAddress = cryptoAddress;
+        this.outgoingId = Validate.isValidString(outgoingId) ? UUID.fromString(outgoingId) : null;
     }
     //PUBLIC METHODS
 
@@ -77,6 +80,10 @@ public final class BuyingRecord {
 
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
+    }
+
+    public UUID getOutgoingId() {
+        return outgoingId;
     }
 
     //INNER CLASSES

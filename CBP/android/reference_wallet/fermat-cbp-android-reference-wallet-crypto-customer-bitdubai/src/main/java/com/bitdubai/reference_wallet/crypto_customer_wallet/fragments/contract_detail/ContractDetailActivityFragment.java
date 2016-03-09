@@ -172,9 +172,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
         brokerName.setText(data.getCryptoBrokerAlias());
-        sellingSummary.setText("SELLING " + paymentCurrency);
+        sellingSummary.setText("SELLING " + data.getMerchandise());
         detailDate.setText("Date:\n" + formatter.format(date));
-        detailRate.setText(exchangeRateAmount + " " + paymentCurrency + " @ " + amount + " " + data.getMerchandise());
+        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
     }
 
 
@@ -208,37 +208,42 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         if(clause.getType() == ClauseType.BROKER_CURRENCY){
                             try {
                                 if(FiatCurrency.codeExists(clause.getValue()))
-                                    merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
-                                else if(CryptoCurrency.codeExists(clause.getValue()))
-                                    merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
-                                merchandiseCurrency = clause.getValue();
-                            }
-                        }
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
-                            paymentAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD)
-                            paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-
-
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
-                            try {
-                                if (FiatCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
-                                else if (CryptoCurrency.codeExists(clause.getValue()))
+                                else if(CryptoCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
                             }catch(Exception e) {
                                 paymentCurrency = clause.getValue();
                             }
                         }
+                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
+                            paymentAmount = clause.getValue();
+                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD)
+                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+
+
+                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
+                            try {
+                                if (FiatCurrency.codeExists(clause.getValue()))
+                                    merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                else if (CryptoCurrency.codeExists(clause.getValue()))
+                                    merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
+                            }catch(Exception e) {
+                                merchandiseCurrency = clause.getValue();
+                            }
+                        }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                             merchandiseAmount = clause.getValue();
                         if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD)
-                            merchandisePaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                            paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                     }
 
                 }catch(Exception e) {e.printStackTrace();}
 
+
+                long paymentSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
+                long paymentAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PENDING_MERCHANDISE, paymentPaymentMethod);
+                long merchandiseSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.MERCHANDISE_SUBMIT, merchandisePaymentMethod);
+                long merchandiseAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
 
 
                 ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
@@ -260,7 +265,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
+                        paymentSubmitDate);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -272,7 +277,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
+                        paymentAckDate);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -284,7 +289,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
+                        merchandiseSubmitDate);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -296,7 +301,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
+                        merchandiseAckDate);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

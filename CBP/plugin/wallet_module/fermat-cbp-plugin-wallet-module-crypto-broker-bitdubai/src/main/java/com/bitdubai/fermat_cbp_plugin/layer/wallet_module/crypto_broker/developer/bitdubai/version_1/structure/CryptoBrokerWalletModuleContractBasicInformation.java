@@ -28,6 +28,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private String customerAlias;
     private byte[] imageBytes;
     private UUID negotiationId;
+    private String contractId;
     private float amount;
     private String merchandise;
     private String typeOfPayment;
@@ -91,8 +92,9 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         customerAlias = customer.getAlias();
         imageBytes = customer.getProfileImage();
         negotiationId = saleNegotiation.getNegotiationId();
+        contractId = saleContract.getContractId();
         cancellationReason = saleNegotiation.getCancelReason();
-        date = saleContract.getDateTime();
+        date = saleNegotiation.getLastNegotiationUpdateDate();
         status = saleContract.getStatus();
         nearExpirationDatetime = saleContract.getNearExpirationDatetime();
         merchandise = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
@@ -123,8 +125,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public UUID getContractId() {
-        return negotiationId;
+    public String getContractId() {
+        return contractId;
     }
 
     @Override

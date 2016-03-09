@@ -33,6 +33,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME = "cbp_wallet_public_key";
     public static final String SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME = "reference_price";
     public static final String SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_type";
+    public static final String SUBMIT_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     public static final String SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
 
