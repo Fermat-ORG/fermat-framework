@@ -37,5 +37,5 @@ public interface BitcoinNetworkConfiguration {
     /**
      * The minimun of Satoshis that we can send, to avoid dusty sends
      */
-    long MIN_ALLOWED_SATOSHIS_ON_SEND = 560;
+    long MIN_ALLOWED_SATOSHIS_ON_SEND = 5430;
 }
