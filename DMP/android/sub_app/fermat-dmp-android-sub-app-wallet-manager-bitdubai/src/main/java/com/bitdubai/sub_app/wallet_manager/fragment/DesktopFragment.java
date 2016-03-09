@@ -16,10 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
@@ -60,7 +61,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -147,6 +148,8 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
             adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP);
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
+
+            ((ImageView)rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.wallet_title);
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);

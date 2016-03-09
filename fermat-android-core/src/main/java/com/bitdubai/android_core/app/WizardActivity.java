@@ -27,7 +27,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -35,8 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 import java.util.ArrayList;
@@ -44,10 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
  * Wizard Activity
@@ -390,17 +388,7 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    public void selectWallet(InstalledWallet installedWallet) {
-
-    }
-
-    @Override
     public void changeActivity(String activityName, String appBackPublicKey, Object... objects) {
-
-    }
-
-    @Override
-    public void selectSubApp(InstalledSubApp installedSubApp) {
 
     }
 

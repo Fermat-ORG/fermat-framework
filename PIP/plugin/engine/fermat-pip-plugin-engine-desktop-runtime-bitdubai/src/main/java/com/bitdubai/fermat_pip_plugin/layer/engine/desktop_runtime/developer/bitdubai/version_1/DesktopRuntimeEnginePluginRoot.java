@@ -197,6 +197,19 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             runtimeDesktopObject.addActivity(activity);
 
 
+            // activity
+            fragment = new Fragment();
+            fragment.setType(Fragments.DESKTOP_P2P_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
+
+            fragment = new Fragment();
+            fragment.setType(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
+
+
+            //
+
+
 
             activity = new Activity();
             activity.setBackgroundColor("#000000");

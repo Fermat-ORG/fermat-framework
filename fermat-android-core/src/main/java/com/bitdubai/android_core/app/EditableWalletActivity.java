@@ -30,27 +30,26 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
 
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 
 /**
@@ -459,12 +458,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         return null;
     }
 
-
-    @Override
-    public void selectSubApp(InstalledSubApp installedSubApp) {
-
-    }
-
     //TODO: Este metodo tiene que desaparecer
     @Override
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
@@ -521,12 +514,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public void changeScreen(String screen, int idContainer, Object[] objects) {
 
     }
-
-    @Override
-    public void selectWallet(InstalledWallet installedWallet) {
-
-    }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {

@@ -48,5 +48,8 @@ project(':fermat_preference_settings').projectDir = new File('android_toolbox/fe
 include ':fermat_navigator_drawer'
 project(':fermat_navigator_drawer').projectDir = new File('android_toolbox/fermat_navigator_drawer')
 
+include ':flip_card'
+project(':flip_card').projectDir = new File('android_toolbox/flip_card')
+
 include ':fermat_statistics'
 project(':fermat_statistics').projectDir = new File('android_toolbox/fermat_statistics')
