@@ -492,8 +492,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             /*
              * we set the SERVER_IP and PORT from text file json
              */
-            SERVER_IP = jsonObject.get("ip").getAsString();
-            PORT = jsonObject.get("port").getAsInt();
+            try {
+                SERVER_IP = jsonObject.get("ip").getAsString();
+                PORT = jsonObject.get("port").getAsInt();
+            }catch (Exception e){
+                SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+                PORT =  ServerConf.DEFAULT_PORT;
+            }
 
         }catch (FileNotFoundException e){
 
