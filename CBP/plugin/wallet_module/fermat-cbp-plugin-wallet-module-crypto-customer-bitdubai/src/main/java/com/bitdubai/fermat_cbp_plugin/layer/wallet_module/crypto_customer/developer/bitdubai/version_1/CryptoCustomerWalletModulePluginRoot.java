@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -7,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -18,6 +21,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
@@ -29,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_onlin
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseManager;
@@ -38,16 +43,23 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletAssociatedSettingImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleNegotiationBankAccount;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
+
 
 /**
  * Module for the Crypto Customer Wallet
@@ -61,7 +73,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
         CryptoCustomerWalletModuleManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem ;
+    private PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -69,7 +81,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
@@ -128,7 +140,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 //    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_CUSTOMER_ACTOR)
 //    CryptoCustomerActorManager cryptoCustomerActorManager;
 
-    private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletManager walletManager;
 
     public CryptoCustomerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -206,6 +218,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
      * Static method to get the logging level from any class under root.
      *
      * @param className the class name
+     *
      * @return the log level for this class
      */
     public static LogLevel getLogLevelByClass(String className) {
@@ -250,5 +263,60 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public void start() throws CantStartPluginException {
+        super.start();
+        //preConfigureWallet();
+    }
+
+    private void preConfigureWallet() {
+        final String customerWalletPublicKey = "crypto_customer_wallet";
+        boolean walletConfigured;
+        try {
+            walletManager = getCryptoCustomerWallet(customerWalletPublicKey);
+            walletConfigured = walletManager.isWalletConfigured(customerWalletPublicKey);
+            if (!walletConfigured) {
+                // IDENTITY
+                createIdentity("Crypto Customer", "", new byte[0]);
+                final CryptoCustomerIdentity cryptoCustomerIdentity = walletManager.getListOfIdentities().get(0);
+                walletManager.associateIdentity(cryptoCustomerIdentity, customerWalletPublicKey);
+
+                // ASSOCIATION BTC Wallet - Customer Wallet
+                InstalledWallet installedWallet = getInstalledWallet(Platforms.CRYPTO_CURRENCY_PLATFORM);
+                assert installedWallet != null;
+
+                CryptoCustomerWalletAssociatedSettingImpl associatedWalletSetting = new CryptoCustomerWalletAssociatedSettingImpl();
+                associatedWalletSetting.setCustomerPublicKey(customerWalletPublicKey);
+                associatedWalletSetting.setId(UUID.randomUUID());
+                associatedWalletSetting.setWalletPublicKey(installedWallet.getWalletPublicKey());
+                associatedWalletSetting.setPlatform(installedWallet.getPlatform());
+                associatedWalletSetting.setMoneyType(MoneyType.CRYPTO);
+                associatedWalletSetting.setMerchandise(CryptoCurrency.BITCOIN);
+                walletManager.saveWalletSettingAssociated(associatedWalletSetting, customerWalletPublicKey);
+
+                // LOCATIONS
+                walletManager.createNewLocation("Torres del Saladillo, Torre Barcelona, Maracaibo, Zulia, Venezuela", customerWalletPublicKey);
+                walletManager.createNewLocation("C.C. Sambil, piso 4, local 5, Caracas, Venezuela", customerWalletPublicKey);
+
+                // BANK ACCOUNTS
+                walletManager.createNewBankAccount(new CryptoCustomerWalletModuleNegotiationBankAccount(FiatCurrency.US_DOLLAR,
+                        "Bank: Banesco\nAccount Number: 1324-548-123456789\nType:Current"));
+
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+    }
+
+    private InstalledWallet getInstalledWallet(Platforms platform) throws CantListWalletsException {
+        final List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
+        for (InstalledWallet wallet : installedWallets) {
+            if (wallet.getPlatform().equals(platform))
+                return wallet;
+        }
+        return null;
     }
 }

@@ -135,6 +135,18 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     @Override
     public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateBrokerIdentityException {
         this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile);
+
+        try {
+            CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
+            if( broker.isPublished() ){
+                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile));
+            }
+        } catch (CantGetIdentityException e) {
+
+        } catch (IdentityNotFoundException e) {
+
+        }
+
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_broker_editado");
     }
 

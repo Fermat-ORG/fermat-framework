@@ -21,6 +21,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
@@ -354,15 +356,44 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 associatedWalletSetting.setMerchandise(FiatCurrency.US_DOLLAR);
                 walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
+                // MERCHANDISES -> Bank VEF
+                installedWallet = getInstalledWallet(Platforms.BANKING_PLATFORM);
+                assert installedWallet != null;
+                List<BankAccountNumber> accounts = walletManager.getAccounts(installedWallet.getWalletPublicKey());
+                BankAccountNumber bankAccountNumber;
+                if (!accounts.isEmpty()) {
+                    bankAccountNumber = accounts.get(0);
+                } else {
+                    bankAccountNumber = walletManager.newEmptyBankAccountNumber("Banesco", BankAccountType.CURRENT, "Pre-configured Bank Wallet",
+                            "123456789", FiatCurrency.VENEZUELAN_BOLIVAR);
+                    walletManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
+                }
+                associatedWalletSetting = new CryptoBrokerWalletAssociatedSettingImpl();
+                associatedWalletSetting.setBrokerPublicKey(brokerWalletPublicKey);
+                associatedWalletSetting.setId(UUID.randomUUID());
+                associatedWalletSetting.setWalletPublicKey(installedWallet.getWalletPublicKey());
+                associatedWalletSetting.setPlatform(installedWallet.getPlatform());
+                associatedWalletSetting.setMoneyType(MoneyType.BANK);
+                associatedWalletSetting.setMerchandise(bankAccountNumber.getCurrencyType());
+                associatedWalletSetting.setBankAccount(bankAccountNumber.getAccount());
+                walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
+
                 // EARNINGS -> BTC/USD - Earning Wallet: Cash USD
-                // TODO uncomment this when Leon fix the error
-                final String earningWalletPublicKey = installedWallet.getWalletPublicKey();
+                String earningWalletPublicKey = "cash_wallet";
                 walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+
+                // EARNINGS -> BTC/VEF - Earning Wallet: Bank VEF
+                earningWalletPublicKey = "banking_wallet";
+                walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, earningWalletPublicKey, brokerWalletPublicKey);
+
+                // EARNINGS -> VEF/USD - Earning Wallet: Cash USD
+                earningWalletPublicKey = "cash_wallet";
+                walletManager.addEarningsPairToEarningSettings(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/USD
                 final List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
                 providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR));
-                final CurrencyExchangeRateProviderManager provider = providers.get(0);
+                CurrencyExchangeRateProviderManager provider = providers.get(0);
 
                 CryptoBrokerWalletProviderSettingImpl providerSetting = new CryptoBrokerWalletProviderSettingImpl();
                 providerSetting.setBrokerPublicKey(brokerWalletPublicKey);
@@ -371,7 +402,39 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(CryptoCurrency.BITCOIN.getCode());
                 providerSetting.setCurrencyTo(FiatCurrency.US_DOLLAR.getCode());
+                walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
+                // PROVIDERS -> BTC/VEF
+                providers.clear();
+                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
+                provider = providers.get(0);
+
+                providerSetting = new CryptoBrokerWalletProviderSettingImpl();
+                providerSetting.setBrokerPublicKey(brokerWalletPublicKey);
+                providerSetting.setDescription(provider.getProviderName());
+                providerSetting.setId(provider.getProviderId());
+                providerSetting.setPlugin(provider.getProviderId());
+                providerSetting.setCurrencyFrom(CryptoCurrency.BITCOIN.getCode());
+                providerSetting.setCurrencyTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+                walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
+
+                // PROVIDERS -> USD/VEF
+                providers.clear();
+                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+                for (CurrencyExchangeRateProviderManager providerManager : providers) {
+                    if (providerManager.getProviderName().equals("DolarToday")) {
+                        provider = providerManager;
+                        break;
+                    }
+                }
+
+                providerSetting = new CryptoBrokerWalletProviderSettingImpl();
+                providerSetting.setBrokerPublicKey(brokerWalletPublicKey);
+                providerSetting.setDescription(provider.getProviderName());
+                providerSetting.setId(provider.getProviderId());
+                providerSetting.setPlugin(provider.getProviderId());
+                providerSetting.setCurrencyFrom(FiatCurrency.US_DOLLAR.getCode());
+                providerSetting.setCurrencyTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
                 walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
                 // OTHER SETTINGS -> Spread and Automatic Restock
@@ -384,7 +447,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
             }
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET,
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

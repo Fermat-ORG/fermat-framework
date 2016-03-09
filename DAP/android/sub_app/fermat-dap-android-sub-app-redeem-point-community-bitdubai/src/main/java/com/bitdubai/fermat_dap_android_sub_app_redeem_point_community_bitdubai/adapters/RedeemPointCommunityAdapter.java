@@ -63,6 +63,9 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                         holder.connectedStateWaiting.setVisibility(View.GONE);
                         holder.connectedStateDenied.setVisibility(View.VISIBLE);
                         break;
+                    default:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
 
                 }
                 holder.connectedStateConnected.setVisibility(View.GONE);
@@ -85,6 +88,10 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 holder.status.setText(R.string.status_denied);
             }
 
+            if (data.getDapConnectionState() == DAPConnectionState.CANCELLED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.CANCELLED_REMOTELY) {
+                holder.status.setText(R.string.status_canceled);
+            }
+
 
             holder.connect.setChecked(data.selected);
             holder.connect.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +104,7 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 }
             });
 
-            byte[] profileImage = data.getProfileImage();
+            //byte[] profileImage = data.getProfileImage();
 
             //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
 //            if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
@@ -105,12 +112,13 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
 //                        BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
 //            }
 
-            if (profileImage != null) {
+            /*if (profileImage != null) {
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
                 } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
+            } else */
+                Picasso.with(context).load(R.drawable.reddem_point_community).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

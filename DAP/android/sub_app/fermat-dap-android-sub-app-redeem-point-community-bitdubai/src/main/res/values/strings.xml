@@ -8,6 +8,7 @@
     <string name="status_offline">Offline</string>
     <string name="status_connecting">Connecting</string>
     <string name="status_denied">Connection Denied</string>
+    <string name="status_canceled">Connection Canceled</string>
 
     <!--Dialog Help - Init-->
     <string name="dap_redeem_community_welcome_subTitle">Welcome to the Redeem Point Community.</string>

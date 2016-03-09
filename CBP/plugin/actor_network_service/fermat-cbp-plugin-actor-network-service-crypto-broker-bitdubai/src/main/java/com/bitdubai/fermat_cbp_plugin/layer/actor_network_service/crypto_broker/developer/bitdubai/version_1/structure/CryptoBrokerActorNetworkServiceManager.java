@@ -43,6 +43,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Collection;
 import java.util.List;
@@ -103,7 +105,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         cryptoBroker.getPublicKey(),
-                        (cryptoBroker.getAlias().toLowerCase()),
+                        (cryptoBroker.getAlias()),
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
@@ -125,6 +127,43 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void updateIdentity(CryptoBrokerExposingData actor) {
+        try {
+            if (isRegistered()) {
+
+                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+
+
+                final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actor.getPublicKey(),
+                        (actor.getAlias()),
+                        (actor.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                        imageString);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                            communicationsClientConnection.updateRegisterActorProfile(platformComponentProfile.getNetworkServiceType(), platformComponentProfile);
+                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
+                System.out.println("----------\n Pasamos por el UPDATE robert\n --------------------");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
