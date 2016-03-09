@@ -168,7 +168,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 }
 
                 if (someSelected) {
-                    menuItemConnect.setVisible(true);
+                    if (actorsConnecting.size() == selectedActors) {
+                        menuItemConnect.setVisible(false);
+                    }else if(actorsConnecting.size() == 0){
+                        menuItemConnect.setVisible(true);
+                    }
+                    if (selectedActors > actorsConnecting.size()){
+                        menuItemConnect.setVisible(true);
+                    }
                     menuItemUnselect.setVisible(true);
                     if (selectedActors == cheackeableActors)
                     {
