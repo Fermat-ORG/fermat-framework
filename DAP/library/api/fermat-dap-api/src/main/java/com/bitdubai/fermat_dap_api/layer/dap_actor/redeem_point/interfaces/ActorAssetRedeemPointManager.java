@@ -160,7 +160,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantDisconnectAssetActorException
      */
 //    void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
-    void disconnectToActorAssetRedeemPoint(String actorAssetRedeemLoggedInPublicKey, String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException;
+    void disconnectToActorAssetRedeemPoint(String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException;
 
 
     void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,

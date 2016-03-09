@@ -239,7 +239,7 @@ public interface ActorAssetUserManager extends FermatManager {
      *
      * @throws CantConnectToActorAssetException
      */
-    void disconnectToActorAssetUser(String actorAssetLoggedInPublicKey, String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetActorException;
+    void disconnectToActorAssetUser(String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetActorException;
 
 //    /**
 //     * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry

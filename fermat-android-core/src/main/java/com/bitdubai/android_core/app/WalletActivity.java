@@ -560,22 +560,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public FermatStructure getAppInUse(String publicKey) throws Exception{
-
-        switch (publicKey) {
-            case "asset_issuer":
-            case "asset_user":
-            case "redeem_point":
-                return getWalletRuntimeManager().getWallet(publicKey);
-            case "public_key_dap_issuer_community":
-            case "public_key_dap_user_community":
-            case "public_key_dap_redeem_point_community":
-            case "public_key_dap_asset_issuer_identity":
-            case "public_key_dap_asset_user_identity":
-            case "public_key_dap_redeem_point_identity":
-            case "public_key_dap_factory":
-                return getSubAppRuntimeMiddleware().getSubAppByPublicKey(publicKey);
-        }
-        return null;
+        return getWalletRuntimeManager().getWallet(publicKey);
     }
 
     @Override

@@ -125,7 +125,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
 
-    void disconnectToActorAssetUser(String actorAssetLoggedInPublicKey, ActorAssetUser user) throws CantDisconnectAssetActorException;
+    void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException;
 
 //    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 
