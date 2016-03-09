@@ -110,10 +110,17 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
 
             if (walletConfigured) {
-                //TODO: Nelson revisa esto para que funcione ya el metodo devuelve true o false si la wallet esta configurada
-                //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
                 getRuntimeManager().changeStartActivity(1);
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+                return;
             }
+
+
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearAssociatedIdentities(appSession.getAppPublicKey());
+            walletManager.clearCryptoCustomerWalletProviderSetting(appSession.getAppPublicKey());
+
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
             CryptoCustomerWalletPreferenceSettings walletSettings;
@@ -211,7 +218,12 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
                         .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
                         .build();
+                presentationDialog.setOnDismissListener(this);
+                presentationDialog.show();                              //ALWAYS SHOW THIS, there are NO identities!!
+
             } else {
+                selectedIdentity = walletManager.getListOfIdentities().get(0);
+
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                         .setIconRes(R.drawable.cbp_crypto_customer)
@@ -220,16 +232,18 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .build();
+                presentationDialog.setOnDismissListener(this);
+
+                final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
+                final CryptoCustomerWalletPreferenceSettings preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+
+                final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
+                if (showDialog)
+                    presentationDialog.show();
+
             }
 
-            presentationDialog.setOnDismissListener(this);
 
-            final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
-            final CryptoCustomerWalletPreferenceSettings preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-            final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-            if (showDialog)
-                presentationDialog.show();
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
