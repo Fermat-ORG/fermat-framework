@@ -79,6 +79,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     private List<Actor> actors;
     private List<Actor> actorsConnecting;
+    private List<ActorAssetUser> actorsToConnect;
     private Actor actor;
     private int MAX = 1;
     private int offset = 0;
@@ -141,6 +142,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 int cheackeableActors = 0;
                 List<Actor> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
+                actorsToConnect = new ArrayList<>();
 
                 for (Actor actor : actors) {
                     if (actor.getCryptoAddress() == null){
@@ -153,6 +155,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                         if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))
                         {
                             actorsConnecting.add(actor);
+                        }
+                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                            actorsToConnect.add(actor);
                         }
                         someSelected = true;
                         selectedActors++;
@@ -465,8 +470,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetUser> toConnect = new ArrayList<>();
                                     for (Actor actor : actors) {
-                                        if (actor.selected)
+                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
                                             toConnect.add(actor);
+                                        }
                                     }
                                     // TODO: 28/10/15 get Actor asset Redeem Point
                                     manager.askActorAssetUserForConnection(toConnect);
@@ -514,8 +520,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 };
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send to ");
-                connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
-                        " Users" : actorsSelected.get(0).getName());
+                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                        " Users" : actorsToConnect.get(0).getName());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.show();
                 return true;
