@@ -5,6 +5,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.d
  */
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -29,6 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
@@ -36,8 +39,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTra
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.OutgoingDraftManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database.OutgoingDraftTransactionDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database.OutgoingDraftTransactionDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.database.OutgoingDraftTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.util.OutgoingDraftTransactionWrapper;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -46,28 +53,27 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 
- * * * * * * * 
- * * * 
+ * * * * * * *
+ * * *
  */
 
 public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         OutgoingDraftManager {
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     private BitcoinWalletManager bitcoinWalletManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
@@ -77,13 +83,11 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
     private com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.structure.OutgoingDraftTransactionAgent outgoingDraftTransactionAgent;
 
 
-
     private OutgoingDraftTransactionDao outgoingDraftTransactionDao;
 
     public OutgoingDraftTransactionPluginRoot() {
-        super(new PluginVersionReference(new Version()));    }
-
-
+        super(new PluginVersionReference(new Version()));
+    }
 
 
     /*
@@ -91,36 +95,33 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-//        IncomingExtraUserDeveloperDatabaseFactory dbFactory = new IncomingExtraUserDeveloperDatabaseFactory(pluginId.toString(), IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
-        return null;//dbFactory.getDatabaseList(developerObjectFactory);
+        return OutgoingDraftTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory, pluginId);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;//IncomingExtraUserDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return OutgoingDraftTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
-//        try {
-//            database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
-//            return IncomingExtraUserDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-//        }catch (CantOpenDatabaseException cantOpenDatabaseException){
-//            /**
-//             * The database exists but cannot be open. I can not handle this situation.
-//             */
-//            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-//            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-//        }
-//        catch (DatabaseNotFoundException databaseNotFoundException) {
-//            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-//            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-//        }
-//        catch (Exception e) {
-//            FermatException e1 = new CantDeliverDatabaseException("Unexpected Exception",e,"","");
-//            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e1);
-//        }
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
+            return OutgoingDraftTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            FermatException e1 = new CantDeliverDatabaseException("Unexpected Exception", e, "", "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
+        }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
     }
@@ -129,10 +130,13 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
      * Service Interface implementation.
      */
     @Override
-    public void start()  throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
         try {
 
-            outgoingDraftTransactionDao = new OutgoingDraftTransactionDao(errorManager,pluginDatabaseSystem);
+            outgoingDraftTransactionDao = new OutgoingDraftTransactionDao(
+                    errorManager,
+                    pluginDatabaseSystem,
+                    cryptoVaultManager);
             outgoingDraftTransactionDao.initialize(pluginId);
 
 
@@ -145,9 +149,8 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
                     null, // transmission not used now
                     eventManager,
                     broadcaster
-                    );
-
-
+            );
+            outgoingDraftTransactionAgent.start();
 
         } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
@@ -159,22 +162,19 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
     @Override
     public void stop() {
 
-
+        outgoingDraftTransactionAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
 
-
-
-
     @Override
-    public void addInputsToDraftTransaction(UUID requestId,DraftTransaction draftTransaction, String txHash, long valueToSend, CryptoAddress addressTo, String walletPublicKey, ReferenceWallet referenceWallet, String memo, String actorToPublicKey, Actors actorToType, String actorFromPublicKey, Actors actorFromType, BlockchainNetworkType blockchainNetworkType) {
+    public void addInputsToDraftTransaction(UUID requestId, DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, String walletPublicKey, ReferenceWallet referenceWallet, String memo, String actorToPublicKey, Actors actorToType, String actorFromPublicKey, Actors actorFromType, BlockchainNetworkType blockchainNetworkType) {
         try {
             cryptoVaultManager.saveTransaction(draftTransaction);
 
             outgoingDraftTransactionDao.registerNewTransaction(
                     requestId,
-                    txHash,
+                    draftTransaction.getTxHash(),
                     walletPublicKey,
                     addressTo,
                     valueToSend,
@@ -188,29 +188,23 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
                     false,
                     blockchainNetworkType);
 
-            if(!outgoingDraftTransactionAgent.isRunning()){
+            if (!outgoingDraftTransactionAgent.isRunning()) {
                 outgoingDraftTransactionAgent.start();
             }
 
-        } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException e) {
-            e.printStackTrace();
-        } catch (CantStoreBitcoinTransactionException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException | CantStoreBitcoinTransactionException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public DraftTransaction getPending(UUID requestId) {
-        DraftTransaction draftTransaction = null;
+        DraftTransaction draftTransaction;
         try {
             OutgoingDraftTransactionWrapper outgoingDraftTransactionWrapper = outgoingDraftTransactionDao.getTransaction(requestId);
-            cryptoVaultManager.getDraftTransaction(outgoingDraftTransactionWrapper.getBlockchainNetworkType(),outgoingDraftTransactionWrapper.getTxHash());
-        } catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        } catch (CantGetDraftTransactionException e) {
-            e.printStackTrace();
+            draftTransaction = cryptoVaultManager.getDraftTransaction(outgoingDraftTransactionWrapper.getBlockchainNetworkType(), outgoingDraftTransactionWrapper.getTxHash());
+        } catch (CantLoadTableToMemoryException | InvalidParameterException | CantGetDraftTransactionException e) {
+            return null;
         }
         return draftTransaction;
     }
