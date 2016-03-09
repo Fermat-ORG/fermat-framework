@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -107,19 +109,19 @@ public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actor != null) {
-//                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
-                    Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//            } catch (CantDisconnectAssetActorException e) {
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+            try {
+                getSession().getModuleManager().cancelActorAssetUser(
+                        identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+                        actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
+                );
+                getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_CANCELED, Boolean.TRUE);
+                Toast.makeText(getContext(),"Connection has Canceled" , Toast.LENGTH_SHORT).show();
+
+                dismiss();
+            } catch (CantCancelConnectionActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();

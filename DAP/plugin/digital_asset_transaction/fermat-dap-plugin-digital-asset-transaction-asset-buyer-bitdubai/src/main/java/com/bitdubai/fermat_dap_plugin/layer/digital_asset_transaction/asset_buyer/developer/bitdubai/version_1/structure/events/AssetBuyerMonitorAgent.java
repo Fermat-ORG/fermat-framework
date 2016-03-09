@@ -198,13 +198,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case WAITING_FIRST_SIGNATURE: {
                         System.out.println("Adding inputs...");
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
-//                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress());
-//                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.INPUTS_ADDED);
-//                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
                         UUID outgoingId = UUID.randomUUID();
                         dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), buyingRecord.getSellerTransaction().getTxHash(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
+                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
                         break;
                     }
@@ -261,7 +258,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         private void creditUserWallet(BuyingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterCreditException {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
-            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
+            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBuyerTransaction().getTxHash());
             AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
         }

@@ -77,22 +77,26 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
 
             switch (position) {
                 case 0:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
                     if (data.getNotifications() != 0) {
-                        holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
+                        holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context)
+                                .setCount(data.getNotifications())
+                                .setTextSize(32)
+                                .setPosition(BadgeDrawable.Position.CENTER)
+                                .build());
                     }
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
                     break;
                 case 4:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
                     break;
             }
         } catch (Exception e) {

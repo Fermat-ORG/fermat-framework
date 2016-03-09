@@ -55,7 +55,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name                   = name                                  ;
         this.actorPublicKey         = actorPublicKey                        ;
-        this.profileImage           = profileImage.clone()                  ;
+
+        this.setProfileImage(profileImage);
 
         if (location != null) {
             this.locationLatitude   = location.getLatitude()                ;
@@ -109,8 +110,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.lastConnectionDate     =       lastConnectionDate      ;
 
         this.actorsType             =       actorsType              ;
-        if(profileImage != null)
-            this.profileImage           =       profileImage.clone()    ;
+
+        this.setProfileImage(profileImage);
 
     }
 
@@ -340,7 +341,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     public void setProfileImage(byte[] profileImage) {
         if(profileImage != null)
-            this.profileImage = profileImage;
+            this.profileImage = profileImage.clone();
         else
             this.profileImage = new byte[0];
     }
