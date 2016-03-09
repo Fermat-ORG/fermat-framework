@@ -45,6 +45,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -493,11 +494,12 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-    private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
+    private void connectWithSubApp(Engine engine, Object[] objects,FermatApp fermatApp){
         Intent intent = new Intent(this, SubAppActivity.class);
         intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
         intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
-        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,subApp.getAppPublicKey());
+        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,fermatApp.getAppPublicKey());
+        intent.putExtra(ApplicationConstants.INTENT_APP_TYPE,fermatApp.getAppStatus());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
