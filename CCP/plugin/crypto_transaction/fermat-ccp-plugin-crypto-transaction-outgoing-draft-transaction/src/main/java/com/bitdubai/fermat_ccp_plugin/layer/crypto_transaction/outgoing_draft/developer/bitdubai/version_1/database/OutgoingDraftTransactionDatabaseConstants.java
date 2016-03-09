@@ -4,13 +4,13 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.d
  * The Class <code>OutgoingIntraActorTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Ezequiel Postan - (ezequiel.postan@gmail.com) on 21/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoingIntraActorTransactionDatabaseConstants {
+public class OutgoingDraftTransactionDatabaseConstants {
 
 
     /**
@@ -44,7 +44,6 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_DRAFT_RUNNING_NETWORK_TYPE = "runningNetworkType";
     public static final String OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME = "read_mark";
     public static final String OUTGOING_DRAFT_FIRST_KEY_COLUMN = "transaction_id";
-
 
 
 }
