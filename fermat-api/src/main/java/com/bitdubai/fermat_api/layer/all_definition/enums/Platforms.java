@@ -15,6 +15,7 @@ public enum Platforms implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
+    ART_PLATFORM                        ("ART"),
     BLOCKCHAINS                         ("BCH"),
     BANKING_PLATFORM                    ("BNK"),
     COMMUNICATION_PLATFORM              ("CP"),
