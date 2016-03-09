@@ -174,7 +174,7 @@ public class JettyEmbeddedAppServer {
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
         webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
-        webAppContext.setResourceBase(resourceBase);
+        webAppContext.setResourceBase(location.toExternalForm()+"!/webapp");
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
@@ -234,7 +234,7 @@ public class JettyEmbeddedAppServer {
 
         upnpService.getControlPoint().search();*/
 
-        /* Use this is OK, load the ip dynamically */
+        /* Use this is OK, load the ip dynamically
 
         UpnpServiceImpl upnpService = null;
         PortMapping[] arr = null;
@@ -257,7 +257,7 @@ public class JettyEmbeddedAppServer {
             upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
             upnpService.getControlPoint().search();
 
-        }
+        }*/
 
         this.initialize();
         LOG.info("Starting the internal server");

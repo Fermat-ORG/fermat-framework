@@ -20,7 +20,8 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-cloud-server-bitdubai',
                    'Implementation-Version': version,
-                   'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+                   'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner',
+                   'Class-Path': configurations.runtime.files.collect {"$it.name"}.join(' ')
     }
 }
 
@@ -42,9 +43,7 @@ ext.sharedManifest = manifest {
 task serverJar(type: OneJar) {
 
     mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
-    manifest = project.manifest {
-        from sharedManifest
-    }
+
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
     additionalDir = file('src/main/resources/one-jar.properties')
 
