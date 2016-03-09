@@ -450,11 +450,11 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void disconnectToActorAssetUser(String actorAssetLoggedInPublicKey, ActorAssetUser user) throws CantDisconnectAssetActorException {
+    public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException {
         try {
             blockchainNetworkType = getNetworkTypeActiveByActorOrGeneric();
 
-            this.actorAssetUserManager.disconnectToActorAssetUser(actorAssetLoggedInPublicKey, user.getActorPublicKey(), blockchainNetworkType);
+            this.actorAssetUserManager.disconnectToActorAssetUser(user.getActorPublicKey(), blockchainNetworkType);
 
             this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(user.getActorPublicKey(), user.getActorPublicKey());
 
