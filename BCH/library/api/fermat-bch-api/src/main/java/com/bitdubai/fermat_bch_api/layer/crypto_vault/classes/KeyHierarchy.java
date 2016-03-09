@@ -4,7 +4,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.H
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -32,16 +34,17 @@ public abstract  class KeyHierarchy extends DeterministicHierarchy {
 
     /**
      * gets the private key of the corresponding public Key
-     * @param publicKey
+     * @param address
      * @return
      */
-    public ECKey getPrivateKey (byte[] publicKey){
+    public ECKey getPrivateKey (Address address){
         /**
          * I will try to get the position from the database just to save resources and avoid deriving the keys
          */
         int keyPosition;
+        final NetworkParameters NETWORK_PARAMETERS = address.getParameters();
         try {
-            keyPosition = getCryptoVaultDao().getPublicKeyPosition(publicKey.toString());
+            keyPosition = getCryptoVaultDao().getPublicKeyPosition(address.toString());
         } catch (CantExecuteDatabaseOperationException e) {
             keyPosition = 0;
         }
@@ -49,12 +52,12 @@ public abstract  class KeyHierarchy extends DeterministicHierarchy {
         /**
          * If I didn't get the key position, then I will derive it
          */
-        if (keyPosition != 0) {
+        if (keyPosition == 0) {
             try {
                 for (HierarchyAccount hierarchyAccount : getCryptoVaultDao().getHierarchyAccounts()) {
                     for (ECKey privateKey : getDerivedPrivateKeys(hierarchyAccount)){
                         // If there is a match with the pub key, I will the private key
-                        if (privateKey.getPubKey().equals(publicKey))
+                        if (privateKey.toAddress(NETWORK_PARAMETERS).equals(address))
                             return privateKey;
                     }
                 }

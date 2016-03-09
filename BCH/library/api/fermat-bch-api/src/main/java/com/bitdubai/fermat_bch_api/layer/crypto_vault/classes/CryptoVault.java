@@ -10,6 +10,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -110,7 +111,10 @@ public abstract class CryptoVault {
             /**
              * I get the private key that I will use to sign the hash
              */
-            ECKey privateKey = getPrivateKey(scriptToSign.getPubKey());
+            ECKey privateKey = getPrivateKey(scriptToSign.getToAddress(NETWORK_PARAMETERS));
+
+            if (privateKey == null)
+                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Unable to find a matching private key for the calculated scripts in the transaction.", "Key hierarchy error");
 
             /**
              * I create the signature
@@ -144,10 +148,10 @@ public abstract class CryptoVault {
 
     /**
      * Based on the public Key, I get the corresponding private key
-     * @param publicKey
+     * @param address
      * @return
      */
-    public abstract ECKey getPrivateKey(byte[] publicKey);
+    public abstract ECKey getPrivateKey(Address address);
 
 
 
