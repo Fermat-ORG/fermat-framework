@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -559,7 +560,22 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public FermatStructure getAppInUse(String publicKey) throws Exception{
-        return getWalletRuntimeManager().getWallet(publicKey);
+
+        switch (publicKey) {
+            case "asset_issuer":
+            case "asset_user":
+            case "redeem_point":
+                return getWalletRuntimeManager().getWallet(publicKey);
+            case "public_key_dap_issuer_community":
+            case "public_key_dap_user_community":
+            case "public_key_dap_redeem_point_community":
+            case "public_key_dap_asset_issuer_identity":
+            case "public_key_dap_asset_user_identity":
+            case "public_key_dap_redeem_point_identity":
+            case "public_key_dap_factory":
+                return getSubAppRuntimeMiddleware().getSubAppByPublicKey(publicKey);
+        }
+        return null;
     }
 
     @Override
