@@ -154,7 +154,7 @@ public class CryptoTransaction{
             TransactionConfidence.ConfidenceType confidenceType = transactionConfidence.getConfidenceType();
             int broadcasters = transactionConfidence.getBroadcastBy().size();
 
-            if (broadcasters == 0 && transactionConfidence.getSource() == TransactionConfidence.Source.SELF)
+            if (broadcasters == 0 && transactionConfidence.getSource() == TransactionConfidence.Source.SELF && depth == 0)
                 return CryptoStatus.PENDING_SUBMIT;
             else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
@@ -165,6 +165,9 @@ public class CryptoTransaction{
             else
                 return CryptoStatus.PENDING_SUBMIT;
         } catch (Exception e){
+            System.out.println("***CryptoNetwork*** error calculating CryptoStatus on CryptoTransaction.");
+            System.out.println(transaction.toString());
+            e.printStackTrace();
             return CryptoStatus.ON_CRYPTO_NETWORK;
         }
     }
