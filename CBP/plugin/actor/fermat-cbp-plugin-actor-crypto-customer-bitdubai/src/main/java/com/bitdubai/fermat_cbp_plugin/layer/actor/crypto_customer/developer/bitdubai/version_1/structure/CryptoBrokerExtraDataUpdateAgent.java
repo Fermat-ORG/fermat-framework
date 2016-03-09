@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
+import android.util.Log;
+
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -63,7 +65,7 @@ public class CryptoBrokerExtraDataUpdateAgent implements Agent {
 class MonitorAgentExtraData implements Runnable {
 
     boolean          threadWorking;
-    public final int SLEEP_TIME = 43200000; // Cada 12 horas
+    public final int SLEEP_TIME = 43200000; // Cada 12 horas ()
     int              iterationNumber = 0;
 
     private CryptoBrokerManager cryptoBrokerANSManager;
@@ -107,7 +109,9 @@ class MonitorAgentExtraData implements Runnable {
         try {
             Collection<ActorExtraData> actors = this.dao.getAllActorExtraData();
             for(ActorExtraData actor : actors){
-                this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
+                if( actor.getQuotes() != null ){
+                    this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
+                }
             }
         } catch (CantGetListActorExtraDataException e) {
             this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
