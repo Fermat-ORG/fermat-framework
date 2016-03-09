@@ -16,8 +16,14 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetBotException
      */
     @Override
-    public Bot getBotURLByBotId(String botId) throws CantGetBotException {
+    public Bot getBotByBotId(String botId) throws CantGetBotException {
         Bot bot = TokenlySwapBotProcessor.getBotURLByBotId(botId);
         return bot;
+    }
+
+    @Override
+    public Bot getBotBySwapbotUsername(String username) throws CantGetBotException {
+        //TODO: to implement
+        return null;
     }
 }

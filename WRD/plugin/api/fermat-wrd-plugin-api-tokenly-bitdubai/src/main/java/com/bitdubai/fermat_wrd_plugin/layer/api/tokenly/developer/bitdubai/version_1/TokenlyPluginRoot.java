@@ -76,7 +76,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
     private void testManagerByBotId(){
         String id="17d47db1-6115-485d-bd62-bb965bb31867";
         try{
-            Bot bot = this.tokenlyManager.getBotURLByBotId(id);
+            Bot bot = this.tokenlyManager.getBotByBotId(id);
             System.out.println("WRD: Test response - " + bot);
         } catch (Exception e) {
             System.out.println("WRD: Test URL exception");
