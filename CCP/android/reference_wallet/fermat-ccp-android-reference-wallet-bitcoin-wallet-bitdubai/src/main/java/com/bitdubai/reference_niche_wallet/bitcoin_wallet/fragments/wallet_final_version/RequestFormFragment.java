@@ -588,7 +588,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 BigDecimal money;
 
-                if (!amount.equals(""))
+                if (amount.equals(""))
                     money = new BigDecimal("0");
                 else
                     money = new BigDecimal(amount);
