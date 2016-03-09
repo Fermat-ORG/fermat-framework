@@ -425,6 +425,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 }
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
@@ -438,10 +439,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             restartButtons();
         }
-
-
 
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
             List<ActorAssetUser> actorsSelected = new ArrayList<>();
@@ -827,6 +827,7 @@ Sample AsyncTask to fetch the notifications count
                         }
                     } else
                         showEmpty(true, emptyView);
+                    restartButtons();
                 }
 
                 @Override

@@ -265,6 +265,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         switch (broadcast.getStatus()) {
                             case BROADCASTED: {
                                 debitUserWallet(record, BalanceType.AVAILABLE);
+                                unlockFunds(record.getMetadata());
                                 dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
                                 System.out.println("Asset Sold...");
                                 break;
