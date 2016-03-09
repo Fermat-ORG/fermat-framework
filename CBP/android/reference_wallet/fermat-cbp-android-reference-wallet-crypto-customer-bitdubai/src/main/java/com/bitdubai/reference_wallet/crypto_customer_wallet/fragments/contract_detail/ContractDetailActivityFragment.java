@@ -240,6 +240,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 }catch(Exception e) {e.printStackTrace();}
 
 
+                long paymentSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
+                long paymentAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PENDING_MERCHANDISE, paymentPaymentMethod);
+                long merchandiseSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.MERCHANDISE_SUBMIT, merchandisePaymentMethod);
+                long merchandiseAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
+
 
                 ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
                 //ContractStatus contractStatus = ContractStatus.PENDING_PAYMENT;
@@ -260,7 +265,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el customer envio el pago
+                        paymentSubmitDate);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -272,7 +277,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el broker acepto el pago
+                        paymentAckDate);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -284,7 +289,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el broker envio mercancia
+                        merchandiseSubmitDate);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -296,7 +301,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        data.getLastUpdate());              //TODO: falta el date que el customer recibio mercancia
+                        merchandiseAckDate);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
