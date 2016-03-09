@@ -275,7 +275,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public void reloadConnectClient() throws Exception {
 
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")  Port "+PORT);
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
 
         /*
@@ -284,6 +284,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         uri = new URI(ServerConf.WS_PROTOCOL + SERVER_IP + ":" + PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
+            wsCommunicationsTyrusCloudClientConnection.setNotTryToReconnectToCloud();
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();
         }
 
@@ -368,14 +369,15 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     @Override
     public void changeIpAndPortProperties(String ipAddress, Integer port) {
 
-        this.SERVER_IP = ipAddress;
-        this.PORT = port;
+        this.SERVER_IP = (ipAddress != null) ? ipAddress : ServerConf.SERVER_IP_PRODUCTION;
+        this.PORT = (port != null && port > 0) ? port : ServerConf.DEFAULT_PORT;
 
         /*
          * Set the ipAddress and the port in the File Text
          */
         try {
-            editServerIpAndPortProperties(ipAddress, port);
+            editServerIpAndPortProperties(SERVER_IP, PORT);
+            reloadConnectClient();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -396,6 +398,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          */
         try {
             editServerIpAndPortProperties(ServerConf.SERVER_IP_PRODUCTION, ServerConf.DEFAULT_PORT);
+            reloadConnectClient();
         } catch (Exception e) {
             e.printStackTrace();
         }
