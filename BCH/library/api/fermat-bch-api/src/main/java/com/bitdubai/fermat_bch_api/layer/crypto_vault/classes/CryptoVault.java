@@ -119,10 +119,11 @@ public abstract class CryptoVault {
             /**
              * I create the signature
              */
-            ECKey.ECDSASignature signature = privateKey.sign(sigHash);
+            ECKey.ECDSASignature signature = privateKey.sign(sigHash).toCanonicalised();
+
             TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
 
-            Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+            Script inputScript = ScriptBuilder.createInputScript(transactionSignature, privateKey);
 
             /**
              * I will add the signature to the input script of the transaction

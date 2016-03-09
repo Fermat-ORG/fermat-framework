@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 
@@ -50,13 +51,13 @@ public abstract  class KeyHierarchy extends DeterministicHierarchy {
         }
 
         /**
-         * If I didn't get the key position, then I will derive it
+         * If I didn't get the key position, then I will derive all of them and search it manually
          */
         if (keyPosition == 0) {
             try {
                 for (HierarchyAccount hierarchyAccount : getCryptoVaultDao().getHierarchyAccounts()) {
                     for (ECKey privateKey : getDerivedPrivateKeys(hierarchyAccount)){
-                        // If there is a match with the pub key, I will the private key
+                        // If there is a match with the pub key, I will return the private key
                         if (privateKey.toAddress(NETWORK_PARAMETERS).equals(address))
                             return privateKey;
                     }
@@ -65,12 +66,17 @@ public abstract  class KeyHierarchy extends DeterministicHierarchy {
                 //null if there was a database error
                 return null;
             }
+        } else {
+            /**
+             * I found it and I know the position, then I will derive it and return it.
+             */
+            HierarchyAccount hierarchyAccount = new HierarchyAccount(0, "Master Account", HierarchyAccountType.MASTER_ACCOUNT);
+            ECKey privateKey = this.derivePrivateKey(keyPosition, hierarchyAccount);
+            return privateKey;
         }
 
-        /**
-         * If I didn't get it I will return null.
-         */
-        return null;
+        // I couldn't find a match
+       return null;
     }
 
     /**
@@ -106,5 +112,12 @@ public abstract  class KeyHierarchy extends DeterministicHierarchy {
         }
 
         return childKeys;
+    }
+
+    private ECKey derivePrivateKey(int position, HierarchyAccount hierarchyAccount){
+        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(hierarchyAccount);
+        // I derive the key at position
+        DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(position, false));
+        return ECKey.fromPrivate(derivedKey.getPrivKey());
     }
 }
