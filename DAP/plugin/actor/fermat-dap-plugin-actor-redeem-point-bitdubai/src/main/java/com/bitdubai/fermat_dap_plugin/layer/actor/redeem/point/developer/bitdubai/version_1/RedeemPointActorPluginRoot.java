@@ -884,6 +884,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DENIED:
                         this.denyConnectionActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
                         break;
                     case ACTOR_ASSET_NOT_FOUND:
                         this.redeemPointActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);
