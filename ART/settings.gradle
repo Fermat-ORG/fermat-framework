@@ -21,6 +21,14 @@ project(':fermat-art-plugin-actor-network-service-artist-bitdubai').projectDir =
 include ':fermat-art-plugin-actor-network-service-fan-bitdubai'
 project(':fermat-art-plugin-actor-network-service-fan-bitdubai').projectDir = new File('ART/plugin/actor_network_service/fermat-art-plugin-actor-network-service-fan-bitdubai')
 
+//Identity
+include ':fermat-art-plugin-identity-artist-bitdubai'
+project(':fermat-art-plugin-identity-artist-bitdubai').projectDir = new File('ART/plugin/identity/fermat-art-plugin-identity-artist-bitdubai')
+
+include ':fermat-art-plugin-identity-fan-bitdubai'
+project(':fermat-art-plugin-identity-fan-bitdubai').projectDir = new File('ART/plugin/identity/fermat-art-plugin-identity-fan-bitdubai')
+
+
 //Sub app module
 include ':fermat-art-plugin-sub-app-module-artist-community-bitdubai'
 project(':fermat-art-plugin-sub-app-module-artist-community-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-artist-community-bitdubai')
