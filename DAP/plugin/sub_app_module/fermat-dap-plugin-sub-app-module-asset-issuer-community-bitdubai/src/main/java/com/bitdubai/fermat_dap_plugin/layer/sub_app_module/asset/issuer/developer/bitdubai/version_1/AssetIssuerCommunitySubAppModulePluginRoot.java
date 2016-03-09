@@ -297,10 +297,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void cancelActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetIssuer(ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
         try {
 
-            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetIssuerLoggedPublicKey, actorAssetToCancel.getActorPublicKey());
+            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetToCancel.getActorPublicKey());
 
 //            this.assetIssuerActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetIssuerLoggedPublicKey, actorAssetToCancel);
 

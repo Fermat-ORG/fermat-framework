@@ -452,6 +452,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException {
         try {
+            String actorLoggedPublicKey = null;
+
             blockchainNetworkType = getNetworkTypeActiveByActorOrGeneric();
 
             this.actorAssetUserManager.disconnectToActorAssetUser(user.getActorPublicKey(), blockchainNetworkType);
@@ -485,10 +487,11 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 //    }
 
     @Override
-    public void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetUser(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {
+            String actorLoggedPublicKey = null;
 
-            this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
+            this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserToCancelPublicKey);
 
 //            this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
 
