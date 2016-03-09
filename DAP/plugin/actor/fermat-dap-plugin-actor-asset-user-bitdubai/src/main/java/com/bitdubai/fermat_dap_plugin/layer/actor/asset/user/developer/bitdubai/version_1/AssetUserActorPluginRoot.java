@@ -603,11 +603,11 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     //TODO apply for user (issuer)
     @Override
-    public void disconnectToActorAssetUser(String actorAssetLoggedInPublicKey, String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException, CantDeleteRecordException {
+    public void disconnectToActorAssetUser(String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException, CantDeleteRecordException {
         try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
 
             this.assetUserActorDao.deleteCryptoAddress(actorAssetToDisconnect, blockchainNetworkType);
-            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetLoggedInPublicKey, actorAssetToDisconnect, DAPConnectionState.REGISTERED_ONLINE);
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetToDisconnect, actorAssetToDisconnect, DAPConnectionState.REGISTERED_ONLINE);
 
         } catch (CantDeleteRecordException e) {
             throw new CantDeleteRecordException("Can't delte crypto for this user", e, "Error", "");
@@ -949,7 +949,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DISCONNECTED:
 //                        this.disconnectActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
-                        this.disconnectToActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey, notification.getBlockchainNetworkType());
+                        this.disconnectToActorAssetUser(intraUserSendingPublicKey, notification.getBlockchainNetworkType());
 
                         break;
                     case RECEIVED:
