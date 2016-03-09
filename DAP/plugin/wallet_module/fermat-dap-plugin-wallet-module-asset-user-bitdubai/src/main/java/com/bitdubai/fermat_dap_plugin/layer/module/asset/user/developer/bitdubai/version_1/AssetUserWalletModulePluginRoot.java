@@ -474,7 +474,10 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void acceptAsset(UUID negotiationId) throws CantProcessBuyingTransactionException {
         try {
-            assetBuyerManager.acceptAsset(negotiationId);
+            List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
+            //TODO REMOVE HARDCODE
+            InstalledWallet installedWallet = installedWallets.get(0);
+            assetBuyerManager.acceptAsset(negotiationId, installedWallet.getWalletPublicKey());
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessBuyingTransactionException(e);

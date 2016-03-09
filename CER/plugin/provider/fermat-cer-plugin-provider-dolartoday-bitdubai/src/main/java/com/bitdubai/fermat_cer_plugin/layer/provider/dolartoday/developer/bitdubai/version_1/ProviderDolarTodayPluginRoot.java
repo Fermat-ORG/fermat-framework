@@ -138,8 +138,8 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         try{
             JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
 
-            purchasePrice = (double) json.getJSONObject("USD").get("transferencia");
-            salePrice = (double) json.getJSONObject("USD").get("transferencia");
+            purchasePrice = json.getJSONObject("USD").getDouble("transferencia");
+            salePrice = json.getJSONObject("USD").getDouble("transferencia");
         }catch (JSONException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"DolarToday CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());

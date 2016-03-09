@@ -74,7 +74,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         textButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_confirm_button);
         confirmButton.setOnClickListener(this);
-
+        confirmButton.setVisibility(View.INVISIBLE);
         /*customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
@@ -99,7 +99,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             switch (contractDetail.getContractStep()) {
                 case 2:
                     //Send the payment to the Broker and update CardView background
-                    walletManager.ackPayment(contractDetail.getContractId().toString());
+                    walletManager.ackPayment(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
                     //Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
@@ -109,7 +109,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     break;
                 case 3:
                     //Confirm the reception of the broker's merchandise
-                    walletManager.submitMerchandise(contractDetail.getContractId().toString());
+                    walletManager.submitMerchandise(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
                     //Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
@@ -177,39 +177,25 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         //ContractStatus visualContractStatus=getContractStatusByContractDetailType(contractStatus, contractDetailType);
         //itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
 
-
+        System.out.println("CONTRACT_DETAILS STATUS = "+itemInfo.getContractStatus());
 
         switch (itemInfo.getContractStep()){
             case 1:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
-                        textDescription.setText("Send:");
+                        textDescription.setText("Customer sends:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         confirmButton.setVisibility(View.INVISIBLE);
                         break;
-
                     default:
-                        textDescription.setText("You sent:");
+                        textDescription.setText("Customer sent:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
-
                 }
                 break;
 
@@ -217,32 +203,22 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
-
-                confirmButton.setVisibility(View.INVISIBLE);
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
+                        textDescription.setText("you receive:");
+                        textDescriptionDate.setVisibility(View.INVISIBLE);
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_inactive));
+                        break;
                     case PAYMENT_SUBMIT:
-                        textDescription.setText("Broker receives:");
+                        textDescription.setText("you receive:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         confirmButton.setText("Confirm");
+                        confirmButton.setVisibility(View.VISIBLE);
                         break;
-
                     default:
-                        textDescription.setText("Broker received:");
+                        textDescription.setText("you received:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
@@ -252,32 +228,23 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_03);
                 stepTitle.setText("Merchandise Delivery");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
-                confirmButton.setVisibility(View.INVISIBLE);
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
+                        textDescription.setText("You send:");
+                        textDescriptionDate.setVisibility(View.INVISIBLE);
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_inactive));
+                        break;
                     case PENDING_MERCHANDISE:
-                        textDescription.setText("Broker sends:");
+                        textDescription.setText("You send:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         confirmButton.setText("Confirm");
+                        confirmButton.setVisibility(View.VISIBLE);
                         break;
-
                     default:
-                        textDescription.setText("Broker sent:");
+                        textDescription.setText("You sent:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
@@ -287,32 +254,22 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stepNumber.setImageResource(R.drawable.bg_detail_number_04);
                 stepTitle.setText("Merchandise reception");
                 textButton.setText(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()));
-                try {
-                    textDescription2.setText("using " + MoneyType.getByCode(itemInfo.getPaymentOrMerchandiseTypeOfPayment()).getFriendlyName() );
-                }catch (FermatException ex){
-                    Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-                    Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-                    if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
-                    }
-                }
+                textDescription2.setText("using " + itemInfo.getPaymentOrMerchandiseTypeOfPayment() );
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
                     case PENDING_MERCHANDISE:
+                        textDescription.setText("Customer receive:");
+                        textDescriptionDate.setVisibility(View.INVISIBLE);
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_inactive));
+                        break;
                     case MERCHANDISE_SUBMIT:
-                        textDescription.setText("You receive:");
+                        textDescription.setText("Customer receive:");
                         textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-
                         break;
-
                     default:
-                        textDescription.setText("You received:");
+                        textDescription.setText("Customer received:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
 
@@ -405,8 +362,11 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 //    }
 
     @NonNull
-    private String getFormattedAmount(float amount, String currencyCode) {
-        return (decimalFormat.format(amount) + " " + currencyCode);
+    private String getFormattedAmount(String amount, String currencyCode) {
+        float aux = 0.0f;
+        try{ aux = Float.parseFloat(amount); } catch (Exception e){ }
+
+        return (decimalFormat.format(aux) + " " + currencyCode);
     }
 
     @NonNull

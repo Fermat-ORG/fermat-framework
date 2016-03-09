@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;

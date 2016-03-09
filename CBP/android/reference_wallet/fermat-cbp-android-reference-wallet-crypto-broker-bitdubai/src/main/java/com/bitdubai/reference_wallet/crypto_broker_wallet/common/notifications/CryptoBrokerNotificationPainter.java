@@ -57,4 +57,9 @@ public class CryptoBrokerNotificationPainter implements NotificationPainter {
         return null;
     }
 
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
+
 }

@@ -20,4 +20,8 @@ public class CantGetInputTransactionException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantGetInputTransactionException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }
