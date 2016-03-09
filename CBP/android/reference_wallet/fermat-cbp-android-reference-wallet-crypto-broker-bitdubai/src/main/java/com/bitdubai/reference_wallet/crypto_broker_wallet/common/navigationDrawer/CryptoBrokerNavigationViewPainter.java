@@ -1,6 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +27,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -43,11 +44,11 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private CryptoBrokerWalletManager walletManager;
     private CryptoBrokerWalletSession session;
     private CryptoBrokerIdentity actorIdentity;
-    private Activity activity;
+    private WeakReference<Context> activity;
     private ErrorManager errorManager;
 
-    public CryptoBrokerNavigationViewPainter(Activity activity, CryptoBrokerWalletSession session) {
-        this.activity = activity;
+    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSession session) {
+        this.activity = new WeakReference<Context>(activity);
         this.session = session;
 
         errorManager = session.getErrorManager();
@@ -69,7 +70,8 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -82,7 +84,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             List<NavViewFooterItem> stockData = getStockData();
             List<NavViewFooterItem> earningsData = getEarningsData();
 
-            return new CryptoBrokerNavigationViewAdapter(activity, stockData, earningsData);
+            return new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +103,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
             options.inSampleSize = 5;
-            drawable = BitmapFactory.decodeResource(activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+            drawable = BitmapFactory.decodeResource(activity.get().getResources(), R.drawable.cbw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }

@@ -21,7 +21,7 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
     private ImageView icon;
     private LinearLayout row_container;
     private View navigation_row_divider;
-    View badge;
+    private View badge;
 
     public NavigationItemMenuViewHolder(View itemView) {
         super(itemView);
@@ -48,5 +48,9 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
 
     public View getNavigation_row_divider() {
         return navigation_row_divider;
+    }
+
+    public View getBadge() {
+        return badge;
     }
 }

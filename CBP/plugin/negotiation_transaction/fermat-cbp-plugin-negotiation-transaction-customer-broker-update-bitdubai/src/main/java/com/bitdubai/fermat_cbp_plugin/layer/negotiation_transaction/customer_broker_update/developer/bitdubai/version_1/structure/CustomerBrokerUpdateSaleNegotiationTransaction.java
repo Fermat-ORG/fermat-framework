@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -44,7 +43,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                             "\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //UPDATE NEGOTIATION
@@ -52,10 +52,10 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
-                transactionId,
-                customerBrokerSaleNegotiation,
-                NegotiationType.SALE,
-                NegotiationTransactionStatus.PENDING_SUBMIT
+                    transactionId,
+                    customerBrokerSaleNegotiation,
+                    NegotiationType.SALE,
+                    NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -77,18 +77,20 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForBroker(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
 //        } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -112,7 +114,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
@@ -145,7 +148,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
+                            "\n- Status = " + customerBrokerSaleNegotiation.getStatus()
             );
 
             //CANCEL NEGOTIATION
@@ -156,7 +160,7 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                     transactionId,
                     customerBrokerSaleNegotiation,
                     NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {

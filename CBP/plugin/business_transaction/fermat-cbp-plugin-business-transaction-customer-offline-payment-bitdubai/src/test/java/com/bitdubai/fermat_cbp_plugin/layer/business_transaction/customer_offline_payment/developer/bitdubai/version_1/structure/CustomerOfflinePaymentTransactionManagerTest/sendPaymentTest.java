@@ -47,28 +47,31 @@ public class sendPaymentTest {
     @Before
     public void setup() throws Exception{
         MockitoAnnotations.initMocks(this);
-        customerOfflinePaymentTransactionManager = new CustomerOfflinePaymentTransactionManager(customerBrokerContractPurchaseManager,
+        customerOfflinePaymentTransactionManager = new CustomerOfflinePaymentTransactionManager(
+                customerBrokerContractPurchaseManager,
                 customerOfflinePaymentBusinessTransactionDao,
                 errorManager);
         setUpGeneralMockitoRules();
     }
     public void setUpGeneralMockitoRules() throws Exception{
-        when(customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(anyString())).thenReturn(customerBrokerContractPurchase);
+        when(customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(anyString())).
+                thenReturn(customerBrokerContractPurchase);
         when(customerBrokerContractPurchase.getNegotiatiotId()).thenReturn("00000000-0000-0000-C000-000000000046");
         UUID negotiationUUID=UUID.fromString("00000000-0000-0000-C000-000000000046");
-        when(customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationUUID)).thenReturn(purchaseNegotiationOnlineMock);
+        when(customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationUUID)).
+                thenReturn(purchaseNegotiationOnlineMock);
 
 
     }
 
     @Test
-    public void sendPaymentTest_Should() throws Exception{
+    public void sendPaymentTest() throws Exception{
         customerOfflinePaymentTransactionManager.sendPayment("contractHash");
     }
 
     //ObjectNotSetException
     @Test(expected = CantSendPaymentException.class)
-    public void sendPaymentTest_Should_() throws Exception{
+    public void sendPaymentTest_Should_Return_Exception() throws Exception{
 
         customerOfflinePaymentTransactionManager.sendPayment(null);
     }

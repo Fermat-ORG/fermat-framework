@@ -1,7 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -30,7 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 public class ChatFermatAppConnection extends AppConnections {
     private ErrorManager errorManager;
 
-    public ChatFermatAppConnection(Activity activity) {
+    public ChatFermatAppConnection(Context activity) {
         super(activity);
     }
 

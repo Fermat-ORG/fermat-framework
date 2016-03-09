@@ -1,8 +1,10 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -22,9 +24,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Market
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.LinePageIndicator;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+
 
 /**
  * Paint the header of the home, this is, a chart with the market exchange rate for the selected providers
@@ -37,12 +40,12 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "BrokerWalletHeader";
 
     private final CryptoBrokerWalletSession session;
-    private final Activity activity;
+    private final WeakReference<Context> activity;
     private CryptoBrokerWalletManager walletManager;
 
 
-    public CryptoBrokerWalletHeaderPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
-        this.activity = activity;
+    public CryptoBrokerWalletHeaderPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+        this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
         try {
@@ -54,7 +57,8 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        View container = activity.getLayoutInflater().inflate(R.layout.cbw_header_layout, viewGroup, true);
+        View container = ((LayoutInflater) activity.get()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.cbw_header_layout, viewGroup, true);
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.cbw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -63,7 +67,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
 
-        FermatWorker fermatWorker = new FermatWorker(activity) {
+        FermatWorker fermatWorker = new FermatWorker(activity.get()) {
             @Override
             protected Object doInBackground() throws Exception {
                 List<IndexInfoSummary> data = new ArrayList<>();
@@ -90,6 +94,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
                         View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
                         marketRateViewPagerContainer.setVisibility(View.VISIBLE);
 
+                        final Activity activity = (Activity) CryptoBrokerWalletHeaderPainter.this.activity.get();
                         MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity, session, summaries);
 
                         ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
@@ -118,6 +123,6 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             }
         });
 
-        Executors.newSingleThreadExecutor().execute(fermatWorker);
+        fermatWorker.execute();
     }
 }

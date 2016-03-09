@@ -1,4 +1,4 @@
-package com.mati.image_slider;
+package com.mati.toolbar_widgets.search_view;
 
 /**
  * Created by mati on 2016.02.16..

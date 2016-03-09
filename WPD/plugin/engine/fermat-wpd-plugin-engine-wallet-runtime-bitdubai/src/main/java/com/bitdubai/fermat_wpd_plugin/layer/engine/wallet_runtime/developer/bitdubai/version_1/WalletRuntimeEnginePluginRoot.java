@@ -25,8 +25,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -45,9 +43,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -283,6 +284,16 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @Override
     public FermatStructure getLastApp() {
         return lstWalletNavigationStructureOpen.get(lastWalletPublicKey);
+    }
+
+    @Override
+    public FermatStructure getAppByPublicKey(String appPublicKey) {
+        return getNavigationStructure(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return lstWalletNavigationStructureOpen.keySet();
     }
 
     /**
@@ -1193,6 +1204,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         // Activity: Home
         runtimeActivity = new Activity();
@@ -1605,6 +1617,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         // Activity: Home
         runtimeActivity = new Activity();
@@ -2015,6 +2028,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
+
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
@@ -2354,6 +2369,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
 
         // Side Menu
@@ -2892,6 +2908,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
 
         // Side Menu
@@ -3494,6 +3511,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         //Setup activity
         runtimeActivity = new Activity();
@@ -3623,7 +3641,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         final String publicKey = "cash_wallet";
-        final String statusBarColor = "#00b9ff";
+        //final String statusBarColor = "#00b9ff";
+        final String statusBarColor = "#11516F";
         final String titleBarLabelColor = "#FFFFFF";
         final String titleBarColor = "#00b9ff";
         final int titleBarLabelSize = 20;
@@ -3632,6 +3651,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
 
         //Setup Activity

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -52,7 +52,13 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
         this.actor = actor;
         this.identity = identity;
     }
-
+    public DisconnectDialog(Activity a,
+                         final AssetUserCommunitySubAppSession actorUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources) {
+        super(a, actorUserSubAppSession, subAppResources);
+        this.actor = null;
+        this.identity = null;
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -110,7 +116,7 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
                 } else {
                     super.toastDefaultError();
                 }
-            } catch (CantDisconnectAssetUserActorException e) {
+            } catch (CantDisconnectAssetActorException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

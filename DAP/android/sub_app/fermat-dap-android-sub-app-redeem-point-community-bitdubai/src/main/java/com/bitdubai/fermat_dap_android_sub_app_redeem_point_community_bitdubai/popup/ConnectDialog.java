@@ -126,29 +126,29 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actorRedeem != null) {
-//                    redeemConnect = new ArrayList<>();
-//
-//                    redeemConnect.add(actorRedeem);
-//
-//                    getSession().getModuleManager().askActorAssetRedeemForConnection(redeemConnect);
-//
-//                    Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                    sendLocalBroadcast(broadcast);
-//                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//            } catch (CantRequestAlreadySendActorAssetException e) {
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            } catch (CantAskConnectionActorAssetException e) {
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+            try {
+                //image null
+                if (actorRedeem != null) {
+                    redeemConnect = new ArrayList<>();
+
+                    redeemConnect.add(actorRedeem);
+
+                    getSession().getModuleManager().askActorAssetRedeemForConnection(redeemConnect);
+
+                    Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
+                    broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                    sendLocalBroadcast(broadcast);
+                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                } else {
+                    super.toastDefaultError();
+                }
+            } catch (CantRequestAlreadySendActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (CantAskConnectionActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();

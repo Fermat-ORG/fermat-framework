@@ -4,7 +4,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.AssetSellerDigitalAssetTransactionPluginRoot;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -21,9 +23,10 @@ public final class SellingRecord {
     private DraftTransaction sellerTransaction;
     private String broadcastingTxHash;
     private UUID negotiationId;
+    private long startTime;
 
     //CONSTRUCTORS
-    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId) {
+    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId, long startTime) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.buyer = buyer;
@@ -32,6 +35,7 @@ public final class SellingRecord {
         this.sellerTransaction = sellerTransaction;
         this.broadcastingTxHash = broadcastingTxHash;
         this.negotiationId = negotiationId;
+        this.startTime = startTime;
     }
 
     //PUBLIC METHODS
@@ -71,5 +75,14 @@ public final class SellingRecord {
     public UUID getNegotiationId() {
         return negotiationId;
     }
+
+    public boolean isExpired() {
+        return new Date().after(new Date(startTime + AssetSellerDigitalAssetTransactionPluginRoot.SELL_TIMEOUT));
+    }
+
+    public Date getStartTime() {
+        return new Date(startTime);
+    }
+
     //INNER CLASSES
 }

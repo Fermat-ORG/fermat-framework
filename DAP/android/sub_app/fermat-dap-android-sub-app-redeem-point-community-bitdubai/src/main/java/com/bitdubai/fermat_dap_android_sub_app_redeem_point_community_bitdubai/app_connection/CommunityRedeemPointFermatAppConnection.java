@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -29,7 +30,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     private RedeemPointCommunitySubAppModuleManager manager;
     private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
 
-    public CommunityRedeemPointFermatAppConnection(Activity activity) {
+    public CommunityRedeemPointFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -56,7 +57,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new RedeemPointCommunityNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override

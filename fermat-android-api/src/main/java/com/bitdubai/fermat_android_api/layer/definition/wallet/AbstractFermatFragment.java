@@ -221,6 +221,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         System.gc();
     }
 
+    protected void sendErrorReport(String userTo) throws Exception {
+        ((FermatActivityManager)getActivity()).reportError(userTo);
+    }
+
     protected final void onBack(String activityCodeBack){
         getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
     }
@@ -273,5 +277,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     public void onUpdateViewOnUIThread(String code) {
         return;
+    }
+
+    /**
+     * This method will be called when the user press the back button
+     */
+    public void onBackPressed() {
+
     }
 }

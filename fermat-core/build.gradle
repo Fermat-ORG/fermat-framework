@@ -11,14 +11,13 @@ repositories {
 }
 
 dependencies {
-
     /**
      * For doing the code more readable, please keep the elements in the file sorted alphabetically.
      */
 
     compile project(':fermat-api')
     compile project(':fermat-core-api')
-
+    compile project(':fermat-art-core')
     compile project(':fermat-cer-core')
     compile project(':fermat-bch-core')
     compile project(':fermat-bnk-core')
@@ -30,12 +29,12 @@ dependencies {
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
     compile project(':fermat-wpd-core')
+    compile project(':fermat-wrd-core')
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
-
 }
 

@@ -4,6 +4,7 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
@@ -30,6 +31,7 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
     private boolean flagRead;
     private int sentCount;
 
+    private String messageXML;
     private BlockchainNetworkType blockchainNetworkType;
     private UUID responseToNotificationId;
 
@@ -47,7 +49,8 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
                                           boolean flagRead,
                                           int sendCount,
                                           BlockchainNetworkType blockchainNetworkType,
-                                          UUID responseToNotificationId) {
+                                          UUID responseToNotificationId,
+                                          String messageXML) {
 
         this.id                             = id;
         this.actorSenderAlias               = actorSenderAlias;
@@ -61,8 +64,10 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState        = actorAssetProtocolState;
         this.flagRead                       = flagRead;
         this.sentCount                      = sendCount;
-        this.blockchainNetworkType          = blockchainNetworkType;
+        if (blockchainNetworkType != null)
+            this.blockchainNetworkType          = blockchainNetworkType;
         this.responseToNotificationId       = responseToNotificationId;
+        this.messageXML = messageXML;
     }
 
 
@@ -80,8 +85,11 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState =      gson.fromJson(jsonObject.get("actorAssetProtocolState").getAsString(), ActorAssetProtocolState.class);
         this.flagRead =                  jsonObject.get("flagRead").getAsBoolean();
         this.sentCount =                    jsonObject.get("sentCount").getAsInt();
-        this.blockchainNetworkType       =  gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
 
+        if (jsonObject.get("messageXML") != null)
+            this.messageXML       =  jsonObject.get("messageXML").getAsString();
+        if (jsonObject.get("blockchainNetworkType") != null)
+            this.blockchainNetworkType       =  gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
         if (jsonObject.get("responseToNotificationId") != null)
             this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
@@ -145,6 +153,10 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         return sentCount;
     }
 
+    public String getMessageXML() {
+        return messageXML;
+    }
+
     public void changeDescriptor(AssetNotificationDescriptor assetNotificationDescriptor) {
         this.assetNotificationDescriptor = assetNotificationDescriptor;
     }
@@ -201,6 +213,10 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
+    public void setMessageXML(String messageXML) {
+        this.messageXML = messageXML;
+    }
+
     public String toJson() {
 
         Gson gson = new Gson();
@@ -218,9 +234,12 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
         jsonObject.addProperty("actorAssetProtocolState",       actorAssetProtocolState.toString());
         jsonObject.addProperty("flagRead",                      flagRead);
         jsonObject.addProperty("sentCount",                     sentCount);
-        jsonObject.addProperty("blockchainNetworkType",         blockchainNetworkType.toString());
+        if (messageXML != null)
+            jsonObject.addProperty("messageXML",                messageXML);
+        if (blockchainNetworkType != null)
+            jsonObject.addProperty("blockchainNetworkType",     blockchainNetworkType.toString());
         if (responseToNotificationId != null)
-            jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
+            jsonObject.addProperty("responseToNotificationId",  responseToNotificationId.toString());
         return gson.toJson(jsonObject);
 
     }
@@ -253,6 +272,7 @@ public class ActorAssetNetworkServiceRecord implements ActorNotification {
                 ", actorAssetProtocolState=" + actorAssetProtocolState +
                 ", flagRead=" + flagRead +
                 ", sentCount=" + sentCount +
+                ", messageXML=" + messageXML +
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 ", responseToNotificationId=" + responseToNotificationId +
                 '}';

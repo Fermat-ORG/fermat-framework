@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -248,7 +249,7 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public void deleteCryptoCurrencyFromRedeemPointRegistered(String redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
+    public void deleteCryptoCurrencyFromRedeemPointRegistered(String redeemPointPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
 
         DatabaseTable table;
 
@@ -256,7 +257,7 @@ public class RedeemPointActorDao implements Serializable {
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -266,23 +267,22 @@ public class RedeemPointActorDao implements Serializable {
             }
 
             // 2) Find the Redeem Point , filter by keys.
-            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint, DatabaseFilterType.EQUAL);
-
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             if (table.getRecords().isEmpty()) {
-                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint);
+                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPointPublicKey);
             }
 
-            // 3) Get Redeem Point record and update state.
-            for (DatabaseTableRecord record : table.getRecords()) {
-
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, "");
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, "");
-                table.updateRecord(record);
+            // 3) Get Redeem Point record and delete
+            if (!table.getRecords().isEmpty()) {
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    table.deleteRecord(record);
+                }
             }
 
-        } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
+        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), e, "Redeem Point Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
@@ -1179,7 +1179,7 @@ public class RedeemPointActorDao implements Serializable {
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_ISSUER.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_USER.getCode());
 
                 table.insertRecord(record);
                 /**

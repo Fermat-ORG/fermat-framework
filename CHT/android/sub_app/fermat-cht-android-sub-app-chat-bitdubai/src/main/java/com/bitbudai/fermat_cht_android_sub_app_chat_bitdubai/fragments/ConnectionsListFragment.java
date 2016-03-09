@@ -1,5 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,37 +28,23 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-/*import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;*/
-//import android.os.Bundle;
-//import android.text.TextUtils;
-//import android.widget.AbsListView;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.ListAdapter;
-//import android.widget.LinearLayout;
-//import android.widget.ListView;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-//import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
 
 /**
  * Connections List fragment
@@ -64,10 +55,8 @@ import android.support.v4.widget.CursorAdapter;*/
  */
 public class ConnectionsListFragment extends AbstractFermatFragment {
 
-    // Defines a tag for identifying log entries
-    public List<Contact> contacts;
-
-    private Contact contactl;
+    public List<ContactConnection> contacts;
+    private ContactConnection contactl;
 
     // Whether or not this fragment is showing in a two-pane layout
     private boolean mIsTwoPaneLayout;
@@ -82,17 +71,15 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     private ChatSession chatSession;
     private Toolbar toolbar;
     ListView list;
+    // Defines a tag for identifying log entries
     String TAG="CHT_ConnectionsListFragment";
     ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    //public ContactsListFragment() {}
-   // static void initchatinfo(){
-   // }
+    Typeface tf;
 
     public static ConnectionsListFragment newInstance() {
-    //    initchatinfo();
         return new ConnectionsListFragment();}
 
     @Override
@@ -117,8 +104,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.connection_list_fragment, container, false);
         TextView text=(TextView) layout.findViewById(R.id.text);
+        //text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
 //            //Comentar, solo para pruebas
@@ -135,18 +124,18 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
 //            cadded.setRemoteName("No hay nadie conectado");
 //            chatManager.saveContact(cadded);
 //            //Fin Comentar
-            List <Contact> con=  chatManager.getContacts();
+            List<ContactConnection> con = chatManager.getContactConnections();
             int size = con.size();
             if (size > 0) {
-                for (int i=0;i<size;i++){
-                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
-                        contactname.add(con.get(i).getAlias());
-                        contactid.add(con.get(i).getContactId());
-                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                    }
+                for (int i = 0; i < size; i++) {
+                    contactname.add(con.get(i).getAlias());
+                    contactid.add(con.get(i).getContactId());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
                 }
                 text.setVisibility(View.GONE);
-            }else{
+            } else {
                 text.setVisibility(View.VISIBLE);
                 text.setText("No Connections");
             }
@@ -204,41 +193,65 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                         }
                     }else {
-                        appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                        Contact conn = chatSession.getSelectedConnection();
-                        //chatManager.saveContact(conn);
-                        Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-                        //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                    }
-//                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-//                            UUID contactidnew = contactexist.getContactId();
-//                            contactexist=chatManager.getContactByContactId(contactid.get(position));
-//                            Chat chat=chatSession.getSelectedChat();
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew=chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            chatManager.deleteContact(contactexist);
-//                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//                            appSession.setData("whocallme", "contact");
-//                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-//                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-//                        }
-//                    }else {
-//                        appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(position)));
-//                        Contact conn = chatSession.getSelectedConnection();
-//                        //chatManager.saveContact(conn);
-//                        Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-//                        //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//                    }
+                        final int pos=position;
+                        final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
+                       
+                        if (contactConn.getRemoteName()!=null) {
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                            builder1.setMessage("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
+                            builder1.setCancelable(true);
 
+                            builder1.setPositiveButton(
+                                    "Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                            try {
+                                                //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
+                                                //Contact conn = chatSession.getSelectedConnection();
+                                                if (chatManager.getContactByLocalPublicKey(contactConn.getRemoteActorPublicKey()) == null) {
+                                                    ContactImpl newContact = new ContactImpl();
+                                                    newContact.setAlias(contactConn.getAlias());
+                                                    newContact.setRemoteActorType(contactConn.getRemoteActorType());
+                                                    newContact.setRemoteActorPublicKey(contactConn.getRemoteActorPublicKey());
+                                                    newContact.setRemoteName(contactConn.getRemoteName());
+                                                    newContact.setContactId(UUID.randomUUID());
+                                                    newContact.setCreationDate(System.currentTimeMillis());
+                                                    newContact.setContactStatus(contactConn.getContactStatus());
+                                                    newContact.setProfileImage(contactConn.getProfileImage());
+                                                    chatManager.saveContact(newContact);
+                                                    Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
+                                                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                                } else {
+                                                    Toast.makeText(getActivity(), "Contact already exist", Toast.LENGTH_SHORT).show();
+                                                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                                }
+                                            } catch (CantSaveContactException e) {
+                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                            } catch (Exception e) {
+                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                            }
+                                            //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                                        }
+                                    });
+
+                            builder1.setNegativeButton(
+                                    "No",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            try {
+                                                dialog.cancel();
+                                            } catch (Exception e) {
+                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                            }
+                                        }
+                                    });
+                            AlertDialog alert11 = builder1.create();
+                            alert11.show();
+                        }else{
+                            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                        }
+                    }
                 }catch(CantSaveChatException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch(CantDeleteContactException e) {
@@ -260,31 +273,28 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     @Override
                     public void run() {
                         Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
-
                         try {
-                            List <Contact> con=  chatManager.getContacts();
+                            List <ContactConnection> con=  chatManager.getContactConnections();
                             if (con.size() > 0) {
                                 contactname.clear();
                                 contactid.clear();
                                 contacticon.clear();
                                 for (int i=0;i<con.size();i++){
-                                    if(!con.get(i).getRemoteName().equals("Not registered contact") && !contactname.contains(con.get(i).getRemoteName())) {
-                                        contactname.add(con.get(i).getAlias());
-                                        contactid.add(con.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                                    }
+                                    contactname.add(con.get(i).getAlias());
+                                    contactid.add(con.get(i).getContactId());
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    contacticon.add(bmd.getBitmap());
                                 }
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
-                                //adaptador.notifyDataSetChanged();
-
                                 list.invalidateViews();
                                 list.requestLayout();
                             }else{
                                 Toast.makeText(getActivity(), "No Connections", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (CantGetContactException e) {
+                        } catch (CantGetContactConnectionException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -294,10 +304,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                 }, 2500);
             }
         });
-
-        return layout;
         // Inflate the list fragment layout
-        //return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;
     }
 
     @Override

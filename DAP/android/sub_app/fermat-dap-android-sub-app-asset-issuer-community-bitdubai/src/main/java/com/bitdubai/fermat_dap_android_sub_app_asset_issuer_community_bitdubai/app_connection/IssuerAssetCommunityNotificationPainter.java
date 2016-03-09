@@ -46,4 +46,14 @@ public class IssuerAssetCommunityNotificationPainter implements NotificationPain
     public int getIcon() {
         return 0;
     }
+
+    @Override
+    public String getActivityCodeResult() {
+        return null;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
 }

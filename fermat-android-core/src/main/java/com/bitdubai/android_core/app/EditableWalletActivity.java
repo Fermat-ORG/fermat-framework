@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -47,8 +48,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 
 import java.util.List;
 
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 
 /**
@@ -269,7 +271,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
             Activity activity = walletNavigationStructure.getLastActivity();
 //            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getFermatSessionManager().getAppsSession(walletNavigationStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getFermatAppManager().getAppsSession(walletNavigationStructure.getPublicKey()));
 
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             loadBasicUI(activity,fermatAppConnection);
@@ -282,7 +284,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
                 setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory);
+                setOneFragmentInScreen(fermatFragmentFactory,walletSession);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -397,13 +399,13 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 
                 intent = getIntent();//new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-                if (intent.hasExtra(WalletActivity.WALLET_PUBLIC_KEY)) {
-                    intent.removeExtra(WalletActivity.WALLET_PUBLIC_KEY);
+                if (intent.hasExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)){
+                    intent.removeExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
                 }
-                if (intent.hasExtra(WalletActivity.INSTALLED_WALLET)) {
-                    intent.removeExtra(WalletActivity.INSTALLED_WALLET);
+                if (intent.hasExtra(ApplicationConstants.INSTALLED_FERMAT_APP)) {
+                    intent.removeExtra(ApplicationConstants.INSTALLED_FERMAT_APP);
                 }
-                intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, getWalletRuntimeManager().getLastWallet().getPublicKey());
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, getWalletRuntimeManager().getLastWallet().getPublicKey());
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

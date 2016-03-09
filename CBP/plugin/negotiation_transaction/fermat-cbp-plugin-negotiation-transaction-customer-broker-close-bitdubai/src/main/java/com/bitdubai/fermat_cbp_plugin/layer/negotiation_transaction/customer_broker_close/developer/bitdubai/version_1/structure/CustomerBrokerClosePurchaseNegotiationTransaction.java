@@ -67,8 +67,23 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             System.out.print("\n\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
+
+//            if(customerBrokerPurchaseNegotiation.getClauses() != null) {
+//                System.out.print("\n\n --- Negotiation Mock XML Clause:");
+//                Collection<Clause> clauses = customerBrokerPurchaseNegotiation.getClauses();
+//                for (Clause item: clauses) {
+//                    System.out.print("\n - Id: " +item.getClauseId()
+//                                    +"\n - Type: " +item.getType().getCode()
+//                                    +"\n - Value: " +item.getValue()
+//                                    +"\n - Status: " +item.getStatus().getCode()
+//                                    +"\n - Proposed: " +item.getProposedBy()
+//                                    +"\n - IndexOrder: "+String.valueOf(item.getIndexOrder())
+//                    );
+//                }
+//            }
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                     this.cryptoAddressBookManager,
@@ -76,17 +91,18 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                     this.walletManagerManager
             );
 
-            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+//            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
                 System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
+                System.out.print("\n\n**** 3.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****\n");
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
             } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
 
-            //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            System.out.print("\n\n**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -97,11 +113,11 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             );
 
         } catch (CantDetermineCryptoCurrencyException e) {
-            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, IN CUSTOMER BROKER CLOSE, NEGOTIATION TRANSACTION. CANT DETERMINE CRYPTO CURRENCY");
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TR*ANSACTION, IN CUSTOMER BROKER PURCHASE NEGOTIATION, UPDATE.");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e) {
-            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+            throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, IN CUSTOMER BROKER PURCHASE NEGOTIATION, CLOSE.");
         } catch (Exception e){
             throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
@@ -115,13 +131,23 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             CustomerBrokerPurchaseNegotiation purchaseNegotiation;
 
+            System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+
+            System.out.print("\n\n --- Negotiation Mock XML Date" +
+                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
+            );
+
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                 this.cryptoAddressBookManager,
                 this.cryptoVaultManager,
                 this.walletManagerManager
             );
 
-            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+//            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)){
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
                 customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
@@ -134,10 +160,10 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                transactionId,
-                customerBrokerPurchaseNegotiation,
-                NegotiationType.PURCHASE,
-                NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
+                    transactionId,
+                    customerBrokerPurchaseNegotiation,
+                    NegotiationType.PURCHASE,
+                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -160,12 +186,16 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                     this.walletManagerManager
             );
 
-            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
+//            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
+            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
                 this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             }
+
+            //CLOSE NEGOTIATION
+            customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(),e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");

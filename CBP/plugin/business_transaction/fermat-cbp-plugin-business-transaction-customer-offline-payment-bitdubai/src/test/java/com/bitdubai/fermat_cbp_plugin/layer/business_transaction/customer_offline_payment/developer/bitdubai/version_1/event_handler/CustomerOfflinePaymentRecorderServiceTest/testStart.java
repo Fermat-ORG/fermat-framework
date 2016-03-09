@@ -14,10 +14,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 02/02/16.
@@ -46,8 +44,9 @@ public class testStart {
     }
 
     @Test
-    public void testStart_Should_Return_Start() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
+    public void testStart() throws Exception {
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(
+                customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOfflinePaymentRecorderService.setEventManager(eventManager);
         customerOfflinePaymentRecorderService.start();
         assertEquals(ServiceStatus.STARTED, customerOfflinePaymentRecorderService.getStatus());
@@ -61,7 +60,8 @@ public class testStart {
 
     @Test
     public void testStop_Should_Return_Stop() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(
+                customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOfflinePaymentRecorderService.setEventManager(eventManager);
         customerOfflinePaymentRecorderService.start();
         customerOfflinePaymentRecorderService.stop();

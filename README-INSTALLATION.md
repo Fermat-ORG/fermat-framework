@@ -9,21 +9,25 @@ Currently Fermat is targeting the Android OS (other OS will come later on).
 
 This guide covers *everything* you need to know to set up the development environment to start programming within Fermat.
 ## System Requirements
-A minimum advisable requirement for ensure enough CPU power to run the project is:
-CPU = Intel i5 or higher
-RAM = 8 Gb
+The advisable requirements to ensure enough CPU power to run the project are:
+* Min specs: <br>
+  Intel Core i3-2350M  // AMD Althon 64 X2 3800+ <br>
+  8Gb RAM (to run smoothly with other programs you should need 12Gb at least)
 
+* Recomended specs:<br>
+  Intel Core i5-4440 //  AMD FX 4100<br>
+  16Gb RAM
 <br>
 ## Part I: Setting up the Environment
 
 <br>
 ### 1.- Working on Linux - PLEASE READ THIS FIRST- 
 
-It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
+It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution).<br> 
 To use Ubuntu, you will need:
 * a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
-* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )
-* c) A free DVD to create the UBUNTU installation disk.
+* b) A valid UBUNTU disc image ( you can download v.14.04.3  here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) ) (please check if there is an updated one )
+* c) A free DVD to create the UBUNTU installation disk. Copy the image file and boot from the DVD, and follow the instructions.
 
 <br>
 ### 2.- Tools Overview

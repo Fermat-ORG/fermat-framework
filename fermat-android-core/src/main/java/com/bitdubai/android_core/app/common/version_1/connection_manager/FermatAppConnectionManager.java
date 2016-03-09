@@ -1,7 +1,8 @@
 package com.bitdubai.android_core.app.common.version_1.connection_manager;
 
 import android.app.Activity;
-
+import android.content.Context;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
@@ -14,9 +15,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.ap
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.app_connection.WalletAssetIssuerFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection.WalletAssetUserFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
-//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
@@ -31,6 +30,8 @@ import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserF
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
 import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
 
+//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
@@ -38,7 +39,7 @@ public class FermatAppConnectionManager {
 
 
 
-    private static AppConnections switchStatement(Activity activity,String publicKey,FermatSession fermatSession){
+    private static AppConnections switchStatement(Context activity,String publicKey){
         AppConnections fermatAppConnection = null;
 
         switch (publicKey){
@@ -143,17 +144,18 @@ public class FermatAppConnectionManager {
     }
 
 
-    public static AppConnections getFermatAppConnection(
-            String publicKey,
-            Activity activity,
-            FermatSession fermatSession) {
-        AppConnections fermatAppConnection = switchStatement(activity,publicKey,fermatSession);
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession fermatSession) {
+        AppConnections fermatAppConnection = switchStatement(context,publicKey);
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatAppConnection;
     }
 
 
     public static AppConnections getFermatAppConnection(String appPublicKey, Activity activity) {
-        return switchStatement(activity,appPublicKey, null);
+        return switchStatement(activity,appPublicKey);
+    }
+
+    public static AppConnections getFermatAppConnection(String appPublicKey, Context context) {
+        return switchStatement(context,appPublicKey);
     }
 }

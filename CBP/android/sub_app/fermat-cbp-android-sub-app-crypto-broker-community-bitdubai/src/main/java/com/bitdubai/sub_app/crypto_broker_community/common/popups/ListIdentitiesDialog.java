@@ -1,34 +1,21 @@
 package com.bitdubai.sub_app.crypto_broker_community.common.popups;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppFriendsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppSelectableIdentitiesListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 import java.util.ArrayList;
@@ -55,7 +42,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
      */
     private CryptoBrokerCommunitySubAppModuleManager manager;
 
-    public ListIdentitiesDialog(final Activity                                activity       ,
+    public ListIdentitiesDialog(final Context activity       ,
                                 final CryptoBrokerCommunitySubAppSession      subAppSession  ,
                                 final SubAppResourcesProviderManager          subAppResources) {
 

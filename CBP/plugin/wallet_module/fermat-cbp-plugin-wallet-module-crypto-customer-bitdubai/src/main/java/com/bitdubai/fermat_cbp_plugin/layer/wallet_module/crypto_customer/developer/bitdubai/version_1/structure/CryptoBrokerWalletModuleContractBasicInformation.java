@@ -15,11 +15,14 @@ import java.util.UUID;
  * Created by nelson on 11/11/15.
  */
 public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
-    private static Random random = new Random(321515131);
+
     private static Calendar instance = Calendar.getInstance();
 
     private String customerAlias;
-    private byte[] imageBytes;
+    private byte[] customerImage;
+    private String brokerAlias;
+    private byte[] brokerImage;
+
     private UUID negotiationId;
     private float amount;
     private String merchandise;
@@ -30,11 +33,19 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private ContractStatus status;
     private String cancellationReason;
 
-    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) {
+    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, byte[] customerImage, String brokerAlias, byte[] brokerImage, String merchandise, String typeOfPayment,
+                                                            String paymentCurrency, ContractStatus status, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){
         this.customerAlias = customerAlias;
+        this.customerImage = customerImage;
+
+        this.brokerAlias = brokerAlias;
+        this.brokerImage = brokerImage;
+
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
+        this.amount = 0;
+        this.exchangeRateAmount = 0;
         if (customerBrokerPurchaseNegotiation != null) {
             this.cancellationReason = customerBrokerPurchaseNegotiation.getCancelReason();
             negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
@@ -42,10 +53,10 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
             try {
                 for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
                     if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
-                        amount = Float.valueOf(clause.getValue());
+                        amount = Float.valueOf(clause.getValue().replace(",",""));
                     }
                     if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
-                        exchangeRateAmount = Float.valueOf(clause.getValue());
+                        exchangeRateAmount = Float.valueOf(clause.getValue().replace(",",""));
                     }
                 }
             } catch (CantGetListClauseException e) {
@@ -54,12 +65,9 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         }
         else{
             this.cancellationReason = "";
-            this.amount = 0;
-            this.exchangeRateAmount = 0;
             negotiationId = UUID.randomUUID();
             date = instance.getTimeInMillis();
         }
-        imageBytes = new byte[0];
 
         this.status = status;
     }
@@ -70,9 +78,16 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public byte[] getCryptoCustomerImage() {
+    public byte[] getCryptoCustomerImage() { return customerImage; }
 
-        return imageBytes;
+    @Override
+    public String getCryptoBrokerAlias() {
+        return brokerAlias;
+    }
+
+    @Override
+    public byte[] getCryptoBrokerImage() {
+        return brokerImage;
     }
 
     @Override

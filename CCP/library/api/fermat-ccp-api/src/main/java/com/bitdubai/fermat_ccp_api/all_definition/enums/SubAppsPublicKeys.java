@@ -10,7 +10,10 @@ public enum SubAppsPublicKeys implements FermatEnum {
     //TODO: MUY PROVISORIO Para usar en el bradcaster de notificaciones
     CCP_COMMUNITY               ("public_key_intra_user_commmunity"),
     CCP_IDENTITY               ("public_key_ccp_intra_user_identity"),
-    CHT_NEWMESSAGE             ("public_key_cht_chat");
+    CBP_BROKER_COMMUNITY               ("public_key_crypto_broker_community"),
+    CBP_CUSTOMER_COMMUNITY               ("public_key_crypto_customer_community"),
+
+    ;
 
     private String code;
 
@@ -22,9 +25,10 @@ public enum SubAppsPublicKeys implements FermatEnum {
 
         switch (code){
 
-            case "public_key_intra_user_commmunity": return CCP_COMMUNITY               ;
+            case "public_key_intra_user_commmunity": return CCP_COMMUNITY  ;
             case "public_key_intra_user_identity": return CCP_IDENTITY     ;
-            case "public_key_cht_chat": return CHT_NEWMESSAGE    ;
+            case "public_key_crypto_broker_community": return CBP_BROKER_COMMUNITY  ;
+            case "public_key_crypto_customer_community": return CBP_CUSTOMER_COMMUNITY     ;
 
 
             default:

@@ -17,4 +17,8 @@ public interface NotificationPainter {
 
     int getIcon();
 
+    String getActivityCodeResult();
+//set enabled notification property
+    boolean showNotification();
+
 }

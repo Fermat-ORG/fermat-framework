@@ -37,8 +37,9 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
-
     compile project(':fermat_preference_settings')
+
+    compile project(':fermat_navigator_drawer')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
