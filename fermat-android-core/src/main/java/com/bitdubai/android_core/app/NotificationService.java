@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import java.util.HashMap;
 import java.util.Map;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
  * Created by mati on 2016.03.01..
  */
@@ -65,8 +65,8 @@ public class NotificationService extends Service {
     public void notificate(String code,FermatStructure fermatStructure){
         Notification.Builder builder = null;
         if (fermatStructure != null) {
-// notificationIdCount++;
-// lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+            // notificationIdCount++;
+            // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {

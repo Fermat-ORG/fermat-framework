@@ -10,11 +10,11 @@ import com.mati.fermat_preference_settings.R;
 /**
  * Created by mati on 2016.02.08..
  */
-public class SettingsTextPlusRadio extends FermatViewHolder {
+public class SettingsTextPlusRadioHolder extends FermatViewHolder {
 
     private RadioButton radio_context;
 
-    public SettingsTextPlusRadio(View itemView,int type) {
+    public SettingsTextPlusRadioHolder(View itemView, int type) {
         super(itemView,type);
         radio_context = (RadioButton) itemView.findViewById(R.id.radio_context);
 

@@ -16,6 +16,7 @@ public class SessionConstantsAssetIssuerCommunity {
     public static final String BROADCAST_CLOSE_APP = "sub.app.actor.issuer.community.broadcast.close.app";
 
     public static final String IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED = "asset_issuer_notification_accepted";
+    public static final String IC_ACTION_ISSUER_NOTIFICATIONS_CANCELED = "asset_issuer_notification_canceled";
     public static final String IC_ACTION_ISSUER_NOTIFICATIONS_DENIED = "asset_issuer_notification_denied";
 
     /*Numeracion Aleatoria, escogencia personal*/
