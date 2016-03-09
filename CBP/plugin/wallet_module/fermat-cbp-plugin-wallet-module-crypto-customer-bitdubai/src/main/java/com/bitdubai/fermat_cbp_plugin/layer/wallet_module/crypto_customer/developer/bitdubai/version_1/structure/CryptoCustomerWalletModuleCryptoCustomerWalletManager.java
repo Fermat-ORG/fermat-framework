@@ -1286,7 +1286,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
              * Case: sending offline payment.
              */
             if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
-                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode() ||
                     contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode()) {
                 this.customerOfflinePaymentManager.sendPayment(contractHash);
             }
