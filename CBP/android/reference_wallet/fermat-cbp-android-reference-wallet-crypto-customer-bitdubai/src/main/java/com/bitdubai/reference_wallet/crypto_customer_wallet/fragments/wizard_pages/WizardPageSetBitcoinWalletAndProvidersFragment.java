@@ -100,41 +100,32 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             errorManager = appSession.getErrorManager();
             bitcoinWallets = getBitcoinWallets(walletManager);
 
-            // Verify if wallet configured, if it is, show this fragment, else show the home fragment (the second start fragment)
-            boolean walletConfigured;
+            //Obtain walletSettings or create new walletSettings if first time opening wallet/wizard
+            CryptoCustomerWalletPreferenceSettings walletSettings;
             try {
-                walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
-            } catch (Exception ex) {
-                Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
-                walletConfigured = (data != null);
+                walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                walletSettings = new CryptoCustomerWalletPreferenceSettings();
+                walletSettings.setIsPresentationHelpEnabled(true);
+                walletSettings.setIsWalletConfigured(false);
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
             }
 
-            if (walletConfigured) {
+
+            // Verify if wallet has been configured, if it is, go to wallet's home!
+            if (walletSettings.isWalletConfigured()) {
                 getRuntimeManager().changeStartActivity(1);
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
                 return;
             }
 
+            //It it isnt, continue..
 
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
             walletManager.clearAssociatedIdentities(appSession.getAppPublicKey());
             walletManager.clearCryptoCustomerWalletProviderSetting(appSession.getAppPublicKey());
 
-
-            //Obtain walletSettings or create new wallet settings if first time opening wallet
-            CryptoCustomerWalletPreferenceSettings walletSettings;
-            try {
-                walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                walletSettings = null;
-            }
-
-            if (walletSettings == null) {
-                walletSettings = new CryptoCustomerWalletPreferenceSettings();
-                walletSettings.setIsPresentationHelpEnabled(true);
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
-            }
 
         } catch (Exception ex) {
             if (errorManager != null)
