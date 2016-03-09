@@ -15,7 +15,7 @@ public class ContractDetail {
 
     private int contractStep;
     private ContractStatus contractStatus;
-    private UUID contractId;
+    private String contractId;
     private UUID negotiationId;
 
     private String paymentOrMerchandiseAmount;
@@ -23,7 +23,7 @@ public class ContractDetail {
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
 
-    public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId,
+    public ContractDetail(int contractStep, ContractStatus contractStatus, String contractId, UUID negotiationId,
                           String amount, String typeOfPayment, String currencyCode, long deliveryDate) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
@@ -41,7 +41,7 @@ public class ContractDetail {
     public ContractStatus getContractStatus() {return contractStatus;}
     //public void setContractStatus(ContractStatus contractStatus) {this.contractStatus = contractStatus;}
 
-    public UUID getContractId() {return contractId;}
+    public String getContractId() {return contractId;}
     //public void setContractId(UUID contractId) {this.contractId = contractId;}
 
     public UUID getNegotiationId() {return negotiationId;}
