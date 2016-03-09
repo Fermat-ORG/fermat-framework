@@ -203,6 +203,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
+    LOSS_PROTECTED_WALLET       ("LPW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
     BITCOIN_HOLD                ("BHOLD"),
     BITCOIN_UNHOLD              ("BUNHOLD"),
