@@ -86,6 +86,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
+    private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
@@ -139,6 +140,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 int cheackeableActors = 0;
                 List<ActorIssuer> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
+                actorsToConnect = new ArrayList<>();
 
                 for (ActorIssuer actor : actors) {
                     if (actor.getRecord().getExtendedPublicKey() == null)
@@ -149,6 +151,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         if (actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))
                         {
                             actorsConnecting.add(actor);
+                        }
+                        if (!(actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                            actorsToConnect.add(actor.getRecord());
                         }
 
                         someSelected = true;
@@ -439,8 +444,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetIssuer> toConnect = new ArrayList<>();
                                     for (ActorIssuer actorIssuer : actors) {
-                                        if (actorIssuer.selected)
+                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
                                             toConnect.add(actorIssuer.getRecord());
+                                        }
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
                                     manager.askActorAssetIssuerForConnection(toConnect);
@@ -486,8 +492,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 };
                 connectDialog.setTitle(R.string.connection_request_title);
                 connectDialog.setDescription(getString(R.string.connection_request_desc));
-                connectDialog.setUsername((toConnect.size() > 1) ? "" + toConnect.size() +
-                        " Issuers" : toConnect.get(0).getName());
+                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                        " Issuers" : actorsToConnect.get(0).getName());
                 connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
                 connectDialog.show();
                 return true;
