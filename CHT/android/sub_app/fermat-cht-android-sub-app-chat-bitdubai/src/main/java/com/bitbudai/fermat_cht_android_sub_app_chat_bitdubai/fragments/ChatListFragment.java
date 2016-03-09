@@ -287,6 +287,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cht_banner)
                     .setIconRes(R.drawable.chat_subapp)
+                    .setIsCheckEnabled(true)
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)

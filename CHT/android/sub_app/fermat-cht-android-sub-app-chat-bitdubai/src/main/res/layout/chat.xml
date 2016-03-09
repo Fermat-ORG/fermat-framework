@@ -40,10 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@color/color_white"
-            android:layout_gravity="top|fill_horizontal">
+            android:layout_gravity="bottom|fill_horizontal">
             <!--android:layout_gravity="center_horizontal|top"bottom|fill_horizontal
             android:layout_alignParentBottom="true"-->
             <EditText
