@@ -18,9 +18,11 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
-    <style name="AppTheme.NoActionBarStart">
+    <style name="AppTheme.NoActionBarStart" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:title"></item>
+        <item name="android:windowFullscreen">true</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

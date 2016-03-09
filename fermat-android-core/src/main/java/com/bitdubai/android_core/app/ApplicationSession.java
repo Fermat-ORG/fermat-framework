@@ -8,7 +8,6 @@ import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsMan
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
 
 import org.acra.ACRA;
@@ -17,7 +16,6 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * Reformated by Matias Furszyfer
@@ -62,12 +60,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      *  Application state
      */
     public static int applicationState=STATE_NOT_CREATED;
-
-    /**
-     *  SubApps fragment factories
-     */
-    private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
-
 
 
     public static ApplicationSession getInstance(){

@@ -69,6 +69,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private int redeemNotificationsCount = 0;
 
     private List<Actor> actorsConnecting;
+    private List<ActorAssetRedeemPoint> actorsToConnect;
     private List<Actor> actors;
     private Actor actor;
     ErrorManager errorManager;
@@ -140,6 +141,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 int cheackeableActors = 0;
                 List<Actor> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
+                actorsToConnect = new ArrayList<>();
 
                 for (Actor actor : actors) {
                     if (actor.getCryptoAddress() == null){
@@ -153,20 +155,32 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                         {
                             actorsConnecting.add(actor);
                         }
+                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                            actorsToConnect.add(actor);
+                        }
                         someSelected = true;
                         selectedActors++;
                     }
                 }
+
                 if (actorsConnecting.size() > 0)
                 {
                     menuItemCancel.setVisible(true);
+
                 }
                 else {
                     menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
-                    menuItemConnect.setVisible(true);
+                    if (actorsConnecting.size() == selectedActors) {
+                        menuItemConnect.setVisible(false);
+                    }else if(actorsConnecting.size() == 0){
+                        menuItemConnect.setVisible(true);
+                    }
+                    if (selectedActors > actorsConnecting.size()){
+                        menuItemConnect.setVisible(true);
+                    }
                     menuItemUnselect.setVisible(true);
                     if (selectedActors == cheackeableActors)
                     {
@@ -454,8 +468,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
                                     for (Actor actor : actors) {
-                                        if (actor.selected)
-                                            toConnect.add(actor);
+                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                                        toConnect.add(actor);
+                                        }
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
                                   manager.askActorAssetRedeemForConnection(toConnect);
@@ -503,8 +518,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 };
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send to ");
-                connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
-                        " Redeem Points" : actorsSelected.get(0).getName());
+                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                        " Redeem Points" : actorsToConnect.get(0).getName());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.show();
                 return true;

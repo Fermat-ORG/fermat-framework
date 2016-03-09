@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
+import android.graphics.Color;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -62,7 +63,7 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     @Override
     public int getBackgroundColor() {
-        return 0;
+        return Color.WHITE;
     }
 
     @Override
