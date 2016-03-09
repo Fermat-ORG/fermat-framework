@@ -404,6 +404,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
@@ -417,6 +418,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             restartButtons();
         }
 
@@ -661,6 +663,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         }
                     } else
                         showEmpty(true, emptyView);
+                    restartButtons();
 //                    if (actors == null || actors.isEmpty() && getActivity() != null) // for test purpose only
 //                        Toast.makeText(getActivity(), "There are no registered actors...", Toast.LENGTH_SHORT).show();
                 }

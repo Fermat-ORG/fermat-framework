@@ -128,10 +128,10 @@ dependencies {
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
     compile project(':fermat-cht-android-sub-app-chat-bitdubai')
-    //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
-    //compile 'com.android.support:appcompat-v7:21.0.3'
+
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:support-v13:23.1.1'
     //compile 'com.google.android.gms:play-services:6.5.87'
