@@ -1347,15 +1347,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     fermatApp = ((FermatApp) bundle.getSerializable(ApplicationConstants.INSTALLED_FERMAT_APP));
                 } else if (bundle.containsKey(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY)) {
                     publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-                    fermatAppType = (FermatAppType) bundle.get(ApplicationConstants.INTENT_APP_TYPE);
                 }
                 if (fermatApp == null) {
-                    fermatApp = getFermatAppManager().getApp(publicKey, fermatAppType);
+                    fermatApp = getFermatAppManager().getApp(publicKey);
                 }
                 if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
                     String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                     if (activityCode != null)
-                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey(), fermatApp.getAppType()).getActivity(Activities.valueOf(activityCode));
+                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                 }
             }
             return createOrOpenApp(fermatApp);
