@@ -274,10 +274,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void disconnectToActorAssetRedeemPoint(String actorAssetRedeemLoggedInPublicKey, ActorAssetRedeemPoint redeemPoint) throws CantDisconnectAssetActorException {
+    public void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantDisconnectAssetActorException {
         try {
 
-            actorAssetRedeemPointManager.disconnectToActorAssetRedeemPoint(actorAssetRedeemLoggedInPublicKey, redeemPoint.getActorPublicKey(), assetUserWalletSubAppModuleManager.getSelectedNetwork());
+            actorAssetRedeemPointManager.disconnectToActorAssetRedeemPoint(redeemPoint.getActorPublicKey(), assetUserWalletSubAppModuleManager.getSelectedNetwork());
 
             this.assetRedeemPointActorNetworkServiceManager.disconnectConnectionActorAsset(redeemPoint.getActorPublicKey(), redeemPoint.getActorPublicKey());
 
