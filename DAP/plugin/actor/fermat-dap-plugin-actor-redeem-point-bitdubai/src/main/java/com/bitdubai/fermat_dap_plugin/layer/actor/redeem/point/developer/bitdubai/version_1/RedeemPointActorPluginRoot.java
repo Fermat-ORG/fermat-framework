@@ -522,7 +522,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void disconnectToActorAssetRedeemPoint(String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException {
+    public void disconnectToActorAssetRedeemPoint(String actorAssetRedeemLoggedInPublicKey, String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException {
         try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
 
             this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(actorUserToDisconnectPublicKey, blockchainNetworkType);
@@ -570,7 +570,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
-        try {
+        try {//TODO EVALUAR State CANCEL o directamente REGISTERED_ONLINE
             this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateRedeemPointException e) {
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
@@ -873,7 +873,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DISCONNECTED:
 //                        this.disconnectActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
-                        this.disconnectToActorAssetRedeemPoint(intraUserSendingPublicKey, notification.getBlockchainNetworkType());
+                        this.disconnectToActorAssetRedeemPoint(intraUserToConnectPublicKey, intraUserSendingPublicKey, notification.getBlockchainNetworkType());
 
                         break;
                     case RECEIVED:
