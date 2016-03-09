@@ -959,7 +959,7 @@ public class ChatMiddlewareMonitorAgent implements
         private ChatMetadata constructChatMetadata(
                 Chat chat,
                 Message message){
-            Timestamp timestamp=new Timestamp(chat.getDate().getTime());
+            Timestamp timestamp=new Timestamp(message.getMessageDate().getTime());
             ChatMetadata chatMetadata=new ChatMetadataRecord(
                     chat.getChatId(),
                     chat.getObjectId(),
