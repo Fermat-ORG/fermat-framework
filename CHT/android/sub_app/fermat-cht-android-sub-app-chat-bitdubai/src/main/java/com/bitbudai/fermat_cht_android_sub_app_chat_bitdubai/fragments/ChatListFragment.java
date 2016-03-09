@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -139,6 +140,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     private int size;
+    ImageView noData;
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
@@ -254,9 +256,11 @@ public class ChatListFragment extends AbstractFermatFragment{
             if(!chatManager.getMessages().isEmpty()) {
                 chatlistview();
                 text.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
             }else{
                 Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
                 text.setVisibility(View.VISIBLE);
+                noData.setVisibility(View.VISIBLE);
                 text.setText(" ");
                 text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
@@ -275,7 +279,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         text = (TextView) layout.findViewById(R.id.text);
-
+        noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
@@ -389,19 +393,15 @@ public class ChatListFragment extends AbstractFermatFragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         try {
-            if(chatManager.isIdentityDevice() == false) {
-                menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            }else {
-
+           if(chatManager.isIdentityDevice() != false) {//if((chatSettings.getLocalPlatformComponentType()!=null && chatSettings.getLocalPublicKey()!=null))
                 // Inflate the menu items
                 inflater.inflate(R.menu.chat_list_menu, menu);
-                menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 // Locate the search item
                 //MenuItem searchItem = menu.findItem(R.id.menu_search);
-            }
+           }
+           menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                   .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         } catch (CantGetChatUserIdentityException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
