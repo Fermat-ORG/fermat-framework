@@ -1,6 +1,5 @@
 package com.bitdubai.android_core.app;
 
-import android.app.NotificationManager;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -63,9 +62,11 @@ import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
+import com.bitdubai.android_core.app.common.version_1.util.LogReader;
 import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
+import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
+import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
@@ -127,21 +128,20 @@ import java.util.Vector;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getDesktopRuntimeManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getSubAppRuntimeMiddleware;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils.getWalletRuntimeManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppResourcesProviderManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
  */
 
-public abstract class FermatActivity extends AppCompatActivity
-        implements
+public abstract class FermatActivity extends AppCompatActivity implements
         WizardConfiguration,
         PaintActivityFeatures,
         NavigationView.OnNavigationItemSelectedListener,
@@ -417,10 +417,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
-
-
-
-
 
     private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
         try {
@@ -912,30 +908,9 @@ public abstract class FermatActivity extends AppCompatActivity
             else broadcastManager = new BroadcastManager(this);
             AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
 
-            //getNotificationManager().addObserver(this);
-            //getNotificationManager().addCallback(this);
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        if (notification != null) {
-//            NotificationManager mNotificationManager =
-//                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
-//        } else {
-//            try {
-//                if (getCloudClient().getCommunicationsCloudClientConnection().isConnected()) {
-//                    launchIntent("running");
-//                } else {
-//                    launchIntent("closed");
-//                }
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//
-//        }
 //        try {
 //            networkStateReceiver = NetworkStateReceiver.getInstance();
 //            networkStateReceiver.addListener(this);
@@ -1410,7 +1385,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-
     //TODO: esto es un plugin más para el manejo de los desktops
     protected InstalledDesktop getDesktopManager(){
         return new FermatInstalledDesktop();
@@ -1518,12 +1492,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
     }
 
-
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback ){
         if(bottomNavigation!=null) bottomNavigation.setDesktopHolderClickCallback(desktopHolderClickCallback);
     }
-
-
 
 
     @Override
@@ -1583,7 +1554,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         // update highlighted item in the navigation menu
@@ -1636,17 +1606,6 @@ public abstract class FermatActivity extends AppCompatActivity
             }
         }else{
             super.onBackPressed();
-        }
-
-
-        try{
-
-
-
-
-
-        }catch (Exception e){
-            e.printStackTrace();
         }
 
     }
@@ -1712,10 +1671,6 @@ public abstract class FermatActivity extends AppCompatActivity
         return this;
     }
 
-//    private FermatSession getFermatSessionInUse(String appPublicKey){
-//        return getFermatSessionManager().getAppsSession(appPublicKey);
-//    }
-
     /**
      * Abstract methods
      */
@@ -1750,6 +1705,13 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Report error
+     */
+    public void reportError(String mailUserTo) throws Exception {
+        YourOwnSender yourOwnSender = new YourOwnSender(this);
+        yourOwnSender.send(mailUserTo, LogReader.getLog().toString());
+    }
 
 
 
@@ -1767,20 +1729,8 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-//        try {
-//            getNotificationManager().deleteObserver(this);
-//            getNotificationManager().deleteCallback(this);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         if(broadcastManager!=null)broadcastManager.stop();
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancelAll();
-
-
 //        networkStateReceiver.removeListener(this);
-        //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
 
 
@@ -1817,7 +1767,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-//    private BoundService mBoundService;
     private NotificationService notificationService;
     private boolean mNotificationServiceConnected;
     /**
