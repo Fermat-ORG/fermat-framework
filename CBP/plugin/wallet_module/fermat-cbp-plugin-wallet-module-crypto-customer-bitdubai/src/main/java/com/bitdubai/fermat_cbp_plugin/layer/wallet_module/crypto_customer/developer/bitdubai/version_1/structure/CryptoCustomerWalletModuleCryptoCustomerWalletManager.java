@@ -1221,15 +1221,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         try {
             CustomerBrokerContractPurchase customerBrokerContractPurchase;
             //TODO: This is the real implementation
-            /*customerBrokerContractPurchase =
+            customerBrokerContractPurchase =
                     this.customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);
             //TODO: for testing
-            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
+            /*CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
                     new CustomerBrokerContractPurchaseManagerMock();
             customerBrokerContractPurchase =
                     customerBrokerContractPurchaseManagerMock.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
             //End of Mock testing
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
@@ -1237,12 +1237,13 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
             //TODO: remove this mock
-            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();
+//            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();
             ContractClauseType contractClauseType = getContractClauseType(
                     customerBrokerPurchaseNegotiation);
             /**
              * Case: sending crypto payment.
              */
+
             if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
 
                 /**
