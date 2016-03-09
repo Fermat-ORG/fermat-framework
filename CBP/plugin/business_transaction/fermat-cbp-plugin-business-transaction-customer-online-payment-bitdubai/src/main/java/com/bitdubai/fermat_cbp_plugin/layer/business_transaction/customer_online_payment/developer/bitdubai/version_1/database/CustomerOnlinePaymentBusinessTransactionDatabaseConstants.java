@@ -31,6 +31,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     public static final String ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_network_type";
+    public static final String ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 

@@ -456,7 +456,28 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      */
     @Override
     public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
-        //TODO to implement
-        return 0;
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
+            return this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.getCompletionDateByContractHash(
+                    contractHash);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "Unexpected exception from database");
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "The contract hash argument is null");
+        }
     }
 }

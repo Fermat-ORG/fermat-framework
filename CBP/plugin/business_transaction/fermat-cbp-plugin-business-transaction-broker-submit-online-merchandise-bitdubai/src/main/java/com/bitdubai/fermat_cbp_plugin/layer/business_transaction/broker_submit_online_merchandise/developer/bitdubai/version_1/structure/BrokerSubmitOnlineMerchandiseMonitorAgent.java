@@ -67,6 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -591,6 +592,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.MERCHANDISE_SUBMIT);
+                            Date date=new Date();
+                            brokerSubmitOnlineMerchandiseBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -616,6 +620,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent(contractHash);
                             }
                         }
