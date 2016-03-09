@@ -221,6 +221,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         System.gc();
     }
 
+    protected void sendErrorReport(String userTo) throws Exception {
+        ((FermatActivityManager)getActivity()).reportError(userTo);
+    }
+
     protected final void onBack(String activityCodeBack){
         getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
     }

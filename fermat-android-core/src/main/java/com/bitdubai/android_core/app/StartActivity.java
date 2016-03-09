@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
+import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;

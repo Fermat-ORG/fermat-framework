@@ -1084,7 +1084,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
     }
 
     @Override
-    public ECKey getPrivateKey(byte[] publicKey) {
-        return this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(publicKey);
+    public ECKey getPrivateKey(Address address) {
+        return this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
     }
 }

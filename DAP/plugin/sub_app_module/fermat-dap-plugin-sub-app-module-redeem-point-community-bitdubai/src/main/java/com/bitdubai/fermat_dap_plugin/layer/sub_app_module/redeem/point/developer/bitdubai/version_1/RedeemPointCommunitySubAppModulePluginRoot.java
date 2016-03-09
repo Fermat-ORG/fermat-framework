@@ -296,7 +296,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
             this.actorAssetRedeemPointManager.cancelActorAssetRedeem(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
 
-            this.assetRedeemPointActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
+//            this.assetRedeemPointActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
 
         } catch (CantCancelConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
