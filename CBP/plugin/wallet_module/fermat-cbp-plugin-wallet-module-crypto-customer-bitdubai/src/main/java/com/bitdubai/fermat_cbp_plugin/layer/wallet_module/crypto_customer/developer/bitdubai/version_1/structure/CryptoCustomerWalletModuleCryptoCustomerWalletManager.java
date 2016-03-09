@@ -26,6 +26,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -44,6 +46,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfac
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.interfaces.BrokerAckOnlinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offline_merchandise.interfaces.BrokerSubmitOfflineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.interfaces.BrokerSubmitOnlineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
@@ -158,6 +164,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final CustomerOfflinePaymentManager customerOfflinePaymentManager;
     private final CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager;
     private final CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
+    private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
+    private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
+    private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
+    private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
+
     private final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
 
     private final ErrorManager errorManager;
@@ -180,6 +191,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  CustomerOfflinePaymentManager customerOfflinePaymentManager,
                                                                  CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager,
                                                                  CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager,
+                                                                 BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
+                                                                 BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
+                                                                 BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
+                                                                 BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
                                                                  SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager,
 
                                                                  final ErrorManager errorManager,
@@ -198,6 +213,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.customerOfflinePaymentManager = customerOfflinePaymentManager;
         this.customerAckOnlineMerchandiseManager = customerAckOnlineMerchandiseManager;
         this.customerAckOfflineMerchandiseManager = customerAckOfflineMerchandiseManager;
+        this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
+        this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
+        this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
+        this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
 
         this.settingsManager = settingsManager;
 
@@ -240,7 +259,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             paymentCurrency,
                             status,
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
-                            PurchaseNegotiation);
+                            PurchaseNegotiation,
+                            customerBrokerContractPurchase.getContractId());
 
                     filteredList.add(contract);
                 }
@@ -265,7 +285,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                 paymentCurrency,
                                 statusContractCancelled,
                                 false,
-                                PurchaseNegotiation);
+                                PurchaseNegotiation,
+                                "");
 
                         filteredList.add(contract);
                     }
@@ -296,7 +317,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             paymentCurrency,
                             customerBrokerContractPurchase.getStatus(),
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
-                            PurchaseNegotiation);
+                            PurchaseNegotiation,
+                            customerBrokerContractPurchase.getContractId());
 
                     filteredList.add(contract);
                 }
@@ -319,7 +341,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             paymentCurrency,
                             statusContractCancelled,
                             false,
-                            PurchaseNegotiation);
+                            PurchaseNegotiation,
+                            "");
 
                     filteredList.add(contract);
                 }
@@ -327,11 +350,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
 
             //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
             filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
             filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
             filteredList.add(contract);
 
             return filteredList;
@@ -370,14 +393,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         paymentCurrency,
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
-                        negotiation);
+                        negotiation,
+                        customerBrokerContract.getContractId());
 
                 waitingForBroker.add(contract);
             }
 
             //TODO:Eliminar. Solo para que se terminen las pantallas
             contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, false, null);
+                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, false, null, "");
             waitingForBroker.add(contract);
 
             return waitingForBroker;
@@ -416,14 +440,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         paymentCurrency,
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
-                        negotiation);
+                        negotiation,
+                        customerBrokerContract.getContractId());
 
                 waitingForBroker.add(contract);
             }
 
             //TODO: Eliminar. Solo para que se terminen las pantallas
             contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, false, null);
+                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, false, null, "");
             waitingForBroker.add(contract);
 
             return waitingForBroker;
@@ -1413,6 +1438,35 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             throw new CantListActorConnectionsException(e, "", "Error trying to list the broker connections of the customer.");
         }
+    }
+
+    @Override
+    public long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod) {
+        try {
+            switch(contractStatus) {
+                case PAYMENT_SUBMIT:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return customerOnlinePaymentManager.getCompletionDate(contractHash);
+                    else
+                        return customerOfflinePaymentManager.getCompletionDate(contractHash);
+                case PENDING_MERCHANDISE:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return brokerAckOnlinePaymentManager.getCompletionDate(contractHash);
+                    else
+                        return brokerAckOfflinePaymentManager.getCompletionDate(contractHash);
+                case MERCHANDISE_SUBMIT:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return brokerSubmitOnlineMerchandiseManager.getCompletionDate(contractHash);
+                    else
+                        return brokerSubmitOfflineMerchandiseManager.getCompletionDate(contractHash);
+                case READY_TO_CLOSE:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return customerAckOnlineMerchandiseManager.getCompletionDate(contractHash);
+                    else
+                        return customerAckOfflineMerchandiseManager.getCompletionDate(contractHash);
+            }
+        }catch(CantGetCompletionDateException e) {}
+        return 0;
     }
 
     /**

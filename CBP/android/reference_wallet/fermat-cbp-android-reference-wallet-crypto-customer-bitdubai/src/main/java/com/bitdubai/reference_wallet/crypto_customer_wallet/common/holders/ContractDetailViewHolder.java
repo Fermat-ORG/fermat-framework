@@ -100,7 +100,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             switch (contractDetail.getContractStep()) {
                 case 1:
                     //Send the payment to the Broker and update CardView background
-                    //TODO: this.walletManager.sendPayment(contractDetail.getContractId().toString());
+                    this.walletManager.sendPayment(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You sent:");
@@ -109,7 +109,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
                 case 4:
                     //Confirm the reception of the broker's merchandise
-                    //TODO: this.walletManager.ackMerchandise(contractDetail.getContractId().toString());
+                    this.walletManager.ackMerchandise(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You received:");

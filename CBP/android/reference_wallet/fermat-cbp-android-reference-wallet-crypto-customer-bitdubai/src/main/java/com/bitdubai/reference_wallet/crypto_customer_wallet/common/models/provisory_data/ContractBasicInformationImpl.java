@@ -18,6 +18,7 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
     private String customerAlias;
     private byte[] imageBytes;
     private UUID negotiationId;
+    private String contractId;
     private float amount;
     private String merchandise;
     private String typeOfPayment;
@@ -39,7 +40,8 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
         exchangeRateAmount = random.nextFloat(); //tasa de cambio
         this.cancellationReason = ""; //Negotiation del objeto como tal
         date = instance.getTimeInMillis(); //
-        negotiationId = UUID.randomUUID(); //Contrato
+        negotiationId = UUID.randomUUID(); //Negociacion
+        contractId = ""; //Contrato
 
         imageBytes = new byte[0]; //Actor customer
         this.status = status;
@@ -67,8 +69,8 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
     }
 
     @Override
-    public UUID getContractId() {
-        return negotiationId;
+    public String getContractId() {
+        return contractId;
     }
 
     @Override

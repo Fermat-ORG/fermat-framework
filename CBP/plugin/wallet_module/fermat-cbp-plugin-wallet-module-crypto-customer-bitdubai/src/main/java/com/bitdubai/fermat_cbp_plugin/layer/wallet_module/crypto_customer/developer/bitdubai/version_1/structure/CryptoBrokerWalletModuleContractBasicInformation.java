@@ -23,6 +23,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private byte[] brokerImage;
 
     private UUID negotiationId;
+    private String contractId;
     private float amount;
     private String merchandise;
     private String typeOfPayment;
@@ -34,12 +35,14 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private boolean nearExpirationDatetime;
 
     public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, byte[] customerImage, String brokerAlias, byte[] brokerImage, String merchandise, String typeOfPayment,
-                                                            String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){        this.customerAlias = customerAlias;
+                                                            String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                                                            String contractId) {
+        this.customerAlias = customerAlias;
         this.customerImage = customerImage;
-
         this.brokerAlias = brokerAlias;
         this.brokerImage = brokerImage;
 
+        this.contractId = contractId;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
@@ -92,8 +95,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public UUID getContractId() {
-        return negotiationId;
+    public String getContractId() {
+        return contractId;
     }
 
     @Override

@@ -315,4 +315,15 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      */
     ActorIdentity getBrokerInfoByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantListActorConnectionsException;
 
+
+    /**
+     * Returns a completionDate in which a specific status was achieved for a specific contract
+     *
+     * @param contractHash
+     * @param contractStatus
+     * @param paymentMethod
+     * @return a completionDate in which a specific status was achieved for a specific contract
+     */
+    long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
+
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -108,4 +109,16 @@ public interface WalletManager extends ModuleManager<FermatSettings, ActiveActor
      * @return Collection<NegotiationLocations>
      */
     Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException, CantGetListLocationsPurchaseException;
+
+
+    /**
+     * Returns a completionDate in which a specific status was achieved for a specific contract
+     *
+     * @param contractHash
+     * @param contractStatus
+     * @param paymentMethod
+     * @return a completionDate in which a specific status was achieved for a specific contract
+     */
+    long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
+
 }
