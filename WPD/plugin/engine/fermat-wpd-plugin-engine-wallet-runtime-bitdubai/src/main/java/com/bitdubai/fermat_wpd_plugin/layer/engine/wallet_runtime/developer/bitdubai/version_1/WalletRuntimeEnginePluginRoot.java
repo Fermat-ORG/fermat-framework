@@ -2019,6 +2019,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         // Activity: Home
         runtimeActivity = new Activity();
@@ -2028,8 +2029,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
-        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
-
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
