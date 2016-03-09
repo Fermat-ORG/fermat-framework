@@ -48,7 +48,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
@@ -418,12 +417,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
 
-
-    @Override
-    public void selectSubApp(InstalledSubApp installedSubApp) {
-
-    }
-
     @Override
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
         try {
@@ -518,10 +511,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
-    @Override
-    public void selectWallet(InstalledWallet installedWallet) {
-
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {

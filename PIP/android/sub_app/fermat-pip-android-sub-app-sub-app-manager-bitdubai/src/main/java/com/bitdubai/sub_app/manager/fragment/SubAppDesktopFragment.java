@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.manager.fragment;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,28 +10,24 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import android.app.Fragment;
 /**
  * Created by Natalia on 12/01/2015.
  */
-public class SubAppDesktopFragment extends Fragment {
+public class SubAppDesktopFragment extends AbstractDesktopFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
@@ -195,7 +190,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -208,7 +203,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -222,7 +217,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -236,7 +231,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -249,7 +244,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
