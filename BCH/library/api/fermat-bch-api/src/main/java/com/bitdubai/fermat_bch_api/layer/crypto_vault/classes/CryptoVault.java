@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -19,6 +17,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.TransactionSignature;
@@ -26,7 +25,6 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +34,6 @@ import java.util.UUID;
  * Created by rodrigo on 2/26/16.
  */
 public abstract class CryptoVault {
-
     /**
      * Platform variables
      */
@@ -71,9 +68,9 @@ public abstract class CryptoVault {
     }
 
 
-    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign, ECKey privateKey) throws CantSignTransactionException{
+    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign) throws CantSignTransactionException{
         //validate parameters
-        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null || privateKey == null)
+        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null)
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "SignTransaction parameters can't be null", "null parameters.");
 
         final NetworkParameters NETWORK_PARAMETERS = transactionToSign.getParams();
@@ -111,6 +108,11 @@ public abstract class CryptoVault {
             Sha256Hash sigHash = transactionToSign.hashForSignature(inputIndex, scriptToSign, Transaction.SigHash.ALL, false);
 
             /**
+             * I get the private key that I will use to sign the hash
+             */
+            ECKey privateKey = getPrivateKey(scriptToSign.getPubKey());
+
+            /**
              * I create the signature
              */
             ECKey.ECDSASignature signature = privateKey.sign(sigHash);
@@ -121,7 +123,16 @@ public abstract class CryptoVault {
             /**
              * I will add the signature to the input script of the transaction
              */
-            entry.getKey().setScriptSig(inputScript);
+            transactionToSign.getInput(inputIndex).setScriptSig(inputScript);
+
+            /**
+             * Verify everything is ok
+             */
+            try{
+                transactionToSign.getInput(inputIndex).verify(entry.getValue());
+            } catch (VerificationException e){
+                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error during signing of transaction.", "incorrect signature");
+            }
         }
 
         /**
@@ -130,6 +141,15 @@ public abstract class CryptoVault {
          */
         return transactionToSign;
     }
+
+    /**
+     * Based on the public Key, I get the corresponding private key
+     * @param publicKey
+     * @return
+     */
+    public abstract ECKey getPrivateKey(byte[] publicKey);
+
+
 
     /**
      * Gets the transaction outputs referenced in the passed transaction Input outpoints that are mine.

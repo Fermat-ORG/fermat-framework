@@ -113,7 +113,7 @@ public class AcceptDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
                     getSession().getModuleManager().denyConnectionActorAssetUser(
                             identity.getPublicKey(),
                             actor.getActorPublicKey());
-                    getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED, Boolean.FALSE);
+//                    getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED, Boolean.FALSE);
                     Toast.makeText(getContext(), actor.getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();

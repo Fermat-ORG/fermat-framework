@@ -211,7 +211,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
-        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         frameLayout.setLayoutParams(lbs);
 

@@ -55,4 +55,9 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
     public String getActivityCodeResult() {
         return null;
     }
+
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
 }
