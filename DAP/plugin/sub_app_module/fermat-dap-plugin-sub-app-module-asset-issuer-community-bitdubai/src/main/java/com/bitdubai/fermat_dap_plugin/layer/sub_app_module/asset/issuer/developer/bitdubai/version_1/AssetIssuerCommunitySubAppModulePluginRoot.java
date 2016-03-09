@@ -297,19 +297,19 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void cancelActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, String actorAssetIssuerToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
         try {
 
-            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetIssuerLoggedPublicKey, actorAssetIssuerToCancelPublicKey);
+            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetIssuerLoggedPublicKey, actorAssetToCancel.getActorPublicKey());
 
-            this.assetIssuerActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetIssuerLoggedPublicKey, actorAssetIssuerToCancelPublicKey);
+//            this.assetIssuerActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetIssuerLoggedPublicKey, actorAssetToCancel);
 
         } catch (CantCancelConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" + actorAssetIssuerToCancelPublicKey, e, "", "");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" +  actorAssetToCancel.getActorPublicKey(), e, "", "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" + actorAssetIssuerToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" +  actorAssetToCancel.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
