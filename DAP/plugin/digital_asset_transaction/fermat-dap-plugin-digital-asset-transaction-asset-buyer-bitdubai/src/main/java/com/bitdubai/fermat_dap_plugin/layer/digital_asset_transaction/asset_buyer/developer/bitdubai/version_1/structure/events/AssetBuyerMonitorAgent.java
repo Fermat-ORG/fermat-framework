@@ -258,7 +258,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         private void creditUserWallet(BuyingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterCreditException {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
-            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
+            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBuyerTransaction().getTxHash());
             AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
         }

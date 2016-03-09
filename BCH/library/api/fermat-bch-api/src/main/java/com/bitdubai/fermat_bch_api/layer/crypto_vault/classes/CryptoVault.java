@@ -100,8 +100,11 @@ public abstract class CryptoVault {
             int inputIndex = 0;
             for (TransactionInput intputToSign : transactionToSign.getInputs()){
                 if (intputToSign.equals(entry.getKey()))
+                    break;
+                else
                     inputIndex++;
             }
+
 
             /**
              * I get the signature hash for my output.
