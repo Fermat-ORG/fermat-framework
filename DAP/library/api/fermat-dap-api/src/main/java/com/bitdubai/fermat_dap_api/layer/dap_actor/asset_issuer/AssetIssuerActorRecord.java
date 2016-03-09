@@ -58,7 +58,9 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
         this.actorPublicKey = actorPublicKey;
         this.name = name;
-        this.profileImage = profileImage.clone();
+
+        this.setProfileImage(profileImage);
+
         if (location != null) {
             this.locationLatitude = location.getLatitude();
             this.locationLongitude = location.getLongitude();
@@ -92,7 +94,8 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.description        = description;
         this.extendedPublicKey  = extendedPublicKey;
         this.actorsType         = actorsType;
-        this.profileImage       = profileImage.clone();
+
+        this.setProfileImage(profileImage);
     }
 
     private AssetIssuerActorRecord(JsonObject jsonObject, Gson gson) {
@@ -191,7 +194,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+        if(profileImage != null)
+            this.profileImage = profileImage.clone();
+        else
+            this.profileImage = new byte[0];
     }
 
     /**

@@ -295,10 +295,11 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
                 public void onDismiss(DialogInterface dialog) {
                     Object o = appSession.getData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_ACCEPTED);
                     try {
-                        if ((Boolean) o) {
-                            onRefresh();
-                            appSession.removeData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED);
-                        }
+                        if (o != null)
+                            if ((Boolean) o) {
+                                appSession.removeData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_ACCEPTED);
+                            }
+                        onRefresh();
                     } catch (Exception e) {
                         e.printStackTrace();
                         onRefresh();
