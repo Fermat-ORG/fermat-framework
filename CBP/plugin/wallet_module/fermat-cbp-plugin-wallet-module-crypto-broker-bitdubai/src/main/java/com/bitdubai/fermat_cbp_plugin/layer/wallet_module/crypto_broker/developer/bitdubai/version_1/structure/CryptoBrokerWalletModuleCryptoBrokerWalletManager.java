@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -54,6 +55,10 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.Custo
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOnlineMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_online_merchandise.interfaces.CustomerAckOnlineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -200,6 +205,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
     private final BitcoinWalletManager bitcoinWalletManager;
     private final CryptoBrokerActorManager cryptoBrokerActorManager;
+    private final CustomerOnlinePaymentManager customerOnlinePaymentManager;
+    private final CustomerOfflinePaymentManager customerOfflinePaymentManager;
+    private final CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager;
+    private final CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
     private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
     private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
@@ -228,6 +237,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CustomerBrokerUpdateManager customerBrokerUpdateManager,
                                                              BitcoinWalletManager bitcoinWalletManager,
                                                              CryptoBrokerActorManager cryptoBrokerActorManager,
+                                                             CustomerOnlinePaymentManager customerOnlinePaymentManager,
+                                                             CustomerOfflinePaymentManager customerOfflinePaymentManager,
+                                                             CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager,
+                                                             CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager,
                                                              BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                              BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
                                                              BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
@@ -253,6 +266,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.customerBrokerUpdateManager = customerBrokerUpdateManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.cryptoBrokerActorManager = cryptoBrokerActorManager;
+        this.customerOnlinePaymentManager = customerOnlinePaymentManager;
+        this.customerOfflinePaymentManager = customerOfflinePaymentManager;
+        this.customerAckOnlineMerchandiseManager = customerAckOnlineMerchandiseManager;
+        this.customerAckOfflineMerchandiseManager = customerAckOfflineMerchandiseManager;
         this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
         this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
@@ -492,6 +509,35 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
+    }
+
+    @Override
+    public long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod) {
+        try {
+            switch(contractStatus) {
+                case PAYMENT_SUBMIT:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return customerOnlinePaymentManager.getCompletionDate(contractHash);
+                    else
+                        return customerOfflinePaymentManager.getCompletionDate(contractHash);
+                case PENDING_MERCHANDISE:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return brokerAckOnlinePaymentManager.getCompletionDate(contractHash);
+                    else
+                        return brokerAckOfflinePaymentManager.getCompletionDate(contractHash);
+                case MERCHANDISE_SUBMIT:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return brokerSubmitOnlineMerchandiseManager.getCompletionDate(contractHash);
+                    else
+                        return brokerSubmitOfflineMerchandiseManager.getCompletionDate(contractHash);
+                case READY_TO_CLOSE:
+                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                        return customerAckOnlineMerchandiseManager.getCompletionDate(contractHash);
+                    else
+                        return customerAckOfflineMerchandiseManager.getCompletionDate(contractHash);
+            }
+        }catch(CantGetCompletionDateException e) {}
+        return 0;
     }
 
     @Override
