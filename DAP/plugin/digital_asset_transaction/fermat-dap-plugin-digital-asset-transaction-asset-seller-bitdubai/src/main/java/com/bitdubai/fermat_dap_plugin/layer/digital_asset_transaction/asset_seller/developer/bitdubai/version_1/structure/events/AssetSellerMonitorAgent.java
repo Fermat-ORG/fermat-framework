@@ -232,20 +232,21 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         System.out.println("Negotiation partially signed...");
-                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+                        if (Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+                            DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
+                            dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
+                            String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
+                            dao.updateTransactionHash(record.getRecordId(), txHash);
+                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
+                        } else {
                             AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                             DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
                             assetTransmission.sendMessage(message);
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
+                            System.out.println("Signature rejected!!");
                         }
-                        DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
-                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
-                        String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
-                        dao.updateTransactionHash(record.getRecordId(), txHash);
-                        dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
-
                         break;
                     }
                     case COMPLETE_SIGNATURE: {
@@ -264,6 +265,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         switch (broadcast.getStatus()) {
                             case BROADCASTED: {
                                 debitUserWallet(record, BalanceType.AVAILABLE);
+                                unlockFunds(record.getMetadata());
                                 dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
                                 System.out.println("Asset Sold...");
                                 break;

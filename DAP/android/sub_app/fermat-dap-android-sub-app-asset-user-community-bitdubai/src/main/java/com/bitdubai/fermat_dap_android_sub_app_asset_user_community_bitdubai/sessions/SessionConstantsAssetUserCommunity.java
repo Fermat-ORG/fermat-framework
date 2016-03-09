@@ -14,6 +14,7 @@ public class SessionConstantsAssetUserCommunity {
 
     public static final String IC_ACTION_USER_NOTIFICATIONS_ACCEPTED = "asset_user_notification_accepted";
     public static final String IC_ACTION_USER_NOTIFICATIONS_DENIED = "asset_user_notification_denied";
+    public static final String IC_ACTION_USER_NOTIFICATIONS_CANCELED = "asset_user_notification_canceled";
 
     public static final String LOCAL_BROADCAST_CHANNEL = "sub.app.actor.user.community.broadcast.chanel";
     public static final String BROADCAST_CONNECTED_UPDATE = "sub.app.actor.user.community.broadcast.connected";

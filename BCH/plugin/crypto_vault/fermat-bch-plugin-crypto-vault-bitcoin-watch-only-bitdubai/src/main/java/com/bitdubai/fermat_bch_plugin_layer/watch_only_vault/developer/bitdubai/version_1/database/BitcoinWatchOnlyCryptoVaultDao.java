@@ -669,9 +669,9 @@ public class BitcoinWatchOnlyCryptoVaultDao implements CryptoVaultDao {
     }
 
     @Override
-    public int getPublicKeyPosition(String publicKey) throws CantExecuteDatabaseOperationException {
+    public int getPublicKeyPosition(String address) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();

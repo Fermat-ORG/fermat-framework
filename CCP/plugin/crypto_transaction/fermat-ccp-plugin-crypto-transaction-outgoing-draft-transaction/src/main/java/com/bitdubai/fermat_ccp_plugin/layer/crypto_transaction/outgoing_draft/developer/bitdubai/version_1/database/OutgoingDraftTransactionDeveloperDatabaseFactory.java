@@ -24,14 +24,14 @@ import java.util.UUID;
  * The Class <code>OutgoingIntraActorTransactionDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Ezequiel Postan - (ezequiel.postan@gmail.com) on 21/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 
-public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class OutgoingDraftTransactionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -52,7 +52,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public OutgoingIntraActorTransactionDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public OutgoingDraftTransactionDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
 
@@ -74,7 +74,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -89,13 +89,13 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            OutgoingIntraActorTransactionDatabaseFactory outgoingIntraActorTransactionDatabaseFactory = new OutgoingIntraActorTransactionDatabaseFactory(pluginDatabaseSystem);
+            OutgoingDraftTransactionDatabaseFactory outgoingDraftTransactionDatabaseFactory = new OutgoingDraftTransactionDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = outgoingIntraActorTransactionDatabaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
+                database = outgoingDraftTransactionDatabaseFactory.createDatabase(pluginId, OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,17 +106,17 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
     }
 
 
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+    public static List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory, UUID pluginId) {
         /**
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Outgoing Intra User", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, pluginId.toString()));
         return databases;
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
@@ -124,40 +124,39 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
          */
         List<String> outgoingIntraUserColumns = new ArrayList<String>();
 
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_FROM_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_TO_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_FROM_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_TO_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE);
+        outgoingIntraUserColumns.add(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME);
 
         /**
          * Table Outgoing Intra User addition.
          */
-        DeveloperDatabaseTable outgoingIntraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME, outgoingIntraUserColumns);
+        DeveloperDatabaseTable outgoingIntraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME, outgoingIntraUserColumns);
         tables.add(outgoingIntraUserTable);
-
 
 
         return tables;
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -169,12 +168,12 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -192,13 +191,10 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
-            database.closeDatabase();
+        } catch (Exception e) {
             return returnedRecords;
         }
-        database.closeDatabase();
         return returnedRecords;
     }
 
