@@ -272,6 +272,25 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
     }
 
+    private void setUpHelpAssetStatistics(boolean checkButton) {
+        try {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setIsCheckEnabled(true)
+                    .setSubTitle(R.string.cht_chat_subtitle)
+                    .setBody(R.string.cht_chat_body)
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -282,22 +301,10 @@ public class ChatListFragment extends AbstractFermatFragment{
         noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
+        setUpHelpAssetStatistics(true);
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
         {
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setBannerRes(R.drawable.cht_banner)
-                    .setIconRes(R.drawable.chat_subapp)
-                    .setIsCheckEnabled(true)
-                    .setSubTitle(R.string.cht_chat_subtitle)
-                    .setBody(R.string.cht_chat_body)
-                    .setTextFooter(R.string.cht_chat_footer)
-                    .build();
-            try {
-                presentationDialog.show();
-            } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+            setUpHelpAssetStatistics(true);
         }
         try {
             toolbar = getToolbar();
@@ -411,17 +418,9 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        setUpHelpAssetStatistics(true);
         if(id == ChtConstants.CHT_ICON_HELP){
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setBannerRes(R.drawable.cht_banner)
-                    .setIconRes(R.drawable.chat_subapp)
-                    .setSubTitle(R.string.cht_chat_subtitle)
-                    .setBody(R.string.cht_chat_body)
-                    .setTextFooter(R.string.cht_chat_footer)
-                    .build();
-            presentationDialog.show();
-            return true;
+            setUpHelpAssetStatistics(true);
         }
         if (id == R.id.menu_open_chat) {
             changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
@@ -507,4 +506,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
+
+
 }
