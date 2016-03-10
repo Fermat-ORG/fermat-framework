@@ -22,17 +22,6 @@ public final class IssuingRecord {
     private Date creationTime;
 
     //CONSTRUCTORS
-
-    public IssuingRecord(int assetsGenerated, int assetsToGenerate, BlockchainNetworkType networkType, DigitalAsset asset, IssuingStatus status, String btcWalletPk, long creationTime) {
-        this.assetsGenerated = assetsGenerated;
-        this.assetsToGenerate = assetsToGenerate;
-        this.networkType = networkType;
-        this.asset = asset;
-        this.status = status;
-        this.btcWalletPk = btcWalletPk;
-        this.creationTime = new Date(creationTime);
-    }
-
     public IssuingRecord(int assetsGenerated, int assetsToGenerate, BlockchainNetworkType networkType, DigitalAsset asset, IssuingStatus status, String btcWalletPk, String issuerWalletPk, long creationTime) {
         this.assetsGenerated = assetsGenerated;
         this.assetsToGenerate = assetsToGenerate;
