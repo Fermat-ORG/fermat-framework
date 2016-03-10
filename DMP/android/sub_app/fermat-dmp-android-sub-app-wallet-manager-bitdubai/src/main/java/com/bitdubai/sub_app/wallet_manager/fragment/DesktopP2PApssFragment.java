@@ -135,7 +135,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 
         try {
 
-            rootView = inflater.inflate(R.layout.desktop_main, container, false);
+            rootView = inflater.inflate(R.layout.desktop_p2p_main, container, false);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
@@ -330,32 +330,32 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 //                    lstItemsWithIcon.add(item);
 //                }
 //            }
-            InstalledApp installedApp = new InstalledApp("Uber","uber_public_key",new Version(),R.drawable.fermat,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            InstalledApp installedApp = new InstalledApp("Tinder","tinder_public_key",new Version(),R.drawable.icon_empresa_tinder,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
 
             lstInstalledApps.add(installedApp);
             Item item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
+            item.setIconResource(R.drawable.icon_empresa_tinder);
             item.setPosition(0);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(),R.drawable.fermat,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(),R.drawable.icon_empresa_aribnb,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
+            item.setIconResource(R.drawable.icon_empresa_aribnb);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("eBay","eBay_public_key",new Version(),R.drawable.fermat,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            installedApp = new InstalledApp("eBay","eBay_public_key",new Version(),R.drawable.icon_ebay,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
+            item.setIconResource(R.drawable.icon_ebay);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Tinder","Tinder_public_key",new Version(),R.drawable.fermat,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            installedApp = new InstalledApp("Mercado libre","mercado libre_public_key",new Version(),R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
+            item.setIconResource(R.drawable.icon_mercado_libre);
             item.setPosition(3);
             lstItemsWithIcon.add(item);
 
