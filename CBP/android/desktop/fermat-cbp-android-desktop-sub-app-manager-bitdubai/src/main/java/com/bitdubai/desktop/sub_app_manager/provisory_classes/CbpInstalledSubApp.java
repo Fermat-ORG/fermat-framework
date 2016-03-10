@@ -135,4 +135,9 @@ public class CbpInstalledSubApp implements InstalledSubApp {
     public FermatAppType getAppType() {
         return null;
     }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
 }

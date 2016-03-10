@@ -12,8 +12,26 @@ import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
  */
 public interface FermatAppsManager {
 
+    /**
+     * Method to initialize the fermatManager
+     */
+    void init();
+
+    /**
+     *  Get the last app structure
+     *
+     * @return
+     */
     FermatStructure lastAppStructure();
+
+    /**
+     *  Get the last app session
+     *
+     * @return
+     */
     FermatSession lastAppSession();
+
+
     RuntimeManager selectRuntimeManager(FermatAppType fermatAppType);
 
     boolean isAppOpen(String appPublicKey);
@@ -24,5 +42,9 @@ public interface FermatAppsManager {
 
     FermatApp getApp(String publicKey,FermatAppType fermatAppType) throws Exception;
 
+    FermatApp getApp(String appPublicKey) throws Exception;
+
     FermatStructure getAppStructure(String appPublicKey, FermatAppType appType);
+
+    FermatStructure getAppStructure(String appPublicKey);
 }

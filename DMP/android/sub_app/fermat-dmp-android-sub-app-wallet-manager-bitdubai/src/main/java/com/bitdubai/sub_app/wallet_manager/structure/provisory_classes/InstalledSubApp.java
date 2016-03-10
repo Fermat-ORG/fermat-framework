@@ -167,6 +167,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
     public int getPosition() {
         return position;
     }

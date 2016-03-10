@@ -12,6 +12,7 @@ import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
+import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -24,7 +25,6 @@ import java.lang.ref.WeakReference;
 
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
-import io.codetail.widget.RevealFrameLayout;
 
 
 /**
@@ -45,7 +45,7 @@ public class BottomMenuReveal {
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
 
-    public BottomMenuReveal(final RevealFrameLayout mRevealView, final FermatActivity activity) {
+    public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
         this.mRevealView = mRevealView;
         this.fermatActivity = new WeakReference<FermatActivity>(activity);

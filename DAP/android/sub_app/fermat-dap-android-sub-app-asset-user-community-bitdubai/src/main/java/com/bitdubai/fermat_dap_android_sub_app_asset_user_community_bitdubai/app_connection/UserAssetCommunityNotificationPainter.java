@@ -51,4 +51,9 @@ public class UserAssetCommunityNotificationPainter implements NotificationPainte
     public String getActivityCodeResult() {
         return null;
     }
+
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
 }

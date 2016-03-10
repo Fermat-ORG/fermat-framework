@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai;
 
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -18,13 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes.InstalledSubApp;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * Created by Natalia on 12/01/2015.
  */
-public class SubAppDesktopFragment extends Fragment {
+public class SubAppDesktopFragment extends AbstractDesktopFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
@@ -207,7 +206,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -221,7 +220,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -235,7 +234,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -251,7 +250,7 @@ public class SubAppDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetIssuerManager.hasIntraIssuerIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                    selectSubApp(installedSubApp);
                                 else
                                     Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
@@ -270,7 +269,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -286,7 +285,7 @@ public class SubAppDesktopFragment extends Fragment {
                             //set the next fragment and params
                             try {
                                 if(identityAssetIssuerManager.hasIntraIssuerIdentity())
-                                    ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                                    selectSubApp(installedSubApp);
                                 else
                                     Toast.makeText(getActivity(), "Need Issuer Identity", Toast.LENGTH_SHORT).show();
 
@@ -306,7 +305,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
 
                         }
                     });
@@ -319,7 +318,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -333,7 +332,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -347,7 +346,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -360,7 +359,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            selectSubApp(installedSubApp);
                         }
                     });
 

@@ -9,7 +9,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum DesktopFragmentsEnumType implements FermatFragmentsEnumType<DesktopFragmentsEnumType> {
 
     DESKTOP_MAIN("DAM"),
-    SETTINGS("DS")
+    DESKTOP_P2P_MAIN("DP2PM"),
+    SETTINGS("DS"),
+    DESKTOP_SOCIAL_MAIN("DSM")
     ;
 
     private String key;
