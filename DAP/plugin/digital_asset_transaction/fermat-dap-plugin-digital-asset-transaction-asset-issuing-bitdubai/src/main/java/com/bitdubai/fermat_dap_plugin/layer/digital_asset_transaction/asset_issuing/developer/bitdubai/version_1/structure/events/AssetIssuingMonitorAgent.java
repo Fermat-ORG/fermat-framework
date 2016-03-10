@@ -23,7 +23,6 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -198,7 +197,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                             }
                             dao.updateWalletBalance(cryptoGenesisTransaction, record.getTransactionId(), BalanceType.AVAILABLE);
                             dao.updateMetadataIssuingStatus(record.getTransactionId(), IssuingStatus.ON_BLOCK_CHAIN);
-                            dao.newAssetGenerated(record.getAssetMetadata().getDigitalAsset().getPublicKey());
+                            dao.assetCompleted(record.getAssetMetadata().getDigitalAsset().getPublicKey());
                         }
                         break;
                     }
@@ -299,14 +298,14 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
         private void checkGeneratingAssets() throws ExecutionException, InterruptedException, CantGetDigitalAssetFromLocalStorageException, InvalidParameterException, CantLoadTableToMemoryException, RecordsNotFoundException, CantUpdateRecordException, CantGetOutgoingIntraActorTransactionManagerException {
             for (IssuingRecord record : dao.getRecordsForStatus(IssuingStatus.ISSUING)) {
                 dao.processingAsset(record.getAsset().getPublicKey());
-                int missingAssets = record.getAssetsToGenerate() - record.getAssetsGenerated();
+                int missingAssets = record.getAssetsToGenerate() - record.getAssetsProcessed();
                 for (int i = 0; i < missingAssets; i++) {
                     if (assetVaultManager.getAvailableKeyCount() <= MINIMUN_KEY_COUNT) {
                         dao.unProcessingAsset(record.getAsset().getPublicKey());
                         outOfKeys = true;
                         return;
                     } else {
-                        AssetMetadataFactory assetMetadataFactory = new AssetMetadataFactory(record, assetVaultManager, issuer, getIntraUser(), dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, bitcoinWalletManager);
+                        AssetMetadataFactory assetMetadataFactory = new AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, bitcoinWalletManager);
                         Future<Boolean> result = executor.submit(assetMetadataFactory);
                     }
                 }

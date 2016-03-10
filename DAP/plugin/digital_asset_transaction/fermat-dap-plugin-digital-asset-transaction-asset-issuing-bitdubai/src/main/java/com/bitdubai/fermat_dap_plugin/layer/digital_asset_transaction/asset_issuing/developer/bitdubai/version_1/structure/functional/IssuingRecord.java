@@ -12,8 +12,9 @@ import java.util.Date;
 public final class IssuingRecord {
 
     //VARIABLE DECLARATION
-    private int assetsGenerated;
+    private int assetsCompleted;
     private int assetsToGenerate;
+    private int assetsProcessed;
     private BlockchainNetworkType networkType;
     private DigitalAsset asset;
     private IssuingStatus status;
@@ -22,9 +23,12 @@ public final class IssuingRecord {
     private Date creationTime;
 
     //CONSTRUCTORS
-    public IssuingRecord(int assetsGenerated, int assetsToGenerate, BlockchainNetworkType networkType, DigitalAsset asset, IssuingStatus status, String btcWalletPk, String issuerWalletPk, long creationTime) {
-        this.assetsGenerated = assetsGenerated;
+
+
+    public IssuingRecord(int assetsCompleted, int assetsToGenerate, int assetsProcessed, BlockchainNetworkType networkType, DigitalAsset asset, IssuingStatus status, String btcWalletPk, String issuerWalletPk, long creationTime) {
+        this.assetsCompleted = assetsCompleted;
         this.assetsToGenerate = assetsToGenerate;
+        this.assetsProcessed = assetsProcessed;
         this.networkType = networkType;
         this.asset = asset;
         this.status = status;
@@ -42,12 +46,12 @@ public final class IssuingRecord {
 
     //GETTER AND SETTERS
 
-    public int getAssetsGenerated() {
-        return assetsGenerated;
+    public int getAssetsCompleted() {
+        return assetsCompleted;
     }
 
-    public void setAssetsGenerated(int assetsGenerated) {
-        this.assetsGenerated = assetsGenerated;
+    public void setAssetsCompleted(int assetsCompleted) {
+        this.assetsCompleted = assetsCompleted;
     }
 
     public int getAssetsToGenerate() {
@@ -104,6 +108,14 @@ public final class IssuingRecord {
 
     public void setIssuerWalletPk(String issuerWalletPk) {
         this.issuerWalletPk = issuerWalletPk;
+    }
+
+    public int getAssetsProcessed() {
+        return assetsProcessed;
+    }
+
+    public void setAssetsProcessed(int assetsProcessed) {
+        this.assetsProcessed = assetsProcessed;
     }
 
     //INNER CLASSES

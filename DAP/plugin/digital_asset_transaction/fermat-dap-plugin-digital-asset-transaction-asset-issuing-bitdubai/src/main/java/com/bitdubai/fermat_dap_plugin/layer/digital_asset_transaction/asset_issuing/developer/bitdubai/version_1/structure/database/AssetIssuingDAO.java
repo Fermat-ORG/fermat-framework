@@ -104,7 +104,8 @@ public class AssetIssuingDAO {
             DatabaseTableRecord newRecord = databaseTable.getEmptyRecord();
 
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetToIssue.getPublicKey());
-            newRecord.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME, 0);
+            newRecord.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME, 0);
+            newRecord.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME, 0);
             newRecord.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME, assetQuantity);
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_NETWORK_TYPE_COLUMN_NAME, networkType.getCode());
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME, btcWalletPK);
@@ -132,7 +133,7 @@ public class AssetIssuingDAO {
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_OUTGOING_ID_COLUMN_NAME, outgoingId.toString());
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.SENDING_CRYPTO.getCode());
             newRecord.setLongValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_CREATION_TIME_COLUMN_NAME, System.currentTimeMillis());
-
+            assetProcessed(metadata.getDigitalAsset().getPublicKey());
             databaseTable.insertRecord(newRecord);
         } catch (CantInsertRecordException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, context, "Cannot insert a record in Asset Appropriation Event Table");
@@ -141,7 +142,7 @@ public class AssetIssuingDAO {
         }
     }
 
-    public synchronized void newAssetGenerated(String assetPk) throws CantCreateDigitalAssetTransactionException {
+    public synchronized void assetProcessed(String assetPk) throws CantCreateDigitalAssetTransactionException {
         String context = "Asset : " + assetPk;
         try {
             DatabaseTable databaseTable = getIssuingTable();
@@ -150,11 +151,29 @@ public class AssetIssuingDAO {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if (records.isEmpty()) throw new RecordsNotFoundException();
             DatabaseTableRecord record = records.get(0);
-            int assetsGenerated = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME);
+            int assetsProcessed = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME);
+
+            record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME, ++assetsProcessed);
+            databaseTable.updateRecord(record);
+        } catch (Exception exception) {
+            throw new CantCreateDigitalAssetTransactionException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    public synchronized void assetCompleted(String assetPk) throws CantCreateDigitalAssetTransactionException {
+        String context = "Asset : " + assetPk;
+        try {
+            DatabaseTable databaseTable = getIssuingTable();
+            databaseTable.addStringFilter(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPk, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if (records.isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = records.get(0);
+            int assetsCompleted = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME);
             int assetsToGenerate = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME);
 
-            record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME, ++assetsGenerated);
-            if (assetsGenerated >= assetsToGenerate) {
+            record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME, ++assetsCompleted);
+            if (assetsCompleted >= assetsToGenerate) {
                 record.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUED.getCode());
             }
             databaseTable.updateRecord(record);
@@ -171,8 +190,13 @@ public class AssetIssuingDAO {
         vault.deliverDigitalAssetMetadataToAssetWallet(cryptoTransaction, internalId.toString(), balanceType);
     }
 
-    public void unprocessIssuingAssets() throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordsForTableByFilter(getIssuingTable(), AssetIssuingDatabaseConstants.ASSET_ISSUING_PROCESSING_COLUMN_NAME, Boolean.FALSE, AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
+    public void reprocessIssuingAssets() {
+        try {
+            updateRecordsForTableByFilter(getIssuingTable(), AssetIssuingDatabaseConstants.ASSET_ISSUING_PROCESSING_COLUMN_NAME, Boolean.FALSE, AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            //Nothing.
+        }
     }
 
     public void updateIssuingStatus(String assetPK, IssuingStatus status) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
@@ -257,7 +281,8 @@ public class AssetIssuingDAO {
 
     private IssuingRecord constructIssuingRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetDigitalAssetFromLocalStorageException {
         int assetsToGenerate = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME);
-        int assetsGenerated = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME);
+        int assetsCompleted = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME);
+        int assetsProcessed = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME);
         BlockchainNetworkType networkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_NETWORK_TYPE_COLUMN_NAME));
         String assetPk = record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME);
         DigitalAsset digitalAsset = vault.getDigitalAssetFromLocalStorage(assetPk);
@@ -265,7 +290,7 @@ public class AssetIssuingDAO {
         String btcWalletPk = record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String issuerWalletPk = record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUER_WALLET_PUBLIC_KEY_COLUMN_NAME);
         long creationTime = record.getLongValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_CREATION_DATE_COLUMN_NAME);
-        return new IssuingRecord(assetsGenerated, assetsToGenerate, networkType, digitalAsset, status, btcWalletPk, issuerWalletPk, creationTime);
+        return new IssuingRecord(assetsCompleted, assetsToGenerate, assetsProcessed, networkType, digitalAsset, status, btcWalletPk, issuerWalletPk, creationTime);
     }
 
 

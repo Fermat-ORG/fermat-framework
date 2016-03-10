@@ -126,6 +126,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
             transactionManager = new AssetIssuingTransactionManager(dao, bitcoinWalletManager);
             startRecorderService();
             startMonitorAgent();
+            dao.reprocessIssuingAssets();
         } catch (CantSetObjectException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Issuing plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
