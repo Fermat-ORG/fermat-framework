@@ -110,6 +110,8 @@ public class AssetIssuingDAO {
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME, btcWalletPK);
             newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUER_WALLET_PUBLIC_KEY_COLUMN_NAME, issuerWalletPk);
             newRecord.setLongValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_CREATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+            newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
+            newRecord.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_PROCESSING_COLUMN_NAME, Boolean.FALSE.toString());
 
             databaseTable.insertRecord(newRecord);
         } catch (CantInsertRecordException exception) {

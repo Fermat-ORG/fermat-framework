@@ -73,6 +73,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
     private ExecutorService executor;
     public static final int MINIMUN_KEY_COUNT = 10;
     public static final int ACCEPTABLE_KEY_COUNT = 100;
+    private static final int WAIT_TIME = 5 * 1000; //SECONDS
 
     //CONSTRUCTORS
 
@@ -130,8 +131,6 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
 
     private class IssuingAgent implements Runnable {
         private boolean agentRunning;
-        private static final int WAIT_TIME = 5 * 1000; //SECONDS
-        private static final int MAX_WAIT_TIME = 2 * 60 * 1000; //MINUTES
 
         public IssuingAgent() {
             startAgent();
@@ -155,12 +154,12 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     doTheMainTask();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_ISSUING, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 } finally {
                     try {
                         Thread.sleep(WAIT_TIME);
                     } catch (InterruptedException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_ISSUING, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                         agentRunning = false;
                     }
                 }
@@ -275,6 +274,13 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     doTheMainTask();
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        Thread.sleep(WAIT_TIME);
+                    } catch (InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_ISSUING, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        running = false;
+                    }
                 }
             }
         }
