@@ -38,12 +38,12 @@ public interface ArtistIdentityManager extends FermatManager{
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
     /**
-     *
+     * This method updates the artist identity
      * @param alias
      * @param publicKey
      * @param imageProfile
      */
-    void updateCryptoBrokerIdentity(
+    void updateArtistIdentity(
             String alias,
             String publicKey,
             byte[] imageProfile,
@@ -51,7 +51,7 @@ public interface ArtistIdentityManager extends FermatManager{
             CantUpdateArtistIdentityException;
 
     /**
-     *
+     * This method returns a Artist identity
      * @param publicKey
      * @return
      * @throws CantGetArtistIdentityException
