@@ -640,7 +640,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                                 for(Actor actor: actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    //manager.cancelActorAssetUser(actor.getActorPublicKey(), manager.getActiveAssetUserIdentity().getPublicKey());
+                                    manager.cancelActorAssetRedeem(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
