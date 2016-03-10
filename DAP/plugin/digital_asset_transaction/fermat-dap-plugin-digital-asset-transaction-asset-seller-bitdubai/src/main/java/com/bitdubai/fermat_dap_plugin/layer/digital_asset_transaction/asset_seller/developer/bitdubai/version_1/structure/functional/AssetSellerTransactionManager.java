@@ -104,7 +104,7 @@ public final class AssetSellerTransactionManager {
 
     private boolean weHaveEnoughAssets(int requestedQuantity, AssetUserWallet assetUserWallet, DigitalAsset digitalAsset) {
         try {
-            return requestedQuantity >= getAvailableAssetMetadata(assetUserWallet, digitalAsset).size();
+            return requestedQuantity <= getAvailableAssetMetadata(assetUserWallet, digitalAsset).size();
         } catch (CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
             return false;
         }
