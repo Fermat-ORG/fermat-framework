@@ -50,6 +50,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     private AdapterCallbackContacts mAdapterCallback;
     int AlertType = 0;
     String body,title;
+    public boolean delete_contact = false;
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
@@ -111,6 +112,9 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
         btn_yes.setOnClickListener(this);
         btn_no.setOnClickListener(this);
     }
+    public boolean getStatusDeleteContact(){
+        return delete_contact;
+    }
 
     public void onClick(View v) {
         int id = v.getId();
@@ -171,6 +175,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
+                delete_contact = true;
             }
         }
 
