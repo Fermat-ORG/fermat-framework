@@ -207,7 +207,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
         private void checkSendingBitcoins() throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException, CantLoadTableToMemoryException, CantGetOutgoingIntraActorTransactionManagerException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantSaveStatisticException, RecordsNotFoundException, CantUpdateRecordException, CantGetBroadcastStatusException {
             for (MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.SENDING_CRYPTO)) {
                 String genesisTransaction = outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(record.getOutgoingId());
-                if (Validate.isValidString(genesisTransaction) || genesisTransaction.equals("UNKNOWN YET")) {
+                if (!Validate.isValidString(genesisTransaction) || genesisTransaction.equals("UNKNOWN YET")) {
                     System.out.println("ASSET ISSUING is null - continue asking");
                     continue;
                 }
