@@ -142,10 +142,18 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             e.printStackTrace();
         }
 
+      for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
+          saveCryptoTransaction(cryptoTransaction);
+      }
         /**
          * Register the new incoming transaction into the database
          */
-        saveIncomingTransaction(wallet, tx);
+        //saveIncomingTransaction(wallet, tx);
+    }
+
+    private void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
+        getDao().saveCryptoTransaction(cryptoTransaction);
+
     }
 
     /**
@@ -256,18 +264,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public synchronized void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
-        /**
-         * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
-         */
-        CryptoStatus cryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
-        try {
-            if (isIncomingTransaction(tx.getHashAsString()))
-                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.INCOMING);
-            else
-                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.OUTGOING);
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
+        for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
+            saveCryptoTransaction(cryptoTransaction);
         }
+
+//        /**
+//         * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
+//         */
+//        CryptoStatus cryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
+//        try {
+//            if (isIncomingTransaction(tx.getHashAsString()))
+//                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.INCOMING);
+//            else
+//                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.OUTGOING);
+//        } catch (CantExecuteDatabaseOperationException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override

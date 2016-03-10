@@ -1495,4 +1495,38 @@ public class BitcoinCryptoNetworkDatabaseDao {
         return blockchainNetworkTypes;
 
     }
+
+    /**
+     * Saves the passed CryptoTransaction into the database
+     * @param cryptoTransaction
+     */
+    public void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
+        ProtocolStatus protocolStatus;
+        /**
+         * If the transaction is pending submit, then no need to notify anyone
+         */
+        if (CryptoStatus.PENDING_SUBMIT == cryptoTransaction.getCryptoStatus())
+            protocolStatus = ProtocolStatus.NO_ACTION_REQUIRED;
+        else
+            protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+        try {
+            saveNewTransaction(UUID.randomUUID(),
+                    cryptoTransaction.getTransactionHash(),
+                    cryptoTransaction.getBlockHash(),
+                    cryptoTransaction.getBlockchainNetworkType(),
+                    cryptoTransaction.getCryptoStatus(),
+                    cryptoTransaction.getBlockDepth(),
+                    cryptoTransaction.getAddressTo(),
+                    cryptoTransaction.getAddressFrom(),
+                    cryptoTransaction.getCryptoAmount(),
+                    cryptoTransaction.getOp_Return(),
+                    protocolStatus,
+                    TransactionTypes.getByCode(cryptoTransaction.getCryptoTransactionType().getCode()));
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+    }
 }
