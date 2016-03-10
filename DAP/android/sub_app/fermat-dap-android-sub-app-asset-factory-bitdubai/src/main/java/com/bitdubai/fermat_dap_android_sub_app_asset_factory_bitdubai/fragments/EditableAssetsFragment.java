@@ -39,6 +39,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
@@ -455,8 +457,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         try {
             AssetFactory assetFactory = getAssetForEdit();
             long satoshis = assetFactory.getAmount();
-            if (satoshis < MINIMUN_SATOSHI_AMOUNT) {
-                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is " + MINIMUN_SATOSHI_AMOUNT + " satoshis.\n" +
+            if (CryptoVault.isDustySend(satoshis)) {
+                Toast.makeText(getActivity(), "The minimum monetary amount for any Asset is " + BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND + " satoshis.\n" +
                         " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.", Toast.LENGTH_LONG).show();
                 return false;
             }

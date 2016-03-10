@@ -38,6 +38,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.BitcoinsSpinnerAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
@@ -60,6 +62,7 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
 
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
@@ -333,6 +336,14 @@ public class AssetSellFragment extends AbstractFermatFragment {
         double total = Double.parseDouble(bitcoinsTotal.getText().toString());
         if (total == 0) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        BitcoinConverter.Currency from = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
+        long amountPerUnity = (long) BitcoinConverter.convert(Double.parseDouble(bitcoins.getText().toString()), from, SATOSHI);
+        if (CryptoVault.isDustySend(amountPerUnity)) {
+            makeText(getActivity(), "The minimum monetary amount for any Asset is " + BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND + " satoshis.\n" +
+                            " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
