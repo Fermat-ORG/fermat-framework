@@ -278,7 +278,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cht_banner)
                     .setIconRes(R.drawable.chat_subapp)
-                    .setIsCheckEnabled(true)
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
@@ -301,7 +300,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
-        setUpHelpAssetStatistics(true);
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
         {
             setUpHelpAssetStatistics(true);
@@ -418,7 +416,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        setUpHelpAssetStatistics(true);
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpAssetStatistics(true);
         }
