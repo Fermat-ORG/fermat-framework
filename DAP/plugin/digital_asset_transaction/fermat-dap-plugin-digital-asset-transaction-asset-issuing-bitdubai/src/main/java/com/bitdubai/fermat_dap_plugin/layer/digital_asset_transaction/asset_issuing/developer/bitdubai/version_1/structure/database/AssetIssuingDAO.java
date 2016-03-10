@@ -155,7 +155,7 @@ public class AssetIssuingDAO {
             int assetsToGenerate = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME);
 
             record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME, ++assetsGenerated);
-            if (assetsGenerated > assetsToGenerate) {
+            if (assetsGenerated >= assetsToGenerate) {
                 record.setStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUED.getCode());
             }
             databaseTable.updateRecord(record);
