@@ -128,7 +128,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
         try {
             String digitalAssetInnerXML = digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName, internalId);
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName, digitalAssetMetadata.getDigitalAsset().getPublicKey());
             String digitalAssetMetadataInnerXML = digitalAssetMetadata.toString();
             persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, digitalAssetMetadataFileName, internalId);
         } catch (CantPersistFileException | CantCreateFileException exception) {
