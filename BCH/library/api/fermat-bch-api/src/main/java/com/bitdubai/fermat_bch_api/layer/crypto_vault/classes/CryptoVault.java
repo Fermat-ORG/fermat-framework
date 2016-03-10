@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
@@ -226,5 +227,17 @@ public abstract class CryptoVault {
         } catch (MnemonicException e) {
             throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
+    }
+
+    /**
+     * It validates if the amount to be send it less than what the network is allowing.
+     * @param satoshisToSend
+     * @return true if this is a dusty send and we shouldn't allow to send it.
+     */
+    public static boolean isDustySend(long satoshisToSend){
+        if (satoshisToSend < BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
+            return true;
+        else
+            return false;
     }
 }
