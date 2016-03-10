@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.util;
+package com.bitdubai.android_core.app.common.version_1.util.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;

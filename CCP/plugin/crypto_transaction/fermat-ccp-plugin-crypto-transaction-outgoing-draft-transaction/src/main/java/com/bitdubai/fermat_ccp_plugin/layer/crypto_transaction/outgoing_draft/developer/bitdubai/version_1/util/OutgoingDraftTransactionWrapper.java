@@ -13,9 +13,6 @@ import java.util.UUID;
 public class OutgoingDraftTransactionWrapper {
 
     private UUID requestId;
-//    private DraftTransaction bitcoinTransaction;
-//    private CryptoAddress sellerCryptoAddress;
-//    private CryptoAddress buyerCryptoAddress;
     private String walletPublicKey;
     private long valueToSend;
     private CryptoAddress addressTo;
@@ -32,29 +29,8 @@ public class OutgoingDraftTransactionWrapper {
     public OutgoingDraftTransactionWrapper() {
     }
 
-    public OutgoingDraftTransactionWrapper(
-            UUID requestId,
-            String txHash,
-            long valueToSend,
-            CryptoAddress addressTo,
-            String walletPublicKey,
-            ReferenceWallet referenceWallet) {
+    public OutgoingDraftTransactionWrapper(UUID requestId, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp, String txHash) {
         this.requestId = requestId;
-//        this.bitcoinTransaction = bitcoinTransaction;
-//        this.sellerCryptoAddress = sellerCryptoAddress;
-//        this.buyerCryptoAddress = buyerCryptoAddress;
-        this.valueToSend = valueToSend;
-        this.addressTo = addressTo;
-        this.walletPublicKey = walletPublicKey;
-        this.referenceWallet = referenceWallet;
-        this.txHash = txHash;
-    }
-
-    public OutgoingDraftTransactionWrapper(UUID requestId,String txHash, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp) {
-        this.requestId = requestId;
-//        this.bitcoinTransaction = bitcoinTransaction;
-//        this.sellerCryptoAddress = sellerCryptoAddress;
-//        this.buyerCryptoAddress = buyerCryptoAddress;
         this.walletPublicKey = walletPublicKey;
         this.valueToSend = valueToSend;
         this.addressTo = addressTo;
@@ -68,18 +44,6 @@ public class OutgoingDraftTransactionWrapper {
         this.timestamp = timestamp;
         this.txHash = txHash;
     }
-
-//    public CryptoAddress getBuyerCryptoAddress() {
-//        return buyerCryptoAddress;
-//    }
-//
-//    public DraftTransaction getBitcoinTransaction() {
-//        return bitcoinTransaction;
-//    }
-//
-//    public CryptoAddress getSellerCryptoAddress() {
-//        return sellerCryptoAddress;
-//    }
 
     public long getValueToSend() {
         return valueToSend;

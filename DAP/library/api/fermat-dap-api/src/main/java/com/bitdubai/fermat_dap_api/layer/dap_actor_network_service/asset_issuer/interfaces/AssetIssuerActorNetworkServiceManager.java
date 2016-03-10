@@ -99,10 +99,10 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
      * The method <coda>cancelConnectionActorAsset</coda> cancels and informs the other intra user the cancelling
      *
      * @param actorAssetLoggedInPublicKey The public key of the actor asset cancelling the connection
-     * @param actorAssetToCancelPublicKey The public key of the user to cancel
+     * @param actorAssetToCancel The public key of the user to cancel
      * @throws CantCancelConnectionActorAssetException
      */
-    void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <coda>getPendingNotifications</coda> returns all pending notifications

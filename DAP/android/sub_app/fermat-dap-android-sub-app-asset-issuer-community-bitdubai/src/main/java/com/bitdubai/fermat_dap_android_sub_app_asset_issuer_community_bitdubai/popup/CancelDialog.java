@@ -10,12 +10,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
@@ -36,7 +40,7 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
     private CharSequence username;
     private CharSequence title;
 
-    private final ActorIssuer actor;
+    private final ActorIssuer actorIssuer;
     private final IdentityAssetIssuer identity;
 
     public CancelDialog(final Activity activity,
@@ -47,14 +51,14 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
 
         super(activity, issuerCommunitySubAppSession, subAppResources);
 
-        this.actor = actor;
+        this.actorIssuer = actor;
         this.identity = identity;
     }
     public CancelDialog(Activity a,
                         final AssetIssuerCommunitySubAppSession issuerCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
         super(a, issuerCommunitySubAppSession, subAppResources);
-        this.actor = null;
+        this.actorIssuer = null;
         this.identity = null;
     }
 
@@ -105,19 +109,19 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actor != null) {
-//                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
-                    Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//            } catch (CantDisconnectAssetActorException e) {
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+            try {
+                getSession().getModuleManager().cancelActorAssetIssuer(
+                        identity.getPublicKey(),//ACTOR INSIDE/LOCAL
+                        actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
+
+                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_CANCELED, Boolean.TRUE);
+                Toast.makeText(getContext(),"Connection has been cancel" , Toast.LENGTH_SHORT).show();
+
+                dismiss();
+            } catch (CantCancelConnectionActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();
