@@ -18,7 +18,15 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.OutgoingDraftManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
@@ -68,9 +76,12 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
     private final OutgoingDraftManager outgoingDraftManager;
+    private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    private final ExtraUserManager extraUserManager;
+
     //CONSTRUCTORS
 
-    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingDraftManager outgoingDraftManager) {
+    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingDraftManager outgoingDraftManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, ExtraUserManager extraUserManager) {
         this.errorManager = errorManager;
         this.dao = dao;
         this.transactionManager = transactionManager;
@@ -80,6 +91,8 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         this.cryptoVaultManager = cryptoVaultManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.outgoingDraftManager = outgoingDraftManager;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.extraUserManager = extraUserManager;
     }
 
     //PUBLIC METHODS
@@ -152,7 +165,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException, CantCreateDraftTransactionException {
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException, CantCreateDraftTransactionException, CantListIntraWalletUsersException, CantCreateExtraUserException {
             checkPendingMessages();
             checkNegotiationStatus();
             checkBuyingStatus();
@@ -192,7 +205,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkBuyingStatus() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantSignTransactionException, CantCreateDraftTransactionException {
+        private void checkBuyingStatus() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantSignTransactionException, CantCreateDraftTransactionException, CantListIntraWalletUsersException, CantCreateExtraUserException {
             for (BuyingRecord buyingRecord : dao.getActionRequiredBuying()) {
                 switch (buyingRecord.getStatus()) {
                     case WAITING_FIRST_SIGNATURE: {
@@ -200,8 +213,21 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
                         UUID outgoingId = UUID.randomUUID();
                         dao.updateOutgoingId(buyingRecord.getRecordId(), outgoingId);
-                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        outgoingDraftManager.addInputsToDraftTransaction(outgoingId, buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getCryptoAddress(), negotiationRecord.getBtcWalletPublicKey(), ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, WalletUtilities.DEFAULT_MEMO_BUY, buyingRecord.getSeller().getActorPublicKey(), Actors.DAP_ASSET_USER, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, negotiationRecord.getNegotiation().getNetworkType());
+                        IntraWalletUserIdentity mySelf = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+                        Actor externalUser = getExtraUser(buyingRecord.getSeller());
+                        outgoingDraftManager.addInputsToDraftTransaction(
+                                outgoingId,
+                                buyingRecord.getSellerTransaction(),
+                                negotiationRecord.getNegotiation().getTotalAmount(),
+                                buyingRecord.getCryptoAddress(),
+                                negotiationRecord.getBtcWalletPublicKey(),
+                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                WalletUtilities.DEFAULT_MEMO_BUY,
+                                externalUser.getActorPublicKey(),
+                                Actors.EXTRA_USER,
+                                mySelf.getPublicKey(),
+                                Actors.INTRA_USER,
+                                negotiationRecord.getNegotiation().getNetworkType());
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.ADDING_INPUTS);
                         break;
                     }
@@ -261,6 +287,15 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBuyerTransaction().getTxHash());
             AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
+        }
+
+
+        private Actor getExtraUser(ActorAssetUser actorAssetUser) throws CantCreateExtraUserException {
+            try {
+                return extraUserManager.getActorByPublicKey(actorAssetUser.getActorPublicKey());
+            } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                return extraUserManager.createActor(actorAssetUser.getName(), actorAssetUser.getProfileImage());
+            }
         }
 
         public boolean isAgentRunning() {

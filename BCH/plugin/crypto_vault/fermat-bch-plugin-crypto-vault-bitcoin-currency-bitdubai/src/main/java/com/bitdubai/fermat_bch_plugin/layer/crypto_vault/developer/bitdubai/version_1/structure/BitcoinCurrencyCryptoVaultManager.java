@@ -130,18 +130,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
 
     /**
-     * Creates a bitcoinj Wallet from the already derived keys of the specified account.
-     * @param vaultAccount
-     * @param networkParameters
-     * @return
-     */
-    private Wallet getWalletForAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount, NetworkParameters networkParameters) {
-        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
-        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
-        return wallet;
-    }
-
-    /**
      * Transform a CryptoAddress into a BitcoinJ Address
      * * @param networkParameters the network parameters where we are using theis address.
      * @param cryptoAddress the Crypto Address
@@ -151,16 +139,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         Address address = new Address(networkParameters, cryptoAddress.getAddress());
         return address;
     }
-
-    /**
-     * Gets the next available key from the specified account.
-     * @return
-     */
-    private ECKey getNextAvailableECKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
-        ECKey ecKey = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(hierarchyAccount);
-        return ecKey;
-    }
-
 
     /**
      * Will make sure that we have a listening network running for this address that we are trying to send bitcoins to.
@@ -309,6 +287,13 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             CryptoTransactionAlreadySentException {
 
         /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(satoshis))
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+
+
+        /**
          * I get the network for this address and validate that is active
          */
         BlockchainNetworkType networkType = null;
@@ -415,6 +400,18 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CouldNotSendMoneyException e = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**
@@ -516,6 +513,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             throw exception;
         }
 
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(valueToSend))
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more bitcoins!");
 
         /**
          * I get the network for this address and validate that is active
@@ -621,6 +623,18 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CantCreateDraftTransactionException e = new CantCreateDraftTransactionException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**

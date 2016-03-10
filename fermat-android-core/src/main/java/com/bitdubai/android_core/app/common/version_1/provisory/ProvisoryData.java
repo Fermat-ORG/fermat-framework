@@ -54,7 +54,7 @@ public class ProvisoryData {
         item2.setIconResource(R.drawable.asset_user_identity);
         item2.setPosition(2);
         lstIdentities.add(item2);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Redeem Points", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Redeem Points", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0));
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.redeem_point_identity);
         item2.setPosition(3);
