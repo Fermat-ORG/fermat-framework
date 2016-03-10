@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  * Created by rodrigo on 9/4/15.
  */
-public class DigitalAsset  implements Serializable{
+public class DigitalAsset implements Serializable {
     /**
      * properties defined by the Issuer
      */
@@ -39,6 +38,19 @@ public class DigitalAsset  implements Serializable{
      */
     public DigitalAsset() {
         this.state = State.DRAFT;
+    }
+
+    public static DigitalAsset copyAsset(DigitalAsset previousAsset) {
+        DigitalAsset newAsset = new DigitalAsset();
+        newAsset.setGenesisAddress(previousAsset.getGenesisAddress());
+        newAsset.setGenesisAmount(previousAsset.getGenesisAmount());
+        newAsset.setIdentityAssetIssuer(previousAsset.getIdentityAssetIssuer());
+        newAsset.setContract(previousAsset.getContract());
+        newAsset.setDescription(previousAsset.getDescription());
+        newAsset.setName(previousAsset.getName());
+        newAsset.setState(previousAsset.getState());
+        newAsset.setPublicKey(previousAsset.getPublicKey());
+        return newAsset;
     }
 
     /**
@@ -119,6 +131,7 @@ public class DigitalAsset  implements Serializable{
     /**
      * The string of the Digital Asset will be used to generate a unique Hash
      * I generate an XML with the class structure
+     *
      * @return
      */
     @Override

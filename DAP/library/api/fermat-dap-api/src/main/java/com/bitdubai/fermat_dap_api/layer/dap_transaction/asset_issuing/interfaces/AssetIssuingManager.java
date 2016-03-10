@@ -1,57 +1,49 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
+ * Updated by Víctor Mars (marsvicam@gmail.com) on 09/03/16
  */
 public interface AssetIssuingManager extends FermatManager {
-
     /**
-     * This method will create and deliver digital assets according to the amount indicated by the assetsAmount argument.
-     * The process includes creating the transaction and send the crypto genesisAmount from the bitcoin wallet to wallet asset.
-     * */
+     * This method will start the issuing, generating the needed
+     * amount of digital asset metadata.
+     *
+     * @param digitalAssetToIssue   The asset which we want to create
+     * @param assetsAmount          The amount of asset that we are willing to create
+     * @param issuerWalletPk       The issuer wallet public key where the assets will go.
+     * @param btcWalletPublicKey    The btc wallet public key where we'll take the bitcoins from.
+     * @param blockchainNetworkType The kind of network where this asset will be created.
+     * @throws CantIssueDigitalAssetsException In case something went wrong.
+     */
     void issueAssets(DigitalAsset digitalAssetToIssue,
                      int assetsAmount,
-                     String walletPublicKey,
-                     BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
+                     String issuerWalletPk,
+                     String btcWalletPublicKey,
+                     BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException, InsufficientCryptoFundsException;
 
     /**
-     * This method will issue the unfinished digital assets to the asset issuer wallet
-     * @param assetPublicKey
-     */
-    void issuePendingDigitalAssets(String assetPublicKey);
-
-    /**
-     * This method must be used to set the crypto wallet to the Asset Issuing plugin
-     * @param cryptoWallet
-     */
-    //void setCryptoWallet(CryptoWallet cryptoWallet);
-    /**
-     * This method must be used from the Asset Wallet to confirm the DigitalAssetMetadata reception.
-     * @param genesisTransaction is a DigitalAssetMetadata parameter.
-     * @throws CantConfirmTransactionException
-     */
-    void confirmReception(String  genesisTransaction)throws CantConfirmTransactionException;
-
-    /**
-     * This method return the number of issued assets
-     * @param assetPublicKey
-     * @return
+     * This method search the number of issued assets by the time it is requested.
+     *
+     * @param assetPublicKey The public key of the asset that we are issuing
+     * @return the number of already issued assets
      * @throws CantExecuteDatabaseOperationException
      */
     int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException;
 
     /**
-     * This method returns the IssuingStatus from the complete issuing process about a Digital Asset
-     * @param assetPublicKey
-     * @return
+     * The issuing status for the process of publishing this asset.
+     *
+     * @param assetPublicKey The public key of the asset that we are issuing
+     * @return The actual issuing status for the issuing process.
      * @throws CantExecuteDatabaseOperationException
      */
     IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException;
