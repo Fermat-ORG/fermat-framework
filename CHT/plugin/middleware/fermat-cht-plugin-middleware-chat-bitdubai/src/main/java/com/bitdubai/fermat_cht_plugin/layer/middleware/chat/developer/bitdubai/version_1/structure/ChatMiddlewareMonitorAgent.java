@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -491,8 +492,9 @@ public class ChatMiddlewareMonitorAgent implements
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                     }
                 }
-                eventRecord.setEventStatus(EventStatus.NOTIFIED);
-                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+//                eventRecord.setEventStatus(EventStatus.NOTIFIED);
+//                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+                chatMiddlewareDatabaseDao.updateEventStatus(eventRecord.getEventId(), EventStatus.NOTIFIED);
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new CantGetPendingTransactionException(
                         e,
@@ -535,6 +537,8 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot save chat"
                 );
+            } catch (CantUpdateRecordException e) {
+                e.printStackTrace();
             }
 
         }
@@ -570,8 +574,10 @@ public class ChatMiddlewareMonitorAgent implements
                         break;
                     }
                 }
-                eventRecord.setEventStatus(EventStatus.NOTIFIED);
-                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+//                eventRecord.setEventStatus(EventStatus.NOTIFIED);
+//                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
+                chatMiddlewareDatabaseDao.updateEventStatus(eventRecord.getEventId(), EventStatus.NOTIFIED);
+
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new CantGetPendingTransactionException(
                         e,
@@ -608,6 +614,8 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming status pending transactions",
                         "Cannot get confirm the reception to local NS"
                 );
+            } catch (CantUpdateRecordException e) {
+                e.printStackTrace();
             }
         }
 
