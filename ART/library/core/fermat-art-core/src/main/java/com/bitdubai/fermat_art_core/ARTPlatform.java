@@ -19,19 +19,18 @@ public class ARTPlatform extends AbstractPlatform {
     @Override
     public void start() throws CantStartPlatformException {
 
-//        try {
-//
-//            registerLayer(new ActorNetworkServiceLayer());
-//
-//        } catch (CantRegisterLayerException e) {
-//
-//            System.out.println("##########\n ART EXCEPTION :"+e.getMessage());
-//            throw new CantStartPlatformException(
-//                    e,
-//                    "ART Platform.",
-//                    "Problem trying to register a layer."
-//            );
-//        }
-        System.out.println("ARTPlatform started");
+        try {
+
+            registerLayer(new ActorNetworkServiceLayer());
+
+        } catch (CantRegisterLayerException e) {
+
+            throw new CantStartPlatformException(
+                    e,
+                    "ART Platform.",
+                    "Problem trying to register a layer."
+            );
+        }
+
     }
 }
