@@ -142,13 +142,18 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             e.printStackTrace();
         }
 
+    /**
+     * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
+     */
       for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
           saveCryptoTransaction(cryptoTransaction);
       }
-        /**
-         * Register the new incoming transaction into the database
-         */
-        //saveIncomingTransaction(wallet, tx);
+
+
+//        /**
+//         * Register the new incoming transaction into the database
+//         */
+//          saveIncomingTransaction(wallet, tx);
     }
 
     private void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
@@ -264,6 +269,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public synchronized void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+        /**
+         * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
+         */
         for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
