@@ -1244,66 +1244,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         try {
             CustomerBrokerContractPurchase customerBrokerContractPurchase;
             //TODO: This is the real implementation
-            customerBrokerContractPurchase =
-                    this.customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);
-            //TODO: for testing
-            /*CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManagerMock =
-                    new CustomerBrokerContractPurchaseManagerMock();
-            customerBrokerContractPurchase =
-                    customerBrokerContractPurchaseManagerMock.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);*/
-            //End of Mock testing
+            customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
-                    this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
-                            UUID.fromString(negotiationId));
+            CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+            ContractClauseType contractClauseType = getContractClauseType(negotiation);
 
-            //TODO: remove this mock
-//            customerBrokerPurchaseNegotiation = new PurchaseNegotiationOnlineMock();
-            ContractClauseType contractClauseType = getContractClauseType(
-                    customerBrokerPurchaseNegotiation);
-            /**
-             * Case: sending crypto payment.
-             */
+            if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
+                //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
+                String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash);
 
-            if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
-
-                /**
-                 * TODO: here we need to get the CCP Wallet public key to send BTC to customer,
-                 * when the settings is finished, please, implement how to get the CCP Wallet public
-                 * key here. Thanks.
-                 */
-                //TODO: this is a hardcoded public key
-                String cryptoBrokerPublicKey = "walletPublicKeyTest";
-                this.customerOnlinePaymentManager.sendPayment(
-                        cryptoBrokerPublicKey,
-                        contractHash);
+            } else {  // Case: sending offline payment.
+                customerOfflinePaymentManager.sendPayment(contractHash);
             }
-            /**
-             * Case: sending offline payment.
-             */
-            if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
-                    contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode() ||
-                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode()) {
-                this.customerOfflinePaymentManager.sendPayment(contractHash);
-            }
+
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-            throw new CantSendPaymentException(
-                    e,
-                    "Sending the payment",
-                    "Cannot get the contract");
+            throw new CantSendPaymentException(e, "Sending the payment", "Cannot get the contract");
         } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new CantSendPaymentException(
-                    e,
-                    "Sending the payment",
-                    "Cannot get the negotiation list");
+            throw new CantSendPaymentException(e, "Sending the payment", "Cannot get the negotiation list");
         } catch (CantGetListClauseException e) {
-            throw new CantSendPaymentException(
-                    e,
-                    "Sending the payment",
-                    "Cannot get the clauses list");
+            throw new CantSendPaymentException(e, "Sending the payment", "Cannot get the clauses list");
         }
 
     }
