@@ -531,7 +531,7 @@ public class ContactFragment extends AbstractFermatFragment {
                                            public void onDismiss(DialogInterface dialog) {
                                                if(alert.getStatusDeleteContact() == true){
                                                    try {
-                                                       changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+                                                       changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
                                                    }catch (Exception e){
                                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                                    }
