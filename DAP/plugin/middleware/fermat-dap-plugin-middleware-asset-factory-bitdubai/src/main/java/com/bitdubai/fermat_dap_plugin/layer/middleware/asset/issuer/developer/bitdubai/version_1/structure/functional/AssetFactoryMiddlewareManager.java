@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
@@ -672,7 +673,7 @@ public final class AssetFactoryMiddlewareManager {
                 digitalAsset.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
                 digitalAsset.setResources(assetFactory.getResources());
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getAssetPublicKey());
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), /* Issuer Wallet PK */WalletUtilities.WALLET_PUBLIC_KEY, /* BTC Wallet PK*/assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
             } else {
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
