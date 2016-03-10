@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -42,7 +41,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -2003,7 +2001,7 @@ public class ChatMiddlewareDatabaseDao {
     public boolean chatIdExists(UUID chatId) throws CantGetChatException{
         try{
             DatabaseTable databaseTable=getDatabaseChatTable();
-            return checkIdExists(
+            return checkIdChatExists(
                     chatId,
                     ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
                     databaseTable);
@@ -2021,15 +2019,15 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method checks if the message exists in database.
-     * @param chatId
+     * @param messageId
      * @return
      * @throws CantGetChatException
      */
-    public boolean messageIdExists(UUID chatId) throws CantGetChatException{
+    public boolean messageIdExists(UUID messageId) throws CantGetChatException{
         try{
             DatabaseTable databaseTable=getDatabaseMessageTable();
-            return checkIdExists(
-                    chatId,
+            return checkIdMessageExists(
+                    messageId,
                     ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
                     databaseTable);
         } catch (Exception e){
@@ -2052,7 +2050,7 @@ public class ChatMiddlewareDatabaseDao {
      * @return
      * @throws CantGetChatException
      */
-    private boolean checkIdExists(
+    private boolean checkIdChatExists(
             UUID id,
             String databaseColumn,
             DatabaseTable databaseTable) throws
@@ -2072,5 +2070,24 @@ public class ChatMiddlewareDatabaseDao {
             );
         }
     }
-
+    private boolean checkIdMessageExists(
+            UUID id,
+            String databaseColumn,
+            DatabaseTable databaseTable) throws
+            CantGetChatException {
+        try{
+            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+            databaseTableFilter.setValue(id.toString());
+            databaseTableFilter.setColumn(databaseColumn);
+            List<DatabaseTableRecord> records=getMessageData(databaseTableFilter);
+            return !(records == null || records.isEmpty());
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetChatException(
+                    e,
+                    "Checking if Id exists in database",
+                    "An unexpected error in database"
+            );
+        }
+    }
 }

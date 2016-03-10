@@ -458,7 +458,7 @@ public class BankMoneyWalletDao {
             BankAccountType bankAccountType = BankAccountType.getByCode(accountType);
             FiatCurrency currency = FiatCurrency.getByCode(currencyType);
             System.out.println("BNK-ACCOUNT = [" + account + "] alias = [" + alias + "] account type = [" + bankAccountType.getCode() + "]");
-            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType);
+            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType,getBankName());
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
