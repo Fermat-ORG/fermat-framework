@@ -294,6 +294,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
+
+        /**
+         * I will override the passed value of the transaction Type, only if it is with status PendingSubmit,
+         * I will transform it to an outgoing transaction
+         */
+        if (CryptoStatus.PENDING_SUBMIT == cryptoStatus)
+            transactionTypes = TransactionTypes.OUTGOING;
+
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionTypes.getCode());
         try {
             databaseTable.insertRecord(record);
