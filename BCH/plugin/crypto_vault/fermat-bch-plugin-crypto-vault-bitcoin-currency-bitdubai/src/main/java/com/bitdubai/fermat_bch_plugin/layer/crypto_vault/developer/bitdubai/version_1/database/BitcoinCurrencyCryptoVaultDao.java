@@ -675,9 +675,9 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
     }
 
     @Override
-    public int getPublicKeyPosition(String publicKey) throws com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException {
+    public int getPublicKeyPosition(String address) throws com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();

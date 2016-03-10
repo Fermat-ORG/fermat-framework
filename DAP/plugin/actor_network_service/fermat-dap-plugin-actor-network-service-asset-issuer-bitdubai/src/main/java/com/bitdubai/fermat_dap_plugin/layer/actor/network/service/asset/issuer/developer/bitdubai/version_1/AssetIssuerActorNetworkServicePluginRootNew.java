@@ -1140,13 +1140,13 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
     }
 
     @Override
-    public void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToCancelPublicKey)
+    public void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetToCancel)
             throws CantCancelConnectionActorAssetException {
 
         try {
             final ActorAssetNetworkServiceRecord assetIssuerNetworkServiceRecord = incomingNotificationsDao.
                     changeActorAssetNotificationDescriptor(
-                            actorAssetToCancelPublicKey,
+                            actorAssetToCancel.getActorPublicKey(),
                             AssetNotificationDescriptor.CANCEL,
                             ActorAssetProtocolState.DONE);
 
@@ -1155,8 +1155,10 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
             assetIssuerNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
             assetIssuerNetworkServiceRecord.setActorSenderType(assetIssuerNetworkServiceRecord.getActorDestinationType());
 
-            assetIssuerNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancelPublicKey);
+            assetIssuerNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancel.getActorPublicKey());
             assetIssuerNetworkServiceRecord.setActorDestinationType(actorSwap);
+
+//            assetIssuerNetworkServiceRecord.setActorSenderAlias(actorAssetAccepted.getName());
 
             assetIssuerNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.CANCEL);
 
