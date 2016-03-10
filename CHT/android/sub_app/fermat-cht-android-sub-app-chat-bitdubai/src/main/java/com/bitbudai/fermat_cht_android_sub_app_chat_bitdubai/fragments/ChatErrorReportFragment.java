@@ -75,12 +75,13 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
                 String messageText = messageEdit.getText().toString();
                 if (TextUtils.isEmpty(messageText)) {
                     return;
-                }
-                try {
-
-                    messageEdit.getText().clear();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }else {
+                    try {
+                        sendErrorReport(messageText);
+                        messageEdit.getText().clear();
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                 }
             }
         });

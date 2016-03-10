@@ -11,24 +11,27 @@
     android:background="@color/background_activity"
     >
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/padding"
         android:paddingTop="@dimen/padding"
         android:orientation="vertical"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:text="Please send us the error report."
-        style="@style/contactNameTitle"
-        android:layout_marginTop="20dp" />
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:layout_gravity="fill_horizontal" />
     <RelativeLayout
         android:id="@+id/inputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/color_white"
+        android:padding="10dp"
         android:layout_gravity="center|fill_horizontal"
         >
         <EditText
@@ -37,65 +40,39 @@
             android:layout_height="wrap_content"
             android:autoText="true"
             android:textColorHint="#bdbdbd"
+            android:inputType="textEmailAddress"
             android:hint="Type your email"
             android:backgroundTint="#acaaaa"
-            android:layout_marginLeft="@dimen/margin_10dp"
-            android:inputType="textAutoComplete"
             android:textColor="#000000"
-            android:layout_alignBottom="@+id/chatSendButton"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/chatSendButton"
             />
+
     </RelativeLayout>
+
     <RelativeLayout
-        android:id="@+id/inputContainer"
+        android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:background="@color/color_white"
-        android:layout_gravity="fill_horizontal"
-        >
+        android:layout_gravity="center_horizontal|bottom"
+        android:padding="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
 
         <Button
             android:id="@+id/okButton"
-            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/cht_buttom_ok"
-            android:layout_alignParentEnd="true"
-            />
+            android:background="@drawable/cht_ok_buttom"
+            android:layout_width="wrap_content"
+            android:layout_alignParentStart="true"/>
 
         <Button
             android:id="@+id/cancelButton"
-            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:background="@drawable/cht_cancel_buttom"
-            android:layout_alignParentEnd="true"
-            />
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
-</FrameLayout><!--
-</android.support.v4.widget.SwipeRefreshLayout>-->
-<!--
-android:layout_below="@+id/meLbl"
-
-            <TextView
-                android:id="@+id/friendLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="Friend"
-                android:singleLine="false"
-                android:textColor="@color/text_color"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/meLbl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="MySelf"
-                android:textColor="@color/text_color"
-                android:textSize="20dp" />
-                -->
+</FrameLayout>
