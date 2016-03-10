@@ -86,6 +86,7 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     public FermatSession getAppsSession(String appPublicKey) {
         try {
             if (fermatSessionManager.isSessionOpen(appPublicKey)) {
+                orderStackWithThisPkLast(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
                 return openApp(
