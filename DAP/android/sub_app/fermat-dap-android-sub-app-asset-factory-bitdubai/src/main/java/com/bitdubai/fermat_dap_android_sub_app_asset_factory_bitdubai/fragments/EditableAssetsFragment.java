@@ -122,7 +122,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             manager = ((AssetFactorySession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-//            settingsManager = appSession.getModuleManager().getSettingsManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
             satoshisWalletBalance = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
@@ -263,9 +263,12 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
                 manager.setAppPublicKey(appSession.getAppPublicKey());
 
+                manager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        } else {
+            manager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
         }
 
         final AssetFactorySettings assetFactorySettingsTemp = settings;
