@@ -198,7 +198,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
                 } else {
 
-                    if (dao.existsInputTransaction(currencyMatching.getOriginTransactionId()))
+                    if (!dao.existsInputTransaction(currencyMatching.getOriginTransactionId()))
                         dao.createInputTransaction(
                                 currencyMatching,
                                 earningPairId
