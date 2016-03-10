@@ -1,17 +1,17 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -27,7 +27,6 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,6 @@ import java.util.UUID;
  * Created by rodrigo on 2/26/16.
  */
 public abstract class CryptoVault {
-
     /**
      * Platform variables
      */
@@ -72,9 +70,9 @@ public abstract class CryptoVault {
     }
 
 
-    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign, ECKey privateKey) throws CantSignTransactionException{
+    public Transaction signTransaction(List<ECKey> walletKeys, Transaction transactionToSign) throws CantSignTransactionException{
         //validate parameters
-        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null || privateKey == null)
+        if ((walletKeys == null || walletKeys.size() == 0) || transactionToSign == null)
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "SignTransaction parameters can't be null", "null parameters.");
 
         final NetworkParameters NETWORK_PARAMETERS = transactionToSign.getParams();
@@ -103,8 +101,11 @@ public abstract class CryptoVault {
             int inputIndex = 0;
             for (TransactionInput intputToSign : transactionToSign.getInputs()){
                 if (intputToSign.equals(entry.getKey()))
+                    break;
+                else
                     inputIndex++;
             }
+
 
             /**
              * I get the signature hash for my output.
@@ -112,12 +113,21 @@ public abstract class CryptoVault {
             Sha256Hash sigHash = transactionToSign.hashForSignature(inputIndex, scriptToSign, Transaction.SigHash.ALL, false);
 
             /**
+             * I get the private key that I will use to sign the hash
+             */
+            ECKey privateKey = getPrivateKey(scriptToSign.getToAddress(NETWORK_PARAMETERS));
+
+            if (privateKey == null)
+                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Unable to find a matching private key for the calculated scripts in the transaction.", "Key hierarchy error");
+
+            /**
              * I create the signature
              */
-            ECKey.ECDSASignature signature = privateKey.sign(sigHash);
+            ECKey.ECDSASignature signature = privateKey.sign(sigHash).toCanonicalised();
+
             TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
 
-            Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+            Script inputScript = ScriptBuilder.createInputScript(transactionSignature, privateKey);
 
             /**
              * I will add the signature to the input script of the transaction
@@ -140,6 +150,15 @@ public abstract class CryptoVault {
          */
         return transactionToSign;
     }
+
+    /**
+     * Based on the public Key, I get the corresponding private key
+     * @param address
+     * @return
+     */
+    public abstract ECKey getPrivateKey(Address address);
+
+
 
     /**
      * Gets the transaction outputs referenced in the passed transaction Input outpoints that are mine.
@@ -208,5 +227,17 @@ public abstract class CryptoVault {
         } catch (MnemonicException e) {
             throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
+    }
+
+    /**
+     * It validates if the amount to be send it less than what the network is allowing.
+     * @param satoshisToSend
+     * @return true if this is a dusty send and we shouldn't allow to send it.
+     */
+    public static boolean isDustySend(long satoshisToSend){
+        if (satoshisToSend < BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
+            return true;
+        else
+            return false;
     }
 }

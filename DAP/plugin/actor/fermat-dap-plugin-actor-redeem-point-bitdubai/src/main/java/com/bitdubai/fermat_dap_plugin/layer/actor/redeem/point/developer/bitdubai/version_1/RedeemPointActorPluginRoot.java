@@ -570,7 +570,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
-        try {
+        try {//TODO EVALUAR State CANCEL o directamente REGISTERED_ONLINE
             this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateRedeemPointException e) {
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");

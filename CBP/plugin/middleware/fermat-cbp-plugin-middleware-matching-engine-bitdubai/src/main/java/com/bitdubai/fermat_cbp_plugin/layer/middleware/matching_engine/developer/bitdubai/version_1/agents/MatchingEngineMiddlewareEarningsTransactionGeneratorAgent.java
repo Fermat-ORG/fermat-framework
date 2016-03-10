@@ -5,16 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
-import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareInputTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -156,6 +154,8 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                 if (unmatchedBuyInputTransactions.isEmpty())
                     break;
 
+                UUID earningTransactionId = UUID.randomUUID();
+
                 List<InputTransaction> matchedBuyTransactions = new ArrayList<>();
 
                 int i = 0;
@@ -170,7 +170,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     if (amountToMatch == amountMatchedTemp) {
 
                         amountMatched = amountMatchedTemp;
-                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
                         matchedBuyTransactions.add(buyTransaction);
                         break;
 
@@ -195,6 +195,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                                 buyTransaction.getCurrencyReceiving()  ,
                                 partialToMatchAmountReceiving          ,
                                 earningsPair.getId()                   ,
+                                earningTransactionId                   ,
                                 InputTransactionState.MATCHED
                         );
 
@@ -206,10 +207,11 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                                 buyTransaction.getCurrencyReceiving(),
                                 partialRestingAmountReceiving,
                                 earningsPair.getId(),
+                                earningTransactionId                   ,
                                 InputTransactionState.UNMATCHED
                         );
 
-                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
                         matchedBuyTransactions.add(partialToMatch);
                         amountMatched = amountToMatch;
                     }
@@ -218,7 +220,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     else {
 
                         amountMatched = amountMatchedTemp;
-                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId());
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
                         matchedBuyTransactions.add(buyTransaction);
                     }
 
@@ -244,6 +246,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                             unmatchedSellInputTransaction.getCurrencyReceiving()  ,
                             partialToMatchAmountReceiving          ,
                             earningsPair.getId()                   ,
+                            earningTransactionId                   ,
                             InputTransactionState.MATCHED
                     );
 
@@ -255,10 +258,11 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                             unmatchedSellInputTransaction.getCurrencyReceiving(),
                             partialRestingAmountReceiving,
                             earningsPair.getId(),
+                            earningTransactionId                   ,
                             InputTransactionState.UNMATCHED
                     );
 
-                    dao.markInputTransactionAsMatched(databaseTransaction, unmatchedSellInputTransaction.getId());
+                    dao.markInputTransactionAsMatched(databaseTransaction, unmatchedSellInputTransaction.getId(), earningTransactionId);
                     matchedBuyTransactions.add(partialToMatch);
                     amountToMatch = amountMatched;
                     sellTransactionToMatch = partialToMatch;
@@ -268,6 +272,8 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                 // sellTransactionToMatch as the sell transaction to match...
                 // matchedBuyTransactions as the buy transactions related to it...
                 // then execute the database transaction
+
+                // TODO MATCHING MUST TO ASSOCIATE THE INPUT TRANSACTION WITH THE PROPER EARNING TRANSACTION
 
                 unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
             }

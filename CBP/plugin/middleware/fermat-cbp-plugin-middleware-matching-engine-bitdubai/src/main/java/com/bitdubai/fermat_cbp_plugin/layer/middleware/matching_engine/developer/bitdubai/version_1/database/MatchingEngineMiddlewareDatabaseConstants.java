@@ -38,7 +38,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME        = "earning_currency_type"     ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME              = "linked_currency"           ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME         = "linked_currency_type"      ;
-    public static final String EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME   = "earnings_wallet_public_key"         ;
+    public static final String EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME   = "earnings_wallet_public_key";
     public static final String EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME            = "wallet_public_key"         ;
     public static final String EARNING_PAIR_STATE_COLUMN_NAME                        = "state"                     ;
 
@@ -54,6 +54,8 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME = "earning_currency_type"     ;
     public static final String EARNING_TRANSACTION_AMOUNT_COLUMN_NAME                = "amount"                    ;
     public static final String EARNING_TRANSACTION_STATE_COLUMN_NAME                 = "state"                     ;
+    public static final String EARNING_TRANSACTION_TIME_COLUMN_NAME                  = "time"                      ;
+    public static final String EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME       = "earning_pair_id"           ;
 
     public static final String EARNING_TRANSACTION_FIRST_KEY_COLUMN                  = "id"                        ;
 
