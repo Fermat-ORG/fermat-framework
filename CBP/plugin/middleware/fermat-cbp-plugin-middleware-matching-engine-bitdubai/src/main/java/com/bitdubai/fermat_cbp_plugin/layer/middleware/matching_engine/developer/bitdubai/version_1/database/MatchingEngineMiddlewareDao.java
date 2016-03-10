@@ -532,17 +532,17 @@ public final class MatchingEngineMiddlewareDao {
         database.executeTransaction(databaseTransaction);
     }
 
-    public final InputTransaction createPartialInputTransaction(final DatabaseTransaction   databaseTransaction ,
-                                                                final String                originTransactionId ,
-                                                                final Currency              currencyGiving      ,
-                                                                final float                 amountGiving        ,
-                                                                final Currency              currencyReceiving   ,
-                                                                final float                 amountReceiving     ,
-                                                                final UUID                  earningsPairId      ,
-                                                                final UUID                  earningTransactionId,
-                                                                final InputTransactionState state               ) {
+    public final InputTransaction createPartialMatchedInputTransaction(final DatabaseTransaction databaseTransaction,
+                                                                       final String originTransactionId,
+                                                                       final Currency currencyGiving,
+                                                                       final float amountGiving,
+                                                                       final Currency currencyReceiving,
+                                                                       final float amountReceiving,
+                                                                       final UUID earningsPairId,
+                                                                       final UUID earningTransactionId) {
 
-        final InputTransactionType  type  = InputTransactionType .PARTIAL  ;
+        final InputTransactionType  type  = InputTransactionType .PARTIAL;
+        final InputTransactionState state = InputTransactionState.MATCHED;
 
         final InputTransaction inputTransaction = new MatchingEngineMiddlewareInputTransaction(
                 UUID.randomUUID()  ,
@@ -560,6 +560,39 @@ public final class MatchingEngineMiddlewareDao {
         DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
 
         entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction, earningTransactionId);
+
+        databaseTransaction.addRecordToInsert(inputTransactionTable, entityRecord);
+
+        return inputTransaction;
+    }
+
+    public final InputTransaction createPartialUnmatchedInputTransaction(final DatabaseTransaction databaseTransaction,
+                                                                         final String originTransactionId,
+                                                                         final Currency currencyGiving,
+                                                                         final float amountGiving,
+                                                                         final Currency currencyReceiving,
+                                                                         final float amountReceiving,
+                                                                         final UUID earningsPairId) {
+
+        final InputTransactionType  type  = InputTransactionType .PARTIAL  ;
+        final InputTransactionState state = InputTransactionState.UNMATCHED;
+
+        final InputTransaction inputTransaction = new MatchingEngineMiddlewareInputTransaction(
+                UUID.randomUUID()  ,
+                originTransactionId,
+                currencyGiving     ,
+                amountGiving       ,
+                currencyReceiving  ,
+                amountReceiving    ,
+                type               ,
+                state
+        );
+
+        final DatabaseTable inputTransactionTable = database.getTable(INPUT_TRANSACTION_TABLE_NAME);
+
+        DatabaseTableRecord entityRecord = inputTransactionTable.getEmptyRecord();
+
+        entityRecord = buildInputTransactionDatabaseRecord(entityRecord, earningsPairId, inputTransaction, null);
 
         databaseTransaction.addRecordToInsert(inputTransactionTable, entityRecord);
 

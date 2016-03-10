@@ -204,30 +204,27 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                         float partialRestingAmountGiving    = buyTransaction.getAmountGiving()    - partialToMatchAmountGiving   ;
                         float partialRestingAmountReceiving = buyTransaction.getAmountReceiving() - partialToMatchAmountReceiving;
 
-                        InputTransaction partialToMatch = dao.createPartialInputTransaction(
-                                databaseTransaction                    ,
+                        InputTransaction partialToMatch = dao.createPartialMatchedInputTransaction(
+                                databaseTransaction,
                                 buyTransaction.getOriginTransactionId(),
-                                buyTransaction.getCurrencyGiving()     ,
-                                partialToMatchAmountGiving             ,
-                                buyTransaction.getCurrencyReceiving()  ,
-                                partialToMatchAmountReceiving          ,
-                                earningsPair.getId()                   ,
-                                earningTransactionId                   ,
-                                InputTransactionState.MATCHED
+                                buyTransaction.getCurrencyGiving(),
+                                partialToMatchAmountGiving,
+                                buyTransaction.getCurrencyReceiving(),
+                                partialToMatchAmountReceiving,
+                                earningsPair.getId(),
+                                earningTransactionId
                         );
 
                         System.out.println("            **** partialToMatch: " + partialToMatch);
 
-                        InputTransaction partialRest = dao.createPartialInputTransaction(
-                                databaseTransaction                    ,
+                        InputTransaction partialRest = dao.createPartialUnmatchedInputTransaction(
+                                databaseTransaction,
                                 buyTransaction.getOriginTransactionId(),
-                                buyTransaction.getCurrencyGiving()     ,
-                                partialRestingAmountGiving             ,
-                                buyTransaction.getCurrencyReceiving()  ,
-                                partialRestingAmountReceiving          ,
-                                earningsPair.getId()                   ,
-                                earningTransactionId                   ,
-                                InputTransactionState.UNMATCHED
+                                buyTransaction.getCurrencyGiving(),
+                                partialRestingAmountGiving,
+                                buyTransaction.getCurrencyReceiving(),
+                                partialRestingAmountReceiving,
+                                earningsPair.getId()
                         );
 
                         System.out.println("            **** partialRest: "+partialRest);
@@ -269,30 +266,27 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     float partialRestingAmountGiving    = unmatchedSellInputTransaction.getAmountGiving()    - partialToMatchAmountGiving   ;
                     float partialRestingAmountReceiving = unmatchedSellInputTransaction.getAmountReceiving() - partialToMatchAmountReceiving;
 
-                    InputTransaction partialToMatch = dao.createPartialInputTransaction(
-                            databaseTransaction                                   ,
+                    InputTransaction partialToMatch = dao.createPartialMatchedInputTransaction(
+                            databaseTransaction,
                             unmatchedSellInputTransaction.getOriginTransactionId(),
-                            unmatchedSellInputTransaction.getCurrencyGiving()     ,
-                            partialToMatchAmountGiving                            ,
-                            unmatchedSellInputTransaction.getCurrencyReceiving()  ,
-                            partialToMatchAmountReceiving                         ,
-                            earningsPair.getId()                                  ,
-                            earningTransactionId                                  ,
-                            InputTransactionState.MATCHED
+                            unmatchedSellInputTransaction.getCurrencyGiving(),
+                            partialToMatchAmountGiving,
+                            unmatchedSellInputTransaction.getCurrencyReceiving(),
+                            partialToMatchAmountReceiving,
+                            earningsPair.getId(),
+                            earningTransactionId
                     );
 
                     System.out.println("           ***** partialToMatch: "+partialToMatch);
 
-                    InputTransaction partialRest = dao.createPartialInputTransaction(
+                    InputTransaction partialRest = dao.createPartialUnmatchedInputTransaction(
                             databaseTransaction,
                             unmatchedSellInputTransaction.getOriginTransactionId(),
                             unmatchedSellInputTransaction.getCurrencyGiving(),
                             partialRestingAmountGiving,
                             unmatchedSellInputTransaction.getCurrencyReceiving(),
                             partialRestingAmountReceiving,
-                            earningsPair.getId(),
-                            earningTransactionId,
-                            InputTransactionState.UNMATCHED
+                            earningsPair.getId()
                     );
 
                     System.out.println("           ***** partialRest: "+partialRest);
