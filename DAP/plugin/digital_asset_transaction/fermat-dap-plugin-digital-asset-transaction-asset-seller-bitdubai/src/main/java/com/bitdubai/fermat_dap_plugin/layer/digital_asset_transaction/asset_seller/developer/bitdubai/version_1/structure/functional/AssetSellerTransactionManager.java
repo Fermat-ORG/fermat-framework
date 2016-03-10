@@ -80,7 +80,9 @@ public final class AssetSellerTransactionManager {
     }
 
     private void startSellingTransactions(AssetUserWallet userWallet, AssetNegotiation negotiation, ActorAssetUser actorTo) throws CantGetDigitalAssetFromLocalStorageException, CantGetTransactionsException, CantInsertRecordException, RecordsNotFoundException, CantExecuteLockOperationException {
-        for (AssetUserWalletTransaction transaction : userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey())) {
+        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey());
+        for (int i = 0; i < negotiation.getQuantityToBuy(); i++) {
+            AssetUserWalletTransaction transaction = availableTransactions.get(i);
             DigitalAssetMetadata metadata = userWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
             userWallet.lockFunds(metadata); //We are locking this metadata so it wont be used for another operation different until we unlock it.
             dao.startNewSelling(metadata, actorTo, negotiation.getNegotiationId());
