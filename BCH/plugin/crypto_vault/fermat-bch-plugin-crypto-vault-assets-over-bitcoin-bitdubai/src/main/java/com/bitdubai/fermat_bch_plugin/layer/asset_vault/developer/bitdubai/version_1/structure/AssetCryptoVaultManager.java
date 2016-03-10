@@ -25,6 +25,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
@@ -147,6 +148,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
      * @throws CantSendAssetBitcoinsToUserException
      */
     public String sendAssetBitcoins(String inputTransaction, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
+
         /**
          * I get the network for this address.
          */
@@ -221,6 +223,12 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          */
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
+
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(coinToSend.getValue()))
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, "Dusty send request: " + coinToSend.getValue(), "send more bitcoins!");
 
         /**
          * if the value to send is negative or zero, I will inform of the error
@@ -924,7 +932,6 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         if (inputTransaction.isEmpty() || addressTo == null)
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "InputTransaction or AddressTo can't be null", null);
 
-
         /**
          * I get the network for this address.
          */
@@ -978,6 +985,11 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = genesisTransaction.getOutput(0).getValue().subtract(fee);
 
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(coinToSend.getValue()))
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + coinToSend.getValue(), "send more bitcoins!");
 
         /**
          * if the value to send is negative or zero, I will inform of the error

@@ -225,12 +225,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_method_title, clauseNumberImageRes, R.string.reception_method);
                 break;
-            case CUSTOMER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.cbw_crypto_address_customer, clauseNumberImageRes, R.string.cbw_crypto_address_title);
-                break;
-            case BROKER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.cbw_crypto_address_broker, clauseNumberImageRes, R.string.cbw_crypto_address_title);
-                break;
             case CUSTOMER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.cbw_bank_account_customer, clauseNumberImageRes, R.string.cbw_bank_account_title);
                 break;

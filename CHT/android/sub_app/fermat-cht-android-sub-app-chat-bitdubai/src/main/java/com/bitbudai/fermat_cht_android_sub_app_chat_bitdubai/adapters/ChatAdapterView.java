@@ -344,9 +344,13 @@ public class ChatAdapterView extends LinearLayout {
                     Long dv = System.currentTimeMillis();
 
                     if (chatWasCreate) {
+
                         chat = (ChatImpl) chatManager.getChatByChatId(chatId);
                         chat.setLastMessageDate(new Timestamp(dv));
                         chatManager.saveChat(chat);
+
+//                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
+//                        chatManager.saveChat(chat);
 
                         message.setChatId(chatId);
                         message.setMessageId(UUID.randomUUID());
@@ -416,7 +420,7 @@ public class ChatAdapterView extends LinearLayout {
                         chatSession.setData(
                                 "contactid",
                                 newContact
-                        );
+                                );
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as

@@ -1486,6 +1486,12 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         }
     }
 
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public void setCompletionDateByContractHash(
             String contractHash,
             long completionDate)
@@ -1513,7 +1519,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
 
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
-                    "Getting completion date from database",
+                    "Setting completion date from database",
                     "Cannot load the database table");
         }
     }
