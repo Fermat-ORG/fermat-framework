@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareEarningsTransactionGeneratorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareTransactionMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory;
@@ -77,6 +78,8 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
     private MatchingEngineMiddlewareTransactionMonitorAgent monitorAgent;
 
+    private MatchingEngineMiddlewareEarningsTransactionGeneratorAgent transactionGeneratorAgent;
+
     @Override
     public FermatManager getManager() {
         return fermatManager;
@@ -110,6 +113,15 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
             monitorAgent.start();
 
+            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(
+                    errorManager,
+                    dao,
+                    getPluginVersionReference()
+
+            );
+
+            transactionGeneratorAgent.start();
+
             super.start();
 
         } catch (final CantInitializeDatabaseException cantInitializeActorConnectionDatabaseException) {
@@ -134,6 +146,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
         try {
 
             monitorAgent.pause();
+            transactionGeneratorAgent.pause();
 
         } catch (CantStopAgentException cantStopAgentException) {
             errorManager.reportUnexpectedPluginException(
@@ -152,6 +165,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
         try {
 
             monitorAgent.resume();
+            transactionGeneratorAgent.resume();
 
         } catch (CantStartAgentException cantStartAgentException) {
             errorManager.reportUnexpectedPluginException(
@@ -168,6 +182,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
     public void stop() {
 
         monitorAgent.stop();
+        transactionGeneratorAgent.stop();
 
         super.stop();
     }
