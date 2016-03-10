@@ -243,8 +243,8 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
                         "ORIGIN2",
                         CryptoCurrency.BITCOIN,
                         FiatCurrency.VENEZUELAN_BOLIVAR,
-                        1,
-                        1100
+                        0.9f,
+                        1000
                         )
         );
 
