@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.identity.exceptions;
+package com.bitdubai.fermat_art_api.layer.identity.artist.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public class CantGetArtistIdentityException extends ARTException {
+public class IdentityNotFoundException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT GET ARTIST IDENTITY";
+    public static final String DEFAULT_MESSAGE = "IDENTITY NOT FOUND";
 
-    public CantGetArtistIdentityException(
+    public IdentityNotFoundException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,31 +17,29 @@ public class CantGetArtistIdentityException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantGetArtistIdentityException(
+    public IdentityNotFoundException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public CantGetArtistIdentityException(
+    public IdentityNotFoundException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantGetArtistIdentityException(final String message) {
+    public IdentityNotFoundException(final String message) {
         this(message, null);
     }
 
-    public CantGetArtistIdentityException(final Exception exception) {
+    public IdentityNotFoundException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantGetArtistIdentityException() {
+    public IdentityNotFoundException() {
         this(DEFAULT_MESSAGE);
     }
 }
-
-

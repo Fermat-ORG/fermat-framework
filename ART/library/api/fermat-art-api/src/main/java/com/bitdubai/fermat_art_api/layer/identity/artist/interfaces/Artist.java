@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.identity.interfaces;
+package com.bitdubai.fermat_art_api.layer.identity.artist.interfaces;
 
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
