@@ -17,4 +17,8 @@
         android:title="@string/menu_switch_profile"
         android:icon="@drawable/cht_profile_icon"
         android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_error_report"
+        android:title="@string/menu_settings"
+        android:showAsAction="ifRoom"/>
 </menu>

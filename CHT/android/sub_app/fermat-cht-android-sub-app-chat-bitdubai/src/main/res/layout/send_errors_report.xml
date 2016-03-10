@@ -7,39 +7,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     android:windowSoftInputMode="stateVisible|adjustPan"
+    android:background="@color/background_activity"
     >
-   <!-- <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true"
-        >-->
-        <RelativeLayout
-            android:id="@+id/container"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:background="@drawable/cht_background"
-            android:layout_above="@+id/inputContainer"
-            >
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/messagesContainer"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentTop="false"
-                    android:listSelector="@android:color/transparent"
-                    android:transcriptMode="alwaysScroll"
-                    android:divider="@null"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="35dp"
-                    />
-        </RelativeLayout>
-    <!--</ScrollView>-->
-
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
+        android:paddingTop="@dimen/padding"
+        android:orientation="vertical"
+        android:textColor="@color/black"
+        android:text="Please send us the error report."
+        style="@style/contactNameTitle"
+        android:layout_marginTop="20dp" />
     <RelativeLayout
         android:id="@+id/inputContainer"
         android:layout_width="match_parent"
@@ -48,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/color_white"
-        android:layout_gravity="bottom|fill_horizontal"
+        android:layout_gravity="center|fill_horizontal"
         >
         <EditText
             android:id="@+id/messageEdit"
@@ -56,7 +37,7 @@
             android:layout_height="wrap_content"
             android:autoText="true"
             android:textColorHint="#bdbdbd"
-            android:hint="@string/defaulttext"
+            android:hint="Type your email"
             android:backgroundTint="#acaaaa"
             android:layout_marginLeft="@dimen/margin_10dp"
             android:inputType="textAutoComplete"
@@ -65,14 +46,35 @@
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/chatSendButton"
             />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/inputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/color_white"
+        android:layout_gravity="fill_horizontal"
+        >
+
         <Button
-            android:id="@+id/chatSendButton"
+            android:id="@+id/okButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/cht_buttom_send"
+            android:background="@drawable/cht_buttom_ok"
+            android:layout_alignParentEnd="true"
+            />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cht_cancel_buttom"
             android:layout_alignParentEnd="true"
             />
     </RelativeLayout>
+
 </FrameLayout><!--
 </android.support.v4.widget.SwipeRefreshLayout>-->
 <!--
