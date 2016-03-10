@@ -23,6 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.AssetMetadataFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.IssuingRecord;
@@ -166,12 +168,12 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, RecordsNotFoundException, InvalidParameterException, CantUpdateRecordException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantGetBroadcastStatusException, CantGetOutgoingIntraActorTransactionManagerException, CantSaveStatisticException, CantLoadWalletException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantDeliverDigitalAssetToAssetWalletException {
+        private void doTheMainTask() throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, RecordsNotFoundException, InvalidParameterException, CantUpdateRecordException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantGetBroadcastStatusException, CantGetOutgoingIntraActorTransactionManagerException, CantSaveStatisticException, CantLoadWalletException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantDeliverDigitalAssetToAssetWalletException, CantCreateDigitalAssetTransactionException {
             checkPendingEvents();
             checkSendingBitcoins();
         }
 
-        private void checkPendingEvents() throws CantLoadTableToMemoryException, RecordsNotFoundException, InvalidParameterException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantUpdateRecordException, CantDeliverDigitalAssetToAssetWalletException {
+        private void checkPendingEvents() throws CantLoadTableToMemoryException, RecordsNotFoundException, InvalidParameterException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantUpdateRecordException, CantDeliverDigitalAssetToAssetWalletException, CantCreateDigitalAssetTransactionException {
             for (String eventId : dao.getPendingEvents()) {
                 switch (dao.getEventType(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER: {
@@ -196,6 +198,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                             }
                             dao.updateWalletBalance(cryptoGenesisTransaction, record.getTransactionId(), BalanceType.AVAILABLE);
                             dao.updateMetadataIssuingStatus(record.getTransactionId(), IssuingStatus.ON_BLOCK_CHAIN);
+                            dao.newAssetGenerated(record.getAssetMetadata().getDigitalAsset().getPublicKey());
                         }
                         break;
                     }
@@ -307,7 +310,6 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                         Future<Boolean> result = executor.submit(assetMetadataFactory);
                     }
                 }
-
             }
         }
 

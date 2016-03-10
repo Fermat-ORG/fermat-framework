@@ -77,7 +77,9 @@ public class AssetMetadataFactory implements Callable<Boolean> {
             return Boolean.FALSE;
         }
         CryptoAddress cryptoAddress = assetVaultManager.getNewAssetVaultCryptoAddress(issuingRecord.getNetworkType());
-        DigitalAsset asset = issuingRecord.getAsset();
+        //We'll need to copy the asset so the other threads won't modify its content.
+        //Trust me, its necessary.
+        DigitalAsset asset = DigitalAsset.copyAsset(issuingRecord.getAsset());
         asset.setGenesisAddress(cryptoAddress);
         DigitalAssetMetadata metadata = new DigitalAssetMetadata(asset);
         metadata.setNetworkType(issuingRecord.getNetworkType());
@@ -104,10 +106,11 @@ public class AssetMetadataFactory implements Callable<Boolean> {
     private UUID sendCrypto(DigitalAssetMetadata metadata) throws OutgoingIntraActorInsufficientFundsException, OutgoingIntraActorCantSendFundsExceptions {
         CryptoAddress cryptoAddress = metadata.getDigitalAsset().getGenesisAddress();
         DigitalAsset asset = metadata.getDigitalAsset();
+        String assetHash = metadata.getDigitalAssetHash();
         return manager.sendCrypto(issuingRecord.getBtcWalletPk(),
                 cryptoAddress,
                 asset.getGenesisAmount(),
-                metadata.getDigitalAssetHash(),
+                assetHash,
                 asset.getDescription(),
                 intraActor.getPublicKey(),
                 actorAssetIssuer.getActorPublicKey(),

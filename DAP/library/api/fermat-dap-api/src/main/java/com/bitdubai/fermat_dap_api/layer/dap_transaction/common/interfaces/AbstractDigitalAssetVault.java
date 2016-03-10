@@ -124,11 +124,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @param internalId           Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException
      */
-    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
+    public synchronized void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
         DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
         try {
             String digitalAssetInnerXML = digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName, digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName, internalId);
             String digitalAssetMetadataInnerXML = digitalAssetMetadata.toString();
             persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, digitalAssetMetadataFileName, internalId);
         } catch (CantPersistFileException | CantCreateFileException exception) {

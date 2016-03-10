@@ -134,7 +134,6 @@ public class AssetIssuingDAO {
             newRecord.setLongValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_CREATION_TIME_COLUMN_NAME, System.currentTimeMillis());
 
             databaseTable.insertRecord(newRecord);
-            newAssetGenerated(metadata.getDigitalAsset().getPublicKey());
         } catch (CantInsertRecordException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, context, "Cannot insert a record in Asset Appropriation Event Table");
         } catch (Exception exception) {
