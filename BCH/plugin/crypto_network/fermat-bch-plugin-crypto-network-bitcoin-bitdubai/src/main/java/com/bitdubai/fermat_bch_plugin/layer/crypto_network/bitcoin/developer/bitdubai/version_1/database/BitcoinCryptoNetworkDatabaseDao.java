@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -203,7 +204,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                             String op_Return,
                                             ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(null, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.INCOMING);
+        this.saveNewTransaction(null, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, CryptoTransactionType.INCOMING);
     }
 
     /**
@@ -231,7 +232,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                     long value,
                                     String op_Return,
                                     ProtocolStatus protocolStatus,
-                                    TransactionTypes transactionTypes)
+                                    CryptoTransactionType cryptoTransactionType)
             throws CantExecuteDatabaseOperationException{
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
@@ -244,7 +245,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * event. A transaction that we are sending may be actually recorded as incoming. The important thing at this point is not to
          * duplicate transactions
          */
-        if (!this.isNewTransaction(hash, cryptoStatus))
+        if (!this.isNewTransaction(hash, cryptoStatus, addressTo))
             return;
 
         /**
@@ -294,7 +295,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
-        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionTypes.getCode());
+
+        /**
+         * I will override the passed value of the transaction Type, only if it is with status PendingSubmit,
+         * I will transform it to an outgoing transaction
+         */
+        if (CryptoStatus.PENDING_SUBMIT == cryptoStatus)
+            cryptoTransactionType = CryptoTransactionType.OUTGOING;
+
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, cryptoTransactionType.getCode());
         try {
             databaseTable.insertRecord(record);
         } catch (CantInsertRecordException e) {
@@ -396,7 +405,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                            String op_Return,
                                            ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(transactionId, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.OUTGOING);
+        this.saveNewTransaction(transactionId, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, CryptoTransactionType.OUTGOING);
     }
 
     /**
@@ -909,13 +918,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param cryptoStatus
      * @return
      */
-    public boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus) throws CantExecuteDatabaseOperationException {
+    private boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus, CryptoAddress addressTo) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         /**
          * sets the table filters
          */
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -1100,11 +1110,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     /**
      * Will detele a previously stored transaction in the database, probably to rollback it.
+     * T TransTio
      * @param txHash
      */
     public void deleteStoredBitcoinTransaction(String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, Status.IDLE.getCode(), DatabaseFilterType.EQUAL);
+
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -1485,6 +1498,41 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         return blockchainNetworkTypes;
+
+    }
+
+    /**
+     * Saves the passed CryptoTransaction into the database
+     * @param cryptoTransaction
+     */
+    public void saveCryptoTransaction(CryptoTransaction cryptoTransaction, @Nullable UUID transactionId) throws CantExecuteDatabaseOperationException {
+        /**
+         * if not passed, I will define my own transactionId
+         */
+        if (transactionId == null)
+            transactionId = UUID.randomUUID();
+
+        /**
+         * If the transaction is pending submit or Outgoing, then no need to notify anyone
+         */
+        ProtocolStatus protocolStatus;
+        if (CryptoStatus.PENDING_SUBMIT == cryptoTransaction.getCryptoStatus() || cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.OUTGOING)
+            protocolStatus = ProtocolStatus.NO_ACTION_REQUIRED;
+        else
+            protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+        saveNewTransaction(transactionId,
+                cryptoTransaction.getTransactionHash(),
+                cryptoTransaction.getBlockHash(),
+                cryptoTransaction.getBlockchainNetworkType(),
+                cryptoTransaction.getCryptoStatus(),
+                cryptoTransaction.getBlockDepth(),
+                cryptoTransaction.getAddressTo(),
+                cryptoTransaction.getAddressFrom(),
+                cryptoTransaction.getCryptoAmount(),
+                cryptoTransaction.getOp_Return(),
+                protocolStatus,
+                cryptoTransaction.getCryptoTransactionType());
 
     }
 }
