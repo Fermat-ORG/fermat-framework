@@ -37,7 +37,7 @@
         <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
         <!-- separator or empty layer -->
-        <layer name="API" language="java" super_layer="WRD"></layer>
+        <layer name="World API" language="java" super_layer="WRD"></layer>
         <!-- separator or empty layer -->
         <layer name="Communication" language="java" super_layer="P2P"></layer>
         <!-- separator or empty layer -->
@@ -4303,7 +4303,7 @@
             </layer>
         </super_layer>
 	<super_layer code="WRD" name="World" dependsOn="COR">
-            <layer name="API" language="java">
+            <layer name="World API" language="java">
                 <plugins>
                     <plugin name="Tokenly" description="" difficulty="10" code-level="development">
                         <authors>
