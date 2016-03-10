@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
@@ -64,6 +66,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -328,6 +331,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chatId=eventRecord.getChatId();
                     switch (eventType){
                         case INCOMING_CHAT:
+                            System.out.println("");
                             checkIncomingChat(
                                     chatId,
                                     eventRecord);
@@ -466,6 +470,8 @@ public class ChatMiddlewareMonitorAgent implements
                                 Specialist.UNKNOWN_SPECIALIST);
                 UUID incomingTransactionChatId;
                 ChatMetadata incomingChatMetadata;
+                Contact contact;
+                String code;
                 if(pendingTransactionList==null){
                     /**
                      * In this version, when the NS return a null list, I'll ignore this this issue,
@@ -486,7 +492,18 @@ public class ChatMiddlewareMonitorAgent implements
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                      //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
+                        if(chatMiddlewareDatabaseDao.getMessageByMessageId(incomingChatMetadata.getMessageId()).getType()==TypeMessage.INCOMMING) {
+                            contact = getContactFromChatMetadata(incomingChatMetadata);
+                            code = contact.getRemoteName() + "@#@#" + incomingChatMetadata.getMessage();
+                            try {
+                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_NEWMESSAGE.getCode(), code);
+                            }catch(Exception e)
+                                {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                }
+
+                        }
+                      /// /  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here
                       /*  chatNetworkServiceManager.sendChatMessageNewStatusNotification(
@@ -527,6 +544,11 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
                 );
+            }catch (CantGetContactException e) {
+                    throw new CantGetPendingTransactionException(e,
+                            "Getting message from ChatMetadata",
+                            "Cannot get the contact");
+
             /*}
             catch (CantSendChatMessageNewStatusNotificationException e) {
                 throw new CantGetPendingTransactionException(
@@ -752,6 +774,40 @@ public class ChatMiddlewareMonitorAgent implements
             }
             chat.setContactAssociated(contactList);
             return chat;
+        }
+
+        /**
+         * This method get contact from incoming metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Contact getContactFromChatMetadata(ChatMetadata chatMetadata)
+                throws
+                CantGetContactException{
+            if(chatMetadata==null){
+                throw new CantGetContactException("The chat metadata from network service is null");
+            }
+            try{
+                UUID chatId=chatMetadata.getChatId();
+                Chat chatFromDatabase=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                String contactLocalPublicKey=chatFromDatabase.getRemoteActorPublicKey();
+                Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+
+                return contact;
+            } catch (DatabaseOperationException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Unexpected exception in database");
+            } catch (CantGetContactException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Cannot get the contact");
+            } catch (CantGetChatException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Cannot get the chat");
+            }
+
         }
 
         /**
