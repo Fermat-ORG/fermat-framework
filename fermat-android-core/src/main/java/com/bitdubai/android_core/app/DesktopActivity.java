@@ -85,9 +85,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void onDestroy() {
 
         if(bottomMenuReveal !=null) bottomMenuReveal.clear();
-
-
-
         super.onDestroy();
 
         unbindDrawables(findViewById(R.id.drawer_layout));
@@ -433,17 +430,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void loadUI() {
         try {
 
-            /**
-             * Get current activity to paint
-             */
-            Activity activity = getActivityUsedType();
+            Activity activity = null;
 
             try {
-
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
 
                 getFermatAppManager().openApp(getDesktopManager(),fermatAppConnection);
                 //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+                /**
+                 * Get current activity to paint
+                 */
+
+                activity = getFermatAppManager().getLastAppStructure().getLastActivity();
                 loadBasicUI(activity, fermatAppConnection);
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {

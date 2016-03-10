@@ -8,15 +8,11 @@ import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionMana
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -67,7 +63,8 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         return (RecentApp) CollectionUtils.find(recentsAppsStack.values(), new Predicate() {
             @Override
             public boolean evaluate(Object o) {
-                return ((RecentApp) o).getTaskStackPosition() == recentsAppsStack.size();
+                int pos = ((RecentApp) o).getTaskStackPosition()+1;
+                return ((RecentApp) o).getTaskStackPosition()+1 == recentsAppsStack.size();
             }
         });
     }
@@ -89,6 +86,7 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     public FermatSession getAppsSession(String appPublicKey) {
         try {
             if (fermatSessionManager.isSessionOpen(appPublicKey)) {
+                orderStackWithThisPkLast(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
                 return openApp(
@@ -105,10 +103,21 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         return null;
     }
 
+    private void orderStackWithThisPkLast(String publicKey){
+        RecentApp recentApp = recentsAppsStack.get(publicKey);
+        recentsAppsStack.remove(publicKey);
+        for(RecentApp r : recentsAppsStack.values()){
+            r.setTaskStackPosition(r.getTaskStackPosition()-1);
+        }
+        recentApp.setTaskStackPosition(recentsAppsStack.size());
+        recentsAppsStack.put(publicKey,recentApp);
+    }
+
     @Override
     public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) {
         if(recentsAppsStack.containsKey(fermatApp.getAppPublicKey())){
-            recentsAppsStack.get(fermatApp.getAppPublicKey()).setTaskStackPosition(recentsAppsStack.size());
+//            recentsAppsStack.get(fermatApp.getAppPublicKey()).setTaskStackPosition(recentsAppsStack.size());
+            orderStackWithThisPkLast(fermatApp.getAppPublicKey());
         }else{
             recentsAppsStack.put(fermatApp.getAppPublicKey(), new RecentApp(fermatApp.getAppPublicKey(),fermatApp,recentsAppsStack.size()));
         }
@@ -116,9 +125,10 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
             return fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
-            return fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
+            return fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
     }
+
 
     /**
      * aca no solo la obtengo si no que la tengo que poner arriba del stack de apps
@@ -155,6 +165,12 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
         return selectRuntimeManager(appsInstalledInDevice.get(appPublicKey)).getAppByPublicKey(appPublicKey);
+    }
+
+    @Override
+    public FermatStructure getLastAppStructure() {
+        RecentApp recentApp = findLastElement();
+        return selectRuntimeManager(recentApp.getFermatApp().getAppType()).getLastApp();
     }
 
     /**
@@ -203,23 +219,5 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         return runtimeManager;
     }
 
-
-    /**
-     *  Return an instance of module manager
-     * @param pluginVersionReference
-     * @return
-     */
-    public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
-        try {
-            return ApplicationSession.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
-        } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.toString());
-            return null;
-        } catch (Exception e) {
-            System.err.println(e.toString());
-            return null;
-        }
-    }
 
 }
