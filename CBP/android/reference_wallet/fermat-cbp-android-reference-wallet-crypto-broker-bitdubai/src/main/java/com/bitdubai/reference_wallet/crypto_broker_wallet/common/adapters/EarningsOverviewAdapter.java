@@ -6,20 +6,20 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.EarningsOverviewViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
 
 import java.util.List;
 
 /**
  * Created by nelson on 27/01/16.
  */
-public class EarningsOverviewAdapter extends FermatAdapter<EarningsPairDetail, EarningsOverviewViewHolder> {
+public class EarningsOverviewAdapter extends FermatAdapter<EarningsDetailData, EarningsOverviewViewHolder> {
     private Currency earningCurrency;
     private TimeFrequency frequency;
 
-    public EarningsOverviewAdapter(Context context, List<EarningsPairDetail> dataSet, Currency earningCurrency) {
+    public EarningsOverviewAdapter(Context context, List<EarningsDetailData> dataSet, Currency earningCurrency) {
         super(context, dataSet);
         this.earningCurrency = earningCurrency;
         frequency = TimeFrequency.DAILY;
@@ -36,7 +36,7 @@ public class EarningsOverviewAdapter extends FermatAdapter<EarningsPairDetail, E
     }
 
     @Override
-    protected void bindHolder(EarningsOverviewViewHolder holder, EarningsPairDetail data, int position) {
+    protected void bindHolder(EarningsOverviewViewHolder holder, EarningsDetailData data, int position) {
         holder.bind(data, frequency, earningCurrency);
     }
 

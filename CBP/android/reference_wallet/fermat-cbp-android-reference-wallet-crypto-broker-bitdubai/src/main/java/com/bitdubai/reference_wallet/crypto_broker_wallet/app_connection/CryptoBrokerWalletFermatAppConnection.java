@@ -23,6 +23,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
 
@@ -86,6 +87,8 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
                 return new CryptoBrokerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
             case CBW_CANCEL_NEGOTIATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract Story, a customer has canceled a negotiation","");
+            case CBW_NEW_CONTRACT_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("New Contract.","A new contract has been created, check your wallet.","");
             default:
                 return super.getNotificationPainter(code);
         }

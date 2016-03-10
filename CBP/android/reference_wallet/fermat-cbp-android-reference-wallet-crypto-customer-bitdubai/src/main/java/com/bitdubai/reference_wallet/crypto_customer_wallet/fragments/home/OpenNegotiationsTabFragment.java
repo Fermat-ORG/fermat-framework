@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEW_CONTRACT_UPDATE_VIEW;
 
 
 /**
@@ -175,7 +176,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 //                waitingForCustomer.addAll(TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_CUSTOMER));
                 waitingForCustomer.addAll(walletManager.getNegotiationsWaitingForCustomer(0, 10));
-                // TODO waitingForCustomer.addAll(walletManager.getNegotiationsWaitingForCustomer(0, 10));
                 grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(grouper);
 
@@ -183,7 +183,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
 //                waitingForBroker.addAll(TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER));
                 waitingForBroker.addAll(walletManager.getNegotiationsWaitingForBroker(0, 10));
-                // TODO waitingForBroker.addAll(walletManager.getNegotiationsWaitingForBroker(0, 10));
                 grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(grouper);
 
@@ -243,6 +242,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public void onUpdateViewOnUIThread(String code) {
         switch (code){
             case CCW_NEGOTIATION_UPDATE_VIEW:
+                onRefresh();
+                break;
+            case CCW_NEW_CONTRACT_UPDATE_VIEW:
                 onRefresh();
                 break;
         }
