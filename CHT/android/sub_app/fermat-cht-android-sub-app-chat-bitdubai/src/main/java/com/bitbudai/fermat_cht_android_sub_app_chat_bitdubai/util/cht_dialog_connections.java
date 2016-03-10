@@ -176,6 +176,9 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
 
                         if (contactConn.getRemoteName() != null) {
                             cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(),getSession(),null,contactConn, mAdapterCallback);
+                            customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
+                           customAlert.setTextTitle("Add connections");
+                            customAlert.setType("add-connections");
                             customAlert.show();
                         } else {
                             //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
