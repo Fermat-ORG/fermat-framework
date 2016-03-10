@@ -521,11 +521,24 @@ public class ContactFragment extends AbstractFermatFragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
+            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
             alert.setTextTitle("Delete contact");
             alert.setTextBody("Do you want to delete this contact?");
             alert.setType("delete-contact");
             alert.show();
+            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                           @Override
+                                           public void onDismiss(DialogInterface dialog) {
+                                               if(alert.getStatusDeleteContact() == true){
+                                                   try {
+                                                       changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+                                                   }catch (Exception e){
+                                                       errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                                   }
+                                               }
+                                           }
+                                       }
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);
