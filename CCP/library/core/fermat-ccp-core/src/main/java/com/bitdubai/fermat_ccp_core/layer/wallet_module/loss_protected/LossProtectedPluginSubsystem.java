@@ -12,7 +12,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class LossProtectedPluginSubsystem extends AbstractPluginSubsystem {
 
     public LossProtectedPluginSubsystem() {
-        super(new PluginReference(Plugins.CRYPTO_WALLET));
+        super(new PluginReference(Plugins.CRYPTO_LOSS_PROTECTED_WALLET));
     }
 
     @Override
