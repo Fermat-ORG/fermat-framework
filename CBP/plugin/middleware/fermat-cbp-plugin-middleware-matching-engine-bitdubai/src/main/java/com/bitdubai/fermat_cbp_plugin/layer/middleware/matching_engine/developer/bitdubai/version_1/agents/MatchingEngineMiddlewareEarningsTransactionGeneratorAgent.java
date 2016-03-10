@@ -143,9 +143,11 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
             InputTransaction unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
 
-            InputTransaction sellTransactionToMatch = unmatchedSellInputTransaction;
+            InputTransaction sellTransactionToMatch;
 
             while (unmatchedSellInputTransaction != null) {
+
+                sellTransactionToMatch = unmatchedSellInputTransaction;
 
                 System.out.println(" *************** processing sell transaction: "+sellTransactionToMatch.getOriginTransactionId());
 
