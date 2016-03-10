@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.identity.exceptions;
+package com.bitdubai.fermat_art_api.layer.identity.fan.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public class CantUpdateArtistIdentityException extends ARTException {
+public class FanIdentityAlreadyExistsException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT UPDATE ARTIST IDENTITY";
+    public static final String DEFAULT_MESSAGE = "FAN IDENTITY ALREADY EXISTS";
 
-    public CantUpdateArtistIdentityException(
+    public FanIdentityAlreadyExistsException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,29 @@ public class CantUpdateArtistIdentityException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantUpdateArtistIdentityException(
+    public FanIdentityAlreadyExistsException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public CantUpdateArtistIdentityException(
+    public FanIdentityAlreadyExistsException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantUpdateArtistIdentityException(final String message) {
+    public FanIdentityAlreadyExistsException(final String message) {
         this(message, null);
     }
 
-    public CantUpdateArtistIdentityException(final Exception exception) {
+    public FanIdentityAlreadyExistsException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantUpdateArtistIdentityException() {
+    public FanIdentityAlreadyExistsException() {
         this(DEFAULT_MESSAGE);
     }
 }

@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_art_api.layer.identity.interfaces;
+package com.bitdubai.fermat_art_api.layer.identity.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.ArtistIdentityAlreadyExistsException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.CantCreateArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.CantGetArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.CantListArtistIdentitiesException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.CantUpdateArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 
 import java.util.List;
 
@@ -38,12 +38,12 @@ public interface ArtistIdentityManager extends FermatManager{
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
     /**
-     *
+     * This method updates the artist identity
      * @param alias
      * @param publicKey
      * @param imageProfile
      */
-    void updateCryptoBrokerIdentity(
+    void updateArtistIdentity(
             String alias,
             String publicKey,
             byte[] imageProfile,
@@ -51,7 +51,7 @@ public interface ArtistIdentityManager extends FermatManager{
             CantUpdateArtistIdentityException;
 
     /**
-     *
+     * This method returns a Artist identity
      * @param publicKey
      * @return
      * @throws CantGetArtistIdentityException

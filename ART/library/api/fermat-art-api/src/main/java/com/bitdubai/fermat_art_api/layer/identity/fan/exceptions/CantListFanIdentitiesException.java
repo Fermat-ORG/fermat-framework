@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.identity.exceptions;
+package com.bitdubai.fermat_art_api.layer.identity.fan.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public class IdentityNotFoundException extends ARTException {
+public class CantListFanIdentitiesException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "IDENTITY NOT FOUND";
+    public static final String DEFAULT_MESSAGE = "CANNOT LIST FAN IDENTITIES";
 
-    public IdentityNotFoundException(
+    public CantListFanIdentitiesException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,30 @@ public class IdentityNotFoundException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public IdentityNotFoundException(
+    public CantListFanIdentitiesException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public IdentityNotFoundException(
+    public CantListFanIdentitiesException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public IdentityNotFoundException(final String message) {
+    public CantListFanIdentitiesException(final String message) {
         this(message, null);
     }
 
-    public IdentityNotFoundException(final Exception exception) {
+    public CantListFanIdentitiesException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public IdentityNotFoundException() {
+    public CantListFanIdentitiesException() {
         this(DEFAULT_MESSAGE);
     }
 }
+
