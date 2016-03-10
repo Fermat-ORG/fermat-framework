@@ -308,7 +308,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     this.bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).debit(transaction);
-                    this.bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.BOOK).debit(transaction);
                     break;
                 default:
                     throw new OutgoingIntraActorWalletNotSupportedException("The wallet is not supported", null, "ReferenceWallet enum value: " + walletPublicKey.toString(), "Missing case in switch statement");

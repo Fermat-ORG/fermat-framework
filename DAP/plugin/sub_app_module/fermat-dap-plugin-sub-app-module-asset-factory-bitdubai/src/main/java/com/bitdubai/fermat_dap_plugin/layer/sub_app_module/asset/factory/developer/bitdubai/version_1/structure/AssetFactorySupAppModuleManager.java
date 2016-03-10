@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -20,6 +21,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
@@ -31,14 +34,18 @@ public class AssetFactorySupAppModuleManager  {
 
     private final AssetFactoryManager assetFactoryManager;
     private final IdentityAssetIssuerManager identityAssetIssuerManager;
+    private ErrorManager  errorManager;
 
     /**
      * constructor
      * @param assetFactoryManager
      */
-    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager, final IdentityAssetIssuerManager identityAssetIssuerManager) {
+    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager,
+                                           final IdentityAssetIssuerManager identityAssetIssuerManager,
+                                           ErrorManager errorManager) {
         this.assetFactoryManager = assetFactoryManager;
         this.identityAssetIssuerManager = identityAssetIssuerManager;
+        this.errorManager = errorManager;
     }
 
     public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
@@ -90,8 +97,9 @@ public class AssetFactorySupAppModuleManager  {
         try {
             List<IdentityAssetIssuer> identities = assetFactoryManager.getActiveIdentities();
             return (identities == null || identities.isEmpty()) ? null : assetFactoryManager.getActiveIdentities().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
             return null;
         }
     }
@@ -99,8 +107,9 @@ public class AssetFactorySupAppModuleManager  {
     public List<IdentityAssetIssuer> getActiveIdentities() {
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
         }
         return null;
     }
