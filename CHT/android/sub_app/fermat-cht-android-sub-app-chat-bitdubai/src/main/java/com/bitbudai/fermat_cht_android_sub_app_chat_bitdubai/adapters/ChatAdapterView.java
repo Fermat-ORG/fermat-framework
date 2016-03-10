@@ -208,6 +208,7 @@ public class ChatAdapterView extends LinearLayout {
                             msg.setStatus(MessageStatus.READ.toString());
                             messagei.setStatus(MessageStatus.READ);
                             chatManager.saveMessage(messagei);
+                            chatManager.sendReadMessageNotification(messagei);
                         }
                     }
                     msg.setStatus(mess.getStatus().toString());
