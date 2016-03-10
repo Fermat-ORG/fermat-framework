@@ -175,7 +175,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
         try{
             json =  new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/"));
-            price = (double) json.getJSONObject(exchangeFrom).get(exchangeTo);
+            price = json.getJSONObject(exchangeFrom).getDouble(exchangeTo);
 
         }catch (JSONException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

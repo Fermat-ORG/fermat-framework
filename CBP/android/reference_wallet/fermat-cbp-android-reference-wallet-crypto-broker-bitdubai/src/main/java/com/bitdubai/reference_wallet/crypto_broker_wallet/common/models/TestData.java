@@ -328,7 +328,7 @@ public class TestData {
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, false);
+            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PAYMENT_SUBMIT, false);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
             contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED, false);
