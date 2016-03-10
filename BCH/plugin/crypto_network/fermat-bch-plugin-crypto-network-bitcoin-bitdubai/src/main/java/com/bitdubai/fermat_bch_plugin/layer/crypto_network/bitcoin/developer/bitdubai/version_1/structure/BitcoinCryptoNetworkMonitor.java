@@ -498,9 +498,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
             for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
-                getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+                try {
+                    getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    //maybe try saving into disk if cant save it.
+                    e.printStackTrace();
+                }
             }
-//            events.saveOutgoingTransaction(wallet, tx, transactionId);
+
         }
 
         /**

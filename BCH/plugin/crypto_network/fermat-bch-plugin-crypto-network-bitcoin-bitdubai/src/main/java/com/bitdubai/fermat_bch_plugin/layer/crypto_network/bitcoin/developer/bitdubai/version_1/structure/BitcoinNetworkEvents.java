@@ -161,7 +161,12 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param cryptoTransaction
      */
     public void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
-        getDao().saveCryptoTransaction(cryptoTransaction, null);
+        try {
+            getDao().saveCryptoTransaction(cryptoTransaction, null);
+        } catch (CantExecuteDatabaseOperationException e) {
+            //todo maybe try saving to disk if database fails.
+            e.printStackTrace();
+        }
     }
 
     /**
