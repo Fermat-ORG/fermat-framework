@@ -18,14 +18,19 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings {
     private boolean isHomeTutorialDialogEnabled;
     private CryptoCustomerWalletAssociatedSetting bitcoinWallet;
     private List<CryptoCustomerWalletProviderSetting> providers;
+    private boolean isWalletConfigured;
 
-    public boolean isHomeTutorialDialogEnabled() {
-        return isHomeTutorialDialogEnabled;
+    public boolean isHomeTutorialDialogEnabled() {return isHomeTutorialDialogEnabled;}
+
+    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;}
+
+    public boolean isWalletConfigured() {
+        return isWalletConfigured;
     }
 
-    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
-        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
-    }
+    public void setIsWalletConfigured(boolean isWalletConfigured) {this.isWalletConfigured = isWalletConfigured;}
+
+
     /**
      * This method let us know the default language of a wallet
      *

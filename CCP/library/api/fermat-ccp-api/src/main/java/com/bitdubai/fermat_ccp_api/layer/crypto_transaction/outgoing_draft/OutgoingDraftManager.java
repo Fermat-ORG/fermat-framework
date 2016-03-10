@@ -18,7 +18,6 @@ public interface OutgoingDraftManager extends FermatManager {
     void addInputsToDraftTransaction (
             UUID requestId,
             DraftTransaction draftTransaction,
-            String txHash,
             long valueToSend,
             CryptoAddress addressTo,
             String walletPublicKey,
