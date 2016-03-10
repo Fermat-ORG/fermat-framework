@@ -11,12 +11,6 @@ project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api
 include ':fermat-cbp-core'
 project(':fermat-cbp-core').projectDir = new File('CBP/library/core/fermat-cbp-core')
 
-//Desktop
-include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
-project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
-include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
-project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
-
 //Reference Wallet
 include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
 project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
