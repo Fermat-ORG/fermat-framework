@@ -89,10 +89,10 @@ public class AcceptDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
         if (i == R.id.positive_button) {
             try {
                 if (actor != null) { //&& identity != null) {
-//
+
                     getSession().getModuleManager().acceptActorAssetUser(
-                            identity.getPublicKey(),//USER LOCAL
-                            actor.getActorPublicKey()//USER OUTSIDE
+                            identity.getPublicKey(),   // ACTOR INSIDE/LOCAL
+                            actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
                     );
                     getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(), actor.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
@@ -111,9 +111,10 @@ public class AcceptDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
             try {
                 if (actor != null) {  //&& identity != null)
                     getSession().getModuleManager().denyConnectionActorAssetUser(
-                            identity.getPublicKey(),
-                            actor.getActorPublicKey());
-                    getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED, Boolean.FALSE);
+                            identity.getPublicKey(),   // ACTOR INSIDE/LOCAL
+                            actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
+                    );
+//                    getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_DENIED, Boolean.FALSE);
                     Toast.makeText(getContext(), actor.getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
