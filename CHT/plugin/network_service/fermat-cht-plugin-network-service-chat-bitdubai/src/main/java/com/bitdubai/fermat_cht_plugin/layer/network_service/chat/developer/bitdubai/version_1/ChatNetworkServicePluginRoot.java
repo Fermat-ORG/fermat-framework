@@ -53,7 +53,6 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatExecutorAgent;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.EncodeMsjContent;
@@ -109,8 +108,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
     ExecutorService executorService;
 
-    private ChatExecutorAgent chatExecutorAgent;
-
     private long reprocessTimer =  300000; //five minutes
 
     private Timer timer = new Timer();
@@ -137,28 +134,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     public ChatMetadataRecordDAO getChatMetadataRecordDAO() {
         return chatMetadataRecordDAO;
     }
-    public void initializeAgent() {
 
-        try {
-
-            if (chatExecutorAgent == null) {
-
-                chatExecutorAgent = new ChatExecutorAgent(
-                        this,
-                        errorManager,
-                        eventManager,
-                        getChatMetadataRecordDAO()
-                );
-            }
-
-            if (!chatExecutorAgent.isRunning())
-                chatExecutorAgent.start();
-
-        } catch(final CantStartAgentException e) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-    }
     @Override
     protected void onStart() {
 
@@ -197,23 +173,22 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
 
     }
-    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
-                                                                           PlatformComponentType platformComponentType) {
-
-
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                .constructBasicPlatformComponentProfileFactory(
-                        identityPublicKey,
-                        NetworkServiceType.UNDEFINED,
-                        platformComponentType
-
-                );
-    }
+//    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
+//                                                                           PlatformComponentType platformComponentType) {
+//
+//
+//        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+//                .constructBasicPlatformComponentProfileFactory(
+//                        identityPublicKey,
+//                        NetworkServiceType.UNDEFINED,
+//                        platformComponentType
+//
+//                );
+//    }
 
     @Override
     public void stop() {
         getCommunicationNetworkServiceConnectionManager().stop();
-        chatExecutorAgent.stop();
         executorService.shutdownNow();
         super.stop();
        // executorService.shutdownNow();
@@ -327,6 +302,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                         "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey()
                                         + "\n-------------------------------------------------");
                                 //NOTIFICATION LAUNCH
+                                if (messageStatus == null) {
+                                    break;
+                                }
                                 launcheIncomingChatStatusNotification(chatID);
 
                             }
@@ -410,7 +388,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
         //I check my time trying to send the message
-        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+//        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
     @Override
@@ -432,7 +410,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     public void pause() {
 
         getCommunicationNetworkServiceConnectionManager().pause();
-        chatExecutorAgent.pause();
 
         super.pause();
     }
@@ -441,46 +418,24 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
         // resume connections manager.
         getCommunicationNetworkServiceConnectionManager().resume();
-        chatExecutorAgent.resume();
 
         super.resume();
-    }
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination, NetworkServiceType senderNsType, PlatformComponentType senderType) {
-        return this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                        getNetworkServiceProfile().getAlias(),
-                        getNetworkServiceProfile().getName(),
-                        NetworkServiceType.CHAT,
-                        PlatformComponentType.NETWORK_SERVICE,
-                        "");
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender, NetworkServiceType senderNsType, PlatformComponentType senderType) {
-        return this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                                                       .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                                                                               getNetworkServiceProfile().getAlias(),
-                                                                               getNetworkServiceProfile().getName(),
-                                                                               NetworkServiceType.CHAT,
-                                                                               PlatformComponentType.NETWORK_SERVICE,
-                                                                               "");
     }
 
     @Override
     protected void reprocessMessages() {
-        try {
-           getChatMetadataRecordDAO().changeStatusNotSentMessage();
-
-        }
-        catch(CantUpdateRecordDataBaseException e)
-        {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
-            reportUnexpectedError(e);
-        } catch (Exception e) {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
-            reportUnexpectedError(e);
-        }
+//        try {
+//           getChatMetadataRecordDAO().changeStatusNotSentMessage();
+//
+//        }
+//        catch(CantUpdateRecordDataBaseException e)
+//        {
+//            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+//            reportUnexpectedError(e);
+//        } catch (Exception e) {
+//            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+//            reportUnexpectedError(e);
+//        }
     }
 
     @Override
@@ -793,10 +748,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                         @Override
                         public void run() {
                             try {
-
                                 sendNewMessage(
-                                        constructBasicPlatformComponentProfile(localActorPubKey, senderType),
-                                        constructBasicPlatformComponentProfile(remoteActorPubKey, receiverType),
+                                        getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                        getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
                                         msjContent
                                 );
 
@@ -883,8 +837,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             try {
 
                                 sendNewMessage(
-                                        constructBasicPlatformComponentProfile(localActorPubKey, senderType),
-                                        constructBasicPlatformComponentProfile(remoteActorPubKey, receiverType),
+                                        getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                        getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
                                         msjContent
                                 );
 
@@ -993,8 +947,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
                     try {
                         sendNewMessage(
-                                constructBasicPlatformComponentProfile(sender,senderType),
-                                constructBasicPlatformComponentProfile(remote,remoteType),
+                                getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, remoteType),
                                 EncodedMsg
                         );
                     } catch (CantSendMessageException e) {
