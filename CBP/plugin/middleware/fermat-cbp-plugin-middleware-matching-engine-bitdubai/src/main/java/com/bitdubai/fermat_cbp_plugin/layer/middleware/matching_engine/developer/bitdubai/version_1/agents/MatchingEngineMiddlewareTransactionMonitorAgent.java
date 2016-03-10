@@ -3,8 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
@@ -14,11 +14,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.util.CurrencyMatchingImp;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantCreateInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.utils.MatchingEngineMiddlewareCurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -139,7 +141,9 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
         List<CurrencyMatching> currencyMatchingList;
 
-        try {
+        // TODO test purposes
+        currencyMatchingList = testDataCurrencyMatching();
+       /* try {
 
             currencyMatchingList = cryptoBrokerWallet.getCryptoBrokerTransactionCurrencyInputs();
 
@@ -147,7 +151,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetTransactionCryptoBrokerWalletMatchingException);
             return;
-        }
+        }*/
 
         Map<MatchingEngineMiddlewareCurrencyPair, UUID> linkedEarningPairs = new HashMap<>();
 
@@ -191,17 +195,17 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
                             UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                             new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching.")
                     );
-                    return;
+
+                } else {
+
+                    if (dao.existsInputTransaction(currencyMatching.getOriginTransactionId()))
+                        dao.createInputTransaction(
+                                currencyMatching,
+                                earningPairId
+                        );
+
+                    transactionsToMarkAsSeen.add(currencyMatching.getOriginTransactionId());
                 }
-
-                if (dao.existsInputTransaction(currencyMatching.getOriginTransactionId()))
-                    dao.createInputTransaction(
-                            currencyMatching,
-                            earningPairId
-                    );
-
-                transactionsToMarkAsSeen.add(currencyMatching.getOriginTransactionId());
-
             } catch (CantCreateInputTransactionException | CantGetInputTransactionException daoException) {
 
                 errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, daoException);
@@ -220,6 +224,61 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
     }
 
+    private List<CurrencyMatching> testDataCurrencyMatching() {
+
+        List<CurrencyMatching> matchingList = new ArrayList<>();
+
+        matchingList.add(
+                new CurrencyMatchingImp(
+                        "ORIGIN1",
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        CryptoCurrency.BITCOIN,
+                        1000,
+                        1
+                )
+        );
+
+        matchingList.add(
+                new CurrencyMatchingImp(
+                        "ORIGIN2",
+                        CryptoCurrency.BITCOIN,
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        1,
+                        1100
+                        )
+        );
+
+        matchingList.add(
+                new CurrencyMatchingImp(
+                        "ORIGIN3",
+                        CryptoCurrency.BITCOIN,
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        1.5f,
+                        1650
+                )
+        );
+
+        matchingList.add(
+                new CurrencyMatchingImp(
+                        "ORIGIN4",
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        CryptoCurrency.BITCOIN,
+                        500,
+                        0.5f
+                )
+        );
+        matchingList.add(
+                new CurrencyMatchingImp(
+                        "ORIGIN5",
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        CryptoCurrency.BITCOIN,
+                        500,
+                        0.5f
+                )
+        );
+
+        return matchingList;
+    }
 
     private void cleanResources() {
         /**

@@ -3,8 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.util;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 15/02/16.
  */
@@ -53,5 +51,16 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     @Override
     public float getAmountReceiving() {
         return amountReceiving;
+    }
+
+    @Override
+    public String toString() {
+        return "CurrencyMatchingImp{" +
+                "originTransactionId='" + originTransactionId + '\'' +
+                ", currencyGiving=" + currencyGiving +
+                ", currencyReceiving=" + currencyReceiving +
+                ", amountGiving=" + amountGiving +
+                ", amountReceiving=" + amountReceiving +
+                '}';
     }
 }

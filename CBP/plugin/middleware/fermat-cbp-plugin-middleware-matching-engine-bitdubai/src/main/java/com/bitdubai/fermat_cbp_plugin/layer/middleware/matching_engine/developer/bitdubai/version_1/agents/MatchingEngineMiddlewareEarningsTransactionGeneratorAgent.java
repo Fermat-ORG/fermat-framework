@@ -4,15 +4,19 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -200,18 +204,18 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                         );
 
                         dao.createPartialInputTransaction(
-                                databaseTransaction,
+                                databaseTransaction                    ,
                                 buyTransaction.getOriginTransactionId(),
-                                buyTransaction.getCurrencyGiving(),
-                                partialRestingAmountGiving,
-                                buyTransaction.getCurrencyReceiving(),
-                                partialRestingAmountReceiving,
-                                earningsPair.getId(),
+                                buyTransaction.getCurrencyGiving()     ,
+                                partialRestingAmountGiving             ,
+                                buyTransaction.getCurrencyReceiving()  ,
+                                partialRestingAmountReceiving          ,
+                                earningsPair.getId()                   ,
                                 earningTransactionId                   ,
                                 InputTransactionState.UNMATCHED
                         );
 
-                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
+                        dao.markInputTransactionAsSplit(databaseTransaction, buyTransaction.getId());
                         matchedBuyTransactions.add(partialToMatch);
                         amountMatched = amountToMatch;
                     }
@@ -239,41 +243,68 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     float partialRestingAmountReceiving = unmatchedSellInputTransaction.getAmountReceiving() - partialToMatchAmountReceiving;
 
                     InputTransaction partialToMatch = dao.createPartialInputTransaction(
-                            databaseTransaction                    ,
+                            databaseTransaction                                   ,
                             unmatchedSellInputTransaction.getOriginTransactionId(),
                             unmatchedSellInputTransaction.getCurrencyGiving()     ,
-                            partialToMatchAmountGiving             ,
+                            partialToMatchAmountGiving                            ,
                             unmatchedSellInputTransaction.getCurrencyReceiving()  ,
-                            partialToMatchAmountReceiving          ,
-                            earningsPair.getId()                   ,
-                            earningTransactionId                   ,
+                            partialToMatchAmountReceiving                         ,
+                            earningsPair.getId()                                  ,
+                            earningTransactionId                                  ,
                             InputTransactionState.MATCHED
                     );
 
                     dao.createPartialInputTransaction(
-                            databaseTransaction,
+                            databaseTransaction                                   ,
                             unmatchedSellInputTransaction.getOriginTransactionId(),
-                            unmatchedSellInputTransaction.getCurrencyGiving(),
-                            partialRestingAmountGiving,
-                            unmatchedSellInputTransaction.getCurrencyReceiving(),
-                            partialRestingAmountReceiving,
-                            earningsPair.getId(),
-                            earningTransactionId                   ,
+                            unmatchedSellInputTransaction.getCurrencyGiving()     ,
+                            partialRestingAmountGiving                            ,
+                            unmatchedSellInputTransaction.getCurrencyReceiving()  ,
+                            partialRestingAmountReceiving                         ,
+                            earningsPair.getId()                                  ,
+                            earningTransactionId                                  ,
                             InputTransactionState.UNMATCHED
                     );
 
-                    dao.markInputTransactionAsMatched(databaseTransaction, unmatchedSellInputTransaction.getId(), earningTransactionId);
-                    matchedBuyTransactions.add(partialToMatch);
+                    dao.markInputTransactionAsSplit(databaseTransaction, unmatchedSellInputTransaction.getId());
                     amountToMatch = amountMatched;
                     sellTransactionToMatch = partialToMatch;
+
+                } else {
+
+                    dao.markInputTransactionAsMatched(databaseTransaction, unmatchedSellInputTransaction.getId(), earningTransactionId);
                 }
 
-                // generate the earning transaction with:
-                // sellTransactionToMatch as the sell transaction to match...
-                // matchedBuyTransactions as the buy transactions related to it...
-                // then execute the database transaction
+                float sellAmountReceiving = sellTransactionToMatch.getAmountReceiving();
+                float buyAmountGiving = 0;
 
-                // TODO MATCHING MUST TO ASSOCIATE THE INPUT TRANSACTION WITH THE PROPER EARNING TRANSACTION
+                float earningAmount = sellAmountReceiving - buyAmountGiving;
+
+                for (InputTransaction inputTransaction : matchedBuyTransactions)
+                    buyAmountGiving += inputTransaction.getAmountGiving();
+
+                EarningTransaction newEarningTransaction = new MatchingEngineMiddlewareEarningTransaction(
+                        earningTransactionId,
+                        earningsPair.getEarningCurrency(),
+                        earningAmount,
+                        EarningTransactionState.CALCULATED,
+                        System.currentTimeMillis(),
+
+                        dao
+                );
+
+                dao.createEarningTransaction(
+                        databaseTransaction,
+                        newEarningTransaction,
+                        earningsPair.getId()
+                );
+
+                try {
+                    dao.executeTransaction(databaseTransaction);
+                } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
+                }
 
                 unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
             }
