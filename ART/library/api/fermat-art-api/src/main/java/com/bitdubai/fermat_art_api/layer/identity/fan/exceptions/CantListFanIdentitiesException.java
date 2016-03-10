@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.identity.artist.exceptions;
+package com.bitdubai.fermat_art_api.layer.identity.fan.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public class CantListArtistIdentitiesException extends ARTException {
+public class CantListFanIdentitiesException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT LIST ARTIST IDENTITIES";
+    public static final String DEFAULT_MESSAGE = "CANNOT LIST FAN IDENTITIES";
 
-    public CantListArtistIdentitiesException(
+    public CantListFanIdentitiesException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,29 @@ public class CantListArtistIdentitiesException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantListArtistIdentitiesException(
+    public CantListFanIdentitiesException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public CantListArtistIdentitiesException(
+    public CantListFanIdentitiesException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantListArtistIdentitiesException(final String message) {
+    public CantListFanIdentitiesException(final String message) {
         this(message, null);
     }
 
-    public CantListArtistIdentitiesException(final Exception exception) {
+    public CantListFanIdentitiesException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantListArtistIdentitiesException() {
+    public CantListFanIdentitiesException() {
         this(DEFAULT_MESSAGE);
     }
 }

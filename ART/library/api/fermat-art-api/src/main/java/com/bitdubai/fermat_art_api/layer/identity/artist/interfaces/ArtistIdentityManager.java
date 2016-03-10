@@ -8,7 +8,7 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateAr
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 
 import java.util.List;
 

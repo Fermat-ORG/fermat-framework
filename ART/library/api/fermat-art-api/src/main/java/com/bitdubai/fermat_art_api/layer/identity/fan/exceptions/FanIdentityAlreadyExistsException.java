@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.identity.artist.exceptions;
+package com.bitdubai.fermat_art_api.layer.identity.fan.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public class IdentityNotFoundException extends ARTException {
+public class FanIdentityAlreadyExistsException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "IDENTITY NOT FOUND";
+    public static final String DEFAULT_MESSAGE = "FAN IDENTITY ALREADY EXISTS";
 
-    public IdentityNotFoundException(
+    public FanIdentityAlreadyExistsException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,31 @@ public class IdentityNotFoundException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public IdentityNotFoundException(
+    public FanIdentityAlreadyExistsException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public IdentityNotFoundException(
+    public FanIdentityAlreadyExistsException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public IdentityNotFoundException(final String message) {
+    public FanIdentityAlreadyExistsException(final String message) {
         this(message, null);
     }
 
-    public IdentityNotFoundException(final Exception exception) {
+    public FanIdentityAlreadyExistsException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public IdentityNotFoundException() {
+    public FanIdentityAlreadyExistsException() {
         this(DEFAULT_MESSAGE);
     }
 }
+
+
