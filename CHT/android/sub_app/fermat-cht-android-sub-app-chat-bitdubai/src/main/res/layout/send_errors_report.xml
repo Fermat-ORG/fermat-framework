@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:text="Please send us the error report."
+        android:text="Please, send us an error report to help fix the problem."
         android:textSize="18sp"
         android:layout_marginTop="20dp"
         android:padding="10dp"
