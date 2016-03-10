@@ -54,6 +54,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME = "earning_currency_type"     ;
     public static final String EARNING_TRANSACTION_AMOUNT_COLUMN_NAME                = "amount"                    ;
     public static final String EARNING_TRANSACTION_STATE_COLUMN_NAME                 = "state"                     ;
+    public static final String EARNING_TRANSACTION_TIME_COLUMN_NAME                  = "time"                      ;
     public static final String EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME       = "earning_pair_id"           ;
 
     public static final String EARNING_TRANSACTION_FIRST_KEY_COLUMN                  = "id"                        ;

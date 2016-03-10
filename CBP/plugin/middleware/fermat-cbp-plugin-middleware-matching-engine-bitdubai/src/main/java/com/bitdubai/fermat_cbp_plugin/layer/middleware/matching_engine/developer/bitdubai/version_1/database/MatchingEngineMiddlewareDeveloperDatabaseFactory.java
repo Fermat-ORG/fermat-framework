@@ -147,6 +147,7 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME);
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME               );
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME                );
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TIME_COLUMN_NAME                 );
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME      );
 
         /**

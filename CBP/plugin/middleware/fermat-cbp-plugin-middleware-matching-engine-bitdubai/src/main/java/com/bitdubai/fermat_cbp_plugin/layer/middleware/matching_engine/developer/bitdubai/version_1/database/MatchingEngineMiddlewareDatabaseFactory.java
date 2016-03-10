@@ -113,12 +113,13 @@ public class MatchingEngineMiddlewareDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TABLE_NAME);
 
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_ID_COLUMN_NAME                   , DatabaseDataType.STRING, 100, Boolean.TRUE );
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME               , DatabaseDataType.MONEY ,   0, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME                , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME      , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_ID_COLUMN_NAME                   , DatabaseDataType.STRING      , 100, Boolean.TRUE );
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME               , DatabaseDataType.MONEY       ,   0, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME                , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TIME_COLUMN_NAME                 , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+            table.addColumn(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME      , DatabaseDataType.STRING      , 100, Boolean.FALSE);
 
             table.addIndex (MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_FIRST_KEY_COLUMN);
 

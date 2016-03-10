@@ -7,6 +7,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,14 +27,18 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
     private final Currency                earningCurrency  ;
     private final float                   amount           ;
     private       List<InputTransaction>  inputTransactions;
+    private final long                    time             ;
     private final EarningTransactionState state            ;
 
     private final MatchingEngineMiddlewareDao dao;
+
+    private final Calendar                    cal;
 
     public MatchingEngineMiddlewareEarningTransaction(final UUID                        id               ,
                                                       final Currency                    earningCurrency  ,
                                                       final float                       amount           ,
                                                       final EarningTransactionState     state            ,
+                                                      final long                        time             ,
 
                                                       final MatchingEngineMiddlewareDao dao              ) {
 
@@ -40,8 +46,12 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
         this.earningCurrency   = earningCurrency  ;
         this.amount            = amount           ;
         this.state             = state            ;
+        this.time              = time             ;
 
         this.dao               = dao              ;
+
+        cal = GregorianCalendar.getInstance();
+        cal.setTimeInMillis(this.time);
     }
 
     @Override
@@ -61,12 +71,20 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
 
     public List<InputTransaction> listInputTransactions() throws CantListInputTransactionsException {
 
-        return dao.listInputsTransactionByEarningTransaction(id);
+        if (inputTransactions == null)
+            inputTransactions = dao.listInputsTransactionByEarningTransaction(id);
+
+        return inputTransactions;
     }
 
     @Override
     public EarningTransactionState getState() {
         return state;
+    }
+
+    @Override
+    public long getTime() {
+        return time;
     }
 
     @Override
@@ -78,5 +96,30 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
                 ", inputTransactions=" + inputTransactions +
                 ", state=" + state +
                 '}';
+    }
+
+    public int getDay() {
+
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public int getDayOfYear() {
+
+        return cal.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public int getWeekOfYear() {
+
+        return cal.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public int getMonth() {
+
+        return cal.get(Calendar.MONTH);
+    }
+
+    public int getYear() {
+
+        return cal.get(Calendar.YEAR);
     }
 }

@@ -97,7 +97,7 @@ public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair 
 
         return new MatchingEngineMiddlewareEarningsSearch(
                 dao            ,
-                walletReference
+                this
         );
     }
 

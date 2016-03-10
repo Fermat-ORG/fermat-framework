@@ -18,7 +18,6 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -26,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
@@ -183,11 +183,10 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 String value = "0.0";
 
                 final EarningsSearch search = earningsPair.getSearch();
-                search.setTimeFrequency(TimeFrequency.DAILY);
 
-                final List<EarningsPairDetail> earningsPairDetails = search.listResults(1, 0);
-                if (!earningsPairDetails.isEmpty()) {
-                    final double amount = earningsPairDetails.get(0).getAmount();
+                final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(1, 0), TimeFrequency.DAILY);
+                if (!earningsDetails.isEmpty()) {
+                    final double amount = earningsDetails.get(0).getAmount();
                     value = numberFormat.format(amount);
                 }
 

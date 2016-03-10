@@ -40,4 +40,19 @@ public interface EarningTransaction {
      */
     EarningTransactionState getState();
 
+    /**
+     * @return the time when the earning transaction was computed.
+     */
+    long getTime();
+
+    int getDay();
+
+    int getDayOfYear();
+
+    int getWeekOfYear();
+
+    int getMonth();
+
+    int getYear();
+
 }

@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsDetailsException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
 import java.util.List;
@@ -21,39 +20,36 @@ import java.util.List;
 public final class MatchingEngineMiddlewareEarningsSearch implements EarningsSearch {
 
     private final MatchingEngineMiddlewareDao dao            ;
-    private final WalletReference             walletReference;
-
-    private TimeFrequency timeFrequency;
+    private final EarningsPair                earningsPair   ;
 
     public MatchingEngineMiddlewareEarningsSearch(final MatchingEngineMiddlewareDao dao            ,
-                                                  final WalletReference             walletReference) {
+                                                  final EarningsPair                earningsPair) {
 
-        this.dao             = dao            ;
-        this.walletReference = walletReference;
+        this.dao          = dao         ;
+        this.earningsPair = earningsPair;
+
+        resetFilters();
     }
 
     @Override
-    public void setTimeFrequency(final TimeFrequency timeFrequency) {
+    public List<EarningTransaction> listResults() throws CantListEarningTransactionsException {
 
-        this.timeFrequency = timeFrequency;
+        return dao.listEarningTransactions(earningsPair.getId());
     }
 
     @Override
-    public List<EarningsPairDetail> listResults() throws CantListEarningsDetailsException {
+    public List<EarningTransaction> listResults(final int max   ,
+                                                final int offset) throws CantListEarningTransactionsException {
 
-        return null;
-    }
-
-    @Override
-    public List<EarningsPairDetail> listResults(final int max   ,
-                                                final int offset) throws CantListEarningsDetailsException {
-
-        return null;
+        return dao.listEarningTransactions(
+                earningsPair.getId(),
+                max,
+                offset
+        );
     }
 
     @Override
     public void resetFilters() {
 
-        timeFrequency = TimeFrequency.NONE;
     }
 }
