@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -16,6 +17,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.util.Map;
+
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.*;
+
 
 /**
  * Created by nelson on 28/10/15.
@@ -31,6 +35,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final FermatTextView paymentCurrency;
     public final FermatTextView lastUpdateDate;
     public final FermatTextView status;
+    public final ProgressBar sendingProgressBar;
     private Resources res;
     private View itemView;
 
@@ -56,6 +61,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.cbw_negotiation_status);
+        sendingProgressBar = (ProgressBar) itemView.findViewById(R.id.cbw_sending_progress_bar);
     }
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
@@ -71,6 +77,9 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         itemView.setBackgroundColor(getStatusBackgroundColor(negotiationStatus));
         status.setText(getStatusStringRes(negotiationStatus));
 
+        int visibility = (negotiationStatus == SENT_TO_CUSTOMER) ? View.VISIBLE : View.INVISIBLE;
+        sendingProgressBar.setVisibility(visibility);
+
         Map<ClauseType, String> negotiationSummary = itemInfo.getNegotiationSummary();
         merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
         exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
@@ -81,29 +90,26 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {
-        if (status == NegotiationStatus.WAITING_FOR_BROKER || status == NegotiationStatus.SENT_TO_BROKER)
+        if (status == WAITING_FOR_BROKER || status == SENT_TO_BROKER)
             return res.getColor(R.color.waiting_for_broker_list_item_background);
 
-        if (status == NegotiationStatus.WAITING_FOR_CUSTOMER || status == NegotiationStatus.SENT_TO_CUSTOMER)
+        if (status == WAITING_FOR_CUSTOMER || status == SENT_TO_CUSTOMER)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
 
-        if (status == NegotiationStatus.CLOSED)
+        if (status == CLOSED)
             return res.getColor(R.color.negotiation_closed_list_item_background);
 
         return res.getColor(R.color.negotiation_cancelled_list_item_background);
     }
 
     private int getStatusStringRes(NegotiationStatus status) {
-        if (status == NegotiationStatus.WAITING_FOR_BROKER || status == NegotiationStatus.SENT_TO_BROKER)
+        if (status == WAITING_FOR_BROKER || status == SENT_TO_BROKER)
             return R.string.waiting_for_you;
 
-        if (status == NegotiationStatus.WAITING_FOR_CUSTOMER || status == NegotiationStatus.SENT_TO_CUSTOMER)
+        if (status == WAITING_FOR_CUSTOMER)
             return R.string.waiting_for_the_customer;
 
-        if (status == NegotiationStatus.CLOSED)
-            return R.string.negotiation_closed;
-
-        return R.string.negotiation_cancelled;
+        return R.string.sending_to_the_customer;
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
