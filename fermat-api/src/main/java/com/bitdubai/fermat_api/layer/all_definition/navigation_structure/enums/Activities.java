@@ -707,6 +707,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
             case "CHTOPOD":
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
+            case "CHTOSER":
+                return Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;

@@ -169,6 +169,7 @@ public class ChatAdapterView extends LinearLayout {
     public void findMessage(){
         String message;
         String inorout;
+        String estatus;
         ChatMessage msg;
         Chat chat;
         int messSize;
@@ -197,13 +198,12 @@ public class ChatAdapterView extends LinearLayout {
                     msg = new ChatMessage();
                     message = mess.getMessage();
                     inorout = mess.getType().toString();
+                    estatus = mess.getStatus().toString();
                     msg.setId(mess.getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else {
                         msg.setMe(false);
-                        //java.util.ArrayList cannot be cast to com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl
-
-                        if(msg.getStatus()!= "READ" && inorout == "INCOMMING") {
+                        if(estatus!= MessageStatus.READ.toString()) {
                             messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
                             msg.setStatus(MessageStatus.READ.toString());
                             messagei.setStatus(MessageStatus.READ);

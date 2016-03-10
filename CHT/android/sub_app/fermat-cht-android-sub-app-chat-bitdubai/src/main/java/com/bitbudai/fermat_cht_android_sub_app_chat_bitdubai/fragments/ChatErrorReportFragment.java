@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
@@ -44,6 +46,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     private Button okBtn;
     private EditText messageEdit;
     private Button cancelBtn;
+    private Toolbar toolbar;
 
     public static ChatErrorReportFragment newInstance() { return new ChatErrorReportFragment(); }
 
@@ -55,6 +58,8 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -69,6 +74,13 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         okBtn = (Button) layout.findViewById(R.id.okButton);
         cancelBtn = (Button) layout.findViewById(R.id.cancelButton);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +90,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
                 }else {
                     try {
                         sendErrorReport(messageText);
+                        Toast.makeText(getActivity(), "Report Sent", Toast.LENGTH_SHORT).show();
                         messageEdit.getText().clear();
                     } catch (Exception e) {
                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
