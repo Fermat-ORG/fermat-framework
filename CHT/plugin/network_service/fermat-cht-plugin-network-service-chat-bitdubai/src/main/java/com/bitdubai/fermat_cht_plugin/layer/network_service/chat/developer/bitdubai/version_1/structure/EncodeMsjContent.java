@@ -115,7 +115,7 @@ public class EncodeMsjContent {
      * @param receiverType
      * @return
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType, UUID chatId) {
 
 
         Gson gson = new Gson();
@@ -126,6 +126,7 @@ public class EncodeMsjContent {
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS,gson.toJson(DistributionStatus.DELIVERED));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
 
         return gson.toJson(jsonObjectContent);
     }

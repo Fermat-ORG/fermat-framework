@@ -41,7 +41,7 @@ public class AppsConfiguration {
         return new HashMap<>();
     }
 
-    public void updateAppsCoreInstalled(){
+    public HashMap<String,FermatAppType>  updateAppsCoreInstalled(){
         HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
         // Aplicaciones instaladas en el dispositivo separadas por tipo
         for (FermatAppType fermatAppType : FermatAppType.values()) {
@@ -60,6 +60,7 @@ public class AppsConfiguration {
         }catch(Exception e){
             e.printStackTrace();
         }
+        return appsInstalledInDevice;
     }
 
 }

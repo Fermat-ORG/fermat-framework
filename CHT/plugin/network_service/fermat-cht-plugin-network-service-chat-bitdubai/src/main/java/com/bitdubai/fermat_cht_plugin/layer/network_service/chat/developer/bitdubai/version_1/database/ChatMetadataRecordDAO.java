@@ -330,6 +330,60 @@ public class ChatMetadataRecordDAO implements DAO {
 
         return chatMetadaTransactionRecord;
     }
+
+    public ChatMetadataRecord getNotificationByChatAndMessageId(UUID chatId,UUID messageId) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
+
+        if (chatId == null) {
+            throw new IllegalArgumentException("The id is required, can not be null");
+        }
+
+        if (messageId == null) {
+            throw new IllegalArgumentException("The id is required, can not be null");
+        }
+
+        ChatMetadataRecord chatMetadaTransactionRecord = null;
+
+        try {
+
+            /*
+             * 1 - load the data base to memory with filter
+             */
+            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
+            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
+            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, messageId.toString(), DatabaseFilterType.EQUAL);
+            OUTGOINGMessageTable.loadToMemory();
+
+            /*
+             * 2 - read all records
+             */
+            List<DatabaseTableRecord> records = OUTGOINGMessageTable.getRecords();
+
+
+            /*
+             * 3 - Convert into ChatMetadataRecord objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 3.1 - Create and configure a  ChatMetadataRecord
+                 */
+                chatMetadaTransactionRecord = constructFrom(record);
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            reportUnexpectedError(cantReadRecordDataBaseException);
+            throw cantReadRecordDataBaseException;
+        }
+
+        return chatMetadaTransactionRecord;
+    }
     public String getNotificationResponseToByID(UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
 
         if (transactionID == null) {

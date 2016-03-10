@@ -603,11 +603,11 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     //TODO apply for user (issuer)
     @Override
-    public void disconnectToActorAssetUser(String userPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException, CantDeleteRecordException {
+    public void disconnectToActorAssetUser(String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException, CantDeleteRecordException {
         try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
 
-            this.assetUserActorDao.deleteCryptoAddress(userPublicKey, blockchainNetworkType);
-            this.assetUserActorDao.updateRegisteredConnectionState(userPublicKey, userPublicKey, DAPConnectionState.REGISTERED_ONLINE);
+            this.assetUserActorDao.deleteCryptoAddress(actorAssetToDisconnect, blockchainNetworkType);
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetToDisconnect, actorAssetToDisconnect, DAPConnectionState.REGISTERED_ONLINE);
 
         } catch (CantDeleteRecordException e) {
             throw new CantDeleteRecordException("Can't delte crypto for this user", e, "Error", "");
@@ -669,7 +669,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     //TODO apply for user (issuer)
     @Override
     public void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
-        try {
+        try {//TODO EVALUAR State CANCEL o directamente REGISTERED_ONLINE
             this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateAssetUserConnectionException e) {
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
