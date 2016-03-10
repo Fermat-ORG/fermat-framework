@@ -1108,11 +1108,14 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     /**
      * Will detele a previously stored transaction in the database, probably to rollback it.
+     * T TransTio
      * @param txHash
      */
     public void deleteStoredBitcoinTransaction(String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, Status.IDLE.getCode(), DatabaseFilterType.EQUAL);
+
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -1500,18 +1503,24 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * Saves the passed CryptoTransaction into the database
      * @param cryptoTransaction
      */
-    public void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
-        ProtocolStatus protocolStatus;
+    public void saveCryptoTransaction(CryptoTransaction cryptoTransaction, @Nullable UUID transactionId) {
+        /**
+         * if not passed, I will define my own transactionId
+         */
+        if (transactionId == null)
+            transactionId = UUID.randomUUID();
+
         /**
          * If the transaction is pending submit, then no need to notify anyone
          */
+        ProtocolStatus protocolStatus;
         if (CryptoStatus.PENDING_SUBMIT == cryptoTransaction.getCryptoStatus())
             protocolStatus = ProtocolStatus.NO_ACTION_REQUIRED;
         else
             protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
 
         try {
-            saveNewTransaction(UUID.randomUUID(),
+            saveNewTransaction(transactionId,
                     cryptoTransaction.getTransactionHash(),
                     cryptoTransaction.getBlockHash(),
                     cryptoTransaction.getBlockchainNetworkType(),

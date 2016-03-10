@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -397,6 +398,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                          */
                         wallet.saveToFile(walletFileName);
 
+                        /**
+                         * deletes the stored transaction on disk
+                         */
+                        deleteStoredTransaction(txHash);
+
                         System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
@@ -491,7 +497,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            events.saveOutgoingTransaction(wallet, tx, transactionId);
+            for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
+                getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+            }
+//            events.saveOutgoingTransaction(wallet, tx, transactionId);
         }
 
         /**
