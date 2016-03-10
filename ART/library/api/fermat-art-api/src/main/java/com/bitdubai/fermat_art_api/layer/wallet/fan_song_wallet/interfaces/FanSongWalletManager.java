@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_art_api.layer.wallet.interfaces;
+package com.bitdubai.fermat_art_api.layer.wallet.fan_song_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.wallet.exceptions.CantCreateFanSongWalletException;
-import com.bitdubai.fermat_art_api.layer.wallet.exceptions.CantLoadFanSongWalletException;
+import com.bitdubai.fermat_art_api.layer.wallet.fan_song_wallet.exceptions.CantCreateFanSongWalletException;
+import com.bitdubai.fermat_art_api.layer.wallet.fan_song_wallet.exceptions.CantLoadFanSongWalletException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.

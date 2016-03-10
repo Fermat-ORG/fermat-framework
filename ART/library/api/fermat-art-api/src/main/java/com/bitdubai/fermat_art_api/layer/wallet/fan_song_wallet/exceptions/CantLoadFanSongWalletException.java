@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_art_api.layer.wallet.exceptions;
+package com.bitdubai.fermat_art_api.layer.wallet.fan_song_wallet.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public class CantCreateFanSongWalletException extends ARTException {
+public class CantLoadFanSongWalletException extends ARTException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT CREATE A FAN SONG WALLET";
+    public static final String DEFAULT_MESSAGE = "CANNOT LOAD A FAN SONG WALLET";
 
-    public CantCreateFanSongWalletException(
+    public CantLoadFanSongWalletException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,29 @@ public class CantCreateFanSongWalletException extends ARTException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantCreateFanSongWalletException(
+    public CantLoadFanSongWalletException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public CantCreateFanSongWalletException(
+    public CantLoadFanSongWalletException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantCreateFanSongWalletException(final String message) {
+    public CantLoadFanSongWalletException(final String message) {
         this(message, null);
     }
 
-    public CantCreateFanSongWalletException(final Exception exception) {
+    public CantLoadFanSongWalletException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantCreateFanSongWalletException() {
+    public CantLoadFanSongWalletException() {
         this(DEFAULT_MESSAGE);
     }
 }

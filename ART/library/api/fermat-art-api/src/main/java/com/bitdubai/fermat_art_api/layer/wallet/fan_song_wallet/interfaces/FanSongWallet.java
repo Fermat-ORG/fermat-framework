@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.wallet.interfaces;
+package com.bitdubai.fermat_art_api.layer.wallet.fan_song_wallet.interfaces;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
