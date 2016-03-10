@@ -272,7 +272,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
     }
 
-    private void setUpHelpAssetStatistics(boolean checkButton) {
+    private void setUpHelpChat(boolean checkButton) {
         try {
             presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -302,7 +302,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
         {
-            setUpHelpAssetStatistics(true);
+            setUpHelpChat(false);
         }
         try {
             toolbar = getToolbar();
@@ -417,7 +417,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == ChtConstants.CHT_ICON_HELP){
-            setUpHelpAssetStatistics(true);
+            setUpHelpChat(false);
         }
         if (id == R.id.menu_open_chat) {
             changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
