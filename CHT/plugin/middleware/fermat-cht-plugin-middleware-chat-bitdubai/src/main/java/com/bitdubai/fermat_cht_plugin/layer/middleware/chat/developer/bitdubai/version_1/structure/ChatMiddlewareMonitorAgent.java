@@ -550,6 +550,7 @@ public class ChatMiddlewareMonitorAgent implements
                 CantGetPendingTransactionException,
                 UnexpectedResultReturnedFromDatabaseException {
             try{
+
                 List<Transaction<ChatMetadata>> pendingTransactionList=
                         chatNetworkServiceManager.getPendingTransactions(
                                 Specialist.UNKNOWN_SPECIALIST);
@@ -563,7 +564,7 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //Check if metadata exists in database
-                        checkChatMetadata(incomingChatMetadata);
+                        if(!checkChatMetadata(incomingChatMetadata)) return;
                         updateMessageStatus(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         break;
@@ -631,8 +632,9 @@ public class ChatMiddlewareMonitorAgent implements
                     return true;
                 }else{
                     //TODO: I need to study how can I handle this case.
-                    throw new CantGetPendingTransactionException(
-                            "The Message Id "+messageId+" does not exists in database");
+                    return false;
+//                    throw new CantGetPendingTransactionException(
+//                            "The Message Id "+messageId+" does not exists in database");
                 }
             }else{
                 //This is a case that in this version I cannot handle
