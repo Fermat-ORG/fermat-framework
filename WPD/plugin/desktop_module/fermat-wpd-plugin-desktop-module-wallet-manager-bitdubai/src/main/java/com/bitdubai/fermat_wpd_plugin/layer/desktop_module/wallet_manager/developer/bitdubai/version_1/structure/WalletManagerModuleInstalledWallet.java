@@ -184,4 +184,9 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     public FermatAppType getAppType() {
         return FermatAppType.WALLET;
     }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
 }
