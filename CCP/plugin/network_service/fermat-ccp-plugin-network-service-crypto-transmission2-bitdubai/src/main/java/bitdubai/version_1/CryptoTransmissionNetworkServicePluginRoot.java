@@ -73,7 +73,7 @@ import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager
 /**
  * Created by natalia on 12/02/16.
  */
-public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetworkServiceBase  implements
+public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkServiceBase  implements
         CryptoTransmissionNetworkServiceManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
@@ -121,7 +121,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
      * Constructor with parameters
      *
      */
-    public CryptoTransmissionNetworkServicePluginRootNew() {
+    public CryptoTransmissionNetworkServicePluginRoot() {
         super(new PluginVersionReference(new Version()),
                 EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION,
                 PlatformComponentType.NETWORK_SERVICE,
@@ -453,7 +453,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
                 getCommunicationsClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("CryptoTransmissionNetworkServicePluginRootNew - Trying to register to: " + platformComponentProfile.getAlias());
+                System.out.println("CryptoTransmissionNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -801,11 +801,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.remove(pluginPair.getKey());
-                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -821,7 +821,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         try {
 
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.get(correctedClass[0]);
+            return CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
