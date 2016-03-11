@@ -272,17 +272,15 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private void checkConfirmedTransactions() {
             try {
                 for (OutgoingDraftTransactionWrapper transaction : dao.getAllInState(TransactionState.SUCCESSFUL_SIG)) {
-                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType());
+                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType(), transaction.getAddressTo());
                     dance:
                     for (CryptoTransaction cryptoTx : cryptoTransactions) {
-                        if (cryptoTx.getAddressTo().equals(transaction.getAddressTo())) {
-                            switch (cryptoTx.getCryptoStatus()) {
-                                case ON_BLOCKCHAIN:
-                                case IRREVERSIBLE:
-                                    debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
-                                    dao.setToCompleted(transaction);
-                                    break dance; //If we find our transaction then a single update is needed, so we'll break the for
-                            }
+                        switch (cryptoTx.getCryptoStatus()) {
+                            case ON_BLOCKCHAIN:
+                            case IRREVERSIBLE:
+                                debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
+                                dao.setToCompleted(transaction);
+                                break dance; //If we find our transaction then a single update is needed, so we'll break the for
                         }
                     }
                 }
