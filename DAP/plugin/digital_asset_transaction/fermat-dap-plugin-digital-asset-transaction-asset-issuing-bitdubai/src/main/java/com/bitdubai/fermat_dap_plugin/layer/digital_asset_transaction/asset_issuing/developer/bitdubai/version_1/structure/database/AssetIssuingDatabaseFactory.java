@@ -74,8 +74,9 @@ public class AssetIssuingDatabaseFactory {
             issuingTable = databaseFactory.newTableFactory(ownerId, AssetIssuingDatabaseConstants.ASSET_ISSUING_TABLE_NAME);
 
             issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME, DatabaseDataType.INTEGER, 4, Boolean.FALSE);
-            issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME, DatabaseDataType.INTEGER, 4, Boolean.FALSE);
+            issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             issuingTable.addColumn(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUER_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

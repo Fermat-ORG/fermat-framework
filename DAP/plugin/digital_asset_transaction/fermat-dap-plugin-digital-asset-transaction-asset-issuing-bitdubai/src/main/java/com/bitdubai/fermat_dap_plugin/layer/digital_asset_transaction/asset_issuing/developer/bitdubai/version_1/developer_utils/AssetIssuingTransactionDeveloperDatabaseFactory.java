@@ -123,7 +123,8 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
 
         issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME);
         issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME);
-        issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME);
+        issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME);
+        issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME);
         issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_NETWORK_TYPE_COLUMN_NAME);
         issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME);
         issuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUER_WALLET_PUBLIC_KEY_COLUMN_NAME);
