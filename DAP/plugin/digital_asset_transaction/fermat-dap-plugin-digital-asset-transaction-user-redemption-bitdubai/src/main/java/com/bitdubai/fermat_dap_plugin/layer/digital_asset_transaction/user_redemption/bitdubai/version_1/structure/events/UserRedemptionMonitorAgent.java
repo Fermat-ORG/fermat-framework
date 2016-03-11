@@ -281,12 +281,12 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 switch (record.getState()) {
                     case DELIVERING:
                         DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromWallet(assetAcceptedGenesisTransaction, record.getNetworkType());
-                        userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, metadata.getLastTransactionHash());
-                        userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                         ActorAssetRedeemPoint redeemPoint = redeemPointManager.getActorByPublicKey(userRedemptionDao.getActorRedeemPointPublicKeyByGenesisTransaction(metadata.getGenesisTransaction()), metadata.getNetworkType());
                         sendCryptoAmountToRemoteActor(metadata);
                         //HERE we send the movement
                         sendAssetMovement(metadata, redeemPoint);
+                        userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, metadata.getLastTransactionHash());
+                        userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                         break;
                     case DELIVERING_CANCELLED:
                         userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.SENDING_CRYPTO_FAILED, assetAcceptedGenesisTransaction);
@@ -394,7 +394,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint redeemPoint) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
             //Storing Users
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
-            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(),digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(), digitalAssetMetadata.getDigitalAsset().getPublicKey());
 
             //Creating AssetMovementContentMessage
             AssetMovementContentMessage content = new AssetMovementContentMessage(actorSender, redeemPoint, digitalAssetMetadata.getDigitalAsset().getPublicKey(), digitalAssetMetadata.getNetworkType(), AssetMovementType.ASSET_REDEEMED);
