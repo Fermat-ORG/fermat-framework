@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
@@ -27,12 +27,12 @@ public class StartTest {
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @Mock
-    private TransactionTransmissionPluginRoot transactionTransmissionPluginRoot;
+    private TransactionTransmissionNetworkServicePluginRoot transactionTransmissionNetworkServicePluginRoot;
 
     @Test
     public void Start_ParametersProperlySet_ThreadStarted() throws Exception{
         TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent transactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
-                this.transactionTransmissionPluginRoot,
+                this.transactionTransmissionNetworkServicePluginRoot,
                 this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
         );
         transactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent.start();
