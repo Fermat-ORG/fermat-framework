@@ -215,6 +215,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                     adapter.changeDataSet(openContractList);
             }
         }
+        if (openContractList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
