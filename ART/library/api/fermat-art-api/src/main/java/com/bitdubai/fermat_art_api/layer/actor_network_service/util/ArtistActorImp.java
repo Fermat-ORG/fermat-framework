@@ -14,11 +14,6 @@ public class ArtistActorImp extends ArtistActorNetworkServiceRecord implements A
      * @param artist
      */
     public ArtistActorImp(Artist artist){
-        setActorSenderAlias(artist.getAlias());
-        setActorSenderPublicKey(artist.getPublicKey());
-        setNewProfileImage(artist.getProfileImage());
-        setActorSenderExternalUserName(artist.getExternalUsername());
-        setActorSenderExternalAccessToken(artist.getExternalAccesToken());
-        setActorSenderExternalPlataform(artist.getExternalPlatform());
+       super(artist.getAlias(),artist.getPublicKey(),artist.getProfileImage(),artist.getExternalUsername(),artist.getExternalAccesToken(),artist.getExternalPlatform());
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.util;
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
@@ -40,6 +41,15 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification {
 
     public ArtistActorNetworkServiceRecord(){
 
+    }
+
+    public ArtistActorNetworkServiceRecord(String alias, String publickey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform){
+        this.actorSenderAlias = alias;
+        this.actorSenderPublicKey = publickey;
+        this.actorSenderProfileImage = imageProfile;
+        this.actorSenderExternalUserName = externalUserName;
+        this.actorSenderExternalAccessToken = externalAccessToken;
+        this.actorSenderExternalPlataform =externalPlatform;
     }
     public ArtistActorNetworkServiceRecord(UUID id,
                                            String actorSenderAlias,
