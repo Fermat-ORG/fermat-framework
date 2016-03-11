@@ -14,6 +14,7 @@ import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorImp;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
@@ -219,7 +220,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
     public void registerIdentitiesANS(String publicKey) throws CantRegisterActorArtistNetworkServiceException {
         try {
             Artist artist = getArtistIdentityDao().getIdentityArtist(publicKey);
-            actorArtistNetworkServiceManager.registerActorArtist((ArtistActor)artist);
+            actorArtistNetworkServiceManager.registerActorArtist(new ArtistActorImp(artist));
         } catch (CantRegisterActorArtistNetworkServiceException | CantGetArtistIdentityException | CantInitializeArtistIdentityDatabaseException e) {
             e.printStackTrace();
         }
