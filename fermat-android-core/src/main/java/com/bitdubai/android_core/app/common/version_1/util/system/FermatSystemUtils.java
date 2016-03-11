@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.util.system;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.provisory.P2PAppsRuntimeManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.DesktopManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -462,5 +464,9 @@ public class FermatSystemUtils {
                 return null;
             }
         };
+    }
+
+    public static RuntimeManager getP2PApssRuntimeManager() {
+        return new P2PAppsRuntimeManager();
     }
 }
