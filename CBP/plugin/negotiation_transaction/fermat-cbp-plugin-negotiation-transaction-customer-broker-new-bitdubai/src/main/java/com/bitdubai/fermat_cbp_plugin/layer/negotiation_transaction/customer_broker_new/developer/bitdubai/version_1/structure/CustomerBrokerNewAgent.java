@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -108,7 +110,10 @@ public class CustomerBrokerNewAgent implements
     private MonitorAgentTransaction                     monitorAgentTransaction;
 
     /** Let me send a fire a broadcast to show a notification or update a view*/
-    private Broadcaster broadcaster;
+    private Broadcaster                                 broadcaster;
+
+    /*Represent Plugin Version*/
+    private PluginVersionReference                      pluginVersionReference;
 
 
     public CustomerBrokerNewAgent(
@@ -122,7 +127,8 @@ public class CustomerBrokerNewAgent implements
         CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
         CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
         CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager,
-        Broadcaster                                 broadcaster
+        Broadcaster                                 broadcaster,
+        PluginVersionReference                      pluginVersionReference
     ){
         this.pluginDatabaseSystem                       = pluginDatabaseSystem;
         this.logManager                                 = logManager;
@@ -135,6 +141,7 @@ public class CustomerBrokerNewAgent implements
         this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
         this.broadcaster                                = broadcaster;
+        this.pluginVersionReference                     = pluginVersionReference;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -247,7 +254,7 @@ public class CustomerBrokerNewAgent implements
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerNewNegotiationTransactionException | CantSendCustomerBrokerNewConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
 
@@ -272,7 +279,7 @@ public class CustomerBrokerNewAgent implements
                 }
 
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+                errorManager.reportUnexpectedPluginException(pluginVersionReference,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
                 throw new CantInitializeCBPAgent(exception,"Customer Broker New Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
             }
 
@@ -365,16 +372,22 @@ public class CustomerBrokerNewAgent implements
                 }
                 
             } catch (CantGetNegotiationTransactionListException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot get the Negotiation list from database");
             } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot Update State the Negotiation from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
             } catch (CantSendNegotiationToCryptoBrokerException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoCustomerException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewConfirmationNegotiationTransactionException(CantSendCustomerBrokerNewConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
         }
@@ -390,7 +403,8 @@ public class CustomerBrokerNewAgent implements
                 NegotiationTransaction          negotiationTransaction;
                 NegotiationType                 negotiationType;
                 String                          negotiationXML;
-                CustomerBrokerSaleNegotiation   saleNegotiation     = new NegotiationSaleRecord();
+                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
                 String eventStatus = customerBrokerNewNegotiationTransactionDatabaseDao.getEventStatus(eventId);
@@ -420,17 +434,18 @@ public class CustomerBrokerNewAgent implements
 
                             if (negotiationXML != null) {
 
-                                //TODO FOR TEST
-//                                if(customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasctionFromNegotiationId(negotiationTransmission.getNegotiationId()) == null) {
-//                                System.out.print("\n**** 18.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT ID "+ eventId +" PENDING ****\n");
+                                if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+
                                     switch (negotiationType) {
                                         case SALE:
-//                                        System.out.print("\n**** 19) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
+                                            System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
                                             //CREATE SALE NEGOTIATION
                                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                             customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                                                    customerBrokerSaleNegotiationManager,
-                                                    customerBrokerNewNegotiationTransactionDatabaseDao
+                                                customerBrokerSaleNegotiationManager,
+                                                customerBrokerNewNegotiationTransactionDatabaseDao,
+                                                errorManager,
+                                                pluginVersionReference
                                             );
                                             customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
 
@@ -439,56 +454,55 @@ public class CustomerBrokerNewAgent implements
                                             broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
                                             break;
                                     }
-//                                }
 
-                                //NOTIFIED EVENT
-                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                                System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
-                                //CONFIRM TRANSMISSION
-                                negotiationTransmissionManager.confirmReception(transmissionId);
+                                    //NOTIFIED EVENT
+                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                    System.out.print("\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
+                                    //CONFIRM TRANSMISSION
+                                    negotiationTransmissionManager.confirmReception(transmissionId);
+
+                                }else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+
+                                    System.out.print("\n**** 25.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                    switch (negotiationType) {
+                                        case PURCHASE:
+                                            System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                            //CREATE SALE NEGOTIATION
+                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                            customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                            break;
+                                    }
+
+                                    //CONFIRM TRANSACTION
+                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                                    //NOTIFIED EVENT
+                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                    //CONFIRM TRANSMISSION
+                                    negotiationTransmissionManager.confirmReception(transmissionId);
+
+                                }
                             }
                         }
                     }
                 }
 
-                //EVENT - RECEIVE CONFIRM NEGOTIATION
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW.getCode())) {
-                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
-
-                        negotiationTransmission = record.getInformation();
-                        transmissionId  = negotiationTransmission.getTransmissionId();
-                        transactionId = negotiationTransmission.getTransactionId();
-                        negotiationXML = negotiationTransmission.getNegotiationXML();
-
-                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-                        saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                        customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
-
-                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
-
-                            //CONFIRM TRANSACTION
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-                            //NOTIFIED EVENT
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                            //CONFIRM TRANSMISSION
-                            negotiationTransmissionManager.confirmReception(transmissionId);
-
-                        }
-                    }
-                }
-
             } catch (CantDeliverPendingTransactionsException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (CantNewSaleNegotiationTransactionException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (CantConfirmTransactionException e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (CantUpdateRecordException e){
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }

@@ -145,5 +145,16 @@
 
         </receiver>
 
+        <service android:name="com.bitdubai.android_core.app.CommunicationService"
+            android:label="CommService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Service name -->
+                <action android:name="org.fermat.COMM_SERVICE" />
+            </intent-filter>
+        </service>
+
     </application>
 </manifest>
