@@ -68,7 +68,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager {
     @Override
     public int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException {
         try {
-            return dao.getRecordForAsset(assetPublicKey).getAssetsGenerated();
+            return dao.getRecordForAsset(assetPublicKey).getAssetsCompleted();
         } catch (RecordsNotFoundException e) {
             return 0;
         } catch (CantLoadTableToMemoryException | InvalidParameterException | CantGetDigitalAssetFromLocalStorageException e) {
