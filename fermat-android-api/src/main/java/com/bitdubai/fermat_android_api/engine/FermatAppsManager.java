@@ -47,4 +47,6 @@ public interface FermatAppsManager {
     FermatStructure getAppStructure(String appPublicKey, FermatAppType appType);
 
     FermatStructure getAppStructure(String appPublicKey);
+
+    FermatStructure getLastAppStructure();
 }
