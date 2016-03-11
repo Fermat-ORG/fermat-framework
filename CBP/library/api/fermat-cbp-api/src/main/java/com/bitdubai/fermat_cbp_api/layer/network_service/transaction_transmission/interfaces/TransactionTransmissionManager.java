@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
@@ -48,7 +49,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String transactionHash,
             String transactionId,
             ContractTransactionStatus contractStatus,
-            Plugins remoteBusinessTransaction) throws
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
             CantSendContractNewStatusNotificationException;
 
     /**
