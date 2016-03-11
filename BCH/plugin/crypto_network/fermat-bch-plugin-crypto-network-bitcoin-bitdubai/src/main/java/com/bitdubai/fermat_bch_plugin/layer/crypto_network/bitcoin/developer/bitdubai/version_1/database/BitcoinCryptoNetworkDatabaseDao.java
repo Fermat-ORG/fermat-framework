@@ -318,7 +318,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         cryptoTransactionsTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         // we are only getting results from outgoing transactions
-        cryptoTransactionsTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, CryptoTransactionType.OUTGOING.getCode(), DatabaseFilterType.EQUAL);
+        //cryptoTransactionsTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, CryptoTransactionType.OUTGOING.getCode(), DatabaseFilterType.EQUAL);
         try {
             cryptoTransactionsTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
