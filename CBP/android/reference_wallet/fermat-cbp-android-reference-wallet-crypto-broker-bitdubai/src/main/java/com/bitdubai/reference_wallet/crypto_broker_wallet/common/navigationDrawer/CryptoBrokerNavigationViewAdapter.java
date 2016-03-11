@@ -25,6 +25,8 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     private List<NavViewFooterItem> earningsItems;
     private List<NavViewFooterItem> stockItems;
+    private String stockTitle = "Current Stock";
+    private String earningsTitle = "Daily Earnings";
 
     public CryptoBrokerNavigationViewAdapter(Context context) {
         super(context);
@@ -108,7 +110,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
         } else if (holder instanceof NavTitleFooterViewHolder) {
             NavTitleFooterViewHolder titleFooterViewHolder = (NavTitleFooterViewHolder) holder;
-            String title = isStockTitleItemPosition(position) ? "Current Stock" : "Weekly Earnings";
+            String title = isStockTitleItemPosition(position) ? stockTitle : earningsTitle;
             titleFooterViewHolder.getNavFooterTitle().setText(title);
 
         } else {
@@ -192,5 +194,13 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     private boolean isEarningsItemPosition(int position) {
         return position >= getItemCount() - earningsItems.size() && position < getItemCount();
+    }
+
+    public void setEarningsTitle(String earningsTitle) {
+        this.earningsTitle = earningsTitle;
+    }
+
+    public void setStockTitle(String stockTitle) {
+        this.stockTitle = stockTitle;
     }
 }
