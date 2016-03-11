@@ -71,10 +71,10 @@ import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
-import bitdubai.version_1.structure.structure.CryptoTransmissionMessage;
-import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
-import bitdubai.version_1.structure.structure.CryptoTransmissionMetadataRecord;
-import bitdubai.version_1.structure.structure.CryptoTransmissionResponseMessage;
+import bitdubai.version_1.structure.CryptoTransmissionMessage;
+import bitdubai.version_1.structure.CryptoTransmissionMessageType;
+import bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
+import bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
 
 /**
  * Created by natalia on 12/02/16.

@@ -1,4 +1,4 @@
-package bitdubai.version_1.structure.structure;
+package bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
