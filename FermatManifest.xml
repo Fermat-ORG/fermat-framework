@@ -2765,19 +2765,6 @@
             </layer>
         </platform>
 	<platform code="ART" name="Artist Platform" logo="" dependsOn="DAP">
-            <layer name="Reference Wallet">
-                <androids>
-                    <android name="Fan Wallet" description="" difficulty="4" code-level="concept">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="lostwood" scope="implementation" percentage="0"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </android>
-                </androids>
-            </layer>
 	    <layer name="Sub App">
                 <androids>
                     <android name="Artist Community" description="" difficulty="4" code-level="concept">
