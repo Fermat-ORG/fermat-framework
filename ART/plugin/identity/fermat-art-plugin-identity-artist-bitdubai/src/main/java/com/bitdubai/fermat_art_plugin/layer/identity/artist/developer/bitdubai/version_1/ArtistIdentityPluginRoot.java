@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.database.ArtistIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantInitializeArtistIdentityDatabaseException;
+import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.IdentityArtistManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -101,6 +103,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.actorArtistNetworkServiceManager);
 
             System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
+           // testCreateArtist();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.ARTIST_IDENTITY);
@@ -112,11 +115,35 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 //            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 //        }
     }
+
+    private void testCreateArtist(){
+        try {
+            Artist artist = createArtistIdentity("El Gabo",new byte[0]);
+            System.out.println("#######################ART TEST");
+            testUpdateArtist(artist);
+            publishIdentity(artist.getPublicKey());
+        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void testUpdateArtist(Artist artist){
+        String externalName = "El gabo artist";
+        String externalAccessToken = "El access token";
+        ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
+        ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
+        ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
+        try {
+            updateArtistIdentity(artist.getAlias(),artist.getPublicKey(),artist.getProfileImage(),externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+        } catch (CantUpdateArtistIdentityException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
         return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
     }
-
     @Override
     public Artist createArtistIdentity(String alias, byte[] imageBytes) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         return identityArtistManager.createNewIdentityArtist(alias,imageBytes);
