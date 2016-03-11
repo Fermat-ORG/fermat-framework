@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -271,12 +272,18 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private void checkConfirmedTransactions() {
             try {
                 for (OutgoingDraftTransactionWrapper transaction : dao.getAllInState(TransactionState.SUCCESSFUL_SIG)) {
-                    switch (bitcoinNetworkManager.getCryptoStatus(transaction.getTxHash())) {
-                        case ON_BLOCKCHAIN:
-                        case IRREVERSIBLE:
-                            debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
-                            dao.setToCompleted(transaction);
-                            break;
+                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType());
+                    dance:
+                    for (CryptoTransaction cryptoTx : cryptoTransactions) {
+                        if (cryptoTx.getAddressTo().equals(transaction.getAddressTo())) {
+                            switch (cryptoTx.getCryptoStatus()) {
+                                case ON_BLOCKCHAIN:
+                                case IRREVERSIBLE:
+                                    debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
+                                    dao.setToCompleted(transaction);
+                                    break dance; //If we find our transaction then a single update is needed, so we'll break the for
+                            }
+                        }
                     }
                 }
             } catch (Exception e) {
