@@ -262,6 +262,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + chatMetadataRecord.getLocalActorPublicKey());
                     break;
                 case TRANSACTION_STATUS_UPDATE:
+                    System.out.println("12345 UPDATE RECIBIDO");
                     DistributionStatus distributionStatus = (messageData.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
                     MessageStatus messageStatus = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(), MessageStatus.class) : null;
                     ChatProtocolState chatProtocolState = (messageData.has(ChatTransmissionJsonAttNames.PROTOCOL_STATE)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.PROTOCOL_STATE).getAsString(), ChatProtocolState.class) : null;
@@ -273,13 +274,15 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                      */
 
                     if(responseTo != null) {
+                        System.out.println("12345 UPDATE RECIBIDO 1");
                         chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responseTo);
 
                         if (chatMetadataRecord != null) {
+                            System.out.println("12345 UPDATE RECIBIDO 2");
                             chatMetadataRecord.setChatId(chatMetadataRecord.getChatId());
 
                             if (chatProtocolState == ChatProtocolState.DONE) {
-
+                                System.out.println("12345 UPDATE RECIBIDO 3");
                                 System.out.println("----------------------------\n" +
                                         "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + chatMetadataRecord.getLocalActorPublicKey()
                                         + "\n-------------------------------------------------");
@@ -298,13 +301,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 //create incoming notification
                                 chatMetadataRecord.setFlagReadead(false);
                                 getChatMetadataRecordDAO().update(chatMetadataRecord);
-                                System.out.println("----------------------------\n" +
-                                        "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey()
-                                        + "\n-------------------------------------------------");
                                 //NOTIFICATION LAUNCH
                                 if (messageStatus == null) {
                                     break;
                                 }
+                                System.out.println("----------------------------\n" +
+                                        "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey()
+                                        + "\n-------------------------------------------------");
                                 launcheIncomingChatStatusNotification(chatID);
 
                             }
@@ -809,8 +812,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 throw new IllegalArgumentException("Argument newDistributionStatus can not be null");
             }
 
+
             ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByChatAndMessageId(chatId, messageId);
-            System.out.println("12345 Sending status notification "+chatMetadataRecord.toString());
+            System.out.println("12345 Sending status notification MessageStatus" + chatMetadataRecord.getMessageStatus());
+            System.out.println("12345 Sending status notification Message"+chatMetadataRecord.getMessage());
+            System.out.println("12345 Sending status notification Processed" + chatMetadataRecord.getProcessed());
+            System.out.println("12345 Sending status notification TransactionId" + chatMetadataRecord.getTransactionId());
+            chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
             final String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(
                     chatMetadataRecord.getResponseToNotification(),
                     messageStatus,
@@ -820,16 +828,19 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             );
 
             while(!Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
+                System.out.println("12345 INSIDE WHILE");
                 chatMetadataRecord = getChatMetadataRecordDAO().getNotificationById(chatMetadataRecord.getTransactionId());
                 chatMetadataRecord.setDistributionStatus(newDistributionStatus);
                 chatMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
                 chatMetadataRecord.setRemoteActorType(receiverType);
                 chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
                 chatMetadataRecord.setLocalActorType(senderType);
-                chatMetadataRecord.changeState(ChatProtocolState.DELIVERY);
                 chatMetadataRecord.setMsgXML(msjContent);
-                if(Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
+                System.out.println("12345 START OF IF");
+                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), MessageStatus.READ)){
+                    chatMetadataRecord.setMessageStatus(MessageStatus.READ);
                     chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
+                    System.out.println("12345 INSIDE IF");
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
                     executorService.submit(new Runnable() {
                         @Override
@@ -841,9 +852,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                         getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
                                         msjContent
                                 );
-
-                                getChatMetadataRecordDAO().update(chatMetadataToSend);
                                 System.out.println("12345 SEND STATUS");
+                                getChatMetadataRecordDAO().update(chatMetadataToSend);
                             } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
                                 e.printStackTrace();
                             }
