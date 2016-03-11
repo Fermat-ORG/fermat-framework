@@ -27,12 +27,14 @@
         <layer name="Contract" language="java"></layer>
         <layer name="Negotiation" language="java"></layer>
         <layer name="Composite Wallet" language="java"></layer>
+	<layer name="Song Wallet" language="java"></layer>
         <layer name="Wallet" language="java"></layer>
         <layer name="World" language="java"></layer>
         <layer name="Identity" language="java"></layer>
         <layer name="Actor Connection" language="java"></layer>
         <layer name="Actor Network Service" language="java"></layer>
         <layer name="Network Service" language="java"></layer>
+	<layer name="External API" language="java"></layer>
         <!-- separator or empty layer -->
         <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
@@ -2745,6 +2747,21 @@
                         <certifications> </certifications>
                     </plugin>
                 </plugins>
+            </layer>
+        </platform>
+	<platform code="TKY" name="Tokenly Platform" logo="" dependsOn="MKT">
+            <layer name="Reference Wallet">
+                <androids>
+                    <android name="Fan Wallet" description="" difficulty="6" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="lostwood" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
             </layer>
         </platform>
 	<platform code="ART" name="Artist Platform" logo="" dependsOn="DAP">
