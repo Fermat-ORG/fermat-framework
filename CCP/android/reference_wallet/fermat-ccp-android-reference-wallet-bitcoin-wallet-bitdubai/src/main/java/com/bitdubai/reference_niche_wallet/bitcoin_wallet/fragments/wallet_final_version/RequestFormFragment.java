@@ -607,7 +607,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                     }
-                    if(Long.valueOf(newAmount) <= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) {
+                  //  if(Long.valueOf(newAmount) <= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) {
 
                         BigDecimal operator = new BigDecimal(newAmount);
 
@@ -642,10 +642,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         if (isFragmentFromDetail) onBack(null);
                         else
                             onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
-                    }
-                    else {
-                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
-                    }
+                    //}
+                    //else {
+                      //  Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                   // }
                 } else {
                     showMessage(getActivity(), "Invalid Request Amount");
                 }
