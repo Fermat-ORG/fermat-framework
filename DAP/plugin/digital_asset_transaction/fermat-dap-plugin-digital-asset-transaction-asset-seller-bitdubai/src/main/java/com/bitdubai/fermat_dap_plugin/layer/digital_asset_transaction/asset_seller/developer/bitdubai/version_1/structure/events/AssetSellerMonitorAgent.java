@@ -69,8 +69,6 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_sell
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
@@ -341,7 +339,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             try {
                 return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
             } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources() == null ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
+                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
                 String actorName = "Asset " + digitalAssetMetadata.getDigitalAsset().getName() + " sold.";
                 return extraUserManager.createActor(actorName, image);
             }
