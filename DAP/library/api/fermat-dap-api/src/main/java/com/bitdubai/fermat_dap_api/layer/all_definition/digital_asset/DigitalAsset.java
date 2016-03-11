@@ -47,6 +47,7 @@ public class DigitalAsset implements Serializable {
         newAsset.setGenesisAmount(previousAsset.getGenesisAmount());
         newAsset.setIdentityAssetIssuer(previousAsset.getIdentityAssetIssuer());
         newAsset.setContract(previousAsset.getContract());
+        newAsset.setResources(previousAsset.getResources());
         newAsset.setDescription(previousAsset.getDescription());
         newAsset.setName(previousAsset.getName());
         newAsset.setState(previousAsset.getState());
