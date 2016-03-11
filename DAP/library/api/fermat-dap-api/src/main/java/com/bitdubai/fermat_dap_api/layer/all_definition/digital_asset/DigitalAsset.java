@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,6 +90,7 @@ public class DigitalAsset implements Serializable {
     }
 
     public List<Resource> getResources() {
+        if (resources == null) return Collections.EMPTY_LIST;
         return resources;
     }
 
