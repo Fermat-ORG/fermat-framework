@@ -59,7 +59,7 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
 
         final NumberFormat instance = DecimalFormat.getInstance();
         final EarningsDetailData currentEarning = data.isEmpty() ? null : data.get(0);
-        final EarningsDetailData previousEarning = data.isEmpty() ? null : data.get(1);
+        final EarningsDetailData previousEarning = (!data.isEmpty() && data.size() > 1 ? data.get(1) : null);
 
         final FermatTextView currentEarningValue = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_value);
         currentEarningValue.setText(currentEarning != null ? instance.format(currentEarning.getAmount()) : "No current earnings");

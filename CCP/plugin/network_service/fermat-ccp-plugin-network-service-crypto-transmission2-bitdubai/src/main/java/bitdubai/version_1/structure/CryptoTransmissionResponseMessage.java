@@ -1,4 +1,4 @@
-package bitdubai.version_1.structure.structure;
+package bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
@@ -9,13 +9,13 @@ import java.util.UUID;
 /**
  * Created by mati on 2015.10.12..
  */
-public class CryptoTransmissionResponseMessage  extends CryptoTransmissionMessage{
+public class CryptoTransmissionResponseMessage  extends CryptoTransmissionMessage {
 
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
 
     public CryptoTransmissionResponseMessage(
             UUID transactionId,
-            CryptoTransmissionMessageType cryptoTransmissionMessageType,
+            bitdubai.version_1.structure.CryptoTransmissionMessageType cryptoTransmissionMessageType,
             CryptoTransmissionProtocolState cryptoTransmissionStates,
             CryptoTransmissionMetadataType cryptoTransmissionMetadataType,
             CryptoTransmissionMetadataState cryptoTransmissionMetadataState,

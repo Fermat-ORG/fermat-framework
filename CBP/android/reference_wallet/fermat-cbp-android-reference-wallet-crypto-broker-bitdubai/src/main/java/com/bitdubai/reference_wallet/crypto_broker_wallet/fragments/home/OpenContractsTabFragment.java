@@ -24,27 +24,24 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ContractBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem,CryptoBrokerWalletSession,ResourceProviderManager>
+public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Fermat Managers
@@ -160,21 +157,19 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
             try {
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                // waitingForCustomer.addAll(walletManager.getContractsWaitingForCustomer(10, 0));
-                //CryptoBrokerWalletModuleContractBasicInformation
+
+                waitingForBroker.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForBroker(10, 0));
                 waitingForCustomer.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForCustomer(10, 0));
-                waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
-                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(grouper);
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
+                if (!waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
+                    grouperText = getActivity().getString(R.string.waiting_for_you);
+                    grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                    data.add(grouper);
 
-                //  waitingForBroker.addAll(walletManager.getContractsWaitingForBroker(10, 0));
-                waitingForBroker.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForBroker(10,0));
-                waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
+                    grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                    grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                    data.add(grouper);
+                }
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -229,7 +224,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        switch (code){
+        switch (code) {
             case CBW_NEW_CONTRACT_UPDATE_VIEW:
                 onRefresh();
                 break;

@@ -1,4 +1,4 @@
-package bitdubai.version_1.database.communications;
+package bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -31,21 +30,21 @@ import bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
-import bitdubai.version_1.structure.structure.CryptoTransmissionMetadataRecord;
-import bitdubai.version_1.structure.structure.CryptoTransmissionResponseMessage;
+import bitdubai.version_1.structure.CryptoTransmissionMessageType;
+import bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
+import bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.10.04..
  */
-public class CryptoTransmissionMetadataDAO_V2 {
+public class CryptoTransmissionNetworkServiceMetadataDao {
  ;
     private final String tableType;
     private Database database;
 
-    public CryptoTransmissionMetadataDAO_V2(
-                                            final Database database,
-                                            String tableType) {
+    public CryptoTransmissionNetworkServiceMetadataDao(
+            final Database database,
+            String tableType) {
 
         this.database = database;
         this.tableType = tableType;

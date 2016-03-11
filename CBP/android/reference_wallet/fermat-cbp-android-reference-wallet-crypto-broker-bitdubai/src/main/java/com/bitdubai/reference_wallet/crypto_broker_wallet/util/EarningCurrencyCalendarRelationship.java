@@ -2,15 +2,13 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
-import java.util.Comparator;
-
 /**
  * The class <code>com.bitdubai.reference_wallet.crypto_broker_wallet.util.EarningCurrencyCalendarRelationship</code>
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/03/2016.
  */
-public class EarningCurrencyCalendarRelationship implements Comparator<EarningCurrencyCalendarRelationship> {
+public class EarningCurrencyCalendarRelationship implements Comparable<EarningCurrencyCalendarRelationship> {
 
     private final Integer  year               ;
     private final Integer  month              ;
@@ -69,25 +67,24 @@ public class EarningCurrencyCalendarRelationship implements Comparator<EarningCu
     }
 
     @Override
-    public int compare(final EarningCurrencyCalendarRelationship ed1,
-                       final EarningCurrencyCalendarRelationship ed2) {
+    public int compareTo(EarningCurrencyCalendarRelationship ed2) {
 
-        if (ed1.getYear() < ed2.getYear())
+        if (getYear() < ed2.getYear())
             return -1;
 
-        if (ed1.getYear() > ed2.getYear())
+        if (getYear() > ed2.getYear())
             return 1;
 
-        if (ed1.getTimeReference() < ed2.getTimeReference())
+        if (getTimeReference() < ed2.getTimeReference())
             return -1;
 
-        if (ed1.getTimeReference() > ed2.getTimeReference())
+        if (getTimeReference() > ed2.getTimeReference())
             return 1;
 
-        if (ed1.getCurrency().hashCode() < ed2.getCurrency().hashCode())
+        if (getCurrency().hashCode() < ed2.getCurrency().hashCode())
             return -1;
 
-        if (ed1.getCurrency().hashCode() > ed2.getCurrency().hashCode())
+        if (getCurrency().hashCode() > ed2.getCurrency().hashCode())
             return 1;
 
         return 0;
