@@ -6,6 +6,7 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,8 +32,10 @@ public class AppsConfiguration {
             FileInputStream fIn = context.openFileInput(APPS_CONFIGURATION_FILE);
             ObjectInputStream isr = new ObjectInputStream(fIn);
             return (HashMap<String, FermatAppType>) isr.readObject();
+        } catch (FileNotFoundException fileNotFoundException){
+            updateAppsCoreInstalled();
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e){

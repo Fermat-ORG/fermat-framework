@@ -215,6 +215,9 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
             case DESKTOP:
                 runtimeManager = FermatSystemUtils.getDesktopRuntimeManager();
                 break;
+            case P2P_APP:
+                runtimeManager = FermatSystemUtils.getP2PApssRuntimeManager();
+                break;
         }
         return runtimeManager;
     }
