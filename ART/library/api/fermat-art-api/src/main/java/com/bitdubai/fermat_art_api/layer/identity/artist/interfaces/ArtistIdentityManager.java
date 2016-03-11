@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_art_api.layer.identity.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
@@ -37,17 +40,23 @@ public interface ArtistIdentityManager extends FermatManager{
             final byte[] imageBytes) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
+
     /**
-     * This method updates the artist identity
+     *
      * @param alias
      * @param publicKey
-     * @param imageProfile
+     * @param profileImage
+     * @param externalUserName
+     * @param externalAccessToken
+     * @param externalPlatform
+     * @param exposureLevel
+     * @param artistAcceptConnectionsType
+     * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String alias,
-            String publicKey,
-            byte[] imageProfile,
-            String external) throws
+            String alias,String publicKey, byte[] profileImage,
+            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantUpdateArtistIdentityException;
 
     /**
