@@ -40,6 +40,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
+import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
@@ -674,7 +675,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         for (DatabaseTableRecord record : databaseTable.getRecords()){
             TransactionProtocolData transactionProtocolData = new TransactionProtocolData();
             transactionProtocolData.setTransactionId(UUID.fromString(record.getStringValue(transactionIdColumnName)));
-            transactionProtocolData.setCryptoTransaction(getCryptoTransactionFromRecord(transactionType, record));
+            transactionProtocolData.setCryptoTransaction(getCryptoTransactionFromRecord(record));
             transactionProtocolData.setAction(Action.APPLY);
             transactionProtocolData.setTimestamp(System.currentTimeMillis() / 1000L); //todo I need to convert the stored saved date to long
 
@@ -687,28 +688,43 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     /**
      * Creates a incoming or outgoing CryptoTransaction object from a database record
-     * @param transactionType
      * @param record
      * @return
      */
-    private CryptoTransaction getCryptoTransactionFromRecord(TransactionTypes transactionType, DatabaseTableRecord record) {
+    private CryptoTransaction getCryptoTransactionFromRecord(DatabaseTableRecord record) {
        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+
+        //TransactionHash
         cryptoTransaction.setTransactionHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME));
-        if (record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME) != null)
+        // Block hash
+        if (!StringUtils.isBlank(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME)))
             cryptoTransaction.setBlockHash(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME));
-
+        //BlockchainNetworkType
         cryptoTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE)));
-
+        //Currency
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        //CryptoStatus
         try {
             cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
+        //CryptoAmount
         cryptoTransaction.setCryptoAmount(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME));
+        //AddressFrom
         cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME), CryptoCurrency.BITCOIN));
+        //AddressTo
         cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME), CryptoCurrency.BITCOIN));
+        //OP_Return
         cryptoTransaction.setOp_Return(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME));
+        //CryptoTransactionType
+        try {
+            cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME)));
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+        cryptoTransaction.setBlockDepth(record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME));
+
         return cryptoTransaction;
     }
 
@@ -1481,5 +1497,29 @@ public class BitcoinCryptoNetworkDatabaseDao {
                 protocolStatus,
                 cryptoTransaction.getCryptoTransactionType());
 
+    }
+
+    /**
+     * Gets the list of CryptoTransactions stored for the specified network
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
+        List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            CryptoTransaction cryptoTransaction = getCryptoTransactionFromRecord(record);
+            cryptoTransactions.add(cryptoTransaction);
+        }
+        return cryptoTransactions;
     }
 }
