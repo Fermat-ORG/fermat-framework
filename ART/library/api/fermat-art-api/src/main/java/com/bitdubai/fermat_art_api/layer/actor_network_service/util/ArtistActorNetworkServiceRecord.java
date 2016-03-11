@@ -4,11 +4,13 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
-import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorNotification;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo 09/03/16.
  */
-public class ArtistActorNetworkServiceRecord implements ActorNotification {
+public class ArtistActorNetworkServiceRecord implements ActorNotification, ArtistActor {
     private UUID id;
     private PlatformComponentType actorDestinationType;
     private PlatformComponentType actorSenderType;
@@ -26,10 +28,12 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification {
     private String actorDestinationPublicKey;
     private String actorSenderAlias;
     private byte[] actorSenderProfileImage;
-    private String actorSenderExternalUserName;
-    private String actorSenderExternalAccessToken;
-    private ExternalPlatform actorSenderExternalPlataform;
     private NotificationDescriptor notificationDescriptor;
+    private String externalUsername;
+    private String externalAccesToken;
+    private ExternalPlatform externalPlatform;
+    private ExposureLevel exposureLevel;
+    private ArtistAcceptConnectionsType artistAcceptConnectionsType;
     private long sentDate;
     private ProtocolState protocolState;
     private boolean flagRead;
@@ -43,13 +47,20 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification {
 
     }
 
-    public ArtistActorNetworkServiceRecord(String alias, String publickey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform){
+    public ArtistActorNetworkServiceRecord(String alias, String publickey, byte[] imageProfile){
         this.actorSenderAlias = alias;
         this.actorSenderPublicKey = publickey;
         this.actorSenderProfileImage = imageProfile;
-        this.actorSenderExternalUserName = externalUserName;
-        this.actorSenderExternalAccessToken = externalAccessToken;
-        this.actorSenderExternalPlataform =externalPlatform;
+    }
+    public ArtistActorNetworkServiceRecord(Artist artist){
+        this.actorSenderAlias = artist.getAlias();
+        this.actorSenderPublicKey = artist.getPublicKey();
+        this.actorSenderProfileImage = artist.getProfileImage();
+        this.externalUsername = artist.getExternalUsername();
+        this.externalAccesToken = artist.getExternalAccesToken();
+        this.externalPlatform = artist.getExternalPlatform();
+        this.exposureLevel = artist.getExposureLevel();
+        this.artistAcceptConnectionsType = artist.getArtistAcceptConnectionsType();
     }
     public ArtistActorNetworkServiceRecord(UUID id,
                                            String actorSenderAlias,
@@ -289,6 +300,16 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification {
     }
 
     @Override
+    public ExposureLevel getExposureLevel() {
+        return exposureLevel;
+    }
+
+    @Override
+    public ArtistAcceptConnectionsType getArtistAcceptConnectionsType() {
+        return artistAcceptConnectionsType;
+    }
+
+    @Override
     public String getAlias() {
         return actorSenderAlias;
     }
@@ -305,33 +326,41 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification {
 
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
-        actorSenderProfileImage = imageBytes;
+        this.actorSenderProfileImage = imageBytes;
     }
 
     @Override
     public String getExternalUsername() {
-        return actorSenderExternalUserName;
+        return externalUsername;
     }
 
     @Override
     public String getExternalAccesToken() {
-        return actorSenderExternalAccessToken;
+        return externalAccesToken;
     }
 
     @Override
     public ExternalPlatform getExternalPlatform() {
-        return actorSenderExternalPlataform;
+        return externalPlatform;
     }
 
-    public void setActorSenderExternalUserName(String actorSenderExternalUserName) {
-        this.actorSenderExternalUserName = actorSenderExternalUserName;
+    public void setExternalUsername(String externalUsername) {
+        this.externalUsername = externalUsername;
     }
 
-    public void setActorSenderExternalAccessToken(String actorSenderExternalAccessToken) {
-        this.actorSenderExternalAccessToken = actorSenderExternalAccessToken;
+    public void setExternalAccesToken(String externalAccesToken) {
+        this.externalAccesToken = externalAccesToken;
     }
 
-    public void setActorSenderExternalPlataform(ExternalPlatform actorSenderExternalPlataform) {
-        this.actorSenderExternalPlataform = actorSenderExternalPlataform;
+    public void setExternalPlatform(ExternalPlatform externalPlatform) {
+        this.externalPlatform = externalPlatform;
+    }
+
+    public void setExposureLevel(ExposureLevel exposureLevel) {
+        this.exposureLevel = exposureLevel;
+    }
+
+    public void setArtistAcceptConnectionsType(ArtistAcceptConnectionsType artistAcceptConnectionsType) {
+        this.artistAcceptConnectionsType = artistAcceptConnectionsType;
     }
 }
