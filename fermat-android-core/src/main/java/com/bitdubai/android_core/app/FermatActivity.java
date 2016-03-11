@@ -1759,6 +1759,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     data.setAction("org.fermat.APP_LAUNCHER");
                     sendBroadcast(data);
                     //finish();
+                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
+                    // if i want i could do something here
                 }
                 break;
             }
