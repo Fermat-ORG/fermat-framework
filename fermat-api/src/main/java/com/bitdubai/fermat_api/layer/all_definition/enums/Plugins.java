@@ -302,6 +302,7 @@ public enum Plugins implements FermatPluginsEnum {
     // ART
 
     ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
+    ARTIST_IDENTITY                    ("ARTIDNTY"),
     //WRD
     API_TOKENLY                         ("TOKAP")
 
@@ -442,6 +443,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
             case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
             case "ANSART":   return ACTOR_NETWORK_SERVICE_ARTIST;
+            case "ARTIDNTY": return ARTIST_IDENTITY;
             case "TOKAP":   return API_TOKENLY                      ;
 
             default:
