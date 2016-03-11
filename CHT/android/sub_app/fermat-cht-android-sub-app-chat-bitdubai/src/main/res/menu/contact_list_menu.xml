@@ -19,6 +19,6 @@
         android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_error_report"
-        android:title="@string/menu_settings"
+        android:title="Error Report"
         android:showAsAction="ifRoom"/>
 </menu>
