@@ -71,7 +71,7 @@ public class AssetMetadataFactory implements Callable<Boolean> {
         }
         BitcoinWalletWallet wallet = bitcoinWalletManager.loadWallet(issuingRecord.getBtcWalletPk());
         BitcoinWalletBalance balance = wallet.getBalance(BalanceType.AVAILABLE);
-        if (issuingRecord.getAsset().getGenesisAmount() > balance.getBalance()) {
+        if (issuingRecord.getAsset().getGenesisAmount() > balance.getBalance(issuingRecord.getNetworkType())) {
             dao.updateIssuingStatus(issuingRecord.getAsset().getPublicKey(), IssuingStatus.INSUFFICIENT_FONDS);
             dao.unProcessingAsset(issuingRecord.getAsset().getPublicKey());
             return Boolean.FALSE;
