@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
+import android.util.Log;
+
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -82,8 +84,14 @@ public final class ActorCustomerExtraDataEventActions {
                 for(CryptoBrokerActorConnection broker : connections){
 
                     if( !this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey()) ) {
-                        ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
-                        this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+
+                        if( !this.cryptoCustomerActorDao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer()) ){
+
+                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
+
+                            this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+                        }
+
                         this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
                     }
                 }
@@ -148,10 +156,11 @@ public final class ActorCustomerExtraDataEventActions {
 
                 ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identity, quotes, null);
 
-                if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identity.getPublicKey(), extraDate.getRequesterPublicKey()) ){
+                if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes( extraDate.getRequesterPublicKey(), identity.getPublicKey() ) ){
 
                     this.cryptoCustomerActorDao.updateQuotes(actorExtraData);
                 }else{
+
                     this.cryptoCustomerActorDao.createActorQuotes(actorExtraData);
                 }
 

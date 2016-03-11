@@ -35,6 +35,7 @@ public class MessageImpl implements Message {
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
+//        messageDate=new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 chatMetadata.getDate().getTime());
         this.contactId=contactId;

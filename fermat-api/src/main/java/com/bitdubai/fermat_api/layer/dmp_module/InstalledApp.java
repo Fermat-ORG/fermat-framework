@@ -85,6 +85,11 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     }
 
     @Override
+    public int getBanner() {
+        return 0;
+    }
+
+    @Override
     public String getAppName() {
         return name;
     }

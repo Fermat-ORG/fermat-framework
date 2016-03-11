@@ -15,6 +15,10 @@ public class SessionConstantsAssetIssuerCommunity {
     public static final String BROADCAST_DISCONNECTED_UPDATE = "sub.app.actor.issuer.community.broadcast.disconnected";
     public static final String BROADCAST_CLOSE_APP = "sub.app.actor.issuer.community.broadcast.close.app";
 
+    public static final String IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED = "asset_issuer_notification_accepted";
+    public static final String IC_ACTION_ISSUER_NOTIFICATIONS_CANCELED = "asset_issuer_notification_canceled";
+    public static final String IC_ACTION_ISSUER_NOTIFICATIONS_DENIED = "asset_issuer_notification_denied";
+
     /*Numeracion Aleatoria, escogencia personal*/
     public static int IC_ACTION_ISSUER_COMMUNITY_CONNECT = 400;
 
@@ -23,5 +27,8 @@ public class SessionConstantsAssetIssuerCommunity {
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_HISTORY = 403;
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_STATISTICS = 404;
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL = 405;
-    public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_DESELECT_ALL= 406;
+    public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL= 406;
+    public static final int IC_ACTION_ISSUER_COMMUNITY_NOTIFICATIONS = 407;
+    public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 408;
+    public static final int IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING = 409;
 }

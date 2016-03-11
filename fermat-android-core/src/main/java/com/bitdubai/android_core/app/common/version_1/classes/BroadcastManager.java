@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by mati on 2016.02.04..
+ * Created by Matias Furszyfer on 2016.02.04..
  */
 public class BroadcastManager implements BroadcasterInterface {
 

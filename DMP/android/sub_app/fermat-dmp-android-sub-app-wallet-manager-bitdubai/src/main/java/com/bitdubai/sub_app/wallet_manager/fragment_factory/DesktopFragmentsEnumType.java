@@ -11,7 +11,8 @@ public enum DesktopFragmentsEnumType implements FermatFragmentsEnumType<DesktopF
     DESKTOP_MAIN("DAM"),
     DESKTOP_P2P_MAIN("DP2PM"),
     SETTINGS("DS"),
-    DESKTOP_SOCIAL_MAIN("DSM")
+    DESKTOP_SOCIAL_MAIN("DSM"),
+    COMMUNITIES_FRAGMENT("CF")
     ;
 
     private String key;

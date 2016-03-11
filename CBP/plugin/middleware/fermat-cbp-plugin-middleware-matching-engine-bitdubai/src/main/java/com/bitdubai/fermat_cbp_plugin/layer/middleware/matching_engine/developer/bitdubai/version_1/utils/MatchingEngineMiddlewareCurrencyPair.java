@@ -14,6 +14,9 @@ import java.security.InvalidParameterException;
  */
 public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+
     private final Currency from;
     private final Currency to  ;
 
@@ -55,10 +58,18 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = 31 * result + from.hashCode();
-        result = 31 * result + to.hashCode();
-        return result;
+
+        int c = 0;
+        c += from.hashCode();
+        c += to.hashCode();
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
+    @Override
+    public String toString() {
+        return "MatchingEngineMiddlewareCurrencyPair{" +
+                "from=" + from +
+                ", to=" + to +
+                '}';
+    }
 }

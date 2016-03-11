@@ -24,18 +24,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantListActorAssetUsersException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.structure.AssetUserNetworkServiceRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -124,7 +119,7 @@ public class AssetUserActorNetworkServiceAgent extends FermatAgent {
      * <p/>
      * publicKey  and transaccion metadata waiting to be a response
      */
-    Map<String, AssetUserNetworkServiceRecord> poolConnectionsWaitingForResponse;
+    Map<String, ActorAssetNetworkServiceRecord> poolConnectionsWaitingForResponse;
 
     private AssetUserActorNetworkServicePluginRoot assetUserActorNetworkServicePluginRoot;
 
@@ -286,12 +281,12 @@ public class AssetUserActorNetworkServiceAgent extends FermatAgent {
     private void processSend() {
         try {
 
-            List<AssetUserNetworkServiceRecord> lstActorRecord = assetUserActorNetworkServicePluginRoot
+            List<ActorAssetNetworkServiceRecord> lstActorRecord = assetUserActorNetworkServicePluginRoot
                     .getOutgoingNotificationDao().listRequestsByProtocolStateAndNotDone(
                             ActorAssetProtocolState.PROCESSING_SEND);
 
 
-            for (AssetUserNetworkServiceRecord cpr : lstActorRecord) {
+            for (ActorAssetNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getAssetNotificationDescriptor()) {
 
                     case ASKFORCONNECTION:
@@ -346,11 +341,11 @@ public class AssetUserActorNetworkServiceAgent extends FermatAgent {
 
     public void processReceive() {
         try {
-            List<AssetUserNetworkServiceRecord> lstActorRecord = assetUserActorNetworkServicePluginRoot.
+            List<ActorAssetNetworkServiceRecord> lstActorRecord = assetUserActorNetworkServicePluginRoot.
                     getIncomingNotificationsDao().listRequestsByProtocolStateAndType(
                     ActorAssetProtocolState.PROCESSING_RECEIVE);
 
-            for (AssetUserNetworkServiceRecord cpr : lstActorRecord) {
+            for (ActorAssetNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getAssetNotificationDescriptor()) {
                     case ASKFORCONNECTION:
                         System.out.println("ACTOR ASSET MENSAJE PROCESANDOSE:" + cpr.getActorDestinationPublicKey());
@@ -423,7 +418,7 @@ public class AssetUserActorNetworkServiceAgent extends FermatAgent {
         }
     }
 
-    private void sendMessageToActor(AssetUserNetworkServiceRecord assetUserNetworkServiceRecord) {
+    private void sendMessageToActor(ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord) {
         try {
             if (!poolConnectionsWaitingForResponse.containsKey(assetUserNetworkServiceRecord.getActorDestinationPublicKey())) {
                 if (assetUserActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(assetUserNetworkServiceRecord.getActorDestinationPublicKey()) == null) {
@@ -567,7 +562,7 @@ public class AssetUserActorNetworkServiceAgent extends FermatAgent {
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
-    public Map<String, AssetUserNetworkServiceRecord> getPoolConnectionsWaitingForResponse() {
+    public Map<String, ActorAssetNetworkServiceRecord> getPoolConnectionsWaitingForResponse() {
         return poolConnectionsWaitingForResponse;
     }
 

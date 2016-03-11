@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -38,6 +39,7 @@ public class EditIdentityWorker extends FermatWorker {
     @Override
     protected Object doInBackground() throws Exception {
 
+
         boolean valueChanged = (identity.isPublished() != identityInfo.isPublished());
 
         if ( identity == null ) {
@@ -45,10 +47,11 @@ public class EditIdentityWorker extends FermatWorker {
         } else {
             moduleManager.updateCryptoBrokerIdentity(identity);
             if (valueChanged) {
-                if (identity.isPublished())
+                if (identity.isPublished()) {
                     moduleManager.publishIdentity(identity.getPublicKey());
-                else
+                }else {
                     moduleManager.hideIdentity(identity.getPublicKey());
+                }
             }
             return SUCCESS;
         }

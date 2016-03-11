@@ -108,7 +108,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -133,7 +132,6 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
@@ -213,7 +211,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private BottomNavigation bottomNavigation;
 
-    private boolean hidden = true;
     /**
      * Listeners
      */
@@ -506,19 +503,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     private void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
-    }
-
-    public Activity getActivityUsedType() {
-        Activity activity = null;
-        if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-            SubApp subApp = getSubAppRuntimeMiddleware().getLastApp();
-            activity = subApp.getLastActivity();
-        } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
-            //activity = getWalletRuntimeManager().getLasActivity();
-        } else if (ActivityType.ACTIVITY_TYPE_DESKTOP == activityType){
-            activity = getDesktopRuntimeManager().getLastDesktopObject().getLastActivity();
-        }
-        return activity;
     }
 
     /**
@@ -1214,7 +1198,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             List<AbstractFermatFragment> fragments = new Vector<>();
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
-            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[4];
+            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[3];
 
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops().values()) {
@@ -1227,8 +1211,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //                            DesktopFragment desktopFragment = DesktopFragment.newInstance((WalletManagerModule) manager);
 
-                        String type = desktopObject.getLastActivity().getLastFragment().getType();
+                        //String type = desktopObject.getLastActivity().getLastFragment().getType();
 
+                        String type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey()).getType();
 
                         fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
@@ -1244,18 +1229,18 @@ public abstract class FermatActivity extends AppCompatActivity implements
                                 null
                         );
 
-                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_SOCIAL_MAIN.getKey()).getType();
-
-                        fragmentsArray[2] = appConnections.getFragmentFactory().getFragment(
-                                type,
-                                createOrOpenApp(getDesktopManager()),
-                                null
-                        );
+//                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_SOCIAL_MAIN.getKey()).getType();
+//
+//                        fragmentsArray[2] = appConnections.getFragmentFactory().getFragment(
+//                                type,
+//                                createOrOpenApp(getDesktopManager()),
+//                                null
+//                        );
 
                         break;
                     case "WPD":
                             DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
-                            fragmentsArray[3] =  subAppDesktopFragment;
+                            fragmentsArray[2] =  subAppDesktopFragment;
                         break;
 
                 }

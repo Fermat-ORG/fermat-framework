@@ -87,6 +87,8 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
             }
             if (settings != null) {
                 listElementSpinner = settings.getBlockchainNetwork();
+            } else {
+                listElementSpinner.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             setUpUi();

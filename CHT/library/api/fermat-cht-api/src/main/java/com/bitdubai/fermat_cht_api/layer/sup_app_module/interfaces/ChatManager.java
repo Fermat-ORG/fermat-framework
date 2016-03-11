@@ -1,10 +1,14 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
@@ -13,10 +17,14 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatExc
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.util.HashMap;
@@ -51,6 +59,8 @@ public interface ChatManager {
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
 
+    void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException;
+
     List<Contact> getContacts() throws CantGetContactException;
 
     Contact getContactByContactId(UUID contactId) throws CantGetContactException;
@@ -61,7 +71,7 @@ public interface ChatManager {
 
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
-    List<Contact> discoverActorsRegistered() throws CantGetContactException;
+    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
@@ -72,5 +82,29 @@ public interface ChatManager {
      * Service.
      * @return
      */
-    HashMap<PlatformComponentType, String> getSelfIdentities() throws CantGetOwnIdentitiesException;
+    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
+
+    /**
+     * This method returns the contact id by local public key.
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     */
+    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
+
+    void createSelfIdentities() throws CantCreateSelfIdentityException;
+
+    boolean isIdentityDevice() throws CantGetChatUserIdentityException;
+
+    List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException;
+
+    ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
+
+    void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
+
+    void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
+
+    List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
+
+    ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException;
 }

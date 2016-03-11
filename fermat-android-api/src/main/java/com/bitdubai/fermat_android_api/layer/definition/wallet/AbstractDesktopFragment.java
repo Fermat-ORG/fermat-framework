@@ -14,23 +14,26 @@ public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceP
 
 
 
-    protected void selectSubApp(InstalledSubApp installedSubApp){
+    protected void selectSubApp(InstalledSubApp installedSubApp) throws Exception {
         destroy();
         getDesktopAppSelector().selectSubApp(installedSubApp);
     }
 
-    protected void selectApp(InstalledApp installedSubApp){
+    protected void selectApp(InstalledApp installedSubApp) throws Exception {
         destroy();
         getDesktopAppSelector().selectApp(installedSubApp);
     }
 
-    protected void selectWallet(InstalledWallet installedWallet){
+    protected void selectWallet(InstalledWallet installedWallet) throws Exception {
         destroy();
         getDesktopAppSelector().selectWallet(installedWallet);
     }
 
-    private DesktopAppSelector getDesktopAppSelector(){
-        return ((DesktopAppSelector)getActivity());
+    private DesktopAppSelector getDesktopAppSelector() throws Exception {
+        if(getActivity() instanceof DesktopAppSelector){
+            return (DesktopAppSelector) getActivity();
+        }
+        throw new Exception("big problem occur");
     }
 
 
