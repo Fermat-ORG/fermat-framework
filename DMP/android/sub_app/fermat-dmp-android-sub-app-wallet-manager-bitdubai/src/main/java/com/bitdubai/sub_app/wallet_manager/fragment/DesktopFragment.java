@@ -337,7 +337,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
 
                 if(installedWallet.getWalletPublicKey().equals("loss_protected_wallet")) {
                     Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.bitcoin_wallet);
+                    item.setIconResource(R.drawable.loss_protected);
                     item.setPosition(8);
                     lstItemsWithIcon.add(item);
                 }
