@@ -85,6 +85,7 @@ dependencies {
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
+    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
