@@ -1,4 +1,4 @@
-package bitdubai.version_1.database.communications;
+package bitdubai.version_1.database;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.cryptotransmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants</code>

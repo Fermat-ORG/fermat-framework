@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -25,11 +24,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
@@ -63,18 +57,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
-import bitdubai.version_1.database.communications.CryptoTransmissionMetadataDAO_V2;
-import bitdubai.version_1.database.communications.CryptoTransmissionNetworkServiceDatabaseConstants;
+import bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants;
+import bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseFactory;
+import bitdubai.version_1.database.CryptoTransmissionNetworkServiceDeveloperDatabaseFactory;
+import bitdubai.version_1.database.CryptoTransmissionNetworkServiceMetadataDao;
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
 import bitdubai.version_1.structure.CryptoTransmissionMessage;
 import bitdubai.version_1.structure.CryptoTransmissionMessageType;
 import bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
 import bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
+import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
 
 /**
  * Created by natalia on 12/02/16.
@@ -94,9 +88,9 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     private long reprocessTimer = 300000; //five minutes
 
     /**
-     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     * Represent the cryptoTransmissionNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private CryptoTransmissionNetworkServiceDeveloperDatabaseFactory cryptoTransmissionNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -115,15 +109,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     /**
      * DAO
      */
-    private CryptoTransmissionMetadataDAO_V2 incomingNotificationsDao;
-    private CryptoTransmissionMetadataDAO_V2 outgoingNotificationDao;
-
-
-    /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
-
+    private CryptoTransmissionNetworkServiceMetadataDao incomingNotificationsDao;
+    private CryptoTransmissionNetworkServiceMetadataDao outgoingNotificationDao;
 
     /**
      * Executor
@@ -147,35 +134,27 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     @Override
     protected void onStart() {
-        try {
 
+        try {
 
             executorService = Executors.newFixedThreadPool(1);
 
-                            /*
-                             * Create a new key pair for this execution
-                             */
-
-                    initializeClientIdentity();
-
-
-                            /*
-                             * Initialize the data base
-                             */
+                    /*
+                     * Initialize the data base
+                     */
                     initializeDb();
 
-
-                            /*
-                             * Initialize Developer Database Factory
-                             */
-                    communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-                    communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+                    /*
+                     * Initialize Developer Database Factory
+                     */
+                    cryptoTransmissionNetworkServiceDeveloperDatabaseFactory = new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+                    cryptoTransmissionNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
 
                     //DAO
-                    incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+                    incomingNotificationsDao = new CryptoTransmissionNetworkServiceMetadataDao(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-                    outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+                    outgoingNotificationDao = new CryptoTransmissionNetworkServiceMetadataDao(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
 
             // change message state to process again first time
@@ -761,7 +740,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return cryptoTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -772,9 +751,9 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         if(developerDatabase.getName().equals(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME))
-            return new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+            return new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
-            return new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
+            return new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
 
     }
 
@@ -785,7 +764,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
+        return cryptoTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
     /**
@@ -939,14 +918,14 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CryptoTransmissionNetworkServiceDatabaseFactory cryptoTransmissionNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBaseCommunication = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+                this.dataBaseCommunication = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -957,71 +936,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
-        }
-
-
-
-
-    }
-
-
-    private void initializeClientIdentity() throws CantStartPluginException {
-
-        System.out.println("CryptoTransmissionNetworkServicePluginRoot - Calling the method - initializeClientIdentity() ");
-
-        try {
-
-            System.out.println("Loading clientIdentity");
-
-             /*
-              * Load the file with the clientIdentity
-              */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String content = pluginTextFile.getContent();
-
-            //System.out.println("content = "+content);
-
-            identity = new ECCKeyPair(content);
-
-        } catch (FileNotFoundException e) {
-
-            /*
-             * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new clientIdentity
-             */
-            try {
-
-                System.out.println("CryptoTransmissionNetworkServicePluginRoot - No previous clientIdentity finder - Proceed to create new one");
-
-                /*
-                 * Create the new clientIdentity
-                 */
-                identity = new ECCKeyPair();
-
-                /*
-                 * save into the file
-                 */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(identity.getPrivateKey());
-                pluginTextFile.persistToMedia();
-
-            } catch (Exception exception) {
-                /*
-                 * The file cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantStartPluginException(exception.getLocalizedMessage());
-            }
-
-
-        } catch (CantCreateFileException cantCreateFileException) {
-
-            /*
-             * The file cannot be load. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
-
         }
 
     }

@@ -1,4 +1,4 @@
-package bitdubai.version_1.database.communications;
+package bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -37,14 +37,14 @@ import bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
 /**
  * Created by Matias Furszyfer on 2015.10.04..
  */
-public class CryptoTransmissionMetadataDAO_V2 {
+public class CryptoTransmissionNetworkServiceMetadataDao {
  ;
     private final String tableType;
     private Database database;
 
-    public CryptoTransmissionMetadataDAO_V2(
-                                            final Database database,
-                                            String tableType) {
+    public CryptoTransmissionNetworkServiceMetadataDao(
+            final Database database,
+            String tableType) {
 
         this.database = database;
         this.tableType = tableType;
