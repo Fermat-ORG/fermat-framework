@@ -34,6 +34,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactLis
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -92,6 +94,7 @@ public class ContactFragment extends AbstractFermatFragment {
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
+    private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
     private Toolbar toolbar;
@@ -116,6 +119,7 @@ public class ContactFragment extends AbstractFermatFragment {
 //            mIsSearchResultView = true;
 //        }
 //    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -517,54 +521,24 @@ public class ContactFragment extends AbstractFermatFragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage("Do you want to delete this contact?");
-            builder1.setCancelable(true);
-
-            builder1.setPositiveButton(
-                    "Yes",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            try {
-                                Contact con = chatSession.getSelectedContact();
-                                chatManager.deleteContact(con);
-                                List <Contact> cont=  chatManager.getContacts();
-                                if (cont.size() > 0) {
-                                    for (int i=0;i<cont.size();i++){
-                                        contactname.add(cont.get(i).getAlias());
-                                        contactid.add(cont.get(i).getContactId());
-                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
-                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                        contacticon.add(bmd.getBitmap());
-                                    }
-                                    final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
-                                                    moduleManager, errorManager, chatSession, appSession, null);
-                                    adaptador.refreshEvents(contactname, contacticon, contactid);
-                                }
-                            }catch(CantGetContactException e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }catch (Exception e){
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
-                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                        }
-                    });
-
-            builder1.setNegativeButton(
-                    "No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            try {
-                                dialog.cancel();
-                            }catch (Exception e){
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
-                        }
-                    });
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
+            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
+            alert.setTextTitle("Delete contact");
+            alert.setTextBody("Do you want to delete this contact?");
+            alert.setType("delete-contact");
+            alert.show();
+            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                           @Override
+                                           public void onDismiss(DialogInterface dialog) {
+                                               if(alert.getStatusDeleteContact() == true){
+                                                   try {
+                                                       changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+                                                   }catch (Exception e){
+                                                       errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                                   }
+                                               }
+                                           }
+                                       }
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);
