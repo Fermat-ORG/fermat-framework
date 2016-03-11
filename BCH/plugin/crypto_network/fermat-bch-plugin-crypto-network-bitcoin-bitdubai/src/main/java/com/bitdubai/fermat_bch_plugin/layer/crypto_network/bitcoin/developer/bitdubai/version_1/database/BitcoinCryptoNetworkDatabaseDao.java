@@ -180,32 +180,6 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     }
 
-    /**
-     * Saves a new incoming transaction into the database
-     * @param hash
-     * @param cryptoStatus
-     * @param blockchainNetworkType
-     * @param blockDepth
-     * @param addressTo
-     * @param addressFrom
-     * @param value
-     * @param op_Return
-     * @param protocolStatus
-     * @throws CantExecuteDatabaseOperationException
-     */
-    public void saveNewIncomingTransaction  (String hash,
-                                             String blockHash,
-                                             BlockchainNetworkType blockchainNetworkType,
-                                             CryptoStatus cryptoStatus,
-                                            int blockDepth,
-                                            CryptoAddress addressTo,
-                                            CryptoAddress addressFrom,
-                                            long value,
-                                            String op_Return,
-                                            ProtocolStatus protocolStatus)
-            throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(null, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, CryptoTransactionType.INCOMING);
-    }
 
     /**
      * saves a new Crypto transaction into database
@@ -377,35 +351,6 @@ public class BitcoinCryptoNetworkDatabaseDao {
      */
     private long getCurrentDateTime(){
         return  System.currentTimeMillis();
-    }
-
-    /**
-     * Saves and outgoing transaction into the database
-     * @param transactionId
-     * @param hash
-     * @param blockchainNetworkType
-     * @param cryptoStatus
-     * @param blockDepth
-     * @param addressTo
-     * @param addressFrom
-     * @param value
-     * @param op_Return
-     * @param protocolStatus
-     * @throws CantExecuteDatabaseOperationException
-     */
-    public void saveNewOutgoingTransaction(UUID transactionId,
-                                           String hash,
-                                           String blockHash,
-                                           BlockchainNetworkType blockchainNetworkType,
-                                           CryptoStatus cryptoStatus,
-                                           int blockDepth,
-                                           CryptoAddress addressTo,
-                                           CryptoAddress addressFrom,
-                                           long value,
-                                           String op_Return,
-                                           ProtocolStatus protocolStatus)
-            throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(transactionId, hash, blockHash, blockchainNetworkType, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, CryptoTransactionType.OUTGOING);
     }
 
     /**
