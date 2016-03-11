@@ -169,10 +169,15 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 name = cont.getRemoteName();
                                 message = messl.get(messl.size() - 1).getMessage();
                                 Chat chatl = chatManager.getChatByChatId(chatidtemp);
-                                long milliseconds = chatl.getLastMessageDate().getTime() + (chatl.getLastMessageDate().getNanos() / 1000000);
-                                if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds))))) {
+                                long timemess = chatl.getLastMessageDate().getTime();
+                                long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
+                                long milliseconds = timemess + nanos;
+                                Date dated= new java.util.Date(milliseconds);
+                                //String datef= DateFormat.getDateTimeInstance().format(dated);
+                                //Date to =new Date(datef);
+                                if (Validate.isDateToday(dated)) {
                                     datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                                } else {
+                                }else {
                                     Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
                                     Date today = new Date();
                                     long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
