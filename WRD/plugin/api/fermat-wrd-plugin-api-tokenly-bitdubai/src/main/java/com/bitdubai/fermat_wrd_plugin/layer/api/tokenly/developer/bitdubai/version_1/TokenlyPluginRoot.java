@@ -44,6 +44,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //Test Method
             //testURL();
             //testManagerByBotId();
+            testManagerByUsername();
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.API_TOKENLY,
@@ -77,6 +78,18 @@ public class TokenlyPluginRoot extends AbstractPlugin {
         String id="17d47db1-6115-485d-bd62-bb965bb31867";
         try{
             Bot bot = this.tokenlyManager.getBotByBotId(id);
+            System.out.println("WRD: Test response - " + bot);
+        } catch (Exception e) {
+            System.out.println("WRD: Test URL exception");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void testManagerByUsername(){
+        String username="tatiana";
+        try{
+            Bot bot = this.tokenlyManager.getBotBySwapbotUsername(username);
             System.out.println("WRD: Test response - " + bot);
         } catch (Exception e) {
             System.out.println("WRD: Test URL exception");

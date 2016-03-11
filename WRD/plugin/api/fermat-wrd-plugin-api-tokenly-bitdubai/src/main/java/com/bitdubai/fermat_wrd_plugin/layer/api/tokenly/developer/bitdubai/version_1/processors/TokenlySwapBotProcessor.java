@@ -12,6 +12,7 @@ import com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.versi
 import com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.config.TokenlySwapJSonAttNames;
 import com.bitdubai.fermat_wrd_plugin.layer.api.tokenly.developer.bitdubai.version_1.records.SwapBotRecord;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.sql.Date;
@@ -29,12 +30,40 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetBotException
      */
-    public static Bot getBotURLByBotId(String botId) throws CantGetBotException {
+    public static Bot getBotByBotId(String botId) throws CantGetBotException {
         //Request URL to get a bot by tokenly Id.
         String requestedURL=swabotTokenlyURL+"bot/"+botId;
         try{
             JsonObject jSonObject = RemoteJSonProcessor.getJSonObject(requestedURL);
             return getBotFromJsonObject(jSonObject);
+        } catch (CantGetJSonObjectException e) {
+            throw new CantGetBotException(
+                    e,
+                    "Getting swap bot from given Id",
+                    "Cannot get JSon from tokenly API using URL "+requestedURL);
+        }
+
+    }
+
+    /**
+     * This method returns a bot from tokenly API by a request URL.
+     * @param username
+     * @return
+     * @throws CantGetBotException
+     */
+    public static Bot getBotByTokenlyUsername(String username) throws CantGetBotException {
+        //Request URL to get a bot by tokenly Id.
+        String requestedURL=swabotTokenlyURL+"bots?username="+username;
+        try{
+            JsonArray jSonArray = RemoteJSonProcessor.getJSonArray(requestedURL);
+            if(jSonArray==null){
+                return null;
+            }
+            JsonObject jSonObject = jSonArray.
+                    get(0).
+                    getAsJsonObject();
+            String id = getStringFromJsonObject(jSonObject, TokenlyBotJSonAttNames.ID);
+            return getBotByBotId(id);
         } catch (CantGetJSonObjectException e) {
             throw new CantGetBotException(
                     e,
@@ -51,7 +80,6 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
      */
     private static Bot getBotFromJsonObject(JsonObject jSonObject){
 
-        Gson gSonProcessor = new Gson();
         //Bot Id
         String id = getStringFromJsonObject(jSonObject, TokenlyBotJSonAttNames.ID);
         //Bot name
@@ -80,7 +108,7 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
         Swap[] swaps = TokenlySwapProcessor.getSwapArrayFromJsonObject(jSonObject);
         //Bot balances
         TokenlyBalance[] tokenlyBalances = TokenlyBalanceProcessor.
-                getTokenlyBalancesByJsonObject(
+                getTokenlyBalancesFromJsonObject(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BALANCES));
         //Bot all balances by type
         TokenlyBalance[][] allTokenlyBalancesByType = TokenlyBalanceProcessor.

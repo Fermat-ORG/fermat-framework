@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
  */
 public class TokenlyBalanceProcessor extends AbstractTokenlyProcessor {
 
-    public static TokenlyBalance[] getTokenlyBalancesByJsonObject(JsonObject jsonObject){
+    /*public static TokenlyBalance[] getTokenlyBalancesByJsonObject(JsonObject jsonObject){
         JsonElement jsonElement = jsonObject.get(TokenlyBotJSonAttNames.BALANCES);
         JsonObject jsonObjectArray = jsonElement.getAsJsonObject();
         TokenlyBalance[] tokenlyBalances = new TokenlyBalance[TokenlyCurrency.values().length];
@@ -34,6 +34,7 @@ public class TokenlyBalanceProcessor extends AbstractTokenlyProcessor {
         return tokenlyBalances;
     }
 
+    /*
     public static TokenlyBalance[][] getTokenlyBalancesByType(JsonObject jsonObject){
         JsonElement jsonElement = jsonObject.get(TokenlyBotJSonAttNames.ALL_BALANCES_BY_TYPE);
         JsonArray jsonArray = jsonElement.getAsJsonArray();
@@ -63,7 +64,7 @@ public class TokenlyBalanceProcessor extends AbstractTokenlyProcessor {
             counter++;
         }
         return tokenlyBalances;
-    }
+    }*/
 
     /**
      * This method return TokenlyBalance by a given JsonObject
@@ -133,6 +134,58 @@ public class TokenlyBalanceProcessor extends AbstractTokenlyProcessor {
                     TokenlyCurrency.BITCOIN);
             return tokenlyBalance;
         }
+    }
+
+    /**
+     * This method returns a Receipt from a JsonObject.
+     * @param jsonObject
+     * @return
+     */
+    public static TokenlyBalanceRecord[] getTokenlyBalancesFromJsonObject(
+            JsonObject jsonObject){
+        //Balance
+        double balance;
+        int availableTokenlyCurrencySize = TokenlyCurrency.values().length;
+        //For loop counter.
+        int counter = 0;
+        TokenlyBalanceRecord tokenlyBalance;
+        TokenlyBalanceRecord[] tokenlyBalanceArray = new TokenlyBalanceRecord[availableTokenlyCurrencySize];
+        for (TokenlyCurrency tokenlyCurrency : TokenlyCurrency.values()) {
+            //Generic balance
+            balance = getDoubleFromJsonObject(
+                    jsonObject,
+                    tokenlyCurrency.getCode());
+            tokenlyBalance = new TokenlyBalanceRecord(
+                    balance,
+                    tokenlyCurrency);
+            tokenlyBalanceArray[counter] = tokenlyBalance;
+            counter++;
+        }
+        return tokenlyBalanceArray;
+    }
+
+    public static TokenlyBalance[][] getTokenlyBalancesByType(JsonObject jsonObject){
+        int balanceTypesEnumSize = TokenlyBalancesType.values().length;
+        //Tokenly balance single array
+        TokenlyBalanceRecord[] tokenlyBalanceArray;
+        TokenlyBalance[][] tokenlyBalanceArrays = new TokenlyBalance[balanceTypesEnumSize][];
+        //For loop counter.
+        int counter = 0;
+        int innerCounter;
+        for (TokenlyBalancesType tokenlyBalancesType : TokenlyBalancesType.values()) {
+            tokenlyBalanceArray=getTokenlyBalancesFromJsonObject(
+                    jsonObject.getAsJsonObject(
+                            tokenlyBalancesType.getCode()));
+            innerCounter=0;
+            for(TokenlyBalanceRecord tokenlyBalance : tokenlyBalanceArray){
+                tokenlyBalance.setType(tokenlyBalancesType);
+                tokenlyBalanceArray[innerCounter]=tokenlyBalance;
+                innerCounter++;
+            }
+            tokenlyBalanceArrays[counter]=tokenlyBalanceArray;
+            counter++;
+        }
+        return tokenlyBalanceArrays;
     }
 
 }

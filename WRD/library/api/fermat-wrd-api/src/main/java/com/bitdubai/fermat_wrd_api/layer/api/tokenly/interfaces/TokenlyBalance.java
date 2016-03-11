@@ -15,10 +15,16 @@ public interface TokenlyBalance {
     TokenlyBalancesType getType();
 
     /**
+     * This method sets the balance type.
+     * @param tokenlyBalancesType
+     */
+    void setType(TokenlyBalancesType tokenlyBalancesType);
+
+    /**
      * This method returns the tokenly balance
      * @return
      */
-    long getBalance();
+    double getBalance();
 
     /**
      * This method returns the currency type.

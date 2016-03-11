@@ -20,7 +20,6 @@ public class TokenlyImageDetailsProcessor extends AbstractTokenlyProcessor{
      */
     public static ImageDetails getImageDetailsFromJsonObject(JsonObject jSonObject){
 
-        Gson gSonProcessor = new Gson();
         //Image Detail Id
         String id = getStringFromJsonObject(
                 jSonObject,

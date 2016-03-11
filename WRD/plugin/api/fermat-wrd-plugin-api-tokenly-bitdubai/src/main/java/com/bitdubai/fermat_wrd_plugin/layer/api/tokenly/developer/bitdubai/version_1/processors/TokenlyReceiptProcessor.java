@@ -20,7 +20,6 @@ public class TokenlyReceiptProcessor extends AbstractTokenlyProcessor {
      */
     public static Receipt getReceiptFromJsonObject(JsonObject jsonObject){
 
-        Gson gSonProcessor = new Gson();
         //Receipt quantity in.
         double quantityIn = getLongFromJsonObject(
                 jsonObject,

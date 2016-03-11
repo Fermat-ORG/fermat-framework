@@ -10,7 +10,7 @@ import com.bitdubai.fermat_wrd_api.layer.api.tokenly.interfaces.TokenlyBalance;
 public class TokenlyBalanceRecord implements TokenlyBalance {
 
     private TokenlyBalancesType type;
-    private long balance;
+    private double balance;
     private TokenlyCurrency currencyType;
 
     /**
@@ -19,7 +19,7 @@ public class TokenlyBalanceRecord implements TokenlyBalance {
      * @param currencyType
      */
     public TokenlyBalanceRecord(
-            long balance,
+            double balance,
             TokenlyCurrency currencyType) {
         this.balance = balance;
         this.currencyType = currencyType;
@@ -51,11 +51,20 @@ public class TokenlyBalanceRecord implements TokenlyBalance {
     }
 
     /**
+     * This method sets the TokenlyBalancesType
+     * @param tokenlyBalancesType
+     */
+    @Override
+    public void setType(TokenlyBalancesType tokenlyBalancesType) {
+        this.type = tokenlyBalancesType;
+    }
+
+    /**
      * This method returns the balance.
      * @return
      */
     @Override
-    public long getBalance() {
+    public double getBalance() {
         return 0;
     }
 
