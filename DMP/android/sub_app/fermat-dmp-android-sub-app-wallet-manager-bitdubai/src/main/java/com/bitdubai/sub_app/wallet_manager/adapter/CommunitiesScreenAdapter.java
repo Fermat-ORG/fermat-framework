@@ -4,9 +4,10 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.holder.CommunitiesHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,7 @@ public class CommunitiesScreenAdapter extends FermatAdapter<InstalledApp, Commun
 
     @Override
     protected void bindHolder(final CommunitiesHolder holder, final InstalledApp data, final int position) {
-        holder.thumbnail.setVisibility(View.VISIBLE);
-
+        Picasso.with(context).load(data.getIconResource()).into(holder.getImageView());
     }
 
 }
