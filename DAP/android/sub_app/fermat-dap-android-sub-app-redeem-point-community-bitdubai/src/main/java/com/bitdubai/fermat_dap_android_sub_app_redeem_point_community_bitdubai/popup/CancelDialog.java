@@ -111,7 +111,7 @@ public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
         if (i == R.id.positive_button) {
             try {
                 getSession().getModuleManager().cancelActorAssetRedeem(
-                        identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+//                        identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
                         actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
                 );
                 getSession().setData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_CANCELED, Boolean.TRUE);

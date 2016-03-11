@@ -129,6 +129,10 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
         this.adapterChangeListener = adapterChangeListener;
     }
 
+    public AdapterChangeListener<Actor> getAdapterChangeListener() {
+        return adapterChangeListener;
+    }
+
     public int getSize() {
         if (dataSet != null)
             return dataSet.size();
