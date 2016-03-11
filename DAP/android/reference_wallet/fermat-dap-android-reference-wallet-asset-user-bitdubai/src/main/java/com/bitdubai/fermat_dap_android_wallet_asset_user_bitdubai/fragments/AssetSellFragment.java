@@ -44,7 +44,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.BitcoinsSpinnerAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
-
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.SellInfo;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
@@ -57,12 +56,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
 
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
@@ -322,7 +319,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_quantity_zero),
                     Toast.LENGTH_SHORT).show();
             return false;
-        } else if (quantity > digitalAsset.getAvailableBalanceQuantity()) {
+        } else if (quantity > digitalAsset.getUsableAssetsQuantity()) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_quantity),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -482,9 +479,9 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
         assetSellNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetSellRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
+        assetSellRemainingText.setText(digitalAsset.getUsableAssetsQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
-        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+        if (digitalAsset.getUsableAssetsQuantity() == 0) {
             selectUserButton.setOnClickListener(null);
         }
     }
@@ -511,7 +508,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
         assetSellNameText.setText(digitalAsset.getName());
 //        assetsToSellEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
-        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        long quantity = digitalAsset.getUsableAssetsQuantity();
         assetSellRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
 
         Object x = appSession.getData("user_selected");
