@@ -119,18 +119,6 @@
         android:textSize="@dimen/ccw_regular_text_size"
         tools:text="03 Feb 2015"/>
 
-    <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_update_date_exp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/ccw_update_date"
-        android:layout_alignRight="@+id/ccw_update_date"
-        android:layout_below="@+id/ccw_update_date"
-        android:paddingTop="0dp"
-        android:textColor="@color/negotiation_date_text"
-        android:textSize="@dimen/ccw_regular_text_size"
-        tools:text="Exp 03 Feb 2015"/>-->
-
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -189,5 +177,14 @@
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="BTC"/>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/ccw_sending_progress_bar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:indeterminate="true"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/ccw_update_date"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>
 

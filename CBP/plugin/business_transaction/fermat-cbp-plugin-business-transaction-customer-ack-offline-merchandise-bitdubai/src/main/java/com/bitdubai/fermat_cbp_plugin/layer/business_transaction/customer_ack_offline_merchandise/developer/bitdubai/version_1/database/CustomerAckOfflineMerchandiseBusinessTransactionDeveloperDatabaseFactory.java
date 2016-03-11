@@ -113,6 +113,8 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFa
         onlinePaymentColumns.add(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_MERCHANDISE_AMOUNT_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Online Payment addition.
          */

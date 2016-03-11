@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 
 import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
-import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRootNew;
 
 
 /**
@@ -27,7 +26,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoTransmissionNetworkServicePluginRootNew());
+            this.registerVersion(new CryptoTransmissionNetworkServicePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
