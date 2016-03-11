@@ -141,8 +141,6 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
         List<CurrencyMatching> currencyMatchingList;
 
-        // TODO test purposes
-       // currencyMatchingList = testDataCurrencyMatching();
         try {
 
             currencyMatchingList = cryptoBrokerWallet.getCryptoBrokerTransactionCurrencyInputs();
@@ -152,6 +150,9 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetTransactionCryptoBrokerWalletMatchingException);
             return;
         }
+
+        // TODO test purposes
+        //currencyMatchingList = testDataCurrencyMatching();
 
         Map<MatchingEngineMiddlewareCurrencyPair, UUID> linkedEarningPairs = new HashMap<>();
 
@@ -263,8 +264,8 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
                         "ORIGIN4",
                         FiatCurrency.VENEZUELAN_BOLIVAR,
                         CryptoCurrency.BITCOIN,
-                        500,
-                        0.5f
+                        1500,
+                        1.5f
                 )
         );
         matchingList.add(
@@ -272,14 +273,14 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
                         "ORIGIN5",
                         FiatCurrency.VENEZUELAN_BOLIVAR,
                         CryptoCurrency.BITCOIN,
-                        500,
-                        0.5f
+                        1500,
+                        1.5f
                 )
         );
 
         return matchingList;
-    }
-*/
+    }*/
+
     private void cleanResources() {
         /**
          * Disconnect from database and explicitly set all references to null.

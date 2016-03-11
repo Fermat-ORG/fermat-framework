@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputT
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 
+import java.security.InvalidParameterException;
 import java.util.UUID;
 
 /**
@@ -35,6 +36,24 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
                                                     final float                  amountReceiving    ,
                                                     final InputTransactionType   type               ,
                                                     final InputTransactionState  state              ) {
+
+        if (id == null)
+            throw new InvalidParameterException("id is null.");
+
+        if (originTransactionId == null)
+            throw new InvalidParameterException("originTransactionId is null.");
+
+        if (currencyGiving == null)
+            throw new InvalidParameterException("currencyGiving is null.");
+
+        if (currencyReceiving == null)
+            throw new InvalidParameterException("currencyReceiving is null.");
+
+        if (type == null)
+            throw new InvalidParameterException("type is null.");
+
+        if (state == null)
+            throw new InvalidParameterException("state is null.");
 
         this.id                  = id                 ;
         this.originTransactionId = originTransactionId;

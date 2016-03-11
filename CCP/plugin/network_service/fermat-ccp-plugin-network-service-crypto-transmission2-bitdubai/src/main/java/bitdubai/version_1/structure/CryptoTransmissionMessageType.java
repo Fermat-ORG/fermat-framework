@@ -1,4 +1,4 @@
-package bitdubai.version_1.structure.structure;
+package bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
