@@ -182,5 +182,10 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         return FermatAppType.WALLET;
     }
 
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
 
 }

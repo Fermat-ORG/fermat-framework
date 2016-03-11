@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
                 tools:text="1.4 BTC"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 />
