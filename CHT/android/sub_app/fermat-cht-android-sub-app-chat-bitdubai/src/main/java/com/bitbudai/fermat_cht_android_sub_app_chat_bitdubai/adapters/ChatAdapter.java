@@ -175,7 +175,6 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
-        //TODO: put empty the others holders too
         holder.txtMessage.setText(data.getMessage());
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
