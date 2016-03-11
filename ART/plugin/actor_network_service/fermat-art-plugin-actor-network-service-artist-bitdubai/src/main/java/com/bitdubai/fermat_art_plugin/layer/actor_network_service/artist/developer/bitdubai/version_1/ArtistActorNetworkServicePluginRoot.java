@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -24,6 +27,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDeveloperDatabaseFactory;
@@ -31,8 +35,13 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -51,10 +60,13 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     private long reprocessTimer = 300000; //five minutes
     private Timer timer = new Timer();
     private Database dataBase;
+    protected final static String ART_PROFILE_IMG = "ART_PROFILE_IMG";
 
     private ArtistActorNetworkServiceDeveloperDatabaseFactory artistActorNetworkServiceDeveloperDatabaseFactory;
     private IncomingNotificationDao incomingNotificationDao;
     private OutgoingNotificationDao outgoingNotificationDao;
+
+    private List<PlatformComponentProfile> actorArtistPendingToRegistration;
     /**
      * Executor
      */
@@ -69,6 +81,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                 NetworkServiceType.ARTIST_ACTOR,
                 "Actor Network Service Artist",
                 null);
+        this.actorArtistPendingToRegistration = new ArrayList<>();
     }
 
     @Override
@@ -112,7 +125,16 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
     @Override
     protected void onNetworkServiceRegistered() {
-        System.out.println("##########################\n Actor Artist Network Service Registred\nPublic Key: " + getIdentity().getPublicKey() + "\n#######################################3");
+        try {
+            //TODO Test this functionality
+            for (PlatformComponentProfile platformComponentProfile : actorArtistPendingToRegistration) {
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                System.out.println("AssetRedeemActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+            }
+        } catch (Exception e) {
+            reportUnexpectedError(e);
+            e.printStackTrace();
+        }
     }
 
     private void startTimer() {
@@ -181,9 +203,82 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
         executorService.shutdownNow();
     }
 
+    private PlatformComponentProfile constructPlatformComponentProfile(ArtistActor artist, CommunicationsClientConnection communicationsClientConnection) {
+   /*
+    * Construct the profile
+    */
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(ART_PROFILE_IMG, Base64.encodeToString(artist.getProfileImage(), Base64.DEFAULT));
+
+        String extraData = gson.toJson(jsonObject);
+
+        return communicationsClientConnection.constructPlatformComponentProfileFactory(
+                artist.getPublicKey(),
+                artist.getAlias().toLowerCase().trim(),
+                artist.getAlias(),
+                NetworkServiceType.UNDEFINED,
+                PlatformComponentType.NETWORK_SERVICE,
+                extraData);
+    }
     @Override
     public void registerActorArtist(ArtistActor actorArtistNetworkService) throws CantRegisterActorArtistNetworkServiceException {
+        try {
+            if (isRegister()) {
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
+                /*
+                 * Construct the profile
+                 */
+
+                final PlatformComponentProfile platformComponentProfileActorArtist = constructPlatformComponentProfile(
+                        actorArtistNetworkService, communicationsClientConnection);
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                /**
+                 * I need to add this in a new thread other than the main android thread
+                 */
+                if (!actorArtistPendingToRegistration.contains(platformComponentProfileActorArtist)) {
+                    actorArtistPendingToRegistration.add(platformComponentProfileActorArtist);
+                }
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            communicationsClientConnection.registerComponentForCommunication(
+                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileActorArtist);
+                            onComponentRegistered(platformComponentProfileActorArtist);
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, "ACTOR ARTIST REGISTER-ACTOR");
+                thread.start();
+            }
+        } catch (Exception e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantRegisterActorArtistNetworkServiceException pluginStartException = new CantRegisterActorArtistNetworkServiceException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
     }
 
     @Override
