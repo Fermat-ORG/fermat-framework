@@ -72,7 +72,7 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp> 
             layout.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onBackPressed();
+                    getActivity().onBackPressed();
                 }
             });
 

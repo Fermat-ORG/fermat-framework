@@ -887,7 +887,7 @@ public class AssetIssuingTransactionDao {
 
     public List<String> getGenesisTransactionByAssetKey(String assetPublicKey) throws CantCheckAssetIssuingProgressException {
         return getValueListFromAssetIssuingTableByFieldCode(
-                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME,
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME,
                 assetPublicKey,
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
     }
