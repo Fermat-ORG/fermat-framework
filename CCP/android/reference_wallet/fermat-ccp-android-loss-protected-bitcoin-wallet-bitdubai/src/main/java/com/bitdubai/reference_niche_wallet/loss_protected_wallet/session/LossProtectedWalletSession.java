@@ -6,17 +6,17 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
@@ -56,9 +56,9 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
 
     public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
-    private CryptoWalletWalletContact lastContactSelected;
+    private LossProtectedWalletContact lastContactSelected;
 
-    private PaymentRequest paymentRequest;
+    private LossProtectedPaymentRequest paymentRequest;
     private String communityConnection;
 
 
@@ -80,11 +80,11 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     public void setAccountName(String accountName){
         this.accountName=accountName;
     }
-    public void setLastContactSelected(CryptoWalletWalletContact walletContact){
+    public void setLastContactSelected(LossProtectedWalletContact walletContact){
         this.lastContactSelected=walletContact;
     }
 
-    public void setLastRequestSelected(PaymentRequest paymentRequest){
+    public void setLastRequestSelected(LossProtectedPaymentRequest paymentRequest){
         this.paymentRequest=paymentRequest;
     }
 
@@ -121,15 +121,15 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
         typeBalanceSelected=balaceType.getCode();
     }
 
-    public CryptoWalletWalletContact getLastContactSelected() {
+    public LossProtectedWalletContact getLastContactSelected() {
         return lastContactSelected;
     }
 
-    public PaymentRequest getLastRequestSelected() {
+    public LossProtectedPaymentRequest getLastRequestSelected() {
         return this.paymentRequest;
     }
 
-    public LossProtectedWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
+    public LossProtectedWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException {
         List<LossProtectedWalletIntraUserIdentity> lst = null;
         try {
             lst = getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();

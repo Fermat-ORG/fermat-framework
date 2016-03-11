@@ -5,7 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
-public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<ReferenceFragmentsEnumType> {
+public enum LossProtectedFragmentsEnumType implements FermatFragmentsEnumType<LossProtectedFragmentsEnumType> {
 
 
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND("CWRWBTCABS"),
@@ -38,12 +38,12 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
 
     private String key;
 
-    ReferenceFragmentsEnumType(String key) {
+    LossProtectedFragmentsEnumType(String key) {
         this.key = key;
     }
 
-    public static ReferenceFragmentsEnumType getValue(String name) {
-        for (ReferenceFragmentsEnumType fragments : ReferenceFragmentsEnumType.values()) {
+    public static LossProtectedFragmentsEnumType getValue(String name) {
+        for (LossProtectedFragmentsEnumType fragments : LossProtectedFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }

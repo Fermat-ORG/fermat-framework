@@ -17,7 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletModuleSettings;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.ReferenceWalletFragmentFactory;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.LossProtectedWalletFragmentFactory;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 
@@ -35,7 +35,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        return new ReferenceWalletFragmentFactory();
+        return new LossProtectedWalletFragmentFactory();
     }
 
     @Override

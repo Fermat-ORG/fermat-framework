@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -21,12 +21,12 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,13 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 public class SettingsMainNetworkFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private ReferenceWalletSession referenceWalletSession;
-    private CryptoWallet cryptoWallet;
+    private LossProtectedWalletSession referenceWalletSession;
+    private LossProtectedWallet cryptoWallet;
     private FermatEditText port;
     private FermatEditText ipAdress;
     private Spinner spinner;
 
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
 
 
     public static SettingsMainNetworkFragment newInstance() {
@@ -56,14 +56,15 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = (LossProtectedWalletSession) appSession;
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoWalletException e) {
+          } catch (CantGetCryptoLossProtectedWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
         }
     }
 
@@ -118,7 +119,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
                     System.out.println("NETWORK TYPE SELECTED IS "+text);
                     System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
 
-                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                    LossProtectedWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                     bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
                     settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);

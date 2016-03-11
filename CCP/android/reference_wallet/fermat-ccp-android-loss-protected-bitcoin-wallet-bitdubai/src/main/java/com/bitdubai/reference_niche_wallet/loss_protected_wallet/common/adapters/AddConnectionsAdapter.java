@@ -7,12 +7,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.IntraUserInfoViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
 import com.squareup.picasso.Picasso;
@@ -25,12 +26,12 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserActor, IntraUserInfoViewHolder> {
+public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntraUserActor, IntraUserInfoViewHolder> {
 
 
     private final AddConnectionCallback addConnectionCallback;
 
-    public AddConnectionsAdapter(Context context, ArrayList<CryptoWalletIntraUserActor> dataSet,AddConnectionCallback addConnectionCallback) {
+    public AddConnectionsAdapter(Context context, ArrayList<LossProtectedWalletIntraUserActor> dataSet,AddConnectionCallback addConnectionCallback) {
         super(context, dataSet);
         this.addConnectionCallback = addConnectionCallback;
     }
@@ -46,7 +47,7 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
     }
 
     @Override
-    protected void bindHolder(final IntraUserInfoViewHolder holder, final CryptoWalletIntraUserActor data, final int position) {
+    protected void bindHolder(final IntraUserInfoViewHolder holder, final LossProtectedWalletIntraUserActor data, final int position) {
         holder.thumbnail.setVisibility(View.VISIBLE);
         holder.container_data.setVisibility(View.VISIBLE);
         holder.checkbox_connection.setVisibility(View.VISIBLE);

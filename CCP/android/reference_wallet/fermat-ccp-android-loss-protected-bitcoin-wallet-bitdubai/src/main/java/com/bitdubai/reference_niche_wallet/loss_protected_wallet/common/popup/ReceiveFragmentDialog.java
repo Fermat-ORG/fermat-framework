@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -25,14 +25,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.google.zxing.WriterException;
@@ -51,14 +48,14 @@ public class ReceiveFragmentDialog extends Dialog implements
     public Dialog d;
 
 
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
      *  Deals with crypto wallet interface
      */
 
-    private CryptoWallet cryptoWallet;
+    private LossProtectedWallet cryptoWallet;
 
     /**
      * Deals with error manager interface
@@ -69,7 +66,7 @@ public class ReceiveFragmentDialog extends Dialog implements
     /**
      *  Contact member
      */
-    private CryptoWalletWalletContact walletContact;
+    private LossProtectedWalletContact walletContact;
     private String user_address_wallet = "";
 
     /**
@@ -101,7 +98,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
 
 
-    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,CryptoWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey, BlockchainNetworkType blockchainNetworkType) {
+    public ReceiveFragmentDialog(Activity a,LossProtectedWallet cryptoWallet,ErrorManager errorManager,LossProtectedWalletContact walletContact,String identityPublicKey,String walletPublcKey, BlockchainNetworkType blockchainNetworkType) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -157,7 +154,7 @@ public class ReceiveFragmentDialog extends Dialog implements
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
-        } catch (CantRequestCryptoAddressException e) {
+        } catch (CantRequestLossProtectedAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 

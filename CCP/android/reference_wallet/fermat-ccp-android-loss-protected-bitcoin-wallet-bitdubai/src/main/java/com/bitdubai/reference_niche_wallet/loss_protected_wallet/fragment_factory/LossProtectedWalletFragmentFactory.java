@@ -17,17 +17,17 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
+public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<LossProtectedWalletSession,WalletResourcesProviderManager,LossProtectedFragmentsEnumType>  {
 
 
     @Override
-    public AbstractFermatFragment getFermatFragment(ReferenceFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(LossProtectedFragmentsEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;
         try {
 
@@ -107,7 +107,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
     }
 
     @Override
-    public ReferenceFragmentsEnumType getFermatFragmentEnumType(String key) {
-        return ReferenceFragmentsEnumType.getValue(key);
+    public LossProtectedFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return LossProtectedFragmentsEnumType.getValue(key);
     }
 }

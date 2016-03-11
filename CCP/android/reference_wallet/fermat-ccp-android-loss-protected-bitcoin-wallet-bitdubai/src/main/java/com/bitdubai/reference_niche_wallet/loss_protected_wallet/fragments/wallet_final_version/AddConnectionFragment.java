@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -30,9 +30,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -40,7 +41,8 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.BitcoinW
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -49,16 +51,16 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer
  */
-public class AddConnectionFragment extends FermatWalletListFragment<CryptoWalletIntraUserActor>
-        implements FermatListItemListeners<CryptoWalletIntraUserActor>,AddConnectionCallback {
+public class AddConnectionFragment extends FermatWalletListFragment<LossProtectedWalletIntraUserActor>
+        implements FermatListItemListeners<LossProtectedWalletIntraUserActor>,AddConnectionCallback {
 
 
     private static final Integer MAX_USER_SHOW = 20;
     private int offset = 0;
-    private CryptoWallet moduleManager;
+    private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
-    private ReferenceWalletSession referenceWalletSession;
+    private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList;
+    private LossProtectedWalletSession referenceWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -66,7 +68,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private LinearLayout empty_view;
     private boolean connectionDialogIsShow=false;
     Handler hnadler;
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
     public static AddConnectionFragment newInstance() {
@@ -79,7 +81,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
         try {
             // setting up  module
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = (LossProtectedWalletSession) appSession;
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = referenceWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -87,7 +89,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             connectionPickCounter = 0;
             hnadler = new Handler();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
@@ -239,8 +241,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         }
     }
 
-    private void clean(List<CryptoWalletIntraUserActor> intraUserInformationList){
-        for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
+    private void clean(List<LossProtectedWalletIntraUserActor> intraUserInformationList){
+        for(LossProtectedWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
              cryptoWalletIntraUserActor.setSelected(false);
         }
     }
@@ -290,7 +292,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             int id = item.getItemId();
 
             if(id == BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION){
-                for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
+                for(LossProtectedWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (cryptoWalletIntraUserActor.isSelected()) {
                             moduleManager.convertConnectionToContact(
@@ -323,8 +325,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     }
 
     @Override
-    public List<CryptoWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<CryptoWalletIntraUserActor> data = new ArrayList<>();
+    public List<LossProtectedWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<LossProtectedWalletIntraUserActor> data = new ArrayList<>();
         runThread();
         try {
             if (moduleManager == null) {
@@ -376,7 +378,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
 
     @Override
-    public void onItemClickListener(CryptoWalletIntraUserActor data, int position) {
+    public void onItemClickListener(LossProtectedWalletIntraUserActor data, int position) {
         //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
         //changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
         //data.setSelected(!data.isSelected());
@@ -385,7 +387,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     }
 
     @Override
-    public void onLongItemClickListener(CryptoWalletIntraUserActor data, int position) {
+    public void onLongItemClickListener(LossProtectedWalletIntraUserActor data, int position) {
 
     }
 
@@ -409,8 +411,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         }
     }
 
+
+
     @Override
-    public void setSelected(CryptoWalletIntraUserActor cryptoWalletIntraUserActor,boolean selected) {
+    public void setSelected(LossProtectedWalletIntraUserActor cryptoWalletIntraUserActor,boolean selected) {
         intraUserInformationList.remove(cryptoWalletIntraUserActor);
         cryptoWalletIntraUserActor.setSelected(selected);
         intraUserInformationList.add(cryptoWalletIntraUserActor);

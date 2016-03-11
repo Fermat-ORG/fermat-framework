@@ -26,7 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -51,20 +51,22 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -76,7 +78,8 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import org.apache.http.HttpResponse;
@@ -104,13 +107,13 @@ import static android.widget.Toast.makeText;
  *
  * @author MAtias Furszyfer
  */
-public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceWalletSession,ResourceProviderManager>
-        implements FermatListItemListeners<CryptoWalletTransaction>{
+public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager>
+        implements FermatListItemListeners<LossProtectedWalletTransaction>{
 
 
     final TransactionType transactionType = TransactionType.DEBIT;
-    ReferenceWalletSession referenceWalletSession;
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    LossProtectedWalletSession referenceWalletSession;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
     long before = 0;
     long after = 0;
@@ -119,7 +122,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     Thread background;
     private int MAX_TRANSACTIONS = 20;
     // Fermat Managers
-    private CryptoWallet moduleManager;
+    private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
     // Data
     private List<GrouperItem> openNegotiationList;
@@ -127,7 +130,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private TextView txt_balance_amount;
     private long balanceAvailable;
     private View rootView;
-    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
+    private List<LossProtectedWalletTransaction> lstCryptoWalletTransactionsAvailable;
     //private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
@@ -212,7 +215,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         });
 
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = (LossProtectedWalletSession) appSession;
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = appSession.getErrorManager();
 
@@ -222,14 +225,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
              settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
             try {
                  bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             }catch (Exception e){
                 bitcoinWalletSettings = null;
             }
             if(bitcoinWalletSettings == null){
-                bitcoinWalletSettings = new BitcoinWalletSettings();
+                bitcoinWalletSettings = new LossProtectedWalletSettings();
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
 
@@ -248,7 +251,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
             System.out.println("Network Type"+blockchainNetworkType);
-            final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+            final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 
             Handler handlerTimer = new Handler();
@@ -257,13 +260,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if(bitcoinWalletSettingsTemp.isPresentationHelpEnabled()){
                         setUpPresentation(false);
                     }
-//                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);
-//                    if(o!=null) {
-//                        if (!(Boolean) o)
-//                            setUpPresentation();
-//                    }else{
-//
-//                    }
                 }}, 500);
 
             setRunningDailyBalance();
@@ -285,14 +281,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
-//        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-//                .setBannerRes(R.drawable.banner_bitcoin_wallet)
-//                .setIconRes(R.drawable.bitcoin_wallet_2)
-//                .setBody("Hola que tal")
-//                .setSubTitle("Soy un subtitulo")
-//                .setTextFooter("soy un footer y me la re banco")
-//                .build();
-
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -304,7 +292,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
                 }
                 try {
-                    CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
+                    LossProtectedWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
                     if(cryptoWalletIntraUserIdentity==null){
                         getActivity().onBackPressed();
                     }else{
@@ -312,7 +300,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
                 } catch (CantListCryptoWalletIntraUserIdentityException e) {
                     e.printStackTrace();
-                } catch (CantGetCryptoWalletException e) {
+                } catch (CantGetCryptoLossProtectedWalletException e) {
                     e.printStackTrace();
                 }
 
@@ -496,27 +484,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
                         String receivedAddress = "";
 
-                       // try{
-
-
                             GET("",getActivity());
-
-//                        CryptoAddress cryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.BITCOIN);
-//                            CryptoWalletWalletContact cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
-//
-//                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-//                            String url = "http://52.27.68.19:15400/mati/hello/?address="+myCryptoAddress;
-//                            String response = GET(url);
-//                            if(!response.equals("transaccion fallida")){
-//                                Toast.makeText(getActivity(),"Mati Bitcoins!!",Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (CantCreateWalletContactException e) {
-//                            e.printStackTrace();
-//                        } catch (ContactNameAlreadyExistsException e) {
-//                            e.printStackTrace();
-//                        } catch (Exception e){
-//                            e.printStackTrace();
-//                        }
                         progress1 = 1;
                         circularProgressBar.setProgressValue(progress1);
                         return true;
@@ -527,14 +495,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
         });
 
-//        txt_type_balance.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-//                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-//                changeBalanceType(txt_type_balance, txt_balance_amount);
-//            }
-//        });
 
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
@@ -559,14 +519,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
         //txt_balance_amount.setTypeface(tf);
 
-        try {
             long balance = moduleManager.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
-        } catch (CantGetBalanceException e) {
-            e.printStackTrace();
-        }
 
-        txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+            txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
         }
         catch (Exception e){
 
@@ -592,11 +548,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
-        } catch (CantRequestCryptoAddressException e) {
+        } catch (CantRequestLossProtectedAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-        } catch (CantGetCryptoWalletException e) {
+        } catch (CantGetCryptoLossProtectedWalletException e) {
             e.printStackTrace();
         } catch (CantListCryptoWalletIntraUserIdentityException e) {
             e.printStackTrace();
@@ -638,14 +594,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                             String SetServerString = "";
                             CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
-                            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+                            LossProtectedWalletContact cryptoWalletWalletContact = null;
                             try {
                                 cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
-                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
+                            } catch ( ContactNameAlreadyExistsException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException | CantListCryptoWalletIntraUserIdentityException | WalletContactNotFoundException | CantGetCryptoWalletException e3) {
+                                } catch (CantFindLossProtectedWalletContactException  e3) {
 
+                                } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantGetCryptoLossProtectedWalletException e1) {
+                                    e1.printStackTrace();
                                 }
                             } catch (Exception e) {
 
@@ -678,7 +640,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 });
                 thread.start();
             }
-        } catch (CantGetBalanceException e) {
+
+
+        } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
         }
     }
@@ -779,13 +743,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         try {
-            CryptoWalletIntraUserIdentity intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
+            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
+                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
@@ -796,11 +760,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 //book_offset = lstCryptoWalletTransactionsBook.size();
 
 
-                for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
+                for (LossProtectedWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
 //                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
-                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    List<LossProtectedWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
-                    GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
+                    GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
 
@@ -811,7 +775,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             }
 
-        } catch (CantListTransactionsException e) {
+        } catch (CantListLossProtectedTransactionsException e) {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
@@ -825,12 +789,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     @Override
-    public void onItemClickListener(CryptoWalletTransaction data, int position) {
+    public void onItemClickListener(LossProtectedWalletTransaction data, int position) {
 
     }
 
     @Override
-    public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
+    public void onLongItemClickListener(LossProtectedWalletTransaction data, int position) {
     }
 
     @Override
@@ -884,7 +848,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         updateBalances();
         setRunningDailyBalance();
         try {
-            if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            if (((LossProtectedWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txt_type_balance.setText(R.string.book_balance);
@@ -907,9 +871,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             balance = referenceWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
             System.out.println("THE BALANCE IS " + balance);
-        } catch (CantGetBalanceException e) {
+
+        } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
-        } catch (CantGetCryptoWalletException e) {
+        } catch (CantGetCryptoLossProtectedWalletException e) {
             e.printStackTrace();
         }
         return balance;
@@ -955,7 +920,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<Long, Long>();
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
             try {
                 bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             }catch (Exception e){

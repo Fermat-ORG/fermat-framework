@@ -7,8 +7,9 @@ import android.content.DialogInterface;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
 import java.text.DecimalFormat;
@@ -43,26 +44,7 @@ public class WalletUtils {
         }
         showMoneyType=!showMoneyType;
 
-        /*switch (showMoneyType){
 
-            case true:
-                DecimalFormat df = new DecimalFormat();
-                df.setMaximumFractionDigits(2);
-                df.setMinimumFractionDigits(2);
-                String BTCFormat = df.format(balance / 100000000.0);
-                stringBalance = BTCFormat + " BTC";
-                break;
-            case false:
-                stringBalance = (int) (balance / 100) + " bits";
-                break;
-            default:
-                DecimalFormat df1 = new DecimalFormat();
-                df1.setMaximumFractionDigits(2);
-                df1.setMinimumFractionDigits(2);
-                String BTCFormat1 = df1.format(balance / 100000000.0);
-                stringBalance = BTCFormat1 + " BTC";
-                break;
-        }*/
         return stringBalance;
     }
 
@@ -83,26 +65,7 @@ public class WalletUtils {
         }
         showMoneyType=!showMoneyType;
 
-        /*switch (showMoneyType){
 
-            case true:
-                DecimalFormat df = new DecimalFormat();
-                df.setMaximumFractionDigits(2);
-                df.setMinimumFractionDigits(2);
-                String BTCFormat = df.format(balance / 100000000.0);
-                stringBalance = BTCFormat + " BTC";
-                break;
-            case false:
-                stringBalance = (int) (balance / 100) + " bits";
-                break;
-            default:
-                DecimalFormat df1 = new DecimalFormat();
-                df1.setMaximumFractionDigits(2);
-                df1.setMinimumFractionDigits(2);
-                String BTCFormat1 = df1.format(balance / 100000000.0);
-                stringBalance = BTCFormat1 + " BTC";
-                break;
-        }*/
         return stringBalance;
     }
 
@@ -111,7 +74,7 @@ public class WalletUtils {
      * @param strToValidate
      * @return
      */
-    public static CryptoAddress validateAddress(String strToValidate,CryptoWallet cryptoWallet) {
+    public static CryptoAddress validateAddress(String strToValidate,LossProtectedWallet cryptoWallet) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
         CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);

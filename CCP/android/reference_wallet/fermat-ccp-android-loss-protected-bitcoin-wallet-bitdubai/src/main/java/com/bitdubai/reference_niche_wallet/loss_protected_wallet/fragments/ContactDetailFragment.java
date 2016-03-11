@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -27,12 +27,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -40,7 +42,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -77,20 +79,20 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      * Platform
      */
-    private CryptoWallet cryptoWallet;
+    private LossProtectedWallet cryptoWallet;
     private ErrorManager errorManager;
-    private CryptoWalletManager cryptoWalletManager;
+    private LossProtectedWalletManager cryptoWalletManager;
     private WalletSettingsManager walletSettingsManager;
 
     /**
      * DATA
      */
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+    private LossProtectedWalletContact cryptoWalletWalletContact;
     /**
      *  Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
-    private ReferenceWalletSession referenceWalletSession;
+    private LossProtectedWalletSession referenceWalletSession;
     private FermatButton send_button;
     private FermatButton receive_button;
     private ImageView img_update;
@@ -103,7 +105,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             addressIsTouch = false;
         }
     };
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
 
@@ -117,7 +119,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = (LossProtectedWalletSession) appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
             if(cryptoWalletWalletContact==null){
@@ -129,7 +131,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
 
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
@@ -145,25 +147,14 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
             System.out.println("Network Type"+blockchainNetworkType);
 
-        } catch (CantGetCryptoWalletException e) {
+        } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
-//        /* Load Wallet Contact */
-//        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
-//            @Override
-//            public boolean evaluate(WalletContact walletContact) {
-//                try {
-//                    return walletContact.name.equalsIgnoreCase(accountName);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//                return false;
-//            }
-//        });
+
     }
 
     @Nullable
@@ -270,7 +261,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         }else{
                             Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
                         }
-                    } catch (CantGetCryptoWalletException | CantListCryptoWalletIntraUserIdentityException e) {
+                    } catch (CantGetCryptoLossProtectedWalletException | CantListCryptoWalletIntraUserIdentityException e) {
                         e.printStackTrace();
                     }
 
@@ -340,7 +331,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                            send_button.setVisibility(View.VISIBLE);
                        }
 
-                       } catch (CantGetCryptoWalletException e) {
+                       } catch (CantGetCryptoLossProtectedWalletException e) {
                            e.printStackTrace();
                        } catch (CantListCryptoWalletIntraUserIdentityException e) {
                            e.printStackTrace();
@@ -358,7 +349,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                        CryptoCurrency.BITCOIN,
                                        blockchainNetworkType
                                );
-                           } catch (CantGetCryptoWalletException e1) {
+                           } catch (CantGetCryptoLossProtectedWalletException e1) {
                                e1.printStackTrace();
                            } catch (CantListCryptoWalletIntraUserIdentityException e1) {
                                e1.printStackTrace();

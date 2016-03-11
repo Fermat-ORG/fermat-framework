@@ -5,15 +5,16 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -25,18 +26,18 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by Matias Furszyfer on 2015.09.30..
  */
-public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest, PaymentHistoryItemViewHolder>  {
+public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPaymentRequest, PaymentHistoryItemViewHolder>  {
 
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
-    CryptoWallet cryptoWallet;
-    ReferenceWalletSession referenceWalletSession;
+    LossProtectedWallet cryptoWallet;
+    LossProtectedWalletSession referenceWalletSession;
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
@@ -84,7 +85,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      * @param position position to render
      */
     @Override
-    protected void bindHolder(final PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
+    protected void bindHolder(final PaymentHistoryItemViewHolder holder, final LossProtectedPaymentRequest data, int position) {
 
         try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
@@ -174,17 +175,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             }
         }
 
-
-
-      /*  if(data.getState() != null) {
-          holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-            holder.getTxt_state().setText(data.getState());
-            holder.getTxt_state().setTypeface(tf);
-        }else{
-           holder.getLinear_layour_container_state().setVisibility(View.GONE);
-            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
-        }*/
 
 
             holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {

@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -23,13 +23,14 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -41,22 +42,22 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>,onRefreshList {
 
     /**
      * Session
      */
-    ReferenceWalletSession referenceWalletSession;
+    LossProtectedWalletSession referenceWalletSession;
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
      */
-    private CryptoWallet cryptoWallet;
+    private LossProtectedWallet cryptoWallet;
     /**
      * DATA
      */
-    private List<PaymentRequest> lstPaymentRequest;
-    private PaymentRequest selectedItem;
+    private List<LossProtectedPaymentRequest> lstPaymentRequest;
+    private LossProtectedPaymentRequest selectedItem;
     /**
      * Executor Service
      */
@@ -80,9 +81,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)appSession;
+        referenceWalletSession = (LossProtectedWalletSession)appSession;
 
-        lstPaymentRequest = new ArrayList<PaymentRequest>();
+        lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
@@ -184,7 +185,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lstPaymentRequest = new ArrayList<PaymentRequest>();
+            lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -239,14 +240,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
     @Override
-    public List<PaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
+    public List<LossProtectedPaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<LossProtectedPaymentRequest> lstPaymentRequest  = new ArrayList<LossProtectedPaymentRequest>();
 
         try {
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey,10,offset);
+            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, 10, offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -258,7 +259,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
     @Override
-    public void onItemClickListener(PaymentRequest item, int position) {
+    public void onItemClickListener(LossProtectedPaymentRequest item, int position) {
         selectedItem = item;
         onRefresh();
         //showDetailsActivityFragment(selectedItem);
@@ -271,7 +272,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * @param position
      */
     @Override
-    public void onLongItemClickListener(PaymentRequest data, int position) {
+    public void onLongItemClickListener(LossProtectedPaymentRequest data, int position) {
 
     }
 
@@ -303,32 +304,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
-
-   /* @Override
-   public void onClick(View v) {
-        try {
-            PaymentRequest paymentRequest = selectedItem;
-            int id = v.getId();
-            if(id == R.id.btn_refuse_request){
-
-                cryptoWallet.refuseRequest(paymentRequest.getRequestId());
-                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
-            }
-            else if ( id == R.id.btn_accept_request){
-
-                cryptoWallet.approveRequest(paymentRequest.getRequestId()
-                        , referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
-                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (Exception e)
-        {
-            showMessage(getActivity(), "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
-        }
-    }*/
 
 
 }
