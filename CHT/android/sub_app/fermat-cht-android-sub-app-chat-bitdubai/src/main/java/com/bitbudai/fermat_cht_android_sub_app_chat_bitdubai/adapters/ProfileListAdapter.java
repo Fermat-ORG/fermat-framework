@@ -86,7 +86,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
         View item = inflater.inflate(R.layout.profile_list_item, null, true);
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
-            imagen.setImageBitmap(getRoundedShape(profileicon.get(position), 300));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            imagen.setImageBitmap(getRoundedShape(profileicon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(profileinfo.get(position));

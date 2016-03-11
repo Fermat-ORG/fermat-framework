@@ -141,12 +141,11 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         final List<EarningsPair> data = new ArrayList<>();
 
         try {
-            final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
-            //final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(appSession.getAppPublicKey());
+            //final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
+            final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(appSession.getAppPublicKey());
             data.addAll(earningsPairs);
         } catch (Exception ex) {
-            //final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
-            //data.addAll(earningsPairs);
+            data.addAll(TestData.getEarningsPairs());// TODO: just for test purposes
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else

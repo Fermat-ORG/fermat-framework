@@ -57,7 +57,7 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {//public class 
         View item = inflater.inflate(R.layout.connection_list_item, null, true);
         try {
             ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 300));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));

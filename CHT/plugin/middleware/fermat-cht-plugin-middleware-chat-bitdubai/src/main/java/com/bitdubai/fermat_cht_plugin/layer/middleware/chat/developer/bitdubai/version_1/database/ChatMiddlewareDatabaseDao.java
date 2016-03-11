@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -42,7 +41,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -1123,7 +1121,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    private byte[] getChatUserIdentityProfileImage(String publicKey)
+    private byte[] getChatUserIdentityProfileImage(String publicKey) throws FileNotFoundException
     {
         byte[] profileImage = new byte[0];
 
@@ -1138,19 +1136,41 @@ public class ChatMiddlewareDatabaseDao {
             file.loadFromMedia();
             profileImage = file.getContent();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new FileNotFoundException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File not exist.",
+                    null);
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        } catch (CantLoadFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new FileNotFoundException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
         }catch (Exception e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new FileNotFoundException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
         return profileImage;
     }
 
-    private byte[] getContactImage(String publicKey)
+    private byte[] getContactImage(String publicKey) throws CantPersistFileException
     {
         byte[] profileImage = new byte[0];
 
@@ -1165,19 +1185,41 @@ public class ChatMiddlewareDatabaseDao {
             file.loadFromMedia();
             profileImage = file.getContent();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File not exist.",
+                    null);
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        } catch (CantLoadFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
         }catch (Exception e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
         return profileImage;
     }
 
-    private byte[] getContactConnectionImage(String publicKey)
+    private byte[] getContactConnectionImage(String publicKey) throws CantPersistFileException
     {
         byte[] profileImage = new byte[0];
 
@@ -1191,20 +1233,32 @@ public class ChatMiddlewareDatabaseDao {
             );
             file.loadFromMedia();
             profileImage = file.getContent();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        } catch (CantLoadFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
         }catch (Exception e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
         return profileImage;
     }
 
-    private void  persistNewChatUserIdentityProfileImage(String publicKey,byte[] profileImage) {
+    private void  persistNewChatUserIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistFileException {
 
         PluginBinaryFile file = null;
         try {
@@ -1219,14 +1273,40 @@ public class ChatMiddlewareDatabaseDao {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Persist File.",
+                    null);
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
+        }catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
     }
 
-    private void  persistNewContactImage(String publicKey,byte[] profileImage) {
+    private void  persistNewContactImage(String publicKey,byte[] profileImage) throws CantPersistFileException {
 
         PluginBinaryFile file = null;
         try {
@@ -1241,14 +1321,40 @@ public class ChatMiddlewareDatabaseDao {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Persist File.",
+                    null);
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
+        }catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
     }
 
-    private void  persistNewContactConnectionImage(String publicKey,byte[] profileImage) {
+    private void  persistNewContactConnectionImage(String publicKey,byte[] profileImage) throws CantPersistFileException {
 
         PluginBinaryFile file = null;
         try {
@@ -1263,9 +1369,35 @@ public class ChatMiddlewareDatabaseDao {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Persist File.",
+                    null);
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error Create File.",
+                    null);
+        }catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantPersistFileException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error general.",
+                    null);
         }
 
     }
@@ -1411,6 +1543,8 @@ public class ChatMiddlewareDatabaseDao {
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
         table.loadToMemory();
 
         return table.getRecords();
@@ -1495,14 +1629,22 @@ public class ChatMiddlewareDatabaseDao {
 
     private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
     {
-        ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME),
-                null,
-                chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                null,
-                getChatUserIdentityProfileImage(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                Actors.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME)),
-                PlatformComponentType.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME))
-                );
+        ChatUserIdentityImpl chatUserIdentity = null;
+        try {
+            chatUserIdentity = new ChatUserIdentityImpl(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME),
+                    null,
+                    chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                    null,
+                    getChatUserIdentityProfileImage(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                    Actors.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME)),
+                    PlatformComponentType.getByCode(chatUserIdentityTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME))
+                    );
+        } catch (FileNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
 
         return chatUserIdentity;
     }
@@ -1859,7 +2001,7 @@ public class ChatMiddlewareDatabaseDao {
     public boolean chatIdExists(UUID chatId) throws CantGetChatException{
         try{
             DatabaseTable databaseTable=getDatabaseChatTable();
-            return checkIdExists(
+            return checkIdChatExists(
                     chatId,
                     ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
                     databaseTable);
@@ -1877,15 +2019,15 @@ public class ChatMiddlewareDatabaseDao {
 
     /**
      * This method checks if the message exists in database.
-     * @param chatId
+     * @param messageId
      * @return
      * @throws CantGetChatException
      */
-    public boolean messageIdExists(UUID chatId) throws CantGetChatException{
+    public boolean messageIdExists(UUID messageId) throws CantGetChatException{
         try{
             DatabaseTable databaseTable=getDatabaseMessageTable();
-            return checkIdExists(
-                    chatId,
+            return checkIdMessageExists(
+                    messageId,
                     ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
                     databaseTable);
         } catch (Exception e){
@@ -1908,7 +2050,7 @@ public class ChatMiddlewareDatabaseDao {
      * @return
      * @throws CantGetChatException
      */
-    private boolean checkIdExists(
+    private boolean checkIdChatExists(
             UUID id,
             String databaseColumn,
             DatabaseTable databaseTable) throws
@@ -1928,5 +2070,24 @@ public class ChatMiddlewareDatabaseDao {
             );
         }
     }
-
+    private boolean checkIdMessageExists(
+            UUID id,
+            String databaseColumn,
+            DatabaseTable databaseTable) throws
+            CantGetChatException {
+        try{
+            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+            databaseTableFilter.setValue(id.toString());
+            databaseTableFilter.setColumn(databaseColumn);
+            List<DatabaseTableRecord> records=getMessageData(databaseTableFilter);
+            return !(records == null || records.isEmpty());
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetChatException(
+                    e,
+                    "Checking if Id exists in database",
+                    "An unexpected error in database"
+            );
+        }
+    }
 }

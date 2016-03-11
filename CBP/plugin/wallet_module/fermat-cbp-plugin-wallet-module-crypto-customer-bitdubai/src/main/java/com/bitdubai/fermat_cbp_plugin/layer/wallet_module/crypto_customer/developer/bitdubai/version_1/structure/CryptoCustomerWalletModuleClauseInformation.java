@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
 import java.util.UUID;
@@ -18,6 +19,12 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
         this.clauseType = clauseType;
         this.value = value;
         this.status = status;
+    }
+
+    public CryptoCustomerWalletModuleClauseInformation(Clause clause) {
+        this.clauseType = clause.getType();
+        this.value = clause.getValue();
+        this.status = clause.getStatus();
     }
 
     @Override

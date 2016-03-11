@@ -29,23 +29,17 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.IdentityAssociatedNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
@@ -59,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -126,7 +119,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
-        ClauseTextDialog clauseTextDialog;
+        TextValueDialog clauseTextDialog;
         switch (type) {
             case BROKER_CURRENCY:
                 dialogFragment = new SimpleListDialogFragment<>();
@@ -143,9 +136,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 dialogFragment.show(getFragmentManager(), "brokerCurrenciesDialog");
                 break;
             case BROKER_CURRENCY_QUANTITY:
-                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
 
-                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
                         actionListenerBrokerCurrencyQuantity(clause, newValue);
@@ -153,16 +146,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
+                clauseTextDialog.configure(R.string.ccw_amount_to_buy, R.string.ccw_value);
 
                 clauseTextDialog.show();
                 break;
 
             default:
-                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
-                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
+                clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
                         actionListener(clause, newValue);
@@ -171,7 +162,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
                 clauseTextDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_pay,
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
 
                 clauseTextDialog.show();
@@ -196,7 +187,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                     clauses = getClause(mapClauses);
 
                     if (walletManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
-                        Toast.makeText(getActivity(), "Send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Send negotiation. ", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getActivity(), "Send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
                         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
                     } else {
                         Toast.makeText(getActivity(), "Error send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
