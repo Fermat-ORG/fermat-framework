@@ -284,6 +284,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_cancel), Toast.LENGTH_LONG).show();
                     changeActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY, appSession.getAppPublicKey());
                 }
             }
@@ -471,7 +472,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
                     changeActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY, appSession.getAppPublicKey());
                 }
