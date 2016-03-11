@@ -67,7 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -289,6 +289,12 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                 customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                 userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                final String brokerWalletPublicKey = "crypto_broker_wallet";
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW);
             }
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_OPEN_CONTRACT
             {
@@ -305,12 +311,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            //TODO: modificar el broadcaster a notifiacion con sus respectivos codigos
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String brokerWalletPublicKey = "crypto_broker_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -411,12 +419,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            //TODO: modificar el broadcaster a notifiacion con sus respectivos codigos
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String brokerWalletPublicKey = "crypto_broker_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }

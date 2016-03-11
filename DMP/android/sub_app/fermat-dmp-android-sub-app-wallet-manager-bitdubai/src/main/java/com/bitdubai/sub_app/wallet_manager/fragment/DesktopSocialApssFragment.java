@@ -176,7 +176,6 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addDesktopCallBack(this);
     }
 
 //    private void setUpData() {

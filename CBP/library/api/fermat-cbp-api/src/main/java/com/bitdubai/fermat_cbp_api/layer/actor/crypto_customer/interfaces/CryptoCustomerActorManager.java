@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
@@ -21,6 +22,14 @@ public interface CryptoCustomerActorManager extends FermatManager {
      * @throws CantCreateNewCustomerIdentityWalletRelationshipException
      */
     CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException;
+
+    /**
+     *
+     * @param wallet
+     * @return
+     * @throws CantClearAssociatedCustomerIdentityWalletRelationshipException
+     */
+    void clearAssociatedCustomerIdentityWalletRelationship(String wallet) throws CantClearAssociatedCustomerIdentityWalletRelationshipException;
 
     /**
      *

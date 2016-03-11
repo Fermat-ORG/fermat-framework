@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsDetailsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
 
 import java.util.List;
 
@@ -17,21 +16,13 @@ import java.util.List;
 public interface EarningsSearch {
 
     /**
-     * Through this method you can set a time frequency filter to bring the earnings concerning to a period.
-     * By default is NONE and it brings all the earnings.
-     *
-     * @param timeFrequency an element of this enum making reference to the selected time frequency.
-     */
-    void setTimeFrequency(TimeFrequency timeFrequency);
-
-    /**
      * Through this method you cant execute the search for the given params.
      *
-     * @return a list of Earnings Pair Details with the requested information.
+     * @return a list of Earnings Pair Transactions with the requested information.
      *
-     * @throws CantListEarningsDetailsException if something goes wrong.
+     * @throws CantListEarningTransactionsException if something goes wrong.
      */
-    List<EarningsPairDetail> listResults() throws CantListEarningsDetailsException;
+    List<EarningTransaction> listResults() throws CantListEarningTransactionsException;
 
     /**
      * Through this method you cant execute the search for the given params.
@@ -39,11 +30,11 @@ public interface EarningsSearch {
      * @param max     quantity of results that we need.
      * @param offset  since which point the query must return the results.
      *
-     * @return a list of Earnings Pair Details with the requested information.
+     * @return a list of Earnings Pair Transactions with the requested information.
      *
-     * @throws CantListEarningsDetailsException if something goes wrong.
+     * @throws CantListEarningTransactionsException if something goes wrong.
      */
-    List<EarningsPairDetail> listResults(int max, int offset) throws CantListEarningsDetailsException;
+    List<EarningTransaction> listResults(int max, int offset) throws CantListEarningTransactionsException;
 
     /**
      * Through this method you can reset the filters set in this searching object.

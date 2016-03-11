@@ -28,6 +28,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private String customerAlias;
     private byte[] imageBytes;
     private UUID negotiationId;
+    private String contractId;
     private float amount;
     private String merchandise;
     private String typeOfPayment;
@@ -36,6 +37,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private long date;
     private ContractStatus status;
     private String cancellationReason;
+    private Boolean nearExpirationDatetime;
 
     public CryptoBrokerWalletModuleContractBasicInformation(ActorIdentity customer, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerContractSale customerBrokerContractSale, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) {
         this.customerAlias = customer.getAlias();
@@ -43,6 +45,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
+        nearExpirationDatetime = false;
 
         if (customerBrokerSaleNegotiation != null) {
             this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason();
@@ -89,9 +92,11 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         customerAlias = customer.getAlias();
         imageBytes = customer.getProfileImage();
         negotiationId = saleNegotiation.getNegotiationId();
+        contractId = saleContract.getContractId();
         cancellationReason = saleNegotiation.getCancelReason();
-        date = saleContract.getDateTime();
+        date = saleNegotiation.getLastNegotiationUpdateDate();
         status = saleContract.getStatus();
+        nearExpirationDatetime = saleContract.getNearExpirationDatetime();
         merchandise = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_CURRENCY);
         typeOfPayment = getClauseValue(saleNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
         paymentCurrency = getClauseValue(saleNegotiation, ClauseType.BROKER_CURRENCY);
@@ -120,8 +125,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public UUID getContractId() {
-        return negotiationId;
+    public String getContractId() {
+        return contractId;
     }
 
     @Override
@@ -148,6 +153,11 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public String getTypeOfPayment() {
         return typeOfPayment;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return this.nearExpirationDatetime;
     }
 
     @Override

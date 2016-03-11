@@ -178,7 +178,6 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addDesktopCallBack(this);
     }
 
 //    private void setUpData() {

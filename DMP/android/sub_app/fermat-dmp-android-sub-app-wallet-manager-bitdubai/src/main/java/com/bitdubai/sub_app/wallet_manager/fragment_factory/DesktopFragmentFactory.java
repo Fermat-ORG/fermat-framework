@@ -5,6 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.sub_app.wallet_manager.fragment.CommunitiesFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopP2PApssFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopSocialApssFragment;
@@ -35,6 +36,9 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
                 break;
             case DESKTOP_SOCIAL_MAIN:
                 abstractFermatFragment = DesktopSocialApssFragment.newInstance();
+                break;
+            case COMMUNITIES_FRAGMENT:
+                abstractFermatFragment = CommunitiesFragment.newInstance();
                 break;
             default:
                 abstractFermatFragment = DesktopFragment.newInstance();

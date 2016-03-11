@@ -27,6 +27,7 @@ public class CustomerOfflinePaymentBusinessTransactionDatabaseConstants {
     public static final String OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
     public static final String OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String OFFLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     /**
      * Events recorded database table definition.

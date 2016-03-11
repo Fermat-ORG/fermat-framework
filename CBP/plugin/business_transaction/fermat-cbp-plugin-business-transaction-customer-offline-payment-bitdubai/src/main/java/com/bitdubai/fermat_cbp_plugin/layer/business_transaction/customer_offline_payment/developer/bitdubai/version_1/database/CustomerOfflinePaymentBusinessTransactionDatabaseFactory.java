@@ -75,6 +75,7 @@ public class CustomerOfflinePaymentBusinessTransactionDatabaseFactory implements
             table.addColumn(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 64,Boolean.FALSE);
 
             table.addIndex(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_FIRST_KEY_COLUMN);
 

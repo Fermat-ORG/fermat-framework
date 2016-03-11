@@ -4,6 +4,14 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySearch;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -11,17 +19,26 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -44,7 +61,9 @@ public class ChatMiddlewareContactFactory {
      */
     Platforms[] compatiblePlatforms={
             Platforms.CRYPTO_CURRENCY_PLATFORM,
-            Platforms.DIGITAL_ASSET_PLATFORM};
+            Platforms.DIGITAL_ASSET_PLATFORM
+            //Platforms.CRYPTO_BROKER_PLATFORM
+    };
 
     /**
      * This object contains all the compatible actor network service in this version.
@@ -67,6 +86,30 @@ public class ChatMiddlewareContactFactory {
      * actorAssetUserManager is used to determinate the own DAP identity.
      */
     ActorAssetUserManager actorAssetUserManager;
+
+    /**
+     * This represents the ActorAssetIssuerManager.
+     * actorAssetIssuerManager is used to determinate the own DAP identity.
+     */
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    /**
+     * This represents the ActorAssetRedeemPointManager.
+     * actorAssetRedeemPointManager is used to determinate the own DAP identity.
+     */
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    /**
+     * This represents the CryptoBrokerIdentityManager.
+     * cryptoBrokerIdentityManager is used to determinate the own CBP identity.
+     */
+    CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
+
+    /**
+     * This represents the CryptoCustomerIdentityManager.
+     * cryptoCustomerIdentityManager is used to determinate the own CBP identity.
+     */
+    CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
 
     public ChatMiddlewareContactFactory(
             HashMap<String, Object> actorNetworkServiceMap,
@@ -116,23 +159,30 @@ public class ChatMiddlewareContactFactory {
                                 "CHAT Middleware: The actor network service from "+platform+" is null");
                     }
                 }
-                //DAP USERS
+                //DAP PLATFORM
                 if(platform==Platforms.DIGITAL_ASSET_PLATFORM){
                     platformEnumCode=platform.getCode();
                     objectFromHashMap=this.actorNetworkServiceMap.get(platformEnumCode);
                     if(objectFromHashMap!=null){
-
-                        if(objectFromHashMap instanceof AssetUserActorNetworkServiceManager){
-                            compatiblesActorNetworkServiceList.put(
-                                    Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
-                                    objectFromHashMap);
-                        } else {
-                            //Please, not throw an exception, in this version, make a logcat report.
-                            System.out.println(
-                                    "CHAT Middleware: For "+platform+" we need " +
-                                            ""+IntraUserManager.class+" and we get from PluginRoot " +
-                                            ""+objectFromHashMap.getClass());
+                        List dapManagers= (List) objectFromHashMap;
+                        List dapCompatiblesManagers = new ArrayList();
+                        for(Object manager : dapManagers){
+                            if(manager instanceof AssetUserActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                            if(manager instanceof AssetIssuerActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                            if(manager instanceof AssetRedeemPointActorNetworkServiceManager){
+                                dapCompatiblesManagers.add(manager);
+                                continue;
+                            }
                         }
+                        compatiblesActorNetworkServiceList.put(
+                                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
+                                dapCompatiblesManagers);
 
                     }else{
                         //Please, not throw an exception, this means that the actorNetworkService is not set in this plugin.
@@ -140,6 +190,34 @@ public class ChatMiddlewareContactFactory {
                                 "CHAT Middleware: The actor network service from "+platform+" is null");
                     }
                 }
+                //CBP
+                if(platform==Platforms.CRYPTO_BROKER_PLATFORM){
+                    platformEnumCode=platform.getCode();
+                    objectFromHashMap=this.actorNetworkServiceMap.get(platformEnumCode);
+                    if(objectFromHashMap!=null){
+                        List cbpManagers= (List) objectFromHashMap;
+                        List cbpCompatiblesManagers = new ArrayList();
+                        for(Object manager : cbpManagers){
+                            if(manager instanceof CryptoBrokerCommunitySearch){
+                                cbpCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                            if(manager instanceof CryptoCustomerCommunitySearch){
+                                cbpCompatiblesManagers.add(manager);
+                                continue;
+                            }
+                        }
+                        compatiblesActorNetworkServiceList.put(
+                                Platforms.CRYPTO_BROKER_PLATFORM.getCode(),
+                                cbpCompatiblesManagers);
+
+                    }else{
+                        //Please, not throw an exception, this means that the actorNetworkService is not set in this plugin.
+                        System.out.println(
+                                "CHAT Middleware: The actor network service from "+platform+" is null");
+                    }
+                }
+
             }
             if(compatiblesActorNetworkServiceList.isEmpty()){
                 throw new CantGetCompatiblesActorNetworkServiceListException(
@@ -165,10 +243,10 @@ public class ChatMiddlewareContactFactory {
      * @return
      * @throws CantGetContactException
      */
-    public List<Contact> discoverDeviceActors() throws
+    public List<ContactConnection> discoverDeviceActors() throws
             CantGetContactException {
-        List<Contact> contactList=new ArrayList<>();
-        Contact contact;
+        List<ContactConnection> contactList=new ArrayList<>();
+        ContactConnection contact;
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();
         Object value;
         String remoteName;
@@ -193,6 +271,7 @@ public class ChatMiddlewareContactFactory {
                     if(appPublicKey==null){
                         continue;
                     }
+                    //With this we can discover the intra users registered
                     List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(
                             appPublicKey
                             , 20, 0);
@@ -200,36 +279,163 @@ public class ChatMiddlewareContactFactory {
                         remoteName=intraUserInformation.getName();
                         alias=intraUserInformation.getName();
                         actorPublicKey=intraUserInformation.getPublicKey();
-                        contact=new ContactImpl(
+                        contact=new ContactConnectionImpl(
                                 UUID.randomUUID(),
                                 remoteName,
                                 alias,
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
-                                date.getTime()
+                                date.getTime(),
+                                intraUserInformation.getProfileImage() != null ? intraUserInformation.getProfileImage() : new byte[0],
+                                ContactStatus.AVAILABLE
+                        );
+                        contactList.add(contact);
+                    }
+                    //With this we can get the possible CCP contacts
+                    ccpActorList=intraActorManager.getSuggestionsToContact(20, 0);
+                    for(IntraUserInformation intraUserInformation : ccpActorList){
+                        remoteName=intraUserInformation.getName();
+                        alias=intraUserInformation.getName();
+                        actorPublicKey=intraUserInformation.getPublicKey();
+                        contact=new ContactConnectionImpl(
+                                UUID.randomUUID(),
+                                remoteName,
+                                alias,
+                                PlatformComponentType.ACTOR_INTRA_USER,
+                                actorPublicKey,
+                                date.getTime(),
+                                intraUserInformation.getProfileImage() != null ? intraUserInformation.getProfileImage() : new byte[0],
+                                ContactStatus.AVAILABLE
                         );
                         contactList.add(contact);
                     }
                 }
-                //DAP USERS
+                //DAP PLATFORM
                 if(key.equals(Platforms.DIGITAL_ASSET_PLATFORM.getCode())){
-                    AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager =
-                            (AssetUserActorNetworkServiceManager) value;
-                    List<ActorAssetUser> dapActorList=
-                            assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-                    for(ActorAssetUser actorAssetUser : dapActorList){
-                        remoteName=actorAssetUser.getName();
-                        alias=actorAssetUser.getName();
-                        actorPublicKey=actorAssetUser.getActorPublicKey();
-                        contact=new ContactImpl(
-                                UUID.randomUUID(),
-                                remoteName,
-                                alias,
-                                PlatformComponentType.ACTOR_ASSET_USER,
-                                actorPublicKey,
-                                date.getTime()
-                        );
-                        contactList.add(contact);
+                    List dapContacts= (List) value;
+                    for(Object manager : dapContacts){
+                        //DAP USERS
+                        if(manager instanceof AssetUserActorNetworkServiceManager){
+                            AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager =
+                                    (AssetUserActorNetworkServiceManager) manager;
+                            List<ActorAssetUser> dapActorList=
+                                    assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+                            for(ActorAssetUser actorAssetUser : dapActorList){
+                                remoteName=actorAssetUser.getName();
+                                alias=actorAssetUser.getName();
+                                actorPublicKey=actorAssetUser.getActorPublicKey();
+                                contact=new ContactConnectionImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_USER,
+                                        actorPublicKey,
+                                        date.getTime(),
+                                        actorAssetUser.getProfileImage() != null ? actorAssetUser.getProfileImage() : new byte[0],
+                                        ContactStatus.AVAILABLE
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //DAP ISSUERS
+                        if(manager instanceof AssetIssuerActorNetworkServiceManager){
+                            AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager =
+                                    (AssetIssuerActorNetworkServiceManager) manager;
+                            List<ActorAssetIssuer> dapIssuerList=
+                                    assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+                            for(ActorAssetIssuer actorAssetIssuer : dapIssuerList){
+                                remoteName=actorAssetIssuer.getName();
+                                alias=actorAssetIssuer.getName();
+                                actorPublicKey=actorAssetIssuer.getActorPublicKey();
+                                contact=new ContactConnectionImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                                        actorPublicKey,
+                                        date.getTime(),
+                                        actorAssetIssuer.getProfileImage() != null ? actorAssetIssuer.getProfileImage() : new byte[0],
+                                        ContactStatus.AVAILABLE
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //DAP REDEEM POINT
+                        if(manager instanceof AssetRedeemPointActorNetworkServiceManager){
+                            AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager =
+                                    (AssetRedeemPointActorNetworkServiceManager) manager;
+                            List<ActorAssetRedeemPoint> dapRedeemPointList=
+                                    assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
+                            for(ActorAssetRedeemPoint actorAssetRedeemPoint : dapRedeemPointList){
+                                remoteName=actorAssetRedeemPoint.getName();
+                                alias=actorAssetRedeemPoint.getName();
+                                actorPublicKey=actorAssetRedeemPoint.getActorPublicKey();
+                                contact=new ContactConnectionImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                                        actorPublicKey,
+                                        date.getTime(),
+                                        actorAssetRedeemPoint.getProfileImage() != null ? actorAssetRedeemPoint.getProfileImage() : new byte[0],
+                                        ContactStatus.AVAILABLE
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                    }
+
+                }
+                //CBP PLATFORM
+                if(key.equals(Platforms.CRYPTO_BROKER_PLATFORM.getCode())){
+                    List cbpContacts= (List) value;
+                    for(Object manager : cbpContacts){
+                        //CBP Brokers
+                        if(manager instanceof CryptoBrokerCommunitySearch){
+                            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch =
+                                    (CryptoBrokerCommunitySearch) manager;
+                            List<CryptoBrokerCommunityInformation> cbpActorList=
+                                    cryptoBrokerCommunitySearch.getResult();
+                            for(CryptoBrokerCommunityInformation actorBroker : cbpActorList){
+                                remoteName=actorBroker.getAlias();
+                                alias=actorBroker.getAlias();
+                                actorPublicKey=actorBroker.getPublicKey();
+                                contact=new ContactConnectionImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        actorPublicKey,
+                                        date.getTime(),
+                                        actorBroker.getImage() != null ? actorBroker.getImage() : new byte[0],
+                                        ContactStatus.AVAILABLE
+                                );
+                                contactList.add(contact);
+                            }
+                        }
+                        //CBP Customer
+                        if(manager instanceof CryptoCustomerCommunitySearch){
+                            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch =
+                                    (CryptoCustomerCommunitySearch) manager;
+                            List<CryptoCustomerCommunityInformation> cbpActorList=
+                                    cryptoCustomerCommunitySearch.getResult();
+                            for(CryptoCustomerCommunityInformation actorCustomer : cbpActorList){
+                                remoteName=actorCustomer.getAlias();
+                                alias=actorCustomer.getAlias();
+                                actorPublicKey=actorCustomer.getPublicKey();
+                                contact=new ContactConnectionImpl(
+                                        UUID.randomUUID(),
+                                        remoteName,
+                                        alias,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                        actorPublicKey,
+                                        date.getTime(),
+                                        actorCustomer.getImage() != null ? actorCustomer.getImage() : new byte[0],
+                                        ContactStatus.AVAILABLE
+                                );
+                                contactList.add(contact);
+                            }
+                        }
                     }
 
                 }
@@ -292,11 +498,11 @@ public class ChatMiddlewareContactFactory {
      * identity to avoid to create an unregistered contact in the message receptor.
      * @return
      */
-    public HashMap<PlatformComponentType, String> getSelfIdentities()
+    public HashMap<PlatformComponentType, Object> getSelfIdentities() //TODO:Cambiar el parametro del mapa del String por byte[]
             throws CantGetOwnIdentitiesException {
         Set<String> keySet= compatiblesActorNetworkServiceMap.keySet();
         Object value;
-        HashMap<PlatformComponentType, String> selfIdentitiesMap=new HashMap<>();
+        HashMap<PlatformComponentType, Object> selfIdentitiesMap=new HashMap<>(); //TODO:Cambiar el parametro del mapa del String por byte[]
         try{
             for(String key : keySet){
                 value=this.compatiblesActorNetworkServiceMap.get(key);
@@ -315,20 +521,68 @@ public class ChatMiddlewareContactFactory {
                     if(appPublicKey==null){
                         continue;
                     }
-                    selfIdentitiesMap.put(PlatformComponentType.ACTOR_INTRA_USER, appPublicKey);
+                    selfIdentitiesMap.put(PlatformComponentType.ACTOR_INTRA_USER, identity);
                 }
-                //DAP USERS
+                //DAP ACTORS
                 if(key.equals(Platforms.DIGITAL_ASSET_PLATFORM.getCode())){
-                    if(actorAssetUserManager==null){
-                        //In this version, please, don't throw an exception, only continue the loop.
-                        continue;
+                    if(actorAssetUserManager!=null){
+                        ActorAssetUser actorAssetUser=actorAssetUserManager.getActorAssetUser();
+                        if(actorAssetUser!=null){
+                            String dapUserPublicKey=actorAssetUser.getActorPublicKey();
+                            selfIdentitiesMap.put(
+                                    PlatformComponentType.ACTOR_ASSET_USER,
+                                    actorAssetUser);
+                        }
+
                     }
-                    ActorAssetUser actorAssetUser=actorAssetUserManager.getActorAssetUser();
-                    if(actorAssetUser==null){
-                        continue;
+                    if(actorAssetIssuerManager!=null){
+                        ActorAssetIssuer actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
+                        if(actorAssetIssuer!=null){
+                            String dapIssuerPublicKey=actorAssetIssuer.getActorPublicKey();
+                            selfIdentitiesMap.put(
+                                    PlatformComponentType.ACTOR_ASSET_ISSUER,
+                                    actorAssetIssuer);
+                        }
+
                     }
-                    String dapUserPublicKey=actorAssetUser.getActorPublicKey();
-                    selfIdentitiesMap.put(PlatformComponentType.ACTOR_ASSET_USER, dapUserPublicKey);
+                    if(actorAssetRedeemPointManager!=null){
+                        ActorAssetRedeemPoint actorAssetRedeemPoint=actorAssetRedeemPointManager.getActorAssetRedeemPoint();
+                        if(actorAssetRedeemPoint!=null){
+                            String dapRedeemPointPublicKey=actorAssetRedeemPoint.getActorPublicKey();
+                            selfIdentitiesMap.put(
+                                    PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
+                                    actorAssetRedeemPoint);
+                        }
+
+                    }
+
+                }
+                //CBP ACTORS
+                if(key.equals(Platforms.CRYPTO_BROKER_PLATFORM.getCode())){
+                    if(cryptoBrokerIdentityManager!=null){
+                        List<CryptoBrokerIdentity> brokerIdentities=
+                                cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+                        String brokerPublicKey;
+                        for(CryptoBrokerIdentity brokerIdentity : brokerIdentities){
+                            brokerPublicKey=brokerIdentity.getPublicKey();
+                            selfIdentitiesMap.put(
+                                    PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                    brokerIdentity);
+                            break;
+                        }
+                    }
+                    if(cryptoCustomerIdentityManager!=null){
+                        List<CryptoCustomerIdentity> customerIdentities=
+                                cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
+                        String customerPublicKey;
+                        for(CryptoCustomerIdentity customerIdentity : customerIdentities){
+                            customerPublicKey=customerIdentity.getPublicKey();
+                            selfIdentitiesMap.put(
+                                    PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                    customerIdentity);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -374,5 +628,21 @@ public class ChatMiddlewareContactFactory {
 
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) {
         this.actorAssetUserManager = actorAssetUserManager;
+    }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+    }
+
+    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
+    }
+
+    public void setCryptoBrokerIdentityManager(CryptoBrokerIdentityManager cryptoBrokerIdentityManager) {
+        this.cryptoBrokerIdentityManager = cryptoBrokerIdentityManager;
+    }
+
+    public void setCryptoCustomerIdentityManager(CryptoCustomerIdentityManager cryptoCustomerIdentityManager) {
+        this.cryptoCustomerIdentityManager = cryptoCustomerIdentityManager;
     }
 }
