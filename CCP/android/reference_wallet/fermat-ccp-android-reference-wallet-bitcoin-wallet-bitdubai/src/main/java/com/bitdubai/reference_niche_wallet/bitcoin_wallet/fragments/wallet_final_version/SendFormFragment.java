@@ -621,24 +621,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             }
+                            if(Long.valueOf(newAmount) <= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
+                            {
+                                BigDecimal operator = new BigDecimal(newAmount);
 
-                            BigDecimal operator = new BigDecimal(newAmount);
-                            cryptoWallet.send(
-                                    operator.longValueExact(),
-                                    validAddress,
-                                    notes,
-                                    appSession.getAppPublicKey(),
-                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                    Actors.INTRA_USER,
-                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                    cryptoWalletWalletContact.getActorType(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    blockchainNetworkType
+                                cryptoWallet.send(
+                                        operator.longValueExact(),
+                                        validAddress,
+                                        notes,
+                                        appSession.getAppPublicKey(),
+                                        cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                        Actors.INTRA_USER,
+                                        cryptoWalletWalletContact.getActorPublicKey(),
+                                        cryptoWalletWalletContact.getActorType(),
+                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        blockchainNetworkType
 
-                                   // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType()
-                            );
-                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                            onBack(null);
+                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                );
+                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                onBack(null);
+                            }  else {
+                            Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                            }
+
+
+
                         } catch (InsufficientFundsException e) {
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                             e.printStackTrace();
