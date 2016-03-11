@@ -17,6 +17,13 @@
             android:divider="@drawable/cht_list_divider"
             />
 
+        <ImageView
+            android:id="@+id/nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/cht_empty_contats_icon"
+            android:gravity="center"
+            />
         <TextView android:id="@+id/text"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -24,7 +31,6 @@
             android:textColor="@android:color/black"
             android:fontFamily="sans-serif-light"
             android:focusable="true"
-            android:background="@drawable/cht_empty_contacts_background"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     </FrameLayout>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -108,6 +109,9 @@ public class DigitalAssetMetadata {
 
 
     //PUBLIC METHODS
+    public void addNewTransaction(CryptoTransaction cryptoTransaction) {
+        addNewTransaction(cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash());
+    }
 
     public void addNewTransaction(String transactionHash, String blockHash) {
         transactionChain.put(transactionHash, blockHash);

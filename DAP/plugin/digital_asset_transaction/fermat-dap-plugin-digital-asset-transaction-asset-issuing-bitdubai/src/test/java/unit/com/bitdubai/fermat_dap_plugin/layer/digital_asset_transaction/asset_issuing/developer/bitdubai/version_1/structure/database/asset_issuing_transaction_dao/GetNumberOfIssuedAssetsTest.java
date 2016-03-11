@@ -69,7 +69,7 @@ public class GetNumberOfIssuedAssetsTest {
     private void mockitoRules() throws Exception {
         when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
-        when(databaseTableRecord.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME)).thenReturn(issuedAssetsExpected);
+        when(databaseTableRecord.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME)).thenReturn(issuedAssetsExpected);
     }
 
     @Test

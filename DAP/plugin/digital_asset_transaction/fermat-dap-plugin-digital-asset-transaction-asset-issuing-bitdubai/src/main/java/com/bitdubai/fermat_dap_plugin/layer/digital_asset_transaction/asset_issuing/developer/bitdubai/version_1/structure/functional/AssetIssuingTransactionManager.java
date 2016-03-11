@@ -47,9 +47,9 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager {
     @Override
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String issuerWalletPk, String btcWalletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException, InsufficientCryptoFundsException {
         try {
-            BitcoinWalletBalance balance = manager.loadWallet(btcWalletPublicKey).getBalance(BalanceType.AVAILABLE);
+            long balance = manager.loadWallet(btcWalletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
             long totalAmount = digitalAssetToIssue.getGenesisAmount() * assetsAmount;
-            if (balance.getBalance() < totalAmount) {
+            if (balance < totalAmount) {
                 throw new InsufficientCryptoFundsException(null, null, null, null);
             }
             dao.startIssuing(digitalAssetToIssue, assetsAmount, blockchainNetworkType, btcWalletPublicKey, issuerWalletPk);
@@ -68,7 +68,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager {
     @Override
     public int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException {
         try {
-            return dao.getRecordForAsset(assetPublicKey).getAssetsGenerated();
+            return dao.getRecordForAsset(assetPublicKey).getAssetsCompleted();
         } catch (RecordsNotFoundException e) {
             return 0;
         } catch (CantLoadTableToMemoryException | InvalidParameterException | CantGetDigitalAssetFromLocalStorageException e) {

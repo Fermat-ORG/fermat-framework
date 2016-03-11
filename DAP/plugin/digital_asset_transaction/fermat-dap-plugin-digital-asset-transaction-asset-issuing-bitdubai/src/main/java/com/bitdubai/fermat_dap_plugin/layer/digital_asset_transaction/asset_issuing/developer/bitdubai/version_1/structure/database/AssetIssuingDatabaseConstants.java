@@ -20,7 +20,8 @@ public class AssetIssuingDatabaseConstants {
 
     public static final String ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME = "digital_asset_public_key";
     public static final String ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME = "digital_asset_assets_to_generate";
-    public static final String ASSET_ISSUING_ASSETS_GENERATED_COLUMN_NAME = "digital_asset_assets_generated";
+    public static final String ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME = "digital_asset_assets_generated";
+    public static final String ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME = "digital_asset_assets_processed";
     public static final String ASSET_ISSUING_NETWORK_TYPE_COLUMN_NAME = "blockchain_network_type";
     public static final String ASSET_ISSUING_BTC_WALLET_PUBLIC_KEY_COLUMN_NAME = "btc_wallet_public_key";
     public static final String ASSET_ISSUING_ISSUER_WALLET_PUBLIC_KEY_COLUMN_NAME = "issuer_wallet_public_key";

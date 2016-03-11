@@ -3,13 +3,20 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
-import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -132,71 +139,222 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
     private void processInputTransactions(final EarningsPair earningsPair) {
 
-        // bring unmatched transactions for each pair
-        List<InputTransaction> inputTransactionList;
-
         try {
 
-            inputTransactionList = dao.listUnmatchedInputTransactions(earningsPair.getId());
+            InputTransaction unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
 
-        } catch (CantListInputTransactionsException cantListInputTransactionsException) {
+            InputTransaction sellTransactionToMatch;
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantListInputTransactionsException);
-            return;
+            while (unmatchedSellInputTransaction != null) {
+
+                sellTransactionToMatch = unmatchedSellInputTransaction;
+
+                System.out.println(" *************** processing sell transaction: "+sellTransactionToMatch.getOriginTransactionId());
+
+                DatabaseTransaction databaseTransaction = dao.getNewDatabaseTransaction();
+
+                float amountToMatch = sellTransactionToMatch.getAmountGiving();
+                float amountMatched = 0;
+
+                List<InputTransaction> unmatchedBuyInputTransactions = dao.listUnmatchedBuyInputTransactions(earningsPair);
+
+                // if there's not any unmatched buy transactions I cannot match.
+                if (unmatchedBuyInputTransactions.isEmpty())
+                    break;
+
+                for(InputTransaction inputTransaction : unmatchedBuyInputTransactions)
+                    System.out.println("    ************ unmatched buy transactions: "+inputTransaction.getOriginTransactionId());
+
+                UUID earningTransactionId = UUID.randomUUID();
+
+                List<InputTransaction> matchedBuyTransactions = new ArrayList<>();
+
+                int i = 0;
+                while (i < unmatchedBuyInputTransactions.size() && amountMatched != amountToMatch) {
+
+                    InputTransaction buyTransaction = unmatchedBuyInputTransactions.get(i);
+
+                    // amount matched with the current buy transaction
+                    float amountMatchedTemp = amountMatched + buyTransaction.getAmountReceiving();
+
+                    System.out.println("       ********* amountToMatch    : "+amountToMatch);
+                    System.out.println("       ********* amountMatched    : "+amountMatched);
+                    System.out.println("       ********* amountMatchedTemp: "+amountMatchedTemp);
+
+                    // if there are equals, i will generate the earning transaction and mark both sell and buy transaction as matched.
+                    if (amountToMatch == amountMatchedTemp) {
+
+                        System.out.println("         ******* amount is equal: the while will be finished");
+
+                        amountMatched = amountMatchedTemp;
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
+                        matchedBuyTransactions.add(buyTransaction);
+
+                    }
+
+                    // if the amount to match is lesser than the amount matched, i've to cut the buy transaction in parts
+                    // the first part to match the needed amount, and the second part as unmatched amount
+                    // i will mark the original buy transaction as matched as well.
+                    else if (amountToMatch < amountMatchedTemp) {
+
+                        System.out.println("         ******* the amount to match is lesser than the amount matched temp (with the new buy transaction)");
+                        System.out.println("         ******* generated new input transactions: one matched, one unmatched");
+
+                        float partialToMatchAmountReceiving = amountToMatch - amountMatched;
+                        float partialToMatchAmountGiving    = partialToMatchAmountReceiving / buyTransaction.getAmountReceiving() * buyTransaction.getAmountGiving();
+
+                        float partialRestingAmountGiving    = buyTransaction.getAmountGiving()    - partialToMatchAmountGiving   ;
+                        float partialRestingAmountReceiving = buyTransaction.getAmountReceiving() - partialToMatchAmountReceiving;
+
+                        InputTransaction partialToMatch = dao.createPartialMatchedInputTransaction(
+                                databaseTransaction,
+                                buyTransaction.getOriginTransactionId(),
+                                buyTransaction.getCurrencyGiving(),
+                                partialToMatchAmountGiving,
+                                buyTransaction.getCurrencyReceiving(),
+                                partialToMatchAmountReceiving,
+                                earningsPair.getId(),
+                                earningTransactionId
+                        );
+
+                        System.out.println("            **** partialToMatch: " + partialToMatch);
+
+                        InputTransaction partialRest = dao.createPartialUnmatchedInputTransaction(
+                                databaseTransaction,
+                                buyTransaction.getOriginTransactionId(),
+                                buyTransaction.getCurrencyGiving(),
+                                partialRestingAmountGiving,
+                                buyTransaction.getCurrencyReceiving(),
+                                partialRestingAmountReceiving,
+                                earningsPair.getId()
+                        );
+
+                        System.out.println("            **** partialRest: "+partialRest);
+
+                        dao.markInputTransactionAsSplit(databaseTransaction, buyTransaction.getId());
+                        matchedBuyTransactions.add(partialToMatch);
+                        amountMatched = amountToMatch;
+
+                        System.out.println("         ******* amount is equal: the while will be finished");
+                    }
+
+                    // if the amount to match is bigger than the amount matched i've to keep looking buy transactions until i can.
+                    else {
+
+                        System.out.println("         ******* the amount to match is bigger than the amount to match with the current buy transaction: i will look for more buy transactions to match");
+
+                        amountMatched = amountMatchedTemp;
+                        dao.markInputTransactionAsMatched(databaseTransaction, buyTransaction.getId(), earningTransactionId);
+                        matchedBuyTransactions.add(buyTransaction);
+                    }
+
+                    i++;
+                }
+
+                // if the amount to match is greater than the amount matched, i've to cut the sell transaction in parts
+                // the first part to match the needed amount, and the second part as unmatched amount
+                // i will mark the original sell transaction as matched as well.
+                if (amountToMatch > amountMatched) {
+
+                    System.out.println("       ********* woow we cannot reach the amount to match with the buy transactions we will have to cut the sell transaction    : ");
+                    System.out.println("           ***** amountToMatch: "+amountToMatch);
+                    System.out.println("           ***** amountMatched: "+amountMatched);
+
+                    System.out.println("         ******* generated new sell input transactions: one matched, one unmatched");
+
+                    float partialToRestAmountGiving    = amountToMatch - amountMatched;
+                    float partialToRestAmountReceiving = partialToRestAmountGiving / sellTransactionToMatch.getAmountGiving() * sellTransactionToMatch.getAmountReceiving();
+
+                    float partialToMatchAmountGiving    = sellTransactionToMatch.getAmountGiving()    - partialToRestAmountGiving   ;
+                    float partialToMatchAmountReceiving = sellTransactionToMatch.getAmountReceiving() - partialToRestAmountReceiving;
+
+                    InputTransaction partialRest = dao.createPartialUnmatchedInputTransaction(
+                            databaseTransaction,
+                            sellTransactionToMatch.getOriginTransactionId(),
+                            sellTransactionToMatch.getCurrencyGiving(),
+                            partialToRestAmountGiving,
+                            sellTransactionToMatch.getCurrencyReceiving(),
+                            partialToRestAmountReceiving,
+                            earningsPair.getId()
+                    );
+
+                    System.out.println("           ***** partialRest: "+partialRest);
+
+                    InputTransaction partialToMatch = dao.createPartialMatchedInputTransaction(
+                            databaseTransaction,
+                            sellTransactionToMatch.getOriginTransactionId(),
+                            sellTransactionToMatch.getCurrencyGiving(),
+                            partialToMatchAmountGiving,
+                            sellTransactionToMatch.getCurrencyReceiving(),
+                            partialToMatchAmountReceiving,
+                            earningsPair.getId(),
+                            earningTransactionId
+                    );
+
+                    System.out.println("           ***** partialToMatch: "+partialToMatch);
+
+                    dao.markInputTransactionAsSplit(databaseTransaction, sellTransactionToMatch.getId());
+                    sellTransactionToMatch = partialToMatch;
+
+                } else {
+
+                    dao.markInputTransactionAsMatched(databaseTransaction, sellTransactionToMatch.getId(), earningTransactionId);
+                }
+
+                System.out.println("       ********* Now We'll create the new EarningTransaction: ");
+
+                System.out.println("          ****** sellTransactionToMatch: "+sellTransactionToMatch);
+
+                for (InputTransaction buyTransactionToMatch : matchedBuyTransactions)
+                    System.out.println("          ****** buyTransactionToMatch : "+buyTransactionToMatch);
+
+                System.out.println("                *****");
+
+                float sellAmountReceiving = sellTransactionToMatch.getAmountReceiving();
+                float buyAmountGiving = 0;
+
+                for (InputTransaction inputTransaction : matchedBuyTransactions)
+                    buyAmountGiving += inputTransaction.getAmountGiving();
+
+                float earningAmount = sellAmountReceiving - buyAmountGiving;
+
+                System.out.println("          ****** sellAmountReceiving: "+sellAmountReceiving);
+                System.out.println("          ****** buyAmountGiving    : "+buyAmountGiving);
+
+                EarningTransaction newEarningTransaction = new MatchingEngineMiddlewareEarningTransaction(
+                        earningTransactionId,
+                        earningsPair.getEarningCurrency(),
+                        earningAmount,
+                        EarningTransactionState.CALCULATED,
+                        System.currentTimeMillis(),
+
+                        dao
+                );
+
+                System.out.println("          ****** : ******");
+                System.out.println("          ****** newEarningTransaction: "+newEarningTransaction);
+                System.out.println("          ****** : ******");
+
+                dao.createEarningTransaction(
+                        databaseTransaction,
+                        newEarningTransaction,
+                        earningsPair.getId()
+                );
+
+                try {
+                    dao.executeTransaction(databaseTransaction);
+                } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
+                }
+
+                unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
+            }
+
+        } catch (CantGetInputTransactionException | CantListInputTransactionsException e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-
-        /* divide the list in two:
-         *    list of sell transactions (linked currency)
-         *    list of buy transactions  (linked currency)
-         */
-        List<InputTransaction> sellTransactions = new ArrayList<>();
-        List<InputTransaction> buyTransactions  = new ArrayList<>();
-
-        for (InputTransaction transaction : inputTransactionList) {
-
-            if (transaction.getCurrencyGiving() == earningsPair.getLinkedCurrency())
-                sellTransactions.add(transaction);
-            else
-                buyTransactions.add(transaction);
-        }
-
-        int i = 0;
-        int j = 0;
-
-        /* once we have the list split:
-         *    we get our first sell transaction
-         *    we compare with a buy transaction
-         *    if the amount of sell and buy the currency are equals:
-         *       we create immediately an earning transaction
-         *       the value of the amount earnt or loose is the difference between the amounts sold/bought
-         *       example:
-         *         earning currency ARS
-         *         input1: BTC-ARS | 1.0  / 1000
-         *         input2: ARS-BTC | 1100 /  1.0
-         *
-         *         we compare BTC vs BTC 1.0 == 1.0
-         *         then we do 1100-1000 = 100 <- this is how much we earn
-         *
-         *    if the amount of sell is higher than the amount of buying:
-         *       we will bring another buy transaction
-         *       and compare again with the sum of both
-         *         if still higher we get another and then
-         *         if lower we will cut the buying transaction to exactly sum the amount of selling
-         *         and then we will create:
-         *           an input transaction with the rest of the buying amount
-         *           an earning transaction relating the sell transaction with all the buying transaction matched
-         *
-         *    if the amount of sell is lower than the amount of buying
-         *       we will cut the buying transaction to exactly sum the amount of selling
-         *       and then we will create:
-         *         an input transaction with the rest of the buying amount
-         *         an earning transaction relating the sell transaction with all the buying transaction matched
-         *
-         *    if there isn't more buying transactions we will cut the sell transaction to match with the amount of buying
-         *    and create an input transaction for the buying
-         *
-         * all the process must be in an unique transaction (against database) to avoid any issues
-         */
     }
 
     private void cleanResources() {

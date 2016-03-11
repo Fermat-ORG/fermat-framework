@@ -73,7 +73,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         if (suggestedRate != null)
             exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
-                    suggestedRate.getMerchandise(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency()));
+                    suggestedRate.getMerchandise().getCode(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency().getCode()));
         else if (suggestedRateLoaded)
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
         else

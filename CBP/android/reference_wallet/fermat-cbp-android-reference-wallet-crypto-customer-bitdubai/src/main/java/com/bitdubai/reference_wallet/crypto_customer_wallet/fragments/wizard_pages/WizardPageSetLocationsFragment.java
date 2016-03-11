@@ -61,6 +61,11 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearLocations();
+
+
             Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
             if (data == null) {
                 locationList = new ArrayList<>();
