@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develo
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -13,6 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -22,12 +25,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDeveloperDatabaseFactory;
@@ -129,7 +136,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
             //TODO Test this functionality
             for (PlatformComponentProfile platformComponentProfile : actorArtistPendingToRegistration) {
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("AssetRedeemActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+                System.out.println("##################################\nArtistActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         } catch (Exception e) {
             reportUnexpectedError(e);
@@ -218,7 +225,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                 artist.getPublicKey(),
                 artist.getAlias().toLowerCase().trim(),
                 artist.getAlias(),
-                NetworkServiceType.UNDEFINED,
+                NetworkServiceType.ARTIST_ACTOR,
                 PlatformComponentType.NETWORK_SERVICE,
                 extraData);
     }
@@ -257,6 +264,9 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     }
                 }, "ACTOR ARTIST REGISTER-ACTOR");
                 thread.start();
+            }else{
+                actorArtistPendingToRegistration.add(constructPlatformComponentProfile(
+                        actorArtistNetworkService,wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()));
             }
         } catch (Exception e) {
 
@@ -318,17 +328,27 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        try {
+            ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
+        } catch (CantInitializeTemplateNetworkServiceDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empty list
+        return new ArrayList<>();
     }
 
     @Override
@@ -338,6 +358,23 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
+    }
+
+    @Override
+    protected void onComponentRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
+        actorArtistPendingToRegistration.clear();
+    }
+
+    @Override
+    protected void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile) {
+        try {
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+            System.out.println("##################################\nArtistActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+        } catch (CantRegisterComponentException e) {
+            e.printStackTrace();
+            reportUnexpectedError(e);
+        }
 
     }
 }
