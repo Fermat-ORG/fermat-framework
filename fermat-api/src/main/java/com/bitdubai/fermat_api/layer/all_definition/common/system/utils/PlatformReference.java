@@ -2,13 +2,15 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference</code>
  * haves all the information of a Platform Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
  */
-public class PlatformReference {
+public class PlatformReference implements Serializable{
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;

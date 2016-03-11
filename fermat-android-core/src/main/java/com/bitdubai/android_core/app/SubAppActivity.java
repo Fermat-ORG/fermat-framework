@@ -65,7 +65,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
         try {
 
-            loadUI(createOrCallSubAppSession());
+            loadUI(createOrOpenApplication());
 
         } catch (Exception e) {
             //reportUnexpectedUICoreException
@@ -417,7 +417,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected void loadUI(FermatSession<FermatApp,?> subAppSession) {
         try {
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(), this, subAppSession);
-            Activity activity = getActivityUsedType();
+            Activity activity = getFermatAppManager().getLastAppStructure().getLastActivity();
             loadBasicUI(activity, fermatAppConnection);
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             hideBottonIcons();
@@ -439,10 +439,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    private FermatSession<FermatApp,?> createOrCallSubAppSession(){
-        return createOrOpenApplication();
     }
 
 
