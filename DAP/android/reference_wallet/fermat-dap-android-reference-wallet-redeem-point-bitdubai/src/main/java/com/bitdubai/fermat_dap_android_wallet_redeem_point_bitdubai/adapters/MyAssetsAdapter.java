@@ -20,12 +20,11 @@ import java.util.List;
 public class MyAssetsAdapter extends FermatAdapter<DigitalAsset, MyAssetsViewHolder> implements Filterable {
 
     private AssetRedeemPointWalletSubAppModule manager;
-    private List<DigitalAsset> originalData;
 
     public MyAssetsAdapter(Context context, List<DigitalAsset> digitalAssets, AssetRedeemPointWalletSubAppModule manager) {
         super(context, digitalAssets);
         this.manager = manager;
-        this.originalData = digitalAssets;
+        this.dataSet = digitalAssets;
     }
 
     @Override
@@ -45,6 +44,6 @@ public class MyAssetsAdapter extends FermatAdapter<DigitalAsset, MyAssetsViewHol
 
     @Override
     public Filter getFilter() {
-        return new MyAssetsAdapterFilter(this.originalData, this);
+        return new MyAssetsAdapterFilter(this.dataSet, this);
     }
 }

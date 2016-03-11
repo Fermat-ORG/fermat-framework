@@ -21,15 +21,9 @@ public class RedeemPointCommunityNavigationViewPainter implements NavigationView
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
 
-    public RedeemPointCommunityNavigationViewPainter(Context activity) {
-        this.activity = new WeakReference<Context>(activity);
-    }
-
     public RedeemPointCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
         this.activity = new WeakReference<Context>(activity);
-
         this.activeIdentity = activeIdentity;
-
     }
 
     @Override
@@ -75,6 +69,6 @@ public class RedeemPointCommunityNavigationViewPainter implements NavigationView
 
     @Override
     public boolean hasClickListener() {
-        return false;
+        return true;
     }
 }

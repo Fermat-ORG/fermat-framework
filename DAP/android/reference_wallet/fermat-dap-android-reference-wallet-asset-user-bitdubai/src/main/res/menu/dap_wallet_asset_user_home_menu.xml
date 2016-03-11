@@ -9,9 +9,4 @@
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
-    <item android:id="@+id/action_wallet_user_show_no_balance"
-        android:title="@string/dap_user_wallet_show_all"
-        app:showAsAction="never|withText"
-        app:actionViewClass="android.widget.TextView"/>
-
 </menu>

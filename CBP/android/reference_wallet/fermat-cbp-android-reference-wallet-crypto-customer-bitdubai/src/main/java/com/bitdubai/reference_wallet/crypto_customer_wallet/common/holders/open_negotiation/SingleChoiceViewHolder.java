@@ -48,7 +48,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(buttonValue, clause, clausePosition);
+            listener.onClauseClicked(buttonValue, clause, clausePosition);
     }
 
     @Override

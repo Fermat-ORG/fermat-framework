@@ -13,6 +13,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +34,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactLis
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -45,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -89,6 +94,7 @@ public class ContactFragment extends AbstractFermatFragment {
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
+    private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
     private Toolbar toolbar;
@@ -96,18 +102,13 @@ public class ContactFragment extends AbstractFermatFragment {
     String TAG = "CHT_ContactFragment";
 
     ArrayList<String> contactname=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
-    //public ContactsListFragment() {}
-    static void initchatinfo(){
-        //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
+    Typeface tf;
 
     public static ContactFragment newInstance() {
-        initchatinfo();
         return new ContactFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -118,6 +119,7 @@ public class ContactFragment extends AbstractFermatFragment {
 //            mIsSearchResultView = true;
 //        }
 //    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +132,6 @@ public class ContactFragment extends AbstractFermatFragment {
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
-            //CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
-            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             if(errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -188,6 +188,7 @@ public class ContactFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
@@ -195,19 +196,24 @@ public class ContactFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            contacticon.add(bmd.getBitmap());
+
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(contactalias.get(0));
+            //name.setTypeface(tf, Typeface.NORMAL);
             FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
             id.setText(contactid.get(0).toString());
+            //id.setTypeface(tf, Typeface.NORMAL);
 
             // create bitmap from resource
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+            //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
 
             // set circle bitmap
             ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(getCircleBitmap(bm));
+            mImage.setImageBitmap(getCircleBitmap(contacticon.get(0)));
 
             LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -515,51 +521,24 @@ public class ContactFragment extends AbstractFermatFragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage("Do you want to delete this contact?");
-            builder1.setCancelable(true);
-
-            builder1.setPositiveButton(
-                    "Yes",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            try {
-                                Contact con = chatSession.getSelectedContact();
-                                chatManager.deleteContact(con);
-                                List <Contact> cont=  chatManager.getContacts();
-                                if (cont.size() > 0) {
-                                    for (int i=0;i<cont.size();i++){
-                                        contactname.add(cont.get(i).getAlias());
-                                        contactid.add(cont.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                                    }
-                                    final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
-                                    adaptador.refreshEvents(contactname, contacticon, contactid);
-                                }
-                            }catch(CantGetContactException e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }catch (Exception e){
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
-                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                        }
-                    });
-
-            builder1.setNegativeButton(
-                    "No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            try {
-                                dialog.cancel();
-                            }catch (Exception e){
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
-                        }
-                    });
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
+            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
+            alert.setTextTitle("Delete contact");
+            alert.setTextBody("Do you want to delete this contact?");
+            alert.setType("delete-contact");
+            alert.show();
+            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                           @Override
+                                           public void onDismiss(DialogInterface dialog) {
+                                               if(alert.getStatusDeleteContact() == true){
+                                                   try {
+                                                       changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+                                                   }catch (Exception e){
+                                                       errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                                   }
+                                               }
+                                           }
+                                       }
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);

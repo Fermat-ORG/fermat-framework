@@ -13,8 +13,12 @@ import java.util.UUID;
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16.
  */
 public interface AssetBuyerManager extends FermatManager {
-
-    void acceptAsset(UUID negotiationId) throws CantProcessBuyingTransactionException;
+    /**
+     * @param negotiationId   the {@link UUID} that represents the negotiation that I am going to accept.
+     * @param walletPublicKey the BTC wallet from where I'll get the bitcoins for buying that asset.
+     * @throws CantProcessBuyingTransactionException
+     */
+    void acceptAsset(UUID negotiationId, String walletPublicKey) throws CantProcessBuyingTransactionException;
 
     void declineAsset(UUID negotiationId) throws CantProcessBuyingTransactionException;
 

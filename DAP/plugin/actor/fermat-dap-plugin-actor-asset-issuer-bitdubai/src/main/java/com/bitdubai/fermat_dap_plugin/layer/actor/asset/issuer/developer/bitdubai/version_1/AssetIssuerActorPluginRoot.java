@@ -14,13 +14,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -39,14 +40,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedP
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveExtendedNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
@@ -55,24 +55,26 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantU
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.RedeemerAddressesMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.NewReceiveMessageActorIssuerNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.event_handlers.ActorAssetIssuerNewNotificationsEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerActorDatabaseException;
@@ -124,7 +126,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     private AssetVaultManager assetVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_WATCH_ONLY_VAULT)
-    private WatchOnlyVaultManager WatchOnlyVaultManager;
+    private WatchOnlyVaultManager watchOnlyVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
@@ -301,7 +303,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 //
             actorAssetIssuer = this.assetIssuerActorDao.getActorByPublicKey(actorAssetPublicKey);
 //
-            if(actorAssetIssuer != null)
+            if (actorAssetIssuer != null)
                 return actorAssetIssuer.getDapConnectionState();
             else
                 return DAPConnectionState.ERROR_UNKNOWN;
@@ -368,6 +370,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    private void sendMessage(ActorNotification actorNotification) throws CantConnectToActorAssetException {
+        assetIssuerActorNetworkServiceManager.buildSendMessage(actorNotification);
+    }
+
     @Override
     public void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException {
         String context = "Issuer PK: " + issuerPublicKey + " - Extended PK: " + extendedPublicKey;
@@ -393,6 +399,31 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                                                  String actorAssetIssuerToAddName,
                                                  String actorAssetIssuerToAddPublicKey,
                                                  byte[] profileImage) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
+
+        try {
+            if (assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.CONNECTING)) {
+                throw new CantRequestAlreadySendActorAssetException("CAN'T INSERT ACTOR ASSET USER", null, "", "The request already sent to actor.");
+            } else if (assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.PENDING_LOCALLY)) {
+                this.assetIssuerActorDao.updateRegisteredConnectionState(
+                        actorAssetIssuerToLinkPublicKey,
+                        actorAssetIssuerToAddPublicKey,
+                        DAPConnectionState.REGISTERED_ONLINE);
+            } else {
+                //TODO ANALIZAR PROBLEMAS QUE PUEDA OCASIONAR USAR CONNECTING O PENDING_REMOTELY
+//                this.assetIssuerActorDao.createNewAssetIssuerRequestRegistered(
+//                        actorAssetIssuerToLinkPublicKey,
+//                        actorAssetIssuerToAddPublicKey,
+//                        actorAssetIssuerToAddName,
+//                        profileImage,
+//                        DAPConnectionState.CONNECTING);
+                this.updateIssuerRegisteredDAPConnectionState(actorAssetIssuerToAddPublicKey, DAPConnectionState.CONNECTING);
+            }
+
+        } catch (CantUpdateActorAssetIssuerException e) {
+            e.printStackTrace();
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -429,8 +460,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
                 this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetIssuerLoggedInPublicKey, actorAssetIssuerToAddPublicKey, DAPConnectionState.REGISTERED_REMOTELY);
 //                this.assetIssuerActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetIssuerLoggedInPublicKey, actorAssetIssuerToAddPublicKey);
-            }
-            else{
+            } else {
                 if (!assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.REGISTERED_LOCALLY) ||
                         !assetIssuerActorDao.actorAssetRegisteredRequestExists(actorAssetIssuerToAddPublicKey, DAPConnectionState.PENDING_LOCALLY))
 //                    this.assetIssuerActorDao.updateConnectionState(
@@ -529,31 +559,25 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         System.out.println("***************************************************************");
     }
 
-    public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
-        switch (dapMessage.getMessageContent().messageType()) {
-            case EXTENDED_PUBLIC_KEY:
-                receiveNewRequestExtendedPublicKey(dapMessage);
-                break;
-            case ASSET_APPROPRIATION:
-                receiveNewAssetAppropriated(dapMessage);
-                break;
-        }
-    }
+//    public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
+//        switch (dapMessage.getMessageContent().messageType()) {
+//            case EXTENDED_PUBLIC_KEY:
+//                receiveNewRequestExtendedPublicKey(dapMessage);
+//                break;
+//            case ASSET_APPROPRIATION:
+//                receiveNewAssetAppropriated(dapMessage);
+//                break;
+//        }
+//    }
 
     private void receiveNewAssetAppropriated(DAPMessage dapMessage) {
 
     }
 
-    private void receiveNewRequestExtendedPublicKey(DAPMessage dapMessage) {
-        final ActorAssetRedeemPoint redeemPoint = (ActorAssetRedeemPoint) dapMessage.getActorSender();
-        final DAPActor issuer = dapMessage.getActorReceiver();
-
+    private void newRequestExtendedPublicKey(ActorNotification actorNotification) {
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
-        System.out.println("Actor Asset Redeem Point name: " + redeemPoint.getName());
-        System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageContent().messageType());
-
-//        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-//        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-REQUEST_" + redeemPoint.getName());
+        System.out.println("Actor Asset Redeem Point Key: " + actorNotification.getActorSenderPublicKey());
+        System.out.println("Actor Asset Redeem Point name: " + actorNotification.getActorSenderAlias());
 
         /**
          * I will request a new ExtendedPublicKey from the Asset Vault.
@@ -561,7 +585,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          */
         ExtendedPublicKey extendedPublicKey = null;
         try {
-            extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey(redeemPoint.getActorPublicKey());
+            extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey(actorNotification.getActorSenderPublicKey());
 
         } catch (CantGetExtendedPublicKeyException e) {
             /**
@@ -576,12 +600,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          * I will create a new Message with the extended public Key.
          */
         if (extendedPublicKey != null) {
-            AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
-            /**
-             * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
-             * into the address book.
-             */
-            RedeemerAddressesMonitorAgent monitorAgent = new RedeemerAddressesMonitorAgent(cryptoAddressBookManager, assetVaultManager, issuer.getActorPublicKey());
+            RedeemerAddressesMonitorAgent monitorAgent = new RedeemerAddressesMonitorAgent(cryptoAddressBookManager, assetVaultManager, actorNotification.getActorDestinationPublicKey());
             try {
                 monitorAgent.start();
             } catch (CantStartAgentException e) {
@@ -591,24 +610,26 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
 
-            System.out.println("*****Actor Asset Issuer ****: extended Public KEy generada");
+            System.out.println("*****Actor Asset Issuer ****: extended Public key generated");
             /**
              * and send it using the redeem point network service.
              */
             try {
-                DAPMessage dapMessageSend = new DAPMessage(
-                        assetExtendedPublickKeyContentMessage,
-                        issuer,
-                        redeemPoint);
-
-                assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
-                System.out.println("*****Actor Asset Issuer ****: enviando mensaje a Redeempoint Network Service");
-            } catch (CantSetObjectException e) {
-                e.printStackTrace();
-            } catch (CantSendMessageException e) {
+                System.out.println("*****Actor Asset Issuer ****: enviando Event a Redeem Point");
+                assetIssuerActorNetworkServiceManager.responseExtended(actorNotification, extendedPublicKey);
+//            } catch (CantSetObjectException e) {
+//                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void receiveExtendedPublicKey(ActorNotification actorNotification) {
+        FermatEvent event = eventManager.getNewEvent(EventType.NEW_RECEIVE_EXTENDED_KEY_ACTOR);
+        event.setSource(EventSource.ACTOR_ASSET_ISSUER);
+        ((NewReceiveExtendedNotificationEvent) event).setActorNotification(actorNotification);
+        eventManager.raiseEvent(event);
     }
 
     /**
@@ -693,9 +714,98 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        fermatEventListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
-        fermatEventListener.setEventHandler(new NewReceiveMessageActorIssuerNotificationEventHandler(this));
+//        fermatEventListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+//        fermatEventListener.setEventHandler(new NewReceiveMessageActorIssuerNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+//        fermatEventListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+//        fermatEventListener.setEventHandler(new NewReceiveMessageEventHandler(this, actorAssetRedeemPointManager));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        fermatEventListener.setEventHandler(new ActorAssetIssuerNewNotificationsEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+    }
+
+
+    /**
+     * Procces the list o f notifications from Intra User Network Services
+     * And update intra user actor contact state
+     *
+     * @throws CantGetActorAssetNotificationException
+     */
+    public void processNotifications() throws CantGetActorAssetNotificationException {
+
+        try {
+
+            System.out.println("PROCESSING NOTIFICATIONS IN ACTOR ASSET ISSUER ");
+            List<ActorNotification> actorNotifications = assetIssuerActorNetworkServiceManager.getPendingNotifications();
+
+
+            for (ActorNotification notification : actorNotifications) {
+
+                String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
+
+                String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
+
+                switch (notification.getAssetNotificationDescriptor()) {
+                    case ASKFORCONNECTION:
+                        this.receivingActorAssetIssuerRequestConnection(
+                                intraUserToConnectPublicKey,
+                                notification.getActorSenderAlias(),
+//                                notification.getActorSenderPhrase(),
+                                intraUserSendingPublicKey,
+                                notification.getActorSenderProfileImage());
+                        break;
+                    case CANCEL:
+                        this.cancelActorAssetIssuer(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        break;
+                    case ACCEPTED:
+                        this.acceptActorAssetIssuer(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        this.sendMessage(notification);
+                        break;
+//                    case DISCONNECTED:
+////                        this.disconnectActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+//                        this.disconnectToActorAssetUser(intraUserSendingPublicKey, notification.getBlockchainNetworkType());
+//
+//                        break;
+                    case RECEIVED:
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+                         */
+                        //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+                        break;
+                    case DENIED:
+                        this.denyConnectionActorAssetIssuer(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+                        break;
+                    case ACTOR_ASSET_NOT_FOUND:
+                        this.assetIssuerActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);
+                        break;
+                    case EXTENDED_KEY:
+                        if (notification.getMessageXML() == null)
+                            this.newRequestExtendedPublicKey(notification);
+                        else
+                            this.receiveExtendedPublicKey(notification);
+                        break;
+                    default:
+                        break;
+                }
+                /**
+                 * I confirm the application in the Network Service
+                 */
+                //TODO: VER PORQUE TIRA ERROR
+                assetIssuerActorNetworkServiceManager.confirmActorAssetNotification(notification.getId());
+            }
+        } catch (CantAcceptActorAssetUserException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
+        } catch (CantDenyConnectionActorAssetException e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
+        } catch (Exception e) {
+            throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
+        }
     }
 }
