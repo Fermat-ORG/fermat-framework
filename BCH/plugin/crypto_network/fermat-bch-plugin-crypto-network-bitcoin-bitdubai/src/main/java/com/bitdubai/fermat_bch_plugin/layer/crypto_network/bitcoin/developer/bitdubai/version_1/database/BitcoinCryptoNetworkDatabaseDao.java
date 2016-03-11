@@ -1513,10 +1513,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
             transactionId = UUID.randomUUID();
 
         /**
-         * If the transaction is pending submit, then no need to notify anyone
+         * If the transaction is pending submit or Outgoing, then no need to notify anyone
          */
         ProtocolStatus protocolStatus;
-        if (CryptoStatus.PENDING_SUBMIT == cryptoTransaction.getCryptoStatus())
+        if (CryptoStatus.PENDING_SUBMIT == cryptoTransaction.getCryptoStatus() || cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.OUTGOING)
             protocolStatus = ProtocolStatus.NO_ACTION_REQUIRED;
         else
             protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
