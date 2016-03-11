@@ -31,9 +31,6 @@ project(':fermat-art-android-sub-app-artist-identity-bitdubai').projectDir = new
 include ':fermat-art-android-sub-app-fan-identity-bitdubai'
 project(':fermat-art-android-sub-app-fan-identity-bitdubai').projectDir = new File('ART/android/sub_app/fermat-art-android-sub-app-fan-identity-bitdubai')
 
-
-
-
 //Plugins
 //Actor Network Service
 include  ':fermat-art-plugin-actor-network-service-artist-bitdubai'
@@ -62,10 +59,6 @@ project(':fermat-art-plugin-sub-app-module-fan-community-bitdubai').projectDir =
 
 include ':fermat-art-plugin-sub-app-module-fan-identity-bitdubai'
 project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-fan-identity-bitdubai')
-
-//Wallet
-include ':fermat-art-plugin-wallet-fan-song-wallet-bitdubai'
-project(':fermat-art-plugin-wallet-fan-song-wallet-bitdubai').projectDir = new File('ART/plugin/wallet/fermat-art-plugin-wallet-fan-song-wallet-bitdubai')
 
 //Wallet Module
 include  ':fermat-art-plugin-wallet-module-fan-bitdubai'
