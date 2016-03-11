@@ -64,6 +64,7 @@ public class AssetSellerDeveloperDatabaseFactory {
         assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_ACCEPTED_ASSETS_COLUMN_NAME);
         assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REJECTED_ASSETS_COLUMN_NAME);
         assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_BUYER_PUBLICKEY_COLUMN_NAME);
         assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
         DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);
         tables.add(assetNegotiationTable);

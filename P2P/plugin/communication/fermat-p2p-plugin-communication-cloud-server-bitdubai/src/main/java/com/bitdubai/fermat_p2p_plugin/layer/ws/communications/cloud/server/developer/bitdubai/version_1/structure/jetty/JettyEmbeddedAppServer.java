@@ -209,7 +209,7 @@ public class JettyEmbeddedAppServer {
             throw new Error(e);
         }
 
-        PortMapping desiredMapping = new PortMapping(
+       /* PortMapping desiredMapping = new PortMapping(
                 DEFAULT_PORT,
                 address.getHostAddress(),
                 PortMapping.Protocol.TCP

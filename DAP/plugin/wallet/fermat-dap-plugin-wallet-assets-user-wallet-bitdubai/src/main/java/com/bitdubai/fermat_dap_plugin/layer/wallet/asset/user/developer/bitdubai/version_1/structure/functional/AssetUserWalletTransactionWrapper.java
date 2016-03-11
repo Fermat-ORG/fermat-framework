@@ -58,8 +58,6 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
 
         AssetUserWalletTransactionWrapper that = (AssetUserWalletTransactionWrapper) o;
 
-        if (getActualTransactionHash() != null ? !getActualTransactionHash().equals(that.getActualTransactionHash()) : that.getActualTransactionHash() != null)
-            return false;
         if (getGenesisTransaction() != null ? !getGenesisTransaction().equals(that.getGenesisTransaction()) : that.getGenesisTransaction() != null)
             return false;
         return !(getAssetPublicKey() != null ? !getAssetPublicKey().equals(that.getAssetPublicKey()) : that.getAssetPublicKey() != null);

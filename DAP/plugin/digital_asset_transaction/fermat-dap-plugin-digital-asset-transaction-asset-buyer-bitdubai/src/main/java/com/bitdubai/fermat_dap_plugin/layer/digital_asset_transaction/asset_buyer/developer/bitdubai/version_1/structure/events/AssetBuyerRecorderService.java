@@ -77,6 +77,11 @@ public class AssetBuyerRecorderService implements AssetTransactionService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_DRAFT_TRANSACTION_FINISHED);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
         } catch (Exception e) {
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
         }

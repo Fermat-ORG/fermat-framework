@@ -20,7 +20,9 @@ public class IssuerViewHolder extends FermatViewHolder {
     public FermatTextView name;
     public FermatTextView status;
     //public FermatTextView extendedPublicKey;
-    public ImageView connectedState;
+    public ImageView connectedStateConnected;
+    public ImageView connectedStateWaiting;
+    public ImageView connectedStateDenied;
 
     /**
      * Constructor
@@ -35,7 +37,9 @@ public class IssuerViewHolder extends FermatViewHolder {
 
         status = (FermatTextView) itemView.findViewById(R.id.status);
         //extendedPublicKey = (FermatTextView) itemView.findViewById(R.id.extendedPublicKey);
-        connectedState = (ImageView) itemView.findViewById(R.id.connection_state);
+        connectedStateConnected = (ImageView) itemView.findViewById(R.id.connection_state_connected);
+        connectedStateWaiting = (ImageView) itemView.findViewById(R.id.connection_state_waiting);
+        connectedStateDenied = (ImageView) itemView.findViewById(R.id.connection_state_denied);
 
     }
 }

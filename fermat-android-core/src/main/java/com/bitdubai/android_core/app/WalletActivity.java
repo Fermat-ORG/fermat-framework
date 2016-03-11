@@ -27,7 +27,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppCon
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -46,7 +48,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -87,7 +92,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
         try {
 
-            loadUI(createOrOpenApplication());
+            loadUI(createOrCallWalletSession());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,7 +252,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
         try {
 
-            FermatStructure wallet = getFermatAppManager().getLastAppStructure();
+            WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
 
 
 //            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(), this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
@@ -287,6 +292,36 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getWindow().setBackgroundDrawable(colorDrawable);
         }
 
+    }
+
+    private FermatSession createOrCallWalletSession() {
+        return createOrOpenApplication();
+    }
+
+    public CryptoWalletManager getCryptoWalletManager() {
+
+        try {
+            return (CryptoWalletManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.CRYPTO_WALLET,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN,e);
+
+            return null;
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+            return null;
+        }
     }
 
     /**
@@ -384,6 +419,12 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
 
+
+    @Override
+    public void selectSubApp(InstalledSubApp installedSubApp) {
+
+    }
+
     @Override
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
         try {
@@ -478,6 +519,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
+    @Override
+    public void selectWallet(InstalledWallet installedWallet) {
+
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
