@@ -1,7 +1,7 @@
-package bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.cryptotransmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.cryptotransmission.developer.CryptoTransmissionNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

@@ -1,4 +1,4 @@
-package bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import bitdubai.version_1.database.CryptoTransmissionNetworkServiceMetadataDao;
-import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceMetadataDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 
 /**
  * Created by mati on 2015.11.18..

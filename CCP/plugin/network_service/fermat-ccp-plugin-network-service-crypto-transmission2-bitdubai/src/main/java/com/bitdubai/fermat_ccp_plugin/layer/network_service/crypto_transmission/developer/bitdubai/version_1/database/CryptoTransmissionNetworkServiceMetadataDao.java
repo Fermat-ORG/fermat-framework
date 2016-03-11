@@ -1,4 +1,4 @@
-package bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -19,6 +19,11 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enu
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionMessageType;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 
 import java.util.ArrayList;
@@ -26,13 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
-import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
-import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import bitdubai.version_1.structure.CryptoTransmissionMessageType;
-import bitdubai.version_1.structure.CryptoTransmissionMetadataRecord;
-import bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionResponseMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.10.04..
