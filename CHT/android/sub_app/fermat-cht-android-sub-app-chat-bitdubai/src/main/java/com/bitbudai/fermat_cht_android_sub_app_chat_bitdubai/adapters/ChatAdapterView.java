@@ -514,7 +514,7 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void refreshEvents() {
-        whatToDo();
+        //whatToDo();
         findMessage();
         scroll();
     }
