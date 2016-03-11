@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
@@ -26,6 +27,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -148,24 +150,9 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
 
-        String resourceBase = "";
-        URL webAppUri = this.getClass().getClassLoader().getResource("webapp");
-        LOG.info("WebAppUri = "+webAppUri);
-
-        if (webAppUri != null) {
-            resourceBase = webAppUri.toExternalForm();
-        }
-
-        ProtectionDomain protectionDomain = JettyEmbeddedAppServer.class.getProtectionDomain();
-        URL location = protectionDomain.getCodeSource().getLocation();
-
-
-        LOG.info("resourceBase1 = "+resourceBase);
-        LOG.info("resourceBase2 = "+this.getClass().getResource("webapp"));
-        LOG.info("resourceBase3 = "+this.getClass().getResource("/webapp"));
-        LOG.info("resourceBase4 = "+this.getClass().getClassLoader().getResource("webapp"));
-        LOG.info("resourceBase5 = " + new ClassPathResource("webapp").getURI().toString());
-        LOG.info("resourceBase6 = "+location.toExternalForm());
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        org.springframework.core.io.Resource resource = resolver.getResource("classpath*:webapp");
+        LOG.info("·######## resource = "+resource.getURL());
 
 
         /*
@@ -173,8 +160,8 @@ public class JettyEmbeddedAppServer {
          */
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
-        webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
-        webAppContext.setResourceBase(location.toExternalForm()+"!/webapp");
+        webAppContext.setDescriptor("./webapp/WEB_INF/web.xml");
+        webAppContext.setResourceBase("./webapp");
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
