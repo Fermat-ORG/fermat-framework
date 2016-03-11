@@ -168,7 +168,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
 
             Date date = null;
             try {
-                date = format.parse("2016-01-05 01:24:22");
+                date = format.parse("2016-03-11 01:24:22");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
