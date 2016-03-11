@@ -341,7 +341,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             try {
                 return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
             } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources() == null ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
+                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
                 String actorName = "Asset " + digitalAssetMetadata.getDigitalAsset().getName() + " sold.";
                 return extraUserManager.createActor(actorName, image);
             }
