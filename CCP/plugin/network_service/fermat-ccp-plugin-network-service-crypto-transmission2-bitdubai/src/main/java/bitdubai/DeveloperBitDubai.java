@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 
-import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRootNew;
 
 

@@ -84,6 +84,10 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
+    /**
+     * Represent the newLoggingLevel
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     Timer timer = new Timer();
 
@@ -818,11 +822,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.remove(pluginPair.getKey());
+                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -838,7 +842,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         try {
 
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return CryptoTransmissionNetworkServicePluginRootNew.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
