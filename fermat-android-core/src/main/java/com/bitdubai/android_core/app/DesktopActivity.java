@@ -452,6 +452,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                     hideBottonIcons();
 
+
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
+
                     paintScreen(activity);
 
                     if (activity.getFragments().size() == 1) {

@@ -290,7 +290,8 @@ public enum Activities implements FermatEnum {
     WPD_DESKTOP("WPD"),
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
     CCP_DESKTOP_P2P("DP2P"),
-    CCP_DESKTOP_SOCIAL("DSOCIAL");
+    CCP_DESKTOP_SOCIAL("DSOCIAL"),
+    DESKTOP_COMMUNITY_ACTIVITY("DESCA");
 
     private String code;
 
@@ -752,6 +753,8 @@ public enum Activities implements FermatEnum {
                 return CCP_DESKTOP_P2P;
             case "DSOCIAL":
                 return CCP_DESKTOP_SOCIAL;
+            case "DESCA":
+                return DESKTOP_COMMUNITY_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

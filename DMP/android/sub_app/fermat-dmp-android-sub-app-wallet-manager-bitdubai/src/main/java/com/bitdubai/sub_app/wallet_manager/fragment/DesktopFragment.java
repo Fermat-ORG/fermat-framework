@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -518,14 +519,13 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 case EMPTY:
                     break;
                 case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
-//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
-//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
-//                    folderDialog.getWindow().setAttributes(lp);
-                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    folderDialog.show();
+                    if(data.getInterfaceObject().getName().equals("Communities")){
+                        changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+                    }else {
+                        FolderDialog folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this);
+                        folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        folderDialog.show();
+                    }
                     break;
                 default:
                     break;
