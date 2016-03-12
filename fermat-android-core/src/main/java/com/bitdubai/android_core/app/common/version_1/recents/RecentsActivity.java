@@ -148,7 +148,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     public void onBackPressed() {
         Intent resultIntent = new Intent();
         // TODO Add extras or a data URI to this intent as appropriate.
-        setResult(Activity.RESULT_OK, resultIntent);
+        setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
 //        android.os.Process.killProcess(android.os.Process.myPid());
         super.onBackPressed();
@@ -191,7 +191,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     public void onItemClick(RecentApp item) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,item.getPublicKey());
-//        resultIntent.putExtra(ApplicationConstants.INTENT_APP_TYPE,item.getFermatApp().getAppType());
+        resultIntent.putExtra(ApplicationConstants.INTENT_APP_TYPE,item.getFermatApp().getAppType());
         // TODO Add extras or a data URI to this intent as appropriate.
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
