@@ -60,7 +60,7 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.chat_list_listview, null, true);
         try {
-            String name ="",message ="",messagedate ="",type ="",status ="";
+            String name ="",message ="",messagedate ="",type ="",status ="",noreadmsgsstr ="";
             int noreadmsgs=0;
             String values=chatinfo.get(position);
             List<String> converter=new ArrayList<String>();
@@ -70,8 +70,9 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             messagedate=converter.get(2);
             status=converter.get(5);
             type=converter.get(6);
+            noreadmsgsstr=converter.get(7);
             try{
-                noreadmsgs= Integer.parseInt(converter.get(7));
+                noreadmsgs= Integer.parseInt(noreadmsgsstr);
             }catch(Exception e){
                 noreadmsgs=0;
             }
@@ -106,7 +107,7 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
             if(noreadmsgs>0)
             {
-                tvnumber.setText(noreadmsgs);
+                tvnumber.setText(noreadmsgsstr);
                 tvnumber.setVisibility(View.VISIBLE);
             }else
                 tvnumber.setVisibility(View.GONE);
