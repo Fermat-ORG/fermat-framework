@@ -28,8 +28,8 @@ dependencies {
     compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
+    compile project(':fermat-tky-core')
     compile project(':fermat-wpd-core')
-    compile project(':fermat-wrd-core')
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
