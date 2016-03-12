@@ -334,6 +334,13 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                         item.setPosition(0);
                         lstItemsWithIcon.add(item);
                     }
+
+                if(installedWallet.getWalletPublicKey().equals("loss_protected_wallet")) {
+                    Item item = new Item(installedWallet);
+                    item.setIconResource(R.drawable.loss_protected);
+                    item.setPosition(8);
+                    lstItemsWithIcon.add(item);
+                }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
