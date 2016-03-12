@@ -676,8 +676,12 @@ public class BitcoinCryptoNetworkDatabaseDao {
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
+        //BTC Amount
+        cryptoTransaction.setBtcAmount(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BTC_AMOUNT_COLUMN_NAME));
+        //Fee Amount
+        cryptoTransaction.setFee(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_FEE_AMOUNT_COLUMN_NAME));
         //CryptoAmount
-        cryptoTransaction.setCryptoAmount(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME));
+        cryptoTransaction.setCryptoAmount(record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME));
         //AddressFrom
         cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME), CryptoCurrency.BITCOIN));
         //AddressTo
@@ -737,48 +741,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         for (DatabaseTableRecord record : databaseTable.getRecords()){
-
-            /**
-             * Gets all the values
-             */
-            CryptoAddress addressFrom = new CryptoAddress();
-            addressFrom.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME));
-            addressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
-
-            CryptoAddress addressTo = new CryptoAddress();
-            addressTo.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME));
-            addressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
-
-            long amount = record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME);
-
-            CryptoStatus cryptoStatus = null;
-            try {
-                cryptoStatus = CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME));
-            } catch (InvalidParameterException e) {
-                e.printStackTrace();
-            }
-
-            String op_Return = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME);
-
-            /**
-             * Forms the CryptoTransaction object
-             */
-            CryptoTransaction cryptoTransaction = new CryptoTransaction();
-            cryptoTransaction.setTransactionHash(txHash);
-            cryptoTransaction.setBlockHash((record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME)));
-
-            cryptoTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE)));
-
-            cryptoTransaction.setAddressTo(addressTo);
-            cryptoTransaction.setAddressFrom(addressFrom);
-            cryptoTransaction.setCryptoAmount(amount);
-            cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-            cryptoTransaction.setCryptoStatus(cryptoStatus);
-            cryptoTransaction.setOp_Return(op_Return);
-
-            /**
-             * adds it to the list
-             */
+            CryptoTransaction cryptoTransaction = getCryptoTransactionFromRecord(record);
             cryptoTransactions.add(cryptoTransaction);
         }
 
@@ -1322,10 +1285,18 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
-         * I return the CryptoTranasction with the last cryptoStatus
+         * I return the CryptoTranasction with the last cryptoStatus that are outgoing first.
          */
         for (CryptoTransaction cryptoTransaction: cryptoTransactions){
-            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus)
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus && cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.OUTGOING)
+                return cryptoTransaction;
+        }
+
+        /**
+         * and then the incoming
+         */
+        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus && cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.INCOMING)
                 return cryptoTransaction;
         }
 
@@ -1489,7 +1460,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
         record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME, cryptoTransaction.getBlockDepth());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, cryptoTransaction.getAddressTo().getAddress());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
-        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME, cryptoTransaction.getCryptoAmount());
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BTC_AMOUNT_COLUMN_NAME, cryptoTransaction.getBtcAmount());
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_FEE_AMOUNT_COLUMN_NAME, cryptoTransaction.getFee());
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME, cryptoTransaction.getCryptoAmount());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME, cryptoTransaction.getOp_Return());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
