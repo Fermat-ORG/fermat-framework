@@ -9,16 +9,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Before;
@@ -67,7 +67,7 @@ public class IssuePendingDigitalAssetsTest {
     ErrorManager errorManager;
 
     @Mock
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
 
     List<String> pendingDigitalAssetsTransactionIdList;
 
@@ -111,7 +111,7 @@ public class IssuePendingDigitalAssetsTest {
                 this.cryptoAddressBookManager,
                 this.outgoingIntraActorManager);
         digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
-        digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
+        digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingDAO);
 
         digitalAsset = new DigitalAsset();
         digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
@@ -141,9 +141,9 @@ public class IssuePendingDigitalAssetsTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(assetIssuingTransactionDao.getPendingDigitalAssetsTransactionIdByPublicKey(publicKey)).thenReturn(pendingDigitalAssetsTransactionIdList);
-        when(assetIssuingTransactionDao.getDigitalAssetTransactionStatus(null)).thenReturn(TransactionStatus.FORMING_GENESIS);
-        when(assetIssuingTransactionDao.getDigitalAssetPublicKeyById(null)).thenReturn(digitalAssetPublicKey);
+        when(assetIssuingDAO.getPendingDigitalAssetsTransactionIdByPublicKey(publicKey)).thenReturn(pendingDigitalAssetsTransactionIdList);
+        when(assetIssuingDAO.getDigitalAssetTransactionStatus(null)).thenReturn(TransactionStatus.FORMING_GENESIS);
+        when(assetIssuingDAO.getDigitalAssetPublicKeyById(null)).thenReturn(digitalAssetPublicKey);
         when(pluginFileSystem.getTextFile(pluginId, digitalAssetFileStoragePath, digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(pluginTextFile);
         when(assetVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType)).thenReturn(genesisAddress);
     }

@@ -47,6 +47,7 @@ dependencies {
     compile project(':fermat-cht-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
+    //compile project(':fermat_preference_settings')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // Android
     compile 'com.android.support:support-v4:23.1.1'

@@ -43,6 +43,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerC
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.ActorAssetNetworkServiceRecord;
@@ -818,7 +819,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 
                     String profileImage = "";
                     byte[] imageByte = null;
-                    if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
+                    if (Validate.isValidString(platformComponentProfile.getExtraData())) {
                         try {
                             JsonParser jParser = new JsonParser();
                             JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
