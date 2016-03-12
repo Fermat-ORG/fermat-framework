@@ -234,8 +234,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -250,6 +250,17 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 String newAmount = "";
                 switch (position) {
                     case 0:
+                        text = "[btc]";
+                        if (txtType.equals("[bits]")) {
+                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                        } else if (txtType.equals("[satoshis]")) {
+                            newAmount = bitcoinConverter.getBTC(amount);
+                        } else {
+                            newAmount = amount;
+                        }
+
+                        break;
+                    case 1:
                         text = "[bits]";
                         if (txtType.equals("[btc]")) {
                             newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -259,16 +270,6 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             newAmount = amount;
                         }
 
-                        break;
-                    case 1:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
                         break;
                     case 2:
                         text = "[satoshis]";
@@ -588,7 +589,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 BigDecimal money;
 
-                if (!amount.equals(""))
+                if (amount.equals(""))
                     money = new BigDecimal("0");
                 else
                     money = new BigDecimal(amount);

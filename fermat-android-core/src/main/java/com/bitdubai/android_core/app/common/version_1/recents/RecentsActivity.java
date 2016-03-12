@@ -23,7 +23,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
@@ -121,6 +120,11 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
                 public FermatAppType getAppType() {
                     return FermatAppType.WALLET;
                 }
+
+                @Override
+                public byte[] getAppIcon() {
+                    return new byte[0];
+                }
             },i));
         }
 
@@ -144,7 +148,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     public void onBackPressed() {
         Intent resultIntent = new Intent();
         // TODO Add extras or a data URI to this intent as appropriate.
-        setResult(Activity.RESULT_OK, resultIntent);
+        setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
 //        android.os.Process.killProcess(android.os.Process.myPid());
         super.onBackPressed();
@@ -185,7 +189,6 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 
     @Override
     public void onItemClick(RecentApp item) {
-        Toast.makeText(this,"tocado",Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,item.getPublicKey());
         resultIntent.putExtra(ApplicationConstants.INTENT_APP_TYPE,item.getFermatApp().getAppType());

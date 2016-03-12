@@ -29,7 +29,7 @@ public enum Platforms implements FermatEnum {
     OPERATIVE_SYSTEM_API                ("OSA"),
     PLUG_INS_PLATFORM                   ("PIP"),
     WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD"),
-    WORLD                               ("WRD"),
+    TOKENLY                             ("TKY"),
     ;
 
     private final String code;
@@ -55,7 +55,7 @@ public enum Platforms implements FermatEnum {
             case "OSA":  return OPERATIVE_SYSTEM_API;
             case "PIP":  return PLUG_INS_PLATFORM;
             case "WPD":  return WALLET_PRODUCTION_AND_DISTRIBUTION;
-            case "WRD":  return WORLD;
+            case "TKY":  return TOKENLY;
 
             default:
             throw new InvalidParameterException(

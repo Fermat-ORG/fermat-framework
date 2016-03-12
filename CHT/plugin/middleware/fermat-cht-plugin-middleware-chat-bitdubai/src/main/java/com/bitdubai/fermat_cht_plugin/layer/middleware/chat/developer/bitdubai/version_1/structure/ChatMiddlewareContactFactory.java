@@ -60,8 +60,8 @@ public class ChatMiddlewareContactFactory {
      * To make the code more readable, please keep the compatible platforms. sorted alphabetically.
      */
     Platforms[] compatiblePlatforms={
-            Platforms.CRYPTO_CURRENCY_PLATFORM,
-            Platforms.DIGITAL_ASSET_PLATFORM
+            Platforms.CRYPTO_CURRENCY_PLATFORM
+            //Platforms.DIGITAL_ASSET_PLATFORM
             //Platforms.CRYPTO_BROKER_PLATFORM
     };
 
@@ -286,7 +286,7 @@ public class ChatMiddlewareContactFactory {
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
                                 date.getTime(),
-                                intraUserInformation.getProfileImage(),
+                                intraUserInformation.getProfileImage() != null ? intraUserInformation.getProfileImage() : new byte[0],
                                 ContactStatus.AVAILABLE
                         );
                         contactList.add(contact);
@@ -304,7 +304,7 @@ public class ChatMiddlewareContactFactory {
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
                                 date.getTime(),
-                                intraUserInformation.getProfileImage(),
+                                intraUserInformation.getProfileImage() != null ? intraUserInformation.getProfileImage() : new byte[0],
                                 ContactStatus.AVAILABLE
                         );
                         contactList.add(contact);
@@ -331,7 +331,7 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_USER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetUser.getProfileImage(),
+                                        actorAssetUser.getProfileImage() != null ? actorAssetUser.getProfileImage() : new byte[0],
                                         ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
@@ -354,7 +354,7 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_ISSUER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetIssuer.getProfileImage(),
+                                        actorAssetIssuer.getProfileImage() != null ? actorAssetIssuer.getProfileImage() : new byte[0],
                                         ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
@@ -377,7 +377,7 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_ASSET_REDEEM_POINT,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorAssetRedeemPoint.getProfileImage(),
+                                        actorAssetRedeemPoint.getProfileImage() != null ? actorAssetRedeemPoint.getProfileImage() : new byte[0],
                                         ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
@@ -407,7 +407,7 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorBroker.getImage(),
+                                        actorBroker.getImage() != null ? actorBroker.getImage() : new byte[0],
                                         ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);
@@ -430,7 +430,7 @@ public class ChatMiddlewareContactFactory {
                                         PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                         actorPublicKey,
                                         date.getTime(),
-                                        actorCustomer.getImage(),
+                                        actorCustomer.getImage() != null ? actorCustomer.getImage() : new byte[0],
                                         ContactStatus.AVAILABLE
                                 );
                                 contactList.add(contact);

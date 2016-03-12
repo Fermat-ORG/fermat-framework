@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PersistDigitalAssetTest {
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
     UUID pluginId;
 
     @Mock
@@ -58,8 +58,8 @@ public class PersistDigitalAssetTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
-        assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
+        assetIssuingDAO = new AssetIssuingDAO(pluginDatabaseSystem, pluginId);
 
         records = new LinkedList<>();
         records.add(databaseTableRecord);
@@ -68,19 +68,19 @@ public class PersistDigitalAssetTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME)).thenReturn(databaseTable);
+        when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
     }
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.persistDigitalAsset(digitalAssetPublicKey, digitalAssetLocalStoragePath, assetsAmount, blockchainNetworkType, walletPublickey);
+        assetIssuingDAO.persistDigitalAsset(digitalAssetPublicKey, digitalAssetLocalStoragePath, assetsAmount, blockchainNetworkType, walletPublickey);
     }
 
     @Test
     public void test_Throws_CantPersistDigitalAssetException() throws Exception {
         doThrow(new CantInsertRecordException("error")).when(databaseTable).insertRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).persistDigitalAsset(digitalAssetPublicKey, digitalAssetLocalStoragePath, assetsAmount, blockchainNetworkType, walletPublickey);
+        catchException(assetIssuingDAO).persistDigitalAsset(digitalAssetPublicKey, digitalAssetLocalStoragePath, assetsAmount, blockchainNetworkType, walletPublickey);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

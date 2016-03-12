@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -57,6 +58,8 @@ public interface ChatManager {
     void saveMessage(Message message) throws CantSaveMessageException;
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
+
+    void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException;
 
     List<Contact> getContacts() throws CantGetContactException;
 
