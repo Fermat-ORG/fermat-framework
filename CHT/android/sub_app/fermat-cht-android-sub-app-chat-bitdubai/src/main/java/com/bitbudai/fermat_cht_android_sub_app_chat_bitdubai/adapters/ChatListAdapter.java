@@ -86,7 +86,9 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
 
             ImageView imagetick = (ImageView) item.findViewById(R.id.imagetick);//imagen.setImageResource(imgid.get(position));
             imagetick.setImageResource(0);
-            if(type== TypeMessage.INCOMMING.toString()) {
+            String ty= type.toString();
+            String ty2= TypeMessage.OUTGOING.toString();
+            if(ty == ty2) {
                 if (status == MessageStatus.SEND.toString() || status == MessageStatus.CREATED.toString())
                 {    imagetick.setImageResource(R.drawable.cht_ticksent);}
                 else if (status == MessageStatus.DELIVERED.toString() || status == MessageStatus.RECEIVE.toString())
