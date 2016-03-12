@@ -8,8 +8,8 @@
 include ':fermat-tky-api'
 project(':fermat-tky-api').projectDir = new File('TKY/library/api/fermat-tky-api')
 
-//include ':fermat-tky-core'
-//project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-core')
+include ':fermat-tky-core'
+project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-core')
 
 //PLUGINS
 
