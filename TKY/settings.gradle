@@ -1,0 +1,18 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-tky-api'
+project(':fermat-tky-api').projectDir = new File('TKY/library/api/fermat-tky-api')
+
+//include ':fermat-tky-core'
+//project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-core')
+
+//PLUGINS
+
+//World
+//include ':fermat-tky-plugin-world-tokenly-api-bitdubai'
+//project(':fermat-tky-plugin-world-tokenly-api-bitdubai').projectDir = new File('TKY/plugin/world/fermat-tky-plugin-world-tokenly-api-bitdubai')
