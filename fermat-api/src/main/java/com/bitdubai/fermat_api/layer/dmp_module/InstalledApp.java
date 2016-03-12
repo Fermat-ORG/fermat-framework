@@ -7,12 +7,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLang
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mati on 2016.03.09..
  */
-public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp {
+public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp, Serializable{
 
     private List<InstalledSkin> skinsId;
     private List<InstalledLanguage> languajesId;
@@ -113,4 +114,5 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     public byte[] getAppIcon() {
         return new byte[0];
     }
+
 }

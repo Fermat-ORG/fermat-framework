@@ -15,6 +15,7 @@ public enum Platforms implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
+    ART_PLATFORM                        ("ART"),
     BLOCKCHAINS                         ("BCH"),
     BANKING_PLATFORM                    ("BNK"),
     COMMUNICATION_PLATFORM              ("CP"),
@@ -28,6 +29,7 @@ public enum Platforms implements FermatEnum {
     OPERATIVE_SYSTEM_API                ("OSA"),
     PLUG_INS_PLATFORM                   ("PIP"),
     WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD"),
+    TOKENLY                             ("TKY"),
     ;
 
     private final String code;
@@ -53,6 +55,7 @@ public enum Platforms implements FermatEnum {
             case "OSA":  return OPERATIVE_SYSTEM_API;
             case "PIP":  return PLUG_INS_PLATFORM;
             case "WPD":  return WALLET_PRODUCTION_AND_DISTRIBUTION;
+            case "TKY":  return TOKENLY;
 
             default:
             throw new InvalidParameterException(

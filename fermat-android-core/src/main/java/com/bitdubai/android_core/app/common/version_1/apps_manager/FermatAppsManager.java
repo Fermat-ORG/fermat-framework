@@ -6,6 +6,7 @@ import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
+import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
@@ -70,7 +71,8 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     }
 
 
-    public List<RecentApp> getRecentsAppsStack() {
+    @Override
+    public List<FermatRecentApp> getRecentsAppsStack() {
         ArrayList list = new ArrayList(recentsAppsStack.values());
         Collections.sort(list,new RecentAppComparator());
         return list;

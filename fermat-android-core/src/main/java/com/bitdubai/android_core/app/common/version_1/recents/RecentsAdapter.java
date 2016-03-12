@@ -38,6 +38,16 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
                 itemClickListener.onItemClick(viewHolder.model);
             }
         });
+        try {
+            viewHolder.getIcon().setImageResource(viewHolder.model.getFermatApp().getIconResource());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            viewHolder.getTitle().setText(viewHolder.model.getFermatApp().getAppName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //viewHolder.getRoot().addView(View.inflate(context, R.layout.widgetlayout, null));
     }
 
