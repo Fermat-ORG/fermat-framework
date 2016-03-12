@@ -864,6 +864,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_ISSUER);
             runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -917,7 +918,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
             /**
@@ -926,6 +926,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
             runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_USER.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -979,14 +980,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
             /**
              * REDEEM POINT IDENTITY
              */
             runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.DAP_REDEEM_POINT_IDENTITY);
+            runtimeSubApp.setType(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY);
             runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_REDEEM.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1039,9 +1039,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
 
         } catch (Exception e) {
             String message = com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException.DEFAULT_MESSAGE;
@@ -1385,7 +1382,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1434,7 +1437,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1470,6 +1479,148 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        dapAssetIssuerCommunity.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_LIST_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_LIST_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeActivity.setBackPublicKey(communityIssuerPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Issuer Profile");
+        runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        dapAssetIssuerCommunity.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeActivity.setBackPublicKey(communityIssuerPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapAssetIssuerCommunity.addActivity(runtimeActivity);
+
+        //INI ISSUER SETTINGS ACTIVITY
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeActivity.setBackPublicKey(communityIssuerPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey());
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1525,7 +1676,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1541,13 +1692,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
         //INI User other profile activity
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
         runtimeActivity.setBackPublicKey(communityUserPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
@@ -1565,21 +1723,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_LIST_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_LIST_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeActivity.setBackPublicKey(communityUserPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -1596,10 +1750,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
@@ -1607,11 +1757,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
-
         //INI User connections list activity
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
-        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST.getCode());
+        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
         runtimeActivity.setBackPublicKey(communityUserPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
@@ -1627,10 +1776,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
@@ -1648,7 +1793,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1664,12 +1809,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
         // Activity: Manage Groups
-
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN.getCode());
@@ -1689,10 +1839,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey(), runtimeFragment);
@@ -1709,7 +1855,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1722,6 +1868,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1748,10 +1900,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey(), runtimeFragment);
@@ -1768,7 +1916,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1784,10 +1932,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
-
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS);
@@ -1808,10 +1961,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey(), runtimeFragment);
@@ -1828,7 +1977,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1841,6 +1990,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1867,10 +2022,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
@@ -1887,7 +2038,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1900,6 +2051,74 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapAssetUserCommunity.addActivity(runtimeActivity);
+
+        //INI USER SETTINGS ACTIVITY
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeActivity.setBackPublicKey(communityUserPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Manage Groups");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1959,13 +2178,19 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1973,12 +2198,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
-
         //INI redeem point community other profile
 
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
         runtimeActivity.setBackPublicKey(communityRedeemPointPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
@@ -2001,16 +2225,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
         //INI Redeem Point connections list activity
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST);
-        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST.getCode());
+        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
         runtimeActivity.setBackPublicKey(communityRedeemPointPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
@@ -2026,10 +2250,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
@@ -2047,13 +2267,19 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
         runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -2061,6 +2287,147 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
+        //INI REDEEM POINT SETTINGS ACTIVITY
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeActivity.setBackPublicKey(communityRedeemPointPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_LIST_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_LIST_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeActivity.setBackPublicKey(communityRedeemPointPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Redeem Point Profile");
+        runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeActivity.setBackPublicKey(communityRedeemPointPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
+        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
         listSubApp.put(dapAssetRedeemPointCommunity.getPublicKey(), dapAssetRedeemPointCommunity);
     }
@@ -2652,6 +3019,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer > Databases");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
@@ -2676,6 +3047,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer > Tables");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
@@ -2683,10 +3058,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#d07b62");
-        runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
@@ -2703,6 +3074,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer > Records");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
@@ -2710,10 +3085,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#d07b62");
-        runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
@@ -2761,11 +3132,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Chat");
@@ -2806,6 +3178,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
+//        //Tabs Connections
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("CONNECTIONS");
+//        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
+
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
@@ -2815,12 +3196,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
         //runtimeActivity.setTabStrip(runtimeTabStrip);
 
-//        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-//        runtimeActivity.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contacts");
@@ -2841,11 +3223,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contact Profile");
@@ -2866,11 +3249,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Edit Contact Profile");
@@ -2891,11 +3275,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Available Connections");
@@ -2916,11 +3301,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("");//set title in fragment
@@ -2935,32 +3321,84 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
 
-//        // Activity: Connections
-//        runtimeActivity = new Activity();
-//        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT);
-//        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getCode());
-//        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-//        runtimeActivity.setBackPublicKey(chatPublicKey);
-//        chtChat.addActivity(runtimeActivity);
-//
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#0e738b");
-//        runtimeActivity.setStatusBar(statusBar);
-//
-//        runtimeTitleBar = new TitleBar();
-//        runtimeTitleBar.setLabel("Connections");
-//
-//        runtimeTitleBar.setLabelSize(16);
-//        runtimeTitleBar.setTitleColor("#FFFFFF");
-//        runtimeTitleBar.setIsTitleTextStatic(true);
-//        runtimeTitleBar.setColor("#1189a5");
-//        runtimeActivity.setTitleBar(runtimeTitleBar);
-//
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
-//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
-//
+        // Activity: Profile list
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_PROFILELIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILELIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILELIST);
+        runtimeActivity.setBackPublicKey(chatPublicKey);
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Your Profiles");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
+
+        // Activity: Profile Detail
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("My Profile");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
+
+        // Activity: Send Error Report
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Error Report");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
+
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 

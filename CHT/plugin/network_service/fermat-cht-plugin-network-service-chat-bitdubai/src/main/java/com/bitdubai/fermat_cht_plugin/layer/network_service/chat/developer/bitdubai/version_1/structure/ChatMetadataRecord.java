@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocol
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
+
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private UUID transactionId;
 
-    private String transactionHash;
+    private String responseToNotification;
 
     private UUID chatId;
 
@@ -55,7 +56,15 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private int sentCount;
 
-    private UUID responseToNotificationId;
+    private String msgXML;
+
+    public String getMsgXML() {
+        return msgXML;
+    }
+
+    public void setMsgXML(String msgXML) {
+        this.msgXML = msgXML;
+    }
 
     public ChatProtocolState getChatProtocolState() {
         return chatProtocolState;
@@ -94,30 +103,17 @@ public class ChatMetadataRecord implements ChatMetadata{
         this.sentCount = sentCount;
     }
 
-    public UUID getResponseToNotificationId() {
-        return responseToNotificationId;
-    }
-
-    public void setResponseToNotificationId(UUID responseToNotificationId) {
-        this.responseToNotificationId = responseToNotificationId;
-    }
-
-    @Override
-    public String toString() {
-        ChatMetadata chatMetadata = this;
-        return XMLParser.parseObject(chatMetadata);
-    }
-
     /**
      * This method checks if the ChatMetadataRecord if completed filled before sending.
+     * @param isNewPluginRoot Recieves {@isNewPluginRoot} which indicates if this is an old version of the plugin.
      * @return
      */
-    public boolean isFilled(){
+    public boolean isFilled(boolean isNewPluginRoot){
         if(this.chatId == null)
             return false;
         if(this.transactionId == null)
             return false;
-        if(this.transactionHash == null || this.transactionHash.isEmpty())
+        if(this.responseToNotification == null || this.responseToNotification.isEmpty())
             return false;
         if(this.objectId == null)
             return false;
@@ -143,14 +139,14 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.distributionStatus == null)
             return false;
-//        if(this.processed == null || processed.isEmpty())
-//            return false;
-//        if(this.chatProtocolState == null)
-//            return false;
-//        if(this.sentDate == null)
-//            return false;
-//        if(this.responseToNotificationId == null)
-//            return false;
+        if(this.processed == null || processed.isEmpty())
+            return false;
+        if(isNewPluginRoot){
+            if(this.chatProtocolState == null)
+                return false;
+            if(this.sentDate == null)
+                return false;
+        }
         return true;
     }
 
@@ -164,7 +160,7 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.transactionId != ((ChatMetadataRecord) obj).getTransactionId())
             return false;
-        if(!Objects.equals(this.transactionHash, ((ChatMetadataRecord) obj).getTransactionHash()))
+        if(!Objects.equals(this.responseToNotification, ((ChatMetadataRecord) obj).getResponseToNotification()))
             return false;
         if(this.objectId != ((ChatMetadataRecord) obj).getObjectId())
             return false;
@@ -226,16 +222,16 @@ public class ChatMetadataRecord implements ChatMetadata{
      *
      * @return
      */
-    public String getTransactionHash() {
-        return transactionHash;
+    public String getResponseToNotification() {
+        return responseToNotification;
     }
 
     /**
      *
-     * @param transactionHash
+     * @param responseToNotification
      */
-    public void setTransactionHash(String transactionHash) {
-        this.transactionHash = transactionHash;
+    public void setResponseToNotification(String responseToNotification) {
+        this.responseToNotification = responseToNotification;
     }
 
     /**
@@ -297,12 +293,19 @@ public class ChatMetadataRecord implements ChatMetadata{
         return distributionStatus;
     }
 
+
     /**
      *
      * @param distributionStatus
      */
     public void setDistributionStatus(DistributionStatus distributionStatus) {
         this.distributionStatus = distributionStatus;
+    }
+
+    @Override
+    public String toString() {
+        ChatMetadata chatMetadata = this;
+        return XMLParser.parseObject(chatMetadata);
     }
 
     /**

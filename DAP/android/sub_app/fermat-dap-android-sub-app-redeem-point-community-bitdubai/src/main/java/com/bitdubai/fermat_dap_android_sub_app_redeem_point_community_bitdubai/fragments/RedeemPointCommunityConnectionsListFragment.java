@@ -26,16 +26,19 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.adapters.RedeemPointCommunityAppFriendsListAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.SessionConstantRedeemPointCommunity;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,7 @@ import static android.widget.Toast.makeText;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
     private int offset = 0;
@@ -66,7 +69,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     private RedeemPointCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<Actor> actors;
-    SettingsManager<AssetUserSettings> settingsManager;
+    SettingsManager<RedeemPointSettings> settingsManager;
 
     public static RedeemPointCommunityConnectionsListFragment newInstance() {
         return new RedeemPointCommunityConnectionsListFragment();
@@ -149,12 +152,13 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
 //            e.printStackTrace();
 //        }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         //menu.clear();
     }
@@ -239,17 +243,24 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
 
     private synchronized List<Actor> getMoreData() {
         List<Actor> dataSet = new ArrayList<>();
-       /* try {
-            
-           //TODO dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
+
+        List<ActorAssetRedeemPoint> result;
+        try {
+            if (moduleManager == null)
+                throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+
+            result = moduleManager.getAllActorAssetRedeemPointConnected();
+            if (result != null && result.size() > 0) {
+                for (ActorAssetRedeemPoint record : result) {
+                    dataSet.add((new Actor((RedeemPointActorRecord) record)));
+                }
+            }
+        } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         }
-*/
         return dataSet;
     }
-    
-    
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -263,17 +274,28 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
-        
+
     }
 
     @Override
     public void onItemClickListener(Actor data, int position) {
-        appSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        appSession.setData(REDEEM_POINT_SELECTED, data);
+        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
     public void onLongItemClickListener(Actor data, int position) {
 
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }

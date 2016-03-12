@@ -85,9 +85,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void onDestroy() {
 
         if(bottomMenuReveal !=null) bottomMenuReveal.clear();
-
-
-
         super.onDestroy();
 
         unbindDrawables(findViewById(R.id.drawer_layout));
@@ -197,7 +194,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             onBackPressedNotificate();
 
-            if(activity.getType() != Activities.CCP_DESKTOP){
+            if(activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK){
                 String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
                 String ip = ipPort[0];
                 String port = ipPort[1];
@@ -433,17 +430,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void loadUI() {
         try {
 
-            /**
-             * Get current activity to paint
-             */
-            Activity activity = getActivityUsedType();
+            Activity activity = null;
 
             try {
-
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
 
                 getFermatAppManager().openApp(getDesktopManager(),fermatAppConnection);
                 //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+                /**
+                 * Get current activity to paint
+                 */
+
+                activity = getFermatAppManager().getLastAppStructure().getLastActivity();
                 loadBasicUI(activity, fermatAppConnection);
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
@@ -453,6 +451,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 } else {
 
                     hideBottonIcons();
+
+
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
 
                     paintScreen(activity);
 

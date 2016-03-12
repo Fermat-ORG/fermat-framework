@@ -19,7 +19,9 @@ public class RedeemPointViewHolder extends FermatViewHolder {
     public FermatTextView name;
     public FermatTextView status;
     public FermatTextView crypto;
-    public ImageView connectionState;
+    public ImageView connectedStateConnected;
+    public ImageView connectedStateWaiting;
+    public ImageView connectedStateDenied;
 
     /**
      * Constructor
@@ -34,6 +36,8 @@ public class RedeemPointViewHolder extends FermatViewHolder {
 
         status = (FermatTextView) itemView.findViewById(R.id.status);
         crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
-        connectionState=  (ImageView) itemView.findViewById(R.id.connection_state);
+        connectedStateConnected = (ImageView) itemView.findViewById(R.id.connection_state_connected);
+        connectedStateWaiting = (ImageView) itemView.findViewById(R.id.connection_state_waiting);
+        connectedStateDenied = (ImageView) itemView.findViewById(R.id.connection_state_denied);
     }
 }

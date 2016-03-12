@@ -49,6 +49,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -247,8 +248,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -263,6 +264,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 String newAmount = "";
                 switch (position) {
                     case 0:
+                        text = "[btc]";
+                        if (txtType.equals("[bits]")) {
+                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                        } else if (txtType.equals("[satoshis]")) {
+                            newAmount = bitcoinConverter.getBTC(amount);
+                        } else {
+                            newAmount = amount;
+                        }
+
+                        break;
+                    case 1:
                         text = "[bits]";
                         if (txtType.equals("[btc]")) {
                             newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -272,16 +284,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                             newAmount = amount;
                         }
 
-                        break;
-                    case 1:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
                         break;
                     case 2:
                         text = "[satoshis]";
@@ -619,23 +621,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             }
+                          //  if(Long.valueOf(newAmount) <= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
+                          //  {
+                                BigDecimal operator = new BigDecimal(newAmount);
 
-                            BigDecimal operator = new BigDecimal(newAmount);
-                            cryptoWallet.send(
-                                    operator.longValueExact(),
-                                    validAddress,
-                                    notes,
-                                    appSession.getAppPublicKey(),
-                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                    Actors.INTRA_USER,
-                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                    cryptoWalletWalletContact.getActorType(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    blockchainNetworkType
-                                   // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType()
-                            );
-                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                            onBack(null);
+                                cryptoWallet.send(
+                                        operator.longValueExact(),
+                                        validAddress,
+                                        notes,
+                                        appSession.getAppPublicKey(),
+                                        cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                        Actors.INTRA_USER,
+                                        cryptoWalletWalletContact.getActorPublicKey(),
+                                        cryptoWalletWalletContact.getActorType(),
+                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        blockchainNetworkType
+
+                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                );
+                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                onBack(null);
+                            //}  else {
+                           // Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                           // }
+
+
+
                         } catch (InsufficientFundsException e) {
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                             e.printStackTrace();

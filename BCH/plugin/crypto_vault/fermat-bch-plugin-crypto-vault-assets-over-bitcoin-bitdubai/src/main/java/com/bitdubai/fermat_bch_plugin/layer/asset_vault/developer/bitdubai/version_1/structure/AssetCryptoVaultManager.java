@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
@@ -20,21 +19,18 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantValidateActiveNetworkException;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -44,18 +40,12 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.MnemonicException;
-import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.ArrayList;
@@ -158,6 +148,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
      * @throws CantSendAssetBitcoinsToUserException
      */
     public String sendAssetBitcoins(String inputTransaction, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
+
         /**
          * I get the network for this address.
          */
@@ -232,6 +223,12 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          */
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
+
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(coinToSend.getValue()))
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, "Dusty send request: " + coinToSend.getValue(), "send more bitcoins!");
 
         /**
          * if the value to send is negative or zero, I will inform of the error
@@ -935,7 +932,6 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         if (inputTransaction.isEmpty() || addressTo == null)
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "InputTransaction or AddressTo can't be null", null);
 
-
         /**
          * I get the network for this address.
          */
@@ -989,6 +985,11 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = genesisTransaction.getOutput(0).getValue().subtract(fee);
 
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(coinToSend.getValue()))
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + coinToSend.getValue(), "send more bitcoins!");
 
         /**
          * if the value to send is negative or zero, I will inform of the error
@@ -1083,7 +1084,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         /**
          * I get a signed transaction from the abstract class CryptoVault.
          */
-        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        transaction = this.signTransaction(walletKeys, transaction);
         System.out.println("***AssetVault*** Transaction signed.");
         System.out.println(transaction.toString());
 
@@ -1094,4 +1095,8 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         return draftTransaction;
     }
 
+    @Override
+    public ECKey getPrivateKey(Address address) {
+        return this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
+    }
 }

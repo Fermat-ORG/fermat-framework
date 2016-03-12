@@ -15,10 +15,18 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
@@ -27,6 +35,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -48,10 +57,14 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private IssuerRedemptionDao issuerRedemptionDao;
     private AssetIssuerWalletManager assetIssuerWalletManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private ActorAssetIssuerManager actorAssetIssuerManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private AssetVaultManager assetVaultManager;
     private IssuerAppropriationManager issuerAppropriationManager;
+    private AssetTransmissionNetworkServiceManager assetTransmissionManager;
+    //ActorManagers
+    private ActorAssetUserManager actorAssetUserManager;
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
     //TODO REMOVE HARDCODE!!!
     private String issuerPublicKeyWallet = WalletUtilities.WALLET_PUBLIC_KEY;
     private String btcWallet;
@@ -65,7 +78,10 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                         PluginDatabaseSystem pluginDatabaseSystem,
                                         AssetVaultManager assetVaultManager,
                                         IssuerAppropriationManager issuerAppropriationManager,
-                                        WalletManagerManager walletMiddlewareManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                        WalletManagerManager walletMiddlewareManager, AssetTransmissionNetworkServiceManager assetTransmissionManager, ActorAssetUserManager actorAssetUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+        this.assetTransmissionManager = assetTransmissionManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
@@ -136,6 +152,17 @@ public class IssuerRedemptionMonitorAgent implements Agent {
 
         private void doTheMainTask() throws Exception {
             checkPendingCryptoRouterEvents();
+            checkAssetMovements();
+        }
+
+        private void checkAssetMovements() throws DAPException, CantLoadWalletException {
+            for (DAPMessage message : assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.ASSET_MOVEMENT)) {
+                AssetMovementContentMessage content = (AssetMovementContentMessage) message.getMessageContent();
+                ActorUtils.storeDAPActor(content.getSystemUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+                ActorUtils.storeDAPActor(content.getNewUser(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(content.getNewUser(), content.getSystemUser(), content.getAssetPublicKey(), content.getMovementType());
+                assetTransmissionManager.confirmReception(message);
+            }
         }
 
         public void checkPendingCryptoRouterEvents() throws Exception {

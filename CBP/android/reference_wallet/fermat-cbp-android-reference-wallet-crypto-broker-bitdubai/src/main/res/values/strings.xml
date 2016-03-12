@@ -15,7 +15,7 @@
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
-    <string name="waiting_for_the_customer">Waiting for the customer</string>
+    <string name="waiting_for_the_customer">Waiting for the Customer</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
     <string name="negotiation_cancel">CANCEL</string>
@@ -62,7 +62,7 @@
     <string name="payment_date_title">Payment Date</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="payment_methods_title">Payment Methods</string>
+    <string name="payment_methods_title">Payment Method</string>
     <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="yours">Yours:</string>
@@ -184,11 +184,11 @@
     <string name="cbw_crypto_address_customer">Customer\'s Crypto Address</string>
     <string name="cbw_crypto_address_broker">Broker\'s Crypto Address</string>
     <string name="cbw_bank_account_customer">Customer\'s Bank Account</string>
-    <string name="cbw_bank_account_broker">Broker\'s Bank Accounts</string>
+    <string name="cbw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="cbw_crypto_address_title">Crypto Address</string>
     <string name="cbw_bank_account_title">Bank Account</string>
-    <string name="cbw_cash_place_to_deliver">Place to Deliver</string>
-    <string name="cbw_cash_place_to_receive">Place to Receive</string>
+    <string name="cbw_cash_place_to_deliver">Merchandise\'s Delivery Place</string>
+    <string name="cbw_cash_place_to_receive">Payment\'s Reception Place</string>
     <string name="cbw_insert_note">Insert Note</string>
     <string name="hint">hint</string>
     <string name="title">title</string>
@@ -200,5 +200,5 @@
     <string name="cbw_reason">Reason</string>
     <string name="cbw_earnings_title">Earnings</string>
     <string name="cbw_no_earnings">No Earnings</string>
-    <!--Dialog Help - End-->
+    <string name="sending_to_the_customer">Sending to the Customer</string>
 </resources>

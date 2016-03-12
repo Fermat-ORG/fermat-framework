@@ -9,8 +9,6 @@
     <string name="help">Help</string>
     <string name="dap_user_wallet_search">Search</string>
     <string name="dap_user_wallet_search_hint">Asset name</string>
-    <string name="dap_user_wallet_show_no_balance">Hide empty assets</string>
-    <string name="dap_user_wallet_show_all">Show empty assets</string>
     <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
     <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
     <string name="dap_user_wallet_action_transfer">Transfer Asset</string>

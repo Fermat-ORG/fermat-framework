@@ -190,7 +190,7 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
 
                         }
                     });
@@ -203,7 +203,7 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -217,7 +217,7 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -231,7 +231,7 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -244,7 +244,11 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            selectSubApp(installedSubApp);
+                            try {
+                               try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     break;
