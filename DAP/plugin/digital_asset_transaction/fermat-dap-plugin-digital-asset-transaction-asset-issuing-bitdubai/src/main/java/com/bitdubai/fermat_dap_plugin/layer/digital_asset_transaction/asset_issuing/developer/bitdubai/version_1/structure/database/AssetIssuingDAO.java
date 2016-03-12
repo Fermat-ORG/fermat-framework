@@ -194,7 +194,6 @@ public class AssetIssuingDAO {
         try {
             updateRecordsForTableByFilter(getIssuingTable(), AssetIssuingDatabaseConstants.ASSET_ISSUING_PROCESSING_COLUMN_NAME, Boolean.FALSE, AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
         } catch (Exception e) {
-            e.printStackTrace();
             //Nothing.
         }
     }
