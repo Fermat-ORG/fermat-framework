@@ -164,12 +164,12 @@ public class ChatListFragment extends AbstractFermatFragment{
                         List<Message> messageChat = chatManager.getMessageByChatId(chatidtemp);//
                         if (messageChat != null) {
                             Message mess = messageChat.get(0);
-                            noreadmsgs=2;
+                            noreadmsgs=0;
                             if (mess != null) {
                                 List<Message> messl = chatManager.getMessageByChatId(chatidtemp);
                                 if (messl != null && messl.size() > 0) {
                                     for (Message mss : messl) {
-                                        if(mss.getType().toString().equals(TypeMessage.INCOMMING.toString()) && mss.getStatus().toString().equals(MessageStatus.READ.toString())){
+                                        if(mss.getType().toString().equals(TypeMessage.INCOMMING.toString()) && !(mss.getStatus().toString().equals(MessageStatus.READ.toString()))){
                                             noreadmsgs++;
                                         }
                                     }
