@@ -12,6 +12,7 @@ public enum TransactionState {
     DEBITED_IN_WALLET ("DIW"),
     SENT_TO_CRYPTO_VOULT("STCV"),
     SUCCESSFUL_SIG("SS"),
+    COMPLETED("COM"),
     CANCELED("CLD");
 
 
