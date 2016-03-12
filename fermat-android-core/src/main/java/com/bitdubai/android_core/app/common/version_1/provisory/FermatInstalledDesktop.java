@@ -33,4 +33,9 @@ public class FermatInstalledDesktop implements InstalledDesktop {
     public byte[] getAppIcon() {
         return new byte[0];
     }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
 }
