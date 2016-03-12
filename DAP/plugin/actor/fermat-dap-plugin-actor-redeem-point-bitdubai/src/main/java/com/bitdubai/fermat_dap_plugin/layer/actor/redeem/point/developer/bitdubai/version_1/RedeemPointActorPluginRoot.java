@@ -46,6 +46,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
@@ -393,6 +394,20 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
 
         return list;
+    }
+
+    @Override
+    public void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantGetAssetRedeemPointActorsException {
+
+        try {
+            this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
+        }
+        catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T UPDATE ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
+        }
+
     }
 
 
