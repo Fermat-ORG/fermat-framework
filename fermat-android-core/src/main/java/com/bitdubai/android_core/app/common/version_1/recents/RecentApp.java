@@ -1,11 +1,14 @@
 package com.bitdubai.android_core.app.common.version_1.recents;
 
+import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+
+import java.io.Serializable;
 
 /**
  * Created by mati on 2016.03.03..
  */
-public class RecentApp {
+public class RecentApp implements FermatRecentApp,Serializable {
 
     private String publicKey;
     private FermatApp fermatApp;
