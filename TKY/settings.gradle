@@ -13,6 +13,6 @@ project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-c
 
 //PLUGINS
 
-//World
-//include ':fermat-tky-plugin-world-tokenly-api-bitdubai'
-//project(':fermat-tky-plugin-world-tokenly-api-bitdubai').projectDir = new File('TKY/plugin/world/fermat-tky-plugin-world-tokenly-api-bitdubai')
+//External API
+include ':fermat-tky-plugin-external-api-tokenly-bitdubai'
+project(':fermat-tky-plugin-external-api-tokenly-bitdubai').projectDir = new File('TKY/plugin/external_api/fermat-tky-plugin-external-api-tokenly-bitdubai')
