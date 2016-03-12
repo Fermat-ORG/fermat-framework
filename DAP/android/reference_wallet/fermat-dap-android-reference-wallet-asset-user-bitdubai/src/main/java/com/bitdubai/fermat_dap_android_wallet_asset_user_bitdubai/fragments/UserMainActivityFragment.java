@@ -91,12 +91,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         setHasOptionsMenu(true);
 
         try {
+            appSession.setData("redeem_points", null);
+
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            appSession.setData("redeem_points", null);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -108,11 +108,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-        setupBackgroundBitmap(layout);
-        configureToolbar();
-        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         //Initialize settings
         settingsManager = appSession.getModuleManager().getSettingsManager();
@@ -132,9 +127,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
                 moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        } else {
+            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
         }
 
         final AssetUserSettings assetUserSettingsTemp = settings;
@@ -148,6 +146,15 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
+
+        setupBackgroundBitmap(layout);
+        configureToolbar();
+        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
+
+        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -342,7 +349,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     adapter.changeDataSet(digitalAssets);
                     ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
                 }
-
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
         }
@@ -425,4 +431,3 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         }
     }
 }
-
