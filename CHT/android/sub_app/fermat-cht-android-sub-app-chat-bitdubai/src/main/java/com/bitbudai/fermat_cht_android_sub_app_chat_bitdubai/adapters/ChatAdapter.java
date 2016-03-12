@@ -197,11 +197,11 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
-            if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
+            if (data.getStatus().equals(MessageStatus.SEND.toString()) || data.getStatus().equals(MessageStatus.CREATED.toString()))
                 holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-            else if (data.getStatus() == MessageStatus.DELIVERED.toString() || data.getStatus() == MessageStatus.RECEIVE.toString())
+            else if (data.getStatus().equals(MessageStatus.DELIVERED.toString()) || data.getStatus().equals(MessageStatus.RECEIVE.toString()))
                 holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-            else if (data.getStatus() == MessageStatus.READ.toString())
+            else if (data.getStatus().equals(MessageStatus.READ.toString()))
                 holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_white_shadow);

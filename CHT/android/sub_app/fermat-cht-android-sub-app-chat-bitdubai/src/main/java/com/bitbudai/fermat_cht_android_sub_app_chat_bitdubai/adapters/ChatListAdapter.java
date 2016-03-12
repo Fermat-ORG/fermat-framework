@@ -94,11 +94,11 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             imagetick.setImageResource(0);
             if(type.equals(TypeMessage.OUTGOING.toString())){
                 imagetick.setVisibility(View.VISIBLE);
-                if (status == MessageStatus.SEND.toString() || status == MessageStatus.CREATED.toString())
+                if (status.equals(MessageStatus.SEND.toString()) || status.equals(MessageStatus.CREATED.toString()))
                 {    imagetick.setImageResource(R.drawable.cht_ticksent);}
-                else if (status == MessageStatus.DELIVERED.toString() || status == MessageStatus.RECEIVE.toString())
+                else if (status.equals(MessageStatus.DELIVERED.toString()) || status.equals(MessageStatus.RECEIVE.toString()))
                 {    imagetick.setImageResource(R.drawable.cht_tickdelivered);}
-                else if (status == MessageStatus.READ.toString())
+                else if (status.equals(MessageStatus.READ.toString()))
                 {    imagetick.setImageResource(R.drawable.cht_tickread);}
             }else
                 imagetick.setVisibility(View.GONE);
