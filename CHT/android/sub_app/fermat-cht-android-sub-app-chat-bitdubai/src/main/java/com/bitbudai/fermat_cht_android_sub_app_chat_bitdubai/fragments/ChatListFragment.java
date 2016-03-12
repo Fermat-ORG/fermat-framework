@@ -177,11 +177,11 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
                                 long milliseconds = timemess + nanos;
                                 Date dated= new java.util.Date(milliseconds);
-                                String datef= DateFormat.getDateTimeInstance().format(dated);
-                                Date to =new Date(datef);
-                                if (Validate.isDateToday(to)) {
+                                //String datef= DateFormat.getDateTimeInstance().format(dated);
+                                //Date to =new Date(datef);
+                                if (Validate.isDateToday(dated)) {
                                     datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                                } else {
+                                }else {
                                     Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
                                     Date today = new Date();
                                     long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
@@ -277,7 +277,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 text.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             }else{
-                Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
                 text.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
                 text.setText(" ");
