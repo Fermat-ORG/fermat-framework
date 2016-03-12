@@ -19,12 +19,11 @@ apply from: 'WPD/settings.gradle'
 apply from: 'WRD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':triangle-shape', ':triangle-shape', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':toolbar-expandible-menu', ':country-state-selector', ':shape-views'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
-
 
 //include ':fermat_linux_core'
 //include ':manifest_generator'

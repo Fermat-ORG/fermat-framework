@@ -11,8 +11,14 @@ project(':picker-unit-selector').projectDir = new File('android_toolbox/picker-u
 include ':custom-material-spinner'
 project(':custom-material-spinner').projectDir = new File('android_toolbox/custom-material-spinner')
 
-include ':triangle-shape'
-project(':triangle-shape').projectDir = new File('android_toolbox/triangle-shape')
+include ':toolbar-expandible-menu'
+project(':toolbar-expandible-menu').projectDir = new File('android_toolbox/toolbar-expandible-menu')
+
+include ':country-state-selector'
+project(':country-state-selector').projectDir = new File('android_toolbox/country-state-selector')
+
+include ':shape-views'
+project(':shape-views').projectDir = new File('android_toolbox/shape-views')
 
 include ':send-form'
 project(':send-form').projectDir = new File('android_toolbox/send-form')
@@ -22,7 +28,6 @@ project(':fermat_preference_settings').projectDir = new File('android_toolbox/fe
 
 include ':image_slider'
 project(':image_slider').projectDir = new File('android_toolbox/image_slider')
-
 
 include ':toolbar_widgets'
 project(':toolbar_widgets').projectDir = new File('android_toolbox/toolbar_widgets')
