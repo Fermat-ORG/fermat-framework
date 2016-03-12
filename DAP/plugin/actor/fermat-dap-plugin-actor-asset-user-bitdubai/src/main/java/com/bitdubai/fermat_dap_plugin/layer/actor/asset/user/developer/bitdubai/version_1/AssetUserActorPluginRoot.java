@@ -292,6 +292,19 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void updateOfflineUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantGetAssetUserActorsException {
+
+        try {
+            assetUserActorDao.updateOfflineUserRegisterInNetworkService(actorAssetUsers);
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUserActorsException("CAN'T GET LIST ASSET USER REGISTERED", e, "", "");
+        } catch (CantUpdateAssetUserConnectionException e) {
+            throw new CantGetAssetUserActorsException("CAN'T UPDATE ACTOR ASSET USER REGISTERED", e, "", "");
+        }
+
+    }
+
+    @Override
     public void createActorAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUsers) throws CantCreateAssetUserActorException {
         try {
             List<ActorAssetUser> assetUsers = new ArrayList<>();
@@ -495,7 +508,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         List<ActorAssetUserGroup> list = null;
         try {
             list = this.assetUserActorDao.getAssetUserGroupsList();
-        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
+        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
             throw new CantGetAssetUserGroupException("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
         }
         return list;
@@ -514,7 +527,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
-        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+        } catch (CantGetAssetUserGroupExcepcion ex) {
             throw new CantGetAssetUserGroupException("You can not get groups by users", ex, "Error", "");
         }
     }
