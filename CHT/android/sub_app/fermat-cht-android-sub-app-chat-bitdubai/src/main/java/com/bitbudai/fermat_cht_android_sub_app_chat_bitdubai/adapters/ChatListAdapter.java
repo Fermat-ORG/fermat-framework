@@ -61,13 +61,20 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
         View item = inflater.inflate(R.layout.chat_list_listview, null, true);
         try {
             String name ="",message ="",messagedate ="",type ="",status ="";
+            int noreadmsgs=0;
             String values=chatinfo.get(position);
             List<String> converter=new ArrayList<String>();
             converter.addAll(Arrays.asList(values.split("@#@#")));
             name=converter.get(0);
             message=converter.get(1);
-            type=converter.get(6);
+            messagedate=converter.get(2);
             status=converter.get(5);
+            type=converter.get(6);
+            try{
+                noreadmsgs= Integer.parseInt(converter.get(7));
+            }catch(Exception e){
+                noreadmsgs=0;
+            }
 
             ImageView imagen = (ImageView) item.findViewById(R.id.image);//imagen.setImageResource(imgid.get(position));
             imagen.setImageBitmap(getRoundedShape(imgid.get(position), 400));
@@ -81,21 +88,28 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             //lastmessage.setTypeface(tf, Typeface.NORMAL);
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
-            dateofmessage.setText(messagedate);//   dateofmessage.setText(chatinfo.get(0).get(2));
-            //dateofmessage.setTypeface(tf, Typeface.NORMAL);
+            dateofmessage.setText(messagedate);
 
             ImageView imagetick = (ImageView) item.findViewById(R.id.imagetick);//imagen.setImageResource(imgid.get(position));
             imagetick.setImageResource(0);
-            String ty= type.toString();
-            String ty2= TypeMessage.OUTGOING.toString();
-            if(ty == ty2) {
+            if(type.equals(TypeMessage.OUTGOING.toString())){
+                imagetick.setVisibility(View.VISIBLE);
                 if (status == MessageStatus.SEND.toString() || status == MessageStatus.CREATED.toString())
                 {    imagetick.setImageResource(R.drawable.cht_ticksent);}
                 else if (status == MessageStatus.DELIVERED.toString() || status == MessageStatus.RECEIVE.toString())
                 {    imagetick.setImageResource(R.drawable.cht_tickdelivered);}
                 else if (status == MessageStatus.READ.toString())
                 {    imagetick.setImageResource(R.drawable.cht_tickread);}
-            }
+            }else
+                imagetick.setVisibility(View.GONE);
+
+            TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
+            if(noreadmsgs>0)
+            {
+                tvnumber.setText(noreadmsgs);
+                tvnumber.setVisibility(View.VISIBLE);
+            }else
+                tvnumber.setVisibility(View.GONE);
 
         }catch (Exception e)
         {

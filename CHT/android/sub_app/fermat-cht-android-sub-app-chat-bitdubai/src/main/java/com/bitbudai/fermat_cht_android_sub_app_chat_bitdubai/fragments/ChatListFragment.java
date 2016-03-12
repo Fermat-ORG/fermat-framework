@@ -151,21 +151,30 @@ public class ChatListFragment extends AbstractFermatFragment{
         String contactid;
         String status;
         String from;
-        String name,message,datemessage,chatid;
+        String name="",message="",datemessage="",chatid="";
+        int noreadmsgs=0;
         try {
 
             //for (int i=0;i<chatManager.getChats().size();i++){
             List<Chat> chats = chatManager.getChats();
             if (chats != null && chats.size() > 0) {
                 infochat.clear();
-                for (Chat chat : chats) {//for (int i=0;i<chatManager.getChats().size();i++){
+                for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
                         List<Message> messageChat = chatManager.getMessageByChatId(chatidtemp);//
                         if (messageChat != null) {
-                            Message mess = messageChat.get(0);//3er chat id en mensajes buscar
+                            Message mess = messageChat.get(0);
+                            noreadmsgs=2;
                             if (mess != null) {
                                 List<Message> messl = chatManager.getMessageByChatId(chatidtemp);
+                                if (messl != null && messl.size() > 0) {
+                                    for (Message mss : messl) {
+                                        if(mss.getType().toString()==TypeMessage.INCOMMING.toString() && mss.getStatus().toString()!=MessageStatus.READ.toString()){
+                                            noreadmsgs++;
+                                        }
+                                    }
+                                }
                                 contactid = String.valueOf(mess.getContactId());
                                 Contact cont = chatManager.getContactByContactId(mess.getContactId());
                                 name = cont.getRemoteName();
@@ -177,8 +186,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
                                 long milliseconds = timemess + nanos;
                                 Date dated= new java.util.Date(milliseconds);
-                                //String datef= DateFormat.getDateTimeInstance().format(dated);
-                                //Date to =new Date(datef);
                                 if (Validate.isDateToday(dated)) {
                                     datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
                                 }else {
@@ -191,7 +198,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                         datemessage = new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds));//.toString();
                                 }
                                 chatid = chatidtemp.toString();
-                                infochat.add(name + "@#@#" + message + "@#@#" + datemessage + "@#@#" + chatid + "@#@#" + contactid + "@#@#"+ status + "@#@#"+ from + "@#@#");
+                                infochat.add(name + "@#@#" + message + "@#@#" + datemessage + "@#@#" + chatid + "@#@#" + contactid + "@#@#"+ status + "@#@#"+ from + "@#@#"+ noreadmsgs + "@#@#");
                                 ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
                                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                                 imgid.add(bmd.getBitmap());
