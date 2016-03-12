@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.util.system;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.provisory.P2PAppsRuntimeManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
@@ -28,10 +29,12 @@ import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.DesktopManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -55,6 +58,26 @@ public class FermatSystemUtils {
 
     public static FermatAppsManager getFermatAppManager(){
         return ApplicationSession.getInstance().getFermatAppsManager();
+    }
+
+
+
+    /**
+     *  Return an instance of module manager
+     * @param pluginVersionReference
+     * @return
+     */
+    public static ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
+        try {
+            return ApplicationSession.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
+        } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
+            return null;
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            return null;
+        }
     }
 
 
@@ -441,5 +464,9 @@ public class FermatSystemUtils {
                 return null;
             }
         };
+    }
+
+    public static RuntimeManager getP2PApssRuntimeManager() {
+        return new P2PAppsRuntimeManager();
     }
 }

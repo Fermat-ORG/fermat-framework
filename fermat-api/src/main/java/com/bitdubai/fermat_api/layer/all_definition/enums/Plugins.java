@@ -203,6 +203,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
+    LOSS_PROTECTED_WALLET       ("LPW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
     BITCOIN_HOLD                ("BHOLD"),
     BITCOIN_UNHOLD              ("BUNHOLD"),
@@ -219,6 +220,7 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
+    CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
@@ -331,6 +333,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BN"   :   return BITCOIN_NETWORK          ;
             case "BV"   :   return BITCOIN_VAULT            ;
             case "BW"   :   return BITCOIN_WALLET           ;
+            case "LPW"  :   return LOSS_PROTECTED_WALLET    ;
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
             case "BHOLD":   return BITCOIN_HOLD             ;
             case "BUNHOLD": return BITCOIN_UNHOLD           ;
@@ -347,6 +350,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
             case "CT"   :   return CRYPTO_TRANSMISSION      ;
             case "CW"   :   return CRYPTO_WALLET            ;
+            case "CLPW" :   return CRYPTO_LOSS_PROTECTED_WALLET            ;
             case "DER"  :   return DESKTOP_RUNTIME          ;
             case "DEV"  :   return DEVELOPER                ;
             case "DU"   :   return DEVICE_USER              ;

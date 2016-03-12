@@ -195,6 +195,20 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
             activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
             runtimeDesktopObject.addActivity(activity);
+            activity.setColor("#fff");
+
+
+            // activity
+            fragment = new Fragment();
+            fragment.setType(Fragments.DESKTOP_P2P_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
+
+            fragment = new Fragment();
+            fragment.setType(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
+
+
+            //
 
 
 
@@ -220,6 +234,27 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
             activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
             runtimeDesktopObject.addActivity(activity);
+
+
+            // community
+            activity = new Activity();
+            activity.setActivityType(Activities.DESKTOP_COMMUNITY_ACTIVITY.getCode());
+            activity.setType(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+            activity.setStartFragment(Fragments.COMMUNITIES_FRAGMENT.getKey());
+            activity.setBackActivity(Activities.CCP_DESKTOP);
+            activity.setBackPublicKey(publicKey);
+            activity.setFullScreen(true);
+            activity.setBackgroundColor("#ffffff");
+            activity.setColor("#ffffff");
+
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.COMMUNITIES_FRAGMENT.getKey());
+            runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+            activity.addFragment(Fragments.COMMUNITIES_FRAGMENT.getKey(), runtimeFragment);
+            runtimeDesktopObject.addActivity(activity);
+
+
 
 
             lstDesktops.put(publicKey,runtimeDesktopObject);
