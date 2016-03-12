@@ -146,4 +146,9 @@ public class RuntimeSubApp implements SubApp {
     public byte[] getAppIcon() {
         return new byte[0];
     }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
 }
