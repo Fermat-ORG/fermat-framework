@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateTransactionProtocolStatusByTransactionIdTest {
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
     UUID pluginId;
 
     @Mock
@@ -53,8 +53,8 @@ public class UpdateTransactionProtocolStatusByTransactionIdTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
-        assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
+        assetIssuingDAO = new AssetIssuingDAO(pluginDatabaseSystem, pluginId);
 
         records = new LinkedList<DatabaseTableRecord>();
         records.add(databaseTableRecord);
@@ -63,18 +63,18 @@ public class UpdateTransactionProtocolStatusByTransactionIdTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
+        when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_TABLE)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionID, ProtocolStatus.NO_ACTION_REQUIRED);
+        assetIssuingDAO.updateTransactionProtocolStatusByTransactionId(transactionID, ProtocolStatus.NO_ACTION_REQUIRED);
     }
 
     @Test
     public void test_Throws_CantExecuteQueryException() throws Exception {
         doThrow(new CantUpdateRecordException("error")).when(databaseTable).updateRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).updateTransactionProtocolStatusByTransactionId(transactionID, ProtocolStatus.NO_ACTION_REQUIRED);
+        catchException(assetIssuingDAO).updateTransactionProtocolStatusByTransactionId(transactionID, ProtocolStatus.NO_ACTION_REQUIRED);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

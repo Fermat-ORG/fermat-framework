@@ -111,7 +111,7 @@ public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
         if (i == R.id.positive_button) {
             try {
                 getSession().getModuleManager().cancelActorAssetUser(
-                        identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+//                        identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
                         actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
                 );
                 getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_CANCELED, Boolean.TRUE);

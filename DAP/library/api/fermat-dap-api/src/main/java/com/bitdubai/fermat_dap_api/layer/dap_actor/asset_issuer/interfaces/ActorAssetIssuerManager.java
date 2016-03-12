@@ -156,11 +156,10 @@ public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
-     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
      * @throws CantCancelConnectionActorAssetException
      */
-    void cancelActorAssetIssuer(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetIssuer(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users
