@@ -16,4 +16,6 @@ public interface FermatApp {
     AppsStatus getAppStatus();
 
     FermatAppType getAppType();
+
+    byte[] getAppIcon();
 }

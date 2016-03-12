@@ -154,6 +154,7 @@ public class JettyEmbeddedAppServer {
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
         webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
+        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         webAppContext.setResourceBase(resourceBase);
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});

@@ -863,11 +863,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
-                txt_balance_amount.setTextSize(38);
+                txt_balance_amount.setTextSize(28);
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(28);
+                txt_balance_amount.setTextSize(20);
                 break;
         }
 

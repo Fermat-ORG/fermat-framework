@@ -113,6 +113,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         return FermatAppType.SUB_APP;
     }
 
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
     /**
      * This method gives us the subApp name
      *

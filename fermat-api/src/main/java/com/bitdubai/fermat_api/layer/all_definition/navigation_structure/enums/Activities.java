@@ -294,10 +294,14 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLT"),
     CHT_CHAT_OPEN_PROFILELIST("CHTOPRL"),
     CHT_CHAT_OPEN_PROFILE_DETAIL("CHTOPOD"),
+    CHT_CHAT_OPEN_SEND_ERROR_REPORT("CHTOSER"),
 
 
     WPD_DESKTOP("WPD"),
-    DESKTOP_SETTING_FERMAT_NETWORK("DSFN");
+    DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
+    CCP_DESKTOP_P2P("DP2P"),
+    CCP_DESKTOP_SOCIAL("DSOCIAL"),
+    DESKTOP_COMMUNITY_ACTIVITY("DESCA");
 
     private String code;
 
@@ -706,6 +710,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
             case "CHTOPOD":
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
+            case "CHTOSER":
+                return Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
@@ -765,6 +771,12 @@ public enum Activities implements FermatEnum {
                 return DESKTOP_SETTING_FERMAT_NETWORK;
             case "DWAUANDA":
                 return DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY;
+            case "DP2P":
+                return CCP_DESKTOP_P2P;
+            case "DSOCIAL":
+                return CCP_DESKTOP_SOCIAL;
+            case "DESCA":
+                return DESKTOP_COMMUNITY_ACTIVITY;
             case "DSAAUCS":
                 return DAP_ASSET_USER_COMMUNITY_SETTINGS;
             case "DARPCSF":
