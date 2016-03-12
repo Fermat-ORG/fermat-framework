@@ -4,14 +4,17 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -80,7 +83,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             Map<ClauseType, ClauseInformation> clauses,
             String note,
             long lastUpdateDate,
-            long expirationDatetime
+            long expirationDatetime,
+            String cancelReason
     ) {
         this.customerIdentity   = customerIdentity;
         this.brokerIdentity     = brokerIdentity;
@@ -112,7 +116,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.clauses        = clauses;
         this.note           = note;
         this.lastUpdateDate = lastUpdateDate;
-        this.cancelReason   = "";
+        this.cancelReason   = cancelReason;
         this.expirationDatetime = expirationDatetime;
 
     }
@@ -156,6 +160,31 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.lastUpdateDate = negotiationInformation.getLastNegotiationUpdateDate();
         this.cancelReason   = cancelReason;
         this.expirationDatetime = negotiationInformation.getNegotiationExpirationDate();
+    }
+
+    public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerPurchaseNegotiation negotiation, ActorIdentity customerIdentity, ActorIdentity brokerIdentity) {
+        this.customerIdentity = customerIdentity;
+        this.brokerIdentity = brokerIdentity;
+        status = negotiation.getStatus();
+        note = negotiation.getMemo();
+        lastUpdateDate = negotiation.getLastNegotiationUpdateDate();
+        expirationDatetime = negotiation.getNegotiationExpirationDate();
+        negotiationId = negotiation.getNegotiationId();
+        cancelReason = negotiation.getCancelReason();
+
+        summary = new HashMap<>();
+        clauses = new HashMap<>();
+
+        Collection<Clause> saleNegotiationClauses;
+        try {
+            saleNegotiationClauses = negotiation.getClauses();
+        } catch (CantGetListClauseException e) {
+            saleNegotiationClauses = new ArrayList<>();
+        }
+
+        for(Clause clause : saleNegotiationClauses){
+            clauses.put(clause.getType(), new CryptoCustomerWalletModuleClauseInformation(clause));
+        }
     }
 
     @Override

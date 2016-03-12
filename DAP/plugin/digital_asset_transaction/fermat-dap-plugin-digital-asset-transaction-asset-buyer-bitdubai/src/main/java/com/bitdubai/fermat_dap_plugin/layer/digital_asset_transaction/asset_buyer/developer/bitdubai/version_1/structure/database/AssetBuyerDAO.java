@@ -124,6 +124,7 @@ public class AssetBuyerDAO {
         negotiationRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME, sellerPublicKey);
         negotiationRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ASSET_PUBLICKEY_COLUMN_NAME, negotiation.getAssetToOffer().getPublicKey());
         negotiationRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
+        negotiationRecord.setLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME, negotiation.getQuantityToBuy());
         negotiationRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME, negotiation.getNetworkType().getCode());
         negotiationRecord.setLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
         databaseTable.insertRecord(negotiationRecord);
@@ -140,6 +141,28 @@ public class AssetBuyerDAO {
 
     public void updateSellingStatus(UUID transactionId, AssetSellStatus status) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, status.getCode(), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+    }
+
+    public void acceptNegotiation(UUID negotiationId, String btcWalletPk) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        processNegotiation(negotiationId);
+        updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME, btcWalletPk, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
+    }
+
+    public void rejectNegotiation(UUID negotiationId) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        processNegotiation(negotiationId);
+    }
+
+    public void processNegotiation(UUID negotiationId) throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
+        NegotiationRecord record = getNegotiationRecord(negotiationId);
+        long forProcess = record.getForProcess() - 1;
+        updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, forProcess, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
+        if (forProcess == 0) {
+            updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_FINISHED.getCode(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
+        }
+    }
+
+    public void updateOutgoingId(UUID transactionId, UUID outgoingId) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_OUTGOING_ID_COLUMN_NAME, outgoingId.toString(), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateSellerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
@@ -238,7 +261,8 @@ public class AssetBuyerDAO {
         String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME));
         CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
-        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId, cryptoAddress);
+        String outgoingId = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_OUTGOING_ID_COLUMN_NAME);
+        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId, cryptoAddress, outgoingId);
     }
 
     private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
@@ -246,7 +270,9 @@ public class AssetBuyerDAO {
         AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME));
         Date timeStamp = new Date(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME));
         ActorAssetUser actorAssetUser = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME));
-        return new NegotiationRecord(negotiation, status, actorAssetUser, timeStamp);
+        String btcWalletPublicKey = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME);
+        long forProcess = record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME);
+        return new NegotiationRecord(negotiation, status, actorAssetUser, timeStamp, btcWalletPublicKey, forProcess);
     }
 
     private DatabaseTable getNegotiationTable() {
@@ -329,8 +355,17 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<BuyingRecord> getPartiallySignedBuying() throws DAPException {
-        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.PARTIALLY_SIGNED.getCode());
+    public List<BuyingRecord> getAddingInputsBuying() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.ADDING_INPUTS.getCode());
+        try {
+            return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
+        } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new DAPException(e);
+        }
+    }
+
+    public List<BuyingRecord> getWaitingCompleteSignature() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_COMPLETE_SIGNATURE.getCode());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
         } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
@@ -365,6 +400,18 @@ public class AssetBuyerDAO {
         } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
             throw new DAPException(e);
         }
+    }
+
+    public List<String> getPendingOutgoingDraftEvents() throws CantLoadTableToMemoryException {
+        DatabaseTable table = getEventsTable();
+        table.addStringFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_EVENT_COLUMN_NAME, com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_DRAFT_TRANSACTION_FINISHED.getCode(), DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        List<String> toReturn = new ArrayList<>();
+        for (DatabaseTableRecord record : table.getRecords()) {
+            toReturn.add(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_ID_COLUMN_NAME));
+        }
+        return toReturn;
     }
 
     public List<String> getPendingEvents() throws CantLoadTableToMemoryException {

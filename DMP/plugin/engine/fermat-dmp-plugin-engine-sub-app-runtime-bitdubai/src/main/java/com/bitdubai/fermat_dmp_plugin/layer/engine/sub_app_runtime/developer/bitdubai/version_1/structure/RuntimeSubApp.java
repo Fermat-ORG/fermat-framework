@@ -141,4 +141,14 @@ public class RuntimeSubApp implements SubApp {
     public FermatAppType getAppType() {
         return FermatAppType.SUB_APP;
     }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
 }

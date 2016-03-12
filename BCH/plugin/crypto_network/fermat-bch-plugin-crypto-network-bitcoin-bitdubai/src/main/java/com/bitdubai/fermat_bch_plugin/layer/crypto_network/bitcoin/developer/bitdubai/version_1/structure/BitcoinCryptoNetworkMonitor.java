@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -119,8 +120,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * and start it
          */
-        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
         monitorAgentThread.start();
+        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
     }
 
     @Override
@@ -278,7 +279,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
 
                 System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
-
+                System.out.println("***CryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");
 
                 /**
                  * I will broadcast any transaction that might be in broadcasting status.
@@ -397,6 +398,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                          */
                         wallet.saveToFile(walletFileName);
 
+                        /**
+                         * deletes the stored transaction on disk
+                         */
+                        deleteStoredTransaction(txHash);
+
                         System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
@@ -491,7 +497,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            events.saveOutgoingTransaction(wallet, tx, transactionId);
+            for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
+                try {
+                    getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    //maybe try saving into disk if cant save it.
+                    e.printStackTrace();
+                }
+            }
+
         }
 
         /**

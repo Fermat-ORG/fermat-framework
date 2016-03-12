@@ -114,6 +114,8 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFac
         onlinePaymentColumns.add(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Online Payment addition.
          */

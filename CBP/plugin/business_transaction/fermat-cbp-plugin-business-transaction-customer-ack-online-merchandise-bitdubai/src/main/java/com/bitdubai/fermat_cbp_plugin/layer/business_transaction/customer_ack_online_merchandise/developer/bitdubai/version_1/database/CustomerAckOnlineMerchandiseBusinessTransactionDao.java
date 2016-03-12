@@ -1227,5 +1227,76 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         }
     }
 
+    /**
+     * This method returns the completion date from database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public long getCompletionDateByContractHash(
+            String contractHash)
+            throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            databaseTable.addStringFilter(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return 0;
+            }
+            checkDatabaseRecords(records);
+            long completionDate=records
+                    .get(0)
+                    .getLongValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+            return completionDate;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
+
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void setCompletionDateByContractHash(
+            String contractHash,
+            long completionDate)
+            throws UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            databaseTable.addStringFilter(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return ;
+            }
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setLongValue(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME,
+                    completionDate);
+            databaseTable.updateRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Setting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
 
 }

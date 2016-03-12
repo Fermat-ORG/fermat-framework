@@ -22,11 +22,13 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
@@ -296,5 +298,28 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
+    }
+
+    /**
+     * Gets the download progress from the specified network
+     * @param blockchainNetworkType The network type we want to know the download progress
+     * @return the BlockchainDownloadProgress class which includes information about pending blocks, total blocks, etc.
+     * @throws CantGetBlockchainDownloadProgress
+     */
+    @Override
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
+        //todo implement
+        return new BlockchainDownloadProgress(blockchainNetworkType, 0,0,0,0);
+    }
+
+    /**
+     * Gets the list of stored CryptoTransactions for the specified network type
+     * @param blockchainNetworkType the network type to get the transactions from.
+     * @return the list of Crypto Transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType);
     }
 }

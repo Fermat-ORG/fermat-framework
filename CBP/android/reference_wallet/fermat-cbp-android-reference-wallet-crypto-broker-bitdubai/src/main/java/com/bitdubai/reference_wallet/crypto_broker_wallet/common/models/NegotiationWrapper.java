@@ -83,6 +83,7 @@ final public class NegotiationWrapper {
                     addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
                 }else {
                     addClause(BROKER_CRYPTO_ADDRESS, "");
+                    changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
                 }
             }
 

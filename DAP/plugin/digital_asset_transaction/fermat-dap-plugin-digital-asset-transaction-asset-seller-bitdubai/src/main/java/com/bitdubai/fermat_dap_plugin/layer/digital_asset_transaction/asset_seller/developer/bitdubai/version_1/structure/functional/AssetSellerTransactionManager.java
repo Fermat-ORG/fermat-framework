@@ -20,10 +20,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
@@ -53,20 +55,21 @@ public final class AssetSellerTransactionManager {
     //PUBLIC METHODS
     public void requestAssetSell(ActorAssetUser userToDeliver, AssetNegotiation negotiation) throws CantStartAssetSellTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantSetObjectException, CantSendDigitalAssetMetadataException {
         try {
+            if (userToDeliver.getCryptoAddress() == null)
+                throw new CantStartAssetSellTransactionException();
             BlockchainNetworkType networkType = negotiation.getNetworkType();
             DigitalAsset assetToOffer = negotiation.getAssetToOffer();
             int quantity = negotiation.getQuantityToBuy();
             AssetUserWallet userWallet = getUserWallet(networkType);
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             if (weHaveEnoughAssets(quantity, userWallet, assetToOffer)) {
-                dao.saveAssetNegotiation(negotiation);
-                lockAssetsOnWallet();
+                dao.saveAssetNegotiation(negotiation, userToDeliver.getActorPublicKey());
                 startSellingTransactions(userWallet, negotiation, userToDeliver);
                 sendMessage(negotiation, mySelf, userToDeliver);
             } else {
                 throw new CantStartAssetSellTransactionException("We don't have that much assets");
             }
-        } catch (CantInsertRecordException | CantSendMessageException | CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
+        } catch (RecordsNotFoundException | CantExecuteLockOperationException | CantInsertRecordException | CantSendMessageException | CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantStartAssetSellTransactionException(e);
         }
     }
@@ -76,13 +79,12 @@ public final class AssetSellerTransactionManager {
         return assetUserWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, networkType);
     }
 
-    private void lockAssetsOnWallet() {
-        //TODO
-    }
-
-    private void startSellingTransactions(AssetUserWallet userWallet, AssetNegotiation negotiation, ActorAssetUser actorTo) throws CantGetDigitalAssetFromLocalStorageException, CantGetTransactionsException, CantInsertRecordException {
-        for (AssetUserWalletTransaction transaction : userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey())) {
+    private void startSellingTransactions(AssetUserWallet userWallet, AssetNegotiation negotiation, ActorAssetUser actorTo) throws CantGetDigitalAssetFromLocalStorageException, CantGetTransactionsException, CantInsertRecordException, RecordsNotFoundException, CantExecuteLockOperationException {
+        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey());
+        for (int i = 0; i < negotiation.getQuantityToBuy(); i++) {
+            AssetUserWalletTransaction transaction = availableTransactions.get(i);
             DigitalAssetMetadata metadata = userWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
+            userWallet.lockFunds(metadata); //We are locking this metadata so it wont be used for another operation different until we unlock it.
             dao.startNewSelling(metadata, actorTo, negotiation.getNegotiationId());
         }
     }
@@ -104,7 +106,7 @@ public final class AssetSellerTransactionManager {
 
     private boolean weHaveEnoughAssets(int requestedQuantity, AssetUserWallet assetUserWallet, DigitalAsset digitalAsset) {
         try {
-            return requestedQuantity >= getAvailableAssetMetadata(assetUserWallet, digitalAsset).size();
+            return requestedQuantity <= getAvailableAssetMetadata(assetUserWallet, digitalAsset).size();
         } catch (CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
             return false;
         }

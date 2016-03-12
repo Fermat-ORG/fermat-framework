@@ -82,6 +82,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory imp
             table.addColumn(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
             table.addColumn(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 64,Boolean.FALSE);
 
             table.addIndex(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN);
 

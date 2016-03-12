@@ -89,8 +89,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         this.name               = name                                  ;
         this.actorPublicKey     = actorPublicKey                        ;
-        this.profileImage       = profileImage.clone()                  ;
+
+        this.setProfileImage(profileImage);
         this.registrationDate   = registrationDate                      ;
+
         this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
 
     }
@@ -151,7 +153,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
-        this.profileImage           =       profileImage.clone()    ;
+
+        this.setProfileImage(profileImage);
+
         this.registeredIssuers = registeredIssuers;
     }
 
@@ -252,7 +256,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+        if(profileImage != null)
+            this.profileImage = profileImage.clone();
+        else
+            this.profileImage = new byte[0];
     }
 
     public BlockchainNetworkType getBlockchainNetworkType() {

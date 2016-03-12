@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,29 +24,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-
 /**
- * Contact List Adapter
+ * Connection List Adapter
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ConnectionListAdapter extends ArrayAdapter<String> {
+public class ConnectionListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
     ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     private ErrorManager errorManager;
+    Typeface tf;
 
 
     public ConnectionListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid, ErrorManager errorManager) {
         super(context, R.layout.connection_list_item, contactinfo);
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -56,11 +56,12 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.connection_list_item, null, true);
         try {
-            ImageView imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));
-            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            ImageView imagen = (ImageView) item.findViewById(R.id.icon);
+            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
+            //contactname.setTypeface(tf, Typeface.NORMAL);
         }catch (Exception e)
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

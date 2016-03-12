@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -21,12 +22,22 @@ public class CryptoBrokerWalletSettingMock implements CryptoBrokerWalletSetting 
     }
 
     @Override
+    public void clearCryptoBrokerWalletSpreadSetting() throws CantClearCryptoBrokerWalletSettingException {
+
+    }
+
+    @Override
     public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException {
         return null;
     }
 
     @Override
     public void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException {
+
+    }
+
+    @Override
+    public void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException {
 
     }
 
@@ -42,6 +53,11 @@ public class CryptoBrokerWalletSettingMock implements CryptoBrokerWalletSetting 
 
     @Override
     public void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting) throws CantSaveCryptoBrokerWalletSettingException {
+
+    }
+
+    @Override
+    public void clearCryptoBrokerWalletProviderSetting() throws CantClearCryptoBrokerWalletSettingException {
 
     }
 

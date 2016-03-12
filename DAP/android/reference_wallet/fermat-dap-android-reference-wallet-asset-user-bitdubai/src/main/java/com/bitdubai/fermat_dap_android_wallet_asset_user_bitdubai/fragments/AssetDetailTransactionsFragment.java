@@ -84,6 +84,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
 //    private FermatTextView assetDetailRedeemText;
+    private FermatTextView assetUserDetailLockedAssets;
 
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
@@ -245,7 +246,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0) {
+        if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0 && digitalAsset.getLockedAssets() < digitalAsset.getAvailableBalanceQuantity() ) {
             menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, getResources().getString(R.string.dap_user_wallet_action_redeem))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
             menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 1, getResources().getString(R.string.dap_user_wallet_action_appropriate))
@@ -317,6 +318,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
         pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
+        assetUserDetailLockedAssets = (FermatTextView) rootView.findViewById(R.id.assetUserDetailLockedAssets);
     }
 
     private void setupBackgroundBitmap() {
@@ -381,6 +383,14 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         }
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
+
+        if (digitalAsset.getLockedAssets() > 0){
+            assetUserDetailLockedAssets.setVisibility(View.VISIBLE);
+            assetUserDetailLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
+                    digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
+        }else{
+            assetUserDetailLockedAssets.setVisibility(View.GONE);
+        }
     }
 
     private String pendingText(long pendingValue) {

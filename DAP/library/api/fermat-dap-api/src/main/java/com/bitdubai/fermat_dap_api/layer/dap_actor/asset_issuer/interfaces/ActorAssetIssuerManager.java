@@ -1,20 +1,18 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
@@ -98,6 +96,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
      */
     void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
 
+//    void sendMessage(ActorAssetRedeemPoint requester, ActorAssetIssuer actorAssetIssuer) throws CantConnectToActorAssetException;
+
     void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException;
 
     void updateIssuerRegisteredDAPConnectionState(String issuerPublicKey, DAPConnectionState connectionState) throws CantUpdateActorAssetIssuerException;
@@ -156,11 +156,10 @@ public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
-     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
      * @throws CantCancelConnectionActorAssetException
      */
-    void cancelActorAssetIssuer(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetIssuer(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users

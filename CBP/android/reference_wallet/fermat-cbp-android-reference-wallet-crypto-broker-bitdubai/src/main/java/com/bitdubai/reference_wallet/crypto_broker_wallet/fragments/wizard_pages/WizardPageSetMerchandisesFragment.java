@@ -88,7 +88,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            // Verify if wallet configured, if it is, show this fragment, else show the home fragment (the second start fragment)
+            // Verify if wallet has been configured, if true show this fragment, else show the home fragment (the second start fragment)
             boolean walletConfigured;
             try {
                 walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
@@ -99,6 +99,15 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
             if (walletConfigured) {
                 getRuntimeManager().changeStartActivity(1);
+
+                //TODO: No deberia ser necesario esta linea una vez que el changeStartActivity() funcione...
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                return;
+            } else {
+                //Delete potential previous configurations made by this wizard page
+                //So that they can be reconfigured cleanly
+                walletManager.clearAssociatedIdentities(appSession.getAppPublicKey());
+                walletManager.clearAssociatedWalletSettings(appSession.getAppPublicKey());
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
@@ -113,6 +122,8 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 walletSettings = new CryptoBrokerWalletPreferenceSettings();
                 walletSettings.setIsPresentationHelpEnabled(true);
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+            } else {
+                selectedIdentity = walletManager.getListOfIdentities().get(0);
             }
 
         } catch (Exception ex) {

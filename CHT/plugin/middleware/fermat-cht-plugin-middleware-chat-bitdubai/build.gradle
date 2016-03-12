@@ -12,5 +12,6 @@ dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-ccp-api')
+    compile project(':fermat-cbp-api')
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
 }

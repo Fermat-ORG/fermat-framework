@@ -7,8 +7,6 @@
     <string name="help">Help</string>
     <string name="dap_redeem_point_wallet_search">Search</string>
     <string name="dap_redeem_point_wallet_search_hint">Asset name</string>
-    <string name="dap_redeem_point_wallet_show_no_balance">Hide empty assets</string>
-    <string name="dap_redeem_point_wallet_show_all">Show empty assets</string>
     <!-- -->
 
     <!-- empty list views -->

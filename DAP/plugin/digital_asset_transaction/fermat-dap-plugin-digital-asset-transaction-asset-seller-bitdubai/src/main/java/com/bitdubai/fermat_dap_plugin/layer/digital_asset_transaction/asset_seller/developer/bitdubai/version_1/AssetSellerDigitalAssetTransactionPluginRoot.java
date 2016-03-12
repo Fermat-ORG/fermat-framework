@@ -28,6 +28,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -65,6 +66,8 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     //VARIABLE DECLARATION
 
+    public static int SELL_TIMEOUT = 3 * 60 * 1000; //3 MINUTES FOR TESTING.
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
@@ -97,6 +100,9 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
     private AssetTransmissionNetworkServiceManager assetTransmission;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.EXTRA_WALLET_USER)
+    private ExtraUserManager extraUserManager;
 
     private AssetSellerMonitorAgent agent;
     private AssetSellerRecorderService recorderService;
@@ -155,7 +161,7 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     }
 
     private void initializeMonitorAgent() throws CantStartAgentException {
-        agent = new AssetSellerMonitorAgent(assetUserWalletManager, actorAssetUserManager, dao, errorManager, assetTransmission, assetVaultManager, bitcoinNetworkManager, cryptoVaultManager, cryptoAddressBookManager);
+        agent = new AssetSellerMonitorAgent(assetUserWalletManager, actorAssetUserManager, dao, errorManager, assetTransmission, assetVaultManager, bitcoinNetworkManager, cryptoVaultManager, cryptoAddressBookManager, extraUserManager);
         agent.start();
     }
 

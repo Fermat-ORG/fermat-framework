@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,8 +33,10 @@ public class AppsConfiguration {
             FileInputStream fIn = context.openFileInput(APPS_CONFIGURATION_FILE);
             ObjectInputStream isr = new ObjectInputStream(fIn);
             return (HashMap<String, FermatAppType>) isr.readObject();
+        } catch (FileNotFoundException fileNotFoundException){
+            updateAppsCoreInstalled();
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e){
@@ -41,13 +45,15 @@ public class AppsConfiguration {
         return new HashMap<>();
     }
 
-    public void updateAppsCoreInstalled(){
+    public HashMap<String,FermatAppType>  updateAppsCoreInstalled(){
         HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
-        // Aplicaciones instaladas en el dispositivo separadas por tipo
+        // Aplicaciones instaladas en el dispoanae sitivo separadas por tipo
         for (FermatAppType fermatAppType : FermatAppType.values()) {
-            for (String key : fermatAppsManager.selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
-                appsInstalledInDevice.put(key,fermatAppType);
-            }
+            RuntimeManager runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppType);
+            if(runtimeManager != null)
+                for (String key : fermatAppsManager.selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
+                    appsInstalledInDevice.put(key,fermatAppType);
+                }
         }
         Context context = ApplicationSession.getInstance().getApplicationContext();
         try {
@@ -60,6 +66,7 @@ public class AppsConfiguration {
         }catch(Exception e){
             e.printStackTrace();
         }
+        return appsInstalledInDevice;
     }
 
 }

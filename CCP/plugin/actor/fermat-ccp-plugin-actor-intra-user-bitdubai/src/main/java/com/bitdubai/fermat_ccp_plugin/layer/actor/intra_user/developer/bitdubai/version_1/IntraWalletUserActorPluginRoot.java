@@ -2,11 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -50,9 +49,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantSetPhot
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDao;
@@ -68,11 +65,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -573,15 +569,15 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
              * I ask the list of pending requests to the Network Service to execute
              */
 
-            this.processNotifications();
+            try {
+                this.processNotifications();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             // set plugin status Started
             this.serviceStatus = ServiceStatus.STARTED;
 
-
-        } catch (CantProcessNotificationsExceptions e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR);
 
         } catch (CantInitializeIntraWalletUserActorDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
