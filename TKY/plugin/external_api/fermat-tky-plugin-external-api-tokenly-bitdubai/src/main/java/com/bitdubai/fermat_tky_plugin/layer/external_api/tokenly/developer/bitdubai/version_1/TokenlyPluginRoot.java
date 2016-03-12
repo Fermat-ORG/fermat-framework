@@ -50,7 +50,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //Test Method
             //testURL();
             //testManagerByBotId();
-            testManagerByUsername();
+            //testManagerByUsername();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.API_TOKENLY,
