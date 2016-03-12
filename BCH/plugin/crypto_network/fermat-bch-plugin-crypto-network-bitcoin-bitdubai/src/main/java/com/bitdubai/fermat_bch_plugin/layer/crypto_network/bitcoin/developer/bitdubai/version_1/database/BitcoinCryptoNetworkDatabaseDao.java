@@ -199,7 +199,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * event. A transaction that we are sending may be actually recorded as incoming. The important thing at this point is not to
          * duplicate transactions
          */
-        if (!this.isNewTransaction(cryptoTransaction.getTransactionHash(), cryptoTransaction.getCryptoStatus(), cryptoTransaction.getAddressTo()))
+        if (!this.isNewTransaction(cryptoTransaction.getTransactionHash(), cryptoTransaction.getCryptoStatus(), cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType()))
             return;
 
         /**
@@ -236,19 +236,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
     private void saveMissingCryptoTransaction(CryptoTransaction cryptoTransaction) throws CantExecuteDatabaseOperationException {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
-                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo())){
+                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
                     CryptoTransaction missingCryptoTransaction = cryptoTransaction;
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
-                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo())){
+                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
                     CryptoTransaction missingCryptoTransaction = cryptoTransaction;
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
-                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo())){
+                if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
                     CryptoTransaction missingOBCCryptoTransaction = cryptoTransaction;
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
@@ -848,7 +848,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param cryptoStatus
      * @return
      */
-    private boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus, CryptoAddress addressTo) throws CantExecuteDatabaseOperationException {
+    private boolean isNewTransaction(String txHash, CryptoStatus cryptoStatus, CryptoAddress addressTo, CryptoTransactionType cryptoTransactionType) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         /**
          * sets the table filters
@@ -856,6 +856,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, cryptoTransactionType.getCode(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
