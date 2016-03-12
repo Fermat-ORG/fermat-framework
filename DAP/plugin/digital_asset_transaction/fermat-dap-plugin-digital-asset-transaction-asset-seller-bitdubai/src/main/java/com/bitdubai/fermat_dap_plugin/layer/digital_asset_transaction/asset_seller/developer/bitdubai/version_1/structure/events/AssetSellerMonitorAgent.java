@@ -69,8 +69,6 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_sell
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
