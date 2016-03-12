@@ -320,6 +320,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException {
-        return null;
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType);
     }
 }

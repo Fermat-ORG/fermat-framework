@@ -133,8 +133,7 @@ public class CryptoTransaction{
                 /**
                  * get the address from the output
                  */
-                //todo this needs to be fixed!
-                address = output.getScriptPubKey().getToAddress(RegTestParams.get());
+                address = output.getScriptPubKey().getToAddress(transaction.getParams());
             }
 
             cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
@@ -239,52 +238,65 @@ public class CryptoTransaction{
     public static List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, Wallet wallet, Transaction transaction){
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
 
-        /**
-         * for each output that sends us bitcoins, I will create INC transactions
-         */
-        for (TransactionOutput output : transaction.getWalletOutputs(wallet)){
-            CryptoTransaction incomingCryptoTransaction = new CryptoTransaction();
-            incomingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
-            incomingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
-            incomingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-            incomingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
-            incomingCryptoTransaction.setBlockHash(getBlockHash(transaction));
-            incomingCryptoTransaction.setOp_Return(getOpReturn(transaction));
-            incomingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.INCOMING);
-            incomingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
-            incomingCryptoTransaction.setAddressTo(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
-            incomingCryptoTransaction.setAddressFrom(getAddressFrom(transaction));
-            incomingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
+        try{
+            /**
+             * for each output that sends us bitcoins, I will create INC transactions
+             */
+            for (TransactionOutput output : transaction.getWalletOutputs(wallet)){
+                CryptoTransaction incomingCryptoTransaction = new CryptoTransaction();
+                incomingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
+                incomingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
+                incomingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+                incomingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
+                incomingCryptoTransaction.setBlockHash(getBlockHash(transaction));
+                incomingCryptoTransaction.setOp_Return(getOpReturn(transaction));
+                incomingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.INCOMING);
+                incomingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
+                incomingCryptoTransaction.setAddressTo(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
+                incomingCryptoTransaction.setAddressFrom(getAddressFrom(transaction));
+                incomingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
 
-            cryptoTransactions.add(incomingCryptoTransaction);
-        }
-
-        /**
-         * I will get the connected outputs of the inputs that are mine, to form the OUT transactions
-         */
-        for (TransactionInput input : transaction.getInputs()){
-            TransactionOutput output = input.getConnectedOutput();
-            if (output == null)
-                continue;
-
-            if (output.isMine(wallet)){
-                CryptoTransaction outgoingCryptoTransaction = new CryptoTransaction();
-                outgoingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
-                outgoingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
-                outgoingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-                outgoingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
-                outgoingCryptoTransaction.setBlockHash(getBlockHash(transaction));
-                outgoingCryptoTransaction.setOp_Return(getOpReturn(transaction));
-                outgoingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
-                outgoingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
-                outgoingCryptoTransaction.setAddressTo(getAddressTo(transaction));
-                outgoingCryptoTransaction.setAddressFrom(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
-                outgoingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
-
-                cryptoTransactions.add(outgoingCryptoTransaction);
+                cryptoTransactions.add(incomingCryptoTransaction);
             }
 
+            /**
+             * I will get the connected outputs of the inputs that are mine, to form the OUT transactions
+             */
+            for (TransactionInput input : transaction.getInputs()){
+                TransactionOutput output = input.getConnectedOutput();
+                if (output == null)
+                    continue;
+
+                if (output.isMine(wallet)){
+                    /**
+                     * I will have to form transactions for each address we are sending money to.
+                     */
+                    for (TransactionOutput outputs : transaction.getOutputs()){
+
+                        // if this aint a sent to address output, I don't need it.
+                        if (!outputs.getScriptPubKey().isSentToAddress())
+                            continue;
+
+                        CryptoTransaction outgoingCryptoTransaction = new CryptoTransaction();
+                        outgoingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
+                        outgoingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
+                        outgoingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+                        outgoingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
+                        outgoingCryptoTransaction.setBlockHash(getBlockHash(transaction));
+                        outgoingCryptoTransaction.setOp_Return(getOpReturn(transaction));
+                        outgoingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
+                        outgoingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
+                        outgoingCryptoTransaction.setAddressFrom(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
+                        outgoingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
+                        outgoingCryptoTransaction.setAddressTo(new CryptoAddress(outputs.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
+                        cryptoTransactions.add(outgoingCryptoTransaction);
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
         return cryptoTransactions;
     }
 
