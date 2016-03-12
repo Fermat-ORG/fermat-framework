@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
@@ -353,7 +354,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(satoshis);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
@@ -580,7 +581,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(valueToSend);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){

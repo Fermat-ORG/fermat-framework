@@ -103,7 +103,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.transactionId = cryptoTransaction.getTransactionHash();
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
-        this.amount = cryptoTransaction.getCryptoAmount() != 0 ? cryptoTransaction.getCryptoAmount() : assetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoTransaction.getCryptoAmount() != 0 && cryptoTransaction.getCryptoAmount() <= assetMetadata.getDigitalAsset().getGenesisAmount() ? cryptoTransaction.getCryptoAmount() : assetMetadata.getDigitalAsset().getGenesisAmount();
         this.digitalAssetMetadata = assetMetadata;
         this.memo = memo;
     }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -1028,5 +1029,20 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * I'm not removing duplicates
          */
         return transactions;
+    }
+
+    /**
+     * Gets the list of stored CryptoTransactions for the specified network type
+     * @param blockchainNetworkType the network type to get the transactions from.
+     * @return the list of Crypto Transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantGetCryptoTransactionException {
+        try{
+            return this.getDao().getCryptoTransactions(blockchainNetworkType, addressTo);
+        } catch (Exception e){
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the list of stored cryptoTransactions", "Database issue");
+        }
+
     }
 }

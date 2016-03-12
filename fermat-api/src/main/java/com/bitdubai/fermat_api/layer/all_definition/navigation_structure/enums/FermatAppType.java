@@ -10,7 +10,8 @@ public enum FermatAppType implements FermatEnum{
 
     WALLET("W"),
     SUB_APP("SA"),
-    DESKTOP("D");
+    DESKTOP("D"),
+    P2P_APP("P2P_APP");
 
     private String code;
 
@@ -34,6 +35,8 @@ public enum FermatAppType implements FermatEnum{
                 return SUB_APP;
             case "D":
                 return DESKTOP;
+            case "P2P_APP":
+                return P2P_APP;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
 

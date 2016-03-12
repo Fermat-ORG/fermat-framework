@@ -153,7 +153,7 @@ public class AssetIssuingDAO {
             DatabaseTableRecord record = records.get(0);
             int assetsProcessed = record.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME);
 
-            record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_COMPLETED_COLUMN_NAME, ++assetsProcessed);
+            record.setIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_PROCESSED_COLUMN_NAME, ++assetsProcessed);
             databaseTable.updateRecord(record);
         } catch (Exception exception) {
             throw new CantCreateDigitalAssetTransactionException(FermatException.wrapException(exception), context, "Unexpected exception");
@@ -194,7 +194,6 @@ public class AssetIssuingDAO {
         try {
             updateRecordsForTableByFilter(getIssuingTable(), AssetIssuingDatabaseConstants.ASSET_ISSUING_PROCESSING_COLUMN_NAME, Boolean.FALSE, AssetIssuingDatabaseConstants.ASSET_ISSUING_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
         } catch (Exception e) {
-            e.printStackTrace();
             //Nothing.
         }
     }

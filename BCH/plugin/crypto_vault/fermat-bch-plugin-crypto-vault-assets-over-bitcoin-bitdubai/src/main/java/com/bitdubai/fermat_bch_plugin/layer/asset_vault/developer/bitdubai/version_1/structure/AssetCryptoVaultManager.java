@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
@@ -221,7 +222,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          * Calculates the amount to be sent by removing the fee from the available balance.
          * I'm ignoring the GenesisAmount passed because this might not be the right value.
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
 
         /**
@@ -836,7 +837,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          * Calculates the amount to be sent by removing the fee from the available balance.
          * I'm ignoring the GenesisAmount passed because this might not be the right value.
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = wallet.getBalance().subtract(fee);
 
         /**
@@ -982,7 +983,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          * Calculates the amount to be sent by removing the fee from the available balance.
          * I'm ignoring the GenesisAmount passed because this might not be the right value.
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = genesisTransaction.getOutput(0).getValue().subtract(fee);
 
         /**
