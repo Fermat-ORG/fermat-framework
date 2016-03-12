@@ -213,6 +213,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), "Multiple calls from transaction plugin to send bitcoins using the same transaction");
         }
 
+        /**
+         * will add any missed transaction because we may detect the crypto transaction already OBC, so we need
+         * to manually add any previous state.
+         */
         saveMissingCryptoTransaction(cryptoTransaction);
 
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
@@ -245,9 +249,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo())){
-                    CryptoTransaction missingCryptoTransaction = cryptoTransaction;
-                    missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-                    saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
+                    CryptoTransaction missingOBCCryptoTransaction = cryptoTransaction;
+                    missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+                    saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }
                 break;
         }
