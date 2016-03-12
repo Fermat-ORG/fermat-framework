@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -319,7 +320,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetCryptoTransactionException
      */
     @Override
-    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException {
-        return null;
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType, addressTo);
     }
 }
