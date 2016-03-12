@@ -524,6 +524,13 @@ public class UserRedemptionDao {
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
+    public String getActorRedeemPointPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
+        return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
     public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, RecordsNotFoundException {
         return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
                 genesisTransaction,

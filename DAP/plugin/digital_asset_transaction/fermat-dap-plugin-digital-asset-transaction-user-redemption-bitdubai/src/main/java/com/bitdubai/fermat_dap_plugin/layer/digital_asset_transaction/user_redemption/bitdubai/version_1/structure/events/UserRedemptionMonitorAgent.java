@@ -37,7 +37,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -282,12 +281,12 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 switch (record.getState()) {
                     case DELIVERING:
                         DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromWallet(assetAcceptedGenesisTransaction, record.getNetworkType());
-                        userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, metadata.getLastTransactionHash());
-                        userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
-                        ActorAssetRedeemPoint redeemPoint = redeemPointManager.getActorByPublicKey(userRedemptionDao.getActorRedeemPointCryptoAddressByGenesisTransaction(metadata.getGenesisTransaction()), metadata.getNetworkType());
+                        ActorAssetRedeemPoint redeemPoint = redeemPointManager.getActorByPublicKey(userRedemptionDao.getActorRedeemPointPublicKeyByGenesisTransaction(metadata.getGenesisTransaction()), metadata.getNetworkType());
                         sendCryptoAmountToRemoteActor(metadata);
                         //HERE we send the movement
                         sendAssetMovement(metadata, redeemPoint);
+                        userRedemptionDao.sendingBitcoins(assetAcceptedGenesisTransaction, metadata.getLastTransactionHash());
+                        userRedemptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
                         break;
                     case DELIVERING_CANCELLED:
                         userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.SENDING_CRYPTO_FAILED, assetAcceptedGenesisTransaction);
@@ -395,7 +394,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint redeemPoint) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
             //Storing Users
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
-            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(),digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(), digitalAssetMetadata.getDigitalAsset().getPublicKey());
 
             //Creating AssetMovementContentMessage
             AssetMovementContentMessage content = new AssetMovementContentMessage(actorSender, redeemPoint, digitalAssetMetadata.getDigitalAsset().getPublicKey(), digitalAssetMetadata.getNetworkType(), AssetMovementType.ASSET_REDEEMED);
