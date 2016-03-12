@@ -39,4 +39,9 @@ public interface BitcoinNetworkConfiguration {
      * Dusty sends are considered invalid in the network
      */
     long MIN_ALLOWED_SATOSHIS_ON_SEND = 5430;
+
+    /**
+     * Fixed fee value for outgoing transactions
+     */
+    long FIXED_FEE_VALUE = 30000;
 }
