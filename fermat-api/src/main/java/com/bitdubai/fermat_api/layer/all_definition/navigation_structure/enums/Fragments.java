@@ -333,7 +333,10 @@ public enum Fragments implements FermatFragments {
     CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT("CHTOSERF"),
 
     DESKTOP_SETTINGS("DS"),
-    DESKTOP_APPS_MAIN("DAM")
+    DESKTOP_APPS_MAIN("DAM"),
+    DESKTOP_P2P_MAIN("DP2PM"),
+    DESKTOP_SOCIAL_MAIN("DSM"),
+    COMMUNITIES_FRAGMENT("CF")
     ;
 
     private String code;
