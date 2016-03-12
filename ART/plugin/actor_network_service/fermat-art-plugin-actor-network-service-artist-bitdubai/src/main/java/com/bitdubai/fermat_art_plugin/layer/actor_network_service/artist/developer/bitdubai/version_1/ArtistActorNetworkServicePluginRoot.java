@@ -5,6 +5,7 @@ import android.util.Base64;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,29 +24,40 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorImp;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorNetworkServiceRecord;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantCreateActorArtistNotificationException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -66,6 +79,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private List<PlatformComponentProfile> actorArtistPendingToRegistration;
+    private List<ArtistActor> actorArtistRegistered;
     /**
      * Executor
      */
@@ -81,6 +95,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                 "Actor Network Service Artist",
                 null);
         this.actorArtistPendingToRegistration = new ArrayList<>();
+        this.actorArtistRegistered = new ArrayList<>();
     }
 
     @Override
@@ -290,12 +305,158 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
     @Override
     public List<ArtistActor> getListActorArtistRegistered() throws CantRequestListActorArtistNetworkServiceRegisteredException {
-        return null;
+        try {
+//            if (true) {
+            if (actorArtistRegistered != null && !actorArtistRegistered.isEmpty()) {
+                actorArtistRegistered.clear();
+            }
+
+            DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                    constructDiscoveryQueryParamsFactory(PlatformComponentType.NETWORK_SERVICE, //applicant = who made the request
+                            NetworkServiceType.ARTIST_ACTOR,
+                            null,                     // alias
+                            null,                     // identityPublicKey
+                            null,                     // location
+                            null,                     // distance
+                            null,                     // name
+                            null,                     // extraData
+                            null,                     // offset
+                            null,                     // max
+                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                            null);
+
+            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+
+            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+
+                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
+
+                    String profileImage = "";
+                    byte[] imageByte = null;
+                    if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
+                        try {
+                            JsonParser jParser = new JsonParser();
+                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                            profileImage = jsonObject.get(ART_PROFILE_IMG).getAsString();
+                        } catch (Exception e) {
+                            profileImage = platformComponentProfile.getExtraData();
+                        }
+                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+                    }
+
+
+                    ArtistActor artistActor = new ArtistActorImp(
+                            platformComponentProfile.getIdentityPublicKey(),
+                            platformComponentProfile.getName(),
+                            imageByte);
+
+                    actorArtistRegistered.add(artistActor);
+                }
+            } else {
+                return actorArtistRegistered;
+            }
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Cant Request List Actor Asset Redeem Point Registered";
+
+            CantRequestListActorArtistNetworkServiceRegisteredException pluginStartException = new CantRequestListActorArtistNetworkServiceRegisteredException(CantRequestListActorArtistNetworkServiceRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+        catch (Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Cant Request List Actor Asset Redeem Point Registered";
+
+            CantRequestListActorArtistNetworkServiceRegisteredException pluginStartException = new CantRequestListActorArtistNetworkServiceRegisteredException(CantRequestListActorArtistNetworkServiceRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+        return actorArtistRegistered;
     }
 
     @Override
-    public void askConnectionActorArtist(String senderPublicKey, String senderName, Actors senderType, String receiverPublicKey, String receiverName, Actors destinationType, byte[] profileImage) throws CantAskConnectionActorArtistNetworkServiceException {
+    public void askConnectionActorArtist(String senderPublicKey, String senderName, PlatformComponentType senderType, String receiverPublicKey, String receiverName, PlatformComponentType destinationType, byte[] profileImage) throws CantAskConnectionActorArtistNetworkServiceException {
+        try {
+            UUID newNotificationID = UUID.randomUUID();
+            NotificationDescriptor notificationDescriptor = NotificationDescriptor.ASKFORCONNECTION;
+            long currentTime = System.currentTimeMillis();
+            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
+            final ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    senderPublicKey,
+                    senderType,
+                    receiverPublicKey,
+                    senderName,
+//                    intraUserToAddPhrase,
+                    profileImage,
+                    destinationType,
+                    notificationDescriptor,
+                    currentTime,
+                    protocolState,
+                    false,
+                    1,
+                    null
+            );
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(
+                                        artistActorNetworkServiceRecord.getActorSenderPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        artistActorNetworkServiceRecord.getActorSenderType()
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
+                                        NetworkServiceType.UNDEFINED,
+                                        artistActorNetworkServiceRecord.getActorDestinationType()
+                                ),
+                                artistActorNetworkServiceRecord.toJson());
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedError(e);
+                    }
+                }
+            });
+            // Sending message to the destination
+        } catch (final CantCreateActorArtistNotificationException e) {
+            reportUnexpectedError(e);
+            throw new CantAskConnectionActorArtistNetworkServiceException(e, "actor asset redeem network service", "database corrupted");
+        } catch (final Exception e) {
+            reportUnexpectedError(e);
+            throw new CantAskConnectionActorArtistNetworkServiceException(e, "actor asset redeem network service", "Unhandled error.");
+        }
     }
 
     @Override

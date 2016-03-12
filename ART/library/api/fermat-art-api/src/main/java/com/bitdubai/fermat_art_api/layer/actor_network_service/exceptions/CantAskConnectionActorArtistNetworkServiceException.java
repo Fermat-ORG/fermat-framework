@@ -14,6 +14,9 @@ public class CantAskConnectionActorArtistNetworkServiceException extends ARTExce
         super(message, cause, context, possibleReason);
     }
 
+    public CantAskConnectionActorArtistNetworkServiceException( final Exception cause,final String message,final String possiblecause) {
+        this(message, cause, possiblecause, "");
+    }
     public CantAskConnectionActorArtistNetworkServiceException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

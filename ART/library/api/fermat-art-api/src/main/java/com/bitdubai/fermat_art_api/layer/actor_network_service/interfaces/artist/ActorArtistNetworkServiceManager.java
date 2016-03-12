@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 09/03/16.
@@ -52,10 +51,10 @@ public interface ActorArtistNetworkServiceManager extends FermatManager {
      */
     void askConnectionActorArtist(String senderPublicKey,
                                  String senderName,
-                                 Actors senderType,
+                                  PlatformComponentType senderType,
                                  String receiverPublicKey,
                                  String receiverName,
-                                 Actors destinationType,
+                                  PlatformComponentType destinationType,
                                  byte[] profileImage) throws CantAskConnectionActorArtistNetworkServiceException;
 
     /**

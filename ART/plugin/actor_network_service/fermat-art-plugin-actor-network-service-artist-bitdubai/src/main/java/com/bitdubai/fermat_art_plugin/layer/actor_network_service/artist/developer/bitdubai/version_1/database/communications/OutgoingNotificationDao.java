@@ -27,17 +27,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorNotification;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorNetworkServiceRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantBuildDataBaseRecordException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetNotificationException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetProfileImageException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetPendingRequestException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantBuildFromDatabaseException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantCreateActorArtistNotificationException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetActorArtistNotificationException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPendingRequestActorArtistNotificationException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,19 +69,18 @@ public class OutgoingNotificationDao {
 
     public ArtistActorNetworkServiceRecord createNotification(UUID notificationId,
                                                             String senderPublicKey,
-                                                            Actors senderType,
+                                                              PlatformComponentType senderType,
                                                             String destinationPublicKey,
                                                             String senderAlias,
 //                                                            String senderPhrase,
                                                             byte[] senderProfileImage,
-                                                            Actors destinationType,
-                                                            AssetNotificationDescriptor assetNotificationDescriptor,
+                                                            PlatformComponentType destinationType,
+                                                            NotificationDescriptor notificationDescriptor,
                                                             long timestamp,
-                                                            ActorAssetProtocolState actorAssetProtocolState,
+                                                            ProtocolState protocolState,
                                                             boolean flagRea,
                                                             int sentCount,
-                                                            BlockchainNetworkType blockchainNetworkType,
-                                                            UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
+                                                            UUID responseToNotificationId) throws CantCreateActorArtistNotificationException {
 
         try {
             ArtistActorNetworkServiceRecord connectionRequestRecord = null;
@@ -91,38 +89,38 @@ public class OutgoingNotificationDao {
 
                 DatabaseTableRecord entityRecord = outgoingNotificationTable.getEmptyRecord();
 
-//                connectionRequestRecord = new ArtistActorNetworkServiceRecord(
-//                        notificationId,
-//                        senderAlias,
-////                        senderPhrase,
-//                        senderProfileImage,
-//                        assetNotificationDescriptor,
-//                        destinationType,
-//                        senderType,
-//                        senderPublicKey,
-//                        destinationPublicKey,
-//                        timestamp,
-//                        actorAssetProtocolState,
-//                        flagRea,
-//                        sentCount,
-//                        blockchainNetworkType,
-//                        responseToNotificationId, null
-//                );
+                connectionRequestRecord = new ArtistActorNetworkServiceRecord(
+                        notificationId,
+                        senderAlias,
+//                        senderPhrase,
+                        senderProfileImage,
+                        notificationDescriptor,
+                        destinationType,
+                        senderType,
+                        senderPublicKey,
+                        destinationPublicKey,
+                        timestamp,
+                        protocolState,
+                        flagRea,
+                        sentCount,
+                        responseToNotificationId,
+                        null
+                );
 
                 outgoingNotificationTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
             }
 
             return connectionRequestRecord;
         } catch (CantInsertRecordException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
-        } catch (CantBuildDataBaseRecordException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
-        } catch (CantGetActorAssetNotificationException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database", "");
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
+        } catch (CantGetActorArtistNotificationException e) {
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
+        } catch (CantBuildFromDatabaseException e) {
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
-    public void createNotification(ArtistActorNetworkServiceRecord assetUserNetworkServiceRecord) throws CantCreateActorAssetNotificationException {
+    public void createNotification(ArtistActorNetworkServiceRecord assetUserNetworkServiceRecord) throws CantCreateActorArtistNotificationException {
         try {
             if (!existNotification(assetUserNetworkServiceRecord.getId())) {
                 DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -132,15 +130,15 @@ public class OutgoingNotificationDao {
                 cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, assetUserNetworkServiceRecord));
             }
         } catch (CantInsertRecordException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
-        } catch (CantBuildDataBaseRecordException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
-        } catch (CantGetActorAssetNotificationException e) {
-            throw new CantCreateActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database.", "");
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
+        } catch (CantGetActorArtistNotificationException e) {
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
+        } catch (CantBuildFromDatabaseException e) {
+            throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
-    public ArtistActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetActorAssetNotificationException {
+    public ArtistActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetActorArtistNotificationException {
 
         if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
@@ -157,16 +155,16 @@ public class OutgoingNotificationDao {
                 if (!records.isEmpty())
                     return buildUserNetworkServiceRecord(records.get(0));
                 else
-                    throw new CantGetActorAssetNotificationException("", null, "RequestID: " + notificationId, "Can not find an actor aset user request with the given request id.");
+                    throw new CantGetActorArtistNotificationException("", null, "RequestID: " + notificationId, "Can not find an actor aset user request with the given request id.");
             } catch (CantLoadTableToMemoryException exception) {
-                throw new CantGetActorAssetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+                throw new CantGetActorArtistNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             } catch (InvalidParameterException exception) {
-                throw new CantGetActorAssetNotificationException("", exception, "Check the cause.", "");
+                throw new CantGetActorArtistNotificationException("", exception, "Check the cause.", "");
             }
         return null;
     }
 
-    public List<ArtistActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetActorAssetNotificationException {
+    public List<ArtistActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetActorArtistNotificationException {
         try {
 
             List<ArtistActorNetworkServiceRecord> assetUserNetworkServiceRecordList = new ArrayList<>();
@@ -185,13 +183,13 @@ public class OutgoingNotificationDao {
             return assetUserNetworkServiceRecordList;
 
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantGetActorAssetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
-            throw new CantGetActorAssetNotificationException("", exception, "Check the cause.", "");
+            throw new CantGetActorArtistNotificationException("", exception, "Check the cause.", "");
         }
     }
 
-    public PlatformComponentType getActorTypeFromRequest(String actorPublicKeySender) throws CantGetPendingRequestException {
+    public PlatformComponentType getActorTypeFromRequest(String actorPublicKeySender) throws CantPendingRequestActorArtistNotificationException {
         try {
 
             DatabaseTable actorRequestTable = getDatabaseTable();
@@ -210,18 +208,18 @@ public class OutgoingNotificationDao {
                 if (!records1.isEmpty())
                     return buildUserNetworkServiceRecord(records1.get(0)).getActorDestinationType();
                 else
-                    throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+                    throw new CantPendingRequestActorArtistNotificationException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantGetPendingRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
-            throw new CantGetPendingRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (Exception e) {
-            throw new CantGetPendingRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
-    public PlatformComponentType getActorTypeToRequest(String actorPublicKeyDestination) throws CantGetPendingRequestException {
+    public PlatformComponentType getActorTypeToRequest(String actorPublicKeyDestination) throws CantPendingRequestActorArtistNotificationException {
         try {
 
             DatabaseTable actorToRequestTable = getDatabaseTable();
@@ -240,28 +238,28 @@ public class OutgoingNotificationDao {
                 if (!records1.isEmpty())
                     return buildUserNetworkServiceRecord(records1.get(0)).getActorSenderType();
                 else
-                    throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+                    throw new CantPendingRequestActorArtistNotificationException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetPendingRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
-            throw new CantGetPendingRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         } catch (Exception e) {
-            throw new CantGetPendingRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantPendingRequestActorArtistNotificationException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         }
     }
 
     public void changeActorUserNotificationDescriptor(final String senderPublicKey,
-                                                      final AssetNotificationDescriptor assetNotificationDescriptor)
-            throws CantUpdateRecordDataBaseException, CantUpdateRecordException, CantGetActorAssetNotificationException {
+                                                      final NotificationDescriptor notificationDescriptor)
+            throws CantUpdateRecordDataBaseException, CantUpdateRecordException, CantGetActorArtistNotificationException {
 
         if (senderPublicKey == null)
             throw new CantUpdateRecordDataBaseException("requestId null ", null);
 
-        if (assetNotificationDescriptor == null)
+        if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
 
         try {
@@ -275,10 +273,10 @@ public class OutgoingNotificationDao {
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode());
+                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
-                throw new CantGetActorAssetNotificationException("RequestId: " + senderPublicKey, "Cannot find a actor  user request with the given id.");
+                throw new CantGetActorArtistNotificationException(new Exception(),"RequestId: " + senderPublicKey, "Cannot find a actor  user request with the given id.");
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantUpdateRecordDataBaseException("Exception not handled by the plugin, there is a problem in database and i cannot load the table.", e);
@@ -289,13 +287,13 @@ public class OutgoingNotificationDao {
 
 
     public void changeProtocolState(final UUID notificationId,
-                                    final ActorAssetProtocolState actorAssetProtocolState)
-            throws CantUpdateRecordDataBaseException, CantUpdateRecordException, CantGetActorAssetNotificationException {
+                                    final ProtocolState protocolState)
+            throws CantUpdateRecordDataBaseException, CantUpdateRecordException, CantGetActorArtistNotificationException {
 
         if (notificationId == null)
             throw new CantUpdateRecordDataBaseException("notification id null ", null);
 
-        if (actorAssetProtocolState == null)
+        if (protocolState == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
 
         try {
@@ -309,10 +307,10 @@ public class OutgoingNotificationDao {
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode());
+                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
-                throw new CantGetActorAssetNotificationException("Notification: " + notificationId, "Cannot find a actor  user request with the given id.");
+                throw new CantGetActorArtistNotificationException(new Exception(),"Notification: " + notificationId, "Cannot find a actor  user request with the given id.");
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantUpdateRecordDataBaseException("Exception not handled by the plugin, there is a problem in database and i cannot load the table.", e);
@@ -322,16 +320,16 @@ public class OutgoingNotificationDao {
     }
 
 
-    public List<ArtistActorNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ActorAssetProtocolState actorAssetProtocolState)
-            throws CantGetActorAssetNotificationException {
+    public List<ArtistActorNetworkServiceRecord> listRequestsByProtocolStateAndNotDone(ProtocolState ProtocolState)
+            throws CantGetActorArtistNotificationException {
 
-        if (actorAssetProtocolState == null)
-            throw new CantGetActorAssetNotificationException("protocolState null", null, "The protocolState is required, can not be null", "");
+        if (ProtocolState == null)
+            throw new CantGetActorArtistNotificationException("protocolState null", null, "The protocolState is required, can not be null", "");
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -344,43 +342,43 @@ public class OutgoingNotificationDao {
             }
             return cryptoPaymentList;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
-            throw new CantGetActorAssetNotificationException("", exception, "Exception invalidParameterException.", "");
+            throw new CantGetActorArtistNotificationException("", exception, "Exception invalidParameterException.", "");
         }
     }
 
 
-    public void changeStatusNotSentMessage() throws CantGetActorAssetNotificationException {
+    public void changeStatusNotSentMessage() throws CantGetActorArtistNotificationException {
         try {
             DatabaseTable actorStatusTable = getDatabaseTable();
 
-            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
-            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
             actorStatusTable.loadToMemory();
 
             List<DatabaseTableRecord> records = actorStatusTable.getRecords();
 
             for (DatabaseTableRecord record : records) {
                 //update record
-                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.PROCESSING_SEND.getCode());
+                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.PROCESSING_SEND.getCode());
                 actorStatusTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (CantUpdateRecordException e) {
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
     }
 
 
-    public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantGetActorAssetNotificationException {
+    public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantGetActorArtistNotificationException {
 
         try {
             DatabaseTable actorStatusTable = getDatabaseTable();
 
-            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
-            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
 
             actorStatusTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
 
@@ -391,31 +389,31 @@ public class OutgoingNotificationDao {
 
             for (DatabaseTableRecord record : records) {
                 //update record
-                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorAssetProtocolState.PROCESSING_SEND.getCode());
+                record.setStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.PROCESSING_SEND.getCode());
                 actorStatusTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (CantUpdateRecordException e) {
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
     }
 
-    public List<ArtistActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
-                                                                                  final AssetNotificationDescriptor assetNotificationDescriptor)
-            throws CantGetActorAssetNotificationException {
+    public List<ArtistActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ProtocolState ProtocolState,
+                                                                                  final NotificationDescriptor NotificationDescriptor)
+            throws CantGetActorArtistNotificationException {
 
-        if (actorAssetProtocolState == null)
-            throw new CantGetActorAssetNotificationException("protocolState null", null, "The protocolState is required, can not be null", "");
+        if (ProtocolState == null)
+            throw new CantGetActorArtistNotificationException("protocolState null", null, "The protocolState is required, can not be null", "");
 
-        if (assetNotificationDescriptor == null)
-            throw new CantGetActorAssetNotificationException("type null", null, "The RequestType is required, can not be null", "");
+        if (NotificationDescriptor == null)
+            throw new CantGetActorArtistNotificationException("type null", null, "The RequestType is required, can not be null", "");
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ProtocolState.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, NotificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -430,14 +428,14 @@ public class OutgoingNotificationDao {
 
         } catch (CantLoadTableToMemoryException e) {
 
-            throw new CantGetActorAssetNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
 
-            throw new CantGetActorAssetNotificationException("", exception, "Exception invalidParameterException.", "");
+            throw new CantGetActorArtistNotificationException("", exception, "Exception invalidParameterException.", "");
         }
     }
 
-    public List<ActorNotification> listUnreadNotifications() throws CantGetActorAssetNotificationException {
+    public List<ActorNotification> listUnreadNotifications() throws CantGetActorArtistNotificationException {
         return null;
     }
 
@@ -446,7 +444,7 @@ public class OutgoingNotificationDao {
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
-                                                    ArtistActorNetworkServiceRecord connectionRequestRecord) throws CantBuildDataBaseRecordException {
+                                                    ArtistActorNetworkServiceRecord connectionRequestRecord) throws CantBuildFromDatabaseException {
 
         try {
             record.setUUIDValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getId());
@@ -473,7 +471,7 @@ public class OutgoingNotificationDao {
                 persistNewUserProfileImage(connectionRequestRecord.getActorSenderPublicKey(), connectionRequestRecord.getActorSenderProfileImage());
             return record;
         } catch (Exception e) {
-            throw new CantBuildDataBaseRecordException(CantBuildDataBaseRecordException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantBuildFromDatabaseException(CantBuildFromDatabaseException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
@@ -494,9 +492,9 @@ public class OutgoingNotificationDao {
             artistActorNetworkServiceRecord.setFlagRead(Boolean.valueOf(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setSentCount(record.getIntegerValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME));
             artistActorNetworkServiceRecord.setResponseToNotificationId(record.getUUIDValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME));
-            artistActorNetworkServiceRecord.setActorSenderExternalUserName(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_USER_NAME_COLUMN_NAME));
-            artistActorNetworkServiceRecord.setActorSenderExternalAccessToken(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME));
-            artistActorNetworkServiceRecord.setActorSenderExternalPlataform(ExternalPlatform.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_PLATFORM_COLUMN_NAME)));
+            artistActorNetworkServiceRecord.setExternalUsername(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_USER_NAME_COLUMN_NAME));
+            artistActorNetworkServiceRecord.setExternalAccesToken(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME));
+            artistActorNetworkServiceRecord.setExternalPlatform(ExternalPlatform.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_EXTERNAL_PLATFORM_COLUMN_NAME)));
             byte[] profileImage;
 
             try {
@@ -552,7 +550,7 @@ public class OutgoingNotificationDao {
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
-        } catch (CantBuildDataBaseRecordException e) {
+        } catch (CantBuildFromDatabaseException e) {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, "", "");
             throw cantUpdateRecordDataBaseException;
         }
@@ -580,7 +578,7 @@ public class OutgoingNotificationDao {
     }
 
 
-    public boolean existNotification(final UUID notificationId) throws CantGetActorAssetNotificationException {
+    public boolean existNotification(final UUID notificationId) throws CantGetActorArtistNotificationException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -597,7 +595,7 @@ public class OutgoingNotificationDao {
                 return false;
 
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantGetActorAssetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetActorArtistNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
     }
 
@@ -626,7 +624,7 @@ public class OutgoingNotificationDao {
     }
 
 
-    private byte[] getActorUserProfileImagePrivateKey(final String publicKey) throws CantGetActorAssetProfileImageException, FileNotFoundException {
+    private byte[] getActorUserProfileImagePrivateKey(final String publicKey) throws CantGetProfileImageException, FileNotFoundException {
 
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -640,11 +638,11 @@ public class OutgoingNotificationDao {
             return file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetActorAssetProfileImageException(CantGetActorAssetProfileImageException.DEFAULT_MESSAGE, e, "Error loaded file.", null);
+            throw new CantGetProfileImageException(CantGetProfileImageException.DEFAULT_MESSAGE, e, "Error loaded file.", null);
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new FileNotFoundException(e, "", null);
         } catch (Exception e) {
-            throw new CantGetActorAssetProfileImageException(CantGetActorAssetProfileImageException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+            throw new CantGetProfileImageException(CantGetProfileImageException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
 
