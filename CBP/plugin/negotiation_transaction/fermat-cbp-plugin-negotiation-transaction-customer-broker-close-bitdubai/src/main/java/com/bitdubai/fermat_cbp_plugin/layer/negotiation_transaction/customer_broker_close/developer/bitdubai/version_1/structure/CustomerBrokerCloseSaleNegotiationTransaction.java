@@ -85,9 +85,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                    this.cryptoAddressBookManager,
-                    this.cryptoVaultManager,
-                    this.walletManagerManager
+                this.cryptoAddressBookManager,
+                this.cryptoVaultManager,
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
@@ -103,10 +105,10 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                    transactionId,
-                    customerBrokerSaleNegotiation,
-                    NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                transactionId,
+                customerBrokerSaleNegotiation,
+                NegotiationType.SALE,
+                NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -126,9 +128,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
         try {
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                    this.cryptoAddressBookManager,
-                    this.cryptoVaultManager,
-                    this.walletManagerManager
+                this.cryptoAddressBookManager,
+                this.cryptoVaultManager,
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
@@ -150,10 +154,10 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                    transactionId,
-                    customerBrokerSaleNegotiation,
-                    NegotiationType.SALE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
+                transactionId,
+                customerBrokerSaleNegotiation,
+                NegotiationType.SALE,
+                NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
@@ -175,9 +179,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                    this.cryptoAddressBookManager,
-                    this.cryptoVaultManager,
-                    this.walletManagerManager
+                this.cryptoAddressBookManager,
+                this.cryptoVaultManager,
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {

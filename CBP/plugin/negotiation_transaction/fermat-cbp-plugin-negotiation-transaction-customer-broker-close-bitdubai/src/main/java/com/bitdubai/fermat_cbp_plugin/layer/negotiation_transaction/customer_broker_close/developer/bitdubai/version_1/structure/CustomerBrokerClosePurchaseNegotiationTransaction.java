@@ -78,7 +78,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
 
-            System.out.print("\n\n --- Negotiation Mock XML Date" +
+            System.out.print("\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
                             "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
@@ -86,9 +86,11 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             );
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                    this.cryptoAddressBookManager,
-                    this.cryptoVaultManager,
-                    this.walletManagerManager
+                this.cryptoAddressBookManager,
+                this.cryptoVaultManager,
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
@@ -107,10 +109,10 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                    transactionId,
-                    customerBrokerPurchaseNegotiation,
-                    NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT
+                transactionId,
+                customerBrokerPurchaseNegotiation,
+                NegotiationType.PURCHASE,
+                NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
         } catch (CantDetermineCryptoCurrencyException e) {
@@ -146,7 +148,9 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
                 this.cryptoAddressBookManager,
                 this.cryptoVaultManager,
-                this.walletManagerManager
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
@@ -172,10 +176,10 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             //CREATE NEGOTIATION TRANSATION
             customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                    transactionId,
-                    customerBrokerPurchaseNegotiation,
-                    NegotiationType.PURCHASE,
-                    NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
+                transactionId,
+                customerBrokerPurchaseNegotiation,
+                NegotiationType.PURCHASE,
+                NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
@@ -197,9 +201,11 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             System.out.print("\n\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                    this.cryptoAddressBookManager,
-                    this.cryptoVaultManager,
-                    this.walletManagerManager
+                this.cryptoAddressBookManager,
+                this.cryptoVaultManager,
+                this.walletManagerManager,
+                this.errorManager,
+                this.pluginVersionReference
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
