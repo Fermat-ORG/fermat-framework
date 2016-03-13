@@ -277,7 +277,7 @@ public class CryptoTransaction{
 
                         CryptoTransaction outgoingCryptoTransaction = getBaseCryptoTransaction(transaction, blockchainNetworkType);
                         outgoingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
-                        outgoingCryptoTransaction.setBtcAmount(output.getValue().getValue());
+                        outgoingCryptoTransaction.setBtcAmount(outputs.getValue().getValue());
                         outgoingCryptoTransaction.setCryptoAmount(outgoingCryptoTransaction.getBtcAmount() + outgoingCryptoTransaction.getFee());
                         outgoingCryptoTransaction.setAddressFrom(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
                         outgoingCryptoTransaction.setAddressTo(new CryptoAddress(outputs.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
@@ -327,7 +327,7 @@ public class CryptoTransaction{
 
 
     private static long getCryptoTransactionFee(Transaction transaction){
-        return transaction.getFee().getValue();
+        return (transaction.getFee() == null) ? 0 : transaction.getFee().getValue();
     }
 
     /**
