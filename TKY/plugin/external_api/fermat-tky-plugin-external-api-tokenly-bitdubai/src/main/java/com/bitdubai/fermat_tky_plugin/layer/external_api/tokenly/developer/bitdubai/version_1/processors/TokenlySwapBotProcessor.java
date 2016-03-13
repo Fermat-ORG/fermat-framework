@@ -3,10 +3,10 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Bot;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.ImageDetails;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Swap;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyBalance;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.ImageDetails;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Swap;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.TokenlyBalance;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyBotJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlySwapJSonAttNames;

@@ -13,7 +13,7 @@ public interface TokenlyApiManager extends FermatManager {
      * @param botId represents the bot Id in swapbot site.
      * @return
      */
-    Bot getBotByBotId(String botId) throws CantGetBotException;
+    com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot getBotByBotId(String botId) throws CantGetBotException;
 
     /**
      * This method returns String that contains a swap bot by tokenly username
@@ -21,6 +21,6 @@ public interface TokenlyApiManager extends FermatManager {
      * @return
      * @throws CantGetBotException
      */
-    Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
+    com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
 
 }

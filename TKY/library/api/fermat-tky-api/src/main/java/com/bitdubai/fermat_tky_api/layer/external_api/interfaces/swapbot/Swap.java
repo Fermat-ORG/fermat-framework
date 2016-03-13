@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.layer.external_api.interfaces;
+package com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot;
 
 import java.sql.Date;
 

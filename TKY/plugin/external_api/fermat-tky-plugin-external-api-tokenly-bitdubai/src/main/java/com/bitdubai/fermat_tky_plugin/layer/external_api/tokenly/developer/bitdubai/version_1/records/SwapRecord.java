@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records;
 
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Receipt;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Swap;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Receipt;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Swap;
 
 import java.sql.Date;
 

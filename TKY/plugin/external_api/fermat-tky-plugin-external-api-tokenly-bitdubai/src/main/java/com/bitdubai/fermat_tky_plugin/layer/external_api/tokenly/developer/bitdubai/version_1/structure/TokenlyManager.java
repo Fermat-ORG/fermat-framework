@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Bot;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.TokenlySwapBotProcessor;
 

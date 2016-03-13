@@ -3,7 +3,7 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyBalancesType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyCurrency;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyBalance;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.TokenlyBalance;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.TokenlyBalanceRecord;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

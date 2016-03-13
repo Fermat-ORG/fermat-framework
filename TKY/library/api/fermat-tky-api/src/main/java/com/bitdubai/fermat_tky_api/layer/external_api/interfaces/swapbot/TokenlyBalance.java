@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.layer.external_api.interfaces;
+package com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyBalancesType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyCurrency;

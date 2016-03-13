@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors;
 
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.Receipt;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Receipt;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyReceiptJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.ReceiptRecord;
 import com.google.gson.JsonObject;
