@@ -486,7 +486,7 @@ public class CustomerBrokerNewAgent implements
                                 customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                                 //CONFIRM TRANSMISSION
                                 negotiationTransmissionManager.confirmReception(transmissionId);
-                                
+
                             }
                         }
                     }
