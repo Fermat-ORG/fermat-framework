@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions;
+package com.bitdubai.fermat_api.layer.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
