@@ -249,7 +249,7 @@ public class CryptoTransaction{
                 CryptoTransaction incomingCryptoTransaction = getBaseCryptoTransaction(transaction, blockchainNetworkType);
                 incomingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.INCOMING);
                 incomingCryptoTransaction.setBtcAmount(output.getValue().getValue());
-                incomingCryptoTransaction.setCryptoAmount(incomingCryptoTransaction.getBtcAmount() + incomingCryptoTransaction.getFee());
+                incomingCryptoTransaction.setCryptoAmount(incomingCryptoTransaction.getBtcAmount());
                 incomingCryptoTransaction.setAddressTo(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
                 incomingCryptoTransaction.setAddressFrom(getAddressFrom(transaction));
 
