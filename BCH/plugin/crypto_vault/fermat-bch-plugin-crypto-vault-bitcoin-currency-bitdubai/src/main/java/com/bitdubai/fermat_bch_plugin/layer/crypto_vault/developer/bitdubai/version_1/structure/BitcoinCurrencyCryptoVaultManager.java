@@ -652,6 +652,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          */
         draftTransaction.setBitcoinTransaction(sendRequest.tx);
 
+        // I add the seller crypto address
+        draftTransaction.setSellerCryptoAddress(addressTo);
+
         /**
          * I will store this transaction to be able to return it later
          */
