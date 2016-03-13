@@ -387,8 +387,6 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                         updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                         assetTransferDAO.sendingBitcoins(assetAcceptedGenesisTransaction, digitalAsset.getLastTransactionHash());
                         sendCryptoAmountToRemoteActor(digitalAsset);
-                        updateDistributionStatus(DistributionStatus.NOTIFYING_ISSUER, assetAcceptedGenesisTransaction);
-                        assetTransferDAO.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.NOTIFYING_ISSUER);
                         sendAssetMovement(digitalAsset, userToSend);
                         break;
                     case DELIVERING_CANCELLED:
