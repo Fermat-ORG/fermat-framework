@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music;
 
+import java.sql.Date;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/03/16.
  */
@@ -18,21 +20,75 @@ public interface Song {
     String getName();
 
     /**
-     * This method returns the Song description.
+     * This method returns the Song tokens
      * @return
      */
-    String getDescription();
+    String[] getTokens();
 
     /**
-     * This method returns the Song download URL.
+     * This method returns the song performers.
      * @return
      */
-    String getDownloadURL();
+    String getPerformers();
 
     /**
-     * This method returns the Song download size
+     * This method returns the song composers.
      * @return
      */
-    long getDownloadSize();
+    String getComposers();
+
+    /**
+     * This method returns the song release date.
+     * @return
+     */
+    Date getReleaseDate();
+
+    /**
+     * This method returns the song lyrics.
+     * @return
+     */
+    String getLyrics();
+
+    /**
+     * This method returns the song credits
+     * @return
+     */
+    String credits();
+
+    /**
+     * This method returns the song copyright.
+     * @return
+     */
+    String getCopyright();
+
+    /**
+     * This method returns the song ownership.
+     * @return
+     */
+    String getOwnership();
+
+    /**
+     * This method returns the song usage rights.
+     * @return
+     */
+    String getUsageRights();
+
+    /**
+     * This method returns the song usage prohibitions.
+     * @return
+     */
+    String getUsageProhibitions();
+
+    /**
+     * This method returns the song bitcoin address.
+     * @return
+     */
+    String getBitcoinAddress();
+
+    /**
+     * This method returns the song 'other' field.
+     * @return
+     */
+    String getOther();
 
 }
