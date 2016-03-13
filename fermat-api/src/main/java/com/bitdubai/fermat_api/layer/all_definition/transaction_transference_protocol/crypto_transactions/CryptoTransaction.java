@@ -330,6 +330,25 @@ public class CryptoTransaction{
         return (transaction.getFee() == null) ? 0 : transaction.getFee().getValue();
     }
 
+    public static CryptoTransaction copyCryptoTransaction(CryptoTransaction previousCryptoTransaction){
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setTransactionHash(previousCryptoTransaction.getTransactionHash());
+        cryptoTransaction.setBlockHash(previousCryptoTransaction.getBlockHash());
+        cryptoTransaction.setBlockchainNetworkType(previousCryptoTransaction.getBlockchainNetworkType());
+        cryptoTransaction.setCryptoStatus(previousCryptoTransaction.getCryptoStatus());
+        cryptoTransaction.setBlockDepth(previousCryptoTransaction.getBlockDepth());
+        cryptoTransaction.setCryptoCurrency(previousCryptoTransaction.getCryptoCurrency());
+        cryptoTransaction.setAddressTo(previousCryptoTransaction.getAddressTo());
+        cryptoTransaction.setAddressFrom(previousCryptoTransaction.getAddressFrom());
+        cryptoTransaction.setBtcAmount(previousCryptoTransaction.getBtcAmount());
+        cryptoTransaction.setFee(previousCryptoTransaction.getFee());
+        cryptoTransaction.setCryptoAmount(previousCryptoTransaction.getCryptoAmount());
+        cryptoTransaction.setOp_Return(previousCryptoTransaction.getOp_Return());
+        cryptoTransaction.setCryptoTransactionType(previousCryptoTransaction.getCryptoTransactionType());
+
+        return cryptoTransaction;
+    }
+
     /**
      * Getters
      * */

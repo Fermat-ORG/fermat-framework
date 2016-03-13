@@ -237,19 +237,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = cryptoTransaction;
+                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = cryptoTransaction;
+                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingOBCCryptoTransaction = cryptoTransaction;
+                    CryptoTransaction missingOBCCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }
