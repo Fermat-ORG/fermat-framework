@@ -95,7 +95,9 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                     cryptoAddressBookManager,
                     cryptoVaultManager,
-                    walletManagerManager
+                    walletManagerManager,
+                    errorManager,
+                    pluginVersionReference
             );
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
@@ -122,7 +124,9 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                     cryptoAddressBookManager,
                     cryptoVaultManager,
-                    walletManagerManager
+                    walletManagerManager,
+                    errorManager,
+                    pluginVersionReference
             );
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
