@@ -94,9 +94,9 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
                 return openApp(
                         selectAppManager(
                                 appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey),
-                                FermatAppConnectionManager.getFermatAppConnection(
-                                        appPublicKey,ApplicationSession.getInstance().getApplicationContext()
-                                )
+                        FermatAppConnectionManager.getFermatAppConnection(
+                                appPublicKey,ApplicationSession.getInstance().getApplicationContext()
+                        )
                 );
             }
         }catch (Exception e){
@@ -104,6 +104,7 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
         }
         return null;
     }
+
 
     private void orderStackWithThisPkLast(String publicKey){
         RecentApp recentApp = recentsAppsStack.get(publicKey);
@@ -216,6 +217,7 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
                 break;
             case DESKTOP:
                 runtimeManager = FermatSystemUtils.getDesktopRuntimeManager();
+
                 break;
             case P2P_APP:
                 runtimeManager = FermatSystemUtils.getP2PApssRuntimeManager();

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,11 +47,13 @@ public class AppsConfiguration {
 
     public HashMap<String,FermatAppType>  updateAppsCoreInstalled(){
         HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
-        // Aplicaciones instaladas en el dispositivo separadas por tipo
+        // Aplicaciones instaladas en el dispoanae sitivo separadas por tipo
         for (FermatAppType fermatAppType : FermatAppType.values()) {
-            for (String key : fermatAppsManager.selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
-                appsInstalledInDevice.put(key,fermatAppType);
-            }
+            RuntimeManager runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppType);
+            if(runtimeManager != null)
+                for (String key : fermatAppsManager.selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
+                    appsInstalledInDevice.put(key,fermatAppType);
+                }
         }
         Context context = ApplicationSession.getInstance().getApplicationContext();
         try {
