@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
@@ -121,13 +122,15 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType)  throws CantGetBlockchainConnectionStatusException;
 
-     /**
-     * Gets a stored CryptoTransaction in wathever network.
-     * @param txHash the transaction hash we want to get the CryptoTransaction
-     * @return the last recorded CryptoTransaction.
+    /**
+     * Gets a stored CryptoTransaction in whatever network.
+     * @param txHash the transaction hash of the transaction
+     * @param cryptoTransactionType the type of CryptoTransaction we are looking for
+     * @param toAddress the address this transaction was sent to.
+     * @return the CryptoTransaction with the latest cryptoStatus
      * @throws CantGetCryptoTransactionException
      */
-    CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException;
+    CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantGetCryptoTransactionException;
 
 
     /**

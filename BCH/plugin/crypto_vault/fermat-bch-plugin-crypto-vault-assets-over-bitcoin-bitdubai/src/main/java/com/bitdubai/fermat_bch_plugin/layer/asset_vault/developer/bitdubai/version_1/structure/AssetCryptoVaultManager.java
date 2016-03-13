@@ -1025,6 +1025,9 @@ public class AssetCryptoVaultManager  extends CryptoVault{
 
         draftTransaction.addValue(inputValue.value);
 
+        // I add the buyer crypto address
+        draftTransaction.setBuyerCryptoAddress(addressTo);
+
         System.out.println("***CryptoVault*** Draft Transaction created");
         System.out.println(draftTransaction.toString());
 
