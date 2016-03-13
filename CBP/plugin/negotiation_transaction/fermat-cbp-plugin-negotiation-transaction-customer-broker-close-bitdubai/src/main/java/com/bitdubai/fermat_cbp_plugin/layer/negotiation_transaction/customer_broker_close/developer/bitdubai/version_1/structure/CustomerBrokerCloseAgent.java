@@ -444,7 +444,9 @@ public class CustomerBrokerCloseAgent  implements
                                                 customerBrokerCloseNegotiationTransactionDatabaseDao,
                                                 cryptoAddressBookManager,
                                                 cryptoVaultManager,
-                                                walletManagerManager
+                                                walletManagerManager,
+                                                errorManager,
+                                                pluginVersionReference
                                         );
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
                                         break;
@@ -457,16 +459,18 @@ public class CustomerBrokerCloseAgent  implements
                                                 customerBrokerCloseNegotiationTransactionDatabaseDao,
                                                 cryptoAddressBookManager,
                                                 cryptoVaultManager,
-                                                walletManagerManager
+                                                walletManagerManager,
+                                                errorManager,
+                                                pluginVersionReference
                                         );
                                         customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
                                         break;
                                 }
 
                                 //NOTIFIED EVENT
-                                customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+//                                customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                                 //CONFIRM TRANSMISSION
-                                negotiationTransmissionManager.confirmReception(transmissionId);
+//                                negotiationTransmissionManager.confirmReception(transmissionId);
 
                             } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
@@ -480,7 +484,9 @@ public class CustomerBrokerCloseAgent  implements
                                                 customerBrokerCloseNegotiationTransactionDatabaseDao,
                                                 cryptoAddressBookManager,
                                                 cryptoVaultManager,
-                                                walletManagerManager
+                                                walletManagerManager,
+                                                errorManager,
+                                                pluginVersionReference
                                         );
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
                                         break;
@@ -493,7 +499,9 @@ public class CustomerBrokerCloseAgent  implements
                                                 customerBrokerCloseNegotiationTransactionDatabaseDao,
                                                 cryptoAddressBookManager,
                                                 cryptoVaultManager,
-                                                walletManagerManager
+                                                walletManagerManager,
+                                                errorManager,
+                                                pluginVersionReference
                                         );
                                         customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
                                         break;
@@ -501,12 +509,13 @@ public class CustomerBrokerCloseAgent  implements
 
                                 //CONFIRM TRANSACTION
                                 customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-                                //NOTIFIED EVENT
-                                customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                                //CONFIRM TRANSMISSION
-                                negotiationTransmissionManager.confirmReception(transmissionId);
 
                             }
+
+                            //NOTIFIED EVENT
+                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                            //CONFIRM TRANSMISSION
+                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
 
