@@ -469,7 +469,9 @@ public class CustomerBrokerUpdateAgent implements
                                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                             customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
                                                     customerBrokerPurchaseNegotiationManager,
-                                                    customerBrokerUpdateNegotiationTransactionDatabaseDao
+                                                    customerBrokerUpdateNegotiationTransactionDatabaseDao,
+                                                    errorManager,
+                                                    pluginVersionReference
                                             );
 
                                             final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
@@ -499,7 +501,9 @@ public class CustomerBrokerUpdateAgent implements
                                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                             customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                                                     customerBrokerSaleNegotiationManager,
-                                                    customerBrokerUpdateNegotiationTransactionDatabaseDao
+                                                    customerBrokerUpdateNegotiationTransactionDatabaseDao,
+                                                    errorManager,
+                                                    pluginVersionReference
                                             );
 
                                             final String saleCancelReason = saleNegotiation.getCancelReason();
