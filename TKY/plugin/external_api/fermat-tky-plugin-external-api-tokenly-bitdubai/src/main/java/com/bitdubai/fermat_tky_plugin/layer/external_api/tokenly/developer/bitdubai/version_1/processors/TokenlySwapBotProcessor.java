@@ -10,7 +10,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Tokenly
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyBotJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlySwapJSonAttNames;
-import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.SwapBotRecord;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.swapbot.SwapBotRecord;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
