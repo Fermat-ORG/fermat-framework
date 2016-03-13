@@ -327,7 +327,29 @@ public class CryptoTransaction{
 
 
     private static long getCryptoTransactionFee(Transaction transaction){
-        return (transaction.getFee() == null) ? 0 : transaction.getFee().getValue();
+        long fee = (transaction.getFee() == null) ? 0 : transaction.getFee().getValue();
+
+        /**
+         * if fee is 0, Will try to recalculate
+         */
+        if (fee ==0){
+            long outputValue = 0;
+            for (TransactionOutput output : transaction.getOutputs()){
+                outputValue = outputValue + output.getValue().getValue();
+            }
+
+            long inputValue = 0;
+            for (TransactionInput input : transaction.getInputs()) {
+                TransactionOutput output = input.getConnectedOutput();
+                if (output == null)
+                    continue;
+
+                inputValue = inputValue + output.getValue().getValue();
+            }
+
+            fee = outputValue - inputValue;
+        }
+        return fee;
     }
 
     public static CryptoTransaction copyCryptoTransaction(CryptoTransaction previousCryptoTransaction){
