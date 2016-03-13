@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -17,13 +21,16 @@ import java.util.Map;
  * Created by franklin on 08/10/15.
  */
 public class AssetUserWalletBalanceImpl implements com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance {
+
     private final AssetUserWalletDao assetUserWalletDao;
+    private Broadcaster broadcaster;
 
     /**
      * Constructor.
      */
-    public AssetUserWalletBalanceImpl(AssetUserWalletDao assetUserWalletDao) {
+    public AssetUserWalletBalanceImpl(AssetUserWalletDao assetUserWalletDao, Broadcaster broadcaster) {
         this.assetUserWalletDao = assetUserWalletDao;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -49,10 +56,16 @@ public class AssetUserWalletBalanceImpl implements com.bitdubai.fermat_dap_api.l
     @Override
     public void debit(AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException {
         assetUserWalletDao.addDebit(assetUserWalletTransactionRecord, balanceType);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_USER_WALLET.getCode(), "ASSET-USER-DEBIT_" + "Name: " + assetUserWalletTransactionRecord.getDigitalAsset().getName() + " Balance: " + balanceType.getCode());
     }
 
     @Override
     public void credit(AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, BalanceType balanceType) throws CantRegisterCreditException {
         assetUserWalletDao.addCredit(assetUserWalletTransactionRecord, balanceType);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_USER_WALLET.getCode(), "ASSET-USER-CREDIT_" + "Name: " + assetUserWalletTransactionRecord.getDigitalAsset().getName() + " Balance: " + balanceType.getCode());
     }
 }
