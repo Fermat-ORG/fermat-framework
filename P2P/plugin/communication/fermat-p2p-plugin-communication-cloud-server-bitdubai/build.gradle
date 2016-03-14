@@ -7,6 +7,7 @@ apply plugin: 'gradle-one-jar'
 group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'
+mainClassName = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
 
 configurations {
     deployerJars
@@ -95,7 +96,7 @@ task fatJar(type: Jar) {
     baseName = project.name + '-with-dependencies'
 
     manifest {
-        attributes 'Implementation-Title': 'Standalone Jar Prototype',
+        attributes 'Implementation-Title': 'Standalone Jar Server',
                 'Implementation-Version': version,
                 'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     }
