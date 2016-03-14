@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config;
+package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music;
 
 /**
  * This class contains the basic configurations about management

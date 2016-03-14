@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config;
+package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/03/16.
