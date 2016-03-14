@@ -2,7 +2,7 @@
 <resources>
 
     <!--Home -->
-    <color name="csh_home_titlebar_background">#00b9ff</color>
+    <color name="csh_home_titlebar_background">#26A9E0</color>
     <color name="csh_home_summary_available_tint">#3350d2c2</color>
     <color name="csh_home_summary_book_tint">#33000000</color>
 
@@ -23,8 +23,7 @@
 
 
     <!-- Transaction detail -->
-    <color name="csh_transaction_detail_background">#FFFFFF</color>
-    <color name="csh_transaction_detail_hr_color">#bdbdbd</color>
+    <color name="csh_transaction_detail_hr_color">#FFFFFF</color>
 
     <!-- FAB -->
     <color name="csh_fab_plus_icon_color">#808080</color>
