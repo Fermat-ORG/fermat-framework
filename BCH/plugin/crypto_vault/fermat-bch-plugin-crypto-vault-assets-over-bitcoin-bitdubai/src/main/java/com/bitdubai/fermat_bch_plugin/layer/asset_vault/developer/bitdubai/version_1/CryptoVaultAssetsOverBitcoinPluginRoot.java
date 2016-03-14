@@ -304,8 +304,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantCreateBitcoinTransactionException
      */
     @Override
-    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
-        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo);
+    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo, blockchainNetworkType);
     }
 
     /**
@@ -327,8 +327,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantCreateDraftTransactionException
      */
     @Override
-    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo);
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo, blockchainNetworkType);
     }
 
     /**
