@@ -246,7 +246,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         e.printStackTrace();
                     }
                     record.getDigitalAssetMetadata().removeLastTransaction();
-                    digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoTransactionType.OUTGOING, null), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey(), Actors.DAP_ASSET_REDEEM_POINT, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
+                    digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoTransactionType.INCOMING, null), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey(), Actors.DAP_ASSET_REDEEM_POINT, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
                     userRedemptionDao.cancelDelivering(record.getTransactionId());
                 }
             }
