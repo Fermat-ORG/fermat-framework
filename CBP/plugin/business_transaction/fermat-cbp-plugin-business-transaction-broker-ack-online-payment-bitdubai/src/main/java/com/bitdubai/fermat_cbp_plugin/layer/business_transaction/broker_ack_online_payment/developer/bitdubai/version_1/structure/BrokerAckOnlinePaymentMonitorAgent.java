@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onl
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -297,7 +298,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.ONLINE_PAYMENT_ACK,
-                            Plugins.BROKER_ACK_ONLINE_PAYMENT
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
                     brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -318,7 +319,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT,
-                            Plugins.BROKER_ACK_ONLINE_PAYMENT
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
                     brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,

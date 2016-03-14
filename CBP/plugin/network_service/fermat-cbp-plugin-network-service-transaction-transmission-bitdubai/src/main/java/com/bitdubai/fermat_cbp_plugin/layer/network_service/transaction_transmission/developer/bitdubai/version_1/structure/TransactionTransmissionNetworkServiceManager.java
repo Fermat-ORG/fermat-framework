@@ -92,6 +92,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+            //TODO: me parece que no se esta enviando el msj con el contract hash, revisar esto porque tengo entendido que los msjs ahora se envian directamente.
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",
@@ -111,11 +112,15 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String transactionHash,
             String transactionId,
             ContractTransactionStatus contractStatus,
-            Plugins remoteBusinessTransaction) throws CantSendContractNewStatusNotificationException {
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantSendContractNewStatusNotificationException {
 
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
+        //TODO: hacerse el case con los PlatformComponentType correspondientes, dependiendo del estado.
+
+
+
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 contractStatus,
@@ -141,14 +146,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     gson.toJson(businessTransactionMetadata),
                         pluginRoot.getProfileSenderToRequestConnection(
                                 businessTransactionMetadata.getSenderId(),
-                                NetworkServiceType.UNDEFINED,
-                                businessTransactionMetadata.getSenderType()
+                                NetworkServiceType.TRANSACTION_TRANSMISSION,
+                                senderComponent
                     ),
 
                         pluginRoot.getProfileDestinationToRequestConnection(
                                 businessTransactionMetadata.getReceiverId(),
-                                NetworkServiceType.UNDEFINED,
-                                businessTransactionMetadata.getReceiverType()
+                                NetworkServiceType.TRANSACTION_TRANSMISSION,
+                                receiverComponent
                     )
             );
 
