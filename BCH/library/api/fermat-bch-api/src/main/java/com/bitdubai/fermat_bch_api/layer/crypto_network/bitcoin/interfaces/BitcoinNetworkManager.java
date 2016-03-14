@@ -128,6 +128,15 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException;
 
+
+    /**
+     * Gets the list of stored CryptoTransactions for the specified network type
+     * @param blockchainNetworkType the network type to get the transactions from.
+     * @return the list of Crypto Transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException;
+
     /**
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
@@ -157,4 +166,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantGetBlockchainDownloadProgress
      */
     BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
+
+
 }

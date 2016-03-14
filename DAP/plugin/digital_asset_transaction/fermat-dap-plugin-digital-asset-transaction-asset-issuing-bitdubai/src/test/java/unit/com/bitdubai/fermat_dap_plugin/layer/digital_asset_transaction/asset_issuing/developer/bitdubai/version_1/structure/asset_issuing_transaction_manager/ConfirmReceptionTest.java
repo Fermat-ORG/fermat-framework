@@ -6,13 +6,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Before;
@@ -61,7 +61,7 @@ public class ConfirmReceptionTest {
     OutgoingIntraActorManager outgoingIntraActorManager;
 
     @Mock
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
 
     @Mock
     Database database;
@@ -83,7 +83,7 @@ public class ConfirmReceptionTest {
                 cryptoAddressBookManager,
                 outgoingIntraActorManager);
         assetIssuingTransactionManager.setPluginId(pluginId);
-        assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
+        assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingDAO);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ConfirmReceptionTest {
 
     @Test
     public void test_Throws_CantExecuteQueryException() throws Exception {
-        doThrow(new CantExecuteQueryException("error")).when(assetIssuingTransactionDao).confirmReception(genesisTransaction);
+        doThrow(new CantExecuteQueryException("error")).when(assetIssuingDAO).confirmReception(genesisTransaction);
 
         catchException(assetIssuingTransactionManager).confirmReception(genesisTransaction);
         Exception thrown = caughtException();
@@ -105,7 +105,7 @@ public class ConfirmReceptionTest {
 
     @Test
     public void test_Throws_UnexpectedResultReturnedFromDatabaseException() throws Exception {
-        doThrow(new UnexpectedResultReturnedFromDatabaseException("error", "")).when(assetIssuingTransactionDao).confirmReception(genesisTransaction);
+        doThrow(new UnexpectedResultReturnedFromDatabaseException("error", "")).when(assetIssuingDAO).confirmReception(genesisTransaction);
 
         catchException(assetIssuingTransactionManager).confirmReception(genesisTransaction);
         Exception thrown = caughtException();

@@ -353,10 +353,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
 
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
-
+//ahi, listo
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
             if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
-
                 /*
                  * Send the encode packet to the server
                  */

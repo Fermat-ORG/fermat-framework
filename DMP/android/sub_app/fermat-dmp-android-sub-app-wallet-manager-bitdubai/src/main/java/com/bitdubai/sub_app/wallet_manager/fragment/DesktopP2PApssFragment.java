@@ -351,7 +351,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Mercado libre","mercado libre_public_key",new Version(),R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            installedApp = new InstalledApp("Mercado libre","mercado_libre_public_key",new Version(),R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.icon_mercado_libre);
@@ -422,30 +422,6 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
         }
     }
 
-    private void select(AppsStatus appsStatus){
-        List<Item> list = new ArrayList<>();
-        for (Item installedWallet : lstItemsWithIcon) {
-            if(appsStatus.isAppStatusAvailable(((InstalledWallet) installedWallet.getInterfaceObject()).getAppStatus())){
-                list.add(installedWallet);
-            }
-        }
-        Item[] arrItemsWithoutIcon = new Item[12];
-        for(int i=0;i<12;i++){
-            Item emptyItem = new Item(new EmptyItem(0,i));
-            emptyItem.setIconResource(-1);
-            arrItemsWithoutIcon[i] = emptyItem;
-        }
-
-        for(Item itemIcon: list){
-            arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
-        }
-
-        if(adapter!=null) {
-            adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
-            adapter.notifyDataSetChanged();
-        }
-    }
-
 
     @Override
     public void onDestroy() {
@@ -458,18 +434,6 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
     @Override
     public void onUpdateViewOnUIThread(String code) {
         AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus){
-            case RELEASE:
-                break;
-            case BETA:
-                break;
-            case ALPHA:
-                break;
-            case DEV:
-                break;
-        }
-
-        select(appsStatus);
         super.onUpdateViewOnUIThread(code);
     }
 

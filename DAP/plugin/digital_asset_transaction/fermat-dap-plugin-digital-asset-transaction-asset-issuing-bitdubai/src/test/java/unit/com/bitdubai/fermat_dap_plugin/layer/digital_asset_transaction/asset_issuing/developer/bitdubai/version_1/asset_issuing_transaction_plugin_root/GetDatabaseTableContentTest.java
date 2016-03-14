@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,14 +62,14 @@ public class GetDatabaseTableContentTest {
 
     @Test
     public void test_OK() throws Exception {
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
         List<DeveloperDatabaseTableRecord> list = assetIssuingPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
 
         assertThat(list).isNotNull();
     }
 
     public void test_Throws_CantOpenDatabaseException() throws Exception {
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
 
         List<DeveloperDatabaseTableRecord> list = assetIssuingPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
         assertThat(list).isNotNull();
@@ -77,7 +77,7 @@ public class GetDatabaseTableContentTest {
     }
 
     public void test_Throws_DatabaseNotFoundException() throws Exception {
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
 
         List<DeveloperDatabaseTableRecord> list = assetIssuingPluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
         assertThat(list).isNotNull();

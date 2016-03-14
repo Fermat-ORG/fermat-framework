@@ -159,7 +159,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                         asset = manager.newAssetFactoryEmpty();
                         List<InstalledWallet> installedWallets = manager.getInstallWallets();
                         if (installedWallets != null && installedWallets.size() > 0) {
-                            asset.setWalletPublicKey(installedWallets.get(0).getWalletPublicKey());
+                            asset.setWalletPublicKey(Utils.getBitcoinWalletPublicKey(manager));
                         }
                         return true;
                     }
