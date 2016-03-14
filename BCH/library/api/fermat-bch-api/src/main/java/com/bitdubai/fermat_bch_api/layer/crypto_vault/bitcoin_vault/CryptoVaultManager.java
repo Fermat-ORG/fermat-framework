@@ -37,6 +37,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @param FermatTrId internal transaction Id - used to validate that it was not send previously.
      * @param addressTo the valid address we are sending to
      * @param satoshis the amount in long of satoshis
+     * @param blockchainNetworkType the network type where we are going to create this transaction
      * @return the transaction Hash of the new created transaction in the vault.
      * @throws InsufficientCryptoFundsException
      * @throws InvalidSendToAddressException
@@ -51,6 +52,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @param fermatTrId
      * @param addressTo
      * @param satoshis
+     * @param blockchainNetworkType the network type where we are going to create this transaction
      * @return
      * @throws InsufficientCryptoFundsException
      * @throws InvalidSendToAddressException
@@ -90,7 +92,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @return the draft transaction with the added values.
      * @throws CantCreateDraftTransactionException
      */
-    DraftTransaction addInputsToDraftTransaction (DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException;
+    DraftTransaction addInputsToDraftTransaction (DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException;
 
     /**
      * Returns a stored draft transaction
