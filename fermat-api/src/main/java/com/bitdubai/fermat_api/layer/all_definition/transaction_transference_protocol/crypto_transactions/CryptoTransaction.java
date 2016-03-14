@@ -347,7 +347,8 @@ public class CryptoTransaction{
                 inputValue = inputValue + output.getValue().getValue();
             }
 
-            fee = outputValue - inputValue;
+            long result = outputValue - inputValue;
+            fee = (result > 0 ? result : 0);
         }
         return fee;
     }
