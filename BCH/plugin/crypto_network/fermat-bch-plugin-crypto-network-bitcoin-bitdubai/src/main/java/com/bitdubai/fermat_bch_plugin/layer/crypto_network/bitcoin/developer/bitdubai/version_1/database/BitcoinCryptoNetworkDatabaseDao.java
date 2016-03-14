@@ -1420,10 +1420,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param blockchainNetworkType
      * @return
      */
-    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantExecuteDatabaseOperationException {
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress(), DatabaseFilterType.EQUAL);
+
+        if (cryptoTransactionType != null)
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, cryptoTransactionType.getCode(), DatabaseFilterType.EQUAL);
 
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
 

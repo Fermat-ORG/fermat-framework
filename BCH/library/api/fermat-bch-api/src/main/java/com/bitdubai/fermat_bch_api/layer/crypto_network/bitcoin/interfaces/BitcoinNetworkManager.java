@@ -137,10 +137,11 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Gets the list of stored CryptoTransactions for the specified network type
      * @param blockchainNetworkType the network type to get the transactions from.
      * @param addressTo the AddressTo of the transaction we are looking for.
+     * @param cryptoTransactionType if it is an incoming or outgoing transaction
      * @return the list of Crypto Transaction that match the criteria
      * @throws CantGetCryptoTransactionException
      */
-    List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantGetCryptoTransactionException;
+    List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException;
 
     /**
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path

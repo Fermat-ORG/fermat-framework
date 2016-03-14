@@ -11,7 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
+
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -272,7 +276,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private void checkConfirmedTransactions() {
             try {
                 for (OutgoingDraftTransactionWrapper transaction : dao.getAllInState(TransactionState.SUCCESSFUL_SIG)) {
-                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType(), transaction.getAddressTo());
+                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType(), transaction.getAddressTo(), CryptoTransactionType.OUTGOING);
                     dance:
                     for (CryptoTransaction cryptoTx : cryptoTransactions) {
                         switch (cryptoTx.getCryptoStatus()) {
