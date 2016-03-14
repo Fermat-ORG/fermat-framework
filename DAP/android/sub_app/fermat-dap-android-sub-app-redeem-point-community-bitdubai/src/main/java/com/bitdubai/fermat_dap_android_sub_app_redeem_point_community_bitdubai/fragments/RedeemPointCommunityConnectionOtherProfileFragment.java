@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.p
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
@@ -188,92 +189,97 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         int i = v.getId();
         if (i == R.id.btn_conect) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
-            ConnectDialog connectDialog;
 //            try {
-            connectDialog = new ConnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            connectDialog.setTitle("Connection Request");
-            connectDialog.setDescription("Do you want to send ");
-            connectDialog.setUsername(actorRedeem.getName());
-            connectDialog.setSecondDescription("a connection request");
-            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateButton();
-                }
-            });
-            connectDialog.show();
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
+
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(actorRedeem.getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
 //            } catch (CantGetIdentityRedeemPointException e) {
 //                e.printStackTrace();
 //            }
         }
+
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
-            final DisconnectDialog disconnectDialog;
 //            try {
-            disconnectDialog = new DisconnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            disconnectDialog.setTitle("Disconnect");
-            disconnectDialog.setDescription("Want to disconnect from");
-            disconnectDialog.setUsername(actorRedeem.getName());
-            disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //connectRequest();
-                    updateButton();
-                }
-            });
-            disconnectDialog.show();
-//            } catch (CantGetIdentityRedeemPointException e) {
-//                e.printStackTrace();
-//            }
-        }
-        if (i == R.id.btn_connection_accept) {
-//            try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateButton();
-                }
-            });
-            notificationAcceptDialog.show();
+                final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
 
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Want to disconnect from");
+                disconnectDialog.setUsername(actorRedeem.getName());
+                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        //connectRequest();
+                        updateButton();
+                    }
+                });
+                disconnectDialog.show();
 //            } catch (CantGetIdentityRedeemPointException e) {
 //                e.printStackTrace();
 //            }
         }
-        if (i == R.id.btn_connection_cancel){
-            CancelDialog cancelDialog;
-            cancelDialog = new CancelDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-            cancelDialog.setTitle("Cancel Request");
-            cancelDialog.setDescription("Want to cancel the request to");
-            cancelDialog.setUsername(actorRedeem.getName());
-            cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateButton();
-                }
-            });
-            cancelDialog.show();
+
+        if (i == R.id.btn_connection_accept) {
+            try {
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        manager.getActiveAssetRedeemPointIdentity());
+
+                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                notificationAcceptDialog.show();
+            } catch (CantGetIdentityRedeemPointException e) {
+                e.printStackTrace();
+            }
         }
+
+        if (i == R.id.btn_connection_cancel) {
+//            try {
+                CancelDialog cancelDialog = new CancelDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
+
+                cancelDialog.setTitle("Cancel Request");
+                cancelDialog.setDescription("Want to cancel the request to");
+                cancelDialog.setUsername(actorRedeem.getName());
+                cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                cancelDialog.show();
+//            } catch (CantGetIdentityRedeemPointException e) {
+//                e.printStackTrace();
+//            }
+        }
+
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
             Toast.makeText(getActivity(), R.string.dap_other_profile_request_send_toast, Toast.LENGTH_SHORT).show();
@@ -288,12 +294,11 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         ActorAssetRedeemPoint actorAssetRedeemPoint = null;
         try {
             connectionState = manager.getActorRedeemRegisteredDAPConnectionState(this.actorRedeem.getActorPublicKey());
-            actorAssetRedeemPoint =  manager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
+            actorAssetRedeemPoint = manager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
 
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
-        }
-        catch (CantAssetRedeemPointActorNotFoundException e) {
+        } catch (CantAssetRedeemPointActorNotFoundException e) {
             e.printStackTrace();
         }
 

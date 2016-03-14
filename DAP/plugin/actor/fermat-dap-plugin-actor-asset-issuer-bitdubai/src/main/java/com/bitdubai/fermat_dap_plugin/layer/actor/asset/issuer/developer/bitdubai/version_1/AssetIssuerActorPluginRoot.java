@@ -484,9 +484,9 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void cancelActorAssetIssuer(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetIssuer(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {
-            this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
+            this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetUserToCancelPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateActorAssetIssuerException e) {
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -761,7 +761,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                                 notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
-                        this.cancelActorAssetIssuer(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        this.cancelActorAssetIssuer(intraUserSendingPublicKey);
                         break;
                     case ACCEPTED:
                         this.acceptActorAssetIssuer(intraUserToConnectPublicKey, intraUserSendingPublicKey);

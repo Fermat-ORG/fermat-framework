@@ -195,4 +195,9 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     public void setBanner(int banner) {
         this.banner = banner;
     }
+
+    @Override
+    public int getBannerRes() {
+        return banner;
+    }
 }

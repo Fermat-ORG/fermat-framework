@@ -521,4 +521,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
+    @Override
+    public void setTabCustomImageView(int position,View view) {
+
+    }
 }

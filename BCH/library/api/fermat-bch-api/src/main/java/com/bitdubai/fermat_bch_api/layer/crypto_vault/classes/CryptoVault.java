@@ -117,8 +117,12 @@ public abstract class CryptoVault {
              */
             ECKey privateKey = getPrivateKey(scriptToSign.getToAddress(NETWORK_PARAMETERS));
 
+            /**
+             * If I didn't find a matching private key, then I will continue with another script.
+             */
             if (privateKey == null)
-                throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Unable to find a matching private key for the calculated scripts in the transaction.", "Key hierarchy error");
+                continue;
+
 
             /**
              * I create the signature

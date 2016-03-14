@@ -308,9 +308,9 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         assetRedeemNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetsToRedeemEditText.setText(selectedRPCount + "");
-        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
+        assetRedeemRemainingText.setText(digitalAsset.getUsableAssetsQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
-        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+        if (digitalAsset.getUsableAssetsQuantity() == 0) {
             selectRPButton.setOnClickListener(null);
         }
     }
@@ -338,7 +338,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         assetRedeemNameText.setText(digitalAsset.getName());
 //        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
         assetsToRedeemEditText.setText(selectedRPCount+"");
-        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        long quantity = digitalAsset.getUsableAssetsQuantity();
         assetRedeemRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 

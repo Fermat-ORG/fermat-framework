@@ -60,8 +60,8 @@ public class ChatMiddlewareContactFactory {
      * To make the code more readable, please keep the compatible platforms. sorted alphabetically.
      */
     Platforms[] compatiblePlatforms={
-            Platforms.CRYPTO_CURRENCY_PLATFORM,
-            Platforms.DIGITAL_ASSET_PLATFORM
+            Platforms.CRYPTO_CURRENCY_PLATFORM
+            //Platforms.DIGITAL_ASSET_PLATFORM
             //Platforms.CRYPTO_BROKER_PLATFORM
     };
 
