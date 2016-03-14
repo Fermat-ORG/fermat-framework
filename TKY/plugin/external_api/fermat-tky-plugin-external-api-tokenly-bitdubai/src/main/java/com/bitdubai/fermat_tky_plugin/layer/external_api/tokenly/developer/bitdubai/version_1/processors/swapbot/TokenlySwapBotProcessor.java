@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors;
+package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot;
 
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
@@ -10,6 +10,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Tokenly
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyBotJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlySwapJSonAttNames;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.*;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.swapbot.SwapBotRecord;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -106,11 +107,11 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
         //Bot swaps
         Swap[] swaps = TokenlySwapProcessor.getSwapArrayFromJsonObject(jSonObject);
         //Bot balances
-        TokenlyBalance[] tokenlyBalances = TokenlyBalanceProcessor.
+        TokenlyBalance[] tokenlyBalances = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
                 getTokenlyBalancesFromJsonObject(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BALANCES));
         //Bot all balances by type
-        TokenlyBalance[][] allTokenlyBalancesByType = TokenlyBalanceProcessor.
+        TokenlyBalance[][] allTokenlyBalancesByType = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
                 getTokenlyBalancesByType(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.ALL_BALANCES_BY_TYPE));
         //Bot return fee.
