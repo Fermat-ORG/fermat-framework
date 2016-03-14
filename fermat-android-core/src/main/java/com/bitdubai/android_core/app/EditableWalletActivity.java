@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -64,9 +63,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public static final String INSTALLED_WALLET = "installedWallet";
 
     public static final String WALLET_PUBLIC_KEY = "walletPublicKey";
-    public static final String WALLET_TYPE = "walletType";
-    public static final String WALLET_CATEGORY = "walletCategory";
-
 
     public static final String WALLET_NAVIGATION_STRUCTURE = "walletNavigation";
 
@@ -97,13 +93,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
         try {
-
-            /*
-            * Load wallet UI
-            */
-
             loadUI(createOrCallWalletSession());
-
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
@@ -122,7 +112,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
-            MenuInflater inflater = getMenuInflater();
+            //MenuInflater inflater = getMenuInflater();
 
             /**
              *  Our future code goes here...
