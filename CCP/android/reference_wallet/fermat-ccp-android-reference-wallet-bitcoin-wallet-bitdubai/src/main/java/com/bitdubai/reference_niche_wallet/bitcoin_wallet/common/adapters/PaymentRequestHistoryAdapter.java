@@ -109,7 +109,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_notes().setText(data.getReason());
         holder.getTxt_notes().setTypeface(tf);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
         holder.getTxt_time().setText(data.getDate());
         holder.getTxt_time().setTypeface(tf);
 
