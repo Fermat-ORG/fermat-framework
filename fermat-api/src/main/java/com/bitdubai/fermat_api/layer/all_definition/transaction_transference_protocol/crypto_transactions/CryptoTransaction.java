@@ -332,24 +332,10 @@ public class CryptoTransaction{
         /**
          * if fee is 0, Will try to recalculate
          */
-        if (fee ==0){
-            long outputValue = 0;
-            for (TransactionOutput output : transaction.getOutputs()){
-                outputValue = outputValue + output.getValue().getValue();
-            }
+        //todo improve.
+        if (fee ==0)
+            fee = 30000;
 
-            long inputValue = 0;
-            for (TransactionInput input : transaction.getInputs()) {
-                TransactionOutput output = input.getConnectedOutput();
-                if (output == null)
-                    continue;
-
-                inputValue = inputValue + output.getValue().getValue();
-            }
-
-            long result = outputValue - inputValue;
-            fee = (result > 0 ? result : 0);
-        }
         return fee;
     }
 

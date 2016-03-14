@@ -227,14 +227,15 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     case NEGOTIATION_CONFIRMED: {
                         System.out.println("Negotiation confirmed...");
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        CryptoAddress cryptoVaultAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
+                        CryptoAddress sellerCryptoAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
+                        dao.updateSellerCryptoAddress(record.getRecordId(), sellerCryptoAddress);
 
                         Actor actor = getExtraUser(record.getMetadata());
-                        cryptoAddressBookManager.registerCryptoAddress(cryptoVaultAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, actor.getActorPublicKey(), Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+                        cryptoAddressBookManager.registerCryptoAddress(sellerCryptoAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, actor.getActorPublicKey(), Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
                         dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
-                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue(), cryptoVaultAddress);
+                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), draftTransaction.getValue(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), sellerCryptoAddress, record.getBuyerCryptoAddress());
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
                         sendAssetMovement(record.getMetadata(), record.getBuyer());
@@ -250,7 +251,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                             dao.updateTransactionHash(record.getRecordId(), txHash);
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
                         } else {
-                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
+                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, record.getSellerTransaction().getValue(), AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), null, null);
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                             DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
@@ -317,7 +318,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         private void debitUserWallet(SellingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterDebitException {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
-            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash(), CryptoTransactionType.OUTGOING, record.getBuyer().getCryptoAddress());
+            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash(), CryptoTransactionType.OUTGOING, record.getBuyerCryptoAddress());
             AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getBuyer(), WalletUtilities.DEFAULT_MEMO_SELL);
             userWallet.getBalance().debit(transactionRecord, balance);
         }
