@@ -198,7 +198,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
                 String ip = ipPort[0];
                 String port = ipPort[1];
-                getCloudClient().changeIpAndPortProperties(ip,Integer.getInteger(port));
+                getCloudClient().changeIpAndPortProperties(ip,Integer.parseInt(port));
             }
 
             if (fragment != null) frgBackType = fragment.getBack();
