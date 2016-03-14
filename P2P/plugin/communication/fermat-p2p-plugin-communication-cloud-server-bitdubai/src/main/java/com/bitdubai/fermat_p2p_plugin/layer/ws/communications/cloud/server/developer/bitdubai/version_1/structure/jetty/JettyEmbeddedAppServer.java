@@ -190,7 +190,6 @@ public class JettyEmbeddedAppServer {
 
         this.server.dump(System.err);
 
-
     }
 
     /**
