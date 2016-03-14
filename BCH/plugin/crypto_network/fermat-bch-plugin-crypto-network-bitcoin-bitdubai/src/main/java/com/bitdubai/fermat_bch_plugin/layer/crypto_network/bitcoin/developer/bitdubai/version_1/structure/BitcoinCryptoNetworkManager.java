@@ -834,6 +834,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             }
         }
 
+        /**
+         * if it is still null then there is something wrong
+         */
+        if (cryptoTransaction == null){
+            CantGetCryptoTransactionException exception = new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "The passed Transaction hash " + txHash + " is not stored anywhere!", "wrong transaction hash");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+            throw exception;
+        }
+
         return cryptoTransaction;
     }
 
