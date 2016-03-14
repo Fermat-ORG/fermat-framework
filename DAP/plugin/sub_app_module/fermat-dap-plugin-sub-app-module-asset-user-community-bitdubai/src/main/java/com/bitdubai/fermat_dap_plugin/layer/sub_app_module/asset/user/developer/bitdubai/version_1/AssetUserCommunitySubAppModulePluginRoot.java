@@ -104,7 +104,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     BlockchainNetworkType blockchainNetworkType;
 
-    private String appPublicKey;
+    String appPublicKey;
 
     public AssetUserCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -452,6 +452,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException {
         try {
+            String actorLoggedPublicKey = null;
+
             blockchainNetworkType = getNetworkTypeActiveByActorOrGeneric();
 
             this.actorAssetUserManager.disconnectToActorAssetUser(user.getActorPublicKey(), blockchainNetworkType);
@@ -467,28 +469,12 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         }
     }
 
-//    @Override
-//    public void disconnectActorAssetUser(String actorUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-//        try {
-//
-////            this.actorAssetUserManager.disconnectActorAssetUser(actorUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
-//
-////            this.assetUserActorNetworkServiceManager.disconnectConnectionActorAsset(actorUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey);
-//
-//        } catch (CantDisconnectAssetUserActorException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, e, "", "");
-//        } catch (Exception e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw new CantDisconnectAssetUserActorException("CAN'T DISCONNECT ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
-//        }
-//    }
-
     @Override
-    public void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetUser(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {
+            String actorLoggedPublicKey = null;
 
-            this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
+            this.actorAssetUserManager.cancelActorAssetUser(actorAssetUserToCancelPublicKey);
 
 //            this.assetUserActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey);
 
@@ -503,14 +489,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<ActorAssetUser> getWaitingYourConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
-//        List<ActorAssetUser> intraUserList = new ArrayList<ActorAssetUser>();
-
         try {
-
-//            for (ActorAssetUser intraUserActor : actorsList) {
-//                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
-//            }
-
             return this.actorAssetUserManager.getWaitingYourConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -524,11 +503,6 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public List<ActorAssetUser> getWaitingTheirConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
         try {
-//            List<ActorAssetUser> intraUserList = new ArrayList<ActorAssetUser>();
-
-            //            for (ActorAssetUser intraUserActor : actorsList) {
-//                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
-//            }
             return this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

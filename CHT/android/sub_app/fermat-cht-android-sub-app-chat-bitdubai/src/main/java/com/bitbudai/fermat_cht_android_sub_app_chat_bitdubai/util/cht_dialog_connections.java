@@ -76,7 +76,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     Button btn_add, btn_cancel;
     public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,
                                   ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
-        super(activity , fermatSession, null);
+        super(activity, fermatSession, null);
         this.activity = activity;
         this.chatManager = chatManager;
         this.mAdapterCallback = mAdapterCallback;
@@ -111,11 +111,19 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
             int size = con.size();
             if (size > 0) {
                 for (int i = 0; i < size; i++) {
-                    contactname.add(con.get(i).getAlias());
-                    contactid.add(con.get(i).getContactId());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
-                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                    contacticon.add(bmd.getBitmap());
+                    if(!con.get(i).getAlias().isEmpty() && !con.get(i).getContactId().equals("") && !con.get(i).getProfileImage().equals("")) {
+                        try {
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            if (bmd.getBitmap().getWidth() != 0) {
+                                contactname.add(con.get(i).getAlias());
+                                contactid.add(con.get(i).getContactId());
+                                contacticon.add(bmd.getBitmap());
+                            }
+                        }catch(Exception e){
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                    }
                 }
                 text.setVisibility(View.GONE);
             } else {

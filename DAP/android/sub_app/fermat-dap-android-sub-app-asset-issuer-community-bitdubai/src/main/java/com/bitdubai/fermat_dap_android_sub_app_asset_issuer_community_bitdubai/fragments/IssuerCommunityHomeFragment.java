@@ -526,7 +526,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                                 for(ActorIssuer actor: actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    //manager.cancelActorAssetUser(actor.getActorPublicKey(), manager.getActiveAssetUserIdentity().getPublicKey());
+                                    manager.cancelActorAssetIssuer(actor.getRecord());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);

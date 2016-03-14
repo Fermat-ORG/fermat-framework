@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class GetDatabaseListTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(developerObjectFactory.getNewDeveloperDatabase(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE, this.pluginId.toString())).thenReturn(developerDatabase);
+        when(developerObjectFactory.getNewDeveloperDatabase(AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE, this.pluginId.toString())).thenReturn(developerDatabase);
     }
 
     @Test

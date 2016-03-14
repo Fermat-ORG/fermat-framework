@@ -1739,6 +1739,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         // TODO Add extras or a data URI to this intent as appropriate.
         setResult(android.app.Activity.RESULT_OK, resultIntent);
         //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, getFermatAppManager().getRecentsAppsStack().toArray());
         startActivityForResult(resultIntent, TASK_MANAGER_STACK);
     }
 
@@ -1759,6 +1760,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     data.setAction("org.fermat.APP_LAUNCHER");
                     sendBroadcast(data);
                     //finish();
+                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
+                    // if i want i could do something here
                 }
                 break;
             }

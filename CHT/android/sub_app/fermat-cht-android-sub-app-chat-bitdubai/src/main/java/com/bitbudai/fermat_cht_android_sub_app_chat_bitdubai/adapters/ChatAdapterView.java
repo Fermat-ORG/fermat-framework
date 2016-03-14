@@ -212,9 +212,13 @@ public class ChatAdapterView extends LinearLayout {
                         }
                     }
                     msg.setStatus(mess.getStatus().toString());
-                    long milliseconds = mess.getMessageDate().getTime() + (mess.getMessageDate().getNanos() / 1000000);
-                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)))))
-                    {
+                    long timemess = mess.getMessageDate().getTime();
+                    long nanos = (mess.getMessageDate().getNanos() / 1000000);
+                    long milliseconds = timemess + nanos;
+                    Date dated= new java.util.Date(milliseconds);
+                    //String datef= DateFormat.getDateTimeInstance().format(dated);
+                    //Date to =new Date(datef);
+                    if (Validate.isDateToday(dated)) {
                         String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
                         msg.setDate(S);
                     }else

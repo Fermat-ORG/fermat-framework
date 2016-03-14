@@ -584,6 +584,19 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
                 break;
+
+            case "loss_protected_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "loss_protected_wallet_icon",
+                        "Loss Protected Wallet",
+                        "loss_protected_wallet",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
+                break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
         }

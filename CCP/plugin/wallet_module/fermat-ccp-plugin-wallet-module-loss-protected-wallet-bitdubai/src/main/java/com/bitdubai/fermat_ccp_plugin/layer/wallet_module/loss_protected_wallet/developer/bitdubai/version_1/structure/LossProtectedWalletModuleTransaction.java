@@ -8,6 +8,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 
 
@@ -44,7 +45,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
 
-    public LossProtectedWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
+    public LossProtectedWalletModuleTransaction(final BitcoinLossProtectedWalletTransaction bitcoinWalletTransaction,
                                                final UUID                     contactId,
                                                final Actor                    involvedActor) {
 

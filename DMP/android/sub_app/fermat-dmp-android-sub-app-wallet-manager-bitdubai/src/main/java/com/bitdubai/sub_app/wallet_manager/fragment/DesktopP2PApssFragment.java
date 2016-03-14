@@ -351,7 +351,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Mercado libre","mercado libre_public_key",new Version(),R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+            installedApp = new InstalledApp("Mercado libre","mercado_libre_public_key",new Version(),R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.icon_mercado_libre);
