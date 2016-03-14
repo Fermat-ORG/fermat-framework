@@ -223,7 +223,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                         DraftTransaction draftTransaction = cryptoVaultManager.getDraftTransaction(transaction.getBlockchainNetworkType(), transaction.getTxHash());
 
                         System.out.print("-------------- send draft to cryptoVaultManager");
-                        draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo());
+                        draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo(), transaction.getBlockchainNetworkType());
 
                         // just send the metadata in this place. This MUST be corrected.
                         dao.updateTxHash(transaction.getRequestId(), draftTransaction.getTxHash());
