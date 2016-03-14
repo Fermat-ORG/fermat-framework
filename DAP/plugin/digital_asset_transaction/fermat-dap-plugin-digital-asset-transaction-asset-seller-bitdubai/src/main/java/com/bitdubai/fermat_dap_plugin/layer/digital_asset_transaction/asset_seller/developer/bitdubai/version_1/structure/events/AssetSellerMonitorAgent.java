@@ -233,7 +233,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         Actor actor = getExtraUser(record.getMetadata());
                         cryptoAddressBookManager.registerCryptoAddress(sellerCryptoAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, actor.getActorPublicKey(), Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
-                        DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
+                        DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress(), record.getMetadata().getNetworkType());
                         dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                         AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), draftTransaction.getValue(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), sellerCryptoAddress, record.getBuyerCryptoAddress());
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
