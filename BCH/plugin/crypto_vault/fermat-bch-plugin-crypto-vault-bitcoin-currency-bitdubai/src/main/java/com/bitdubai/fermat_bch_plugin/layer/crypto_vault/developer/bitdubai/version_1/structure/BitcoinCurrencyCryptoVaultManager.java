@@ -281,7 +281,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -297,7 +297,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the network for this address and validate that is active
          */
-        BlockchainNetworkType networkType = null;
+        BlockchainNetworkType networkType = blockchainNetworkType;
         try {
             networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
         } catch (CantValidateCryptoNetworkIsActiveException e) {

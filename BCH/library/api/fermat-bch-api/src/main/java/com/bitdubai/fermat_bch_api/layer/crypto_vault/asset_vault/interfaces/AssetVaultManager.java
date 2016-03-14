@@ -58,7 +58,7 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      * @throws CantSendAssetBitcoinsToUserException
      */
-    String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException;
+    String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException;
 
     /**
      * Gets the amount of unused keys that are available from the master account.

@@ -42,8 +42,8 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws InvalidSendToAddressException
      * @throws CouldNotSendMoneyException
      */
-    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
-
+    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
     /**
      * Generates a new Bitcoin Transaction with needed inputs and outputs.
      * Also signs and pass to the Crypto Network the transaction generated.
@@ -56,24 +56,8 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws InvalidSendToAddressException
      * @throws CryptoTransactionAlreadySentException
      */
-    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
-    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
-
-    /**
-     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
-     * and we must have enought funds to send this money. It allows including an Op_return output value.
-     * @param walletPublicKey
-     * @param FermatTrId
-     * @param addressTo
-     * @param satoshis
-     * @param op_Return
-     * @return
-     * @throws InsufficientCryptoFundsException
-     * @throws InvalidSendToAddressException
-     * @throws CouldNotSendMoneyException
-     * @throws CryptoTransactionAlreadySentException
-     */
-    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
 
     /**
      * Validates if the passes CryptoAddress is valid in the current network or not.
