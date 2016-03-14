@@ -19,13 +19,13 @@ public class TokenlyDownloadSongProcessor extends AbstractTokenlyProcessor {
 
     /**
      * This method returns a download song from tokenly API by a request URL.
-     * @param botId
+     * @param id
      * @return
      * @throws CantGetSongException
      */
-    public static DownloadSong getDownloadSongById(String botId) throws CantGetSongException {
-        //Request URL to get a bot by tokenly Id.
-        String requestedURL=swabotTokenlyURL+"bot/"+botId;
+    public static DownloadSong getDownloadSongById(String id) throws CantGetSongException {
+        //Request URL to get a download song by tokenly Id.
+        String requestedURL=swabotTokenlyURL+"song/download/"+id;
         try{
             JsonObject jSonObject = RemoteJSonProcessor.getJSonObject(requestedURL);
             return getDownloadSongFromJsonObject(jSonObject);
@@ -39,7 +39,7 @@ public class TokenlyDownloadSongProcessor extends AbstractTokenlyProcessor {
     }
 
     /**
-     * This method returns a DownloadSOng object from a JsonObject.
+     * This method returns a DownloadSong object from a JsonObject.
      * @param jSonObject
      * @return
      * @throws CantGetJSonObjectException

@@ -23,7 +23,7 @@ public class TokenlySongAttNames {
     /**
      * Represents the song performance.
      */
-    public static final String PERFORMANCE = "performance";
+    public static final String PERFORMERS = "performers";
 
     /**
      * Represents the song composers.
@@ -58,7 +58,7 @@ public class TokenlySongAttNames {
     /**
      * Represents the song usage rights.
      */
-    public static final String USAGE_RIGHT = "ownership";
+    public static final String USAGE_RIGHTS = "ownership";
 
     /**
      * Represents the song usage prohibitions.
