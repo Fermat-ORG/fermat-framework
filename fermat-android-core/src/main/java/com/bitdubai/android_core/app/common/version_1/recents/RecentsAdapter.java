@@ -52,7 +52,12 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //viewHolder.getRoot().addView(View.inflate(context, R.layout.widgetlayout, null));
+        try {
+            int res = viewHolder.model.getFermatApp().getBannerRes();
+            if(res!=0) viewHolder.getRoot().setBackgroundResource(res);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
