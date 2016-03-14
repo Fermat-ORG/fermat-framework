@@ -327,6 +327,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
                 switch (businessTransactionMetadata.getType()) {
                     case CONFIRM_MESSAGE:
+                        //TODO: mandar a confirmar mensajes de recepcion
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
                         break;
                     case CONTRACT_STATUS_UPDATE:
@@ -334,6 +335,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                         launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         break;
                     case TRANSACTION_HASH:
+                        //TODO: implementar como validar los hash de los contratos
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
                         break;
                     default: //TODO: definir que se va a hacer aqui
