@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music;
 
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
+
+import java.util.Arrays;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/03/16.
@@ -11,6 +14,7 @@ public class AlbumRecord implements Album {
     String name;
     String description;
     int songCount;
+    Song[] songs;
 
     /**
      * Constructor with parameters.
@@ -19,11 +23,17 @@ public class AlbumRecord implements Album {
      * @param description
      * @param songCount
      */
-    public AlbumRecord(String id, String name, String description, int songCount) {
+    public AlbumRecord(
+            String id,
+            String name,
+            String description,
+            int songCount,
+            Song[] songs) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.songCount = songCount;
+        this.songs = songs;
     }
 
     /**
@@ -62,6 +72,15 @@ public class AlbumRecord implements Album {
         return this.songCount;
     }
 
+    /**
+     * This method returns the album songs.
+     * @return
+     */
+    @Override
+    public Song[] getSongs() {
+        return this.songs;
+    }
+
     @Override
     public String toString() {
         return "AlbumRecord{" +
@@ -69,6 +88,7 @@ public class AlbumRecord implements Album {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", songCount=" + songCount +
+                ", songs=" + Arrays.toString(songs) +
                 '}';
     }
 }

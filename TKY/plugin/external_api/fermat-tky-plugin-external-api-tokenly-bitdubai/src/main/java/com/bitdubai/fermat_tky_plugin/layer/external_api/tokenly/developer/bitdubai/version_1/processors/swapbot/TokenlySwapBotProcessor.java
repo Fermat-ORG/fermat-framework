@@ -107,11 +107,11 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
         //Bot swaps
         Swap[] swaps = TokenlySwapProcessor.getSwapArrayFromJsonObject(jSonObject);
         //Bot balances
-        TokenlyBalance[] tokenlyBalances = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
+        TokenlyBalance[] tokenlyBalances = TokenlyBalanceProcessor.
                 getTokenlyBalancesFromJsonObject(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BALANCES));
         //Bot all balances by type
-        TokenlyBalance[][] allTokenlyBalancesByType = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
+        TokenlyBalance[][] allTokenlyBalancesByType = TokenlyBalanceProcessor.
                 getTokenlyBalancesByType(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.ALL_BALANCES_BY_TYPE));
         //Bot return fee.

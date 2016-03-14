@@ -29,4 +29,10 @@ public interface Album {
      */
     int getSongCount();
 
+    /**
+     * This method returns the album songs.
+     * @return
+     */
+    Song[] getSongs();
+
 }

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.swapbot.TokenlySongAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.AbstractTokenlyProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music.SongRecord;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.sql.Date;
@@ -40,7 +41,15 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
 
     }
 
-    private static Song getSongFromJsonObject(
+    public static JsonArray getSongsJsonArrayByAlbumId(String albumId)
+            throws CantGetJSonObjectException {
+        //Request URL to get a song by tokenly Id.
+        String requestedURL=swabotTokenlyURL+"catalog/songs/"+albumId;
+        JsonArray jSonArray = RemoteJSonProcessor.getJSonArray(requestedURL);
+        return jSonArray;
+    }
+
+    public static Song getSongFromJsonObject(
             JsonObject jsonObject) throws CantGetJSonObjectException {
         //Id
         String id = getStringFromJsonObject(jsonObject, TokenlySongAttNames.ID);
