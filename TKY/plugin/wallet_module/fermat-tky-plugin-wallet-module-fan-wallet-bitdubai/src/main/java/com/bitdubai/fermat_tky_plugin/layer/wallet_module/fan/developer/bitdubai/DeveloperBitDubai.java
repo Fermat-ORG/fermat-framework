@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.wallet_module.fan.developer.bitdubai;
+package com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_art_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.FanWalletModulePluginRoot;
+import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.FanWalletModulePluginRoot;
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 

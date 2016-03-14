@@ -59,7 +59,3 @@ project(':fermat-art-plugin-sub-app-module-fan-community-bitdubai').projectDir =
 
 include ':fermat-art-plugin-sub-app-module-fan-identity-bitdubai'
 project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-fan-identity-bitdubai')
-
-//Wallet Module
-include  ':fermat-art-plugin-wallet-module-fan-bitdubai'
-project(':fermat-art-plugin-wallet-module-fan-bitdubai').projectDir = new File('ART/plugin/wallet_module/fermat-art-plugin-wallet-module-fan-bitdubai')
