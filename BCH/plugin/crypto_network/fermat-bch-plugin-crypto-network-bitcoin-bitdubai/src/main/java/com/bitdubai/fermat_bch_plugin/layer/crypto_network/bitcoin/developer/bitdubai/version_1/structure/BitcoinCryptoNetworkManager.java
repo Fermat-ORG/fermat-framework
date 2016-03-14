@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -460,7 +461,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetCryptoTransactionException {
         try {
-            return getDao().getIncomingCryptoTransaction(txHash);
+            return getDao().getCryptoTransactions(txHash,null,null);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
@@ -790,13 +791,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return the last recorded CryptoTransaction.
      * @throws CantGetCryptoTransactionException
      */
-    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+    public CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantGetCryptoTransactionException {
         if (StringUtils.isBlank(txHash))
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null ,"Invalid parameter. TxHash: " + txHash, "GetCryptoTransaction on CryptoNetwork");
 
         CryptoTransaction cryptoTransaction = null;
         try {
-            cryptoTransaction = getDao().getCryptoTransaction(txHash);
+            cryptoTransaction = getDao().getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
@@ -816,6 +817,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                     // If I find it on a running agent, then I will form the CryptoTransaction and return it.
                     if (transaction != null){
                         cryptoTransaction = CryptoTransaction.getCryptoTransaction(entry.getKey(), transaction);
+                        cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                         return cryptoTransaction;
                     }
                 } catch (CantLoadTransactionFromFileException e) {
@@ -1037,9 +1039,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return the list of Crypto Transaction
      * @throws CantGetCryptoTransactionException
      */
-    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantGetCryptoTransactionException {
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
         try{
-            return this.getDao().getCryptoTransactions(blockchainNetworkType, addressTo);
+            return this.getDao().getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
         } catch (Exception e){
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the list of stored cryptoTransactions", "Database issue");
         }

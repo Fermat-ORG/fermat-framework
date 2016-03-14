@@ -729,9 +729,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      * @throws CantExecuteDatabaseOperationException
      */
-    public List<CryptoTransaction> getIncomingCryptoTransaction(String txHash)  throws CantExecuteDatabaseOperationException{
+    public List<CryptoTransaction> getCryptoTransactions(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress)  throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+
+        if (cryptoTransactionType != null)
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, cryptoTransactionType.getCode(), DatabaseFilterType.EQUAL);
+
+        if (toAddress != null)
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, toAddress.getAddress(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -1265,11 +1271,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param txHash
      * @return
      */
-    public CryptoTransaction getCryptoTransaction(String txHash) throws CantExecuteDatabaseOperationException{
+    public CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantExecuteDatabaseOperationException{
         /**
          * I get the list of stored cryptoTransactions with all their crypto Status
          */
-        List<CryptoTransaction> cryptoTransactions = this.getIncomingCryptoTransaction(txHash);
+        List<CryptoTransaction> cryptoTransactions = this.getCryptoTransactions(txHash, cryptoTransactionType, toAddress);
 
         /**
          * I get the last available crypto Status
@@ -1288,18 +1294,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * I return the CryptoTranasction with the last cryptoStatus that are outgoing first.
          */
         for (CryptoTransaction cryptoTransaction: cryptoTransactions){
-            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus && cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.OUTGOING)
+            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus)
                 return cryptoTransaction;
         }
-
-        /**
-         * and then the incoming
-         */
-        for (CryptoTransaction cryptoTransaction: cryptoTransactions){
-            if (cryptoTransaction.getCryptoStatus() == lastCryptoStatus && cryptoTransaction.getCryptoTransactionType() == CryptoTransactionType.INCOMING)
-                return cryptoTransaction;
-        }
-
 
         //this might happen if the transaction has not been broadcasted yet.
         return null;
@@ -1423,10 +1420,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param blockchainNetworkType
      * @return
      */
-    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo) throws CantExecuteDatabaseOperationException {
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress(), DatabaseFilterType.EQUAL);
+
+        if (cryptoTransactionType != null)
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, cryptoTransactionType.getCode(), DatabaseFilterType.EQUAL);
 
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
 
