@@ -154,7 +154,6 @@ public class JettyEmbeddedAppServer {
         org.springframework.core.io.Resource resource = resolver.getResource("classpath*:webapp");
         LOG.info("·######## resource = "+resource.getURL());
 
-
         /*
          * Initialize web layer
          */
@@ -167,7 +166,6 @@ public class JettyEmbeddedAppServer {
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
         webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         server.setHandler(webAppContext);
-
 
         /*
          * Initialize restful service layer
