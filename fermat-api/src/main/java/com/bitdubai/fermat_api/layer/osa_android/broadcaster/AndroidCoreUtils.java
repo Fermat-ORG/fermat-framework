@@ -9,4 +9,6 @@ public interface AndroidCoreUtils {
     void publish(BroadcasterType broadcasterType, String code);
 
     void publish(BroadcasterType broadcasterType, String appCode, String code);
+
+    void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
 }
