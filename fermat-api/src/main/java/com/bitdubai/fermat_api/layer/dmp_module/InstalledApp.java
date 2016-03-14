@@ -7,12 +7,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLang
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mati on 2016.03.09..
  */
-public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp {
+public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp, Serializable{
 
     private List<InstalledSkin> skinsId;
     private List<InstalledLanguage> languajesId;
@@ -23,6 +24,7 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     private int position;
     private int notifications;
     private AppsStatus appsStatus;
+    private int bannerRes;
 
     public InstalledApp(String name, String publicKey, Version version, int iconResource, int position, int notifications,AppsStatus appsStatus) {
         this.name = name;
@@ -57,6 +59,11 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     @Override
     public int getIconResource() {
         return iconResource;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
     }
 
     @Override
@@ -112,5 +119,9 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     @Override
     public byte[] getAppIcon() {
         return new byte[0];
+    }
+
+    public int getBannerRes() {
+        return bannerRes;
     }
 }

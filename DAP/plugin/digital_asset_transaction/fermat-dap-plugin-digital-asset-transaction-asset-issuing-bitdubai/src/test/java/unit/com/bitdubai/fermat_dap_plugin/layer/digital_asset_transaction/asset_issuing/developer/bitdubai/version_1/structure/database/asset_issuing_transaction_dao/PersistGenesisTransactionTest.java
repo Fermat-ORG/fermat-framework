@@ -4,12 +4,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PersistGenesisTransactionTest {
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
     UUID pluginId;
 
     @Mock
@@ -55,8 +53,8 @@ public class PersistGenesisTransactionTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
-        assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
+        assetIssuingDAO = new AssetIssuingDAO(pluginDatabaseSystem, pluginId);
 
         records = new LinkedList<>();
         records.add(databaseTableRecord);
@@ -65,19 +63,19 @@ public class PersistGenesisTransactionTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
+        when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_TABLE)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+        assetIssuingDAO.persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
     }
 
     @Test
     public void test_Throws_CantPersistsGenesisTransactionException() throws Exception {
         doThrow(new CantUpdateRecordException("error")).when(databaseTable).updateRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+        catchException(assetIssuingDAO).persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

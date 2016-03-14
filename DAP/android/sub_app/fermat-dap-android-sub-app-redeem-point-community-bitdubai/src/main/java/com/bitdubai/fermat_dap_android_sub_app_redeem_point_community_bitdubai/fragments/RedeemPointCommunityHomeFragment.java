@@ -396,7 +396,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 0, "Deselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(4, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menu.add(5, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
@@ -425,6 +425,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 }
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
@@ -437,6 +438,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
             menuItemSelect.setVisible(true);
             menuItemUnselect.setVisible(false);
             restartButtons();
@@ -638,7 +640,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                                 for(Actor actor: actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    //manager.cancelActorAssetUser(actor.getActorPublicKey(), manager.getActiveAssetUserIdentity().getPublicKey());
+                                    manager.cancelActorAssetRedeem(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -779,6 +781,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                         }
                     } else
                         showEmpty(true, emptyView);
+                    restartButtons();
                 }
 
                 @Override
