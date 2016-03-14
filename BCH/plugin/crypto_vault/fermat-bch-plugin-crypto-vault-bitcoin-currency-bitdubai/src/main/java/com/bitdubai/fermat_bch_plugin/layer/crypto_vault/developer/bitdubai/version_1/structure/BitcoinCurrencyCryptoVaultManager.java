@@ -40,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -320,9 +321,10 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
+        Context walletContext = new Context(networkParameters);
 
         try {
-             wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+             wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         }
@@ -546,8 +548,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
 
+        //will create a new context to use
+        Context walletContext = new Context(networkParameters);
+
         try {
-            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+            wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         }
