@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -803,6 +805,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
 
+
         /**
          * This might happen if the transaction we are searching for is not yet broadcasted
          */
@@ -820,10 +823,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                         cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                         return cryptoTransaction;
                     }
-                } catch (CantLoadTransactionFromFileException e) {
+                } catch (CantLoadTransactionFromFileException | CantCreateFileException e) {
                     CantGetCryptoTransactionException exception = new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the CryptoTransaction from disk", "IO Error");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     throw exception;
+                } catch (FileNotFoundException e) {
+                    // If I couldn't find it, then it just may not be at that network
+                    e.printStackTrace();
                 }
             }
         }
