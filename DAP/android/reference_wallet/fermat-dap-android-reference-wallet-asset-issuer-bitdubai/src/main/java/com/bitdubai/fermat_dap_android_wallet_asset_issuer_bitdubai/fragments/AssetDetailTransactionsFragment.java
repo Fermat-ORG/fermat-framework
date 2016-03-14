@@ -435,9 +435,9 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
             menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_APPROPRIATE, 1, getResources().getString(R.string.dap_issuer_wallet_action_appropriate))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-            menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_SHOW_STATS, 2, getResources().getString(R.string.dap_issuer_wallet_action_show_statistics))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_SHOW_STATS, 2, getResources().getString(R.string.dap_issuer_wallet_action_show_statistics))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 3, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
