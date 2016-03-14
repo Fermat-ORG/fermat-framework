@@ -163,7 +163,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     database
             );
 
-            transactionTransmissionConnectionsDAO = new TransactionTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
+            transactionTransmissionConnectionsDAO = new TransactionTransmissionConnectionsDAO(pluginDatabaseSystem, pluginId);
 
             /**
              * Initialize manager
@@ -174,7 +174,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     transactionTransmissionContractHashDao
             );
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             String context = contextBuffer.toString();
@@ -229,7 +229,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantInitializeDatabaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
 
@@ -237,6 +237,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#pause()
      */
     @Override
@@ -247,6 +248,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#resume()
      */
     @Override
@@ -257,6 +259,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#stop()
      */
     @Override
@@ -293,18 +296,19 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     /**
      * Static method to get the logging level from any class under root.
+     *
      * @param className
      * @return
      */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return TransactionTransmissionNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -312,9 +316,36 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         }
     }
 
-
-
     @Override
+    public void onNewMessagesReceive(FermatMessage fermatMessage) {
+        Gson gson = new Gson();
+        System.out.println("Transaction Transmission gets a new message");
+        try {
+            BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
+            if (businessTransactionMetadata.getContractHash() != null) {
+                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+
+                switch (businessTransactionMetadata.getType()) {
+                    case CONFIRM_MESSAGE:
+                        System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
+                        break;
+                    case CONTRACT_STATUS_UPDATE:
+                        System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
+                        launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+                        break;
+                    case TRANSACTION_HASH:
+                        System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
+                        break;
+                    default: //TODO: definir que se va a hacer aqui
+                }
+            }
+        } catch (FermatException e) {
+            //TODO: implementar error manager.
+        }
+    }
+
+
+    /*@Override
     public void onNewMessagesReceive(FermatMessage fermatMessage) {
 
         Gson gson = new Gson();
@@ -439,7 +470,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }
-    }
+    }*/
 
 
     private void launchNotification(Plugins remoteBusinessTransaction){
@@ -450,8 +481,20 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
+    private void launchNotification(Plugins remoteBusinessTransaction,EventType eventType){
+        FermatEvent fermatEvent = eventManager.getNewEvent(eventType);
+        IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
+        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingNewContractStatusUpdate.setRemoteBusinessTransaction(remoteBusinessTransaction);
+        eventManager.raiseEvent(incomingNewContractStatusUpdate);
+    }
 
     @Override
+    public void onSentMessage(FermatMessage fermatMessage) {
+
+    }
+
+    /*@Override
     public void onSentMessage(FermatMessage fermatMessage) {
 
         Gson gson = new Gson();
