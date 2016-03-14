@@ -616,18 +616,19 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                msg       = bitcoinConverter.getSathoshisFromBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+                                msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
                                 msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                                msg       = bitcoinConverter.getSathoshisFromBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
+                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
-                           if(Long.valueOf(newAmount) >= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
-                            {
-                                BigDecimal operator = new BigDecimal(newAmount);
 
+                            BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                            BigDecimal operator = new BigDecimal(newAmount);
+                           if(operator.compareTo(minSatoshis) == 1 )
+                            {
                                 cryptoWallet.send(
                                         operator.longValueExact(),
                                         validAddress,

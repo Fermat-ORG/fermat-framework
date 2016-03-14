@@ -613,9 +613,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     }
 
 
-                   if(Long.valueOf(newAmount) >= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) {
-
-                           BigDecimal operator = new BigDecimal(newAmount);
+                    BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                    BigDecimal operator = new BigDecimal(newAmount);
+                    if(operator.compareTo(minSatoshis) == 1 )
+                    {
 
                            String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
