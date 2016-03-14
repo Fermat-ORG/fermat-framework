@@ -150,10 +150,6 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
 
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        org.springframework.core.io.Resource resource = resolver.getResource("classpath*:webapp");
-        LOG.info("·######## resource = "+resource.getURL());
-
         /*
          * Initialize web layer
          */
