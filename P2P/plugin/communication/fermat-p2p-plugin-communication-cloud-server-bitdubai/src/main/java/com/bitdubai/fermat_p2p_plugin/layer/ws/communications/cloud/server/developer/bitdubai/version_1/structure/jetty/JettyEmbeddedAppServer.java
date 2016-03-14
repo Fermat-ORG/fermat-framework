@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
@@ -21,14 +22,18 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.support.igd.PortMappingListener;
 import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -38,6 +43,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.UnsupportedAddressTypeException;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
@@ -147,25 +153,17 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
 
-        String resourceBase = "";
-        URL webAppUri = this.getClass().getClassLoader().getResource("webapp");
-        LOG.info("WebAppUri = "+webAppUri);
-
-        if (webAppUri != null) {
-            resourceBase = webAppUri.toURI().toASCIIString();
-        }
-
         /*
          * Initialize web layer
          */
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
-        webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
-        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        webAppContext.setResourceBase(resourceBase);
+        webAppContext.setDescriptor("./webapp/WEB_INF/web.xml");
+        webAppContext.setResourceBase("./webapp");
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
+        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         server.setHandler(webAppContext);
 
         /*
@@ -188,7 +186,6 @@ public class JettyEmbeddedAppServer {
         this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
         this.server.dump(System.err);
-
 
     }
 
@@ -220,7 +217,7 @@ public class JettyEmbeddedAppServer {
 
         upnpService.getControlPoint().search();*/
 
-        /* Use this is OK, load the ip dynamically */
+        /* Use this is OK, load the ip dynamically
 
         UpnpServiceImpl upnpService = null;
         PortMapping[] arr = null;
@@ -243,7 +240,7 @@ public class JettyEmbeddedAppServer {
             upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
             upnpService.getControlPoint().search();
 
-        }
+        }*/
 
         this.initialize();
         LOG.info("Starting the internal server");

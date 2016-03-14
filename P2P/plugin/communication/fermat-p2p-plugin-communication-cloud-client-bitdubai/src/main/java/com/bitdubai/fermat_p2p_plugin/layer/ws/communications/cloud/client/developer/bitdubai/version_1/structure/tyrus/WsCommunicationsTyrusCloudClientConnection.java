@@ -602,7 +602,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
             // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.getServerIp() + ":" + WsCommunicationsCloudClientPluginRoot.getServerPort() + "/fermat/components/registered", parameters, String.class);
+            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.getServerIp() + ":" + WsCommunicationsCloudClientPluginRoot.getServerPort() + "/fermat/api/components/registered", parameters, String.class);
 
             /*
              * if respond have the result list
