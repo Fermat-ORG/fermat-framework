@@ -45,11 +45,12 @@
                 android:layout_gravity="center_vertical"
                 />
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
+                android:id="@+id/recent_title"
                 android:text="Bitcoin Wallet"
                 android:textSize="28sp"
                 android:paddingLeft="28dp"

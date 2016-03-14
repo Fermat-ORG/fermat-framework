@@ -202,6 +202,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
+    protected TabLayout tabLayout;
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout mDrawerLayout;
 
@@ -215,6 +216,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Listeners
      */
     private RuntimeStructureManager runtimeStructureManager;
+
 
     /**
      * Service
@@ -646,7 +648,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Method used from app to paint tabs
      */
     protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
         pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
