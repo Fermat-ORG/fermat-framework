@@ -766,7 +766,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
      * @return the Transaction Hash of the new transaction
      * @throws CantCreateBitcoinTransactionException
      */
-    public synchronized String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
+    public synchronized String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException {
         /**
          * I get the network for this address.
          */
@@ -929,7 +929,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
      * @return a DraftTransaction class
      * @throws CantCreateDraftTransactionException
      */
-    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
         if (inputTransaction.isEmpty() || addressTo == null)
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "InputTransaction or AddressTo can't be null", null);
 
