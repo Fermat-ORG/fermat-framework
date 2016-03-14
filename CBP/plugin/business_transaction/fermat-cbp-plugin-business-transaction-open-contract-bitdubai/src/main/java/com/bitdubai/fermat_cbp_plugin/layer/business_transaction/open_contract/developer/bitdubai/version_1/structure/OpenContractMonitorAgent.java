@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -321,7 +322,7 @@ public class OpenContractMonitorAgent implements
                                         hashToSubmit,
                                         transactionId.toString(),
                                         ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -333,7 +334,7 @@ public class OpenContractMonitorAgent implements
                                         hashToSubmit,
                                         transactionId.toString(),
                                         ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
