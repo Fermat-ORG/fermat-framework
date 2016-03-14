@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.wallet_module.fan.developer.bitdubai.version_1;
+package com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;

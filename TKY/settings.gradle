@@ -16,3 +16,8 @@ project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-c
 //External API
 include ':fermat-tky-plugin-external-api-tokenly-bitdubai'
 project(':fermat-tky-plugin-external-api-tokenly-bitdubai').projectDir = new File('TKY/plugin/external_api/fermat-tky-plugin-external-api-tokenly-bitdubai')
+
+
+//Wallet Module
+include ':fermat-tky-plugin-wallet-module-fan-wallet-bitdubai'
+project(':fermat-tky-plugin-wallet-module-fan-wallet-bitdubai').projectDir = new File('TKY/plugin/wallet_module/fermat-tky-plugin-wallet-module-fan-wallet-bitdubai')
