@@ -206,7 +206,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException {
-        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo);
+        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo, blockchainNetworkType);
     }
 
     /**
