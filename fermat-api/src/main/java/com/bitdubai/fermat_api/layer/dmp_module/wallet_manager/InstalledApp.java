@@ -43,4 +43,5 @@ public interface InstalledApp extends Serializable, FermatInterfaceObject, Ferma
     String getName();
 
 
+    int getBanner();
 }
