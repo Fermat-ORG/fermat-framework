@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
@@ -547,4 +548,8 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
 
+    @Override
+    public void setTabCustomImageView(int position, View view) {
+
+    }
 }
