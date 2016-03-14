@@ -22,4 +22,8 @@ public interface FermatApp extends Serializable {
     byte[] getAppIcon();
 
     int getIconResource();
+
+    void setBanner(int res);
+
+    public int getBannerRes();
 }
