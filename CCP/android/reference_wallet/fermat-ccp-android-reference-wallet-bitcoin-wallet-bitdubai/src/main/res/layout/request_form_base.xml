@@ -240,7 +240,8 @@
                         android:textColor="#4f4f4f"
                         android:textColorHint="#4f4f4f"
                         android:textSize="16sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:maxLength="35" />
                 </LinearLayout>
 
                 <View
