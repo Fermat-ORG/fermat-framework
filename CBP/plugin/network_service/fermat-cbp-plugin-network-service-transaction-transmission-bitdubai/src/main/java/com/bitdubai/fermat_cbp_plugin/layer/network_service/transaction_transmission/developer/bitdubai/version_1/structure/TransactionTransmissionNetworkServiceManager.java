@@ -117,17 +117,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
-        //TODO: hacerse el case con los PlatformComponentType correspondientes, dependiendo del estado.
-
-
 
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 contractStatus,
                 cryptoBrokerActorSenderPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                senderComponent,
                 null,
                 null,
                 BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
