@@ -20,25 +20,28 @@ public class TokenlyAlbumProcessor extends AbstractTokenlyProcessor {
 
     private static String swabotTokenlyURL= TokenlyConfiguration.URL_TOKENLY_MUSIC_API;
 
-    /**
-     * This method returns a song from tokenly API by a request URL.
-     * @param id
-     * @return
-     * @throws CantGetAlbumException
-     */
-    public static Album getSongById(String id) throws CantGetAlbumException {
+    public static Album[] getAlbums() throws CantGetAlbumException{
         //Request URL to get a song by tokenly Id.
-        String requestedURL=swabotTokenlyURL+"catalog/songs/"+id;
+        String requestedURL=swabotTokenlyURL+"catalog/albums";
         try{
-            JsonObject jSonObject = RemoteJSonProcessor.getJSonObject(requestedURL);
-            return getAlbumFromJsonObject(jSonObject);
+            JsonArray jSonArrayAlbums = RemoteJSonProcessor.getJSonArray(requestedURL);
+            int jsonArraySize = jSonArrayAlbums.size();
+            Album[] albums = new Album[jsonArraySize];
+            Album album;
+            //loop counter
+            int counter=0;
+            for(JsonElement jsonElement : jSonArrayAlbums){
+                album = getAlbumFromJsonObject(jsonElement.getAsJsonObject());
+                albums[counter] = album;
+                counter++;
+            }
+            return albums;
         } catch (CantGetJSonObjectException e) {
             throw new CantGetAlbumException(
                     e,
                     "Getting album from given Id",
                     "Cannot get JSon from tokenly API using URL "+requestedURL);
         }
-
     }
 
     private static Album getAlbumFromJsonObject(JsonObject jsonObject)
