@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
@@ -63,6 +64,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final BlockchainNetworkType NETWORK_TYPE;
     final Context context;
     final NetworkParameters NETWORK_PARAMETERS;
+    BlockchainDownloadProgress blockchainDownloadProgress;
 
     /**
      * Platform variables
@@ -81,6 +83,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         this.walletFilename = walletFilename;
         this.context = context;
         this.NETWORK_PARAMETERS = context.getParams();
+
+        //define the blockchain download progress class with zero values
+        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 0.0);
     }
 
     @Override
@@ -92,7 +97,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
-        //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
+
+        blockchainDownloadProgress.setPendingBlocks(blocksLeft);
     }
 
 
@@ -100,6 +106,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
         System.out.println("***CryptoNetwork*** Blockchain Download started for " + NETWORK_TYPE.getCode() + " network. Blocks left: " + blocksLeft);
+        blockchainDownloadProgress.setTotalBlocks(blocksLeft);
     }
 
     @Override
@@ -269,6 +276,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
         return true;
+    }
+
+    /**
+     * returns the blockchain download progress class.
+     * @return
+     */
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(){
+        return blockchainDownloadProgress;
     }
 }
 

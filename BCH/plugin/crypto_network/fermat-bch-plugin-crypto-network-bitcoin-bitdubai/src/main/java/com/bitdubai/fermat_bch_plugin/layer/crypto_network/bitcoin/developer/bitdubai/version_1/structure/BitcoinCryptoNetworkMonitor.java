@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -62,11 +63,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * class variables
      */
-    MonitorAgent monitorAgent;
-    String threadName;
-    Thread monitorAgentThread;
-    Wallet wallet;
-    File walletFileName;
+    private MonitorAgent monitorAgent;
+    private String threadName;
+    private Thread monitorAgentThread;
+    private Wallet wallet;
+    private File walletFileName;
+    private BlockchainDownloadProgress blockchainDownloadProgress;
 
     final NetworkParameters NETWORK_PARAMETERS;
     final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
@@ -825,6 +827,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public Wallet getWallet() {
             return wallet;
         }
+
+        /**
+         * gets the Blockchain download progress class
+         * @return
+         */
+        public BlockchainDownloadProgress getBlockchainDownloadProgress() {
+            return events.getBlockchainDownloadProgress();
+        }
     }
 
     /**
@@ -858,6 +868,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     public Wallet getWallet(){
         return this.monitorAgent.getWallet();
+    }
+
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(){
+        return this.monitorAgent.getBlockchainDownloadProgress();
     }
 
 }

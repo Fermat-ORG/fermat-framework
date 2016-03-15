@@ -10,15 +10,19 @@ public class BlockchainDownloadProgress {
     int pendingBlocks;
     int totalBlocks;
     int downloadedBlocks;
-    long progress;
+    double progress;
 
-    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, long progress) {
+    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, double progress) {
         this.blockchainNetworkType = blockchainNetworkType;
         this.pendingBlocks = pendingBlocks;
         this.totalBlocks = totalBlocks;
         this.downloadedBlocks = downloadedBlocks;
         this.progress = progress;
     }
+
+    /**
+     * Getters and Setters
+     */
 
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
@@ -36,7 +40,22 @@ public class BlockchainDownloadProgress {
         return downloadedBlocks;
     }
 
-    public long getProgress() {
+    public double getProgress() {
         return progress;
     }
+
+    public void setPendingBlocks(int pendingBlocks) {
+        this.pendingBlocks = pendingBlocks;
+
+        downloadedBlocks = totalBlocks - pendingBlocks;
+        progress = (totalBlocks > 0) ? pendingBlocks / totalBlocks : 1.0;
+
+    }
+
+    public void setTotalBlocks(int totalBlocks) {
+        this.totalBlocks = totalBlocks;
+    }
+
+
+
 }

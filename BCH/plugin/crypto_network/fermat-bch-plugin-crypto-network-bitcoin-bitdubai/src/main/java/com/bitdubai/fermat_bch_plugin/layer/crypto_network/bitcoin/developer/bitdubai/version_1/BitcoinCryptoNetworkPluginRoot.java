@@ -312,7 +312,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        //todo implement
         return new BlockchainDownloadProgress(blockchainNetworkType, 0,0,0,0);
     }
 
