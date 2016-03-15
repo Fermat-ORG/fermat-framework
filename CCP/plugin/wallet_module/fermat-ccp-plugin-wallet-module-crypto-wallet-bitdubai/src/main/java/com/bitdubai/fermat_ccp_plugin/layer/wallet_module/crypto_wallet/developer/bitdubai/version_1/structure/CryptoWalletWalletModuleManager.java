@@ -1319,18 +1319,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         {
                             involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
 
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
                         }
-
-                        if(involvedActor==null)
-                        {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                           walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                        }
-
                          if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
