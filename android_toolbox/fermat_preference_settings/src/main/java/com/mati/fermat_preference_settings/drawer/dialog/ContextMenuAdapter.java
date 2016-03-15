@@ -64,6 +64,7 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
             {
                 getItem(i).setIsRadioTouched(true);
                 ((RadioButton)view).setChecked(true);
+                ((RadioButton)view).setCompoundDrawablesRelative(null,null,context.getDrawable(android.R.drawable.radiobutton_on_background),null);
             }
         }
     }

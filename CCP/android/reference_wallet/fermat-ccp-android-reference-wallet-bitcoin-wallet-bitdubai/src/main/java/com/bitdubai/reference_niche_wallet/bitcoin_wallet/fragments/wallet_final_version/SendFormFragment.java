@@ -612,17 +612,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
                             String txtType = txt_type.getText().toString();
                             String newAmount = "";
-
+                            String msg = "";
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                msg       = bitcoinConverter.getSathoshisFromBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
+                                msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                msg       = bitcoinConverter.getSathoshisFromBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
-                          //  if(Long.valueOf(newAmount) <= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
-                          //  {
+                           if(Long.valueOf(newAmount) >= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)
+                            {
                                 BigDecimal operator = new BigDecimal(newAmount);
 
                                 cryptoWallet.send(
@@ -641,9 +644,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 );
                                 Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                 onBack(null);
-                            //}  else {
-                           // Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
-                           // }
+                           }else{
+                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
+                           }
 
 
 
