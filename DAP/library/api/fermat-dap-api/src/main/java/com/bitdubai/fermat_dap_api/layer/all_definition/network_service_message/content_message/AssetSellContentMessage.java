@@ -18,20 +18,22 @@ public class AssetSellContentMessage implements DAPContentMessage {
     private AssetSellStatus sellStatus;
     private DigitalAssetMetadata assetMetadata;
     private UUID negotiationId;
-    private CryptoAddress cryptoVaultAddress;
+    private CryptoAddress sellerCryptoAddress;
+    private CryptoAddress buyerCryptoAddress;
     //CONSTRUCTORS
 
     public AssetSellContentMessage() {
     }
 
-    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId, long transactionValue, CryptoAddress cryptoVaultAddress) {
+    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, long transactionValue, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId, CryptoAddress sellerCryptoAddress, CryptoAddress buyerCryptoAddress) {
         this.sellingId = sellingId;
         this.serializedTransaction = serializedTransaction;
+        this.transactionValue = transactionValue;
         this.sellStatus = sellStatus;
         this.assetMetadata = assetMetadata;
         this.negotiationId = negotiationId;
-        this.transactionValue = transactionValue;
-        this.cryptoVaultAddress = cryptoVaultAddress;
+        this.sellerCryptoAddress = sellerCryptoAddress;
+        this.buyerCryptoAddress = buyerCryptoAddress;
     }
 
     //PUBLIC METHODS
@@ -74,9 +76,12 @@ public class AssetSellContentMessage implements DAPContentMessage {
         return transactionValue;
     }
 
-    public CryptoAddress getCryptoVaultAddress() {
-        return cryptoVaultAddress;
+    public CryptoAddress getSellerCryptoAddress() {
+        return sellerCryptoAddress;
     }
 
+    public CryptoAddress getBuyerCryptoAddress() {
+        return buyerCryptoAddress;
+    }
     //INNER CLASSES
 }

@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -221,7 +223,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                         DraftTransaction draftTransaction = cryptoVaultManager.getDraftTransaction(transaction.getBlockchainNetworkType(), transaction.getTxHash());
 
                         System.out.print("-------------- send draft to cryptoVaultManager");
-                        draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo());
+                        draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo(), transaction.getBlockchainNetworkType());
 
                         // just send the metadata in this place. This MUST be corrected.
                         dao.updateTxHash(transaction.getRequestId(), draftTransaction.getTxHash());
@@ -271,12 +273,16 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private void checkConfirmedTransactions() {
             try {
                 for (OutgoingDraftTransactionWrapper transaction : dao.getAllInState(TransactionState.SUCCESSFUL_SIG)) {
-                    switch (bitcoinNetworkManager.getCryptoStatus(transaction.getTxHash())) {
-                        case ON_BLOCKCHAIN:
-                        case IRREVERSIBLE:
-                            debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
-                            dao.setToCompleted(transaction);
-                            break;
+                    List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransactions(transaction.getBlockchainNetworkType(), transaction.getAddressTo(), CryptoTransactionType.OUTGOING);
+                    dance:
+                    for (CryptoTransaction cryptoTx : cryptoTransactions) {
+                        switch (cryptoTx.getCryptoStatus()) {
+                            case ON_BLOCKCHAIN:
+                            case IRREVERSIBLE:
+                                debitFromWallet(buildBitcoinTransaction(transaction), transaction.getReferenceWallet(), transaction.getWalletPublicKey(), BalanceType.BOOK);
+                                dao.setToCompleted(transaction);
+                                break dance; //If we find our transaction then a single update is needed, so we'll break the for
+                        }
                     }
                 }
             } catch (Exception e) {
