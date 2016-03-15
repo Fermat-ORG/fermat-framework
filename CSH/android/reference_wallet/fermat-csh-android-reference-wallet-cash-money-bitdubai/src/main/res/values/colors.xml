@@ -38,7 +38,7 @@
 
 
     <!-- Text Colors -->
-    <color name="csh_text_lightblue">#04a2e1</color>
+    <color name="csh_text_lightgray">#666666</color>
     <color name="csh_text_white">#ffffff</color>
     <color name="csh_text_black">#000000</color>
 

@@ -113,7 +113,7 @@
                                         android:textStyle="bold"
                                         android:textSize="@dimen/csh_small_text_size"
                                         android:paddingTop="@dimen/csh_activity_vertical_margin"
-                                        android:textColor="@color/csh_text_lightblue"
+                                        android:textColor="@color/csh_text_white"
                                         />
                                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                                         android:id="@+id/textView_available_currency"
@@ -123,7 +123,7 @@
                                         android:textSize="@dimen/csh_small_text_size"
                                         android:paddingTop="4dp"
                                         android:paddingBottom="@dimen/csh_activity_vertical_margin"
-                                        android:textColor="@color/csh_text_lightblue"
+                                        android:textColor="@color/csh_text_white"
                                         />
                                 </LinearLayout>
 
@@ -205,7 +205,7 @@
                                     android:textSize="@dimen/csh_large_text_size"
                                     android:gravity="center_vertical"
                                     android:paddingLeft="46dp"
-                                    android:textColor="@color/csh_text_lightblue"
+                                    android:textColor="@color/csh_text_white"
                                     />
                             </LinearLayout>
 
