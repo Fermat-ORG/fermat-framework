@@ -4,7 +4,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectE
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
-import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlyConfiguration;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.swapbot.TokenlyDownloadSongAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.AbstractTokenlyProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music.DownloadSongRecord;

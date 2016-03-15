@@ -8,7 +8,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.ImageDe
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Swap;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.TokenlyBalance;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlyBotJSonAttNames;
-import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlyConfiguration;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlySwapJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.*;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.swapbot.SwapBotRecord;
@@ -107,11 +107,11 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
         //Bot swaps
         Swap[] swaps = TokenlySwapProcessor.getSwapArrayFromJsonObject(jSonObject);
         //Bot balances
-        TokenlyBalance[] tokenlyBalances = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
+        TokenlyBalance[] tokenlyBalances = TokenlyBalanceProcessor.
                 getTokenlyBalancesFromJsonObject(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BALANCES));
         //Bot all balances by type
-        TokenlyBalance[][] allTokenlyBalancesByType = com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlyBalanceProcessor.
+        TokenlyBalance[][] allTokenlyBalancesByType = TokenlyBalanceProcessor.
                 getTokenlyBalancesByType(
                         jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.ALL_BALANCES_BY_TYPE));
         //Bot return fee.
