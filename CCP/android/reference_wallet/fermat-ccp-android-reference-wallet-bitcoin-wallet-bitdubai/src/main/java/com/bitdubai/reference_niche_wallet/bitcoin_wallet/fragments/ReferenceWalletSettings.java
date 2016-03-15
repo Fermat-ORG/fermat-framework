@@ -121,57 +121,52 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             }
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
-            switch (preferenceSettingsItem.getId()){
-                case 1:
-                    //Notifications
-                    break;
-                case 5:
-                    //Network
-                    PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-                    BlockchainNetworkType blockchainNetworkType = null;
 
-                    switch (preferenceSettingsTextPlusRadioItem.getText()) {
 
-                        case "MainNet":
-                            blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+            if (preferenceSettingsItem.getId() == 9) {
+                //export key open dialog
+            }
+            else {
+                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+                BlockchainNetworkType blockchainNetworkType = null;
 
-                            break;
+                switch (preferenceSettingsTextPlusRadioItem.getText()) {
 
-                        case "TestNet":
-                            blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                            break;
+                    case "MainNet":
+                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
 
-                        case "RegTest":
-                            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                            break;
+                        break;
 
-                        default:
-                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                            break;
+                    case "TestNet":
+                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                        break;
 
+                    case "RegTest":
+                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                        break;
+
+                    default:
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        break;
+
+                }
+
+                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
+                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
+                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+                if (blockchainNetworkType == null) {
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                    } else {
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                     }
+                }
 
-                    preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
-
-                    System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
-                    System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
-
-                    if (blockchainNetworkType == null) {
-                        if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                        } else {
-                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                        }
-                    }
-
-                    bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                    break;
-
-                case 9:
-                    //export key open dialog
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
             }
-
 
             try {
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
