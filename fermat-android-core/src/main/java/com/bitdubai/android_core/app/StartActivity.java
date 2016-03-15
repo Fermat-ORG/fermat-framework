@@ -226,6 +226,11 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
     }
 
+    @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+
+    }
+
 
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
