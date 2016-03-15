@@ -213,7 +213,9 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
-            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
 
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());

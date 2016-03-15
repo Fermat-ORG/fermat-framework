@@ -407,12 +407,14 @@ public class OpenContractMonitorAgent implements
                             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, contractTransactionStatus);
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
+                            System.out.print("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
+
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.confirmNotificationReception(
                                     businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
                                     contractHash, businessTransactionMetadata.getContractId(),
-                                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                                    Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getReceiverType(),
                                     businessTransactionMetadata.getSenderType());
                         }
@@ -430,6 +432,7 @@ public class OpenContractMonitorAgent implements
                             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.PENDING_RESPONSE);
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
+                            System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation");
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
                     }
@@ -457,6 +460,7 @@ public class OpenContractMonitorAgent implements
                                             ContractStatus.PENDING_PAYMENT);
                             }
 
+                            System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Sending confirmation");
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             raiseNewContractEvent(contractHash);
                         }
