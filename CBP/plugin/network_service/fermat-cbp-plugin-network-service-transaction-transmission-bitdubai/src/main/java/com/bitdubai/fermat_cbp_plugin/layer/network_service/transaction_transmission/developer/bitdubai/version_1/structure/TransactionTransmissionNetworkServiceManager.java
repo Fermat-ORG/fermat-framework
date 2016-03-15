@@ -69,8 +69,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String transactionHash,
             String negotiationId,
-            Plugins remoteBusinessTransaction ,PlatformComponentType senderComponent,PlatformComponentType receiverComponent
-            ) throws CantSendBusinessTransactionHashException {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantSendBusinessTransactionHashException {
+
         //TODO: Check is contractId is necessary
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
