@@ -69,9 +69,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String transactionHash,
             String negotiationId,
-            Plugins remoteBusinessTransaction
+            Plugins remoteBusinessTransaction ,PlatformComponentType senderComponent,PlatformComponentType receiverComponent
             ) throws CantSendBusinessTransactionHashException {
-        //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
@@ -79,9 +78,9 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 transactionHash,
                 ContractTransactionStatus.PENDING_CONFIRMATION,
                 cryptoBrokerActorSenderPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                senderComponent,
                 null,
                 negotiationId,
                 BusinessTransactionTransactionType.TRANSACTION_HASH,
@@ -92,6 +91,22 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+            Gson gson = new Gson();
+
+            sendMessage(
+                    gson.toJson(businessTransactionMetadata),
+                    pluginRoot.getProfileSenderToRequestConnection(
+                            businessTransactionMetadata.getSenderId(),
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
+                            senderComponent
+                    ),
+
+                    pluginRoot.getProfileDestinationToRequestConnection(
+                            businessTransactionMetadata.getReceiverId(),
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
+                            receiverComponent
+                    )
+            );
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",
@@ -111,18 +126,19 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String transactionHash,
             String transactionId,
             ContractTransactionStatus contractStatus,
-            Plugins remoteBusinessTransaction) throws CantSendContractNewStatusNotificationException {
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantSendContractNewStatusNotificationException {
 
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
+
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 contractStatus,
                 cryptoBrokerActorSenderPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                senderComponent,
                 null,
                 null,
                 BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE,
@@ -141,14 +157,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     gson.toJson(businessTransactionMetadata),
                         pluginRoot.getProfileSenderToRequestConnection(
                                 businessTransactionMetadata.getSenderId(),
-                                NetworkServiceType.UNDEFINED,
-                                businessTransactionMetadata.getSenderType()
+                                NetworkServiceType.TRANSACTION_TRANSMISSION,
+                                senderComponent
                     ),
 
                         pluginRoot.getProfileDestinationToRequestConnection(
                                 businessTransactionMetadata.getReceiverId(),
-                                NetworkServiceType.UNDEFINED,
-                                businessTransactionMetadata.getReceiverType()
+                                NetworkServiceType.TRANSACTION_TRANSMISSION,
+                                receiverComponent
                     )
             );
 
@@ -195,18 +211,19 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
-            Plugins remoteBusinessTransaction) throws CantConfirmNotificationReception {
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
 
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
+        //TODO: verificar los parametros del businessTransactionMetadata
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 contractHash,
                 null,
                 cryptoBrokerActorSenderPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
+                senderComponent,
                 null,
                 null,
                 BusinessTransactionTransactionType.CONFIRM_MESSAGE,
@@ -225,13 +242,76 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     gson.toJson(businessTransactionMetadata),
                     pluginRoot.getProfileSenderToRequestConnection(
                             businessTransactionMetadata.getSenderId(),
-                            NetworkServiceType.UNDEFINED,
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
                             businessTransactionMetadata.getSenderType()
                     ),
 
                     pluginRoot.getProfileDestinationToRequestConnection(
                             businessTransactionMetadata.getReceiverId(),
-                            NetworkServiceType.UNDEFINED,
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
+                            businessTransactionMetadata.getReceiverType()
+                    )
+            );
+
+        }  catch (CantInsertRecordDataBaseException e) {
+            throw new CantConfirmNotificationReception(
+                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+                    e,
+                    "Cannot persists the contract hash in table",
+                    "database corrupted");
+        } catch (Exception e){
+            throw new CantConfirmNotificationReception(
+                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+                    e,
+                    "Cannot persists the contract hash in table",
+                    "database corrupted");
+        }
+    }
+
+
+    public void ackConfirmNotificationReception(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String contractHash,
+            String transactionId,
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+
+        Date date=new Date();
+        Timestamp timestamp=new Timestamp(date.getTime());
+        UUID uuidTransactionId=UUID.fromString(transactionId);
+        //TODO: verificar los parametros del businessTransactionMetadata
+        BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
+                contractHash,
+                null,
+                cryptoBrokerActorSenderPublicKey,
+                receiverComponent,
+                cryptoCustomerActorReceiverPublicKey,
+                senderComponent,
+                null,
+                null,
+                BusinessTransactionTransactionType.ACK_CONFIRM_MESSAGE,
+                timestamp.getTime(),
+                uuidTransactionId,
+                TransactionTransmissionStates.PRE_PROCESSING_SEND,
+                remoteBusinessTransaction
+        );
+
+        try {
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+
+            Gson gson = new Gson();
+
+            sendMessage(
+                    gson.toJson(businessTransactionMetadata),
+                    pluginRoot.getProfileSenderToRequestConnection(
+                            businessTransactionMetadata.getSenderId(),
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
+                            businessTransactionMetadata.getSenderType()
+                    ),
+
+                    pluginRoot.getProfileDestinationToRequestConnection(
+                            businessTransactionMetadata.getReceiverId(),
+                            NetworkServiceType.TRANSACTION_TRANSMISSION,
                             businessTransactionMetadata.getReceiverType()
                     )
             );

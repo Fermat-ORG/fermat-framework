@@ -28,4 +28,24 @@ public class FermatInstalledDesktop implements InstalledDesktop {
     public FermatAppType getAppType() {
         return FermatAppType.DESKTOP;
     }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
+
+    @Override
+    public void setBanner(int res) {
+
+    }
+
+    @Override
+    public int getBannerRes() {
+        return 0;
+    }
 }

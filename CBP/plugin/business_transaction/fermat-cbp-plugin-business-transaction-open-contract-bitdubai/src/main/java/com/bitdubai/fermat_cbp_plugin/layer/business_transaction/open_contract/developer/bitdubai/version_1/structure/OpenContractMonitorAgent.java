@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -277,7 +278,7 @@ public class OpenContractMonitorAgent implements
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
                                         purchaseContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -289,7 +290,7 @@ public class OpenContractMonitorAgent implements
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         saleContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -321,7 +322,7 @@ public class OpenContractMonitorAgent implements
                                         hashToSubmit,
                                         transactionId.toString(),
                                         ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -333,7 +334,7 @@ public class OpenContractMonitorAgent implements
                                         hashToSubmit,
                                         transactionId.toString(),
                                         ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -414,9 +415,10 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     contractTransactionStatus);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            //transactionTransmissionManager.confirmNotificationReception();
                         }
                     }
 
@@ -433,7 +435,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     ContractTransactionStatus.PENDING_RESPONSE);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
@@ -452,7 +454,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     ContractTransactionStatus.CONTRACT_OPENED);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             contractType=openContractBusinessTransactionDao.getContractType(contractHash);
                             switch (contractType){

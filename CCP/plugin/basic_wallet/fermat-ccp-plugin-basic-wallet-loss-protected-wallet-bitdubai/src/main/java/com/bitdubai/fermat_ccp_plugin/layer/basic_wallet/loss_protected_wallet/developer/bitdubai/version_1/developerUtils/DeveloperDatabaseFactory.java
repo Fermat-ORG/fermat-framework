@@ -1,16 +1,16 @@
-package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils;
+package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.developerUtils;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinLossProtectedWalletDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,46 +47,46 @@ public class DeveloperDatabaseFactory {
          * We only have one table in each database, let's complete it
          */
         List<String> basicWalletBitcoinWalletColumns = new ArrayList<>();
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME);
 
         /**
          * basicWalletBitcoinWalletColumns table
          */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME, basicWalletBitcoinWalletColumns);
+        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME, basicWalletBitcoinWalletColumns);
         tables.add(cryptoTransactionsTable);
 
         /**
          * Added new table BitcoinWalletWalletTotalBalances
          */
         List<String> bitcoinWalletWalletTotalBalancesColumns = new ArrayList<>();
-        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME);
-        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
-        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
-        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE);
 
 
 
         /**
          * basicWalletBitcoinWalletColumns table
          */
-        DeveloperDatabaseTable  bitcoinWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME, bitcoinWalletWalletTotalBalancesColumns);
+        DeveloperDatabaseTable  bitcoinWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME, bitcoinWalletWalletTotalBalancesColumns);
         tables.add(bitcoinWalletWalletTotalBalances);
 
 

@@ -311,4 +311,15 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         //todo implement
         return new BlockchainDownloadProgress(blockchainNetworkType, 0,0,0,0);
     }
+
+    /**
+     * Gets the list of stored CryptoTransactions for the specified network type
+     * @param blockchainNetworkType the network type to get the transactions from.
+     * @return the list of Crypto Transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType);
+    }
 }

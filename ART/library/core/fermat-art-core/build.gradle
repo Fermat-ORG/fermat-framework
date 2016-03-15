@@ -10,4 +10,7 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core-api')
+
+    compile project(':fermat-art-plugin-actor-network-service-artist-bitdubai')
+    compile project(':fermat-art-plugin-identity-artist-bitdubai')
 }

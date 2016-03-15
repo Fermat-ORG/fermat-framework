@@ -148,23 +148,23 @@ public class BottomMenuReveal {
             AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
             switch (androidCoreSettings.getAppsStatus()){
                 case RELEASE:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
                     break;
                 case BETA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_beta);
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.beta_icon);
                     break;
                 case ALPHA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_alfa);
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.alfa_icon);
                     break;
                 case DEV:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_developer);
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.developer_icon);
                     break;
                 default:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
                     break;
             }
         } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+            btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
             // e.printStackTrace();
         }
         btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {

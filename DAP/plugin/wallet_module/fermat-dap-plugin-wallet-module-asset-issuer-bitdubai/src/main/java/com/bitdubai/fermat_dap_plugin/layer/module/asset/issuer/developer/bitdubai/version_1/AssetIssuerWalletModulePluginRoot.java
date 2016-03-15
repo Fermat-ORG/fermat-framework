@@ -13,6 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -23,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
@@ -89,7 +93,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.ASSET_FACTORY)
     AssetFactoryManager assetFactoryManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_ISSUER)
     IdentityAssetIssuerManager identityAssetIssuerManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
@@ -137,10 +141,10 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     issuerAppropriationManager,
                     identityAssetIssuerManager,
                     pluginId,
-                    pluginFileSystem
+                    pluginFileSystem,
+                    errorManager
             );
-            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            //getTransactionsAssetAll("", "");
+
             System.out.println("******* Asset Issuer Wallet Module Init ******");
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -169,10 +173,11 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
         } else {
             try {
                 for (ActorAssetUserGroup group : actorAssetUserManager.getAssetUserGroupsList()) {
-                    allUsers.removeAll(actorAssetUserManager.getListActorAssetUserByGroups(group.getGroupId(),selectedNetwork));
+                    allUsers.removeAll(actorAssetUserManager.getListActorAssetUserByGroups(group.getGroupId(), selectedNetwork));
                 }
                 return allUsers;
-            } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
+            } catch (CantGetAssetUserGroupException exception) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 //If this happen for some reason it means that we failed to read the groups, then we return the full list.
                 return allUsers;
             }
@@ -202,7 +207,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupId,selectedNetwork);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupId, selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException(e);
@@ -286,8 +291,9 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
             //TODO REMOVE HARDCODE
             InstalledWallet installedWallet = installedWallets.get(0);
             assetIssuerWalletModuleManager.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey(), selectedNetwork);
-        } catch (CantListWalletsException e) {
-            e.printStackTrace();
+        } catch (CantListWalletsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
         }
     }
 
@@ -325,8 +331,11 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void changeNetworkType(BlockchainNetworkType networkType) {
-        if (selectedNetwork == null) return; //NOPE.
-        selectedNetwork = networkType;
+        if (networkType == null) {
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        } else {
+            selectedNetwork = networkType;
+        }
     }
 
     @Override
@@ -347,8 +356,9 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
         try {
             List<IdentityAssetIssuer> identities = assetIssuerWalletModuleManager.getActiveIdentities();
             return (identities == null || identities.isEmpty()) ? null : assetIssuerWalletModuleManager.getActiveIdentities().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
             return null;
         }
     }
@@ -360,6 +370,22 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
+        if (selectedNetwork == null) {
+            try {
+                if (settings == null) {
+                    settingsManager = getSettingsManager();
+                }
+                settings = settingsManager.loadAndGetSettings(DAPPublicKeys.DAP_WALLET_ISSUER.getCode());
+                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+            } catch (CantGetSettingsException exception) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                exception.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                //TODO: Only enter while the Active Actor Wallet is not open.
+                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+//                e.printStackTrace();
+            }
+        }
         return selectedNetwork;
     }
 
@@ -373,15 +399,14 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
             settings = null;
         }
 
-        if(settings != null && settings.getBlockchainNetwork() != null) {
+        if (settings != null && settings.getBlockchainNetwork() != null) {
             settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
         } else {
             int position = 0;
             List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
 
             for (BlockchainNetworkType networkType : list) {
-
-                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
                 } else {
@@ -389,6 +414,13 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                 }
             }
             settings.setBlockchainNetwork(list);
+        }
+
+        try {
+            settingsManager.persistSettings(publicKeyApp, settings);
+        } catch (CantPersistSettingsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
         }
     }
 

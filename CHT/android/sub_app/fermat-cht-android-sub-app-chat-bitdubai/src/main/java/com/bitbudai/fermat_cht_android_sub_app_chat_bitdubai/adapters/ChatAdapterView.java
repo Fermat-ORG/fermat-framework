@@ -59,6 +59,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,7 +72,6 @@ public class ChatAdapterView extends LinearLayout {
 
     private RecyclerView messagesContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private Button sendBtn;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
     private ChatManager chatManager;
@@ -81,6 +81,7 @@ public class ChatAdapterView extends LinearLayout {
     private ChatPreferenceSettings chatSettings;
     private FermatSession appSession;
     private Toolbar toolbar;
+    private Button sendBtn;
     private EditText messageET;
     private ViewGroup rootView;
     private String leftName;
@@ -168,6 +169,7 @@ public class ChatAdapterView extends LinearLayout {
     public void findMessage(){
         String message;
         String inorout;
+        String estatus;
         ChatMessage msg;
         Chat chat;
         int messSize;
@@ -194,29 +196,34 @@ public class ChatAdapterView extends LinearLayout {
                 //for (int i = 0; i < messSize; i++) {
                 for(Message mess : messL){
                     msg = new ChatMessage();
-                    message = mess.getMessage();//19:22 Receive//19.26 r//19.26 r//
+                    message = mess.getMessage();
                     inorout = mess.getType().toString();
+                    estatus = mess.getStatus().toString();
                     msg.setId(mess.getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else {
                         msg.setMe(false);
-                        //java.util.ArrayList cannot be cast to com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl
-
-                        if(msg.getStatus()!= MessageStatus.READ.toString()) {
+                        if(estatus!= MessageStatus.READ.toString()) {
                             messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
                             msg.setStatus(MessageStatus.READ.toString());
                             messagei.setStatus(MessageStatus.READ);
                             chatManager.saveMessage(messagei);
+                            chatManager.sendReadMessageNotification(messagei);
                         }
                     }
                     msg.setStatus(mess.getStatus().toString());
-                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(mess.getMessageDate()))))
-                    {
-                        String S = new SimpleDateFormat("HH:mm").format(mess.getMessageDate());
+                    long timemess = mess.getMessageDate().getTime();
+                    long nanos = (mess.getMessageDate().getNanos() / 1000000);
+                    long milliseconds = timemess + nanos;
+                    Date dated= new java.util.Date(milliseconds);
+                    //String datef= DateFormat.getDateTimeInstance().format(dated);
+                    //Date to =new Date(datef);
+                    if (Validate.isDateToday(dated)) {
+                        String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
                         msg.setDate(S);
                     }else
                     {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(mess.getMessageDate()));
+                        msg.setDate(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
                     }
                     msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
@@ -342,9 +349,13 @@ public class ChatAdapterView extends LinearLayout {
                     Long dv = System.currentTimeMillis();
 
                     if (chatWasCreate) {
+
                         chat = (ChatImpl) chatManager.getChatByChatId(chatId);
                         chat.setLastMessageDate(new Timestamp(dv));
                         chatManager.saveChat(chat);
+
+//                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
+//                        chatManager.saveChat(chat);
 
                         message.setChatId(chatId);
                         message.setMessageId(UUID.randomUUID());
@@ -362,7 +373,8 @@ public class ChatAdapterView extends LinearLayout {
                         //Todo: find another chat name
                         chat.setChatName("Chat_" + remotePk);
                         chat.setDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setLastMessageDate(new Timestamp(dv));                       ;
+                        Calendar c = Calendar.getInstance(Locale.getDefault());
                         /**
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
@@ -413,7 +425,7 @@ public class ChatAdapterView extends LinearLayout {
                         chatSession.setData(
                                 "contactid",
                                 newContact
-                        );
+                                );
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
@@ -506,7 +518,7 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void refreshEvents() {
-        whatToDo();
+        //whatToDo();
         findMessage();
         scroll();
     }

@@ -108,7 +108,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -116,6 +115,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentsEnumType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -132,7 +132,6 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
@@ -203,6 +202,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
+    protected TabLayout tabLayout;
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout mDrawerLayout;
 
@@ -212,11 +212,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private BottomNavigation bottomNavigation;
 
-    private boolean hidden = true;
     /**
      * Listeners
      */
     private RuntimeStructureManager runtimeStructureManager;
+
 
     /**
      * Service
@@ -507,19 +507,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         this.mainMenu = mainMenu;
     }
 
-    public Activity getActivityUsedType() {
-        Activity activity = null;
-        if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-            SubApp subApp = getSubAppRuntimeMiddleware().getLastApp();
-            activity = subApp.getLastActivity();
-        } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
-            //activity = getWalletRuntimeManager().getLasActivity();
-        } else if (ActivityType.ACTIVITY_TYPE_DESKTOP == activityType){
-            activity = getDesktopRuntimeManager().getLastDesktopObject().getLastActivity();
-        }
-        return activity;
-    }
-
     /**
      * @param titleBar
      */
@@ -661,7 +648,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Method used from app to paint tabs
      */
     protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
         pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
@@ -1213,7 +1200,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             List<AbstractFermatFragment> fragments = new Vector<>();
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
-            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[2];
+            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[3];
 
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops().values()) {
@@ -1226,8 +1213,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //                            DesktopFragment desktopFragment = DesktopFragment.newInstance((WalletManagerModule) manager);
 
-                        String type = desktopObject.getLastActivity().getLastFragment().getType();
+                        //String type = desktopObject.getLastActivity().getLastFragment().getType();
 
+                        String type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey()).getType();
 
                         fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
@@ -1235,11 +1223,26 @@ public abstract class FermatActivity extends AppCompatActivity implements
                                 null
                         );
 
+                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey()).getType();
+
+                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
+                                type,
+                                createOrOpenApp(getDesktopManager()),
+                                null
+                        );
+
+//                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_SOCIAL_MAIN.getKey()).getType();
+//
+//                        fragmentsArray[2] = appConnections.getFragmentFactory().getFragment(
+//                                type,
+//                                createOrOpenApp(getDesktopManager()),
+//                                null
+//                        );
 
                         break;
                     case "WPD":
                             DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
-                            fragmentsArray[1] =  subAppDesktopFragment;
+                            fragmentsArray[2] =  subAppDesktopFragment;
                         break;
 
                 }
@@ -1738,6 +1741,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         // TODO Add extras or a data URI to this intent as appropriate.
         setResult(android.app.Activity.RESULT_OK, resultIntent);
         //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, getFermatAppManager().getRecentsAppsStack().toArray());
         startActivityForResult(resultIntent, TASK_MANAGER_STACK);
     }
 
@@ -1755,10 +1759,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
             case (TASK_MANAGER_STACK) : {
                 if (resultCode == android.app.Activity.RESULT_OK) {
                     // TODO Extract the data returned from the child Activity. and open the app
-                    Toast.makeText(this,"yes",Toast.LENGTH_SHORT).show();
                     data.setAction("org.fermat.APP_LAUNCHER");
                     sendBroadcast(data);
                     //finish();
+                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
+                    // if i want i could do something here
                 }
                 break;
             }
