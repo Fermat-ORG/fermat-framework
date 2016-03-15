@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="typeface" format="enum">
+        <enum name="roboto_regular" value="0" />
+        <enum name="roboto_bold" value="1" />
+        <enum name="roboto_italic" value="2" />
+        <enum name="roboto_bold_italic" value="3" />
+        <enum name="caviar_dreams" value="4" />
+        <enum name="caviar_dreams_bold" value="5" />
+        <enum name="caviar_dreams_italic" value="6" />
+        <enum name="caviar_dreams_bold_italic" value="7" />
+    </attr>
+
+    <declare-styleable name="CaviarTextView">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="CaviarEditText">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="CaviarButton">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="CaviarRadioButton">
+        <attr name="typeface" />
+    </declare-styleable>
+
+    <declare-styleable name="CaviarCheckedTextView">
+        <attr name="typeface" />
+    </declare-styleable>
+
+    <declare-styleable name="MaterialSpinner">
+        <attr name="typeface" />
+    </declare-styleable>
+
+    <declare-styleable name="DropdownSpinner">
+        <attr name="typeface" />
+    </declare-styleable>
+
+    <declare-styleable name="MenuButton">
+        <attr name="pointColor" format="color"/>
+        <attr name="pointsBackgroundColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="OverflowMenu">
+        <attr name="typeface"/>
+        <attr name="menuVisibleItems" format="integer"/>
+        <attr name="menuItemTextColor" format="color"/>
+        <attr name="menuItemTextSize" format="integer"/>
+        <attr name="menuItemSelectedColor" format="color"/>
+        <attr name="menuListBackgroundColor" format="color"/>
+        <attr name="menuListBackgroundDrawable" format="integer"/>
+        <attr name="menuPointsColor" format="color"/>
+        <attr name="menuBackgroundColor" format="color"/>
+    </declare-styleable>
+
+</resources>

@@ -48,6 +48,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -215,7 +216,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
                     e.printStackTrace();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 //                changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
@@ -599,6 +600,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
+                    String notes = null;
+                    if (txt_notes.getText().toString().length() != 0){
+                      notes = txt_notes.getText().toString();
+                    }
                     if (txtType.equals("[btc]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     } else if (txtType.equals("[satoshis]")) {
@@ -608,40 +613,44 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     }
 
 
-                    BigDecimal operator = new BigDecimal(newAmount);
+                   if(Long.valueOf(newAmount) >= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) {
 
-                    String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
+                           BigDecimal operator = new BigDecimal(newAmount);
 
-                    CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
-                            identityPublicKey,
-                            Actors.INTRA_USER,
-                            cryptoWalletWalletContact.getActorPublicKey(),
-                            cryptoWalletWalletContact.getActorType(),
-                            Platforms.CRYPTO_CURRENCY_PLATFORM,
-                            VaultType.CRYPTO_CURRENCY_VAULT,
-                            CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                            appSession.getAppPublicKey(),
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            blockchainNetworkType
-                    );
-                    cryptoWallet.sendCryptoPaymentRequest(
-                            cryptoWalletWalletContact.getWalletPublicKey(),
-                            identityPublicKey,
-                            Actors.INTRA_USER,
-                            cryptoWalletWalletContact.getActorPublicKey(),
-                            cryptoWalletWalletContact.getActorType(),
-                            cryptoAddress,
-                            txt_notes.getText().toString(),
-                            operator.longValueExact(),
-                            blockchainNetworkType,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                           String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
-                    );
-                    Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
-                    if (isFragmentFromDetail) onBack(null);
-                    else
-                        onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                           CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                                   identityPublicKey,
+                                   Actors.INTRA_USER,
+                                   cryptoWalletWalletContact.getActorPublicKey(),
+                                   cryptoWalletWalletContact.getActorType(),
+                                   Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                   VaultType.CRYPTO_CURRENCY_VAULT,
+                                   CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                   appSession.getAppPublicKey(),
+                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   blockchainNetworkType
+                           );
+                           cryptoWallet.sendCryptoPaymentRequest(
+                                   cryptoWalletWalletContact.getWalletPublicKey(),
+                                   identityPublicKey,
+                                   Actors.INTRA_USER,
+                                   cryptoWalletWalletContact.getActorPublicKey(),
+                                   cryptoWalletWalletContact.getActorType(),
+                                   cryptoAddress,
+                                   notes,
+                                   operator.longValueExact(),
+                                   blockchainNetworkType,
+                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
 
+                           );
+                           Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
+                           if (isFragmentFromDetail) onBack(null);
+                           else
+                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                    }else {
+                       Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     showMessage(getActivity(), "Invalid Request Amount");
                 }

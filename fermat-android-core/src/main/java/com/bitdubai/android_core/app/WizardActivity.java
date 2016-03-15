@@ -471,4 +471,9 @@ public class WizardActivity extends FermatActivity
     public void setChangeBackActivity(Activities activityCodeBack) {
 
     }
+
+    @Override
+    public void setTabCustomImageView(int position,View view) {
+
+    }
 }
