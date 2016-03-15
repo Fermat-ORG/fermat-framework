@@ -15,6 +15,7 @@ public enum IssuingStatus implements FermatEnum {
     INSUFFICIENT_FONDS("ISFF"),
     INTRA_ACTOR_NULL("IAN"),
     ISSUED("ISED"),
+    PROCESSED("PROC"),
     SENDING_CRYPTO("SNDC"),
     WAITING_CONFIRMATION("WACO"),
     ON_CRYPTO_NETWORK("OCN"),

@@ -324,7 +324,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
 //        if (digitalAsset.getImage() != null) {
 //            assetRedeemImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));

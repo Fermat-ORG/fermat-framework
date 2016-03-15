@@ -729,7 +729,17 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
     }
+    @Override
+    public void updateOfflineIssuersRegisterInNetworkService(List<ActorAssetIssuer> actorAssetIssuers) throws CantGetAssetIssuerActorsException{
 
+        try {
+            this.assetIssuerActorDao.updateOfflineIssuerRegisterInNetworkService(actorAssetIssuers);
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET LIST ASSET ISSUER REGISTERED", e, "", "");
+        } catch (CantUpdateAssetIssuerException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T UPDATE ACTOR ASSET ISSUER REGISTERED", e, "", "");
+        }
+    }
 
     /**
      * Procces the list o f notifications from Intra User Network Services

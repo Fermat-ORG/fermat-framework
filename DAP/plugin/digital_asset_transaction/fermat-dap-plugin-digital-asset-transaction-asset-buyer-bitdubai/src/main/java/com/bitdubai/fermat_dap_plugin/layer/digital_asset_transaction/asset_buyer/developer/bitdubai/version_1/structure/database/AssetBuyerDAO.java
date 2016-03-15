@@ -101,14 +101,16 @@ public class AssetBuyerDAO {
         }
     }
 
-    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey, CryptoAddress cryptoAddress) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
+    public void saveNewBuying(AssetSellContentMessage assetSellContentMessage, String senderPublicKey) throws CantInsertRecordException, CantCreateDigitalAssetFileException {
         assetBuyingVault.persistDigitalAssetMetadataInLocalStorage(assetSellContentMessage.getAssetMetadata(), assetSellContentMessage.getSellingId().toString());
         DatabaseTable databaseTable = getBuyerTable();
         DatabaseTableRecord buyingRecord = databaseTable.getEmptyRecord();
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME, assetSellContentMessage.getSellingId().toString());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME, assetSellContentMessage.getAssetMetadata().getNetworkType().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, assetSellContentMessage.getNegotiationId().toString());
-        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, assetSellContentMessage.getSellerCryptoAddress().getAddress());
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME, assetSellContentMessage.getBuyerCryptoAddress().getAddress());
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_CRYPTO_CURRENCY_COLUMN_NAME, assetSellContentMessage.getSellerCryptoAddress().getCryptoCurrency().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, assetSellContentMessage.getSellStatus().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME, senderPublicKey);
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(assetSellContentMessage.getSerializedTransaction(), Base64.DEFAULT));
@@ -252,17 +254,19 @@ public class AssetBuyerDAO {
         ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME), metadata.getNetworkType());
         String encodeUnsignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME);
         String encodeSignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
-        DraftTransaction signedTransaction = !Validate.isValidString(encodeSignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
-        if (!Validate.isObjectNull(signedTransaction))
-            signedTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_VALUE_COLUMN_NAME));
-        DraftTransaction unsignedTransaction = !Validate.isValidString(encodeUnsignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
-        if (!Validate.isObjectNull(unsignedTransaction))
-            unsignedTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME));
-        String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
+        DraftTransaction buyerTransaction = !Validate.isValidString(encodeSignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(buyerTransaction))
+            buyerTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_VALUE_COLUMN_NAME));
+        DraftTransaction sellerTransaction = !Validate.isValidString(encodeUnsignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(sellerTransaction))
+            sellerTransaction.addValue(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME));
+//        String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME));
-        CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), CryptoCurrency.BITCOIN);
+        CryptoCurrency currency = CryptoCurrency.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_CRYPTO_CURRENCY_COLUMN_NAME));
+        CryptoAddress sellerCryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
+        CryptoAddress buyerCryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
         String outgoingId = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_OUTGOING_ID_COLUMN_NAME);
-        return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId, cryptoAddress, outgoingId);
+        return new BuyingRecord(entryId, metadata, user, status, buyerTransaction, sellerTransaction, negotiationId, sellerCryptoAddress, buyerCryptoAddress, outgoingId);
     }
 
     private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {

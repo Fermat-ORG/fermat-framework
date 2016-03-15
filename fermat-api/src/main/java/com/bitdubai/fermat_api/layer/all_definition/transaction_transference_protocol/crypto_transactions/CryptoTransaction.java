@@ -29,11 +29,14 @@ public class CryptoTransaction{
     private CryptoAddress addressFrom;
     private CryptoAddress addressTo;
     private CryptoCurrency cryptoCurrency;
-    private long cryptoAmount;
+    private long btcAmount;
+    private long fee;
+    private long cryptoAmount; // btcAmount + fee
     private CryptoStatus cryptoStatus;
     private String op_Return;
     private CryptoTransactionType cryptoTransactionType;
     private int blockDepth;
+
 
 
 
@@ -243,18 +246,13 @@ public class CryptoTransaction{
              * for each output that sends us bitcoins, I will create INC transactions
              */
             for (TransactionOutput output : transaction.getWalletOutputs(wallet)){
-                CryptoTransaction incomingCryptoTransaction = new CryptoTransaction();
-                incomingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
-                incomingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
-                incomingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-                incomingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
-                incomingCryptoTransaction.setBlockHash(getBlockHash(transaction));
-                incomingCryptoTransaction.setOp_Return(getOpReturn(transaction));
+                CryptoTransaction incomingCryptoTransaction = getBaseCryptoTransaction(transaction, blockchainNetworkType);
                 incomingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.INCOMING);
-                incomingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
+                incomingCryptoTransaction.setBtcAmount(output.getValue().getValue());
+                incomingCryptoTransaction.setCryptoAmount(incomingCryptoTransaction.getBtcAmount());
                 incomingCryptoTransaction.setAddressTo(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
                 incomingCryptoTransaction.setAddressFrom(getAddressFrom(transaction));
-                incomingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
+
 
                 cryptoTransactions.add(incomingCryptoTransaction);
             }
@@ -277,17 +275,11 @@ public class CryptoTransaction{
                         if (!outputs.getScriptPubKey().isSentToAddress())
                             continue;
 
-                        CryptoTransaction outgoingCryptoTransaction = new CryptoTransaction();
-                        outgoingCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
-                        outgoingCryptoTransaction.setTransactionHash(transaction.getHashAsString());
-                        outgoingCryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-                        outgoingCryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
-                        outgoingCryptoTransaction.setBlockHash(getBlockHash(transaction));
-                        outgoingCryptoTransaction.setOp_Return(getOpReturn(transaction));
+                        CryptoTransaction outgoingCryptoTransaction = getBaseCryptoTransaction(transaction, blockchainNetworkType);
                         outgoingCryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
-                        outgoingCryptoTransaction.setCryptoAmount(output.getValue().getValue());
+                        outgoingCryptoTransaction.setBtcAmount(outputs.getValue().getValue());
+                        outgoingCryptoTransaction.setCryptoAmount(outgoingCryptoTransaction.getBtcAmount() + outgoingCryptoTransaction.getFee());
                         outgoingCryptoTransaction.setAddressFrom(new CryptoAddress(output.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
-                        outgoingCryptoTransaction.setBlockDepth(getBlockDepth(transaction));
                         outgoingCryptoTransaction.setAddressTo(new CryptoAddress(outputs.getAddressFromP2PKHScript(transaction.getParams()).toString(), CryptoCurrency.BITCOIN));
                         cryptoTransactions.add(outgoingCryptoTransaction);
                     }
@@ -300,8 +292,70 @@ public class CryptoTransaction{
         return cryptoTransactions;
     }
 
+    /**
+     * Returns the base CryptoTransaction with all non changing properties
+     * @param transaction
+     * @return
+     */
+    private static CryptoTransaction getBaseCryptoTransaction(Transaction transaction, BlockchainNetworkType blockchainNetworkType) {
+        /**
+         * will define all common properties of whatever cryptoTransaction we return
+         */
+        final CryptoCurrency CRYPTO_CURRENCY = CryptoCurrency.BITCOIN;
+        final String TRANSACTION_HASH = transaction.getHashAsString();
+        final CryptoStatus CRYPTO_STATUS = getTransactionCryptoStatus(transaction);
+        final String BLOCK_HASH = getBlockHash(transaction);
+        final String OP_RETURN = getOpReturn(transaction);
+        final long FEE = getCryptoTransactionFee(transaction);
+        final int BLOCK_DEPTH = getBlockDepth(transaction);
+
+        CryptoTransaction baseCryptoTransaction = new CryptoTransaction();
+        baseCryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
+        baseCryptoTransaction.setTransactionHash(TRANSACTION_HASH);
+        baseCryptoTransaction.setCryptoCurrency(CRYPTO_CURRENCY);
+        baseCryptoTransaction.setCryptoStatus(CRYPTO_STATUS);
+        baseCryptoTransaction.setBlockHash(BLOCK_HASH);
+        baseCryptoTransaction.setOp_Return(OP_RETURN);
+        baseCryptoTransaction.setFee(FEE);
+        baseCryptoTransaction.setBlockDepth(BLOCK_DEPTH);
+        return baseCryptoTransaction;
+    }
+
     private static int getBlockDepth(Transaction transaction){
         return transaction.getConfidence().getDepthInBlocks();
+    }
+
+
+    private static long getCryptoTransactionFee(Transaction transaction){
+        long fee = (transaction.getFee() == null) ? 0 : transaction.getFee().getValue();
+
+        /**
+         * if fee is 0, Will try to recalculate
+         */
+        //todo improve.
+        if (fee ==0)
+            fee = 30000;
+
+        return fee;
+    }
+
+    public static CryptoTransaction copyCryptoTransaction(CryptoTransaction previousCryptoTransaction){
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setTransactionHash(previousCryptoTransaction.getTransactionHash());
+        cryptoTransaction.setBlockHash(previousCryptoTransaction.getBlockHash());
+        cryptoTransaction.setBlockchainNetworkType(previousCryptoTransaction.getBlockchainNetworkType());
+        cryptoTransaction.setCryptoStatus(previousCryptoTransaction.getCryptoStatus());
+        cryptoTransaction.setBlockDepth(previousCryptoTransaction.getBlockDepth());
+        cryptoTransaction.setCryptoCurrency(previousCryptoTransaction.getCryptoCurrency());
+        cryptoTransaction.setAddressTo(previousCryptoTransaction.getAddressTo());
+        cryptoTransaction.setAddressFrom(previousCryptoTransaction.getAddressFrom());
+        cryptoTransaction.setBtcAmount(previousCryptoTransaction.getBtcAmount());
+        cryptoTransaction.setFee(previousCryptoTransaction.getFee());
+        cryptoTransaction.setCryptoAmount(previousCryptoTransaction.getCryptoAmount());
+        cryptoTransaction.setOp_Return(previousCryptoTransaction.getOp_Return());
+        cryptoTransaction.setCryptoTransactionType(previousCryptoTransaction.getCryptoTransactionType());
+
+        return cryptoTransaction;
     }
 
     /**
@@ -396,5 +450,21 @@ public class CryptoTransaction{
 
     public void setBlockDepth(int blockDepth) {
         this.blockDepth = blockDepth;
+    }
+
+    public long getFee() {
+        return fee;
+    }
+
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    public long getBtcAmount() {
+        return btcAmount;
+    }
+
+    public void setBtcAmount(long btcAmount) {
+        this.btcAmount = btcAmount;
     }
 }
