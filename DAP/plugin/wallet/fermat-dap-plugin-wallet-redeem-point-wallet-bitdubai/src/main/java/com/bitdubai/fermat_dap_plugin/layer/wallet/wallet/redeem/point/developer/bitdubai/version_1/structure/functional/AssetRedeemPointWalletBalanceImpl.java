@@ -45,7 +45,7 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
         assetRedeemPointWalletDao.addDebit(assetRedeemPointWalletTransactionRecord, balanceType);
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-DEBIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + " Balance: " + balanceType.getCode());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-DEBIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + "- Balance: " + balanceType.getCode());
     }
 
     @Override
@@ -53,6 +53,6 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
         assetRedeemPointWalletDao.addCredit(assetRedeemPointWalletTransactionRecord, balanceType);
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-CREDIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + " Balance: " + balanceType.getCode());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-CREDIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + "- Balance: " + balanceType.getCode());
     }
 }
