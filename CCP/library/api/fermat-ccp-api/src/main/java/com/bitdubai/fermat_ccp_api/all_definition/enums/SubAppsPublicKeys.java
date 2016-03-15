@@ -12,7 +12,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
     CCP_IDENTITY               ("public_key_ccp_intra_user_identity"),
     CBP_BROKER_COMMUNITY               ("public_key_crypto_broker_community"),
     CBP_CUSTOMER_COMMUNITY               ("public_key_crypto_customer_community"),
-
+    CHT_NEWMESSAGE("13")
     ;
 
     private String code;
@@ -29,7 +29,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
             case "public_key_intra_user_identity": return CCP_IDENTITY     ;
             case "public_key_crypto_broker_community": return CBP_BROKER_COMMUNITY  ;
             case "public_key_crypto_customer_community": return CBP_CUSTOMER_COMMUNITY     ;
-
+            case "13": return CHT_NEWMESSAGE;
 
             default:
                 throw new InvalidParameterException(

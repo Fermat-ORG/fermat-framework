@@ -170,11 +170,10 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
      * The method <code>cancelActorAssetRedeem</code> cancels an intra user from the connections registry
-     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
-     * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException
+     * @throws CantCancelConnectionActorAssetException
      */
-    void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetRedeem(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <code>getWaitingYourConnectionActorAssetRedeem</code> shows the list of all intra users

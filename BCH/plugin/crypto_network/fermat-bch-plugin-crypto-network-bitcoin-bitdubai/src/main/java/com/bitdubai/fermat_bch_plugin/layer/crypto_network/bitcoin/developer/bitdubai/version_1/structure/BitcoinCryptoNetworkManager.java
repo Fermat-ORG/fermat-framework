@@ -1029,4 +1029,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          */
         return transactions;
     }
+
+    /**
+     * Gets the list of stored CryptoTransactions for the specified network type
+     * @param blockchainNetworkType the network type to get the transactions from.
+     * @return the list of Crypto Transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType) throws CantGetCryptoTransactionException {
+        try{
+            return this.getDao().getCryptoTransactions(blockchainNetworkType);
+        } catch (Exception e){
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the list of stored cryptoTransactions", "Database issue");
+        }
+
+    }
 }

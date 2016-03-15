@@ -124,9 +124,8 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @param internalId           Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException
      */
-    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
+    public synchronized void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException {
         DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
-        //String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
         try {
             String digitalAssetInnerXML = digitalAsset.toString();
             persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName, internalId);
@@ -162,6 +161,20 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
             throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + internalId + "' file");
         } catch (Exception exception) {
             throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting " + internalId + "' file");
+        }
+    }
+
+    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPk) throws CantGetDigitalAssetFromLocalStorageException {
+        try {
+            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, digitalAssetFileName, assetPk, FILE_PRIVACY, FILE_LIFE_SPAN);
+            String digitalAssetMetadataXMLString = digitalAssetMetadataFile.getContent();
+            return (DigitalAsset) XMLParser.parseXML(digitalAssetMetadataXMLString, new DigitalAsset());
+        } catch (FileNotFoundException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + assetPk + "' file");
+        } catch (CantCreateFileException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + assetPk + "' file");
+        } catch (Exception exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting " + assetPk + "' file");
         }
     }
 
