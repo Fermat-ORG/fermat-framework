@@ -40,6 +40,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -395,6 +396,18 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             raisePaymentConfirmationEvent();
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                        /**
+                         *
+                         * Confirms notifcation reception
+                         * */
+                        transactionTransmissionManager.confirmNotificationReception(businessTransactionMetadata.getReceiverId()
+                                    ,businessTransactionMetadata.getSenderId()
+                                    ,contractHash,businessTransactionMetadata.getContractId()
+                                    ,Plugins.CUSTOMER_OFFLINE_PAYMENT,businessTransactionMetadata.getReceiverType()
+                                    ,businessTransactionMetadata.getSenderType());
+
+
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
@@ -423,10 +436,16 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                        transactionTransmissionManager.ackConfirmNotificationReception(businessTransactionMetadata.getReceiverId()
+                                ,businessTransactionMetadata.getSenderId()
+                                ,contractHash,businessTransactionMetadata.getContractId()
+                                ,Plugins.CUSTOMER_OFFLINE_PAYMENT,businessTransactionMetadata.getReceiverType()
+                                ,businessTransactionMetadata.getSenderType());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
-                //TODO: look a better way to deal with this exceptions
+                //TODO: REVISAR SI ES NECESARIO UN EVENTO PARA EL ACK_CONFIRM_MESSAGE
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
@@ -467,6 +486,11 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "The customerBrokerContractSale is null");
+            }catch (CantConfirmNotificationReception e){
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending events",
+                        "cant send notification confirmation.");
             }
 
         }
