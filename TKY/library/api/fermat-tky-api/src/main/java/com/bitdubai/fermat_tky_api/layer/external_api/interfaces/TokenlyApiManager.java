@@ -1,7 +1,12 @@
 package com.bitdubai.fermat_tky_api.layer.external_api.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
@@ -13,7 +18,7 @@ public interface TokenlyApiManager extends FermatManager {
      * @param botId represents the bot Id in swapbot site.
      * @return
      */
-    com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot getBotByBotId(String botId) throws CantGetBotException;
+    Bot getBotByBotId(String botId) throws CantGetBotException;
 
     /**
      * This method returns String that contains a swap bot by tokenly username
@@ -21,6 +26,28 @@ public interface TokenlyApiManager extends FermatManager {
      * @return
      * @throws CantGetBotException
      */
-    com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
+    Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
+
+    /**
+     * This method returns a Tokenly Album.
+     * @return
+     * @throws CantGetAlbumException
+     */
+    Album[] getAlbums() throws CantGetAlbumException;
+
+    /**
+     * This method returns a download song by song Id.
+     * @param id
+     * @return
+     */
+    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
+
+    /**
+     * This method returns if a username and key pair si valid (temporal method)
+     * @param username
+     * @param userKey
+     * @return
+     */
+    boolean isTokenlyAccessVaild(String username, String userKey);
 
 }
