@@ -95,7 +95,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_broker_button);
+        Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
 
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +145,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
             }
         });
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
@@ -182,7 +181,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     private void createNewIdentityInBackDevice(String donde){
         String brokerNameText = mBrokerName.getText().toString();
         if(brokerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }else{
             if (cryptoBrokerBitmap == null) {
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
