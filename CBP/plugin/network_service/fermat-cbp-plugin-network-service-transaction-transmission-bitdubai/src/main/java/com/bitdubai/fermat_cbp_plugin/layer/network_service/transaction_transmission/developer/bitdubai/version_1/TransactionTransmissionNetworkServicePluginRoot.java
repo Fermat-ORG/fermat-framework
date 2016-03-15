@@ -326,17 +326,32 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                 transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
                 switch (businessTransactionMetadata.getType()) {
+                    case ACK_CONFIRM_MESSAGE:
+                        //TODO: verificar si es necesario disparar un evento a las business transactions para hacer ACK de la confirmacion del msj
+                        System.out.println("******** TRANSACTION_TRANSMISSION --- ACK_CONFIRM_MESSAGE **********");
+                        break;
                     case CONFIRM_MESSAGE:
-                        //TODO: mandar a confirmar mensajes de recepcion
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
+                        switch (businessTransactionMetadata.getRemoteBusinessTransaction()){
+                            case OPEN_CONTRACT:
+                                //launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                                //launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                                break;
+                            default:
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        }
                         break;
                     case CONTRACT_STATUS_UPDATE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
+                        switch (businessTransactionMetadata.getRemoteBusinessTransaction()){
+                            case OPEN_CONTRACT: launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        }
                         launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         break;
                     case TRANSACTION_HASH:
-                        //TODO: implementar como validar los hash de los contratos
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
+                        launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
                         break;
                     default: //TODO: definir que se va a hacer aqui
                 }

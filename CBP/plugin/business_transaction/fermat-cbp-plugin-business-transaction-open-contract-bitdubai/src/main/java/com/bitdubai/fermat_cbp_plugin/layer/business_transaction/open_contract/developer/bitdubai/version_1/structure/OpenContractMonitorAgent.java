@@ -278,7 +278,7 @@ public class OpenContractMonitorAgent implements
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
                                         purchaseContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -290,7 +290,7 @@ public class OpenContractMonitorAgent implements
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         saleContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -418,6 +418,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            //transactionTransmissionManager.confirmNotificationReception();
                         }
                     }
 
