@@ -87,7 +87,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
 
 
-        list.add(new PreferenceSettingsEditText(9,"Export Private key",""));
+
+        list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -120,52 +121,57 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             }
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
+            switch (preferenceSettingsItem.getId()){
+                case 1:
+                    //Notifications
+                    break;
+                case 5:
+                    //Network
+                    PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+                    BlockchainNetworkType blockchainNetworkType = null;
 
-            if (preferenceSettingsItem.getId() == 1){
-                //enable notifications settings
-                bitcoinWalletSettings.setNotificationEnabled(((PreferenceSettingsSwithItem)preferenceSettingsItem).getSwitchChecked());
-            }
-            else {
-                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-                BlockchainNetworkType blockchainNetworkType = null;
+                    switch (preferenceSettingsTextPlusRadioItem.getText()) {
 
-                switch (preferenceSettingsTextPlusRadioItem.getText()) {
+                        case "MainNet":
+                            blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
 
-                    case "MainNet":
-                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+                            break;
 
-                        break;
+                        case "TestNet":
+                            blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                            break;
 
-                    case "TestNet":
-                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                        break;
+                        case "RegTest":
+                            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                            break;
 
-                    case "RegTest":
-                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                        break;
+                        default:
+                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                            break;
 
-                    default:
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                        break;
-
-                }
-
-                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
-
-                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
-                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
-
-                if (blockchainNetworkType == null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                    } else {
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                     }
-                }
 
-                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                    preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
+                    System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
+                    System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+                    if (blockchainNetworkType == null) {
+                        if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                        } else {
+                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        }
+                    }
+
+                    bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                    break;
+
+                case 9:
+                    //export key open dialog
 
             }
+
 
             try {
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
