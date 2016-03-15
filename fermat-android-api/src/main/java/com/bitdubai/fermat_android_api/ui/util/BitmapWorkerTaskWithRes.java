@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
@@ -18,14 +18,14 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer
  */
-public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
+public class BitmapWorkerTaskWithRes extends AsyncTask<Integer, Void, Drawable> {
 
     private final WeakReference<ImageView> imageViewReference;
     private final Resources res;
     private final int resImageInCaseOfError;
     private boolean isCircle = false;
 
-    public BitmapWorkerTask(ImageView imageView, Resources res,@Nullable int resImageInCaseOfError, boolean isCircle) {
+    public BitmapWorkerTaskWithRes(ImageView imageView, Resources res, @Nullable int resImageInCaseOfError, boolean isCircle) {
         this.res = res;
         this.isCircle = isCircle;
         // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -35,19 +35,23 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
 
     // Decode image in background.
     @Override
-    protected Bitmap doInBackground(byte[]... params) {
-        byte[] data = params[0];
-        return BitmapFactory.decodeByteArray(data, 0, data.length);
+    protected Drawable doInBackground(Integer... params) {
+        int data = params[0];
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return res.getDrawable(data,null);
+        }else{
+            return res.getDrawable(data);
+        }
     }
 
     // Once complete, see if ImageView is still around and set bitmap.
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
+    protected void onPostExecute(Drawable bitmap) {
         final ImageView imageView = imageViewReference.get();
         if (bitmap != null) {
             //if (imageView != null) {
             //imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res,bitmap));
-            imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, bitmap) : new BitmapDrawable(res, bitmap));
+            imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, ((BitmapDrawable)bitmap).getBitmap()) : bitmap);
             //}
         } else {
             if (isCircle)

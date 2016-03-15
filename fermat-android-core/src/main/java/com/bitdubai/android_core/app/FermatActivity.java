@@ -1273,6 +1273,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         case 1:
                             radioGroup.check(R.id.radioButton2);
                             break;
+                        case 2:
+                            radioGroup.check(R.id.radioButton3);
+                            break;
                     }
                 }
 
