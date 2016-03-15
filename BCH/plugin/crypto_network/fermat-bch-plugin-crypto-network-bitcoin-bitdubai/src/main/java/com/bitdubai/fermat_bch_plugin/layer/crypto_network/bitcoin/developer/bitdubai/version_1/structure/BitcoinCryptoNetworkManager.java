@@ -805,6 +805,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
 
+        // If I didn't got it in the right transactionType, will try getting them all
+        if (cryptoTransaction == null){
+            try {
+                cryptoTransaction = getDao().getCryptoTransaction(txHash, null, toAddress);
+            } catch (CantExecuteDatabaseOperationException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
+            }
+        }
+
 
         /**
          * This might happen if the transaction we are searching for is not yet broadcasted
