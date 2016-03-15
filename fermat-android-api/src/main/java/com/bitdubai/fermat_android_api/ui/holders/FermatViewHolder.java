@@ -13,6 +13,7 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
 
     private int holderId = 0;
     private int holderType;
+    private int holderLayoutRes;
 
     /**
      * Constructor
@@ -40,6 +41,13 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
         this.holderType = holderType;
     }
 
+    public FermatViewHolder(View itemView, int holderId, int holderType, int holderLayoutRes) {
+        super(itemView);
+        this.holderId = holderId;
+        this.holderType = holderType;
+        this.holderLayoutRes = holderLayoutRes;
+    }
+
     public int getHolderId() {
         return holderId;
     }
@@ -48,5 +56,6 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
         return holderType;
     }
 
+    public int getHolderLayoutRes(){return holderLayoutRes;}
 
 }
