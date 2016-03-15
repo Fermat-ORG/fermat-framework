@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.util;
 
 import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,6 +43,20 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
                 @Override
                 public void run() {
                     context.publish(broadcasterType,appCode,code);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void publish(final BroadcasterType broadcasterType, final String appCode, final FermatBundle bundle) {
+        try {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    context.publish(broadcasterType,appCode,bundle);
                 }
             });
         }catch (Exception e){

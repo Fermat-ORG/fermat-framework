@@ -91,6 +91,8 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
         holder.row_connection_state.setText(data.getState());
         if(data.getState().equals("Offline"))
             holder.row_connection_state.setTextColor(Color.RED);
+        else
+            holder.row_connection_state.setTextColor(Color.WHITE);
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null && profileImage.length > 0) {

@@ -128,10 +128,9 @@ public final class FermatSystem {
         }
 
         try {
-
             //fermatSystemContext.registerPlatform(new ARTPlatform());
             fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new BNKPlatform());
+//            fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new CERPlatform());
@@ -142,6 +141,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new PIPPlatform());
             //fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
 
 
         } catch(CantRegisterPlatformException e) {
