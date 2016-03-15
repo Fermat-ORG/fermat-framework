@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -336,7 +337,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             if (transaction == null){
                 try {
                     transaction = loadTransactionFromDisk(txHash);
-                } catch (CantLoadTransactionFromFileException e) {
+                } catch (CantLoadTransactionFromFileException | FileNotFoundException | CantCreateFileException e) {
                     throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "No transaction was found to broadcast.", null);
                 }
 
@@ -397,6 +398,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                          */
                         wallet.saveToFile(walletFileName);
 
+                        /**
+                         * deletes the stored transaction on disk
+                         */
+                        deleteStoredTransaction(txHash);
+
                         System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
@@ -428,19 +434,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param txHash
          * @return
          */
-        public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+        public Transaction loadTransactionFromDisk(String txHash) throws FileNotFoundException, CantCreateFileException, CantLoadTransactionFromFileException {
             if (StringUtils.isBlank(txHash))
                 throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.DEFAULT_MESSAGE, null, "txHash is not correct: " + txHash, "invalid parameter");
 
-            try {
-                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                String transactionContent = pluginTextFile.getContent();
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String transactionContent = pluginTextFile.getContent();
 
-                Transaction transaction = (Transaction) XMLParser.parseXML(transactionContent, new Transaction(NETWORK_PARAMETERS));
-                return transaction;
-            } catch (Exception e) {
-                throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.CONTEXT_CONTENT_SEPARATOR, e, "Error loading transaction " + txHash + " from disk.", "IO Error");
-            }
+            Transaction transaction = (Transaction) XMLParser.parseXML(transactionContent, new Transaction(NETWORK_PARAMETERS));
+            return transaction;
+
         }
 
 
@@ -491,7 +494,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            events.saveOutgoingTransaction(wallet, tx, transactionId);
+            for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
+                try {
+                    getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    //maybe try saving into disk if cant save it.
+                    e.printStackTrace();
+                }
+            }
+
         }
 
         /**
@@ -841,7 +852,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         return this.monitorAgent.getBlockchainConnectionStatus();
     }
 
-    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException{
+    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException, FileNotFoundException, CantCreateFileException {
         return this.monitorAgent.loadTransactionFromDisk(txHash);
     }
 

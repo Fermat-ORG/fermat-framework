@@ -91,14 +91,14 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      * @param negotiation
      * @throws CantUpdateCustomerBrokerSaleException
      */
-    void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
+    void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
 
     /**
      *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerSaleException
      */
-    void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
+    void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
 
     /**
      *

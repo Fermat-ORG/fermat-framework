@@ -115,6 +115,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         if (list != null) {
             assetIssuerActorRecords = new ArrayList<>();
+            actorAssetIssuerManager.updateOfflineIssuersRegisterInNetworkService(list);
 
             try {
                 for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered()) {
@@ -250,6 +251,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
                 }
             }
         }
+        else
+        {
+            throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
+        }
         } catch (CantAskConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAskConnectionActorAssetException("", e, "", "");
@@ -297,10 +302,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void cancelActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetIssuer(ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
         try {
 
-            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetIssuerLoggedPublicKey, actorAssetToCancel.getActorPublicKey());
+            this.actorAssetIssuerManager.cancelActorAssetIssuer(actorAssetToCancel.getActorPublicKey());
 
 //            this.assetIssuerActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetIssuerLoggedPublicKey, actorAssetToCancel);
 

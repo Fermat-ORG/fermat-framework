@@ -311,9 +311,9 @@ public class AssetTransferFragment extends AbstractFermatFragment {
 
         assetTransferNameText.setText(digitalAsset.getName());
         assetsToTransferEditText.setText(selectedUserCount + "");
-        assetTransferRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
+        assetTransferRemainingText.setText(digitalAsset.getUsableAssetsQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
-        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+        if (digitalAsset.getUsableAssetsQuantity() == 0) {
             selectUserButton.setOnClickListener(null);
         }
     }
@@ -326,7 +326,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetTransferImage, res, R.drawable.img_asset_without_image, false);
@@ -335,7 +335,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
         assetTransferNameText.setText(digitalAsset.getName());
 
         assetsToTransferEditText.setText(selectedUserCount + "");
-        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        long quantity = digitalAsset.getUsableAssetsQuantity();
         assetTransferRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 

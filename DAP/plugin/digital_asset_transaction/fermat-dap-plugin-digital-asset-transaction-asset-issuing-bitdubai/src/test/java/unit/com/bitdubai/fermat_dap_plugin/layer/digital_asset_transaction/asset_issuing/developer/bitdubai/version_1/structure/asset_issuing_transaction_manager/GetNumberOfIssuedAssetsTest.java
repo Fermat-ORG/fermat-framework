@@ -3,15 +3,15 @@ package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asse
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.AssetIssuingTransactionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Before;
@@ -63,7 +63,7 @@ public class GetNumberOfIssuedAssetsTest {
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
 
     @Mock
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
 
     String assetPublicKey = "assetPublicKey";
 
@@ -90,7 +90,7 @@ public class GetNumberOfIssuedAssetsTest {
                 this.cryptoAddressBookManager,
                 this.outgoingIntraActorManager);
         digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
-        digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
+        digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingDAO);
         MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
 
         setUpMockitoRules();
@@ -102,7 +102,7 @@ public class GetNumberOfIssuedAssetsTest {
 
     @Test
     public void test_OK() throws Exception {
-        when(assetIssuingTransactionDao.getNumberOfIssuedAssets(assetPublicKey)).thenReturn(5);
+        when(assetIssuingDAO.getNumberOfIssuedAssets(assetPublicKey)).thenReturn(5);
 
         int issuedAssets = assetIssuingTransactionManager.getNumberOfIssuedAssets(assetPublicKey);
         assertThat(issuedAssets).isEqualTo(5);
@@ -110,7 +110,7 @@ public class GetNumberOfIssuedAssetsTest {
 
     @Test
     public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
-        when(assetIssuingTransactionDao.getNumberOfIssuedAssets(assetPublicKey)).thenThrow(new CantCheckAssetIssuingProgressException("error"));
+        when(assetIssuingDAO.getNumberOfIssuedAssets(assetPublicKey)).thenThrow(new CantCheckAssetIssuingProgressException("error"));
 
         catchException(assetIssuingTransactionManager).getNumberOfIssuedAssets(assetPublicKey);
         Exception thrown = caughtException();

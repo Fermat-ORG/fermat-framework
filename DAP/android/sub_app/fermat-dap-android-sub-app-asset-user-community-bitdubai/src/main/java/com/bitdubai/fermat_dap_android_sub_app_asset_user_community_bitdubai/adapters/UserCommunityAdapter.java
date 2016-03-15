@@ -57,6 +57,8 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                         break;
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
                         holder.connectedStateWaiting.setVisibility(View.GONE);
                         holder.connectedStateDenied.setVisibility(View.VISIBLE);
                         break;
@@ -118,6 +120,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
     public void setAdapterChangeListener(AdapterChangeListener<Actor> adapterChangeListener) {
         this.adapterChangeListener = adapterChangeListener;
+    }
+
+    public AdapterChangeListener<Actor> getAdapterChangeListener() {
+        return adapterChangeListener;
     }
 
     public int getSize() {

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/10/15.
  */
 public enum IssuingStatus implements FermatEnum {
+    NOT_PUBLISHED("NP"),
     ACTOR_ISSUER_NULL ("AIN"),
     DATABASE_EXCEPTION("DAEX"),
     DIGITAL_ASSET_INCOMPLETE("DAIN"),
@@ -14,6 +15,11 @@ public enum IssuingStatus implements FermatEnum {
     INSUFFICIENT_FONDS("ISFF"),
     INTRA_ACTOR_NULL("IAN"),
     ISSUED("ISED"),
+    PROCESSED("PROC"),
+    SENDING_CRYPTO("SNDC"),
+    WAITING_CONFIRMATION("WACO"),
+    ON_CRYPTO_NETWORK("OCN"),
+    ON_BLOCK_CHAIN("OBC"),
     ISSUING("ISSG"),
     INVALID_ADDRESS_TO_SEND("IATS"),
     INVALID_NUMBER_TO_ISSUE("INTI"),

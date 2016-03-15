@@ -47,7 +47,7 @@ public abstract class AbstractOpenContract {
         ContractSaleRecord contractRecord=new ContractSaleRecord();
         Currency merchandiseCurrency = CryptoCurrency.BITCOIN;
         float merchandiseAmount;
-        long merchandiseDeliveryExpirationDate;
+        long merchandiseDeliveryExpirationDate = 0;
         float paymentAmount;
         Currency paymentCurrency = FiatCurrency.US_DOLLAR;
         long paymentExpirationDate;
@@ -123,8 +123,8 @@ public abstract class AbstractOpenContract {
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
         //To avoid a null field I gonna set the dayTime to 0
-        //TODO: find the correct value, this was removed from negotiation clauses
-        dayTime=0;
+        //TODO: encontrar el valor de entrega de mercancia o de pago
+        dayTime=merchandiseDeliveryExpirationDate;
         contractRecord.setDayTime(dayTime);
         //New fields
         contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
@@ -147,7 +147,7 @@ public abstract class AbstractOpenContract {
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
         Currency paymentCurrency = FiatCurrency.US_DOLLAR;
-        long paymentExpirationDate;
+        long paymentExpirationDate = 0;
         String clauseValue;
         long dayTime;
 
@@ -222,6 +222,8 @@ public abstract class AbstractOpenContract {
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
         contractRecord.setContractClauses(contractClauses);
+        dayTime = paymentExpirationDate;
+        contractRecord.setDayTime(dayTime);
         //New Field
         contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
         return contractRecord;

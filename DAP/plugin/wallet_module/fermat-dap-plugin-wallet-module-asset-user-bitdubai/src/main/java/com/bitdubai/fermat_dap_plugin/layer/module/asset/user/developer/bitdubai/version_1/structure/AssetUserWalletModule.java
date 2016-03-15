@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -26,6 +27,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,19 +43,28 @@ public class AssetUserWalletModule {
     private final UserRedemptionManager userRedemptionManager;
     private final IdentityAssetUserManager identityAssetUserManager;
     private final AssetTransferManager assetTransferManager;
+    private ErrorManager errorManager;
 
-    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager, AssetTransferManager assetTransferManager) {
+    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager,
+                                 AssetAppropriationManager assetAppropriationManager,
+                                 UserRedemptionManager userRedemptionManager,
+                                 IdentityAssetUserManager identityAssetUserManager,
+                                 AssetTransferManager assetTransferManager,
+                                 ErrorManager errorManager) {
+
         this.assetUserWalletManager = assetUserWalletManager;
         this.assetAppropriationManager = assetAppropriationManager;
         this.userRedemptionManager = userRedemptionManager;
         this.identityAssetUserManager = identityAssetUserManager;
         this.assetTransferManager = assetTransferManager;
+        this.errorManager = errorManager;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
             return assetUserWalletManager.loadAssetUserWallet(publicKey, networkType).getBalance().getAssetUserWalletBalances();
         } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetUserWalletBalancesBook", "Class: AssetUserWalletModule");
         }
     }
@@ -74,8 +86,9 @@ public class AssetUserWalletModule {
             walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY; //TODO: Solo para la prueba del Redemption
             HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint, assetsAmount, networkType);
             userRedemptionManager.redeemAssetToRedeemPoint(hashMap, walletPublicKey);
-        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException | FileNotFoundException | CantCreateFileException e) {
-            throw new CantRedeemDigitalAssetException(e, context, null);
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException | FileNotFoundException | CantCreateFileException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantRedeemDigitalAssetException(exception, context, null);
         }
     }
 
@@ -109,6 +122,7 @@ public class AssetUserWalletModule {
             assetTransferManager.transferAssets(hashMap, walletPublicKey);
 
         } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantLoadWalletException("Error transfer Assets", exception, "Method: Transfer Assets", "Class: AssetIssuerWalletModuleManager");
         }
     }
@@ -141,8 +155,9 @@ public class AssetUserWalletModule {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
                 assetAppropriationManager.appropriateAsset(assetMetadata, WalletUtilities.WALLET_PUBLIC_KEY, bitcoinWalletPublicKey, networkType);
             }
-        } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {
-            throw new CantExecuteAppropriationTransactionException(e, context, null);
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantExecuteAppropriationTransactionException(exception, context, null);
         }
     }
 
@@ -150,8 +165,9 @@ public class AssetUserWalletModule {
 
         try {
             return identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
         }
         return null;
     }

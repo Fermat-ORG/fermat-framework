@@ -395,6 +395,20 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantGetAssetRedeemPointActorsException {
+
+        try {
+            this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
+        }
+        catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T UPDATE ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
+        }
+
+    }
+
 
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException {
         try {
@@ -447,7 +461,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     destinationActorType,
                     senderActorPublicKey,
                     destinationActorPublicKey,
-                    CryptoAddressDealers.DAP_ASSET,
+                    CryptoAddressDealers.DAP_WATCH_ONLY,
                     blockchainNetworkType);
 
 //                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, null, blockchainNetworkType);
@@ -569,9 +583,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetRedeem(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {//TODO EVALUAR State CANCEL o directamente REGISTERED_ONLINE
-            this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
+            this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserToCancelPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateRedeemPointException e) {
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -856,7 +870,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                                 notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
-                        this.cancelActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        this.cancelActorAssetRedeem(intraUserSendingPublicKey);
                         break;
                     case ACCEPTED:
                         this.acceptActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
@@ -884,6 +898,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DENIED:
                         this.denyConnectionActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
                         break;
                     case ACTOR_ASSET_NOT_FOUND:
                         this.redeemPointActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);

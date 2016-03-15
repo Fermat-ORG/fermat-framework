@@ -2,13 +2,15 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 
+import java.io.Serializable;
+
 /**
  * The class <code>PluginDeveloperReference</code>
  * haves all the information of a Plugin Developer Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class PluginDeveloperReference {
+public class PluginDeveloperReference implements Serializable{
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;

@@ -8,11 +8,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.EarningCurrencyCalendarRelationship;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -30,7 +33,7 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
         dateTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_date_item);
     }
 
-    public void bind(EarningsPairDetail data, TimeFrequency frequency, Currency earningCurrency) {
+    public void bind(EarningsDetailData data, TimeFrequency frequency, Currency earningCurrency) {
         final NumberFormat numberFormat = DecimalFormat.getInstance();
 
         final String diff = numberFormat.format(data.getAmount());
@@ -50,16 +53,25 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
         CharSequence formattedDate;
         switch (frequency) {
             case MONTHLY:
-                formattedDate = DateFormat.format("MMM yyyy", data.getToTimestamp());
+                formattedDate = DateFormat.format("MMM yyyy", getDate(data.getRelationship()));
                 break;
             case YEARLY:
-                formattedDate = DateFormat.format("yyyy", data.getToTimestamp());
+                formattedDate = DateFormat.format("yyyy", getDate(data.getRelationship()));
                 break;
             default:
-                formattedDate = DateFormat.format("dd MMM yyyy", data.getToTimestamp());
+                formattedDate = DateFormat.format("dd MMM yyyy", getDate(data.getRelationship()));
                 break;
         }
 
         dateTextView.setText(formattedDate);
+    }
+
+    private Calendar getDate(EarningCurrencyCalendarRelationship data) {
+
+        return new GregorianCalendar(
+                data.getYear(),
+                data.getMonth(),
+                data.getDay()
+        );
     }
 }
