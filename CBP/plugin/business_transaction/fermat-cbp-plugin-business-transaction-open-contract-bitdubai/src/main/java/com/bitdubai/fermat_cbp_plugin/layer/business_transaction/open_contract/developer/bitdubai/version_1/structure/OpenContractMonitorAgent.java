@@ -415,7 +415,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     contractTransactionStatus);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             //transactionTransmissionManager.confirmNotificationReception();
@@ -435,7 +435,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     ContractTransactionStatus.PENDING_RESPONSE);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
@@ -454,7 +454,7 @@ public class OpenContractMonitorAgent implements
                                     contractHash,
                                     ContractTransactionStatus.CONTRACT_OPENED);
                             openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
+                                    eventId,
                                     EventStatus.NOTIFIED);
                             contractType=openContractBusinessTransactionDao.getContractType(contractHash);
                             switch (contractType){
