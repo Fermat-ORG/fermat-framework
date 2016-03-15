@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
+package com.mati.expandable_recycler_view.model;
 
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
@@ -6,33 +6,29 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import java.util.List;
 
 
-public class GrouperItem<CHILD_TYPE> implements ParentListItem {
+public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
     private List<CHILD_TYPE> childItemList;
-    private String mParentText;
     private int childCount;
     private boolean initiallyExpanded;
 
-    public GrouperItem(String text, List<CHILD_TYPE> childItemList, boolean initiallyExpanded) {
-        this.mParentText = text;
+    private ITEM item;
+
+    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM item) {
         this.initiallyExpanded = initiallyExpanded;
         this.childItemList = childItemList;
+        this.item = item;
     }
 
     public GrouperItem(String text, boolean initiallyExpanded) {
-        this.mParentText = text;
         this.initiallyExpanded = initiallyExpanded;
     }
 
     public int getChildCount() {
         if (childItemList != null)
+            // Le resto uno porque el ultimo es el total
             childCount = this.childItemList.size();
         return childCount;
-    }
-
-    @Override
-    public CHILD_TYPE getItem() {
-        return null;
     }
 
     /**
@@ -65,7 +61,7 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public String getParentText() {
-        return mParentText;
+    public ITEM getItem() {
+        return item;
     }
 }

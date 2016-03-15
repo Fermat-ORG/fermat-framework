@@ -125,6 +125,23 @@ public class BroadcastManager implements BroadcasterInterface {
         }
     }
 
+    @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+        try {
+            switch (broadcasterType){
+                case UPDATE_VIEW:
+                    updateView(bundle);
+                    break;
+                case NOTIFICATION_SERVICE:
+                    fermatActivity.get().notificateBroadcast(null,bundle);
+                    break;
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
+
     private void updateView(FermatBundle bundle) {
         TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
         if(adapter!=null) {
