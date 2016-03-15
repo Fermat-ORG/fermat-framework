@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -194,8 +195,9 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          * Create the bitcoinj wallet from the keys of all accounts
          */
         final Wallet wallet;
+        Context walletContext = new Context(networkParameters);
         try {
-            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+            wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -798,8 +800,9 @@ public class AssetCryptoVaultManager  extends CryptoVault{
          * Create the bitcoinj wallet from the keys of all accounts
          */
         final Wallet wallet;
+        Context walletContext = new Context(networkParameters);
         try {
-            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+            wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
