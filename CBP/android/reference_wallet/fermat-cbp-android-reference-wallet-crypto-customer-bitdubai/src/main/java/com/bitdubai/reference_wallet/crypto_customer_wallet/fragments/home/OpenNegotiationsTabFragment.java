@@ -59,6 +59,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private List<GrouperItem> openNegotiationList;
     private CryptoCustomerWalletManager walletManager;
 
+    private View emptyListViewsContainer;
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -92,11 +93,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
-
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -229,6 +232,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
             }
+        }
+        if (openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 

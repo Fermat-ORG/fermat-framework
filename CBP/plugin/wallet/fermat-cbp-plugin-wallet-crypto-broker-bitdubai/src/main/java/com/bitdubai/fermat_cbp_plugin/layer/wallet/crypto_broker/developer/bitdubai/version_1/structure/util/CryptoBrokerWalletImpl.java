@@ -120,6 +120,14 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
     }
 
+    @Override
+    public List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        return cryptoBrokerWalletDatabaseDao.getStockHistory(merchandise, moneyType, offset, timeStamp);
+    }
+
     /**
      * This method load the list CryptoBrokerStockTransaction
      *

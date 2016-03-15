@@ -206,7 +206,7 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             "HOLD",
                             cryptoHoldTransaction.getBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
-                    bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionRecord);
+                    bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
                     cryptoHoldTransaction.setTimestampAcknowledged(new Date().getTime() / 1000);
                     holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoHoldTransaction);
@@ -227,7 +227,7 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCalculateBalanceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantRegisterDebitException e) {
+        } catch (CantRegisterCreditException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

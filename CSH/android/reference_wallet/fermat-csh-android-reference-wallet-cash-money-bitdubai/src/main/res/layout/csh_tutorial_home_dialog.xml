@@ -59,7 +59,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
-                    android:src="@drawable/cash_wallet_xxhdpi"
+                    android:src="@drawable/csh_wallet_logo"
                 android:paddingBottom="2dp"/>
 
             </LinearLayout>
