@@ -9,6 +9,7 @@
 
 
     <!-- Text Sizes -->
+    <dimen name="csh_largest_plus_text_size">28sp</dimen>
     <dimen name="csh_largest_text_size">24sp</dimen>
     <dimen name="csh_larger_text_size">22sp</dimen>
     <dimen name="csh_large_text_size">20sp</dimen>
@@ -20,8 +21,7 @@
 
 
     <!-- Home -->
-    <dimen name="csh_home_titlebar_margin_top">20dp</dimen>
-    <dimen name="csh_home_titlebar_margin_bottom">15dp</dimen>
+
 
     <!-- Setup -->
     <dimen name="csh_setup_titlebar_margin_top">20dp</dimen>
