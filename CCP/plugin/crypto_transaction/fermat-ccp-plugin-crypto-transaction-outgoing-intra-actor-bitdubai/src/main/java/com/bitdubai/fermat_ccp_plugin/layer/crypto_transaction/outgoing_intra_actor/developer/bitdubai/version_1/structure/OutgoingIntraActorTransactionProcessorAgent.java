@@ -512,7 +512,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
             eventManager.raiseEvent(platformEvent);*/
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTIONREVERSE|" + transactionWrapper.getTransactionId().toString());
 
         }
 
