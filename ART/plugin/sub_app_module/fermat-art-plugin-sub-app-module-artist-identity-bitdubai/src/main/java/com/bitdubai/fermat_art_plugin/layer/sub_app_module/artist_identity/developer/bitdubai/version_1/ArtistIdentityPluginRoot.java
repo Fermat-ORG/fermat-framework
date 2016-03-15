@@ -16,7 +16,6 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fan;
 
 import java.util.List;
 
