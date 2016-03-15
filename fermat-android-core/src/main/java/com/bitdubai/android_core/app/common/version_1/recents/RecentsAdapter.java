@@ -16,7 +16,7 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
 
 
     private final Context context;
-    private ItemClickListener itemClickListener;
+    private RecentCallback recentCallback;
 
     public RecentsAdapter(Context context,List<RecentApp> recentApps) {
         super(recentApps);
@@ -31,11 +31,15 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
 
     @Override
     public void onBindViewHolder(final RecentHolder viewHolder) {
+        if(viewHolder.getPosition()==0){
+            recentCallback.onFirstElementAdded();
+        }
+
         viewHolder.itemView.setBackgroundColor(232);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemClickListener.onItemClick(viewHolder.model);
+                recentCallback.onItemClick(viewHolder.model);
             }
         });
         try {
@@ -48,12 +52,17 @@ public class RecentsAdapter extends OverviewAdapter<RecentHolder,RecentApp> {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //viewHolder.getRoot().addView(View.inflate(context, R.layout.widgetlayout, null));
+        try {
+            int res = viewHolder.model.getFermatApp().getBannerRes();
+            if(res!=0) viewHolder.getRoot().setBackgroundResource(res);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
+    public void setRecentCallback(RecentCallback recentCallback) {
+        this.recentCallback = recentCallback;
     }
 
 
