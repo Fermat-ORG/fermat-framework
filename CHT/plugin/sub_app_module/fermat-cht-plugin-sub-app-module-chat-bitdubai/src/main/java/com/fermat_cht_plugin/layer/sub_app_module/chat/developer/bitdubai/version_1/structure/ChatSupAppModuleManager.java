@@ -134,28 +134,28 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
-        try
-        {
-            List<ContactConnection> contactConnections = middlewareChatManager.getContactConnections();
-
-            for (ContactConnection contactConnection : contactConnections)
-            {
-                middlewareChatManager.deleteContactConnection(contactConnection);
-            }
-
-        } catch (CantGetContactConnectionException e) {
-            throw new CantGetContactConnectionException(
-                    e,
-                    "delete contact connections",
-                    "Cannot get the contact connection"
-            );
-        } catch (CantDeleteContactConnectionException e) {
-            throw new CantGetContactConnectionException(
-                    e,
-                    "delete contact connections",
-                    "Cannot delete contact connections"
-            );
-        }
+//        try
+//        {
+//            List<ContactConnection> contactConnections = middlewareChatManager.getContactConnections();
+//
+//            for (ContactConnection contactConnection : contactConnections)
+//            {
+//                middlewareChatManager.deleteContactConnection(contactConnection);
+//            }
+//
+//        } catch (CantGetContactConnectionException e) {
+//            throw new CantGetContactConnectionException(
+//                    e,
+//                    "delete contact connections",
+//                    "Cannot get the contact connection"
+//            );
+//        } catch (CantDeleteContactConnectionException e) {
+//            throw new CantGetContactConnectionException(
+//                    e,
+//                    "delete contact connections",
+//                    "Cannot delete contact connections"
+//            );
+//        }
         return middlewareChatManager.discoverActorsRegistered();
     }
 
