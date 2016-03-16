@@ -2,8 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
@@ -168,7 +168,7 @@ public class IncomingIntraUserRelayAgent {
                         transactionHandler.handleTransaction(transaction);
                         registry.setToApplied(transaction.getCryptoTransaction().getTransactionID());
                         System.out.println("TTF - INTRA USER RELAY: TRANSACTION APPLIED");
-                    } catch (IncomingIntraUserCantExecuteTransactionException | CantLoadWalletException | CantGetCryptoAddressBookRecordException | IncomingIntraUserCantAccessTransactionsException e) {
+                    } catch (IncomingIntraUserCantExecuteTransactionException | CantLoadWalletsException | CantGetCryptoAddressBookRecordException | IncomingIntraUserCantAccessTransactionsException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }
