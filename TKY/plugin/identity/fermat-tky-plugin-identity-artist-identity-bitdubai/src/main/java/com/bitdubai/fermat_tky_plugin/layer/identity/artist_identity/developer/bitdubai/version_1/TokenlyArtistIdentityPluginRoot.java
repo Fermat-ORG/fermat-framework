@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.database.TokenlyArtistIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyArtistIdentityDatabaseException;
+import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyArtistIdentityImp;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyIdentityArtistManagerImpl;
 
 import java.util.ArrayList;
@@ -123,7 +125,11 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
             ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
             ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
             ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
-            createArtistIdentity(alias,image,externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            Artist artist = createArtistIdentity(alias,image,externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            Artist artist1 = getArtistIdentity(artist.getId());
+            System.out.println("##############################\n");
+            System.out.println("artist1 = " + XMLParser.parseObject(new TokenlyArtistIdentityImp(artist1.getAlias(),artist1.getId(),artist1.getPublicKey(),artist1.getProfileImage(),artist1.getExternalUsername(),
+                    artist1.getExternalAccesToken(),artist1.getExternalPlatform(),artist1.getExposureLevel(),artist1.getArtistAcceptConnectionsType())));
         } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -158,13 +164,13 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateArtistIdentity(String alias, UUID publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        identityArtistManager.updateIdentityArtist(alias,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+    public void updateArtistIdentity(String alias, UUID id,String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+        identityArtistManager.updateIdentityArtist(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
     }
 
     @Override
-    public Artist getArtistIdentity(UUID publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitArtist(publicKey);
+    public Artist getArtistIdentity(UUID id) throws CantGetArtistIdentityException, IdentityNotFoundException {
+        return identityArtistManager.getIdentitArtist(id);
     }
 
 
