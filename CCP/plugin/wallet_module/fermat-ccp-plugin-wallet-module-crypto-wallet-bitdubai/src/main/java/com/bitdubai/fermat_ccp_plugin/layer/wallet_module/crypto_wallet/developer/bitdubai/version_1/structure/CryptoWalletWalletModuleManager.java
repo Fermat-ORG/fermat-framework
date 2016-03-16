@@ -1331,7 +1331,20 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         contactId = null;
 
                     } catch ( CantGetActorException e) {
-                        contactId = null;
+                        try{
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                            if (walletContactRecord != null)
+                                contactId = walletContactRecord.getContactId();
+
+                        }catch (CantGetActorException exe){
+                            contactId = null;
+                        }catch (Exception ex){
+                            walletContactRecord = null;
+                        }
+
                     }
 
                     break;
