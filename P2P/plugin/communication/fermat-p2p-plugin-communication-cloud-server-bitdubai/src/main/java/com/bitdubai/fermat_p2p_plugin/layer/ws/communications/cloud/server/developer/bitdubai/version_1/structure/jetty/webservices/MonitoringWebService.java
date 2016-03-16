@@ -132,7 +132,7 @@ public class MonitoringWebService {
 
                 data = monitClient.getComponents();
 
-                LOG.info("data = "+data);
+                LOG.debug("data = "+data);
 
                 respond.addProperty("success", Boolean.TRUE);
                 respond.addProperty("data", gson.toJson(data));
