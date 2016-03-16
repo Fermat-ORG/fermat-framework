@@ -10,9 +10,10 @@ public class BlockchainDownloadProgress {
     int pendingBlocks;
     int totalBlocks;
     int downloadedBlocks;
-    double progress;
+    int progress;
+    String downloader;
 
-    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, double progress) {
+    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, int progress) {
         this.blockchainNetworkType = blockchainNetworkType;
         this.pendingBlocks = pendingBlocks;
         this.totalBlocks = totalBlocks;
@@ -40,7 +41,7 @@ public class BlockchainDownloadProgress {
         return downloadedBlocks;
     }
 
-    public double getProgress() {
+    public int getProgress() {
         return progress;
     }
 
@@ -48,7 +49,7 @@ public class BlockchainDownloadProgress {
         this.pendingBlocks = pendingBlocks;
 
         downloadedBlocks = totalBlocks - pendingBlocks;
-        progress = (totalBlocks > 0) ? pendingBlocks / totalBlocks : 1.0;
+        progress = (totalBlocks > 0) ? ((pendingBlocks * 100) / totalBlocks) : 100;
 
     }
 
@@ -56,6 +57,11 @@ public class BlockchainDownloadProgress {
         this.totalBlocks = totalBlocks;
     }
 
+    public String getDownloader() {
+        return downloader;
+    }
 
-
+    public void setDownloader(String downloader) {
+        this.downloader = downloader;
+    }
 }

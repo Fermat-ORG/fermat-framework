@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -88,11 +89,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
 
     /**
-     * UTXO Provider interface variables
-     */
-    BlockchainNetworkType utxoProviderNetworkParameter;
-
-    /**
      * class variables
      */
     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor;
@@ -113,6 +109,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
+    Broadcaster broadcaster;
 
     /**
      * Constructor
@@ -120,13 +117,14 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param eventManager
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, ErrorManager errorManager) {
+    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, ErrorManager errorManager, Broadcaster broadcaster) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
         this.WALLET_PATH = pluginFileSystem.getAppPath();
+        this.broadcaster = broadcaster;
 
         runningAgents = new HashMap<>();
 
@@ -228,7 +226,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context);
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster);
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -238,7 +236,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
@@ -1082,6 +1080,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @throws CantGetBlockchainDownloadProgress
      */
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        return runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
+        return this.runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
     }
 }
