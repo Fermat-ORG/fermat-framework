@@ -181,7 +181,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 5000;
+        public final int SLEEP_TIME = 2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE="13";
         int discoverIteration = 0;
@@ -571,6 +571,7 @@ public class ChatMiddlewareMonitorAgent implements
                         if(!checkChatMetadata(incomingChatMetadata)) return;
                         updateMessageStatus(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                         break;
                     }
                 }
@@ -897,6 +898,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
 
                 chatMiddlewareDatabaseDao.saveMessage(createdMessage);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             } catch (DatabaseOperationException e) {
                 throw new CantSendChatMessageException(
                         e,
