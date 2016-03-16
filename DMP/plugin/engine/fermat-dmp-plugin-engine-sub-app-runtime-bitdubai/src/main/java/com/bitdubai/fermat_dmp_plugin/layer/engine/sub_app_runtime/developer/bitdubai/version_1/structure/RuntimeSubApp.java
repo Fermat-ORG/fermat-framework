@@ -33,6 +33,7 @@ public class RuntimeSubApp implements SubApp {
     Activities lastActivity;
 
     Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+    private int bannerRes;
 
 
     /**
@@ -140,5 +141,25 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public FermatAppType getAppType() {
         return FermatAppType.SUB_APP;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return bannerRes;
     }
 }

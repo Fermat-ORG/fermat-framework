@@ -11,9 +11,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -151,14 +156,15 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
                     assetAppropriationManager,
                     userRedemptionManager,
                     identityAssetUserManager,
-                    assetTransferManager
+                    assetTransferManager,
+                    errorManager
             );
-            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
             System.out.println("******* Asset User Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
+            throw new CantStartPluginException(exception);
         }
     }
 
@@ -264,12 +270,30 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void changeNetworkType(BlockchainNetworkType networkType) {
-        if (networkType == null) return; //NOPE
-        selectedNetwork = networkType;
+        if (networkType == null) {
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        } else {
+            selectedNetwork = networkType;
+        }
     }
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
+        if (selectedNetwork == null) {
+            try {
+                if (settings == null) {
+                    settingsManager = getSettingsManager();
+                }
+                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_USER_WALLET.getCode());
+                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                //TODO: Only enter while the Active Actor Wallet is not open.
+                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+//                e.printStackTrace();
+            }
+        }
         return selectedNetwork;
     }
 
@@ -424,7 +448,6 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
 
             for (BlockchainNetworkType networkType : list) {
-
                 if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
@@ -433,6 +456,13 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
                 }
             }
             settings.setBlockchainNetwork(list);
+        }
+
+        try {
+            settingsManager.persistSettings(publicKeyApp, settings);
+        } catch (CantPersistSettingsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            exception.printStackTrace();
         }
     }
 
@@ -474,7 +504,10 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void acceptAsset(UUID negotiationId) throws CantProcessBuyingTransactionException {
         try {
-            assetBuyerManager.acceptAsset(negotiationId);
+            List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
+            //TODO REMOVE HARDCODE
+            InstalledWallet installedWallet = installedWallets.get(0);
+            assetBuyerManager.acceptAsset(negotiationId, installedWallet.getWalletPublicKey());
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessBuyingTransactionException(e);
@@ -498,8 +531,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public long getBitcoinWalletBalance(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException, CantCalculateBalanceException {
-        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+    public long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletsException, CantCalculateBalanceException {
+        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(selectedNetwork);
     }
 
     @Override

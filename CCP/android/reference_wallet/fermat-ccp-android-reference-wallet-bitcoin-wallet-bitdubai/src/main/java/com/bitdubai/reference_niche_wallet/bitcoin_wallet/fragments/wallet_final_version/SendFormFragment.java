@@ -49,6 +49,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -247,8 +248,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -261,38 +262,41 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
                 String newAmount = "";
-                switch (position) {
-                    case 0:
-                        text = "[bits]";
-                        if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBits(amount);
-                        } else {
-                            newAmount = amount;
-                        }
+                if(bitcoinConverter != null) {
+                    switch (position) {
+                        case 0:
+                            text = "[btc]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
 
-                        break;
-                    case 1:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
-                        break;
-                    case 2:
-                        text = "[satoshis]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                        } else if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
-                        break;
+                            break;
+                        case 1:
+                            text = "[bits]";
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 2:
+                            text = "[satoshis]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                            } else if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                            break;
+                    }
                 }
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
                 alphaAnimation.setDuration(300);
@@ -610,32 +614,45 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
                             String txtType = txt_type.getText().toString();
                             String newAmount = "";
-
+                            String msg = "";
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
+                                msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
 
+                            BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
-                            cryptoWallet.send(
-                                    operator.longValueExact(),
-                                    validAddress,
-                                    notes,
-                                    appSession.getAppPublicKey(),
-                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                    Actors.INTRA_USER,
-                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                    cryptoWalletWalletContact.getActorType(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    blockchainNetworkType
-                                   // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType()
-                            );
-                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                            onBack(null);
+                           if(operator.compareTo(minSatoshis) == 1 )
+                            {
+                                cryptoWallet.send(
+                                        operator.longValueExact(),
+                                        validAddress,
+                                        notes,
+                                        appSession.getAppPublicKey(),
+                                        cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                        Actors.INTRA_USER,
+                                        cryptoWalletWalletContact.getActorPublicKey(),
+                                        cryptoWalletWalletContact.getActorType(),
+                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        blockchainNetworkType
+
+                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                );
+                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                onBack(null);
+                           }else{
+                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
+                           }
+
+
+
                         } catch (InsufficientFundsException e) {
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                             e.printStackTrace();
@@ -677,8 +694,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
-                if (wcr.getReceivedCryptoAddress().size() > 0)
+                if (wcr.getReceivedCryptoAddress().get(blockchainNetworkType) != null)
                     contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
@@ -687,6 +705,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         } catch (CantGetCryptoWalletException e) {
             e.printStackTrace();
         } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            e.printStackTrace();
+
+        } catch (Exception e) {
+                showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
             e.printStackTrace();
         }
         return contacts;

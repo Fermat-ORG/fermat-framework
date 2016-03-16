@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.security.InvalidParameterException;
 
@@ -13,6 +12,9 @@ import java.security.InvalidParameterException;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/02/2016.
  */
 public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
+
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private final Currency from;
     private final Currency to  ;
@@ -55,10 +57,18 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = 31 * result + from.hashCode();
-        result = 31 * result + to.hashCode();
-        return result;
+
+        int c = 0;
+        c += from.hashCode();
+        c += to.hashCode();
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
+    @Override
+    public String toString() {
+        return "MatchingEngineMiddlewareCurrencyPair{" +
+                "from=" + from +
+                ", to=" + to +
+                '}';
+    }
 }

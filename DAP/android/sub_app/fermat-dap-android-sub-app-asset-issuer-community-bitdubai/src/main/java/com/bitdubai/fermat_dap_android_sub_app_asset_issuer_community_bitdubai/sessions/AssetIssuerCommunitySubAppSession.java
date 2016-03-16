@@ -18,9 +18,27 @@ import java.util.Map;
  */
 public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> {
 
+    public static final String BASIC_DATA = "catalog_item_issuer";
+    public static final String PREVIEW_IMGS = "preview_images_issuer";
+    public static final String DEVELOPER_NAME = "developer_name_issuer";
+
+//    private final InstalledWallet installedWallet;
+
+    public AssetIssuerCommunitySubAppSession() {
+        data = new HashMap<String, Object>();
+//        installedWallet = null;
+    }
+
+    public AssetIssuerCommunitySubAppSession(String publicKey,
+                                           InstalledSubApp fermatApp,
+                                           ErrorManager errorManager,
+                                             AssetIssuerCommunitySubAppModuleManager moduleManager,
+                                           SubAppResourcesProviderManager resourceProviderManager) {
+
+        super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
+    }
     private AssetIssuerCommunitySubAppModuleManager manager;
 
-    private final InstalledWallet installedWallet;
 
     /**
      * Active objects in wallet session
@@ -36,11 +54,6 @@ public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<Ins
      *  Wallet Settings
      */
     private WalletSettings settings;
-
-    public AssetIssuerCommunitySubAppSession() {
-        data = new HashMap<String, Object>();
-        installedWallet = null;
-    }
 
     @Override
     public void setData(String key, Object object) {

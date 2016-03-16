@@ -1,51 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content">
-
-<ImageView
-    android:id="@+id/image"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_width="?android:attr/listPreferredItemHeight"
-    android:scaleType="centerCrop"
-    android:padding="10dp"
-    style="@style/quickContactBadgeStyle"
-    android:src="@drawable/ic_contact_picture_holo_light"/>
-
-
-<TextView
-    android:id="@+id/tvtitle"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dip"
-    android:layout_toLeftOf="@+id/tvdate"
-    android:layout_toRightOf="@+id/image"
-    android:maxLines="1"
-    android:text="title"
-    android:textColor="@color/black"
-    android:textSize="15dip" />
+    android:background="@color/color_white">
 
-<TextView
-    android:id="@+id/tvdesc"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/tvtitle"
-    android:layout_toRightOf="@+id/image"
-    android:ellipsize="end"
-    android:maxLines="3"
-    android:text="desc"
-    android:textColor="#757575"
-    android:textSize="12dip" />
+    <ImageView
+        android:id="@+id/image"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_width="?android:attr/listPreferredItemHeight"
+        android:scaleType="centerCrop"
+        android:padding="10dp"
+        style="@style/quickContactBadgeStyle"
+        android:src="@drawable/cht_profile_list_icon"/>
 
-<TextView
-    android:id="@+id/tvdate"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="25dp"
-    android:text="date"
-    android:textColor="#000000"
-    android:textSize="10dip" />
+
+    <TextView
+        android:id="@+id/tvtitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:layout_toLeftOf="@+id/tvdate"
+        android:layout_toRightOf="@+id/image"
+        android:maxLines="1"
+        android:text="title"
+        android:textColor="@color/black"
+        android:textSize="15dip" />
+
+    <ImageView
+        android:id="@+id/imagetick"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="2dp"
+        android:layout_toRightOf="@+id/image"
+        android:layout_below="@+id/tvtitle"
+        android:src="@drawable/cht_ticksent"/>
+
+    <TextView
+        android:id="@+id/tvdesc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvtitle"
+        android:layout_toRightOf="@+id/imagetick"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="desc"
+        android:textColor="#757575"
+        android:textSize="12dip" />
+
+    <TextView
+        android:id="@+id/tvdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:text="date"
+        android:textColor="#000000"
+        android:textSize="10dip" />
+    <TextView
+        android:id="@+id/tvnumber"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tvdate"
+        android:layout_marginRight="10dp"
+        android:maxLines="1"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/circlefornumber"
+        android:textColor="@color/color_white"
+        android:textSize="10dp" />
 
 </RelativeLayout>

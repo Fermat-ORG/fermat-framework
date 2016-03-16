@@ -16,17 +16,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -60,7 +63,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -148,12 +151,12 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
+            ((ImageView)rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.wallets_title);
+
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-            View container_title = rootView.findViewById(R.id.container_title);
-            getPaintActivtyFeactures().setMenuSettings(rootView,container_title);
             //adapter.setFermatListEventListener(this);
 
         } catch(Exception ex) {
@@ -204,12 +207,12 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
 
             }
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0), Platforms.CRYPTO_CURRENCY_PLATFORM);
         Item item = new Item(installedSubApp);
         item.setIconResource(R.drawable.intra_user_identity);
         lstItems.add(item);
 
-        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0),Platforms.CRYPTO_CURRENCY_PLATFORM);
         Item item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.intra_user_community);
         lstItems.add(item1);
@@ -332,6 +335,13 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
                         item.setPosition(0);
                         lstItemsWithIcon.add(item);
                     }
+
+                if(installedWallet.getWalletPublicKey().equals("loss_protected_wallet")) {
+                    Item item = new Item(installedWallet);
+                    item.setIconResource(R.drawable.loss_protected);
+                    item.setPosition(8);
+                    lstItemsWithIcon.add(item);
+                }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -517,14 +527,13 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
                 case EMPTY:
                     break;
                 case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
-//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
-//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
-//                    folderDialog.getWindow().setAttributes(lp);
-                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    folderDialog.show();
+                    if(data.getInterfaceObject().getName().equals("Communities")){
+                        changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+                    }else {
+                        FolderDialog folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this);
+                        folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        folderDialog.show();
+                    }
                     break;
                 default:
                     break;
@@ -552,8 +561,10 @@ public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAp
             arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
         }
 
-        adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
-        adapter.notifyDataSetChanged();
+        if(adapter!=null) {
+            adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+            adapter.notifyDataSetChanged();
+        }
     }
 
 

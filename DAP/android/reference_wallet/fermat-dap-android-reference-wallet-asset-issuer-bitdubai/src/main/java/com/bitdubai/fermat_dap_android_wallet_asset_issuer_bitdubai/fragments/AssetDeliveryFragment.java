@@ -347,8 +347,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
                 }
             }
 
@@ -389,8 +390,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
                 }
             }
 
@@ -434,7 +436,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
 //        if (digitalAsset.getImage() != null) {
 //            assetDeliveryImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));

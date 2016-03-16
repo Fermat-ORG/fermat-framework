@@ -71,6 +71,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             List<String> temp = new ArrayList<>();
             String tempS;
 
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
+
+
+
             List<EarningsWizardData> _earningDataList = createEarningDataList();
             earningDataList = new ArrayList<>();
 

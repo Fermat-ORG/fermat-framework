@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -313,4 +314,37 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     public ContractStatus getContractStatus(String contractHash) {
         return null;
     }*/
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
+            return this.customerOnlinePaymentBusinessTransactionDao.getCompletionDateByContractHash(
+                    contractHash);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "Unexpected exception from database");
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "The contract hash argument is null");
+        }
+    }
 }

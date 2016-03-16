@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.app_connecti
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection.WalletAssetUserFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
@@ -46,6 +47,9 @@ public class FermatAppConnectionManager {
             //CCP WALLET
             case "reference_wallet":
                 fermatAppConnection = new BitcoinWalletFermatAppConnection(activity);
+                break;
+            case "loss_protected_wallet":
+                fermatAppConnection = new LossProtectedWalletFermatAppConnection(activity);
                 break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":
@@ -144,11 +148,8 @@ public class FermatAppConnectionManager {
     }
 
 
-    public static AppConnections getFermatAppConnection(
-            String publicKey,
-            Activity activity,
-            FermatSession fermatSession) {
-        AppConnections fermatAppConnection = switchStatement(activity,publicKey);
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession fermatSession) {
+        AppConnections fermatAppConnection = switchStatement(context,publicKey);
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatAppConnection;
     }

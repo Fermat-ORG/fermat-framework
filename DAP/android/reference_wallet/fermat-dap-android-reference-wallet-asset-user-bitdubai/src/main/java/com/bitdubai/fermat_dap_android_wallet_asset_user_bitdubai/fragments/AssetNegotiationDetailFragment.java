@@ -259,22 +259,52 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         rejectNegotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    moduleManager.declineAsset(digitalAsset.getUserAssetNegotiation().getNegotiationId());
-                } catch (CantProcessBuyingTransactionException e) {
-                    Toast.makeText(activity, "Can't process Buying Transaction Exception"/*getResources().getString(R.string.dap_user_wallet_exception_retry)*/,
-                            Toast.LENGTH_SHORT).show();
-                }
+                doDecline(digitalAsset);
             }
         });
 
+    }
+
+    private void doDecline(final DigitalAsset digitalAsset) {
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                moduleManager.declineAsset(digitalAsset.getUserAssetNegotiation().getNegotiationId());
+                return true;
+            }
+        };
+
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_cancel), Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY, appSession.getAppPublicKey());
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
     }
 
     private void setupUIData() {
 
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetNegotiationImage, res, R.drawable.img_asset_without_image, false);
@@ -442,8 +472,9 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY, appSession.getAppPublicKey());
                 }
             }
 

@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
@@ -56,9 +58,13 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
         status.setText(getStatusStringRes(contractStatus));
         contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
-        customerName.setText(itemInfo.getCryptoCustomerAlias());
-        typeOfPayment.setText(itemInfo.getTypeOfPayment());
-        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+        customerName.setText(itemInfo.getCryptoBrokerAlias());
+        try {
+            typeOfPayment.setText(MoneyType.getByCode(itemInfo.getTypeOfPayment()).getFriendlyName());
+        }catch (FermatException e){
+            typeOfPayment.setText(itemInfo.getTypeOfPayment());
+        }
+        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);
@@ -85,7 +91,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
 
     private String getReceivingOrSendingText(ContractStatus status) {
         if (status == ContractStatus.PENDING_PAYMENT)
-            return res.getString(R.string.receiving);
+            return res.getString(R.string.sending);
         return res.getString(R.string.sending);
     }
 

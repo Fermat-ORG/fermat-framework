@@ -300,6 +300,26 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
+                "loss_protected_wallet_icon", // ICOIN
+                "Loss Protected Wallet", // WALLET NAME
+                "loss_protected_wallet", // PUBLIC KEY
+                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+                lstInstalledWallet.add(installedWallet);
+
+                installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Banking wallet", // WALLET NAME
                 "banking_wallet", // PUBLIC KEY
@@ -333,6 +353,48 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "bitDubai",
                 "",
                 Platforms.CASH_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Broker Wallet", // WALLET NAME
+                "crypto_broker_wallet", // PUBLIC KEY
+                "CBPCBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "crypto_broker", // ICOIN
+                "Crypto Customer Wallet", // WALLET NAME
+                "crypto_customer_wallet", // PUBLIC KEY
+                "CBPCCW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_BROKER_PLATFORM,
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);

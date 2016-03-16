@@ -11,18 +11,19 @@ import android.widget.RelativeLayout;
 
 public interface PaintActivityFeatures {
 
-    public android.support.v7.widget.Toolbar getToolbar();
+    android.support.v7.widget.Toolbar getToolbar();
 
-    public RelativeLayout getToolbarHeader();
+    RelativeLayout getToolbarHeader();
 
-    public void invalidate();
+    void invalidate();
 
-    public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
+    void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
+
+    void setTabCustomImageView(int position,View view);
 
     // Esto no deberia estar acá
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);
 
-    void setMenuSettings(View viewGroup, View container_title);
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
 

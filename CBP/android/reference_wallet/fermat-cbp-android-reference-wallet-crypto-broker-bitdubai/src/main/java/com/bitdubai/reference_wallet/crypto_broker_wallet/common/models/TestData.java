@@ -2,15 +2,12 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data.ClauseInformationImpl;
@@ -20,7 +17,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisor
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -319,69 +315,69 @@ public class TestData {
             ContractBasicInformationImpl contract;
             contractsHistory = new ArrayList<>();
 
-            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PAYMENT_SUBMIT, false);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contract.setCancellationReason("No se entrego la mercancia en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contract.setCancellationReason("Tardo mucho para responder");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, false);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contract.setCancellationReason("No llegamos a un acuerdo con respecto al precio de venta");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, false);
             contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, null, null);
+            contract = new ContractBasicInformationImpl("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED, false);
             contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, null, null);
+            contract = new ContractBasicInformationImpl("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT, false);
             contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
-            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, null, null);
+            contract = new ContractBasicInformationImpl("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED, false);
             contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
         }
@@ -397,9 +393,9 @@ public class TestData {
 
         return earningsPairs;
     }
-
-    public static List<EarningsPairDetail> getEarnings(Currency currency, TimeFrequency frequency) {
-        ArrayList<EarningsPairDetail> dataArrayList = new ArrayList<>();
+/*
+    public static List<EarningsDetailData> getEarnings(Currency currency, TimeFrequency frequency) {
+        ArrayList<EarningsDetailData> dataArrayList = new ArrayList<>();
         EarningTestData earningTestData;
 
         int timeFilter = Calendar.DATE;
@@ -413,62 +409,62 @@ public class TestData {
 
         if (currency.equals(CryptoCurrency.BITCOIN)) {
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.1, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.1f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.2, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.2f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(1.2, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(1.2f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(5.2, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(5.2f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(1.2, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(1.2f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.02, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.02f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.122, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.122f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.5465482, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.5465482f, 2016);
             dataArrayList.add(earningTestData);
 
 
         } else if (currency.equals(FiatCurrency.US_DOLLAR)) {
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.02, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.02f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.122, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.122f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(0.5465482, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(0.5465482f, 2016);
             dataArrayList.add(earningTestData);
 
         } else if (currency.equals(FiatCurrency.VENEZUELAN_BOLIVAR)) {
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(60230.112123, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(60230.112123f, 2016);
             dataArrayList.add(earningTestData);
 
             calendar.add(timeFilter, -1);
-            earningTestData = new EarningTestData(160230.456456, calendar.getTimeInMillis());
+            earningTestData = new EarningTestData(160230.456456f, 2016);
             dataArrayList.add(earningTestData);
         }
 
         return dataArrayList;
-    }
+    }*/
 }

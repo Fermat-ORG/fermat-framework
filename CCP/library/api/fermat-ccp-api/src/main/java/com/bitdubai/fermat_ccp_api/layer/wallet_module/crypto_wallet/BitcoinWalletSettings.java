@@ -20,6 +20,7 @@ public class BitcoinWalletSettings implements WalletSettings {
     private boolean isContactsHelpEnabled;
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
+    private boolean notificationEnabled;
 
     public BitcoinWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -85,5 +86,13 @@ public class BitcoinWalletSettings implements WalletSettings {
         this.runningDailyBalance = runningDailyBalance;
 
 
+    }
+
+    public boolean getNotificationEnabled() {
+        return this.notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 }

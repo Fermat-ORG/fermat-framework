@@ -4,12 +4,15 @@ import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
@@ -71,14 +74,28 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     public NotificationPainter getNotificationPainter(String code){
      try
         {
-            this.referenceWalletSession = (ReferenceWalletSession)this.getSession();
-            if(referenceWalletSession!=  null)
-                if(referenceWalletSession.getModuleManager()!=  null)
+            SettingsManager<BitcoinWalletSettings> settingsManager = null;
+            boolean enabledNotification = true;
+            this.referenceWalletSession = (ReferenceWalletSession)this.getFullyLoadedSession();
+            if(referenceWalletSession!=  null) {
+                if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
+                    //get enabled notification settings
 
-            return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager,code,referenceWalletSession.getAppPublicKey());
+                    settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+                    enabledNotification = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
+                }
 
+
+                if (enabledNotification)
+                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey());
+                else
+                    return new BitcoinWalletNotificationPainter("", "", "", "", false);
+
+            }
+            else
+                return null;
         }
         catch(Exception e)
         {

@@ -33,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseFactory;
@@ -498,6 +499,46 @@ public class AssetIssuerActorDao implements Serializable {
         return recordInsert;
     }
 
+    public void updateOfflineIssuerRegisterInNetworkService(List<ActorAssetIssuer> onlineIssuersInNetworkService) throws CantUpdateAssetIssuerException, CantGetAssetIssuersListException {
+
+        try {
+            List<ActorAssetIssuer> list = getAllAssetIssuerActorRegistered();
+
+            for (ActorAssetIssuer registeredIssuer : list)
+            {
+                if (notInNetworkService(registeredIssuer, onlineIssuersInNetworkService))
+                {
+                    if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE))
+                        updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.CONNECTED_OFFLINE);
+                    else if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE))
+                        updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.REGISTERED_OFFLINE);
+                }
+                else
+                {
+                    if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                        updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.CONNECTED_ONLINE);
+                    else if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                        updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.REGISTERED_ONLINE);
+                }
+            }
+
+        } catch (CantUpdateAssetIssuerException e) {
+            throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "Issuer Actor", "Cant update Issuer State");
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Redeem Point Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DATABASE_NAME + " table in memory.");
+        }
+
+    }
+
+    private boolean notInNetworkService(ActorAssetIssuer registeredIssuer, List<ActorAssetIssuer> onlineIssuersInNetworkService) {
+
+        for (ActorAssetIssuer onlineIssuers : onlineIssuersInNetworkService) {
+            if (onlineIssuers.getActorPublicKey().equals(registeredIssuer.getActorPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
     public void updateAssetIssuerDAPConnectionStateActorNetworkService(DAPConnectionState dapDAPConnectionState) throws CantUpdateAssetIssuerException {
         DatabaseTable table;
 
@@ -881,7 +922,7 @@ public class AssetIssuerActorDao implements Serializable {
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME, Actors.DAP_ASSET_ISSUER.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME, Actors.DAP_ASSET_REDEEM_POINT.getCode());
 
                 table.insertRecord(record);
                 /**
@@ -937,7 +978,7 @@ public class AssetIssuerActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "ACTOR ASSET ISSUER", "");
 
             // 2) Find the Intra User , filter by keys.
-            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
 //            table.addStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();

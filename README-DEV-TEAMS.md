@@ -29,8 +29,9 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
-* Fermat ORG Charlie
-* Fermat ORG Sierra
+* Navi Charlie
+* Navi Sierra
+* Fsociety
 
 ## Current Hierarchy
 
@@ -53,9 +54,9 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
-| Fermat ORG Charlie | | | |
+| Navi Charlie | | | |
 | | Fsociety | | |
-| Fermat ORG Sierra | | | |
+| Navi Sierra | | | |
 
 ## Compensation
 
@@ -84,20 +85,20 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 17 | Awarded Grand Parent Team Leader | Grand Parent Team Leader with 1 awarded grand children. |
 | 18 | Core Developer | Won Programming Competition AND a grand children had a child. |
 
-### Fermat ORG Site
+### dev.fermat.org Site
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
-| 1 | ORG Developer | New developer on the project. |
-| 2 | ORG Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
-| 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
-| 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 5 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 6 | ORG Awarded Team Leader | Team Leader with 5 full-time members on the team. |
-| 7 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 8 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 9 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 10 | ORG Awarded Parent Team Leader | Team Leader with 5 sub-teams. |
+| 1 | Navi Developer | New developer on the project. |
+| 2 | Navi Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
+| 3 | Navi New Team Leader | Team Leader with 1 full-time member on the team. |
+| 4 | Navi Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 5 | Navi Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 6 | Navi Awarded Team Leader | Team Leader with 5 full-time members on the team. |
+| 7 | Navi New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 8 | Navi Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 9 | Navi Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 10 | Navi Awarded Parent Team Leader | Team Leader with 5 sub-teams. |
 
 
 ### The following rules apply:
@@ -154,7 +155,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Victor Mars [New Team Leader]** <br/>
+* **Victor Mars [Team Leader]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
@@ -181,13 +182,13 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
     Github:  https://github.com/furszy
     
     
-* **Natalia Cortez [Veteran Developer]**<br/>
+* **Natalia Cortez [New Team Leader]**<br/>
 ---
       Email:   nattyco@gmail.com
       Skype:   nattyco
       Github:  https://github.com/nattyco
 
-* **Joaquin Carrasquero [New Developer]** <br/>
+* **Joaquin Carrasquero [Veteran Developer]** <br/>
 ---
       Email:   jc.juaco@gmail.com
       Skype:   j-u-a-c-o@hotmail.com
@@ -249,7 +250,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
       Skype:   gabee512
       Github:  https://github.com/GaboHub
 
-* **Miguel Payarez [New Part-Time Developer]**<br/>
+* **Miguel Payarez [Veteran Developer]**<br/>
 ---
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
@@ -339,7 +340,11 @@ We are a team with diverse tastes and full of color making it an explosive integ
       Skype:   jinmyb22
       Github:  https://github.com/jinmyjbv
 
-
+* **Frank Contreras [New Developer]** <br/>
+---
+      Email:   contrerasfrank@gmail.com
+      Skype:   fcontreras1234
+      Github:  https://github.com/javafrank
 <br/>
 
 ### Team Yayo:
@@ -357,15 +362,16 @@ We are responsible of only one thing, making fermat a successfully project, shar
 
 * **José Briceño [New Developer]** <br/>
 ---
-      Email:   josebricenor@gmail.com@gmail.com
+      Email:   josebricenor@gmail.com
       Skype:   josebricenor
       Github:  https://github.com/josebricenor
 
-* **Frank Contreras [New Developer]** <br/>
+* **Luis Torres [New Developer]** <br/>
 ---
-      Email:   contrerasfrank@gmail.com
-      Skype:   fcontreras1234
-      Github:  https://github.com/javafrank
+      Email:   lutor1106@gmail.com
+      Skype:   luis.fernando.torres.leon
+      Github:  https://github.com/iLutor
+
 
 <br>
 We don't mean to make fun of everything, just about the serious things.
@@ -403,6 +409,7 @@ We love music and we do music, we love movies (fanatics), we are also amateur ph
 <br/>
 ### DBZ Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/logo_dbz_team.jpg "Logo DBZ Team")
 We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
 
 #### Team Members:
@@ -440,26 +447,32 @@ We can talk about any topic outside of work, as movies, video games (!), politic
 
 <br/>
 
-### Fermat ORG Charlie:
+### Navi Charlie:
 -----------------------------------
 Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
 
 #### Team Members:
 
-* **Miguel Celedon [ORG Team Leader]**<br/>
+* **Miguel Celedon [Navi Team Leader]**<br/>
 ---
     Email:   miguelceledon@outlook.com
     Skype:   miguel-209
     Github:  https://github.com/miguelcldn
+
+* **Isaías Taborda [Navi Developer]**<br/>
+---
+    Email:   isaiasve30@hotmail.com
+    Skype:   
+    Github:  https://github.com/IsaTab
     
     
-* **Ricardo Delgado [ORG New Team Leader]**<br/>
+* **Ricardo Delgado [Navi New Team Leader]**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
       Skype:   ricardodelgado460
       Github:  https://github.com/ricardo460
 
-* **Emmanuel Colina [ORG Developer]**<br/>
+* **Emmanuel Colina [Navi Veteran Developer]**<br/>
 ---
     Email:   emmanuelcolina14@gmail.com
     Skype:   ecolina4
@@ -475,13 +488,13 @@ Here, in Fsociety, we are a team of developers who gets along well with programm
 
 #### Team Members:
 
-* **Ricardo Delgado [ORG New Team Leader]**<br/>
+* **Ricardo Delgado [Navi New Team Leader]**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
       Skype:   ricardodelgado460
       Github:  https://github.com/ricardo460
 
-* **Daril Rodriguez [ORG Developer]**<br/>
+* **Daril Rodriguez [Navi Developer]**<br/>
 ---
     Email:   darilrodriguez.2@gmail.com
     Skype:   mdmine90
@@ -491,31 +504,31 @@ About the group: We like anime, TV shows, movies and videogames. We always find 
 
 <br/>
 
-### Fermat ORG Sierra:
+### Navi Sierra:
 -----------------------------------
-In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
+In the Navi Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
 
 #### Team Members:
 
-* **Luis Fuenmayor [ORG Team Leader]**<br/>
+* **Luis Fuenmayor [Navi Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
     Skype:   live:fuelusumar.
     Github:  https://github.com/fuelusumar
     
-* **German Mendoza [ORG Veteran Developer]**<br/>
+* **German Mendoza [Navi Veteran Developer]**<br/>
 ---
     Email:   german.mendoza.187@gmail.com
     Skype:   german0296
     Github:  https://github.com/kyxer
 
-* **Luis Campo [ORG Developer]**<br/>
+* **Luis Campo [Navi Developer]**<br/>
 ---
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
 
-* **Erick Narvaez [ORG Developer]**<br/>
+* **Erick Narvaez [Navi Developer]**<br/>
 ---
     Email:   ericknarvaez@hotmail.com 
     Skype:   live:ericknarvaez

@@ -52,6 +52,13 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
         this.actorRedeem = actorRedeem;
         this.identity = identity;
     }
+    public DisconnectDialog(Activity a,
+                            final AssetRedeemPointCommunitySubAppSession intraUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources) {
+        super(a, intraUserSubAppSession, subAppResources);
+        this.actorRedeem = null;
+        this.identity = null;
+    }
 
 
     @SuppressLint("SetTextI18n")
@@ -104,7 +111,10 @@ public class DisconnectDialog extends FermatDialog<AssetRedeemPointCommunitySubA
             try {
                 //image null
                 if (actorRedeem != null) {
-                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(actorRedeem);
+                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(
+//                            identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+                            actorRedeem // ACTOR OUTSIDE/EXTERNAL
+                    );
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
 
                 } else {

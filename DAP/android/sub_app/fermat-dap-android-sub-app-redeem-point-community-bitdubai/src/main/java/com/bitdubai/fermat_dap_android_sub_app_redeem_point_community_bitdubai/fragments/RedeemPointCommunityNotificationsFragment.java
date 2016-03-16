@@ -64,6 +64,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private RedeemPointCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private static RedeemPointCommunitySubAppModuleManager manager;
+    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
@@ -72,6 +73,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private ProgressDialog dialog;
 
     SettingsManager<RedeemPointSettings> settingsManager;
+
     /**
      * Create a new instance of this fragment
      *
@@ -85,12 +87,14 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+
         manager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
-//        intraUserInformation = (IntraUserInformation) appSession.getData(USER_SELECTED);
-//        moduleManager = intraUserSubAppSession.getModuleManager();
+        actorInformation = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
+
         errorManager = appSession.getErrorManager();
         listActorInformation = new ArrayList<>();
     }
@@ -140,7 +144,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
             if (manager == null)
                 throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-            if(manager.getActiveAssetRedeemPointIdentity() != null) {
+            if (manager.getActiveAssetRedeemPointIdentity() != null) {
                 result = manager.getWaitingYourConnectionActorAssetRedeem(manager.getActiveAssetRedeemPointIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
                     for (ActorAssetRedeemPoint record : result) {
@@ -270,6 +274,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
 
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * onItem click listener event
      *
@@ -279,16 +284,10 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     @Override
     public void onItemClickListener(Actor data, int position) {
         try {
-//            ConnectDialog notificationAcceptDialog = new ConnectDialog(
-//                    getActivity(),
-//                    (AssetUserCommunitySubAppSession) appSession,
-//                    null,
-//                    data,
-//                    manager.getActiveAssetUserIdentity());
 
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
+                    assetRedeemPointCommunitySubAppSession,
                     null,
                     data,
                     manager.getActiveAssetRedeemPointIdentity());
@@ -298,10 +297,11 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
                 public void onDismiss(DialogInterface dialog) {
                     Object o = appSession.getData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_ACCEPTED);
                     try {
-                        if ((Boolean) o) {
-                            onRefresh();
-                            appSession.removeData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_DENIED);
-                        }
+                        if (o != null)
+                            if ((Boolean) o) {
+                                appSession.removeData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_ACCEPTED);
+                            }
+                        onRefresh();
                     } catch (Exception e) {
                         e.printStackTrace();
                         onRefresh();

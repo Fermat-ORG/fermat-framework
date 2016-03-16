@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -28,17 +29,29 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
@@ -74,9 +87,10 @@ public class AssetSellerMonitorAgent extends FermatAgent {
     private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
+    private final ExtraUserManager extraUserManager;
     //CONSTRUCTORS
 
-    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager, CryptoAddressBookManager cryptoAddressBookManager) {
+    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager, CryptoAddressBookManager cryptoAddressBookManager, ExtraUserManager extraUserManager) {
         this.userWalletManager = userWalletManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.dao = dao;
@@ -86,6 +100,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.cryptoVaultManager = cryptoVaultManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
+        this.extraUserManager = extraUserManager;
     }
 
     //PUBLIC METHODS
@@ -157,7 +172,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException {
+        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException {
             checkTimeout();
             checkUnreadMessages();
             checkPendingSells();
@@ -173,6 +188,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         System.out.println("This transaction was already cancelled.");
                         continue;
                     }
+                    dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), content.getSellStatus());
                     SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
                     switch (content.getSellStatus()) {
                         case NEGOTIATION_CONFIRMED: {
@@ -205,38 +221,44 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException, CantRegisterCryptoAddressBookRecordException {
+        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException {
             for (SellingRecord record : dao.getActionRequiredSellings()) {
                 switch (record.getStatus()) {
                     case NEGOTIATION_CONFIRMED: {
                         System.out.println("Negotiation confirmed...");
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        CryptoAddress cryptoVaultAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
-                        cryptoAddressBookManager.registerCryptoAddress(cryptoVaultAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, record.getBuyer().getActorPublicKey(), Actors.DAP_ASSET_USER, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-                        DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
-                        dao.updateSellerTransaction(record.getNegotiationId(), draftTransaction);
-                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), draftTransaction.getValue(), cryptoVaultAddress);
+                        CryptoAddress sellerCryptoAddress = cryptoVaultManager.getAddress(record.getMetadata().getNetworkType());
+                        dao.updateSellerCryptoAddress(record.getRecordId(), sellerCryptoAddress);
+
+                        Actor actor = getExtraUser(record.getMetadata());
+                        cryptoAddressBookManager.registerCryptoAddress(sellerCryptoAddress, mySelf.getActorPublicKey(), Actors.DAP_ASSET_USER, actor.getActorPublicKey(), Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, CryptoCurrencyVault.BITCOIN_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+
+                        DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress(), record.getMetadata().getNetworkType());
+                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
+                        AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), draftTransaction.getValue(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId(), sellerCryptoAddress, record.getBuyerCryptoAddress());
                         DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer(), DAPMessageSubject.NEW_SELL_STARTED);
                         assetTransmission.sendMessage(dapMessage);
+                        sendAssetMovement(record.getMetadata(), record.getBuyer());
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
                         break;
                     }
                     case PARTIALLY_SIGNED: {
                         System.out.println("Negotiation partially signed...");
-                        if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
-                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), record.getSellerTransaction().getValue(), null);
+                        if (Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+                            DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
+                            dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
+                            String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
+                            dao.updateTransactionHash(record.getRecordId(), txHash);
+                            dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
+                        } else {
+                            AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, record.getSellerTransaction().getValue(), AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId(), null, null);
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer());
+                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer(), DAPMessageSubject.SIGNATURE_REJECTED);
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
                             assetTransmission.sendMessage(message);
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
+                            System.out.println("Signature rejected!!");
                         }
-                        DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
-                        dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
-                        String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
-                        dao.updateTransactionHash(record.getRecordId(), txHash);
-                        dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
-
                         break;
                     }
                     case COMPLETE_SIGNATURE: {
@@ -255,6 +277,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         switch (broadcast.getStatus()) {
                             case BROADCASTED: {
                                 debitUserWallet(record, BalanceType.AVAILABLE);
+                                unlockFunds(record.getMetadata());
                                 dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
                                 System.out.println("Asset Sold...");
                                 break;
@@ -295,14 +318,33 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         private void debitUserWallet(SellingRecord record, BalanceType balance) throws CantGetAssetUserActorsException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantRegisterDebitException {
             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, record.getMetadata().getNetworkType());
-            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash());
-            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getBuyer());
+            CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(record.getBroadcastingTxHash(), CryptoTransactionType.OUTGOING, record.getBuyerCryptoAddress());
+            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(record.getMetadata(), cryptoTransaction, mySelf, record.getBuyer(), WalletUtilities.DEFAULT_MEMO_SELL);
             userWallet.getBalance().debit(transactionRecord, balance);
         }
 
         private void unlockFunds(DigitalAssetMetadata assetMetadata) throws RecordsNotFoundException, CantExecuteLockOperationException, CantLoadWalletException {
             AssetUserWallet userWallet = userWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, assetMetadata.getNetworkType());
             userWallet.unlockFunds(assetMetadata);
+        }
+
+        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser newUser) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
+            AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), newUser, digitalAssetMetadata.getDigitalAsset().getPublicKey(), digitalAssetMetadata.getNetworkType(), AssetMovementType.ASSET_SOLD);
+            final IdentityAssetIssuer identityAssetIssuer = digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer();
+            ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
+            ActorAssetIssuer actorReceiver = new AssetIssuerActorRecord(identityAssetIssuer.getAlias(), identityAssetIssuer.getPublicKey());
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver, DAPMessageSubject.ASSET_MOVEMENT);
+            assetTransmission.sendMessage(dapMessage);
+        }
+
+        private Actor getExtraUser(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateExtraUserException {
+            try {
+                return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
+                String actorName = "Asset " + digitalAssetMetadata.getDigitalAsset().getName() + " sold.";
+                return extraUserManager.createActor(actorName, image);
+            }
         }
 
         public boolean isAgentRunning() {

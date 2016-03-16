@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -29,7 +31,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -38,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -129,18 +132,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
 
     /**
-     * Creates a bitcoinj Wallet from the already derived keys of the specified account.
-     * @param vaultAccount
-     * @param networkParameters
-     * @return
-     */
-    private Wallet getWalletForAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount, NetworkParameters networkParameters) {
-        List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
-        Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
-        return wallet;
-    }
-
-    /**
      * Transform a CryptoAddress into a BitcoinJ Address
      * * @param networkParameters the network parameters where we are using theis address.
      * @param cryptoAddress the Crypto Address
@@ -152,52 +143,31 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     }
 
     /**
-     * Gets the next available key from the specified account.
-     * @return
+     * Will make sure that the passed network type is active.
+     * @param blockchainNetworkType the networktype to validate
      */
-    private ECKey getNextAvailableECKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
-        ECKey ecKey = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(hierarchyAccount);
-        return ecKey;
-    }
-
-
-    /**
-     * Will make sure that we have a listening network running for this address that we are trying to send bitcoins to.
-     * @param cryptoAddress
-     */
-    private BlockchainNetworkType validateNetorkIsActiveForCryptoAddress(CryptoAddress cryptoAddress) throws CantValidateCryptoNetworkIsActiveException {
+    private void validateNetorkIsActive(BlockchainNetworkType blockchainNetworkType) throws CantValidateCryptoNetworkIsActiveException {
         /**
          * I need to make sure that we have generated a key on the network type to which the address belongs
          * to, so we can be sure that the Crypto Network is listening on this network.
          */
         try {
             List<BlockchainNetworkType> networkTypes = getDao().getActiveNetworkTypes();
-            BlockchainNetworkType addressNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(getNetworkParametersFromAddress(cryptoAddress.getAddress()));
 
             /**
-             * If the address Network Type is not registered, then I won't go on because I know I'm not listening to it.
+             * If the passed networktype is not included, then is not valid.
              */
-            if (!networkTypes.contains(addressNetworkType)){
-                StringBuilder output = new StringBuilder("The specified address belongs to a Bitcoin network we are not listening to.");
-                output.append(System.lineSeparator());
-                output.append("BlockchainNetworkType: " + addressNetworkType.toString());
+            if (!networkTypes.contains(blockchainNetworkType)){
+                StringBuilder output = new StringBuilder("The Network type" + blockchainNetworkType.getCode() + " is not active.");
                 output.append(System.lineSeparator());
                 output.append("Active Networks are: " + networkTypes.toString());
                 throw new CantValidateCryptoNetworkIsActiveException(CantValidateCryptoNetworkIsActiveException.DEFAULT_MESSAGE, null, output.toString(), null);
             }
-
-            return addressNetworkType;
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * If I can't validate this. I will continue because I may be listening to this network already.
              */
             e.printStackTrace();
-            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (AddressFormatException e) {
-            /**
-             * If the passed address doesn't have the correct format, I can't go on.
-             */
-            throw new CantValidateCryptoNetworkIsActiveException(CantValidateCryptoNetworkIsActiveException.DEFAULT_MESSAGE, e, "The specified address is not in the right format: " + cryptoAddress.getAddress(), null);
         }
     }
 
@@ -301,26 +271,32 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
             CryptoTransactionAlreadySentException {
 
         /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(satoshis))
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+
+
+        /**
          * I get the network for this address and validate that is active
          */
-        BlockchainNetworkType networkType = null;
         try {
-            networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+            validateNetorkIsActive(blockchainNetworkType);
         } catch (CantValidateCryptoNetworkIsActiveException e) {
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "The network is not active!", null);
         }
 
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -337,7 +313,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -345,9 +321,10 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
+        Context walletContext = new Context(networkParameters);
 
         try {
-             wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+             wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         }
@@ -367,7 +344,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(satoshis);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
@@ -414,13 +391,25 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CouldNotSendMoneyException e = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId, true);
+            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
@@ -489,7 +478,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get a signed transaction from the abstract class CryptoVault.
          */
-        transaction = this.signTransaction(walletKeys, transaction, privateKey);
+        transaction = this.signTransaction(walletKeys, transaction);
         System.out.println("***CryptoVault*** Transaction signed.");
         System.out.println(transaction.toString());
 
@@ -508,20 +497,24 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @return the draft transaction with the added values.
      * @throws CantCreateDraftTransactionException
      */
-    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        if (draftTransaction == null || addressTo == null || valueToSend == 0){
+    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        if (draftTransaction == null || addressTo == null || valueToSend == 0 || blockchainNetworkType == null){
             CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
 
+        /**
+         * validates we are not sending less than permited.
+         */
+        if (isDustySend(valueToSend))
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more bitcoins!");
 
         /**
          * I get the network for this address and validate that is active
          */
-        BlockchainNetworkType networkType = null;
         try {
-            networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+           validateNetorkIsActive(blockchainNetworkType);
         } catch (CantValidateCryptoNetworkIsActiveException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
@@ -530,7 +523,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -546,7 +539,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -555,8 +548,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
 
+        //will create a new context to use
+        Context walletContext = new Context(networkParameters);
+
         try {
-            wallet = Wallet.fromSeed(networkParameters, getVaultSeed());
+            wallet = Wallet.fromSeed(walletContext.getParams(), getVaultSeed());
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         }
@@ -577,7 +573,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(10000);
+        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(valueToSend);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
@@ -620,13 +616,25 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Bitcoin Vault status: ");
+            output.append(wallet.toString());
+            output.append(System.lineSeparator());
+            output.append("Transaction Status: ");
+            output.append(sendRequest.tx.toString());
+            CantCreateDraftTransactionException e = new CantCreateDraftTransactionException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         }
 
         /**
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
+            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
@@ -635,6 +643,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * updates the bitcoin transaction
          */
         draftTransaction.setBitcoinTransaction(sendRequest.tx);
+
+        // I add the seller crypto address
+        draftTransaction.setSellerCryptoAddress(addressTo);
 
         /**
          * I will store this transaction to be able to return it later
@@ -687,5 +698,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
+    }
+
+    @Override
+    public ECKey getPrivateKey(Address address) {
+        ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
+        return privateKey;
     }
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -10,6 +11,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -19,17 +22,27 @@ import java.util.UUID;
 public class    CustomerBrokerNewPurchaseNegotiationTransaction {
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Transaction database DAO */
-    CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+
+    /*Represent the Error Manager*/
+    private ErrorManager                                        errorManager;
+
+    /*Represent the Plugins Version*/
+    private PluginVersionReference                              pluginVersionReference;
 
     public CustomerBrokerNewPurchaseNegotiationTransaction(
         CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager,
-        CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao
+        CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao,
+        ErrorManager                                        errorManager,
+        PluginVersionReference                              pluginVersionReference
     ){
         this.customerBrokerPurchaseNegotiationManager           = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
+        this.errorManager                                       = errorManager;
+        this.pluginVersionReference                             = pluginVersionReference;
     }
 
     //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
@@ -44,7 +57,8 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
             System.out.print("\n\n --- 3.1) Negotiation Mock Date" +
                             "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getBrokerPublicKey()
+                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getBrokerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             System.out.print("\n**** 3.2) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES NEGOTIATION****\n");
@@ -61,7 +75,8 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
             System.out.print("\n\n --- 3.3) Negotiation DATABASE Date" +
                             "\n- NegotiationId = " + purchase.getNegotiationId() +
                             "\n- CustomerPublicKey = " + purchase.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + purchase.getBrokerPublicKey()
+                            "\n- BrokerPublicKey = " + purchase.getBrokerPublicKey()+
+                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
 
             //CREATE NEGOTIATION TRANSATION
@@ -72,11 +87,14 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
                     NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
-//        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
-//            throw new CantNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
-//        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
-//            throw new CantNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNewPurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
 

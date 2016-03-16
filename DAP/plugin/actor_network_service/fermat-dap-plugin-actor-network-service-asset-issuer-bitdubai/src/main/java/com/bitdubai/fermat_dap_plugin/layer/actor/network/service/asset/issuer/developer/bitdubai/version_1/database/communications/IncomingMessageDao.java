@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -179,7 +180,7 @@ public class IncomingMessageDao {
      *
      * @return All FermatMessage.
      * @throws CantReadRecordDataBaseException
-     * @see CommunicationNetworkServiceDatabaseConstants
+     * @see AssetIssuerNetworkServiceDatabaseConstants
      */
     public List<FermatMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
@@ -256,7 +257,7 @@ public class IncomingMessageDao {
      *
      * @return All FermatMessage.
      * @throws CantReadRecordDataBaseException
-     * @see CommunicationNetworkServiceDatabaseConstants
+     * @see AssetIssuerNetworkServiceDatabaseConstants
      */
     public List<FermatMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 

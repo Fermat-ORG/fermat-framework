@@ -207,9 +207,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         /*
                          * Initialize the Ip And Port to connect to the CLoud Server
                          */
-                        //initializeIpAndPortProperties();
-                        SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
-                        PORT =  ServerConf.DEFAULT_PORT;
+                        initializeConfigurationPropertiesFile();
 
                         System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
@@ -465,18 +463,18 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Initialize the Ip And Port to connect to the CLoud Server
      */
-    private void initializeIpAndPortProperties() throws CantStartPluginException {
+    private void initializeConfigurationPropertiesFile() throws CantStartPluginException {
 
-        System.out.println("Calling the method - initializeIpAndPortProperties() ");
+        System.out.println("Calling the method - initializeConfigurationPropertiesFile() ");
 
         try{
 
             System.out.println("Loading ServerIpAndPort");
 
             /*
-            * Load the file with the serveripandport
+            * Load the file with the configuration
             */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "serveripandport", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
             /*
@@ -488,14 +486,19 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             /*
              * we set the SERVER_IP and PORT from text file json
              */
-            SERVER_IP = jsonObject.get("serverip").getAsString();
-            PORT = jsonObject.get("port").getAsInt();
+            try {
+                SERVER_IP = jsonObject.get("ip").getAsString();
+                PORT = jsonObject.get("port").getAsInt();
+            }catch (Exception e){
+                SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+                PORT =  ServerConf.DEFAULT_PORT;
+            }
 
         }catch (FileNotFoundException e){
 
              /*
              * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new serveripandport
+             * We need to create the new configuration
              */
             try {
 
@@ -506,7 +509,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                  */
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("serverip",ServerConf.SERVER_IP_PRODUCTION);
+                jsonObject.addProperty("ip",ServerConf.SERVER_IP_PRODUCTION);
                 jsonObject.addProperty("port", ServerConf.DEFAULT_PORT);
 
                 /*
@@ -518,7 +521,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                  /*
                  * save into the file
                  */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "serveripandport", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(gson.toJson(jsonObject));
                 pluginTextFile.persistToMedia();
 
@@ -552,9 +555,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         try{
 
              /*
-            * Load the file with the serveripandport
+            * Load the file with the configuration
             */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "serveripandport", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             pluginTextFile.loadFromMedia();
             String content = pluginTextFile.getContent();
 
@@ -563,7 +566,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
              */
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("serverip",ipAddress);
+            jsonObject.addProperty("ip",ipAddress);
             jsonObject.addProperty("port", port);
 
             /*

@@ -26,9 +26,9 @@ import java.util.Map;
 public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private final FermatTextView markerRateReferenceText;
-    private final FermatTextView exchangeRateReferenceValue;
+    public final FermatTextView exchangeRateReferenceValue;
     private final FermatTextView exchangeRateReferenceText;
-    private final FermatTextView markerRateReference;
+    public final FermatTextView markerRateReference;
     private final FermatTextView yourExchangeRateValueLeftSide;
     private final FermatTextView yourExchangeRateValueRightSide;
     private final FermatTextView yourExchangeRateText;
@@ -73,7 +73,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         if (suggestedRate != null)
             exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
-                    suggestedRate.getMerchandise(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency()));
+                    suggestedRate.getMerchandise().getCode(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency().getCode()));
         else if (suggestedRateLoaded)
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
         else

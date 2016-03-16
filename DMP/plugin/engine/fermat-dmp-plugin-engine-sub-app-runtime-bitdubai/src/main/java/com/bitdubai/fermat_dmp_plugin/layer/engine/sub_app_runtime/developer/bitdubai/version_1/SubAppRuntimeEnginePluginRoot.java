@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -32,7 +33,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
@@ -132,6 +133,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         return homeScreen;
     }
 
+    @Override
+    public FermatStructure getAppByPublicKey(String appPublicKey) {
+        return getSubAppByPublicKey(appPublicKey);
+    }
+
+    @Override
+    public Set<String> getListOfAppsPublicKey() {
+        return listSubApp.keySet();
+    }
+
 
     @Override
     public SubApp getSubAppByPublicKey(String subAppPublicKey) {
@@ -161,7 +172,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
 
             RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setPublicKey("public_key_shell");
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.CWP_SHEL_LOGIN.getCode());
             runtimeSubApp.setType(SubApps.CWP_SHELL);
 
             runtimeApp.addSubApp(runtimeSubApp);
@@ -198,7 +209,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet factory app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
-            String factory_public_key = "public_key_factory";
+            String factory_public_key = SubAppsPublicKeys.CWP_FACTORY.getCode();
             runtimeSubApp.setPublicKey(factory_public_key);
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
@@ -313,7 +324,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet Publisher app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_PUBLISHER);
-            runtimeSubApp.setPublicKey("public_key_publisher");
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.CWP_PUBLISHER.getCode());
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -388,7 +399,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
-            runtimeSubApp.setPublicKey("public_key_wallet_manager");
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.CWP_MANAGER.getCode());
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -413,7 +424,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_RUNTIME);
             runtimeApp.addSubApp(runtimeSubApp);
-            runtimeSubApp.setPublicKey("public_key_runtime");
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.CWP_RUNTIME.getCode());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
@@ -526,7 +537,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
             subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
-            String communityPublicKey = "public_key_intra_user_commmunity";
+            String communityPublicKey = SubAppsPublicKeys.CCP_COMMUNITY.getCode();
             subAppIntraUser.setPublicKey(communityPublicKey);
             listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
@@ -786,7 +797,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
-            String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
+            String intraUserIdentityPublicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
 
             // Activity: List of identities
@@ -852,7 +863,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_ISSUER);
-            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -906,7 +918,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
             /**
@@ -914,7 +925,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
-            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_USER.getCode());
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_USER.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -968,14 +980,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
             /**
              * REDEEM POINT IDENTITY
              */
             runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.DAP_REDEEM_POINT_IDENTITY);
-            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_REDEEM.getCode());
+            runtimeSubApp.setType(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY);
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1029,9 +1040,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
         } catch (Exception e) {
             String message = com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
@@ -1050,7 +1058,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TitleBar runtimeTitleBar;
         Fragment runtimeFragment;
 
-        String publicKey = "public_key_store";
+        String publicKey = SubAppsPublicKeys.CWP_STORE.getCode();
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
@@ -1142,7 +1150,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String dapFactoryPublicKey = DAPPublicKeys.DAP_FACTORY.getCode();
+        String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
 
         dapFactory = new RuntimeSubApp();
         dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
@@ -1328,7 +1336,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityIssuerPublicKey = DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
+        String communityIssuerPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
 
         dapAssetIssuerCommunity = new RuntimeSubApp();
         dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
@@ -1617,8 +1625,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
         listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
-
-        listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
     }
 
     private void createAssetUserCommunitySubAppNavigationStructure() {
@@ -1630,7 +1636,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityUserPublicKey = DAPPublicKeys.DAP_COMMUNITY_USER.getCode();
+        String communityUserPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode();
 
         dapAssetUserCommunity = new RuntimeSubApp();
         dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
@@ -2132,7 +2138,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityRedeemPointPublicKey = DAPPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
+        String communityRedeemPointPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
 
         dapAssetRedeemPointCommunity = new RuntimeSubApp();
         dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
@@ -2433,7 +2439,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         StatusBar statusBar;
         Fragment runtimeFragment;
 
-        String publicKey = "sub_app_crypto_customer_identity";
+        String publicKey = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
@@ -2525,7 +2531,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TitleBar runtimeTitleBar;
         Fragment runtimeFragment;
 
-        String publicKey = "sub_app_crypto_broker_identity";
+        String publicKey = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
@@ -2620,7 +2626,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         RuntimeSubApp subAppBrokerCommunity = new RuntimeSubApp();
         subAppBrokerCommunity.setType(SubApps.CBP_CRYPTO_BROKER_COMMUNITY);
-        String communityPublicKey = "public_key_crypto_broker_community";
+        String communityPublicKey = SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode();
         subAppBrokerCommunity.setPublicKey(communityPublicKey);
 
         //Side Menu definition
@@ -2787,7 +2793,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         RuntimeSubApp subAppCustomerCommunity = new RuntimeSubApp();
         subAppCustomerCommunity.setType(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY);
-        String communityPublicKey = "public_key_crypto_customer_community";
+        String communityPublicKey = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
         subAppCustomerCommunity.setPublicKey(communityPublicKey);
 
         //Side Menu definition
@@ -2956,7 +2962,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_DEVELOPER_APP);
-        runtimeSubApp.setPublicKey("public_key_pip_developer_sub_app");
+        runtimeSubApp.setPublicKey(SubAppsPublicKeys.PIP_DEVELOPER.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
@@ -3118,7 +3124,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         chtChat = new RuntimeSubApp();
         chtChat.setType(SubApps.CHT_CHAT);
-        String chatPublicKey = "public_key_cht_chat";
+        String chatPublicKey = SubAppsPublicKeys.CHT_OPEN_CHAT.getCode();
         chtChat.setPublicKey(chatPublicKey);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
@@ -3126,11 +3132,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Chat");
@@ -3171,6 +3178,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
+//        //Tabs Connections
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("CONNECTIONS");
+//        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
+
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
@@ -3180,12 +3196,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
         //runtimeActivity.setTabStrip(runtimeTabStrip);
 
-//        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-//        runtimeActivity.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contacts");
@@ -3206,11 +3223,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Contact Profile");
@@ -3231,11 +3249,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Edit Contact Profile");
@@ -3256,11 +3275,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Available Connections");
@@ -3281,11 +3301,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#47BF73");
-//        runtimeActivity.setStatusBar(statusBar);
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("");//set title in fragment
@@ -3300,32 +3321,84 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
 
-//        // Activity: Connections
-//        runtimeActivity = new Activity();
-//        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT);
-//        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getCode());
-//        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-//        runtimeActivity.setBackPublicKey(chatPublicKey);
-//        chtChat.addActivity(runtimeActivity);
-//
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#0e738b");
-//        runtimeActivity.setStatusBar(statusBar);
-//
-//        runtimeTitleBar = new TitleBar();
-//        runtimeTitleBar.setLabel("Connections");
-//
-//        runtimeTitleBar.setLabelSize(16);
-//        runtimeTitleBar.setTitleColor("#FFFFFF");
-//        runtimeTitleBar.setIsTitleTextStatic(true);
-//        runtimeTitleBar.setColor("#1189a5");
-//        runtimeActivity.setTitleBar(runtimeTitleBar);
-//
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
-//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
-//
+        // Activity: Profile list
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_PROFILELIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILELIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILELIST);
+        runtimeActivity.setBackPublicKey(chatPublicKey);
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Your Profiles");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
+
+        // Activity: Profile Detail
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("My Profile");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
+
+        // Activity: Send Error Report
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Error Report");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
+
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 

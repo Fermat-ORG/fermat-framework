@@ -1,10 +1,11 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
@@ -69,10 +71,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
 
-        list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",false));
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-
-        bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
 
         if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
             blockchainNetworkType =  bitcoinWalletSettings.getBlockchainNetworkType();
@@ -84,6 +85,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         strings.add(new PreferenceSettingsTextPlusRadioItem(8,"RegTest",(blockchainNetworkType.equals(BlockchainNetworkType.REG_TEST)) ? true : false));
 
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
+
+
+
+        list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -104,62 +109,115 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
      */
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
-        PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem =   (PreferenceSettingsTextPlusRadioItem)preferenceSettingsItem;
-        BlockchainNetworkType blockchainNetworkType = null;
-
-        switch (preferenceSettingsTextPlusRadioItem.getText()){
-
-            case "MainNet":
-                blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
-
-                break;
-
-            case "TestNet":
-                blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                break;
-
-            case "RegTest":
-                blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                break;
-
-            default: blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                break;
-
-        }
-
-        preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
-
-        System.out.println("SETTING SELECTED IS "+ preferenceSettingsTextPlusRadioItem.getText());
-        System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
-
 
         try {
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-        if (blockchainNetworkType == null) {
-            if (bitcoinWalletSettings.getBlockchainNetworkType()!=null){
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            }else{
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
             }
+            bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+
+
+
+            if (preferenceSettingsItem.getId() == 9) {
+                //export key open dialog
+            }
+            else {
+                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+                BlockchainNetworkType blockchainNetworkType = null;
+
+                switch (preferenceSettingsTextPlusRadioItem.getText()) {
+
+                    case "MainNet":
+                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
+                        break;
+
+                    case "TestNet":
+                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                        break;
+
+                    case "RegTest":
+                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                        break;
+
+                    default:
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        break;
+
+                }
+
+                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
+                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
+                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+                if (blockchainNetworkType == null) {
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                    } else {
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                    }
+                }
+
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+            }
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e){
         }
-        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+    }
+
+    @Override
+    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
+
         try {
-            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
+
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+            if (preferenceSettingsItem.getId() == 1){
+                //enable notifications settings
+                bitcoinWalletSettings.setNotificationEnabled(isChecked);
+            }
+
+
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e){
         }
+
     }
 
 
     @Override
-    public Drawable getBackground() {
-        return null;
+    public int getBackgroundColor() {
+        return Color.WHITE;
+    }
+
+    @Override
+    public int getBackgroundAlpha() {
+        return 95;
     }
 
 

@@ -25,4 +25,15 @@ public final class MathUtils {
             return BigDecimal.ZERO;
         }
     }
+
+    public static BigDecimal getBigDecimal(String value) {
+        if (value == null)
+            return BigDecimal.ZERO;
+
+        try {
+            return new BigDecimal(numberFormat.parse(value).doubleValue());
+        } catch (ParseException e) {
+            return BigDecimal.ZERO;
+        }
+    }
 }

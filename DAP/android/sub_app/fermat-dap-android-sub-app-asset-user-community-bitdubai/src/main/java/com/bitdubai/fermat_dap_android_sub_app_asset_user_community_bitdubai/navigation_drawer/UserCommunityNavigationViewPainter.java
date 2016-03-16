@@ -41,7 +41,7 @@ public class UserCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
-        return new UserCommunityNavigationAdapter(activity.get(), null);
+        return new UserCommunityNavigationAdapter(activity.get());
     }
 
     @Override

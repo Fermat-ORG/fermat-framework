@@ -8,17 +8,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSendNotificationReviewNegotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
@@ -42,25 +44,35 @@ import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerSaleDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.utils.CustomerBrokerSaleImpl;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
+
 
 /**
  * The Class <code>UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent</code>
@@ -76,7 +88,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     private final OpenContractManager openContractManager;
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
-    private final FiatIndexManager fiatIndexManager;
+    private final CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final BankMoneyRestockManager bankMoneyRestockManager;
     private final CashMoneyRestockManager cashMoneyRestockManager;
@@ -85,6 +97,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     private CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread;
     private CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting;
     private UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager;
+    private Broadcaster broadcaster;
 
     public final int SLEEP_TIME = 5000;
     public final int DELAY_HOURS = 2;
@@ -101,27 +114,27 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                                                       OpenContractManager openContractManager,
                                                                       CloseContractManager closeContractManager,
                                                                       CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                                                      FiatIndexManager fiatIndexManager,
+                                                                      CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter,
                                                                       CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                                       BankMoneyRestockManager bankMoneyRestockManager,
                                                                       CashMoneyRestockManager cashMoneyRestockManager,
                                                                       CryptoMoneyRestockManager cryptoMoneyRestockManager,
                                                                       NotificationManagerMiddleware notificationManagerMiddleware,
-                                                                      UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager) {
+                                                                      UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager,Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
         this.openContractManager = openContractManager;
         this.closeContractManager = closeContractManager;
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
-        this.fiatIndexManager = fiatIndexManager;
+        this.currencyExchangeRateProviderFilter = currencyExchangeRateProviderFilter;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.bankMoneyRestockManager = bankMoneyRestockManager;
         this.cashMoneyRestockManager = cashMoneyRestockManager;
         this.cryptoMoneyRestockManager = cryptoMoneyRestockManager;
         this.notificationManagerMiddleware = notificationManagerMiddleware;
         this.userLevelBusinessTransactionCustomerBrokerSaleManager = userLevelBusinessTransactionCustomerBrokerSaleManager;
-
+        this.broadcaster=broadcaster;
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
         try {
             //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
@@ -256,10 +269,32 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             {
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerSale.getTransactionId()));
                 //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
-                openContractManager.openSaleContract(customerBrokerSaleNegotiation, fiatIndexManager.getCurrentIndex(fiatIndexManager.getReferenceCurrency()));
+
+                //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
+                String customerCurrency = "";
+                for (Clause clause : customerBrokerSaleNegotiation.getClauses())
+                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY)
+                        customerCurrency = clause.getValue();
+
+                float marketExchangeRate = 1;
+                if (customerCurrency.isEmpty()) {
+                    try {
+                        marketExchangeRate = getMarketExchangeRate(customerCurrency);
+                    } catch (CantGetExchangeRateException e) {
+                        marketExchangeRate = 1;
+                    }
+                }
+                openContractManager.openSaleContract(customerBrokerSaleNegotiation, marketExchangeRate);
+
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                 customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                 userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                final String brokerWalletPublicKey = "crypto_broker_wallet";
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW);
             }
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_OPEN_CONTRACT
             {
@@ -276,12 +311,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
-//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String brokerWalletPublicKey = "crypto_broker_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -382,12 +419,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
-                        Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
+                        Date date = new Date();
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
-//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+                            final String brokerWalletPublicKey = "crypto_broker_wallet";
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
                         }
                     }
                 }
@@ -419,8 +458,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                 }
             }
-        } catch (CantSendNotificationReviewNegotiation e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetListSaleNegotiationsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
@@ -434,8 +471,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCloseContractException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetIndexException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetCryptoBrokerWalletSettingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -498,4 +533,61 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
          * Disconnect from database and explicitly set all references to null.
          */
     }
+
+
+
+
+
+    /* Private methods */
+
+    private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {
+        //Find out if customerCurrency parameter is a FiatCurrency or a CryptoCurrency
+        Currency currency = null;
+        try {
+            if (FiatCurrency.codeExists(customerCurrency))
+                currency = FiatCurrency.getByCode(customerCurrency);
+            else if (CryptoCurrency.codeExists(customerCurrency))
+                currency = CryptoCurrency.getByCode(customerCurrency);
+        } catch (Exception e) {
+            throw new CantGetExchangeRateException();
+        }
+
+        if (currency == null)
+            throw new CantGetExchangeRateException();
+
+
+        CurrencyPair currencyPair =  new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
+
+
+        //Get saved CER providers in broker wallet
+        final String publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest"; //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+
+        try {
+            final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall);
+            final CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+            final List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+
+            for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
+
+                UUID providerId = providerSetting.getPlugin();
+                CurrencyExchangeRateProviderManager providerReference = currencyExchangeRateProviderFilter.getProviderReference(providerId);
+                if (providerReference.isCurrencyPairSupported(currencyPair)) {
+                    ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(currencyPair);
+                    return (float) currentExchangeRate.getPurchasePrice();
+                }
+            }
+        } catch (Exception e) { /*Continue*/ }
+
+        //Find any CER provider which can obtain the needed currencyPair, regardless of it not being set up in the broker wallet
+        try {
+            for (CurrencyExchangeRateProviderManager providerReference : currencyExchangeRateProviderFilter.getProviderReferencesFromCurrencyPair(currencyPair)) {
+                ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(currencyPair);
+                return (float) currentExchangeRate.getPurchasePrice();
+            }
+        } catch (Exception e) { /*Continue*/ }
+
+        //Can't do nothing more
+        throw new CantGetExchangeRateException();
+    }
+
 }

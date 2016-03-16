@@ -14,13 +14,14 @@ public class SessionConstantsAssetUserCommunity {
 
     public static final String IC_ACTION_USER_NOTIFICATIONS_ACCEPTED = "asset_user_notification_accepted";
     public static final String IC_ACTION_USER_NOTIFICATIONS_DENIED = "asset_user_notification_denied";
+    public static final String IC_ACTION_USER_NOTIFICATIONS_CANCELED = "asset_user_notification_canceled";
 
     public static final String LOCAL_BROADCAST_CHANNEL = "sub.app.actor.user.community.broadcast.chanel";
     public static final String BROADCAST_CONNECTED_UPDATE = "sub.app.actor.user.community.broadcast.connected";
     public static final String BROADCAST_DISCONNECTED_UPDATE = "sub.app.actor.user.community.broadcast.disconnected";
     public static final String BROADCAST_CLOSE_APP = "sub.app.actor.user.community.broadcast.close.app";
 
-    public static int IC_ACTION_USER_COMMUNITY_CONNECT = 500;
+    public static final int IC_ACTION_USER_COMMUNITY_CONNECT = 500;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION = 501;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP = 502;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_DETAIL = 503;
@@ -33,4 +34,6 @@ public class SessionConstantsAssetUserCommunity {
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL = 510;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL= 511;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 512;
+    public static final int IC_ACTION_USER_COMMUNITY_DISCONNECT = 513;
+    public static final int IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING = 514;
 }

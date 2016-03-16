@@ -100,8 +100,8 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
             adapter = new FermatSettingsAdapter(getActivity(),this,setSettingsItems());
             recyclerView.setAdapter(adapter);
 
-            LinearLayout rl = (LinearLayout)layout.findViewById(R.id.linearLayout);
-           // rl.setBackgroundColor(getBackgroundColor());
+            this.setBackground(layout);
+
         }
     }
 
@@ -126,15 +126,24 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
 
     public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
 
-    public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position){
+    public abstract void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position,boolean isChecked);
 
-    }
+    public abstract int getBackgroundColor();
 
-    public abstract Drawable getBackground();
+    public abstract int getBackgroundAlpha();
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ((FermatSettingsAdapter)adapter).clear();
+    }
+
+    private void setBackground(View layout)
+    {
+        if(getBackgroundColor() != 0) {
+            LinearLayout rl = (LinearLayout) layout.findViewById(R.id.linearLayout);
+            rl.setBackgroundColor(getBackgroundColor());
+            rl.getBackground().setAlpha(getBackgroundAlpha());
+        }
     }
 }

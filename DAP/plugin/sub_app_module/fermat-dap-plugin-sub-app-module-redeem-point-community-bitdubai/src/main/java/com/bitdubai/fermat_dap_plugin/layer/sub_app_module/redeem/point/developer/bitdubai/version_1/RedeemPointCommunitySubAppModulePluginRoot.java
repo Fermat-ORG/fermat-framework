@@ -52,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -65,18 +66,6 @@ import java.util.List;
 public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin implements
         RedeemPointCommunitySubAppModuleManager {
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
-    ActorAssetUserManager actorAssetUserManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
-    AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
-    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
-    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -85,6 +74,18 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.REDEEM_POINT)
     RedeemPointIdentityManager redeemPointIdentityManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
+    AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
+    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
 
     private SettingsManager<RedeemPointSettings> settingsManager;
 
@@ -113,11 +114,15 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         if (list != null) {
             actorAssetRedeemPoints = new ArrayList<>();
+            actorAssetRedeemPointManager.updateOfflineRedeemPointRegisterInNetworkService(list);
 
             try {
-                for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered(assetUserWalletSubAppModuleManager.getSelectedNetwork())) {
-                    RedeemPointActorRecord redeemPointActorRecord = (RedeemPointActorRecord) actorAssetRedeemPoint;
-                    actorAssetRedeemPoints.add(redeemPointActorRecord);
+                BlockchainNetworkType blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
+                for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered(blockchainNetworkType)) {
+                    if (Objects.equals(actorAssetRedeemPoint.getType().getCode(), Actors.DAP_ASSET_REDEEM_POINT.getCode())) {
+                        RedeemPointActorRecord redeemPointActorRecord = (RedeemPointActorRecord) actorAssetRedeemPoint;
+                        actorAssetRedeemPoints.add(redeemPointActorRecord);
+                    }
                 }
             } catch (CantGetAssetRedeemPointActorsException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -205,10 +210,6 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
                             assetRedeemPoint.getProfileImage(),
                             blockchainNetworkType);
 
-//                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(actorAssetIssuer.getActorPublicKey(), DAPConnectionState.CONNECTING);
-                    //TODO SOLO DEBE ENVIARSE EL MENSAJE LUEGO DE RECIBIDA LA ACEPTACION POR EL ISSUER A CONECTAR
-//                actorAssetRedeemPointManager.sendMessage(actorAssetRedeemPoint, actorAssetIssuers);
-
                     if (this.actorAssetRedeemPointManager.getActorRedeemPointRegisteredDAPConnectionState(assetRedeemPoint.getActorPublicKey(), blockchainNetworkType) != DAPConnectionState.REGISTERED_REMOTELY) {
                         System.out.println("The User you are trying to connect with is not connected" +
                                 "so we send the message to the assetRedeemPointActorNetworkService");
@@ -226,6 +227,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
                         System.out.println("The actor asset Redeem Point is connected");
                     }
                 }
+            }
+            else
+            {
+                throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
             }
         } catch (CantAskConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -260,17 +265,16 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     public void denyConnectionActorAssetRedeem(String actorAssetRedeemLoggedInPublicKey, String actorAssetRedeemToRejectPublicKey) throws CantDenyConnectionActorAssetException {
         try {
 
-            this.actorAssetRedeemPointManager.denyConnectionActorAssetRedeem(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemLoggedInPublicKey);
+            this.actorAssetRedeemPointManager.denyConnectionActorAssetRedeem(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToRejectPublicKey);
 
-            this.assetRedeemPointActorNetworkServiceManager.denyConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemLoggedInPublicKey);
+            this.assetRedeemPointActorNetworkServiceManager.denyConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToRejectPublicKey);
 
         } catch (CantDenyConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-
-            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR REDEEM POINT CONNECTION - KEY:" + actorAssetRedeemLoggedInPublicKey, e, "", "");
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR REDEEM POINT CONNECTION - KEY:" + actorAssetRedeemToRejectPublicKey, e, "", "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR REDEEM POINT CONNECTION - KEY:" + actorAssetRedeemLoggedInPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR REDEEM POINT CONNECTION - KEY:" + actorAssetRedeemToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -292,12 +296,12 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public void cancelActorAssetRedeem(String actorAssetRedeemLoggedInPublicKey, String actorAssetRedeemToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+    public void cancelActorAssetRedeem(String actorAssetRedeemToCancelPublicKey) throws CantCancelConnectionActorAssetException {
         try {
 
-            this.actorAssetRedeemPointManager.cancelActorAssetRedeem(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
+            this.actorAssetRedeemPointManager.cancelActorAssetRedeem(actorAssetRedeemToCancelPublicKey);
 
-            this.assetRedeemPointActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
+//            this.assetRedeemPointActorNetworkServiceManager.cancelConnectionActorAsset(actorAssetRedeemLoggedInPublicKey, actorAssetRedeemToCancelPublicKey);
 
         } catch (CantCancelConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

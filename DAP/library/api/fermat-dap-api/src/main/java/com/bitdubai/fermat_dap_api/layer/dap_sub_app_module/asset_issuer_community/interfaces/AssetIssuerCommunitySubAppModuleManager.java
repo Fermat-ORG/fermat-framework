@@ -45,13 +45,13 @@ public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<A
 
     void askActorAssetIssuerForConnection(List<ActorAssetIssuer> actorAssetIssuers) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
-    void acceptActorAssetIssuer(String actorAssetIssuerPublicKey, String actorAssetIssuerAddPublicKey) throws CantAcceptActorAssetUserException;
+    void acceptActorAssetIssuer(String actorAssetIssuerPublicKey, ActorAssetIssuer actorAssetIssuer) throws CantAcceptActorAssetUserException;
 
-    void denyConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, String actorAssetIssuerToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+    void denyConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, ActorAssetIssuer actorAssetIssuer) throws CantDenyConnectionActorAssetException;
 
 //    void disconnectActorAssetIssuer(String actorIssuerLoggedPublicKey, String actorAssetIssuerToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 
-    void cancelActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, String actorAssetIssuerToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetIssuer(ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException;
 
     List<ActorAssetIssuer> getWaitingYourConnectionActorAssetIssuer(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 

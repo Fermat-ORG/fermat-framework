@@ -32,6 +32,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW;
+
 
 /**
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
@@ -40,7 +43,7 @@ import java.util.List;
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem,CryptoBrokerWalletSession,ResourceProviderManager>
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     // Fermat Managers
@@ -153,17 +156,19 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 
             try {
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                //waitingForBroker.addAll(TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER));
-                waitingForBroker.addAll(walletManager.getNegotiationsWaitingForBroker(0, 10));
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
 
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                //waitingForCustomer.addAll(TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_CUSTOMER));
+                waitingForBroker.addAll(walletManager.getNegotiationsWaitingForBroker(0, 10));
                 waitingForCustomer.addAll(walletManager.getNegotiationsWaitingForCustomer(0, 10));
-                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(grouper);
+
+                if (!waitingForBroker.isEmpty() || !waitingForCustomer.isEmpty()) {
+                    grouperText = getActivity().getString(R.string.waiting_for_you);
+                    grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                    data.add(grouper);
+
+                    grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                    grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                    data.add(grouper);
+                }
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -215,6 +220,19 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case CBW_NEGOTIATION_UPDATE_VIEW:
+                onRefresh();
+                break;
+            case CBW_NEW_CONTRACT_UPDATE_VIEW:
+                onRefresh();
+                break;
+        }
+
     }
 }
 

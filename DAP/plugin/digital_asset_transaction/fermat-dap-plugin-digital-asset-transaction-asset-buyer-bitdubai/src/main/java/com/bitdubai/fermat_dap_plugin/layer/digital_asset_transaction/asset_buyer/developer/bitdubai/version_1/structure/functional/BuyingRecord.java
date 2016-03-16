@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.UUID;
@@ -20,23 +21,34 @@ public final class BuyingRecord {
     private AssetSellStatus status;
     private DraftTransaction buyerTransaction;
     private DraftTransaction sellerTransaction;
-    private String broadcastingTxHash;
     private UUID negotiationId;
-    private CryptoAddress cryptoAddress;
+    private CryptoAddress sellerCryptoAddress;
+    private CryptoAddress buyerCryptoAddress;
+    private UUID outgoingId;
 
     //CONSTRUCTORS
 
-    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId, CryptoAddress cryptoAddress) {
+    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, UUID negotiationId, CryptoAddress sellerCryptoAddress, CryptoAddress buyerCryptoAddress, String outgoingId) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.seller = seller;
         this.status = status;
         this.buyerTransaction = buyerTransaction;
+        if (buyerTransaction != null) {
+            this.buyerTransaction.setBuyerCryptoAddress(buyerCryptoAddress);
+            this.buyerTransaction.setSellerCryptoAddress(sellerCryptoAddress);
+        }
         this.sellerTransaction = sellerTransaction;
-        this.broadcastingTxHash = broadcastingTxHash;
+        if (sellerTransaction != null) {
+            this.sellerTransaction.setSellerCryptoAddress(sellerCryptoAddress);
+            this.sellerTransaction.setBuyerCryptoAddress(buyerCryptoAddress);
+        }
         this.negotiationId = negotiationId;
-        this.cryptoAddress = cryptoAddress;
+        this.sellerCryptoAddress = sellerCryptoAddress;
+        this.buyerCryptoAddress = buyerCryptoAddress;
+        this.outgoingId = Validate.isValidString(outgoingId) ? UUID.fromString(outgoingId) : null;
     }
+
     //PUBLIC METHODS
 
     //PRIVATE METHODS
@@ -67,16 +79,20 @@ public final class BuyingRecord {
         return sellerTransaction;
     }
 
-    public String getBroadcastingTxHash() {
-        return broadcastingTxHash;
-    }
-
     public UUID getNegotiationId() {
         return negotiationId;
     }
 
-    public CryptoAddress getCryptoAddress() {
-        return cryptoAddress;
+    public CryptoAddress getSellerCryptoAddress() {
+        return sellerCryptoAddress;
+    }
+
+    public UUID getOutgoingId() {
+        return outgoingId;
+    }
+
+    public CryptoAddress getBuyerCryptoAddress() {
+        return buyerCryptoAddress;
     }
 
     //INNER CLASSES

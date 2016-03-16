@@ -36,10 +36,12 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.adapters.IssuerCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.CancelDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -64,7 +66,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager manager;
-    private int IssuerNotificationsCount = 0;
+    private int issuerNotificationsCount = 0;
 
     ErrorManager errorManager;
 
@@ -75,10 +77,16 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private IssuerCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+
+
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
+    private MenuItem menuItemCancel;
+    private MenuItem menuItemConnect;
 
     private List<ActorIssuer> actors;
+    private List<ActorIssuer> actorsConnecting;
+    private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
@@ -104,7 +112,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            IssuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            issuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
             new FetchCountTask().execute();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -125,21 +133,53 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         adapter.setAdapterChangeListener(new AdapterChangeListener<ActorIssuer>() {
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
-                actors = dataSet;
 
+                actors = dataSet;
                 boolean someSelected = false;
-                int cantSelected=0;
+                int selectedActors=0;
+                int cheackeableActors = 0;
+                List<ActorIssuer> actorsSelected = new ArrayList<>();
+                actorsConnecting = new ArrayList<>();
+                actorsToConnect = new ArrayList<>();
+
                 for (ActorIssuer actor : actors) {
+                    if (actor.getRecord().getExtendedPublicKey() == null)
+                        cheackeableActors++;
                     if (actor.selected) {
+
+                        actorsSelected.add(actor);
+                        if (actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))
+                        {
+                            actorsConnecting.add(actor);
+                        }
+                        if (!(actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                            actorsToConnect.add(actor.getRecord());
+                        }
+
                         someSelected = true;
-                        cantSelected++;
+                        selectedActors++;
 
                     }
                 }
+                if (actorsConnecting.size() > 0)
+                {
+                    menuItemCancel.setVisible(true);
+                }
+                else {
+                    menuItemCancel.setVisible(false);
+                }
 
                 if (someSelected) {
+                    if (actorsConnecting.size() == selectedActors) {
+                        menuItemConnect.setVisible(false);
+                    }else if(actorsConnecting.size() == 0){
+                        menuItemConnect.setVisible(true);
+                    }
+                    if (selectedActors > actorsConnecting.size()){
+                        menuItemConnect.setVisible(true);
+                    }
                     menuItemUnselect.setVisible(true);
-                    if (cantSelected == actors.size())
+                    if (selectedActors == cheackeableActors)
                     {
                         menuItemSelect.setVisible(false);
                     } else {
@@ -148,9 +188,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
                 else
                 {
-                    menuItemUnselect.setVisible(false);
-                    menuItemSelect.setVisible(true);
+                    restartButtons();
                 }
+
+
 
             }
         });
@@ -330,18 +371,24 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 0, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 0, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemSelect = menu.getItem(1);
-        menuItemUnselect = menu.getItem(2);
-        menuItemUnselect.setVisible(false);
+        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+
+        menuItemConnect = menu.getItem(0);
+        menuItemCancel = menu.getItem(1);
+        menuItemSelect = menu.getItem(2);
+        menuItemUnselect = menu.getItem(3);
+        restartButtons();
     }
 
     @Override
@@ -353,9 +400,12 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             for (ActorIssuer actorIssuer : actors)
             {
-                actorIssuer.selected = true;
+                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
+                    actorIssuer.selected = true;
             }
             adapter.changeDataSet(actors);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
+            menuItemConnect.setVisible(true);
             menuItemSelect.setVisible(false);
             menuItemUnselect.setVisible(true);
 
@@ -368,8 +418,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
-            menuItemSelect.setVisible(true);
-            menuItemUnselect.setVisible(false);
+            adapter.getAdapterChangeListener().onDataSetChanged(actors);
+            restartButtons();
         }
 
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
@@ -396,17 +446,18 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetIssuer> toConnect = new ArrayList<>();
                                     for (ActorIssuer actorIssuer : actors) {
-                                        if (actorIssuer.selected)
+                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
                                             toConnect.add(actorIssuer.getRecord());
+                                        }
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
-//                                    manager.askActorAssetIssuerForConnection(toConnect);
+                                    manager.askActorAssetIssuerForConnection(toConnect);
 
-//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
+                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
 
-                                    manager.connectToActorAssetIssuer(null, toConnect);
+//                                    manager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
                             };
@@ -416,6 +467,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
                                     Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+                                    restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
                                             @Override
@@ -442,8 +494,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 };
                 connectDialog.setTitle(R.string.connection_request_title);
                 connectDialog.setDescription(getString(R.string.connection_request_desc));
-                connectDialog.setUsername((toConnect.size() > 1) ? "" + toConnect.size() +
-                        " Issuers" : toConnect.get(0).getName());
+                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                        " Issuers" : actorsToConnect.get(0).getName());
                 connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
                 connectDialog.show();
                 return true;
@@ -452,6 +504,78 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
                 return false;
             }
+        }
+
+        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
+            CancelDialog cancelDialog;
+
+            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null){
+                @Override
+                public void onClick(View v) {
+                    int i = v.getId();
+                    if (i == R.id.positive_button) {
+
+                        final ProgressDialog dialog = new ProgressDialog(getActivity());
+                        dialog.setMessage("Canceling, please wait...");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        FermatWorker worker = new FermatWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
+
+
+                                for(ActorIssuer actor: actorsConnecting) {
+                                    //TODO revisar si esto es asi
+                                    manager.cancelActorAssetIssuer(actor.getRecord());
+                                }
+
+                                    /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);*/
+                                return true;
+                            }
+                        };
+                        worker.setContext(getActivity());
+                        worker.setCallBack(new FermatWorkerCallBack() {
+                            @Override
+                            public void onPostExecute(Object... result) {
+                                dialog.dismiss();
+                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                restartButtons();
+                                if (swipeRefreshLayout != null)
+                                    swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            onRefresh();
+                                        }
+                                    });
+                            }
+
+                            @Override
+                            public void onErrorOccurred(Exception ex) {
+                                dialog.dismiss();
+                                    /*TODO aun no se que error deberia ir aqui*/
+//                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
+//                                ex.printStackTrace();
+                            }
+                        });
+                        worker.execute();
+
+
+                        dismiss();
+                    } else if (i == R.id.negative_button) {
+                        dismiss();
+                    }
+                }
+            };
+            cancelDialog.setTitle("Cancel request");
+            cancelDialog.setDescription("Do you want to cancel connection with ");
+            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                    " Issuers" : actorsConnecting.get(0).getRecord().getName());
+            //connectDialog.setSecondDescription("a connection request");
+            cancelDialog.show();
+            return true;
         }
         try {
 
@@ -468,7 +592,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     }
 
     private void updateNotificationsBadge(int count) {
-        IssuerNotificationsCount = count;
+        issuerNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
     }
 
@@ -497,7 +621,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         protected Integer doInBackground(Void... params) {
             // example count. This is where you'd
             // query your data store for the actual count.
-            return IssuerNotificationsCount;
+            return issuerNotificationsCount;
         }
 
         @Override
@@ -539,6 +663,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         }
                     } else
                         showEmpty(true, emptyView);
+                    restartButtons();
 //                    if (actors == null || actors.isEmpty() && getActivity() != null) // for test purpose only
 //                        Toast.makeText(getActivity(), "There are no registered actors...", Toast.LENGTH_SHORT).show();
                 }
@@ -597,4 +722,16 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+    
+    private void restartButtons()
+    {
+        menuItemCancel.setVisible(false);
+        menuItemSelect.setVisible(true);
+        menuItemUnselect.setVisible(false);
+        menuItemConnect.setVisible(false);
+        
+    }
+
+
+
 }

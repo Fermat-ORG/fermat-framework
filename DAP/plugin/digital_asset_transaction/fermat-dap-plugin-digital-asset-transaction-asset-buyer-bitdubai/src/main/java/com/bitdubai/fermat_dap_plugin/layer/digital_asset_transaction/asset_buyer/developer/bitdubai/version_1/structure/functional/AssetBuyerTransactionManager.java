@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
@@ -40,7 +42,9 @@ public class AssetBuyerTransactionManager {
     public List<AssetNegotiation> getNewNegotiations(BlockchainNetworkType networkType) throws DAPException {
         List<AssetNegotiation> toReturn = new ArrayList<>();
         for (NegotiationRecord record : dao.getNewNegotiations(networkType)) {
-            toReturn.add(record.getNegotiation());
+            for (int i = 0; i < record.getForProcess(); i++) {
+                toReturn.add(record.getNegotiation());
+            }
         }
         return toReturn;
     }
@@ -52,19 +56,21 @@ public class AssetBuyerTransactionManager {
     }
 
     public DAPMessage constructSellingMessage(BuyingRecord buyingRecord, AssetSellStatus status) throws CantSetObjectException, CantGetAssetUserActorsException {
-        AssetSellContentMessage content = new AssetSellContentMessage(buyingRecord.getRecordId(), buyingRecord.getBuyerTransaction().serialize(), status, buyingRecord.getMetadata(), buyingRecord.getNegotiationId(), buyingRecord.getBuyerTransaction().getValue(), null);
+        AssetSellContentMessage content = new AssetSellContentMessage(buyingRecord.getRecordId(), buyingRecord.getBuyerTransaction().serialize(), buyingRecord.getBuyerTransaction().getValue(), status, buyingRecord.getMetadata(), buyingRecord.getNegotiationId(), null, null);
         ActorAssetUser mySelf = userManager.getActorAssetUser();
         return new DAPMessage(content, mySelf, buyingRecord.getSeller(), DAPMessageSubject.TRANSACTION_SIGNED);
     }
 
-    public void acceptAsset(UUID negotiationId) throws DAPException {
+    public void acceptAsset(UUID negotiationId, String btcWalletPk) throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
+        dao.acceptNegotiation(negotiationId, btcWalletPk);
         NegotiationRecord record = dao.getNegotiationRecord(negotiationId);
         record.setNegotiationStatus(AssetSellStatus.NEGOTIATION_CONFIRMED);
         DAPMessage message = constructNegotiationMessage(record);
         assetTransmission.sendMessage(message);
     }
 
-    public void declineAsset(UUID negotiationId) throws DAPException {
+    public void declineAsset(UUID negotiationId) throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
+        dao.rejectNegotiation(negotiationId);
         NegotiationRecord record = dao.getNegotiationRecord(negotiationId);
         record.setNegotiationStatus(AssetSellStatus.NEGOTIATION_REJECTED);
         DAPMessage message = constructNegotiationMessage(record);

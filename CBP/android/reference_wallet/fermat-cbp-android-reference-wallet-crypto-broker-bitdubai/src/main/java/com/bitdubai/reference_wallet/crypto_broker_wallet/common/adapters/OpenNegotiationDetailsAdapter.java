@@ -16,7 +16,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotia
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.DateTimeViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ExchangeRateViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ExpirationTimeViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.SingleChoiceViewHolder;
@@ -34,7 +33,6 @@ import java.util.NoSuchElementException;
  */
 public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
 
-    public static final int TYPE_DATE_EXPIRATION_TIME = 6;
     public static final int TYPE_AMOUNT_TO_SELL = 4;
     public static final int TYPE_AMOUNT_TO_RECEIVE = 7;
 
@@ -47,7 +45,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
     private NegotiationWrapper negotiationWrapper;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
     private ClauseViewHolder.Listener clauseListener;
-    private ExpirationTimeViewHolder.Listener expirationDatetimeListener;
     private List<IndexInfoSummary> marketRateList;
     private Quote quote;
     private boolean quoteLoaded;
@@ -83,10 +80,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
         this.clauseListener = clauseListener;
     }
 
-    public void setExpirationDatetimeListener(ExpirationTimeViewHolder.Listener expirationDatetimeListener) {
-        this.expirationDatetimeListener = expirationDatetimeListener;
-    }
-
     public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener footerListener) {
         this.footerListener = footerListener;
     }
@@ -108,10 +101,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 return new NoteViewHolder(itemView, TYPE_HEADER);
             case TYPE_DATE_TIME:
                 return new DateTimeViewHolder(itemView, TYPE_DATE_TIME);
-            case TYPE_DATE_EXPIRATION_TIME:
-                ExpirationTimeViewHolder expirationTimeViewHolder = new ExpirationTimeViewHolder(itemView, TYPE_DATE_EXPIRATION_TIME);
-                expirationTimeViewHolder.setListener(expirationDatetimeListener);
-                return expirationTimeViewHolder;
             case TYPE_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView, TYPE_SINGLE_CHOICE);
             case TYPE_EXCHANGE_RATE:
@@ -139,8 +128,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 return R.layout.cbw_notes_item;
             case TYPE_DATE_TIME:
                 return R.layout.cbw_clause_date_time_item;
-            case TYPE_DATE_EXPIRATION_TIME:
-                return R.layout.cbw_clause_date_time_item;
             case TYPE_SINGLE_CHOICE:
                 return R.layout.cbw_clause_single_choice_item;
             case TYPE_EXCHANGE_RATE:
@@ -158,7 +145,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
 
     @Override
     public int getItemCount() {
-        return haveNote ? super.getItemCount() + 3 : super.getItemCount() + 2;
+        return haveNote ? super.getItemCount() + 2 : super.getItemCount() + 1;
     }
 
     @Override
@@ -168,9 +155,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
 
         if (isFooterPosition(position))
             return TYPE_FOOTER;
-
-        if (isExpirationDatePosition(position))
-            return TYPE_DATE_EXPIRATION_TIME;
 
         final int itemPosition = getItemPosition(position);
         final ClauseType type = dataSet.get(itemPosition).getType();
@@ -203,12 +187,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
                 noteViewHolder.bind(negotiationWrapper.getNegotiationInfo().getMemo());
                 break;
-            case TYPE_DATE_EXPIRATION_TIME:
-                final ExpirationTimeViewHolder expirationTimeViewHolder = (ExpirationTimeViewHolder) holder;
-                final int clauseNumber = getExpirationDatePosition() + 1;
-                final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
-                expirationTimeViewHolder.bindData(negotiationWrapper, clauseNumberImageRes);
-                break;
             default:
                 position = getItemPosition(position);
                 super.onBindViewHolder(holder, position);
@@ -221,7 +199,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
 
         clauseViewHolder.bindData(negotiationWrapper, clause, position);
-        clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
+        clauseViewHolder.confirmButton.setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
         setViewResources(clause.getType(), position, clauseViewHolder);
@@ -246,12 +224,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 break;
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_method_title, clauseNumberImageRes, R.string.reception_method);
-                break;
-            case CUSTOMER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.cbw_crypto_address_customer, clauseNumberImageRes, R.string.cbw_crypto_address_title);
-                break;
-            case BROKER_CRYPTO_ADDRESS:
-                clauseViewHolder.setViewResources(R.string.cbw_crypto_address_broker, clauseNumberImageRes, R.string.cbw_crypto_address_title);
                 break;
             case CUSTOMER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.cbw_bank_account_customer, clauseNumberImageRes, R.string.cbw_bank_account_title);
@@ -336,14 +308,6 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
 
     private boolean isHeaderPosition(int position) {
         return (position == 0) && (haveNote);
-    }
-
-    private boolean isExpirationDatePosition(int position) {
-        return position == getExpirationDatePosition();
-    }
-
-    private int getExpirationDatePosition() {
-        return getItemCount() - 2;
     }
 
     private boolean isFooterPosition(int position) {

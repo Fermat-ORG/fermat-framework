@@ -4,7 +4,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 28/01/16.
@@ -14,7 +14,8 @@ public class testGetClassesFullPath {
 
     @Test
     public void GetClassesFullPath_Should_Return_List() throws Exception {
-        assertNotNull(customerOfflinePaymentPluginRoot.getClassesFullPath());
+        assertEquals("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot",
+                customerOfflinePaymentPluginRoot.getClassesFullPath().get(0));
     }
 
 }
