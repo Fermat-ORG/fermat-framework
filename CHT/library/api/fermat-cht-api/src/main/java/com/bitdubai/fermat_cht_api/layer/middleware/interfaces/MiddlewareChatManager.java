@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConn
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +59,9 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
 
-    void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException;
+    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+
+    void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
     List<Contact> getContacts() throws CantGetContactException;
 

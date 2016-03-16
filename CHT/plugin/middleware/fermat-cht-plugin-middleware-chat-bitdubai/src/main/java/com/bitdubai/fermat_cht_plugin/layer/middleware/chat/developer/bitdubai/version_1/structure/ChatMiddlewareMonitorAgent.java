@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -181,7 +182,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 5000;
+        public final int SLEEP_TIME = 2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE="13";
         int discoverIteration = 0;
@@ -539,6 +540,8 @@ public class ChatMiddlewareMonitorAgent implements
                 );
             } catch (CantUpdateRecordException e) {
                 e.printStackTrace();
+            } catch (SendStatusUpdateMessageNotificationException e) {
+                e.printStackTrace();
             }
 
         }
@@ -554,6 +557,7 @@ public class ChatMiddlewareMonitorAgent implements
                 CantGetPendingTransactionException,
                 UnexpectedResultReturnedFromDatabaseException {
             try{
+                System.out.println("12345 CHECKING INCOMING STATUS");
 
                 List<Transaction<ChatMetadata>> pendingTransactionList=
                         chatNetworkServiceManager.getPendingTransactions(
@@ -571,6 +575,7 @@ public class ChatMiddlewareMonitorAgent implements
                         if(!checkChatMetadata(incomingChatMetadata)) return;
                         updateMessageStatus(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                         break;
                     }
                 }
@@ -662,7 +667,7 @@ public class ChatMiddlewareMonitorAgent implements
                 ChatMetadata chatMetadata) throws
                 DatabaseOperationException,
                 CantSaveMessageException,
-                CantGetMessageException {
+                CantGetMessageException, SendStatusUpdateMessageNotificationException {
             UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
             if(messageRecorded==null){
@@ -677,6 +682,7 @@ public class ChatMiddlewareMonitorAgent implements
 
             messageRecorded.setStatus(MessageStatus.RECEIVE);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+            chatMiddlewareManager.sendDeliveredMessageNotification(messageRecorded);
         }
 
         /**
@@ -847,6 +853,7 @@ public class ChatMiddlewareMonitorAgent implements
                 DatabaseOperationException,
                 CantSaveMessageException,
                 CantGetMessageException {
+            System.out.println("12345 UPDATING MESSAGE STATUS");
             UUID messageId=chatMetadata.getMessageId();
             Message messageRecorded=chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
             if(messageRecorded==null){
@@ -858,8 +865,12 @@ public class ChatMiddlewareMonitorAgent implements
                         chatMetadata);
                 if(messageRecorded==null) return;
             }
+            if(messageRecorded.getStatus().equals(MessageStatus.READ))
+                return;
+
             messageRecorded.setStatus(chatMetadata.getMessageStatus());
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+            System.out.println("12345 MESSAGE STATUS UPDATED");
         }
 
         /**
@@ -895,8 +906,8 @@ public class ChatMiddlewareMonitorAgent implements
                      */
                     createdMessage.setStatus(MessageStatus.CANNOT_SEND);
                 }
-
                 chatMiddlewareDatabaseDao.saveMessage(createdMessage);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             } catch (DatabaseOperationException e) {
                 throw new CantSendChatMessageException(
                         e,

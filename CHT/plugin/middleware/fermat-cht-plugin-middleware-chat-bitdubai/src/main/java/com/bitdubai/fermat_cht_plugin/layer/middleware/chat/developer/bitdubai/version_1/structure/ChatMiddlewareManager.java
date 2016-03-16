@@ -35,7 +35,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -511,7 +511,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-    public void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException {
+    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
         try {
             UUID chatId = message.getChatId();
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
@@ -531,7 +531,34 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     chat.getChatId(),
                     message.getMessageId());
         } catch (Exception e) {
-            throw new SendReadMessageNotificationException(
+            throw new SendStatusUpdateMessageNotificationException(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
+    public void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
+        try {
+            UUID chatId = message.getChatId();
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if (chat == null) {
+                return;
+            }
+
+            String localActorPublicKey = chat.getLocalActorPublicKey();
+            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
+            networkServiceChatManager.sendChatMessageNewStatusNotification(
+                    localActorPublicKey,
+                    chat.getLocalActorType(),
+                    remoteActorPublicKey,
+                    chat.getRemoteActorType(),
+                    DistributionStatus.DELIVERED,
+                    MessageStatus.DELIVERED,
+                    chat.getChatId(),
+                    message.getMessageId());
+        } catch (Exception e) {
+            throw new SendStatusUpdateMessageNotificationException(
                     e,
                     "Something went wrong",
                     "");

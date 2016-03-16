@@ -20,7 +20,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -101,7 +101,7 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException {
+    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
         middlewareChatManager.sendReadMessageNotification(message);
     }
 

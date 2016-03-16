@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.all_definition.exceptions;
 /**
  * Created by José Vilchez on 10/03/16.
  */
-public class SendReadMessageNotificationException extends CHTException {
+public class SendStatusUpdateMessageNotificationException extends CHTException {
 
 
     /**
@@ -19,7 +19,7 @@ public class SendReadMessageNotificationException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public SendReadMessageNotificationException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public SendStatusUpdateMessageNotificationException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -30,7 +30,7 @@ public class SendReadMessageNotificationException extends CHTException {
      * @param context
      * @param possibleReason
      */
-    public SendReadMessageNotificationException(Exception cause, String context, String possibleReason) {
+    public SendStatusUpdateMessageNotificationException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -40,7 +40,7 @@ public class SendReadMessageNotificationException extends CHTException {
      * @param message
      * @param cause
      */
-    public SendReadMessageNotificationException(final String message, final Exception cause) {
+    public SendStatusUpdateMessageNotificationException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -49,7 +49,7 @@ public class SendReadMessageNotificationException extends CHTException {
      *
      * @param message
      */
-    public SendReadMessageNotificationException(final String message) {
+    public SendStatusUpdateMessageNotificationException(final String message) {
         this(message, null);
     }
 
@@ -58,7 +58,7 @@ public class SendReadMessageNotificationException extends CHTException {
      *
      * @param exception
      */
-    public SendReadMessageNotificationException(final Exception exception) {
+    public SendStatusUpdateMessageNotificationException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -66,7 +66,7 @@ public class SendReadMessageNotificationException extends CHTException {
     /**
      * Constructor
      */
-    public SendReadMessageNotificationException() {
+    public SendStatusUpdateMessageNotificationException() {
         this(DEFAULT_MESSAGE);
     }
 }
