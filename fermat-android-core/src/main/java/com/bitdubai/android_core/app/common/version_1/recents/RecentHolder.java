@@ -20,7 +20,7 @@ public class RecentHolder extends ViewHolder<View,RecentApp>{
     public RecentHolder(View view) {
         super(view);
         root = (ViewGroup) view.findViewById(R.id.app_container);
-        title = (FermatTextView) view.findViewById(R.id.title);
+        title = (FermatTextView) view.findViewById(R.id.recent_title);
         icon = (ImageView) view.findViewById(R.id.img_recent_icon);
     }
 

@@ -324,7 +324,7 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -335,7 +335,7 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
                 }

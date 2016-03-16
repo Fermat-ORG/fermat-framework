@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">FermatCustomViews</string>
+
+    <string name="country_label">Country</string>
+    <string name="state_label">State</string>
+
+    <string name="venezuela_label">Venezuela</string>
+    <string name="usa_label">United States</string>
+    <string name="argentina_label">Argentina</string>
+
+    <string-array name="test_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Clelia López</item>
+        <item>Item with very extra super duper long name</item>
+    </string-array>
+
+    <string-array name="test_venezuela_array">
+        <item>Caracas</item>
+        <item>Zulia</item>
+        <item>Mérida</item>
+        <item>Nueva Esparta</item>
+        <item>Falcón</item>
+    </string-array>
+
+    <string-array name="test_usa_array">
+        <item>New York</item>
+        <item>Florida</item>
+        <item>Maryland</item>
+        <item>California</item>
+        <item>Alabama</item>
+    </string-array>
+
+    <string-array name="test_argentina_array">
+        <item>Buenos Aires</item>
+        <item>Córdoba</item>
+        <item>San Luis</item>
+        <item>Santa Fe</item>
+        <item>Mendoza</item>
+    </string-array>
+
+</resources>

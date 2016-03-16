@@ -50,6 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
+                android:id="@+id/recent_title"
                 android:text="Bitcoin Wallet"
                 android:textSize="28sp"
                 android:paddingLeft="28dp"
