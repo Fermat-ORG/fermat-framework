@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
@@ -217,6 +218,16 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp) {
+
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
+
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
 
     }
 
