@@ -32,6 +32,12 @@ project(':fermat-tky-android-sub-app-fan-identity-bitdubai').projectDir = new Fi
 include ':fermat-tky-plugin-external-api-tokenly-bitdubai'
 project(':fermat-tky-plugin-external-api-tokenly-bitdubai').projectDir = new File('TKY/plugin/external_api/fermat-tky-plugin-external-api-tokenly-bitdubai')
 
+//Identity
+include ':fermat-tky-plugin-identity-artist-identity-bitdubai'
+project(':fermat-tky-plugin-identity-artist-identity-bitdubai').projectDir = new File('TKY/plugin/identity/fermat-tky-plugin-identity-artist-identity-bitdubai')
+
+include ':fermat-tky-plugin-identity-fan-identity-bitdubai'
+project(':fermat-tky-plugin-identity-fan-identity-bitdubai').projectDir = new File('TKY/plugin/identity/fermat-tky-plugin-identity-fan-identity-bitdubai')
 //Sub app module
 include ':fermat-tky-plugin-sub-app-module-artist-identity-bitdubai'
 project(':fermat-tky-plugin-sub-app-module-artist-identity-bitdubai').projectDir = new File('TKY/plugin/sub_app_module/fermat-tky-plugin-sub-app-module-artist-identity-bitdubai')
