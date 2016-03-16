@@ -43,7 +43,7 @@ public class AssetIssuerWallletBalanceImpl implements com.bitdubai.fermat_dap_ap
         assetIssuerWalletDao.addDebit(assetIssuerWalletTransactionRecord, balanceType);
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), "ASSET-ISSUER-DEBIT_" + "Name: " + assetIssuerWalletTransactionRecord.getDigitalAsset().getName() + "- Balance: " + balanceType.getCode());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), "ASSET-ISSUER-DEBIT_" + "Name: " + assetIssuerWalletTransactionRecord.getDigitalAsset().getName() + " - Balance: " + balanceType.getCode());
     }
 
     @Override
@@ -51,6 +51,6 @@ public class AssetIssuerWallletBalanceImpl implements com.bitdubai.fermat_dap_ap
         assetIssuerWalletDao.addCredit(assetIssuerWalletTransactionRecord, balanceType);
 
         broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), "ASSET-ISSUER-CREDIT_" + "Name: " + assetIssuerWalletTransactionRecord.getDigitalAsset().getName() + "- Balance: " + balanceType.getCode());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), "ASSET-ISSUER-CREDIT_" + "Name: " + assetIssuerWalletTransactionRecord.getDigitalAsset().getName() + " - Balance: " + balanceType.getCode());
     }
 }

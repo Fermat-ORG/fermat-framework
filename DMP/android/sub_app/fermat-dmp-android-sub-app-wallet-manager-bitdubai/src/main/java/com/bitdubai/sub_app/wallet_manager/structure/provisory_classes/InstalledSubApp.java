@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_manager.structure.provisory_classes;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -31,9 +32,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private AppsStatus appStatus;
 
     private int banner = 0;
+    private Platforms platform;
 
 
-    public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,Platforms platform) {
         this.subApps = subApps;
         this.skinsId = skinsId;
         this.languajesId = languajesId;
@@ -41,6 +43,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.walletName = walletName;
         this.publicKey = publicKey;
         this.version = version;
+        this.platform = platform;
     }
 
     public void setIconResource(int iconResource) {
@@ -143,6 +146,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public Platforms getPlatform() {
+        return platform;
+    }
+
+    @Override
     public String getIcon() {
         return walletIcon;
     }
@@ -194,5 +202,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
 
     public void setBanner(int banner) {
         this.banner = banner;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return banner;
     }
 }

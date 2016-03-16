@@ -409,6 +409,7 @@ We love music and we do music, we love movies (fanatics), we are also amateur ph
 <br/>
 ### DBZ Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/logo_dbz_team.jpg "Logo DBZ Team")
 We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
 
 #### Team Members:
