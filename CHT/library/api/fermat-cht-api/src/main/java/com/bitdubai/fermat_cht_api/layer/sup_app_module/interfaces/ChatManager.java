@@ -102,6 +102,8 @@ public interface ChatManager {
 
     void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
 
+    //void deleteContactConnections( ) throws CantDeleteContactConnectionException;
+
     void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
 
     List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
@@ -303,12 +304,12 @@ public class ChatMiddlewareMonitorAgent implements
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
                     //deleteActorConnections();
-                    contactList=chatMiddlewareManager.discoverActorsRegistered();
-                    if(!contactList.isEmpty()){
-                        for(ContactConnection contact : contactList){
-                            saveContactConnection(contact);
-                        }
-                    }
+//                    contactList=chatMiddlewareManager.discoverActorsRegistered();
+//                    if(!contactList.isEmpty()){
+//                        for(ContactConnection contact : contactList){
+//                            saveContactConnection(contact);
+//                        }
+//                    }
                 }
                 discoverIteration++;
                 if(discoverIteration==DISCOVER_ITERATION_LIMIT){
@@ -390,23 +391,23 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the pending transaction from Network Service plugin"
                 );
-            } catch (CantGetContactConnectionException e) {
-                //For now, I'm gonna handle this print the exception and continue the thread
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        e);
-                e.printStackTrace();
-            } catch (CantSaveContactConnectionException e) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        e);
-                throw new CantSendChatMessageException(
-                        e,
-                        "Executing Monitor Agent",
-                        "Cannot save a new contact"
-                );
+//            } catch (CantGetContactConnectionException e) {
+//                //For now, I'm gonna handle this print the exception and continue the thread
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.CHAT_MIDDLEWARE,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                        e);
+//                e.printStackTrace();
+//            } catch (CantSaveContactConnectionException e) {
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.CHAT_MIDDLEWARE,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                        e);
+//                throw new CantSendChatMessageException(
+//                        e,
+//                        "Executing Monitor Agent",
+//                        "Cannot save a new contact"
+//                );
             } catch (Exception exception){
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
@@ -984,24 +985,24 @@ public class ChatMiddlewareMonitorAgent implements
                     chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
                 }
 
-        } catch (CantGetContactException e) {
-                throw new CantDeleteContactException(
-                        e,
-                        "delete contact connections",
-                        "Cannot get the contact connection"
-                );
-        } catch (DatabaseOperationException e) {
-                throw new CantDeleteContactException(
-                        e,
-                        "delete contact connections",
-                        "Cannot Database operation"
-                );
-        } catch (CantDeleteContactException e) {
-                throw new CantDeleteContactException(
-                        e,
-                        "delete contact connections",
-                        "Cannot delete contact connections"
-                );
+            } catch (CantGetContactException e) {
+                    throw new CantDeleteContactException(
+                            e,
+                            "delete contact connections",
+                            "Cannot get the contact connection"
+                    );
+            } catch (DatabaseOperationException e) {
+                    throw new CantDeleteContactException(
+                            e,
+                            "delete contact connections",
+                            "Cannot Database operation"
+                    );
+            } catch (CantDeleteContactConnectionException e) {
+                    throw new CantDeleteContactException(
+                            e,
+                            "delete contact connections",
+                            "Cannot delete contact connections"
+                    );
             }
         }
 
