@@ -7,7 +7,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
  */
 public class CantGetBotException extends TKYException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT GET BOT OBJECT FROM JSON RESPONSE";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET SONG OBJECT FROM JSON RESPONSE";
 
     public CantGetBotException(
             final String message,

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesUpdateEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServiceCompleteRegistration;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -40,7 +41,12 @@ public enum EventType implements FermatEventEnum {
     CRYPTO_PAYMENT_REQUEST_NEWS("CRYPRNW") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestNewsEvent(this); }
     },
-
+    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN") {
+        @Override
+        public FermatEvent getNewEvent() {
+            return new ActorNetworkServicePendingsNotificationEvent(this);
+        }
+    },
     ;
 
     private final String code;

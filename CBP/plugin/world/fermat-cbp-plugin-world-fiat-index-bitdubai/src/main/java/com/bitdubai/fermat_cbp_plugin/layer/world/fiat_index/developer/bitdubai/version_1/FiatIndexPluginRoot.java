@@ -33,7 +33,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.enums.FiatIndexProviders;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.exceptions.CantInitializeFiatIndexWorldDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -193,7 +192,7 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeFiatIndexWorldDatabaseException cantInitializeException) {
-            FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "FiatIndexPluginRoot", "");
+            FermatException e = new CantInitializeFiatIndexWorldDatabaseException("Database cannot be initialized", cantInitializeException, "FiatIndexPluginRoot", "");
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
