@@ -31,6 +31,7 @@ public enum Layers implements FermatEnum {
     DESKTOP_MODULE                 ("DKM"),
     DIGITAL_ASSET_TRANSACTION      ("DAT"),
     ENGINE                         ("ENG"),
+    FUNDS_TRANSACTION              ("FTX"),
     HARDWARE                       ("HAR"),
     IDENTITY                       ("IDT"),
     MIDDLEWARE                     ("MID"),
@@ -81,6 +82,7 @@ public enum Layers implements FermatEnum {
             case "DEF":  return DEFINITION;
             case "DKM":  return DESKTOP_MODULE;
             case "ENG":  return ENGINE;
+            case "FTX":  return FUNDS_TRANSACTION;
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;
             case "MID":  return MIDDLEWARE;
