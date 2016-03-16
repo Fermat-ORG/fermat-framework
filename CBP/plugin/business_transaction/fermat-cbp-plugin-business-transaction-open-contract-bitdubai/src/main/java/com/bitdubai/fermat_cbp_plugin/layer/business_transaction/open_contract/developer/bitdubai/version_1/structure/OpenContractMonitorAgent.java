@@ -411,12 +411,12 @@ public class OpenContractMonitorAgent implements
 
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.confirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
-                                    contractHash, businessTransactionMetadata.getContractId(),
+                                    businessTransactionMetadata.getReceiverId(),
+                                    contractHash, businessTransactionMetadata.getTransactionId().toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
                 }

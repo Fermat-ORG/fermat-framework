@@ -208,7 +208,7 @@ public class OpenContractBusinessTransactionDao {
     public boolean isContractHashSentConfirmation(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
-            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.CONTRACT_CONFIRMED.getCode());
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION.getCode());
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
