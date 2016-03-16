@@ -23,8 +23,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
@@ -34,8 +32,10 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.TokenlyArtistIdentityPluginRoot;
+import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantGetTokenlyArtistIdentityPrivateKeyException;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantGetTokenlyArtistIdentityProfileImageException;
+import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyArtistIdentityDatabaseException;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
@@ -150,7 +150,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
         try {
             if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -200,7 +200,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
         try {
             if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -251,7 +251,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point Identity list, table not found.", "Redeem Point Identity", "Cant get Redeem Point identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point Identity list, table not found.");
             }
 
             // 2) Find the Intra users.
@@ -304,7 +304,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.");
             }
 
 
@@ -361,7 +361,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.");
             }
 
 
@@ -419,7 +419,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.");
             }
 
 
@@ -552,7 +552,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             table = this.database.getTable(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_TABLE_NAME);
 
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset Issuer Identity", "");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists");
             }
 
             table.addStringFilter(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
