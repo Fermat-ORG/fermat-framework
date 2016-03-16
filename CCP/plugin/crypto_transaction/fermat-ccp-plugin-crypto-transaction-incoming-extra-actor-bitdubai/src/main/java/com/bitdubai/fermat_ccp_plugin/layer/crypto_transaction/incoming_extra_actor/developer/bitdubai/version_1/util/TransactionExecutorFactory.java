@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_a
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor;
@@ -21,7 +21,7 @@ public class TransactionExecutorFactory {
         this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
-    public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final String walletPublicKey) throws CantLoadWalletException{
+    public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final String walletPublicKey) throws CantLoadWalletsException {
         try {
             switch (walletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
@@ -30,15 +30,15 @@ public class TransactionExecutorFactory {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
             }
-        } catch (CantLoadWalletException e) {
+        } catch (CantLoadWalletsException e) {
             throw e;
         } catch (Exception e) {
-            throw new CantLoadWalletException("An Unexpected Exception Happened", FermatException.wrapException(e),"","");
+            throw new CantLoadWalletsException("An Unexpected Exception Happened", FermatException.wrapException(e),"","");
         }
 
     }
 
-    private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {
+    private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletsException {
         return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
     }
 

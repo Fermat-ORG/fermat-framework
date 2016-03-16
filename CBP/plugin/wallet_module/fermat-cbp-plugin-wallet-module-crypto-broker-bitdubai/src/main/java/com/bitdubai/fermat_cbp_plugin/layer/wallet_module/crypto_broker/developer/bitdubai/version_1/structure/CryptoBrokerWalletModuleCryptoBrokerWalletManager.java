@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
@@ -149,7 +150,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -1072,7 +1072,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
     }
 
-    @Override
+    @Override //TODO BNK
     public double getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
         return bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).getAvailableBalance().getBalance(accountNumber);
     }
@@ -1087,9 +1087,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return cashMoneyWalletManager.cashMoneyWalletExists(walletPublicKey);
     }
 
-    @Override
-    public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException {
-        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+    @Override//TODO CCP - CBP
+    public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException, CantLoadWalletsException {
+        try {
+            return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+        } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
