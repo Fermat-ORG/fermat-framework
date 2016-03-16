@@ -565,12 +565,15 @@ public class ChatMiddlewareMonitorAgent implements
                 UUID incomingTransactionChatId;
                 ChatMetadata incomingChatMetadata;
                 if(pendingTransactionList==null){
+                    System.out.println("12345 CHECKING INCOMING STATUS NO RESULT QUERY");
                     throw new CantGetPendingTransactionException("The Network Service returns a null list");
                 }
                 for(Transaction<ChatMetadata> pendingTransaction : pendingTransactionList){
+                    System.out.println("12345 CHECKING INCOMING STATUS INSIDE FOR");
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
+                        System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF");
                         //Check if metadata exists in database
                         if(!checkChatMetadata(incomingChatMetadata)) return;
                         updateMessageStatus(incomingChatMetadata);
