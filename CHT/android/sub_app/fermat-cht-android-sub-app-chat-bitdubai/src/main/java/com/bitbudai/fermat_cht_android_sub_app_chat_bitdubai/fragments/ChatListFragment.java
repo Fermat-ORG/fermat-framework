@@ -132,7 +132,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<String> infochat=new ArrayList<String>();
     ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
     ArrayList<Bitmap> imgid=new ArrayList<>();
-    TextView text;
+    //TextView text;
     View layout;
     PresentationDialog presentationDialog;
     Typeface tf;
@@ -280,14 +280,14 @@ public class ChatListFragment extends AbstractFermatFragment{
         try{
             if(!chatManager.getMessages().isEmpty()) {
                 chatlistview();
-                text.setVisibility(View.GONE);
+                //text.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             }else{
                 //Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
-                text.setVisibility(View.VISIBLE);
+                //text.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
-                text.setText(" ");
-                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
+                //text.setText(" ");
+                //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -321,7 +321,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
-        text = (TextView) layout.findViewById(R.id.text);
+        //text = (TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();

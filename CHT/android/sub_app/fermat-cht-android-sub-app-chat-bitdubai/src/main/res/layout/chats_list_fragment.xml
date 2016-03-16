@@ -8,11 +8,11 @@
     android:layout_height="match_parent"
     android:background="@color/background_activity"
     >
-
+<!--
   <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+-->
       <!--       android:background="@color/background_activity"
       <ProgressBar
                android:id="@+id/chat_list_progress_bar"
@@ -50,22 +50,23 @@
 
       <ImageView
           android:id="@+id/nodata"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_width="250dp"
+          android:layout_height="250dp"
           android:src="@drawable/cht_empty_chat_icon"
           android:gravity="center"
+          android:layout_gravity="center"
           />
-      <TextView android:id="@+id/text"
+    <!--  <TextView android:id="@+id/text"
           android:gravity="center"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_width="268dp"
+          android:layout_height="245dp"
           android:textColor="@android:color/black"
           android:fontFamily="sans-serif-light"
           android:textAppearance="?android:attr/textAppearanceLarge"
           />
-
-    </FrameLayout>
-
+-->
+  <!--  </FrameLayout>
+-->
 
  <!--   <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
