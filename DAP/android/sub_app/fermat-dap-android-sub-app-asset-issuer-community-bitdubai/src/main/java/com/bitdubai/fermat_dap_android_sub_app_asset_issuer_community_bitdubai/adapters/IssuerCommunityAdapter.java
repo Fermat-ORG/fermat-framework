@@ -56,6 +56,8 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                         break;
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
                         holder.connectedStateWaiting.setVisibility(View.GONE);
                         holder.connectedStateDenied.setVisibility(View.VISIBLE);
                         break;

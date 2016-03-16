@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -223,6 +224,11 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
     @Override
     public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
+
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
 
     }
 

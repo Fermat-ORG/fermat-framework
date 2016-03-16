@@ -17,6 +17,7 @@ public enum CryptoTransactionType implements FermatEnum {
 
     INCOMING ("INC"),
     OUTGOING ("OUT"),
+    UNKNOWN("UKN")
 
     ;
 
@@ -32,6 +33,7 @@ public enum CryptoTransactionType implements FermatEnum {
 
             case "INC":return INCOMING;
             case "OUT":return OUTGOING;
+            case "UKN":return UNKNOWN;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

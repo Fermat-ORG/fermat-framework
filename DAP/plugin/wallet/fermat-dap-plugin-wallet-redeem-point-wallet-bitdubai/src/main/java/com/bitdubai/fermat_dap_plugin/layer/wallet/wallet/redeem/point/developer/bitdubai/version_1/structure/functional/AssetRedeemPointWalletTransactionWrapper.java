@@ -50,6 +50,25 @@ public class AssetRedeemPointWalletTransactionWrapper implements AssetRedeemPoin
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetRedeemPointWalletTransactionWrapper that = (AssetRedeemPointWalletTransactionWrapper) o;
+
+        if (!getTransactionHash().equals(that.getTransactionHash())) return false;
+        return getAssetPublicKey().equals(that.getAssetPublicKey());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTransactionHash().hashCode();
+        result = 31 * result + getAssetPublicKey().hashCode();
+        return result;
+    }
+
+    @Override
     public String getAssetPublicKey() {
         return assetPublicKey;
     }

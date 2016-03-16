@@ -395,6 +395,20 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantGetAssetRedeemPointActorsException {
+
+        try {
+            this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
+        }
+        catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T UPDATE ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
+        }
+
+    }
+
 
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException {
         try {
@@ -447,7 +461,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     destinationActorType,
                     senderActorPublicKey,
                     destinationActorPublicKey,
-                    CryptoAddressDealers.DAP_ASSET,
+                    CryptoAddressDealers.DAP_WATCH_ONLY,
                     blockchainNetworkType);
 
 //                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, null, blockchainNetworkType);

@@ -114,6 +114,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         if (list != null) {
             actorAssetRedeemPoints = new ArrayList<>();
+            actorAssetRedeemPointManager.updateOfflineRedeemPointRegisterInNetworkService(list);
 
             try {
                 BlockchainNetworkType blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
@@ -226,6 +227,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
                         System.out.println("The actor asset Redeem Point is connected");
                     }
                 }
+            }
+            else
+            {
+                throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
             }
         } catch (CantAskConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
