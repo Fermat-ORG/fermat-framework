@@ -58,6 +58,7 @@ public class TokenlyArtistIdentityDatabaseFactory implements DealsWithErrors, De
             table = databaseFactory.newTableFactory(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_TABLE_NAME);
 
             table.addColumn(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+            table.addColumn(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
