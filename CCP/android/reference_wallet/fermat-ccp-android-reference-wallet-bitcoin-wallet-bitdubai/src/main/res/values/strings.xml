@@ -15,7 +15,7 @@
 
     <!-- connection_with_community_dialog.xml -->
     <string name="new_user_text">New User</string>
-    <string name="add_user_in_your_contact_list_text">Add user in your contact list or\nsearch it in the community section</string>
+    <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
     <string name="search_text">Search</string>
 
@@ -30,7 +30,7 @@
 
     <!-- contacts_tutorial_part1_v2.xml -->
     <string name="txt_title_text">Add Contact Help</string>
-    <string name="no_id_In_this_wallet_text">In this wallet you can have two different types of contacts:</string>
+    <string name="no_id_In_this_wallet_text">This wallet allows two different types of contacts:</string>
     <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\'t need to manually exchange addresses with them</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
@@ -38,10 +38,11 @@
     <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
     <string name="add_extra_user_text">Add External Contact</string>
 
+
     <!-- create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
-    <string name="set_name_text">Set name</string>
-    <string name="set_address_text">Set address</string>
+    <string name="set_name_text">Type name</string>
+    <string name="set_address_text">Paste address</string>
     <string name="save_text">Save</string>
 
     <!-- dialog_error_conecting_fermat_network.xml -->
@@ -55,7 +56,7 @@
     <string name="balance_amount_type_text">btc</string>
 
     <!-- fragment_add_connections_list.xml -->
-    <string name="click_me_to_search_text">Click me to\nsearch contacts!</string>
+    <string name="click_me_to_search_text">Click on me\nto look for contacts!</string>
 
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
     <string name="receive_text">Receive</string>
@@ -102,7 +103,6 @@
     <!-- presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
     <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
-    <string name="see_your_balance_text">* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history.</string>
     <string name="close_text">Close</string>
 
     <!-- presentation_wallet.xml -->
