@@ -93,7 +93,7 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
-        System.out.println("*** 12345 case 1:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
+        System.out.println("*** 12345 case 2:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
         middlewareChatManager.saveMessage(message);
     }
 
