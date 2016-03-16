@@ -205,8 +205,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantSendAssetBitcoinsToUserException
      */
     @Override
-    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo);
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException {
+        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo, blockchainNetworkType);
     }
 
     /**
@@ -304,8 +304,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantCreateBitcoinTransactionException
      */
     @Override
-    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
-        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo);
+    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo, blockchainNetworkType);
     }
 
     /**
@@ -327,8 +327,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantCreateDraftTransactionException
      */
     @Override
-    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo);
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo, blockchainNetworkType);
     }
 
     /**

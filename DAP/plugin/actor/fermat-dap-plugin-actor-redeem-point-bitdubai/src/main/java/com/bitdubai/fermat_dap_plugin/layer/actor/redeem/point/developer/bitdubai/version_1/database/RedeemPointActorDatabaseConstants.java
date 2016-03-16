@@ -21,8 +21,8 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_ACTOR_TYPE_COLUMN_NAME = "actor_type";
     public static final String REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
-    public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
-    public static final String REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    //public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    //public static final String REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME = "contact_information";
     public static final String REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME = "address_country_name";
     public static final String REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME = "address_province_name";
@@ -48,8 +48,8 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME = "register_actor_type";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME = "register_location_latitude";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME = "register_location_longitude";
-    public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
-    public static final String REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
+    //public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
+    //public static final String REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
     public static final String REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME = "register_contact_information";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_COUNTRY_NAME_COLUMN_NAME = "register_address_country_name";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_PROVINCE_NAME_COLUMN_NAME = "register_address_province_name";
