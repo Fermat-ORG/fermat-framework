@@ -11,11 +11,11 @@
 
     <!-- empty list views -->
     <string name="no_assets_issuer">No Assets?</string>
-    <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
+    <string name="no_assets_issuer_message">Don\'t  worry!</br>As an Asset Issuer you are able to create new ones using the Asset Factory.</br>Once created, all the assets you publish there, will be stored in this Asset Issuer Wallet.</string>
     <string name="no_assets_user">No Assets?</string>
-    <string name="no_assets_user_message">Don\'t worry, as an Asset User you are able to receive assets from many Asset Owners. You are already eligible to receive them and store them at this wallet.</string>
+    <string name="no_assets_user_message">Don\'t worry!</br>Use the community app to connect to Asset Issuers and/or other Asset Users like you, and then you will be able to receive assets from them !</string>
     <string name="no_assets_redeem_point">No Assets?</string>
-    <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
+    <string name="no_assets_redeem_point_message">Don\'t worry!</br>To act as a Redeem Point you need to use the Community App to connect your device to an Assets Issuer whose assets you want to redeem.</string>
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
     <string name="no_transactions">No Transactions</string>
@@ -23,16 +23,16 @@
 
     <!-- error messages -->
     <string name="dap_issuer_wallet_system_error">Asset Issuer system error</string>
-    <string name="dap_issuer_wallet_exception">Fermat Has detected an exception</string>
-    <string name="dap_issuer_wallet_exception_retry">Fermat Has detected an exception. Please retry again.</string>
+    <string name="dap_issuer_wallet_exception">Fermat has detected an exception</string>
+    <string name="dap_issuer_wallet_exception_retry">Fermat has detected an exception. Please try again.</string>
     <!-- -->
 
     <!-- validation messages -->
-    <string name="dap_issuer_wallet_validate_assets_to_deliver">Must be enter the number of assets to deliver</string>
+    <string name="dap_issuer_wallet_validate_assets_to_deliver">Please enter the number of assets to deliver</string>
     <string name="dap_issuer_wallet_validate_assets_to_deliver_greater">Value can\'t be greater than </string>
-    <string name="dap_issuer_wallet_validate_no_available_assets">There is not assets to distribute</string>
+    <string name="dap_issuer_wallet_validate_no_available_assets">There is no assets to distribute</string>
     <string name="dap_issuer_wallet_validate_no_users_groups">No users/groups selected</string>
-    <string name="dap_issuer_wallet_validate_not_enought_assets">There is not enought assets to distribute</string>
+    <string name="dap_issuer_wallet_validate_not_enought_assets">There are not enough assets to distribute</string>
     <!-- -->
 
     <!-- confirm messages -->
