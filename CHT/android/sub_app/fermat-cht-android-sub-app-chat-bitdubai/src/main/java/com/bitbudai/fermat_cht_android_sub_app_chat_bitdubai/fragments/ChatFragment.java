@@ -50,7 +50,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     // Fermat Managers
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
-    private ErrorManager errorManager;
+    private ErrorManager errorManagerinbox;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
@@ -194,7 +194,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
             }
         });
-        adapter=new ChatAdapterView.Builder(inflater.getContext())
+        adapter=new ChatAdapterView.inboxBuilder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
