@@ -66,18 +66,6 @@ import java.util.Objects;
 public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin implements
         RedeemPointCommunitySubAppModuleManager {
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
-    ActorAssetUserManager actorAssetUserManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
-    AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
-    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
-    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -86,6 +74,18 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.REDEEM_POINT)
     RedeemPointIdentityManager redeemPointIdentityManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
+    AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
+    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
 
     private SettingsManager<RedeemPointSettings> settingsManager;
 
