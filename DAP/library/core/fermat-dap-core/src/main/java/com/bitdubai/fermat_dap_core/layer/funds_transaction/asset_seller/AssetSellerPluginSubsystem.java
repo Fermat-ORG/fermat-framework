@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_seller;
+package com.bitdubai.fermat_dap_core.layer.funds_transaction.asset_seller;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
