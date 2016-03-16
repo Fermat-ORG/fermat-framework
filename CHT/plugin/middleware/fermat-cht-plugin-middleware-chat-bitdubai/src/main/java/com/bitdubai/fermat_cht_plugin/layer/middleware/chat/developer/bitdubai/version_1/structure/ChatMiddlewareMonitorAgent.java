@@ -880,6 +880,7 @@ public class ChatMiddlewareMonitorAgent implements
          */
         private void sendMessage(Message createdMessage) throws CantSendChatMessageException {
             try{
+                System.out.println("*** 12345 case 4:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
                 UUID chatId=createdMessage.getChatId();
                 Chat chat=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
                 if(chat==null){

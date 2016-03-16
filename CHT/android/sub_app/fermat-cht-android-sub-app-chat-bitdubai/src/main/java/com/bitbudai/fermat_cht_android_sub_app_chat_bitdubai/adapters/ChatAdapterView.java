@@ -446,6 +446,7 @@ public class ChatAdapterView extends LinearLayout {
                     adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                     messagesContainer.setAdapter(adapter);
                     displayMessage(chatMessage);
+                    System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
 
 
                 } catch (CantSaveMessageException e) {

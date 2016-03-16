@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -92,6 +93,7 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
+        System.out.println("*** 12345 case 1:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
         middlewareChatManager.saveMessage(message);
     }
 
