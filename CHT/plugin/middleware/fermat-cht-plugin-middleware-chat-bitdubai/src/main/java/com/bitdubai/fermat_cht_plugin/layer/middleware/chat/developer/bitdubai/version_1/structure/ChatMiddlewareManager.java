@@ -59,6 +59,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -439,6 +440,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     public void saveMessage(Message message) throws CantSaveMessageException {
         try {
             ObjectChecker.checkArgument(message, "The message argument is null");
+            System.out.println("*** 12345 case 3:send msg in Manager layer" + new Timestamp(System.currentTimeMillis()));
             this.chatMiddlewareDatabaseDao.saveMessage(message);
         } catch (ObjectNotSetException e) {
             errorManager.reportUnexpectedPluginException(

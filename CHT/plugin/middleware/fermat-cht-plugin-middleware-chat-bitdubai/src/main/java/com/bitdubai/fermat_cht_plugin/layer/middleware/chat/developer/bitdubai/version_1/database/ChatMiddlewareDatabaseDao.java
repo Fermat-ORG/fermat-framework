@@ -898,6 +898,7 @@ public class ChatMiddlewareDatabaseDao {
     {
         try
         {
+            System.out.println("*** 12345 case 4:send msg in Dao layer" + new Timestamp(System.currentTimeMillis()));
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
