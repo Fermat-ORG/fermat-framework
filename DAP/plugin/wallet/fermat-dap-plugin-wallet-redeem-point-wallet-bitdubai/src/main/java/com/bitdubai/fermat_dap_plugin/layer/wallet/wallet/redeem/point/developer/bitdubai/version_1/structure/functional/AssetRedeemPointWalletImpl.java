@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -85,13 +86,16 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
     private final ActorAssetRedeemPointManager redeemPointManager;
 
+    private Broadcaster broadcaster;
+
     public AssetRedeemPointWalletImpl(ErrorManager errorManager,
                                       PluginDatabaseSystem pluginDatabaseSystem,
                                       PluginFileSystem pluginFileSystem,
                                       UUID pluginId,
                                       ActorAssetUserManager actorAssetUserManager,
                                       ActorAssetIssuerManager issuerManager,
-                                      ActorAssetRedeemPointManager redeemPointManager) {
+                                      ActorAssetRedeemPointManager redeemPointManager,
+                                      Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -100,6 +104,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
         this.actorAssetUserManager = actorAssetUserManager;
         this.issuerManager = issuerManager;
         this.redeemPointManager = redeemPointManager;
+        this.broadcaster = broadcaster;
     }
 
     public void initialize(UUID walletId) throws CantInitializeRedeemPointWalletException {
@@ -184,7 +189,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     @Override
     public AssetRedeemPointWalletBalance getBalance() throws CantGetTransactionsException {
         try {
-            return new AssetRedeemPointWalletBalanceImpl(assetRedeemPointWalletDao);
+            return new AssetRedeemPointWalletBalanceImpl(assetRedeemPointWalletDao, broadcaster);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);

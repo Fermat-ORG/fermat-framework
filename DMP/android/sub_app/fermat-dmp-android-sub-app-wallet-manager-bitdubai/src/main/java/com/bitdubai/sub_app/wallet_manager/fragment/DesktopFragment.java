@@ -151,7 +151,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
-            ((ImageView)rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.wallet_title);
+            ((ImageView)rootView.findViewById(R.id.container_title)).setImageResource(R.drawable.wallets_title);
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper = new ItemTouchHelper(callback);

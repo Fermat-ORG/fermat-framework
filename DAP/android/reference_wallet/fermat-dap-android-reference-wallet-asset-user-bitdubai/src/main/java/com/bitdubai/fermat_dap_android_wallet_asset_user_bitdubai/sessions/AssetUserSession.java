@@ -19,6 +19,10 @@ import java.util.Map;
  */
 public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> {
 
+    public static final String BASIC_DATA = "catalog_item_wallet_user";
+    public static final String PREVIEW_IMGS = "preview_images_wallet_user";
+    public static final String DEVELOPER_NAME = "developer_name_wallet_user";
+
     private WalletResourcesProviderManager resourceManager;
     private AssetUserWalletSubAppModuleManager walletManager;
     private InstalledWallet installedWallet;

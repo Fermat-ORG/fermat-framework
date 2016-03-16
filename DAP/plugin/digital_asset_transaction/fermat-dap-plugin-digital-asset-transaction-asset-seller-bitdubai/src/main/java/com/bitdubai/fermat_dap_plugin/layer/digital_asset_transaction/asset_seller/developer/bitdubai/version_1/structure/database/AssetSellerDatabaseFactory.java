@@ -63,6 +63,9 @@ public final class AssetSellerDatabaseFactory {
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, Validate.MAX_SIZE_STRING_COLUMN, Boolean.FALSE);

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -37,7 +38,6 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
@@ -229,7 +229,7 @@ public class AssetIssuerActorNetworkServicePluginRootNew extends AbstractNetwork
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-REQUEST_" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-REQUEST_" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(assetUserNetworkServiceRecord);
                     break;

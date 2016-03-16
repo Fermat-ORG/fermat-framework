@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.util;
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
@@ -153,28 +154,8 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification, Artis
         return new ArtistActorNetworkServiceRecord(jsonObject, gson);
     }
 
-    @Override
-    public String toString() {
-        String profileImageUser = null;
-        if(actorSenderProfileImage != null)
-            profileImageUser = Base64.encodeToString(actorSenderProfileImage, Base64.DEFAULT);
-
-        return "AssetUserNetworkServiceRecord{" +
-                "id=" + id +
-                ", actorDestinationType=" + actorDestinationType +
-                ", actorSenderType=" + actorSenderType +
-                ", actorSenderPublicKey='" + actorSenderPublicKey + '\'' +
-                ", actorDestinationPublicKey='" + actorDestinationPublicKey + '\'' +
-                ", actorSenderAlias='" + actorSenderAlias + '\'' +
-                ", actorSenderProfileImage=" + profileImageUser +
-                ", notificationDescriptor=" + notificationDescriptor +
-                ", sentDate=" + sentDate +
-                ", protocolState=" + protocolState +
-                ", flagRead=" + flagRead +
-                ", sentCount=" + sentCount +
-                ", messageXML=" + messageXML +
-                ", responseToNotificationId=" + responseToNotificationId +
-                '}';
+    public String toXML() {
+        return XMLParser.parseObject(this);
     }
 
     @Override
@@ -244,7 +225,7 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification, Artis
         return notificationDescriptor;
     }
 
-    public void setNotificationDescriptor(NotificationDescriptor notificationDescriptor) {
+    public void changeDescriptor(NotificationDescriptor notificationDescriptor) {
         this.notificationDescriptor = notificationDescriptor;
     }
 
@@ -261,7 +242,7 @@ public class ArtistActorNetworkServiceRecord implements ActorNotification, Artis
         return protocolState;
     }
 
-    public void setProtocolState(ProtocolState protocolState) {
+    public void changeState(ProtocolState protocolState) {
         this.protocolState = protocolState;
     }
 

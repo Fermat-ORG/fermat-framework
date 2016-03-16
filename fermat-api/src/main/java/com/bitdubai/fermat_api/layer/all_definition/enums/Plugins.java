@@ -306,8 +306,10 @@ public enum Plugins implements FermatPluginsEnum {
     ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
     ARTIST_IDENTITY                    ("ARTIDNTY"),
     //WRD
-    API_TOKENLY                         ("TOKAP")
+    API_TOKENLY                         ("TOKAP"),
 
+    //TOKENLY
+    TOKENLY_ARTIST                      ("TOKLY_ARTIST");
     // End  new Plugins
     ;
     private final String code;
@@ -449,6 +451,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "ANSART":   return ACTOR_NETWORK_SERVICE_ARTIST;
             case "ARTIDNTY": return ARTIST_IDENTITY;
             case "TOKAP":   return API_TOKENLY                      ;
+            case "TOKLY_ARTIST": return TOKENLY_ARTIST;
 
             default:
                 throw new InvalidParameterException(

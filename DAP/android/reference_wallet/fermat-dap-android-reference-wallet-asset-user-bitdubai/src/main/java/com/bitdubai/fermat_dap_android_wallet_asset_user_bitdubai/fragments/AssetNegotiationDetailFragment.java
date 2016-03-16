@@ -304,7 +304,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
 
         digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetNegotiationImage, res, R.drawable.img_asset_without_image, false);

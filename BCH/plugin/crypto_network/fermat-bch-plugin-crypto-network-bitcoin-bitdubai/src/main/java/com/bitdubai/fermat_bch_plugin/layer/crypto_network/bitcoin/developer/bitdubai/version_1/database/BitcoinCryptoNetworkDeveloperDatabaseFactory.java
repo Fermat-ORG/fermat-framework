@@ -128,7 +128,9 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
-        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_VALUE_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BTC_AMOUNT_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_FEE_AMOUNT_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
