@@ -5,6 +5,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -18,13 +19,16 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.factory.Wall
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.navigation_drawer.RedeemPointWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletRedeemPointFermatAppConnection extends AppConnections {
+public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemPointSession> {
 
     RedeemPointIdentity redeemPointIdentity;
+    AssetRedeemPointWalletSubAppModule manager;
+    RedeemPointSession redeemPointSession;
 
     public WalletRedeemPointFermatAppConnection(Context activity) {
         super(activity);
@@ -66,5 +70,42 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        NotificationPainter notification = null;
+        try {
+            this.redeemPointSession = (RedeemPointSession) this.getSession();
+            if (redeemPointSession != null)
+                manager = redeemPointSession.getModuleManager();
+            String[] params = code.split("_");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
+
+            switch (notificationType) {
+                case "ASSET-REDEEM-DEBIT":
+//                    if (manager != null) {
+                    //find last notification by sender actor public key
+//                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+//                        notification = new WalletAssetIssuerNotificationPainter("New Extended Key", "Was Received From: " + senderActor.getName(), "", "");
+//                    } else {
+                    notification = new WalletRedeemPointNotificationPainter("Wallet Redeem Point - Debit", senderActorPublicKey, "", "");
+//                    }
+                    break;
+                case "ASSET-REDEEM-CREDIT":
+//                    if (manager != null) {
+                    //find last notification by sender actor public key
+//                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+//                        notification = new WalletAssetIssuerNotificationPainter("New Extended Request", "Was Received From: " + senderActor.getName(), "", "");
+//                    } else {
+                    notification = new WalletRedeemPointNotificationPainter("Wallet Redeem Point Credit", senderActorPublicKey, "", "");
+//                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return notification;
     }
 }

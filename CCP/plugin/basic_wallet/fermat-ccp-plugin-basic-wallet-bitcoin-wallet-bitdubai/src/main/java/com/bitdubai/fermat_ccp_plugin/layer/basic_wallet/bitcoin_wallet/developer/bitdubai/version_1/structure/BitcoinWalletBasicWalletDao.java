@@ -181,6 +181,8 @@ public class BitcoinWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
+            bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
+
             // filter by actor from or to
 
             if (transactionType == TransactionType.CREDIT)
@@ -264,6 +266,8 @@ public class BitcoinWalletBasicWalletDao {
             bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
+            //not reversed
+            bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
 
 
             if ( transactionType == TransactionType.CREDIT){
@@ -273,6 +277,7 @@ public class BitcoinWalletBasicWalletDao {
                 bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
 
                 bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
 
                 bitcoinWalletTable.loadToMemory();
                 return createTransactionList(bitcoinWalletTable.getRecords());

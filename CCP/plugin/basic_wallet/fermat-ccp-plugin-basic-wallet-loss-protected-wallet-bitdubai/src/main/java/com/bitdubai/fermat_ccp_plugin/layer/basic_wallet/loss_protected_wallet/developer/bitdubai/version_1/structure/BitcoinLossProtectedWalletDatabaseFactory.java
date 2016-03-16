@@ -41,8 +41,9 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         Database database = null;
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
-            createBitcoinWalletTable(ownerId, database.getDatabaseFactory());
-            createBitcoinWalletBalancesTable(ownerId, database.getDatabaseFactory());
+            createLossProtetedWalletTable(ownerId, database.getDatabaseFactory());
+            createLossProtectedWalletBalancesTable(ownerId, database.getDatabaseFactory());
+            createLossProtectedWalletSpentTableFactory(ownerId, database.getDatabaseFactory());
             insertInitialBalancesRecord(database);
             database.closeDatabase();
             return database;
@@ -59,60 +60,71 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         }
     }
 
-    private void createBitcoinWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+    private void createLossProtetedWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
-            DatabaseTableFactory tableFactory = createBitcoinWalletTableFactory(ownerId, databaseFactory);
+            DatabaseTableFactory tableFactory = createLossProtectedWalletTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         } catch(InvalidOwnerIdException exception){
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }
 
-    private DatabaseTableFactory createBitcoinWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
-        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+    private DatabaseTableFactory createLossProtectedWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_NAME);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
         return table;
     }
 
-    private void createBitcoinWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+    private DatabaseTableFactory createLossProtectedWalletSpentTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_NAME);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING,100,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+
+
+        return table;
+    }
+
+    private void createLossProtectedWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
-            DatabaseTableFactory tableFactory = createBitcoinWalletBalancesTableFactory(ownerId, databaseFactory);
+            DatabaseTableFactory tableFactory = createLossProtectedWalletBalancesTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         }catch(InvalidOwnerIdException exception){
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }
 
-    private DatabaseTableFactory createBitcoinWalletBalancesTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
-        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 36,false);
+    private DatabaseTableFactory createLossProtectedWalletBalancesTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_NAME);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 36,false);
         return table;
     }
 
     private void insertInitialBalancesRecord(final Database database) throws CantInsertRecordException{
-        DatabaseTable balancesTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+        DatabaseTable balancesTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_NAME);
         List<DatabaseTableRecord> initialListRecord = constructBalanceInitialRecord(balancesTable);
         for(DatabaseTableRecord initalRecord : initialListRecord) {
             balancesTable.insertRecord(initalRecord);
@@ -124,24 +136,24 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         List<DatabaseTableRecord> list = new ArrayList<>();
         DatabaseTableRecord balancesRecord1 = balancesTable.getEmptyRecord();
         UUID balanceRecordId = UUID.randomUUID();
-        balancesRecord1.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
-        balancesRecord1.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord1.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord1.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.PRODUCTION.getCode());
+        balancesRecord1.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
+        balancesRecord1.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord1.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord1.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.PRODUCTION.getCode());
 
         DatabaseTableRecord balancesRecord2 = balancesTable.getEmptyRecord();
         UUID balanceRecordId2 = UUID.randomUUID();
-        balancesRecord2.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId2);
-        balancesRecord2.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord2.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord2.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.REG_TEST.getCode());
+        balancesRecord2.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId2);
+        balancesRecord2.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord2.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord2.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.REG_TEST.getCode());
 
         DatabaseTableRecord balancesRecord3 = balancesTable.getEmptyRecord();
         UUID balanceRecordId3 = UUID.randomUUID();
-        balancesRecord3.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId3);
-        balancesRecord3.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord3.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord3.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.TEST_NET.getCode());
+        balancesRecord3.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId3);
+        balancesRecord3.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord3.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord3.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.TEST_NET.getCode());
 
        list.add(balancesRecord1);
         list.add(balancesRecord2);
