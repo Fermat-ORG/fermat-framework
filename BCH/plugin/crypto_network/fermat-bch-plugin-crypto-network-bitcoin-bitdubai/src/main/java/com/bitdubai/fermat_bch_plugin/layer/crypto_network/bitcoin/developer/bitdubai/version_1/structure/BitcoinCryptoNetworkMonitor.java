@@ -337,7 +337,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             if (transaction == null){
                 try {
                     transaction = loadTransactionFromDisk(txHash);
-                } catch (CantLoadTransactionFromFileException e) {
+                } catch (CantLoadTransactionFromFileException | FileNotFoundException | CantCreateFileException e) {
                     throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "No transaction was found to broadcast.", null);
                 }
 
@@ -434,19 +434,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param txHash
          * @return
          */
-        public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+        public Transaction loadTransactionFromDisk(String txHash) throws FileNotFoundException, CantCreateFileException, CantLoadTransactionFromFileException {
             if (StringUtils.isBlank(txHash))
                 throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.DEFAULT_MESSAGE, null, "txHash is not correct: " + txHash, "invalid parameter");
 
-            try {
-                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                String transactionContent = pluginTextFile.getContent();
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String transactionContent = pluginTextFile.getContent();
 
-                Transaction transaction = (Transaction) XMLParser.parseXML(transactionContent, new Transaction(NETWORK_PARAMETERS));
-                return transaction;
-            } catch (Exception e) {
-                throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.CONTEXT_CONTENT_SEPARATOR, e, "Error loading transaction " + txHash + " from disk.", "IO Error");
-            }
+            Transaction transaction = (Transaction) XMLParser.parseXML(transactionContent, new Transaction(NETWORK_PARAMETERS));
+            return transaction;
+
         }
 
 
@@ -855,7 +852,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         return this.monitorAgent.getBlockchainConnectionStatus();
     }
 
-    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException{
+    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException, FileNotFoundException, CantCreateFileException {
         return this.monitorAgent.loadTransactionFromDisk(txHash);
     }
 

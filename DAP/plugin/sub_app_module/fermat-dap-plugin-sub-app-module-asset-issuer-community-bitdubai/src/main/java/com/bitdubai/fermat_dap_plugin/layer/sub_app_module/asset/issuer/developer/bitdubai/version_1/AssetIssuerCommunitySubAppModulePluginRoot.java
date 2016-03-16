@@ -115,6 +115,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
         if (list != null) {
             assetIssuerActorRecords = new ArrayList<>();
+            actorAssetIssuerManager.updateOfflineIssuersRegisterInNetworkService(list);
 
             try {
                 for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered()) {
@@ -249,6 +250,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
                     System.out.println("The actor asset Issuer is connected");
                 }
             }
+        }
+        else
+        {
+            throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
         }
         } catch (CantAskConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

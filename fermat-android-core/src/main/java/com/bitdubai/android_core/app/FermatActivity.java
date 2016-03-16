@@ -111,6 +111,7 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -1273,6 +1274,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         case 1:
                             radioGroup.check(R.id.radioButton2);
                             break;
+                        case 2:
+                            radioGroup.check(R.id.radioButton3);
+                            break;
                     }
                 }
 
@@ -1481,6 +1485,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             if(mNotificationServiceConnected){
                 notificationService.notificate(code,getFermatAppManager().getAppStructure(appPublicKey));
+            }else{
+                Intent intent = new Intent(this, NotificationService.class);
+                //acá puedo mandarle el messenger con el handler para el callback
+                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+                startService(intent);
+                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public void notificateBroadcast(String appPublicKey,FermatBundle bundle){
+        try {
+            if(mNotificationServiceConnected){
+                notificationService.notificate(appPublicKey,bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback

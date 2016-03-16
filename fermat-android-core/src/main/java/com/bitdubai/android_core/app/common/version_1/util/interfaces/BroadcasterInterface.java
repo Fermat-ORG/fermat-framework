@@ -20,4 +20,6 @@ public interface BroadcasterInterface {
     void publish(BroadcasterType broadcasterType, String code,FermatApps fermatApp);
 
     void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
+
+    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
 }

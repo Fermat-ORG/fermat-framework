@@ -284,9 +284,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         String hash;
 
                         hash = (transaction.getOp_Return() == null) ?
-                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount())
+                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getBlockchainNetworkType())
                                 :
-                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return(), transaction.getBlockchainNetworkType());
 
 //                        if (transaction.getOp_Return() == null)
 //                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
@@ -512,7 +512,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
             eventManager.raiseEvent(platformEvent);*/
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTIONREVERSE|" + transactionWrapper.getTransactionId().toString());
 
         }
 
