@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
-public enum FanWalletEnumtype implements FermatFragmentsEnumType <FanWalletEnumtype>,ResourceProviderManager {
+public enum FanWalletEnumType implements FermatFragmentsEnumType <FanWalletEnumType> {
 
 
     TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYWSTF"),
@@ -15,12 +15,12 @@ public enum FanWalletEnumtype implements FermatFragmentsEnumType <FanWalletEnumt
 
     private String key;
 
-    FanWalletEnumtype(String key){
+    FanWalletEnumType(String key){
         this.key=key;
     }
 
-    public static FanWalletEnumtype getValues(String name){
-        for(FanWalletEnumtype fragments: FanWalletEnumtype.values()){
+    public static FanWalletEnumType getValues(String name){
+        for(FanWalletEnumType fragments: FanWalletEnumType.values()){
             if(fragments.getKey().equals(name)){
                 return fragments;
             }
