@@ -50,7 +50,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
  * -- Luis.
  */
 
-public class StartActivity extends AppCompatActivity implements  BroadcasterInterface, FermatWorkerCallBack /**,ServiceCallback */{
+public class StartActivity extends AppCompatActivity implements  FermatWorkerCallBack /**,ServiceCallback */{
 
 
 
@@ -78,7 +78,7 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
-            androidCoreUtils.setContextAndResume(this);
+//            androidCoreUtils.setContextAndResume(this);
             fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
 
@@ -200,38 +200,6 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
         finish();
         return true;
     }
-
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code) {
-        //Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
-
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform) {
-
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp) {
-
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
-
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
-
-    }
-
 
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
