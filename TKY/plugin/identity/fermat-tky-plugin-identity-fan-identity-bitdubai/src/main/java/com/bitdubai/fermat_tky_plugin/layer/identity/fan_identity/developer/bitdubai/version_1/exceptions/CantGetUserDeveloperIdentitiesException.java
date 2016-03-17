@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions;
+package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/03/16.
  */
-public class CantConfirmActorNotificationException extends TKYException {
+public class CantGetUserDeveloperIdentitiesException extends TKYException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT CONFIRM NOTIFICATION";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET DEVELOPER";
 
-    public CantConfirmActorNotificationException(
+    public CantGetUserDeveloperIdentitiesException(
             final String message,
             final Exception cause,
             final String context,
@@ -17,29 +17,29 @@ public class CantConfirmActorNotificationException extends TKYException {
         super(message, cause, context, possibleReason);
     }
 
-    public CantConfirmActorNotificationException(
+    public CantGetUserDeveloperIdentitiesException(
             Exception cause,
             String context,
             String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
-    public CantConfirmActorNotificationException(
+    public CantGetUserDeveloperIdentitiesException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantConfirmActorNotificationException(final String message) {
+    public CantGetUserDeveloperIdentitiesException(final String message) {
         this(message, null);
     }
 
-    public CantConfirmActorNotificationException(final Exception exception) {
+    public CantGetUserDeveloperIdentitiesException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantConfirmActorNotificationException() {
+    public CantGetUserDeveloperIdentitiesException() {
         this(DEFAULT_MESSAGE);
     }
 }
