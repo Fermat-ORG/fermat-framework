@@ -71,29 +71,20 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 
 public class WalletActivity extends FermatActivity implements FermatScreenSwapper {
 
-    /**
-     * Called when the activity is first created
-     *
-     * @param savedInstanceState
-     */
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
-
         try {
-
             loadUI(createOrOpenApplication());
-
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialize the contents of the Activity's standard options menu
@@ -162,7 +153,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
-
     /**
      * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
      * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
@@ -173,7 +163,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         try {
-
             if (savedInstanceState == null) {
                 savedInstanceState = new Bundle();
             } else
@@ -186,8 +175,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     public void onControlledActivityBack(String activityBackCode){
-        // get actual fragment on execute
-
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -248,31 +235,47 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     /**
      * Method that loads the UI
      */
-    protected void loadUI(FermatSession walletSession) {
-
+    protected void loadUI(FermatSession fermatSession) {
         try {
-
-            FermatStructure wallet = getFermatAppManager().getLastAppStructure();
-
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,walletSession);
-
+            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-            Activity activity = wallet.getLastActivity();
-
+            Activity activity = appStructure.getLastActivity();
             loadBasicUI(activity,fermatAppConnection);
-
             hideBottonIcons();
-
             paintScreen(activity);
-
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
+                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,walletSession,wallet);
+                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
+            }
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void loadUI(FermatSession fermatSession, Activity activity) {
+        try{
+            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
+            loadBasicUI(activity,fermatAppConnection);
+            hideBottonIcons();
+            paintScreen(activity);
+            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
+                initialisePaging();
+            }
+            if (activity.getTabStrip() != null) {
+                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
+            }
+            if (activity.getFragments().size() == 1) {
+                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -357,6 +360,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -391,50 +395,11 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses) {
-
         try {
             selectApp(getFermatAppManager().getApp(fermatAppPublicKey));
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        SubApp installedSubApp = getSubAppRuntimeMiddleware().getSubAppByPublicKey(fermatAppPublicKey);
-//        switch (engine){
-//            case BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY:
-//
-//                //subApp runtime
-//                try {
-//
-//                    //Ultima pantalla de la wallet que quiere conectarse con la app
-////                    installedSubApp.getActivity(Activities.CWP_INTRA_USER_ACTIVITY).changeBackActivity(
-////                            walletNavigationStructure.getPublicKey(),
-////                            lastWalletActivityWhoAskForConnetion.getActivityType());
-//
-//                    connectWithSubApp(engine,objectses,installedSubApp);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                break;
-//            case BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY:
-//
-//                try {
-//
-//                    //Ultima pantalla de la wallet que quiere conectarse con la app
-////                    installedSubApp.getActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY).changeBackActivity(
-////                            walletNavigationStructure.getPublicKey(),
-////                            lastWalletActivityWhoAskForConnetion.getActivityType());
-//
-//                    connectWithSubApp(engine,objectses,installedSubApp);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                break;
-//            default:
-//                break;
-//        }
     }
 
     public void selectApp(FermatApp fermatApp) {
@@ -488,14 +453,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
-        try {
-            String walletPublicKey = savedInstanceState.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
 
-            getWalletRuntimeManager().getWallet(walletPublicKey);
-
-        } catch (WalletRuntimeExceptions walletRuntimeExceptions) {
-            walletRuntimeExceptions.printStackTrace();
-        }
     }
 
     /**
