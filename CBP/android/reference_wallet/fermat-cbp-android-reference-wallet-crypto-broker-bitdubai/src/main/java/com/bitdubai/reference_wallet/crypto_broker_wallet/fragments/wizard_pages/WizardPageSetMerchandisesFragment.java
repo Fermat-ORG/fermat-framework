@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -68,7 +69,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     private WalletsAdapter adapter;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
-    String walletPublicKey = "banking_wallet";
+    String walletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
 
 
     public static WizardPageSetMerchandisesFragment newInstance() {
@@ -308,7 +309,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts("banking_wallet");
+            List<BankAccountNumber> accounts = walletManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
             if (!accounts.isEmpty()) {
 
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();

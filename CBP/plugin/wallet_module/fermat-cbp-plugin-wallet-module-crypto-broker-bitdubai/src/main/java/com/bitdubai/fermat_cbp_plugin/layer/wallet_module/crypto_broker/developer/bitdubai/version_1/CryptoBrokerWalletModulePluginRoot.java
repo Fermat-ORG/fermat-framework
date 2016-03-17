@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -379,15 +380,15 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/USD - Earning Wallet: Cash USD
-                String earningWalletPublicKey = "cash_wallet";
+                String earningWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();//"cash_wallet";
                 walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/VEF - Earning Wallet: Bank VEF
-                earningWalletPublicKey = "banking_wallet";
+                earningWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
                 walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // EARNINGS -> VEF/USD - Earning Wallet: Cash USD
-                earningWalletPublicKey = "cash_wallet";
+                earningWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();//"cash_wallet";
                 walletManager.addEarningsPairToEarningSettings(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/USD
