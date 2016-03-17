@@ -4,15 +4,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -76,6 +77,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetActorLossProtectedTransactionHistoryException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllIntraUserLossProtectedConnectionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedReceivePaymentRequestException;
@@ -106,6 +108,15 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantGetLossProtectedActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantInitializeLossProtectedWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterLossProtectedAddressException;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
@@ -114,6 +125,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -138,7 +150,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final CryptoVaultManager cryptoVaultManager            ;
+    private final CryptoVaultManager            cryptoVaultManager            ;
     private final ErrorManager                   errorManager                  ;
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -146,6 +158,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
+    private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
 
     public LossProtectedWalletModuleManager(final BitcoinLossProtectedWalletManager bitcoinWalletManager          ,
@@ -159,7 +172,8 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
-                                           final WalletContactsManager          walletContactsManager        ) {
+                                           final WalletContactsManager          walletContactsManager ,
+                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -173,6 +187,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
 
     }
 
@@ -737,13 +752,13 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public long getBalance(BalanceType balanceType,
+    public long getBalance(BalanceType balanceType, //available balance only
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType,
                            long exchangeRate) throws CantGetLossProtectedBalanceException {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            return bitcoinWalletWallet.getBalance(balanceType).getBalance(balanceType,blockchainNetworkType,exchangeRate);
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType,exchangeRate);
         } catch (CantLoadWalletException e) {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {
@@ -1440,7 +1455,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name,phrase,image);
+        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image);
     }
 
 
@@ -1450,8 +1465,52 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public String getMnemonicText() throws CantGetMnemonicTextException {
-        return "mnemonic text";
+    public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        try {
+            return cryptoVaultManager.getMnemonicCode();
+        } catch (CantLoadExistingVaultSeed e) {
+            throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
+        }
+    }
+
+    @Override
+    public ExchangeRate getCurrencyExchange() throws CantGetCurrencyExchangeException {
+
+        ExchangeRate rate = null;
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+
+
+            Collection<CurrencyExchangeRateProviderManager> filteredProviders = null;
+
+                filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+
+
+            for (CurrencyExchangeRateProviderManager p : filteredProviders) {
+                String providerName = p.getProviderName();
+
+                //UUID del provider, puedes capturarlo y luego obtener una referencia nueva a el usando providerFilter.getProviderReference(UUID)
+                UUID providerId = p.getProviderId();
+
+                //your exchangerate.
+                rate = p.getCurrentExchangeRate(wantedCurrencyPair);
+
+            }
+
+        } catch (CantGetProviderException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "Provider error.");
+        } catch (CantGetExchangeRateException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "ExchangeRate error.");
+        } catch (UnsupportedCurrencyPairException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "UnsupportedCurrencyPair error.");
+        } catch (CantGetProviderInfoException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "ProviderInfo error.");
+        }
+        catch (Exception e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
+        }
+
+        return rate;
     }
 
     private  String convertTime(long time){
