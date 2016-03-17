@@ -54,6 +54,8 @@ public interface MiddlewareChatManager extends FermatManager{
 
     Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
 
+    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
+
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
     Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;

@@ -416,6 +416,41 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    @Override
+    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException {
+        try {
+            ObjectChecker.checkArgument(chatId, "The message Id is null");
+            return this.chatMiddlewareDatabaseDao.getCountMessageByChatId(chatId);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetMessageException(
+                    e,
+                    "Getting a message from database",
+                    "The chat id is probably null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetMessageException(
+                    e,
+                    "Getting a message from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
+        }
+    }
+
     /**
      * This method return a message by message id.
      *
