@@ -253,6 +253,15 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner_name = (Spinner) rootView.findViewById(R.id.spinner_name);
+        List<String> walletList = new ArrayList<String>();
+        walletList.add("Wallet1");
+        walletList.add("Wallet2");
+        walletList.add("Wallet3");
+        ArrayAdapter<String> walletDataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.list_item_spinner, walletList);
+        walletDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_name.setAdapter(walletDataAdapter);
+
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("Bits");
