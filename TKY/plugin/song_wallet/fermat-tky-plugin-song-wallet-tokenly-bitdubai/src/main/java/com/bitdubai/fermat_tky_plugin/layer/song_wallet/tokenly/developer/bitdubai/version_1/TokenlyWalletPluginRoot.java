@@ -1,4 +1,3 @@
-
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
