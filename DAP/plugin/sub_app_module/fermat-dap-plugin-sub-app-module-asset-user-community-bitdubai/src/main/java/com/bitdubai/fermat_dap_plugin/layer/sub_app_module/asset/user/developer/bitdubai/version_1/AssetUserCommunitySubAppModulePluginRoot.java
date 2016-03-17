@@ -76,6 +76,18 @@ import java.util.Objects;
 public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin implements
         AssetUserCommunitySubAppModuleManager {
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    ErrorManager errorManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_USER)
+    IdentityAssetUserManager identityAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     ActorAssetUserManager actorAssetUserManager;
 
@@ -85,20 +97,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
     AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
-    ActorAssetIssuerManager actorAssetIssuerManager;
-
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_USER)
-    IdentityAssetUserManager identityAssetUserManager;
 
     private SettingsManager<AssetUserSettings> settingsManager;
 
@@ -135,6 +135,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
         if (list != null) {
             assetUserActorRecords = new ArrayList<>();
+            actorAssetUserManager.updateOfflineUserRegisterInNetworkService(list);
 
             try {
 //                BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
@@ -152,6 +153,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                         assetUserActorRecords.add(assetUserActorRecord);
                     }
                 }
+
 
             } catch (CantGetAssetUserActorsException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

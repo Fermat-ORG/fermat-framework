@@ -2,7 +2,12 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artis
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ARTNetworkService;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantCancelActorArtistNetworkServiceException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyActorArtistNetworkServiceException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconectActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
 
@@ -11,7 +16,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 09/03/16.
  */
-public interface ActorArtistNetworkServiceManager extends FermatManager {
+public interface ActorArtistNetworkServiceManager extends FermatManager, ARTNetworkService{
 
     /**
      * Register the Actor Artist in the cloud server like online
@@ -58,45 +63,37 @@ public interface ActorArtistNetworkServiceManager extends FermatManager {
                                  byte[] profileImage) throws CantAskConnectionActorArtistNetworkServiceException;
 
     /**
-     * The method <code>acceptConnectionActorAsset</code> send an acceptance message of a connection request.
+     * The method <code>acceptConnectionActorArtist</code> send an acceptance message of a connection request.
      *
      * @param actorLoggedInPublicKey The public key of the actor asset accepting the connection request.
      * @param ActorToAddPublicKey    The public key of the actor asset to add
      */
-    void acceptConnectionActorAsset(String actorLoggedInPublicKey, String ActorToAddPublicKey) throws CantAskConnectionActorArtistNetworkServiceException;
+    void acceptConnectionActorArtist(String actorLoggedInPublicKey, String ActorToAddPublicKey) throws CantAcceptActorArtistNetworkServiceException;
 
     /**
-     * The method <code>denyConnectionActorAsset</code> send an rejection message of a connection request.
+     * The method <code>denyConnectionActorArtist</code> send an rejection message of a connection request.
      *
      * @param actorLoggedInPublicKey The public key of the actor asset accepting the connection request.
      * @param actorToRejectPublicKey The public key of the actor asset to add
      */
-    void denyConnectionActorAsset(String actorLoggedInPublicKey, String actorToRejectPublicKey) throws CantAskConnectionActorArtistNetworkServiceException;
+    void denyConnectionActorArtist(String actorLoggedInPublicKey, String actorToRejectPublicKey) throws CantDenyActorArtistNetworkServiceException;
 
     /**
-     * The method <coda>disconnectConnectionActorAsset</coda> disconnects and informs the other intra user the disconnecting
+     * The method <coda>disconnectConnectionActorArtist</coda> disconnects and informs the other intra user the disconnecting
      *
      * @param actorLoggedInPublicKey The public key of the actor asset disconnecting the connection
      * @param actorToDisconnectPublicKey The public key of the user to disconnect
-     * @throws CantAskConnectionActorArtistNetworkServiceException
+     * @throws CantDisconectActorArtistNetworkServiceException
      */
-    void disconnectConnectionActorAsset(String actorLoggedInPublicKey, String actorToDisconnectPublicKey) throws CantAskConnectionActorArtistNetworkServiceException;
+    void disconnectConnectionActorArtist(String actorLoggedInPublicKey, String actorToDisconnectPublicKey) throws CantDisconectActorArtistNetworkServiceException;
 
     /**
-     * The method <coda>cancelConnectionActorAsset</coda> cancels and informs the other intra user the cancelling
+     * The method <coda>cancelConnectionActorArtist</coda> cancels and informs the other intra user the cancelling
      *
      * @param actorLoggedInPublicKey The public key of the actor asset cancelling the connection
      * @param actorToCancelPublicKey The public key of the user to cancel
-     * @throws CantAskConnectionActorArtistNetworkServiceException
+     * @throws CantCancelActorArtistNetworkServiceException
      */
-    void cancelConnectionActorAsset(String actorLoggedInPublicKey, String actorToCancelPublicKey) throws CantAskConnectionActorArtistNetworkServiceException;
-
-    /**
-     * The method <coda>getPendingNotifications</coda> returns all pending notifications
-     * of responses to requests for connection
-     *
-     * @return List of IntraUserNotification
-     */
-   // List<ActorNotification> getPendingNotifications() throws CantAskConnectionActorArtistNetworkServiceException;
+    void cancelConnectionActorArtist(String actorLoggedInPublicKey, String actorToCancelPublicKey) throws CantCancelActorArtistNetworkServiceException;
 
 }
