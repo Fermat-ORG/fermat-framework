@@ -108,6 +108,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
                 actorAssetRedeemPointManager.createActorAssetRedeemPointRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetRedeemPointActorsException("Service not available, try in a few minutes.", null, "Problems with the Web Service.", null);
         } catch (CantCreateActorRedeemPointException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

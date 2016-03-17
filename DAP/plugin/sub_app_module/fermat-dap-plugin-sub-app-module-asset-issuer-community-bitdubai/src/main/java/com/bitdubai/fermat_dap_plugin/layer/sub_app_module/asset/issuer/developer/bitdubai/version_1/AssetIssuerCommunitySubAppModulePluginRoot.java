@@ -109,6 +109,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
                 actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetIssuerRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetIssuerActorsException("Service not available, try in a few minutes.", null, "Problems with the Web Service.", null);
         } catch (CantCreateActorAssetIssuerException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

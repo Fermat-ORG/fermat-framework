@@ -129,6 +129,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetUserRegisteredException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetUserActorsException("Service not available, try in a few minutes.", null, "Problems with the Web Service.", null);
         } catch (CantCreateAssetUserActorException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
