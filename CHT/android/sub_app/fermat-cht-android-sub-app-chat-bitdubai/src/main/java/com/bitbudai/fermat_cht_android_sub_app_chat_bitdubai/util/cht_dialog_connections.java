@@ -196,7 +196,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                                 getSession().setData("whocallme", "contact");
                                                 getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
                                                 Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-                                                //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
+                                                //changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
                                                 dismiss();
                                             }
                                         } else {
@@ -219,8 +219,9 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                                 });
 
                                             } else {
-                                                //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                                                 dismiss();
+                                                //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+
                                             }
                                         }
                                     } catch (CantSaveChatException e) {
