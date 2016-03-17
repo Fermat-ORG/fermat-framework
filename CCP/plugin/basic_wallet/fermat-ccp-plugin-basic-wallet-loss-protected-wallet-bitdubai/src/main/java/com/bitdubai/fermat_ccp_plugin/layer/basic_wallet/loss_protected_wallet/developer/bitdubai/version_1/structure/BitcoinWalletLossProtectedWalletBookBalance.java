@@ -57,15 +57,23 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
+    /**
+     * Get wallet available balance for actual exchange rate. Evaluates few blocks value have available to spend
+     * @param blockchainNetworkType
+     * @param exchangeRate
+     * @return
+     * @throws CantCalculateBalanceException
+     */
     @Override
-    public long getBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
+    public long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
         try {
 
             //calculate how many btc can spend based on the exchangeRate
+            //Balance Type available
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
 
-            return bitcoinWalletBasicWalletDao.getAvailableBalance(balanceType, blockchainNetworkType, exchangeRate);
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType, exchangeRate);
 
 
         } catch(CantListTransactionsException exception){

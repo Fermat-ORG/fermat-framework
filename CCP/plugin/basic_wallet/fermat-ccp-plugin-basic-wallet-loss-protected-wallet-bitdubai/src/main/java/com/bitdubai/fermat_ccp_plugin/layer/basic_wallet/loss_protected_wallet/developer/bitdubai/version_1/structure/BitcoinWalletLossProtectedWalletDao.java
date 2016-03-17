@@ -109,17 +109,16 @@ public class BitcoinWalletLossProtectedWalletDao {
         }
     }
 
-    public long getAvailableBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType,
-                                                                                      long exchangeRate) throws CantListTransactionsException {
+    public long getAvailableBalance(BlockchainNetworkType blockchainNetworkType,long exchangeRate) throws CantListTransactionsException {
         try {
 
             long availableBalance = 0;
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            //busco los registros de ingreso menores a la cotizacion actual, saco el total
+            //busco los registros de ingreso menores a la cotizacion actual, me ijo cuanto gasto de cada bloque y saco el salod
 
-        //credit
-            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
             bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TYPE_COLUMN_NAME, TransactionType.CREDIT.getCode(), DatabaseFilterType.EQUAL);
             bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, String.valueOf(exchangeRate), DatabaseFilterType.LESS_OR_EQUAL_THAN);
             bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
@@ -131,11 +130,12 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             for(DatabaseTableRecord record : bitcoinWalletTable.getRecords())
             {
-                availableBalance += record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+                long spending = getTotalTransactionsSpending(record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME));
+                availableBalance += (record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME) - spending);
 
             }
 
-            //debit
+
 
             //balance
             return availableBalance;
@@ -197,18 +197,19 @@ public class BitcoinWalletLossProtectedWalletDao {
 
     public List<BitcoinLossProtectedWalletSpend> listTransactionsSpending(UUID transactionId) throws CantListTransactionsException {
         try {
-            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            bitcoinWalletTable.addUUIDFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-            bitcoinWalletTable.addFilterOrder(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            DatabaseTable bitcoinSpentTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_NAME);
 
-            bitcoinWalletTable.loadToMemory();
+            bitcoinSpentTable.addUUIDFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            bitcoinSpentTable.addFilterOrder(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            bitcoinSpentTable.loadToMemory();
 
             List<BitcoinLossProtectedWalletSpend> spendings = new ArrayList<>();
 
-            for(DatabaseTableRecord record : bitcoinWalletTable.getRecords())
+            for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
             {
-                UUID spendId                  = record.getUUIDValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ID_COLUMN_NAME);
+                UUID spendId               = record.getUUIDValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ID_COLUMN_NAME);
                 long amount                = record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME);
                 long timeStamp             = record.getLongValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
 
@@ -224,6 +225,35 @@ public class BitcoinWalletLossProtectedWalletDao {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
         }
     }
+
+
+    public long getTotalTransactionsSpending(UUID transactionId) throws CantListTransactionsException {
+        try {
+
+            long spending = 0;
+
+            DatabaseTable bitcoinSpentTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_NAME);
+
+            bitcoinSpentTable.addUUIDFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            bitcoinSpentTable.addFilterOrder(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            bitcoinSpentTable.loadToMemory();
+
+            for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
+            {
+                spending  += record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+            }
+
+
+            return spending;
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantListTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        } catch (Exception exception){
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
 
     public List<BitcoinLossProtectedWalletTransaction> listTransactionsByActor(final String actorPublicKey,
                                                                   final BalanceType balanceType,
@@ -326,34 +356,6 @@ public class BitcoinWalletLossProtectedWalletDao {
                                                                                      int             max,
                                                                                      int             offset) throws CantListTransactionsException {
         try {
-
-//            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
-//
-//            String query = "SELECT * FROM " +
-//                    BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_NAME +
-//                    " WHERE " +
-//                    BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME +
-//                    " = '" +
-//                    balanceType.getCode() +
-//                    "' AND " +
-//                    BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TYPE_COLUMN_NAME +
-//                    " = '" +
-//                    transactionType.getCode() +
-//                    "' GROUP BY ";
-//
-//            if (transactionType == TransactionType.CREDIT)
-//                query += BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
-//            else if (transactionType == TransactionType.DEBIT)
-//                query += BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_ACTOR_TO_COLUMN_NAME;
-//
-//            query += " HAVING MAX(" +
-//                    BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-//                    ") = " +
-//                    BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-//                    " LIMIT " + max +
-//                    " OFFSET " + offset;
-//
-
 
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
