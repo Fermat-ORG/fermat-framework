@@ -1,9 +1,8 @@
-package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.interfaces;
+package com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16.
@@ -19,7 +18,7 @@ public interface AssetSellerManager extends FermatManager {
      *                      operation to occur.
      * @param userToDeliver The {@link ActorAssetUser} which I want to sell the asset. This actor
      *                      has to be an connected user, because we will need his {@link com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress}.
-     * @throws CantStartAssetSellTransactionException
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException
      */
-    void requestAssetSell(ActorAssetUser userToDeliver, AssetNegotiation negotiation) throws CantStartAssetSellTransactionException;
+    void requestAssetSell(ActorAssetUser userToDeliver, AssetNegotiation negotiation) throws com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 }

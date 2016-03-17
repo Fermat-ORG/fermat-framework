@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_buyer.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
