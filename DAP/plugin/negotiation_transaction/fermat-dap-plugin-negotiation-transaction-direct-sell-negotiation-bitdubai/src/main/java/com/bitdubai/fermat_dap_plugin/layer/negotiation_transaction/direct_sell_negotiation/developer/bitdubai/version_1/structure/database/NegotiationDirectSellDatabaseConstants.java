@@ -17,6 +17,8 @@ public class NegotiationDirectSellDatabaseConstants {
      */
     public static final String DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_TABLE_NAME = "dsn_events_recorded";
 
+    public static final String DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_ID_COLUMN_NAME = "id";
+
 
     //CONSTRUCTORS
 

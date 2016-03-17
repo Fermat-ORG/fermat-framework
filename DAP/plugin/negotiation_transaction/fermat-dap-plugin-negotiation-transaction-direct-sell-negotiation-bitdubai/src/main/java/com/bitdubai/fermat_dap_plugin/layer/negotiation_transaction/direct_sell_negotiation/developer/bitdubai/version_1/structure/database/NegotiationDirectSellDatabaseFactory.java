@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -58,6 +59,7 @@ public class NegotiationDirectSellDatabaseFactory implements DealsWithPluginData
              * Create Events recorded database table.
              */
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_TABLE_NAME);
+            eventsRecorderTable.addColumn(NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
 
             try {
                 //Create the table
