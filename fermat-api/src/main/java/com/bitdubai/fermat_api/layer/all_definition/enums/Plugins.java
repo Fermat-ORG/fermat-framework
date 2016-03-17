@@ -309,7 +309,10 @@ public enum Plugins implements FermatPluginsEnum {
     API_TOKENLY                         ("TOKAP"),
 
     //TOKENLY
-    TOKENLY_ARTIST                      ("TOKLY_ARTIST");
+    TOKENLY_ARTIST                      ("TOKLY_ARTIST"),
+    TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
+    TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
+    TOKENLY_FAN_WALLET_MODULE           ("TFWM");
     // End  new Plugins
     ;
     private final String code;
@@ -452,6 +455,9 @@ public enum Plugins implements FermatPluginsEnum {
             case "ARTIDNTY": return ARTIST_IDENTITY;
             case "TOKAP":   return API_TOKENLY                      ;
             case "TOKLY_ARTIST": return TOKENLY_ARTIST;
+            case "TASAM": return TOKENLY_ARTIST_SUB_APP_MODULE;
+            case "TFSAM": return TOKENLY_FAN_SUB_APP_MODULE;
+            case "TFWM": return TOKENLY_FAN_WALLET_MODULE;
 
             default:
                 throw new InvalidParameterException(
