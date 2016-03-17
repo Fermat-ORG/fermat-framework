@@ -40,6 +40,8 @@ dependencies {
 
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
+    compile project(':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai')
+
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
