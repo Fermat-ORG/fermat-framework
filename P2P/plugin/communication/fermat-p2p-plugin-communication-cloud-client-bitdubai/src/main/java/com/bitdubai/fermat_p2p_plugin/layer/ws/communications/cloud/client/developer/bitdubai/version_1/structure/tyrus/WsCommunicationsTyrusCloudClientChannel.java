@@ -109,11 +109,10 @@ public class WsCommunicationsTyrusCloudClientChannel {
         this.isRegister = Boolean.FALSE;
     }
 
-    public void sendMessage(final String message) {
+    public synchronized void sendMessage(final String message) {
 
-        /**
+        /*
          * if Packet is bigger than 1000 Send the message through of sendDividedChain
-         *
          */
         if(message.length() > 1000){
 
@@ -124,6 +123,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
             }
 
         }else{
+
             if(clientConnection!=null && clientConnection.isOpen())
                 clientConnection.getAsyncRemote().sendText(message);
         }

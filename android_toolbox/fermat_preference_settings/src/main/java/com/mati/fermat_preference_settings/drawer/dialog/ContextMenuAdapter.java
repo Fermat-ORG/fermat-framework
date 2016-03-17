@@ -1,6 +1,8 @@
 package com.mati.fermat_preference_settings.drawer.dialog;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -59,12 +61,18 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
             if(i!=positionSelected){
                 getItem(i).setIsRadioTouched(false);
                 ((RadioButton)view).setChecked(false);
+                Drawable icon;
+                icon =  context.getResources().getDrawable(android.R.drawable.radiobutton_off_background);
+                ((RadioButton)view).setCompoundDrawablesRelative(null, null, icon, null);
             }
             else
             {
                 getItem(i).setIsRadioTouched(true);
                 ((RadioButton)view).setChecked(true);
-                ((RadioButton)view).setCompoundDrawablesRelative(null,null,context.getDrawable(android.R.drawable.radiobutton_on_background),null);
+
+                Drawable icon;
+                icon =  context.getResources().getDrawable(android.R.drawable.radiobutton_on_background);
+                ((RadioButton)view).setCompoundDrawablesRelative(null,null,icon,null);
             }
         }
     }

@@ -6,4 +6,11 @@ dependencies {
 
     //External API
     compile project(':fermat-tky-plugin-external-api-tokenly-bitdubai')
+
+    //Identity
+    compile project(':fermat-tky-plugin-identity-artist-identity-bitdubai')
+    compile project(':fermat-tky-plugin-identity-fan-identity-bitdubai')
+
+    //Song wallet
+    compile project(':fermat-tky-plugin-song-wallet-tokenly-bitdubai')
 }

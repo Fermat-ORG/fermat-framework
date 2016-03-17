@@ -25,7 +25,7 @@ public class AppLauncherReceiver extends BroadcastReceiver {
                 clazz = WalletActivity.class;
                 break;
             case SUB_APP:
-                clazz = SubAppActivity.class;
+                clazz = WalletActivity.class;
                 break;
             case DESKTOP:
                 clazz = DesktopActivity.class;

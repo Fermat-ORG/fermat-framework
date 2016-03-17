@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.security.InvalidParameterException;
 
