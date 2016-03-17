@@ -802,16 +802,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerPurchaseNegotiation.setMemo("");
 
             System.out.print("\n**** 1.1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES INFORMATION****\n");
-//            for (ClauseInformation information: clauses){
-//                System.out.print("\n**** 1.1.1) - CLAUSES: ****\n" +
-//                        "\n- "+information.getType().getCode()+": "+information.getValue()+" (STATUS: "+information.getStatus()+")");
-//            }
-
-            System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES NEGOTIATION****\n");
-//            for (Clause information: clauseNegotiation){
-//                System.out.print("\n**** 1.2.1) - CLAUSES: ****\n" +
-//                        "\n- "+information.getType().getCode()+": "+information.getValue()+" (STATUS: "+information.getStatus()+")");
-//            }
 
             customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTransaction(customerBrokerPurchaseNegotiation);
 
@@ -822,126 +812,54 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     /**
-     * Add by Yordin Alayn 22.01.16
      * This method Update or Close Negotiation.
      *
      * @param negotiation negotiation information
      *
      * @return boolean
      *
-     * @throws CouldNotUpdateNegotiationException,                                   exception in wallet module Crypto Customer
-     * @throws CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException exception in CustomerBrokerUpdate Negotiation Transaction
+     * @throws CouldNotUpdateNegotiationException exception in wallet module Crypto Customer
      */
     @Override
-    public boolean updateNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotUpdateNegotiationException {
-        try {
+    public void updateNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotUpdateNegotiationException {
+        CustomerBrokerPurchaseNegotiationImpl purchaseNegotiationImpl = null;
 
-            System.out.print("\n**** 1) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION****\n" +
+        try {
+            System.out.println("**** 1) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION ****\n" +
                     "\n-CUSTOMER: " + negotiation.getCustomer().getPublicKey() +
                     "\n-BROKER: " + negotiation.getBroker().getPublicKey() + "" +
                     "\n-Memo: " + negotiation.getMemo());
 
             //VALIDATE STATUS CLAUSE
-            ClauseStatus validateStatusClause = validateStatusClause(negotiation.getClauses());
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiation.getNegotiationId());
+            purchaseNegotiationImpl = new CustomerBrokerPurchaseNegotiationImpl(purchaseNegotiation);
+            purchaseNegotiationImpl.changeInfo(negotiation);
 
-            if ((validateStatusClause != ClauseStatus.CONFIRM)) {
-
-                System.out.print("\n**** 1.1) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
-
-                if (validateStatusClause.equals(ClauseStatus.CHANGED) || !negotiation.getMemo().isEmpty()) {
-                    System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
-                    CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = purchaseNegotiation(negotiation, NegotiationStatus.SENT_TO_BROKER);
-                    customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
-                } else if (validateStatusClause.equals(ClauseStatus.ACCEPTED)) {
-                    System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION****\n");
-                    CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = purchaseNegotiation(negotiation, NegotiationStatus.SENT_TO_BROKER);
-                    customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
-                }
+            if (purchaseNegotiationImpl.dataHasChanged()) {
+                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION ****");
+                customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(purchaseNegotiationImpl);
+            } else {
+                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION ****");
+                customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(purchaseNegotiationImpl);
             }
 
-            return true;
-        } catch (CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException e) {
-            throw new CouldNotUpdateNegotiationException(e.getMessage(), e, CouldNotUpdateNegotiationException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TR*ANSACTION, IN CUSTOMER BROKER PURCHASE NEGOTIATION, UPDATE.");
-//            return false;
-        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e) {
-            throw new CouldNotUpdateNegotiationException(e.getMessage(), e, CouldNotUpdateNegotiationException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER PURCHASE NEGOTIATION TRANSACTION, IN CUSTOMER BROKER PURCHASE NEGOTIATION, CLOSE.");
-//            return false;
-        } catch (Exception e) {
-            throw new CouldNotUpdateNegotiationException(e.getMessage(), FermatException.wrapException(e), CouldNotUpdateNegotiationException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
-//            return false;
+        } catch (CantGetListPurchaseNegotiationsException cause) {
+            throw new CouldNotUpdateNegotiationException("Cant get the Purchase Negotiation from the Data Base",
+                    cause, "negotiationInfo.getNegotiationId(): " + negotiation.getNegotiationId(),
+                    "There is no Record of the Sale Negotiation in the Data Base");
+
+        } catch (CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException cause) {
+            throw new CouldNotUpdateNegotiationException("Cant send the UPDATED Purchase Negotiation Transaction to the customer",
+                    cause, "saleNegotiationImpl: " + purchaseNegotiationImpl, "N/A");
+
+        } catch (CantCreateCustomerBrokerPurchaseNegotiationException cause) {
+            throw new CouldNotUpdateNegotiationException("Cant send the CLOSED Purchase Negotiation Transaction to the customer",
+                    cause, "saleNegotiationImpl: " + purchaseNegotiationImpl, "N/A");
+
+        } catch (Exception cause) {
+            throw new CouldNotUpdateNegotiationException(cause.getMessage(), cause, "Unknown Exception", "N/A");
         }
     }
-
-    private CustomerBrokerPurchaseNegotiationImpl purchaseNegotiation(CustomerBrokerNegotiationInformation negotiation, NegotiationStatus status) {
-
-        Date time = new Date();
-        Map<ClauseType, ClauseInformation> mapClauses = negotiation.getClauses();
-
-        Collection<Clause> clauseNegotiation = getClause(getClauseInformation(mapClauses));
-        CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
-        customerBrokerPurchaseNegotiation.setBrokerPublicKey(negotiation.getBroker().getPublicKey());
-        customerBrokerPurchaseNegotiation.setCustomerPublicKey(negotiation.getCustomer().getPublicKey());
-        customerBrokerPurchaseNegotiation.setNegotiationId(negotiation.getNegotiationId());
-        customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
-        customerBrokerPurchaseNegotiation.setStatus(status);
-        customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
-        customerBrokerPurchaseNegotiation.setNearExpirationDatetime(false);
-        customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(time.getTime());
-        customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(negotiation.getNegotiationExpirationDate());
-        customerBrokerPurchaseNegotiation.setMemo(negotiation.getMemo());
-
-        return customerBrokerPurchaseNegotiation;
-    }
-
-    private ClauseStatus validateStatusClause(Map<ClauseType, ClauseInformation> clause) {
-
-        boolean isChange = false;
-
-        for (ClauseInformation item : clause.values()) {
-            if ((item.getStatus() != ClauseStatus.CHANGED) && (item.getStatus() != ClauseStatus.ACCEPTED))
-                return ClauseStatus.CONFIRM;
-
-            if (item.getStatus().equals(ClauseStatus.CHANGED))
-                isChange = true;
-        }
-
-        if (isChange)
-            return ClauseStatus.CHANGED;
-        else
-            return ClauseStatus.ACCEPTED;
-    }
-
-    private boolean validateClauseUsed(ClauseInformation item, String customerPaymentMethod, String brokerPaymentMethod) {
-
-        if (item.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) ||
-                item.getType().equals(ClauseType.BROKER_PAYMENT_METHOD) ||
-                item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) ||
-                item.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) ||
-                item.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) ||
-                item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)
-                ) {
-
-            if (item.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) && (brokerPaymentMethod.equals(MoneyType.BANK.getCode())))
-                return true;
-            else if (item.getType().equals(ClauseType.BROKER_PLACE_TO_DELIVER) && ((brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
-                return true;
-            else if (item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) && (!brokerPaymentMethod.equals(MoneyType.BANK.getCode())) && (!brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) && (!brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode())))
-                return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && (customerPaymentMethod.equals(MoneyType.BANK.getCode())))
-                return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) && ((customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
-                return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS) && (!customerPaymentMethod.equals(MoneyType.BANK.getCode())) && (!customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) && (!customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode())))
-                return true;
-            else
-                return false;
-
-        } else {
-            return true;
-        }
-
-    }
-
 
     /**
      * This method list all wallet installed in device, start the transaction
