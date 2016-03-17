@@ -67,6 +67,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
@@ -885,6 +886,64 @@ public class ChatMiddlewareDatabaseDao {
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
                     "error trying to get Message from the database with filter: " + chatId.toString(),
+                    null);
+        }
+    }
+
+    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
+    {
+        int countRecord = 0;
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Message> messages = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            //filter.setValue(TypeMessage.INCOMMING.getCode());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            //filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
+            // I will add the message information from the database
+            List<DatabaseTableRecord> records=getMessageData(filter);
+            if(records==null|| records.isEmpty()){
+                return countRecord;
+            }
+            for (DatabaseTableRecord record : records) {
+                final Message message = getMessageTransaction(record);
+
+                messages.add(message);
+            }
+
+            database.closeDatabase();
+
+            for (Message message : messages)
+            {
+                if (message.getStatus().getCode() != MessageStatus.READ.getCode())
+                {
+                    if (message.getType().getCode() != TypeMessage.OUTGOING.getCode()){
+                        countRecord++;
+                    }
+                }
+            }
+
+            if(messages.isEmpty()){
+                return countRecord;
+            }
+
+            return countRecord;
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Count Message from the database with filter: " + chatId.toString(),
                     null);
         }
     }
