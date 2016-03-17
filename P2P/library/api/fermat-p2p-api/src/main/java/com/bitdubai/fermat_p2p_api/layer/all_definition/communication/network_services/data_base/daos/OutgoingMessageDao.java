@@ -6,7 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
@@ -22,9 +25,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_pip_api.layer.module.notification.exception.CantGetNotificationsException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -274,8 +280,6 @@ public final class OutgoingMessageDao {
     }
 
 
-
-
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
@@ -368,7 +372,6 @@ public final class OutgoingMessageDao {
     }
 
 
-
     /**
      * Method that create a new entity in the data base.
      *
@@ -383,21 +386,17 @@ public final class OutgoingMessageDao {
 
         try {
 
-            if(findById(String.valueOf(entity.getId()))== null)
-            {
-                   /*
+            /*
              * 1- Create the record to the entity
              */
-                DatabaseTableRecord entityRecord = constructFrom(entity);
+            DatabaseTableRecord entityRecord = constructFrom(entity);
 
             /*
              * 2.- Create a new transaction and execute
              */
-                DatabaseTransaction transaction = getDataBase().newTransaction();
-                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-                getDataBase().executeTransaction(transaction);
-            }
-
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+            getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -410,10 +409,7 @@ public final class OutgoingMessageDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
         }
-
     }
 
     /**
@@ -433,21 +429,16 @@ public final class OutgoingMessageDao {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+            DatabaseTable databaseTable = getDatabaseTable();
+            databaseTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTable outgoinMessageTable =  getDatabaseTable();
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            if (databaseTable.getRecords().isEmpty()) throw new RecordNotFoundException();
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            setValuesToRecord(record, entity);
+            databaseTable.updateRecord(record);
 
-            //set filter
-            outgoinMessageTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
-
-            transaction.addRecordToUpdate(outgoinMessageTable, entityRecord);
-            getDataBase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (CantUpdateRecordException | CantLoadTableToMemoryException | RecordNotFoundException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
@@ -456,9 +447,33 @@ public final class OutgoingMessageDao {
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
+        }
+    }
 
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, FermatMessage fermatMessage) {
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, fermatMessage.getId().toString());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, fermatMessage.getSender());
+        entityRecord.setFermatEnum(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME, fermatMessage.getSenderType());
+        entityRecord.setFermatEnum(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME, fermatMessage.getSenderNsType());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, fermatMessage.getReceiver());
+        entityRecord.setFermatEnum(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME, fermatMessage.getReceiverType());
+        entityRecord.setFermatEnum(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME, fermatMessage.getReceiverNsType());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, fermatMessage.getContent());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, fermatMessage.getFermatMessageContentType().getCode());
+
+        if (fermatMessage.getShippingTimestamp() != null) {
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, fermatMessage.getShippingTimestamp().getTime());
+        } else {
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, (long) 0);
         }
 
+        if (fermatMessage.getDeliveryTimestamp() != null) {
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, fermatMessage.getDeliveryTimestamp().getTime());
+        } else {
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, (long) 0);
+        }
+        entityRecord.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, fermatMessage.getFailCount());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, fermatMessage.getFermatMessagesStatus().getCode());
     }
 
     /**
@@ -485,7 +500,7 @@ public final class OutgoingMessageDao {
              */
             List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
-            if (countFailMin != null){
+            if (countFailMin != null) {
 
                 DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.GREATER_OR_EQUAL_THAN);
@@ -494,7 +509,7 @@ public final class OutgoingMessageDao {
                 filtersTable.add(newFilter);
             }
 
-            if (countFailMax != null){
+            if (countFailMax != null) {
 
                 DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.LESS_OR_EQUAL_THAN);
@@ -609,15 +624,29 @@ public final class OutgoingMessageDao {
 
             outgoingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setSender(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
+
+            if (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME) != null &&
+                    !record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME).equals("")) {
+                outgoingTemplateNetworkServiceMessage.setSenderType(PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME)));
+                outgoingTemplateNetworkServiceMessage.setSenderNsType(NetworkServiceType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME)));
+            }
+
             outgoingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
+
+            if (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME) != null &&
+                    !record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME).equals("")) {
+                outgoingTemplateNetworkServiceMessage.setReceiverType(PlatformComponentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME)));
+                outgoingTemplateNetworkServiceMessage.setReceiverNsType(NetworkServiceType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME)));
+            }
+
             outgoingTemplateNetworkServiceMessage.setContent(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
             outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
 
-           if(record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME) != null){
-               outgoingTemplateNetworkServiceMessage.setFailCount(record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME));
-           }
+            if (record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME) != null) {
+                outgoingTemplateNetworkServiceMessage.setFailCount(record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME));
+            }
 
             outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
 
@@ -646,31 +675,39 @@ public final class OutgoingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, fermatMessage.getId().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, fermatMessage.getSender().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, fermatMessage.getReceiver().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, fermatMessage.getContent());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, fermatMessage.getFermatMessageContentType().getCode());
-
-        if (fermatMessage.getShippingTimestamp() != null){
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, fermatMessage.getShippingTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, new Long(0));
-        }
-
-        if (fermatMessage.getDeliveryTimestamp() != null){
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, fermatMessage.getDeliveryTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, new Long(0));
-        }
-
-        entityRecord.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, fermatMessage.getFailCount());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, fermatMessage.getFermatMessagesStatus().getCode());
+        setValuesToRecord(entityRecord, fermatMessage);
 
         /*
          * return the new table record
          */
         return entityRecord;
+
+    }
+
+    public boolean existPendingNotification(final UUID notificationId) throws CantGetNotificationsException {
+
+
+        try {
+
+            DatabaseTable outgoingTable = getDatabaseTable();
+
+            outgoingTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+            outgoingTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode(), DatabaseFilterType.EQUAL);
+
+            outgoingTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = outgoingTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetNotificationsException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+        }
 
     }
 

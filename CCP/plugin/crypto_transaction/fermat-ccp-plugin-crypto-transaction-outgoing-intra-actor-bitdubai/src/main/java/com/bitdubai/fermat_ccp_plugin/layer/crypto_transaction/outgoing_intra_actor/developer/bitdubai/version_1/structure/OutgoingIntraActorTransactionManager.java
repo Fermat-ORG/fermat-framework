@@ -6,12 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
@@ -51,7 +51,6 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
             long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)
@@ -65,7 +64,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
-        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
+        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletsException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
         } catch (Exception e) {
@@ -101,7 +100,6 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
             long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)
@@ -114,7 +112,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             return transactionId;
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
-        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
+        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletsException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
         } catch (Exception e) {
@@ -145,7 +143,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             if (cryptoAmount > funds) {
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balance");
             }
-        } catch (CantLoadWalletException | CantCalculateBalanceException  e) {
+        } catch (CantLoadWalletsException | CantCalculateBalanceException  e) {
             e.printStackTrace();
         }
 

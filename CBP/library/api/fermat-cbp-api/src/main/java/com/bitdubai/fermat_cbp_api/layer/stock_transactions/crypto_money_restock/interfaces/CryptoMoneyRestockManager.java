@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
@@ -22,6 +23,7 @@ public interface CryptoMoneyRestockManager  extends FermatManager {
             String memo,
             BigDecimal priceReference,
             OriginTransaction originTransaction,
-            String originTransactionId
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType
     ) throws CantCreateCryptoMoneyRestockException;
 }

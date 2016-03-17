@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
@@ -30,7 +31,7 @@ public interface IntraUserManager extends FermatManager {
      * @return
      * @throws ErrorInIntraUserSearchException
      */
-    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
+    List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
 
     /**
      * The method <code>getIntraUsersSuggestions</code> returns a list of intra users that the logged in
@@ -39,7 +40,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
+    List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
 
 
     /**
@@ -102,7 +103,7 @@ public interface IntraUserManager extends FermatManager {
      *
      * @return List of IntraUserNotification
      */
-    public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException;
+    List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException;
 
 
     /**
@@ -115,16 +116,23 @@ public interface IntraUserManager extends FermatManager {
     /**
      *
      */
-    public void confirmNotification(UUID notificationID) throws CantConfirmNotificationException;
+    void confirmNotification(UUID notificationID) throws CantConfirmNotificationException;
 
 
     /**
      * Regist
      */
-    public void registrateActors(List<Actor> actor);
+    void registrateActors(List<Actor> actor);
     void registrateActor(Actor actor);
 
     Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors ,byte[] profileImage);
 
     void updateActor(Actor actor);
+
+    /**
+     *
+     * @param lstIntraUser
+     * @throws CantInsertRecordException
+     */
+    void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantInsertRecordException;
 }

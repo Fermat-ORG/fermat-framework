@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -44,7 +45,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -59,6 +59,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -114,16 +115,21 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
         //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -133,7 +139,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -261,7 +271,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 customerAckOnlineMerchandiseBusinessTransactionDao =new CustomerAckOnlineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
                 /**
@@ -463,6 +474,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                     contractHash,
                                     ContractStatus.READY_TO_CLOSE);
+                            Date date=new Date();
+                            customerAckOnlineMerchandiseBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raiseAckConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -487,6 +501,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                         contractHash,
                                         ContractStatus.READY_TO_CLOSE);
+                                Date date=new Date();
+                                customerAckOnlineMerchandiseBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raiseAckConfirmationEvent(contractHash);
                             }
                         }

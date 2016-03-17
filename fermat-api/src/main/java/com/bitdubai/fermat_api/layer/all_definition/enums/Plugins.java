@@ -203,6 +203,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
+    LOSS_PROTECTED_WALLET       ("LPW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
     BITCOIN_HOLD                ("BHOLD"),
     BITCOIN_UNHOLD              ("BUNHOLD"),
@@ -219,6 +220,7 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
+    CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
@@ -297,11 +299,24 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM");
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    // ART
+
+    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
+    ARTIST_IDENTITY                    ("ARTIDNTY"),
+
+
+    //TKY
+    API_TOKENLY                         ("TOKAP"),
+    TOKENLY_ARTIST                      ("TARTIST"),
+    TOKENLY_FAN                         ("TFAN"),
+    TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
+    TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
+    TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
+    TOKENLY_WALLET                      ("TWALLET");
 
     // End  new Plugins
-
-    ;
 
     private final String code;
 
@@ -333,6 +348,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BN"   :   return BITCOIN_NETWORK          ;
             case "BV"   :   return BITCOIN_VAULT            ;
             case "BW"   :   return BITCOIN_WALLET           ;
+            case "LPW"  :   return LOSS_PROTECTED_WALLET    ;
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
             case "BHOLD":   return BITCOIN_HOLD             ;
             case "BUNHOLD": return BITCOIN_UNHOLD           ;
@@ -349,6 +365,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
             case "CT"   :   return CRYPTO_TRANSMISSION      ;
             case "CW"   :   return CRYPTO_WALLET            ;
+            case "CLPW" :   return CRYPTO_LOSS_PROTECTED_WALLET            ;
             case "DER"  :   return DESKTOP_RUNTIME          ;
             case "DEV"  :   return DEVELOPER                ;
             case "DU"   :   return DEVICE_USER              ;
@@ -431,11 +448,21 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
             case "MAEN":    return MATCHING_ENGINE;
 
-            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
-            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
+            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
+            case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
+            case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
+            case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "TOKAP":       return API_TOKENLY                              ;
+            case "TARTIST":     return TOKENLY_ARTIST                           ;
+            case "TFAN":        return TOKENLY_FAN                              ;
+            case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;
+            case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
+            case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
+            case "TWALLET":     return TOKENLY_WALLET                           ;
 
             default:
                 throw new InvalidParameterException(

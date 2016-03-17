@@ -5,9 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.KeyHierarchy;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
@@ -34,7 +37,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchy extends DeterministicHierarchy {
+class VaultKeyHierarchy extends KeyHierarchy {
 
     /**
      * Holds the list of Accounts and master keys of the hierarchy
@@ -141,7 +144,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will update the detailed key maintenance information by adding this generated address to the table.
          */
         try {
-            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress, blockchainNetworkType);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -154,10 +157,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws UnexpectedResultReturnedFromDatabaseException {
         try {
-            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress, blockchainNetworkType);
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * will continue because this is not critical.
@@ -269,5 +273,10 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         }
 
         return childKeys;
+    }
+
+    @Override
+    public CryptoVaultDao getCryptoVaultDao() {
+        return this.getDao();
     }
 }

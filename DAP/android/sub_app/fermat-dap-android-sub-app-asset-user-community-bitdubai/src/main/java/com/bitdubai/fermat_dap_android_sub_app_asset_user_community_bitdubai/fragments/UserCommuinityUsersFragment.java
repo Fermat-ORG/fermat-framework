@@ -175,63 +175,19 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_users_menu, menu);
-        this.menu = menu;
-        menuItemAdd = menu.findItem(R.id.action_add_to_group);
+
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS, 0, "Add to group")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menuItemAdd = menu.getItem(0);
         menuItemAdd.setVisible(false);
-        menuItemAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Adding users to group...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-
-                        for (Actor actor : actors) {
-                            if (actor.selected) {
-                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                                actorGroup.setGroupId(group.getGroupId());
-                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                                manager.addActorAssetUserToGroup(actorGroup);
-                            }
-                        }
-
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
-                        appSession.setData("group_selected", group);
-                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-                return false;
-            }
-        });
-
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS, 0, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     private void setUpPresentation(boolean checkButton) {
 
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user)
+                .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -353,6 +309,47 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+            }
+            else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Adding users to group...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+
+                        for (Actor actor : actors) {
+                            if (actor.selected) {
+                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                actorGroup.setGroupId(group.getGroupId());
+                                actorGroup.setActorPublicKey(actor.getActorPublicKey());
+                                manager.addActorAssetUserToGroup(actorGroup);
+                            }
+                        }
+
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Selected users added to the group", Toast.LENGTH_SHORT).show();
+                        appSession.setData("group_selected", group);
+                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
+                return false;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

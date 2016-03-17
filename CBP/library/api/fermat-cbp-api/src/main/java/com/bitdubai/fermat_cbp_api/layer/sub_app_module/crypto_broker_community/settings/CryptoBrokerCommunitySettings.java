@@ -22,6 +22,7 @@ import java.util.UUID;
 public class CryptoBrokerCommunitySettings implements SubAppSettings {
 
     private String lastSelectedIdentityPublicKey;
+    private Actors lastSelectedActorType;
     private boolean presentationHelpEnabled;
 
 
@@ -31,13 +32,18 @@ public class CryptoBrokerCommunitySettings implements SubAppSettings {
 
 
 
-    public String getLastSelectedIdentityPublicKey() {
-        return this.lastSelectedIdentityPublicKey;
-    }
+    public String getLastSelectedIdentityPublicKey() { return this.lastSelectedIdentityPublicKey; }
+    public void setLastSelectedIdentityPublicKey(String identityPublicKey) { this.lastSelectedIdentityPublicKey = identityPublicKey; }
 
-    public void setLastSelectedIdentityPublicKey(String identityPublicKey) {
-        this.lastSelectedIdentityPublicKey = identityPublicKey;
-    }
+
+    public Actors getLastSelectedActorType() { return this.lastSelectedActorType; }
+    public void setLastSelectedActorType(Actors actorType) { this.lastSelectedActorType = actorType; }
+
+
+
+
+
+
 
 
     @Override
@@ -50,37 +56,24 @@ public class CryptoBrokerCommunitySettings implements SubAppSettings {
     }
 
 
-
     @Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
-
-    }
+    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {}
     @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
-        return null;
-    }
+    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException { return null; }
 
 
     @Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
-
-    }
+    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException { }
 
     @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
-        return null;
-    }
+    public UUID getDefaultSkin() throws CantGetDefaultSkinException { return null; }
 
 
-
-    //TODO: Deprecated?
-    @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings {
-    }
 
     @Override
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings {
-        return null;
-    }
+    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings { }
+
+    @Override
+    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings { return null; }
 
 }

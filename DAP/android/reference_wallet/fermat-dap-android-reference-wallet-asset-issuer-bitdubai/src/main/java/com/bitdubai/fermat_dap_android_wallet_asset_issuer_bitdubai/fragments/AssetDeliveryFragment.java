@@ -140,8 +140,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -347,8 +347,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
                 }
             }
 
@@ -389,8 +390,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
+//                    refreshUIData();
                     Toast.makeText(activity, R.string.dap_issuer_wallet_deliver_ok, Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
                 }
             }
 
@@ -434,7 +436,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
 //        if (digitalAsset.getImage() != null) {
 //            assetDeliveryImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));

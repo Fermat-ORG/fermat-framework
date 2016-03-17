@@ -1,9 +1,13 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -24,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -39,10 +44,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.SellingRecord;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,7 +55,7 @@ public class AssetSellerDAO {
 
     //VARIABLE DECLARATION
     private final UUID pluginId;
-    private Database database;
+    private final Database database;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final ActorAssetUserManager actorAssetUserManager;
     private final AssetUserWalletManager assetUserWalletManager;
@@ -94,13 +96,15 @@ public class AssetSellerDAO {
         }
     }
 
-    public void saveAssetNegotiation(AssetNegotiation negotiation) throws CantInsertRecordException {
+    public void saveAssetNegotiation(AssetNegotiation negotiation, String buyerPk) throws CantInsertRecordException {
         DatabaseTable databaseTable = getNegotiationTable();
         DatabaseTableRecord negotiationRecord = databaseTable.getEmptyRecord();
         negotiationRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId().toString());
         negotiationRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME, XMLParser.parseObject(negotiation));
         negotiationRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
         negotiationRecord.setLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+        negotiationRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_BUYER_PUBLICKEY_COLUMN_NAME, buyerPk);
+
         databaseTable.insertRecord(negotiationRecord);
     }
 
@@ -111,6 +115,8 @@ public class AssetSellerDAO {
         sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME, metadata.getGenesisTransaction());
         sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME, metadata.getNetworkType().getCode());
         sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME, buyer.getActorPublicKey());
+        sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME, buyer.getCryptoAddress().getAddress());
+        sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_CRYPTO_CURRENCY_COLUMN_NAME, buyer.getCryptoAddress().getCryptoCurrency().getCode());
         sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.NO_ACTION_REQUIRED.getCode());
         sellingRecord.setStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
         sellingRecord.setLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
@@ -118,10 +124,6 @@ public class AssetSellerDAO {
     }
 
     //UPDATES
-    public void updateAssetNegotiation(AssetNegotiation negotiation) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getNegotiationTable(), AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME, XMLParser.parseObject(negotiation), AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_FIRST_KEY_COLUMN, negotiation.getNegotiationId().toString());
-    }
-
     public void updateNegotiationStatus(UUID transactionId, AssetSellStatus status) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         updateRecordForTableByKey(getNegotiationTable(), AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME, status.getCode(), AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_FIRST_KEY_COLUMN, transactionId.toString());
     }
@@ -130,17 +132,28 @@ public class AssetSellerDAO {
         updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME, status.getCode(), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
-    public void updateBuyerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+    public void updateSellerCryptoAddress(UUID transactionId, CryptoAddress cryptoAddress) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
-    public void updateSellerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+    public void updateBuyerTransaction(UUID transactionId, DraftTransaction draftTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(draftTransaction.serialize(), Base64.DEFAULT), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_VALUE_COLUMN_NAME, draftTransaction.getValue(), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+    }
+
+    public void updateSellerTransaction(UUID transactionId, DraftTransaction draftTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(draftTransaction.serialize(), Base64.DEFAULT), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_VALUE_COLUMN_NAME, draftTransaction.getValue(), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateTransactionHash(UUID transactionId, String transactionHash) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME, transactionHash, AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
+
+    public void assetAccepted(UUID transactionId) {
+
+    }
+
     //DELETE
     public void deleteSellingRecord(UUID recordId) throws CantDeleteRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
         DatabaseTable table = getSellerTable();
@@ -150,6 +163,15 @@ public class AssetSellerDAO {
         DatabaseTableRecord record = table.getRecords().get(0);
         table.deleteRecord(record);
     }
+
+    public void deleteAllSelingForNegotiation(UUID negotiationId) throws CantDeleteRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        DatabaseTable table = getSellerTable();
+        table.addStringFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString(), DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        for (DatabaseTableRecord record : table.getRecords()) {
+            table.deleteRecord(record);
+        }
+    }
     //PRIVATE METHODS
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
@@ -158,6 +180,15 @@ public class AssetSellerDAO {
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Reception Transaction Database", "Error in database plugin.");
         }
+    }
+
+    private void updateRecordForTableByKey(DatabaseTable table, String recordName, long recordValue, String filterColumn, String filterValue) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        table.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+        if (table.getRecords().isEmpty()) throw new RecordsNotFoundException();
+        DatabaseTableRecord record = table.getRecords().get(0);
+        record.setLongValue(recordName, recordValue);
+        table.updateRecord(record);
     }
 
     private void updateRecordForTableByKey(DatabaseTable table, String recordName, String recordValue, String filterColumn, String filterValue) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
@@ -172,7 +203,7 @@ public class AssetSellerDAO {
     private List<DatabaseTableRecord> getRecordsByFilterSellerTable(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getSellerTable();
         for (DatabaseTableFilter filter : filters) {
-            table.addStringFilter(filter.getColumn(), filter.getValue(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         }
         table.addFilterOrder(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.loadToMemory();
@@ -182,7 +213,7 @@ public class AssetSellerDAO {
     private List<DatabaseTableRecord> getRecordsByFilterNegotiationTable(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getNegotiationTable();
         for (DatabaseTableFilter filter : filters) {
-            table.addStringFilter(filter.getColumn(), filter.getValue(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         }
         table.addFilterOrder(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.loadToMemory();
@@ -192,23 +223,32 @@ public class AssetSellerDAO {
     private SellingRecord constructSellingByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException, CantLoadWalletException {
         AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY, BlockchainNetworkType.getByCode(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME)));
         DigitalAssetMetadata metadata = wallet.getDigitalAssetMetadata(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME));
-        ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME);
-        AssetSellStatus status = AssetSellStatus.getByCode(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME);
+        ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME), metadata.getNetworkType());
+        AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME));
         UUID entryId = UUID.fromString(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_ENTRY_ID_COLUMN_NAME));
         String encodeUnsignedTransaction = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME);
         String encodeSignedTransaction = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME);
-        DraftTransaction signedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeSignedTransaction));
-        DraftTransaction unsignedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeUnsignedTransaction));
+        DraftTransaction buyerTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(buyerTransaction))
+            buyerTransaction.addValue(record.getLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_VALUE_COLUMN_NAME));
+        DraftTransaction sellerTransaction = encodeUnsignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
+        if (!Validate.isObjectNull(sellerTransaction))
+            sellerTransaction.addValue(record.getLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_VALUE_COLUMN_NAME));
         String transactionHash = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME);
-
-        return new SellingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash);
+        UUID negotiationId = UUID.fromString(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME));
+        long startTime = record.getLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME);
+        CryptoCurrency currency = CryptoCurrency.getByCode(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_CRYPTO_CURRENCY_COLUMN_NAME));
+        CryptoAddress sellerCryptoAddress = new CryptoAddress(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
+        CryptoAddress buyerCryptoAddress = new CryptoAddress(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
+        return new SellingRecord(entryId, metadata, user, status, buyerTransaction, sellerTransaction, transactionHash, negotiationId, sellerCryptoAddress, buyerCryptoAddress, startTime);
     }
 
-    private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
         AssetNegotiation negotiation = (AssetNegotiation) XMLParser.parseXML(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME), new AssetNegotiation());
         AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME));
-        Date timeStamp = new Date(record.getLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME));
-        return new NegotiationRecord(negotiation, status, timeStamp);
+        ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_BUYER_PUBLICKEY_COLUMN_NAME), negotiation.getNetworkType());
+        long startTime = record.getLongValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
+        return new NegotiationRecord(negotiation, status, startTime, user);
     }
 
     private DatabaseTable getNegotiationTable() {
@@ -265,7 +305,7 @@ public class AssetSellerDAO {
         return toReturn;
     }
 
-    private List<NegotiationRecord> constructNegotiationList(List<DatabaseTableRecord> records) throws InvalidParameterException {
+    private List<NegotiationRecord> constructNegotiationList(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<NegotiationRecord> toReturn = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
             toReturn.add(constructNegotiationByDatabaseRecord(record));
@@ -291,8 +331,8 @@ public class AssetSellerDAO {
         }
     }
 
-    public List<NegotiationRecord> getActionRequiredNegotiations() throws DAPException {
-        DatabaseTableFilter filter = constructFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NO_ACTION_REQUIRED.getCode(), DatabaseFilterType.NOT_EQUALS);
+    public List<NegotiationRecord> getWaitingConfirmationNegotiations() throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
         try {
             return constructNegotiationList(getRecordsByFilterNegotiationTable(filter));
         } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
@@ -300,10 +340,33 @@ public class AssetSellerDAO {
         }
     }
 
-    public List<SellingRecord> getSellingRecordsForNegotiation(UUID negotiationId) throws DAPException {
-        DatabaseTableFilter filter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
+    public NegotiationRecord getNegotiationForId(UUID id) throws DAPException {
+        DatabaseTableFilter filter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME, id.toString());
         try {
-            return constructSellingRecordList(getRecordsByFilterSellerTable(filter));
+            List<NegotiationRecord> records = constructNegotiationList(getRecordsByFilterNegotiationTable(filter));
+            if (records.isEmpty()) return null;
+            return records.get(0);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new DAPException(e);
+        }
+    }
+
+    public List<SellingRecord> getAllSelingRecordsForNegotiation(UUID negotiationId) throws DAPException {
+        DatabaseTableFilter referenceFilter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
+        try {
+            return constructSellingRecordList(getRecordsByFilterSellerTable(referenceFilter));
+        } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new DAPException(e);
+        }
+    }
+
+    public SellingRecord getLastSellingRecord(UUID negotiationId) throws DAPException {
+        DatabaseTableFilter referenceFilter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
+        DatabaseTableFilter statusFilter = constructEqualFilter(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.NO_ACTION_REQUIRED.getCode());
+        try {
+            List<SellingRecord> records = constructSellingRecordList(getRecordsByFilterSellerTable(referenceFilter, statusFilter));
+            if (records.isEmpty()) throw new RecordsNotFoundException();
+            return records.get(0);
         } catch (CantLoadWalletException | CantLoadTableToMemoryException | InvalidParameterException e) {
             throw new DAPException(e);
         }

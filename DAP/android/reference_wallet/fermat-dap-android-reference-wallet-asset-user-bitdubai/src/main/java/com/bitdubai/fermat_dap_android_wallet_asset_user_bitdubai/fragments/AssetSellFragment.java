@@ -38,14 +38,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.BitcoinsSpinnerAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
-
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.SellInfo;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -53,7 +56,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
@@ -78,18 +80,22 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private FermatTextView selectedUserText;
     private FermatEditText assetsToSellEditText;
 
-    private FermatEditText bitcoinsView;
+    private FermatEditText bitcoins;
     private Spinner bitcoinsSpinner;
     private FermatTextView bitcoinsTextView;
+
+    private FermatEditText bitcoinsTotal;
+    private Spinner bitcoinsTotalSpinner;
+    private FermatTextView bitcoinsTotalText;
 
     private View selectUserButton;
     private View sellAssetsButton;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    int selectedUserCount;
-
     SettingsManager<AssetUserSettings> settingsManager;
+
+    private User user;
 
     public AssetSellFragment() {
 
@@ -135,8 +141,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle(R.string.dap_user_wallet_redeem_subTitle)
-                    .setBody(R.string.dap_user_wallet_redeem_body)
+                    .setSubTitle(R.string.dap_user_wallet_sell_subTitle)
+                    .setBody(R.string.dap_user_wallet_sell_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -150,8 +156,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -182,16 +188,20 @@ public class AssetSellFragment extends AbstractFermatFragment {
         selectedUserText = (FermatTextView) rootView.findViewById(R.id.selectedUsersText);
         selectUserButton = rootView.findViewById(R.id.selectUsersButton);
         sellAssetsButton = rootView.findViewById(R.id.sellAssetsButton);
-        bitcoinsView = (FermatEditText) rootView.findViewById(R.id.bitcoins);
+        bitcoins = (FermatEditText) rootView.findViewById(R.id.bitcoins);
         bitcoinsSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsSpinner);
         bitcoinsTextView = (FermatTextView) rootView.findViewById(R.id.bitcoinsText);
+        bitcoinsTotal = (FermatEditText) rootView.findViewById(R.id.bitcoinsTotal);
+        bitcoinsTotalSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsTotalSpinner);
+        bitcoinsTotalText = (FermatTextView) rootView.findViewById(R.id.bitcoinsTotalText);
+
 
         bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-        final BitcoinConverter.Currency[] data = BitcoinConverter.Currency.values();
-        final ArrayAdapter<BitcoinConverter.Currency> spinnerAdapter = new BitcoinsSpinnerAdapter(
+        final BitcoinConverter.Currency[] currenciesSpinner = BitcoinConverter.Currency.values();
+        final ArrayAdapter<BitcoinConverter.Currency> bitcoinsSpinnerAdapter = new BitcoinsSpinnerAdapter(
                 getActivity(), android.R.layout.simple_spinner_item,
-                data);
-        bitcoinsSpinner.setAdapter(spinnerAdapter);
+                currenciesSpinner);
+        bitcoinsSpinner.setAdapter(bitcoinsSpinnerAdapter);
         bitcoinsSpinner.setSelection(3);
         bitcoinsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -205,65 +215,180 @@ public class AssetSellFragment extends AbstractFermatFragment {
             }
         });
 
-//        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
-        sellAssetsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {/*
-                if (selectedUserCount > 0) {
-                    Object x = appSession.getData("redeem_points");
-                    if (x != null) {
-                        final List<User> redeemPoints = (List<User>) x;
-                        if (redeemPoints.size() > 0) {
-                            new ConfirmDialog.Builder(getActivity(), appSession)
-                                    .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                                                    .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-                                                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                                                @Override
-                                                                public void onClick() {
-                                                                    int assetsAmount = Integer.parseInt(assetsToSellEditText.getText().toString());
-                                                                    doSell(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
-                                                                }
-                                                            }).build().show();
-                        }
-                    }
-                } else {
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_redeem_points), Toast.LENGTH_SHORT).show();
-                }*/
-                //TODO: agregar la funcion del sellAssetButton
+        bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
+        final BitcoinConverter.Currency[] currenciesSpinnerTotal = BitcoinConverter.Currency.values();
+        final ArrayAdapter<BitcoinConverter.Currency> bitcoinsSpinnerTotalAdapter = new BitcoinsSpinnerAdapter(
+                getActivity(), android.R.layout.simple_spinner_item,
+                currenciesSpinnerTotal);
+        bitcoinsTotalSpinner.setAdapter(bitcoinsSpinnerTotalAdapter);
+        bitcoinsTotalSpinner.setSelection(3);
+        bitcoinsTotalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                updateBitcoinsTotal();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
-        bitcoinsView.setOnKeyListener(new View.OnKeyListener() {
+
+//        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
+        sellAssetsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (isValidSell()) {
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
+                                    BitcoinConverter.Currency fromTotal = (BitcoinConverter.Currency) bitcoinsTotalSpinner.getSelectedItem();
+                                    long amountPerUnity = (long) BitcoinConverter.convert(Double.parseDouble(bitcoins.getText().toString()), from, SATOSHI);
+                                    long amountTotal = (long) BitcoinConverter.convert(Double.parseDouble(bitcoinsTotal.getText().toString()), fromTotal, SATOSHI);
+                                    int quantityToSell = Integer.parseInt(assetsToSellEditText.getText().toString());
+
+                                    doSell(digitalAsset.getAssetPublicKey(), user, amountPerUnity, amountTotal, quantityToSell);
+                                }
+                            }).build().show();
+                }
+            }
+        });
+        assetsToSellEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                updateBitcoins();
+                return false;
+            }
+        });
+        bitcoins.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 updateBitcoins();
                 return false;
             }
         });
+        bitcoinsTotal.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                updateBitcoinsTotal();
+                return false;
+            }
+        });
         selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 //                appSession.setData("asset_data", data);
+                appSession.setData("sell_info", getSellInfo());
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
                 //TODO: aqui va la actividad de seleccion de users, users conectados a users la cual no existe
             }
         });
-
-        selectedUserCount = getUsersSelectedCount();
-        String message = (selectedUserCount == 0) ? "Select redeem points" : selectedUserCount + " redeem points selected";
-
-        selectedUserText.setText(message);
+        selectedUserText.setText(getResources().getString(R.string.dap_user_wallet_sell_select_user));
     }
+
+    private SellInfo getSellInfo() {
+        SellInfo sellInfo = new SellInfo();
+        sellInfo.setAssetsToSell(assetsToSellEditText.getText().toString());
+        sellInfo.setAssetValue(bitcoins.getText().toString());
+        sellInfo.setTotalValue(bitcoinsTotal.getText().toString());
+        sellInfo.setAssetValueCurrencyIndex(bitcoinsSpinner.getSelectedItemPosition());
+        sellInfo.setTotalValueCurrencyIndex(bitcoinsTotalSpinner.getSelectedItemPosition());
+        return sellInfo;
+    }
+
+    private void setSellInfo(SellInfo sellInfo) {
+        assetsToSellEditText.setText(sellInfo.getAssetsToSell());
+        bitcoins.setText(sellInfo.getAssetValue());
+        bitcoinsTotal.setText(sellInfo.getTotalValue());
+        bitcoinsSpinner.setSelection(sellInfo.getAssetValueCurrencyIndex());
+        bitcoinsTotalSpinner.setSelection(sellInfo.getTotalValueCurrencyIndex());
+    }
+
+    private boolean isValidSell() {
+        String assetsToSellStr = assetsToSellEditText.getText().toString();
+        if (assetsToSellStr.length() == 0) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_quantity_zero),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        int quantity = Integer.parseInt(assetsToSellStr);
+        if (quantity == 0) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_quantity_zero),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (quantity > digitalAsset.getUsableAssetsQuantity()) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_quantity),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        String bitcoinsTotalStr = bitcoinsTotal.getText().toString();
+        if (bitcoinsTotalStr.length() == 0) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        double total = Double.parseDouble(bitcoinsTotal.getText().toString());
+        if (total == 0) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        BitcoinConverter.Currency from = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
+        long amountPerUnity = (long) BitcoinConverter.convert(Double.parseDouble(bitcoins.getText().toString()), from, SATOSHI);
+        if (CryptoVault.isDustySend(amountPerUnity)) {
+            makeText(getActivity(), "The minimum monetary amount for any Asset is " + BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND + " satoshis.\n" +
+                            " \n This is needed to pay the fee of bitcoin transactions during delivery of the assets.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (appSession.getData("user_selected") == null) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_user),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private void updateBitcoins() {
         Object selectedItem = bitcoinsSpinner.getSelectedItem();
-        String bitcoinViewStr = bitcoinsView.getText().toString();
-        if (selectedItem != null && bitcoinViewStr != null && bitcoinViewStr.length() > 0) {
-            BitcoinConverter.Currency from = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
-            double amount = Double.parseDouble(bitcoinsView.getText().toString());
+        String bitcoinStr = bitcoins.getText().toString();
+        String assetsToSellStr = assetsToSellEditText.getText().toString();
+        if (selectedItem != null && bitcoinStr.length() > 0 && assetsToSellStr.length() > 0) {
+            BitcoinConverter.Currency from = (BitcoinConverter.Currency) selectedItem;
+            double amount = Double.parseDouble(bitcoins.getText().toString());
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
+            int quantity = Integer.parseInt(assetsToSellStr);
             bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
+            bitcoinsTotalSpinner.setSelection(bitcoinsSpinner.getSelectedItemPosition());
+            bitcoinsTotal.setText(DAPStandardFormats.EDIT_NUMBER_FORMAT.format((amount * quantity)));
+        } else if (bitcoinStr.length() == 0) {
+            bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+            bitcoinsTotal.setText("");
+        } else if (assetsToSellStr.length() == 0) {
+            bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+            bitcoinsTotal.setText("");
+        }
+        updateBitcoinsTotal();
+    }
+
+    private void updateBitcoinsTotal() {
+        Object selectedItem = bitcoinsTotalSpinner.getSelectedItem();
+        String bitcoinTotalStr = bitcoinsTotal.getText().toString();
+        if (selectedItem != null && bitcoinTotalStr.length() > 0) {
+            BitcoinConverter.Currency from = (BitcoinConverter.Currency) selectedItem;
+            double amount = Double.parseDouble(bitcoinsTotal.getText().toString());
+            double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
+            bitcoinsTotalText.setText(String.format("%.6f BTC", amountBTC));
+        } else if (bitcoinTotalStr.length() == 0) {
+            bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
         }
     }
+
     private long getSatoshis() {
-        String amountStr = bitcoinsView.getText().toString().trim();
+        String amountStr = bitcoins.getText().toString().trim();
         if (amountStr != null && amountStr.length() > 0) {
             BitcoinConverter.Currency currency = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
             double amount = Double.parseDouble(amountStr);
@@ -308,24 +433,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
         asyncTask.execute();
     }
 
-    private int getUsersSelectedCount() {
-        Object x = appSession.getData("redeem_points");
-        int count = 0;
-        if (x != null) {
-            List<User> redeemPoints = (List<User>) x;
-            if (redeemPoints.size() > 0) {
-                for (User redeemPoint :
-                        redeemPoints) {
-                    if (redeemPoint.isSelected()) {
-                        count++;
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
-    private void doSell(final String assetPublicKey, final List<User> redeemPoints, final int assetAmount) {
+    private void doSell(final String assetPublicKey, final User user, final long amountPerUnity, final long amountTotal, final int quantityToSell) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -333,8 +441,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                //moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints), assetAmount);
-                //TODO implementar metodos de sellAsset y agregarlos aqui
+                moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, digitalAsset.getAssetPublicKey());
                 return true;
             }
         };
@@ -345,8 +452,9 @@ public class AssetSellFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    refreshUIData();
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_redeem_ok), Toast.LENGTH_LONG).show();
+//                    refreshUIData();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
                 }
             }
 
@@ -371,10 +479,9 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
         assetSellNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToSellEditText.setText(selectedUserCount + "");
-        assetSellRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
+        assetSellRemainingText.setText(digitalAsset.getUsableAssetsQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
-        if (digitalAsset.getAvailableBalanceQuantity() == 0) {
+        if (digitalAsset.getUsableAssetsQuantity() == 0) {
             selectUserButton.setOnClickListener(null);
         }
     }
@@ -388,7 +495,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
 //        if (digitalAsset.getImage() != null) {
 //            assetSellImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
@@ -397,13 +504,27 @@ public class AssetSellFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetSellImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img); //todo comment to be able to compile
+        bitmapWorkerTask.execute(img);
 
         assetSellNameText.setText(digitalAsset.getName());
 //        assetsToSellEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
-        assetsToSellEditText.setText(selectedUserCount+"");
-        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        long quantity = digitalAsset.getUsableAssetsQuantity();
         assetSellRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
+
+        Object x = appSession.getData("user_selected");
+        if (x != null) {
+            user = (User) x;
+            selectedUserText.setText(user.getName());
+        }
+
+        if (appSession.getData("sell_info") != null) {
+            SellInfo sellInfo = (SellInfo) appSession.getData("sell_info");
+            setSellInfo(sellInfo);
+        } else {
+            assetsToSellEditText.setText(Long.toString(quantity));
+            bitcoins.setText(digitalAsset.getAmount());
+        }
+        updateBitcoins();
     }
 
     private void configureToolbar() {

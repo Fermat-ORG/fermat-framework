@@ -1,13 +1,9 @@
 package com.bitdubai.fermat_android_api.engine;
 
-import android.app.ActionBar;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 
 /**
  * Created by Matias Furszyfer on 2015.09.01..
@@ -15,20 +11,19 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 
 public interface PaintActivityFeatures {
 
-    public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener);
+    android.support.v7.widget.Toolbar getToolbar();
 
-    public android.support.v7.widget.Toolbar getToolbar();
+    RelativeLayout getToolbarHeader();
 
-    public RelativeLayout getToolbarHeader();
+    void invalidate();
 
-    public void invalidate();
+    void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
 
-    public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
+    void setTabCustomImageView(int position,View view);
 
     // Esto no deberia estar acá
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);
 
-    void setMenuSettings(View viewGroup, View container_title);
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
 

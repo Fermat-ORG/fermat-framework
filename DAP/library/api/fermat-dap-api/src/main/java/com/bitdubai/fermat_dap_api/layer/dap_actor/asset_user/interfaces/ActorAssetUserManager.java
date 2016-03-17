@@ -2,19 +2,30 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.List;
@@ -34,6 +45,15 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
+    /**
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
+     *
+     * @param actorPublicKey                    The public key of the Asset Actor User
+     * @return                                  THe information associated with the actorPublicKey.
+     * @throws CantGetAssetUserActorsException
+     * @throws CantAssetUserActorNotFoundException
+     */
+    ActorAssetUser getActorByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
     /**
      * The method <code>createActorAssetUserFactory</code> create Actor by a Identity
      *
@@ -57,6 +77,8 @@ public interface ActorAssetUserManager extends FermatManager {
      * @throws CantCreateAssetUserActorException
      */
     void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException;
+
+    void updateOfflineUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantGetAssetUserActorsException;
 
     void createActorAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUsers) throws CantCreateAssetUserActorException;
     /**
@@ -93,9 +115,9 @@ public interface ActorAssetUserManager extends FermatManager {
      * The method <code>connectToActorAssetUser</code> Enable Connection
      * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
      *
-     * @throws CantConnectToActorAssetUserException
+     * @throws CantConnectToActorAssetException
      */
-    void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException;
+    void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetException;
 
     /**
      * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
@@ -103,7 +125,7 @@ public interface ActorAssetUserManager extends FermatManager {
      *
      * @throws CantConnectToActorAssetRedeemPointException
      */
-    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint) throws CantConnectToActorAssetRedeemPointException;
+    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoint, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetRedeemPointException;
 
     /**
      * The method <code>createAssetUserGroup</code> Register a group in database Actor Asset User
@@ -131,7 +153,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @param actorAssetUserGroupMember
      * @throws CantCreateAssetUserGroupException
      */
-    void addAssetUserToGroup (ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
+    void addAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
 
     /**
      * The method <code>removeAssetUserFromGroup</code> Remove a user from group
@@ -154,7 +176,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups(String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListAssetUserGroupsByActorAssetUser</code> Returns a list of groups by asset user
@@ -171,4 +193,102 @@ public interface ActorAssetUserManager extends FermatManager {
      * @throws CantGetAssetUserGroupException
      */
     ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupException;
+
+    DAPConnectionState getActorAssetUserRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
+
+    /**
+     * The method <code>askActorAssetUserForConnection</code> registers a new actor asset user in the list
+     * managed by this plugin with ContactState PENDING_REMOTELY_ACCEPTANCE until the other intra user
+     * accepts the connection request sent also by this method.
+     *
+     * @param actorAssetUserIdentityToLinkPublicKey The public key of the actor asset user sending the connection request.
+     * @param actorAssetUserToAddName               The name of the actor asset user to add
+     * @param actorAssetUserToAddPublicKey          The public key of the actor asset  user to add
+     * @param profileImage                           The profile image that the actor asset user has
+     *
+     * @throws CantAskConnectionActorAssetException if something goes wrong.
+     */
+    void askActorAssetUserForConnection(String actorAssetUserIdentityToLinkPublicKey,
+                                        String actorAssetUserToAddName,
+                                        String actorAssetUserToAddPublicKey,
+                                        byte[] profileImage,
+                                        BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
+
+
+    /**
+     * The method <code>acceptIntraWalletUser</code> takes the information of a connection request, accepts
+     * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
+     *
+     * @param actorAssetUserInPublicKey The public key of the intra user sending the connection request.
+     * @param actorAssetUserToAddPublicKey    The public key of the intra user to add
+     * @throws CantAcceptActorAssetUserException
+     */
+    void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException;
+
+
+    /**
+     * The method <code>denyConnection</code> rejects a connection request from another intra user
+     *
+     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param actorAssetUserToRejectPublicKey The public key of the intra user that sent the request
+     * @throws CantDenyConnectionActorAssetException
+     */
+    void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+
+    /**
+     * The method <code>connectToActorAssetUser</code> Enable Connection
+     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+     *
+     * @throws CantConnectToActorAssetException
+     */
+    void disconnectToActorAssetUser(String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetActorException;
+
+//    /**
+//     * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry
+//     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+//     * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
+//     * @throws CantDisconnectAssetUserActorException
+//     */
+//    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
+
+
+    void receivingActorAssetUserRequestConnection(String actorAssetUserLoggedInPublicKey,
+                                                  String actorAssetUserToAddName,
+                                                  String actorAssetUserToAddPublicKey,
+                                                  byte[] profileImage) throws CantCreateActorAssetReceiveException;
+
+    /**
+     * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
+     * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
+     * @throws CantCancelConnectionActorAssetException
+     */
+    void cancelActorAssetUser(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+
+    /**
+     * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users
+     * that sent a connection request and are waiting for the acceptance of the logged in one.
+     *
+     * @param actorAssetUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws CantGetActorAssetWaitingException
+     */
+    List<ActorAssetUser> getWaitingYourConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+
+    /**
+     * The method <code>getWaitingTheirConnectionActorAssetUser</code> shows the list of all actor asset users
+     * that the logged in one has sent connections request to and have not been answered yet..
+     *
+     * @param actorAssetUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws CantGetActorAssetWaitingException
+     */
+    List<ActorAssetUser> getWaitingTheirConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+
+    /**
+     *The method <code>getLastNotificationActorAssetUser</code> get the last notification received by actor public key
+     * @param actorAssetUserConnectedPublicKey
+     * @return ActorAssetUser notification object
+     * @throws CantGetActorAssetNotificationException
+     */
+    ActorAssetUser getLastNotificationActorAssetUser(String actorAssetUserConnectedPublicKey) throws CantGetActorAssetNotificationException;
 }

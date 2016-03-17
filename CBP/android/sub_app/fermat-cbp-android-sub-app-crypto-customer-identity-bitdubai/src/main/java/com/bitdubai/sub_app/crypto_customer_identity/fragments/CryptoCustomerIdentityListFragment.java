@@ -60,6 +60,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     private IdentityCustomerPreferenceSettings subappSettings;
 
+    private View layout;
+
     public static CryptoCustomerIdentityListFragment newInstance() {
         return new CryptoCustomerIdentityListFragment();
     }
@@ -82,6 +84,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        this.layout = layout;
+
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
@@ -92,7 +96,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.banner_identity)
+                .setBannerRes(R.drawable.banner_identity_customer)
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -209,7 +213,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     @Override
     public void onLongItemClickListener(CryptoCustomerIdentityInformation data, int position) {
-
+        onRefresh();
     }
 
     @Override
@@ -248,10 +252,30 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     public boolean onQueryTextChange(String text) {
         if (filter == null) {
             CryptoCustomerIdentityInfoAdapter infoAdapter = (CryptoCustomerIdentityInfoAdapter) this.adapter;
-            filter = (CryptoCustomerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
         filter.filter(text);
         return true;
+    }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_customer_creado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_customer_editado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 }

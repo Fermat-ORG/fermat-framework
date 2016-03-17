@@ -31,6 +31,8 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.m
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
@@ -103,7 +105,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
             onRefresh();
         } catch (Exception ex) {
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -111,7 +113,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -123,7 +125,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Connections");
+            connectionsProgressDialog.setMessage(getString(R.string.loading_connections));
             connectionsProgressDialog.setCancelable(false);
             connectionsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
@@ -177,14 +179,21 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
     private synchronized List<ActorIssuer> getMoreData() {
         List<ActorIssuer> dataSet = new ArrayList<>();
-        //TODO hacer el metodo que me trae solo los conectados a el
-//        try {
-//
-//            //dataSet.addAll(manager.getAllIntraUsers(manager.getActiveAssetIssuerIdentity().getPublicKey(), MAX, offset));
-//        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
-//            e.printStackTrace();
-//        }
 
+        List<ActorAssetIssuer> result;
+        try {
+            if (manager == null)
+                throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
+
+            result = manager.getAllActorAssetIssuerConnected();
+            if (result != null && result.size() > 0) {
+                for (ActorAssetIssuer record : result) {
+                    dataSet.add((new ActorIssuer((AssetIssuerActorRecord) record)));
+                }
+            }
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 
@@ -204,7 +213,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     }
     private void setUpPresentation(boolean checkButton) {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_issuer)
+                .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
                 .setTitleTextColor(R.color.dap_community_issuer_view_color)
@@ -227,7 +236,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Community Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_community_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

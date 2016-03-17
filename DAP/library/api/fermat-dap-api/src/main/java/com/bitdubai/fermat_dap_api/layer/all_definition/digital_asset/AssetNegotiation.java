@@ -20,6 +20,8 @@ public class AssetNegotiation implements Serializable {
         negotiationId = UUID.randomUUID();
     }
 
+    private long totalAmount;
+
     /**
      * The amount that cost each asset, represented in satoshis.
      */
@@ -61,7 +63,26 @@ public class AssetNegotiation implements Serializable {
         this.quantityToBuy = quantityToBuy;
         this.assetToOffer = assetToOffer;
         this.networkType = networkType;
+        this.totalAmount = amountPerUnity * quantityToBuy;
     }
+
+    public AssetNegotiation(long totalAmount, long amountPerUnity, int quantityToBuy, DigitalAsset assetToOffer, BlockchainNetworkType networkType) {
+        this.totalAmount = totalAmount;
+        this.amountPerUnity = amountPerUnity;
+        this.quantityToBuy = quantityToBuy;
+        this.assetToOffer = assetToOffer;
+        this.networkType = networkType;
+    }
+
+    public AssetNegotiation(UUID negotiationId, long totalAmount, long amountPerUnity, int quantityToBuy, DigitalAsset assetToOffer, BlockchainNetworkType networkType) {
+        this.negotiationId = negotiationId;
+        this.totalAmount = totalAmount;
+        this.amountPerUnity = amountPerUnity;
+        this.quantityToBuy = quantityToBuy;
+        this.assetToOffer = assetToOffer;
+        this.networkType = networkType;
+    }
+
     //PUBLIC METHODS
 
     /**
@@ -93,8 +114,8 @@ public class AssetNegotiation implements Serializable {
     public boolean isSameDeal(AssetNegotiation assetNegotiation) {
         if (!this.getAssetToOffer().equals(assetNegotiation.getAssetToOffer())) return false;
         if (this.getAmountPerUnity() != assetNegotiation.getAmountPerUnity()) return false;
-        if (this.getQuantityToBuy() != assetNegotiation.getQuantityToBuy()) return false;
-        return true;
+        if (this.getTotalAmount() != assetNegotiation.getTotalAmount()) return false;
+        return this.getQuantityToBuy() == assetNegotiation.getQuantityToBuy();
     }
 
     @Override
@@ -116,40 +137,24 @@ public class AssetNegotiation implements Serializable {
         return negotiationId;
     }
 
-    public void setNegotiationId(UUID negotiationId) {
-        this.negotiationId = negotiationId;
-    }
-
     public long getAmountPerUnity() {
         return amountPerUnity;
-    }
-
-    public void setAmountPerUnity(long amountPerUnity) {
-        this.amountPerUnity = amountPerUnity;
     }
 
     public int getQuantityToBuy() {
         return quantityToBuy;
     }
 
-    public void setQuantityToBuy(int quantityToBuy) {
-        this.quantityToBuy = quantityToBuy;
-    }
-
     public DigitalAsset getAssetToOffer() {
         return assetToOffer;
-    }
-
-    public void setAssetToOffer(DigitalAsset assetToOffer) {
-        this.assetToOffer = assetToOffer;
     }
 
     public BlockchainNetworkType getNetworkType() {
         return networkType;
     }
 
-    public void setNetworkType(BlockchainNetworkType networkType) {
-        this.networkType = networkType;
+    public long getTotalAmount() {
+        return totalAmount;
     }
 
     //INNER CLASSES

@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -104,6 +105,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM,     layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
     private NegotiationTransmissionManager negotiationTransmissionManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
     /*Represent the dataBase*/
     private Database                                                            dataBase;
 
@@ -163,16 +167,15 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //Init monitor Agent
             customerBrokerUpdateAgent = new CustomerBrokerUpdateAgent(
-                pluginDatabaseSystem,
-                logManager,
-                errorManager,
-                eventManager,
-                pluginId,
-                negotiationTransmissionManager,
-                customerBrokerPurchaseNegotiation,
-                customerBrokerSaleNegotiation,
-                customerBrokerPurchaseNegotiationManager,
-                customerBrokerSaleNegotiationManager
+                    pluginDatabaseSystem,
+                    logManager, errorManager,
+                    eventManager, pluginId,
+                    negotiationTransmissionManager,
+                    customerBrokerPurchaseNegotiation,
+                    customerBrokerSaleNegotiation,
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerSaleNegotiationManager,
+                    broadcaster
             );
             customerBrokerUpdateAgent.start();
 
@@ -194,6 +197,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //TEST GET ALL EVENT
 //            getAllEvent();
+
+            //TEST GET ALL TRANSACTION
+//            customerBrokerUpdateManagerImpl.getAllTranasctionTest();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;

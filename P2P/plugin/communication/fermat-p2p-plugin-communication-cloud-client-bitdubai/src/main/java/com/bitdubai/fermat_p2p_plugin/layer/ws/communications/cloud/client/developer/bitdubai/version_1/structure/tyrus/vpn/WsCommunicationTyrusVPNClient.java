@@ -271,7 +271,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
      * @see CommunicationsVPNConnection#sendMessage(FermatMessage)
      */
     @Override
-    public void sendMessage(FermatMessage fermatMessage){
+    public synchronized void sendMessage(FermatMessage fermatMessage){
 
         System.out.println("WsCommunicationVPNClient - sendMessage");
 

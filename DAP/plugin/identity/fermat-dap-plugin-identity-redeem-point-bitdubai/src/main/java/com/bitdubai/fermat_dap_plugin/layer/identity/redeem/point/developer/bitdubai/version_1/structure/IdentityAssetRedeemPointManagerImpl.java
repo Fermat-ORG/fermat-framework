@@ -163,9 +163,38 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         }
     }
 
-    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException {
+    public RedeemPointIdentity createNewIdentityAssetRedeemPoint(String alias, byte[] profileImage,
+                                                                 String contactInformation, String countryName, String provinceName, String cityName,
+                                                                 String postalCode, String streetName, String houseNumber) throws CantCreateNewRedeemPointException {
         try {
-            getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+
+            ECCKeyPair keyPair = new ECCKeyPair();
+            String publicKey = keyPair.getPublicKey();
+            String privateKey = keyPair.getPrivateKey();
+
+            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, contactInformation,
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+
+            IdentityAssetRedeemPointImpl identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId, contactInformation,
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+
+            registerIdentities();
+
+            return identityAssetRedeemPoint;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", e, "Error getting current logged in device user", "");
+        } catch (Exception e) {
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
+                                          String contactInformation, String countryName, String provinceName, String cityName,
+                                          String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException {
+        try {
+            getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, contactInformation,
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 
             registerIdentities();
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
@@ -197,7 +226,12 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (redeemPointIdentities.size() > 0) {
                 for (RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities) {
-                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getImage());
+                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(),
+                            identityAssetRedeemPoint.getAlias(),
+                            identityAssetRedeemPoint.getImage(),
+                            identityAssetRedeemPoint.getContactInformation(),
+                            identityAssetRedeemPoint.getCountryName(),
+                            identityAssetRedeemPoint.getCityName());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {

@@ -48,7 +48,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerId
  * A simple {@link Fragment} subclass.
  */
 public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, DialogInterface.OnDismissListener {
+        implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener{
 
     // Constants
     private static final String TAG = "BrokerIdentityList";
@@ -67,6 +67,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     private PresentationDialog presentationDialog;
 
     private IdentityBrokerPreferenceSettings subappSettings;
+
+    private View layout;
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -95,6 +97,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        this.layout = layout;
 
         noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
 
@@ -260,7 +264,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if (filter == null) {
             CryptoBrokerIdentityInfoAdapter infoAdapter = (CryptoBrokerIdentityInfoAdapter) this.adapter;
 
-            filter = (CryptoBrokerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
 
@@ -270,7 +274,21 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        System.out.println("Dialogo cerrado");
+    public void onUpdateViewOnUIThread(String code) {
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_creado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
+        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_editado")){
+            onRefresh();
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 }

@@ -6,5 +6,11 @@ package com.bitdubai.fermat_api.layer.osa_android.broadcaster;
 public interface AndroidCoreUtils {
 
 
-    public void publish(BroadcasterType broadcasterType, String code);
+    void publish(BroadcasterType broadcasterType, String code);
+
+    void publish(BroadcasterType broadcasterType, String appCode, String code);
+
+    void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
+
+    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
 }

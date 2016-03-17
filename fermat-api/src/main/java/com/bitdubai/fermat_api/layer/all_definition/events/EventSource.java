@@ -19,6 +19,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_ASSET_REDEEM_POINT                ("AAR"),
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
+    ACTOR_NETWORK_SERVICE_ARTIST            ("ANSA"),
     BROKER_ACK_OFFLINE_PAYMENT              ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
     BROKER_SUBMIT_OFFLINE_MERCHANDISE       ("BSFM"),
@@ -71,8 +72,8 @@ public enum EventSource implements FermatEnum {
     WORLD_BLOCKCHAIN_INFO_PLUGIN            ("WBI"),
     WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN    ("WSCCLCL"),
     USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER ("ULCBPM"),
-    USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER ("ULCBSM")
-    ;
+    USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER ("ULCBSM"),
+    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
 
     private final String code;
 
@@ -91,6 +92,7 @@ public enum EventSource implements FermatEnum {
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
+            case "ANSA":   return ACTOR_NETWORK_SERVICE_ARTIST;
             case "BAFP":   return BROKER_ACK_OFFLINE_PAYMENT;
             case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
             case "BSFM":   return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
@@ -139,6 +141,7 @@ public enum EventSource implements FermatEnum {
             case "WSCCC" : return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
             case "ULCBPM" : return USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
             case "ULCBSM" : return USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
+            case "CCPODT": return CCP_OUTGOING_DRAFT_TRANSACTION;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

@@ -16,7 +16,7 @@
         android:visibility="visible"
         android:background="@color/green_light">
 
-        <com.customviews.fermat.customviews.views.custom.CaviarTextView
+        <com.customviews.fermat.currency_selector.custom.CaviarTextView
             android:id="@+id/title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
 
     </HorizontalScrollView>
 
-    <com.customviews.fermat.customviews.views.custom.CaviarEditText
+    <com.customviews.fermat.currency_selector.custom.CaviarEditText
         android:id="@+id/amount_editor_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/grey_light"/>
 
-    <com.customviews.fermat.customviews.views.custom.CaviarTextView
+    <com.customviews.fermat.currency_selector.custom.CaviarTextView
         android:id="@+id/name_label_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
             android:layout_toLeftOf="@+id/converter_tag_text_view"
             android:scrollbars="none">
 
-            <com.customviews.fermat.customviews.views.custom.CaviarTextView
+            <com.customviews.fermat.currency_selector.custom.CaviarTextView
                 android:id="@+id/converter_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 app:typeface="caviar_dreams_bold"/>
         </HorizontalScrollView>
 
-        <com.customviews.fermat.customviews.views.custom.CaviarTextView
+        <com.customviews.fermat.currency_selector.custom.CaviarTextView
             android:id="@+id/converter_tag_text_view"
             android:layout_width="45dp"
             android:layout_height="30dp"

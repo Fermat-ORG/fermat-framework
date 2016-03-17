@@ -112,6 +112,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
         /**
          * Table Chats addition.
          */
@@ -129,6 +130,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
         /**
          * Table Message addition.
          */
@@ -146,11 +148,30 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         contactsColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME);
         contactsColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
         contactsColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME);
+        contactsColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONTACT_STATUS_COLUMN_NAME);
         /**
          * Table Contacts addition.
          */
         DeveloperDatabaseTable contactsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME, contactsColumns);
         tables.add(contactsTable);
+
+        /**
+         * Table Contacts columns.
+         */
+        List<String> contactsConnectionColumns = new ArrayList<String>();
+
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ID_CONTACT_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_NAME_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_ALIAS_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_TYPE_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CREATION_DATE_COLUMN_NAME);
+        contactsConnectionColumns.add(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_CONTACT_STATUS_COLUMN_NAME);
+        /**
+         * Table Contacts addition.
+         */
+        DeveloperDatabaseTable contactsConnectionTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_CONNECTION_TABLE_NAME, contactsConnectionColumns);
+        tables.add(contactsConnectionTable);
 
         /**
          * Table Events columns.
@@ -168,6 +189,23 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         DeveloperDatabaseTable eventsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_TABLE_NAME, eventsColumns);
         tables.add(eventsTable);
+
+        /**
+         * Table Identities columns.
+         */
+        List<String> identitiesColumns = new ArrayList<String>();
+
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_ALIAS_COLUMN_NAME);
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_ACTOR_TYPE_COLUMN_NAME);
+        identitiesColumns.add(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME);
+
+        /**
+         * Table Identity addition.
+         */
+        DeveloperDatabaseTable identitiesTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME, identitiesColumns);
+        tables.add(identitiesTable);
 
         return tables;
     }

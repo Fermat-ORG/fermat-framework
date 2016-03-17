@@ -164,7 +164,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                  */
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
@@ -186,7 +186,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }
     }
@@ -217,7 +217,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
                     new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager
@@ -255,47 +256,64 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             //System.out.println("Customer offline payment starting");
             //testPayment();
         } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin recorder service");
         }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(FermatException.wrapException(exception),
-                    "Starting Customer Online Payment Plugin",
+                    "Starting Customer Offline Payment Plugin",
                     "Unexpected error");
         }
     }
 
     @Override
     public void pause() {
+
         try{
             this.serviceStatus = ServiceStatus.PAUSED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
+
         try{
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 
@@ -304,7 +322,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         try{
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
     }
 

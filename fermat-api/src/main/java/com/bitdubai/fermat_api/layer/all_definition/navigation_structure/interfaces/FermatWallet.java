@@ -2,27 +2,23 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.07.23..
  */
-public interface FermatWallet extends Serializable,FermatStructure{
+public interface FermatWallet extends FermatStructure{
 
-    public String getPublicKey();
+    String getPublicKey();
 
-    public Activity getActivity(Activities activities);
+    Activity getActivity(Activities activities);
 
-    public Activity getStartActivity();
+    Activity getStartActivity();
 
-    public void addPosibleStartActivity(Activities activity);
+    void addPosibleStartActivity(Activities activity);
 
-    public Activity getLastActivity();
+    Activity getLastActivity();
 
-    public void setPublicKey(String publicKey);
+    void setPublicKey(String publicKey);
 
 
     void clear();

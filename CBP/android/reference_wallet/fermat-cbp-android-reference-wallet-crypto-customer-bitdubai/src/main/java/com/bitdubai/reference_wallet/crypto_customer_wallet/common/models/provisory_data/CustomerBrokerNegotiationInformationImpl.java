@@ -1,20 +1,13 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -43,7 +36,7 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
         clauses = data.getClauses();
         status = data.getStatus();
         note = data.getMemo();
-        lastNegotiationUpdateDate = data.getNegotiationExpirationDate();
+        lastNegotiationUpdateDate = data.getLastNegotiationUpdateDate();
         expirationDatetime = data.getNegotiationExpirationDate();
         negotiationId = data.getNegotiationId();
     }
@@ -66,6 +59,11 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
 
     public long getNegotiationExpirationDate() {
         return expirationDatetime;
+    }
+
+    @Override
+    public void setNegotiationExpirationDate(long expirationDatetime) {
+        this.expirationDatetime = expirationDatetime;
     }
 
     public void setExpirationDatetime(long expirationDatetime) {

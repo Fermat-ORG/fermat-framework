@@ -75,7 +75,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected abstract int getTitleTextViewRes();
 
     public interface Listener {
-        void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
+        void onClauseClicked(Button triggerView, ClauseInformation clause, int clausePosition);
         void onConfirmCLicked(ClauseInformation clause);
 //        boolean getValuesHasChanged();
 //        ClauseType getClauseType();
@@ -92,33 +92,6 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
             public void onClick(View view) { listener.onConfirmCLicked(clause); }
         });
 
-/*
-            confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(clause.getType().equals(listener.getClauseType()))
-                    valuesHasChanged = listener.getValuesHasChanged();
-
-                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
-                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.CHANGED );
-                    actualStatus = NegotiationStepStatus.CHANGED;
-                    putClause(clause, ClauseStatus.CHANGED);
-
-                }else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
-                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.ACCEPTED );
-                    actualStatus = NegotiationStepStatus.ACCEPTED;
-                    putClause(clause, ClauseStatus.ACCEPTED);
-
-                }
-
-                System.out.print("\nTEST REFERENCE WALLET: ClauseStatus = "+clause.getStatus().getCode() );
-                valuesHasChanged = false;
-
-                modifyData(actualStatus);
-            }
-        });
-        */
     }
 
     public void setStatus(NegotiationStepStatus stepStatus) {

@@ -18,8 +18,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -42,7 +43,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetsOverBitcoinCryptoVaultDao {
+public class AssetsOverBitcoinCryptoVaultDao implements CryptoVaultDao {
     /**
      * Database instance of the plugin.
      */
@@ -146,7 +147,8 @@ public class AssetsOverBitcoinCryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
-    public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
+    @Override
+    public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException {
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         try {
@@ -571,8 +573,9 @@ public class AssetsOverBitcoinCryptoVaultDao {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
         /**
          * If we are not allowed to save detailed information then we will exit
          */
@@ -601,6 +604,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
         record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {
@@ -702,5 +706,23 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         HierarchyAccount hierarchyAccount = new HierarchyAccount(id, publicKey, hierarchyAccountType);
         return hierarchyAccount;
+    }
+
+    @Override
+    public int getPublicKeyPosition(String address) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.size() != 0){
+            return databaseTableRecords.get(0).getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+        } else
+            return 0;
     }
 }

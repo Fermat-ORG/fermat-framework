@@ -16,6 +16,7 @@ public enum InputTransactionState implements FermatEnum {
      */
 
     MATCHED   ("MAT"),
+    SPLIT     ("SPL"),
     UNMATCHED ("UNM"),
 
     ;
@@ -31,6 +32,7 @@ public enum InputTransactionState implements FermatEnum {
         switch (code) {
 
             case "MAT": return MATCHED  ;
+            case "SPL": return SPLIT    ;
             case "UNM": return UNMATCHED;
 
             default:

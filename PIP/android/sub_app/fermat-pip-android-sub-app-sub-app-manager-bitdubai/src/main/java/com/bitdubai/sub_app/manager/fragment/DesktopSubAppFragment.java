@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -28,12 +28,11 @@ import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
 import com.bitdubai.sub_app.manager.fragment.session.DesktopSession;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +51,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopSubAppFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
+public class DesktopSubAppFragment extends AbstractDesktopFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -276,12 +275,7 @@ public class DesktopSubAppFragment extends AbstractFermatFragment implements Sea
     @Override
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if(s.length()==0 && isStartList){
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
-        }
-        return false;
+        return s.length() == 0 && isStartList;
     }
 
     @Override

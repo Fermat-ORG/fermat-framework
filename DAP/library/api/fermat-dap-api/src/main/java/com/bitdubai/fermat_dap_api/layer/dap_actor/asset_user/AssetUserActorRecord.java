@@ -2,10 +2,12 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.google.gson.Gson;
@@ -32,6 +34,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private long                    lastConnectionDate      ;
     private CryptoAddress           cryptoAddress           ;
     private BlockchainNetworkType   blockchainNetworkType   ;
+    private Actors                  actorsType              = Actors.DAP_ASSET_USER;
     private byte[]                  profileImage            ;
 
 
@@ -52,7 +55,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name                   = name                                  ;
         this.actorPublicKey         = actorPublicKey                        ;
-        this.profileImage           = profileImage.clone()                  ;
+
+        this.setProfileImage(profileImage);
 
         if (location != null) {
             this.locationLatitude   = location.getLatitude()                ;
@@ -80,26 +84,34 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final Long registrationDate,
                                 final Long lastConnectionDate,
                                 final BlockchainNetworkType blockchainNetworkType,
+                                final Actors actorsType,
                                 final byte[] profileImage) {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
-        this.age                    =       age                     ;
-        this.genders                =       genders                 ;
+        if (age != null)
+            this.age                =       age                     ;
+        if (genders != null)
+            this.genders            =       genders                 ;
+
         this.dapConnectionState     =       dapConnectionState      ;
 
-        if (locationLatitude != null)
+        if (locationLatitude != -1)
             this.locationLatitude       = locationLatitude          ;
-        if(locationLongitude != null)
+        if(locationLongitude != -1)
             this.locationLongitude      = locationLongitude         ;
 
         if(cryptoAddress != null)
             this.cryptoAddress          = cryptoAddress             ;
         if(blockchainNetworkType != null)
             this.blockchainNetworkType  =    blockchainNetworkType  ;
+
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
-        this.profileImage           =       profileImage.clone()    ;
+
+        this.actorsType             =       actorsType              ;
+
+        this.setProfileImage(profileImage);
 
     }
 
@@ -117,6 +129,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
         this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
         this.blockchainNetworkType = gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
+        this.actorsType = gson.fromJson(jsonObject.get("actorsType").getAsString(), Actors.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
     }
 
@@ -176,6 +189,16 @@ public class AssetUserActorRecord implements ActorAssetUser {
         return this.name;
     }
 
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return actorsType;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -201,7 +224,10 @@ public class AssetUserActorRecord implements ActorAssetUser {
      */
     @Override
     public Genders getGenders() {
-        return genders;
+        if (this.genders == null)
+            return Genders.INDEFINITE;
+        else
+            return genders;
     }
 
     public void setGenders(Genders genders) {
@@ -315,7 +341,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     public void setProfileImage(byte[] profileImage) {
         if(profileImage != null)
-            this.profileImage = profileImage;
+            this.profileImage = profileImage.clone();
         else
             this.profileImage = new byte[0];
     }
@@ -376,6 +402,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
         jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
+        jsonObject.addProperty("actorsType",            actorsType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
@@ -399,6 +426,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                 ", lastConnectionDate="     + lastConnectionDate +
                 ", cryptoAddress="          + cryptoAddress +
                 ", blockchainNetworkType="  + blockchainNetworkType +
+                ", actorsType="             + actorsType +
                 ", profileImage="           + profileImageUser +
                 '}';
     }

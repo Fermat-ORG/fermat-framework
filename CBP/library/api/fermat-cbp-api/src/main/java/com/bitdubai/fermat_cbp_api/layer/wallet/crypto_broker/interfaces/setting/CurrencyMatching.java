@@ -5,19 +5,20 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import java.util.UUID;
 
 /**
+ * TODO add description
+ *
  * Created by franklin on 14/02/16.
  */
 public interface CurrencyMatching {
-    UUID getCurrencyGivingId();
-    void setCurrencyGivingId(UUID currencyGivingId);
-    UUID getCurrencyReceivingId();
-    void setCurrencyReceivingId(UUID currencyReceivingId);
+
+    String getOriginTransactionId();
+
     Currency getCurrencyGiving();
-    void setCurrencyGiving(Currency currencyGiving);
+
     float getAmountGiving();
-    void setAmountGiving(float amountGiving);
+
     Currency getCurrencyReceiving();
-    void setCurrencyReceiving(Currency currencyReceiving);
+
     float getAmountReceiving();
-    void setAmountReceiving(float amountReceiving);
+
 }

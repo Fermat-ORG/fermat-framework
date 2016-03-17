@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.CantStopAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -36,7 +38,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 23/11/15.
  */
-public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
+public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
     //TODO: Documentar y manejo de excepciones
     //TODO: Manejo de Eventos
 
@@ -46,6 +48,8 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
     private final HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager;
     private final BitcoinWalletManager bitcoinWalletManager;
 
+    public final int SLEEP_TIME = 5000;
+
 
     public HoldCryptoMoneyTransactionMonitorAgent(ErrorManager errorManager,
                                                   HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager,
@@ -54,65 +58,96 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
         this.errorManager                      = errorManager;
         this.holdCryptoMoneyTransactionManager = holdCryptoMoneyTransactionManager;
         this.bitcoinWalletManager              = bitcoinWalletManager;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        }
+                , this.getClass().getSimpleName());
      }
     @Override
     public void start() throws CantStartAgentException {
         Logger LOG = Logger.getGlobal();
         LOG.info("Hold Crypto Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-
-        this.agentThread = new Thread(monitorAgent);
+//        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+//
+//        this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        super.start();
     }
 
     @Override
-    public void stop() {
+    public void stop() throws CantStopAgentException {
         this.agentThread.interrupt();
+        super.stop();
+    }
+
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
-
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
-                    return;
-                }
-
-                /**
-                 * now I will check if there are pending transactions to raise the event
-                 */
-                try {
-                    doTheMainTask();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//                } catch (InterruptedException interruptedException) {
+//                    return;
+//                }
+//
+//                /**
+//                 * now I will check if there are pending transactions to raise the event
+//                 */
+//                try {
+//                    doTheMainTask();
+//                } catch (Exception e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
     private void doTheMainTask(){
         // I define the filter
@@ -169,7 +204,7 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
                             (long)cryptoHoldTransaction.getAmount(),
                             new Date().getTime() / 1000,
                             "HOLD",
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+                            cryptoHoldTransaction.getBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
                     bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionRecord);
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
@@ -188,12 +223,18 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (MissingHoldCryptoDataException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantLoadWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCalculateBalanceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantRegisterDebitException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }

@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetPendingDigitalAssetPublicKeysTest {
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
     UUID pluginId;
 
     @Mock
@@ -55,8 +55,8 @@ public class GetPendingDigitalAssetPublicKeysTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
-        assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
+        assetIssuingDAO = new AssetIssuingDAO(pluginDatabaseSystem, pluginId);
 
         records = new LinkedList<>();
         records.add(databaseTableRecord);
@@ -72,22 +72,22 @@ public class GetPendingDigitalAssetPublicKeysTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME)).thenReturn(databaseTable);
+        when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
-        when(databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME)).thenReturn(publicKeyExpected);
-        when(databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME)).thenReturn(1);
+        when(databaseTableRecord.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME)).thenReturn(publicKeyExpected);
+        when(databaseTableRecord.getIntegerValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_ASSETS_TO_GENERATE_COLUMN_NAME)).thenReturn(1);
     }
 
     @Test
     public void test_OK() throws Exception {
-        List<String> pendingDigitalAssetPublicKeys = assetIssuingTransactionDao.getPendingDigitalAssetPublicKeys();
+        List<String> pendingDigitalAssetPublicKeys = assetIssuingDAO.getPendingDigitalAssetPublicKeys();
         assertThat(pendingDigitalAssetPublicKeys).isEqualTo(pendingDigitalAssetPublicKeysExpected);
     }
 
     @Test
     public void test_Throws_CantCheckAssetIssuingProgressException() throws Exception {
-        doThrow(new CantOpenDatabaseException("error")).when(pluginDatabaseSystem).openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
-        catchException(assetIssuingTransactionDao).getPendingDigitalAssetPublicKeys();
+        doThrow(new CantOpenDatabaseException("error")).when(pluginDatabaseSystem).openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE);
+        catchException(assetIssuingDAO).getPendingDigitalAssetPublicKeys();
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

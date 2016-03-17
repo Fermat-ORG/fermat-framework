@@ -29,8 +29,11 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants {
     public static final String ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME = "payment_amount";
     public static final String ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME = "payment_type";
     public static final String ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
-    public static final String ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID = "externalTransactionId";
-    public static final String ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY = "actor_public_key";
+    public static final String ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID_COLUMN_NAME = "external_transaction_id";
+    public static final String ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME = "customer_alias";
+    public static final String ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key";
+    public static final String ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME = "cbp_wallet_public_key";
+    public static final String ACK_OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     public static final String ACK_OFFLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 

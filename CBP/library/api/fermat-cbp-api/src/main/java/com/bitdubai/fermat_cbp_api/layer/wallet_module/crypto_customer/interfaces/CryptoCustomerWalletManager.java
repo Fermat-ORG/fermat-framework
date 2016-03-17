@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -13,9 +14,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -26,14 +28,18 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteLocationPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantClearCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
@@ -43,6 +49,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCustomerBrokerNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantSaveCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotUpdateNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.IdentityAssociatedNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -72,10 +80,33 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      */
     boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException;
 
+    /**
+     * Clear all identities from this wallet
+     *
+     * @param walletPublicKey the public key of the wallet to clear
+     * @return true if the association was successful false otherwise
+     */
+    void clearAssociatedIdentities(String walletPublicKey) throws CantClearAssociatedCustomerIdentityWalletRelationshipException;
 
-    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException;
 
-    CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException, CantGetAssociatedIdentity;
+    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetCustomerIdentityWalletRelationshipException;
+
+    /**
+     * Through this method you can get the customer identity associated to any crypto customer wallet.
+     *
+     * @param walletPublicKey the public key of the crypto customer wallet that we're trying to get the associated identity.
+     *
+     * @return an instance of CryptoCustomerIdentity associated to the wallet.
+     *
+     * @throws CantGetAssociatedIdentityException            if something goes wrong.
+     * @throws IdentityAssociatedNotFoundException  if can't find the identity associated with the wallet.
+     */
+    CryptoCustomerIdentity getAssociatedIdentity(
+
+            String walletPublicKey
+
+    ) throws CantGetAssociatedIdentityException,
+             IdentityAssociatedNotFoundException;
 
     /**
      * @return list of identities associated with this wallet
@@ -120,6 +151,14 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
+     * Start a new negotiation with a crypto broker
+     *
+     * @param negotiation the negotiation
+     * @return true if the association was successful false otherwise
+     */
+    boolean updateNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotUpdateNegotiationException, CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
+
+    /**
      * This method list all wallet installed in device, start the transaction
      */
     List<InstalledWallet> getInstallWallets() throws CantListWalletsException;
@@ -132,6 +171,12 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @throws CantCreateLocationPurchaseException
      */
     void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException;
+
+    /**
+     * Clear all saved locations from wallet
+     * @throws CantDeleteLocationPurchaseException
+     */
+    void clearLocations() throws CantDeleteLocationPurchaseException;
 
     NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
 
@@ -156,6 +201,12 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
 
     /**
+     * Delete all bank accounts associated with the crypto customer wallet
+     * @throws CantDeleteBankAccountPurchaseException
+     */
+    void clearAllBankAccounts() throws CantDeleteBankAccountPurchaseException;
+
+    /**
      * @param negotiation
      * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
@@ -178,6 +229,8 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException;
 
     void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException, CantPersistSettingsException, CantGetSettingsException;
+
+    void clearCryptoCustomerWalletProviderSetting(String customerWalletpublicKey) throws CantClearCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException, CantPersistSettingsException, CantGetSettingsException;
 
     List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey) throws FileNotFoundException, CantCreateFileException, CantGetSettingsException, SettingsNotFoundException;
 
@@ -251,4 +304,26 @@ public interface CryptoCustomerWalletManager extends WalletManager {
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException;*/
+
+
+    /**
+     *
+     * @param brokerPublicKey
+     * @param customerPublicKey
+     * @return The basic information of the broker whose publickey equals the parameter passed as publickey.
+     * @throws CantListActorConnectionsException
+     */
+    ActorIdentity getBrokerInfoByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantListActorConnectionsException;
+
+
+    /**
+     * Returns a completionDate in which a specific status was achieved for a specific contract
+     *
+     * @param contractHash
+     * @param contractStatus
+     * @param paymentMethod
+     * @return a completionDate in which a specific status was achieved for a specific contract
+     */
+    long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
+
 }

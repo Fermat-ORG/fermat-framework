@@ -94,7 +94,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             table.insertRecord(record);
 
             if(statusTransaction.getCode() == NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode()) {
-                System.out.print("\n\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
             }else{
                 System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
             }
@@ -415,7 +415,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         }  catch (CantLoadTableToMemoryException e) {
-            throw new CantRegisterCustomerBrokerCloseEventException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterCustomerBrokerCloseEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
 

@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -91,7 +93,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS.getCode())){
                     return clause.getValue();
                 }
             }
@@ -117,7 +119,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
@@ -150,12 +152,15 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             try{
                 return Long.valueOf(stringValue);
             }catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        exception);
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to long",
                         "Cannot parse "+stringValue+" string value to long");
             }
-
         }
     }
 
@@ -175,7 +180,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
     }
 
     /**
-     * This method creates the Broker Submit Online Merchandise Business Transaction
+     * This method creates the Broker Submit Online Merchandise Business Transaction.
+     * The BlockchainNetworkType is set as default.
      * @param cbpWalletPublicKey
      * @param walletPublicKey
      * @param contractHash
@@ -188,6 +194,29 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String walletPublicKey,
             String contractHash)
             throws CantSubmitMerchandiseException {
+        submitMerchandise(
+                referencePrice,
+                cbpWalletPublicKey,
+                walletPublicKey,
+                contractHash,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    }
+
+    /**
+     * This method creates the Broker Submit Online Merchandise Business Transaction
+     * @param cbpWalletPublicKey
+     * @param walletPublicKey
+     * @param contractHash
+     * @throws CantSubmitMerchandiseException
+     */
+    @Override
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String walletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType) throws
+            CantSubmitMerchandiseException {
         try {
             //Checking the arguments
             Object[] arguments={referencePrice, cbpWalletPublicKey, walletPublicKey, contractHash};
@@ -213,38 +242,72 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     walletPublicKey,
                     cryptoAmount,
                     cbpWalletPublicKey,
-                    referencePrice);
+                    referencePrice,
+                    blockchainNetworkType);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the CustomerBrokerContractSale");
         } catch (CantGetListSaleNegotiationsException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the CustomerBrokerSaleNegotiation list");
         } catch (CantGetCryptoAmountException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the Crypto amount");
         } catch (CantGetCryptoAddressException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the Customer Crypto Address");
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot insert a record in database");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Invalid input to this manager");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSubmitMerchandiseException(e,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
 
     /**
      * This method send a payment according the contract clauses.
      * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
-     * this public key can be obtained from the crypto broker wallet
+     * this public key can be obtained from the crypto broker wallet.
+     * BlockchainNetworkType is set as default.
      * @param referencePrice
      * @param cbpWalletPublicKey
      * @param contractHash
@@ -255,6 +318,29 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             BigDecimal referencePrice,
             String cbpWalletPublicKey,
             String contractHash) throws CantSubmitMerchandiseException {
+        submitMerchandise(
+                referencePrice,
+                cbpWalletPublicKey,
+                contractHash,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    }
+
+    /**
+     * This method send a payment according the contract clauses.
+     * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
+     * this public key can be obtained from the crypto broker wallet.
+     * @param referencePrice
+     * @param cbpWalletPublicKey
+     * @param contractHash
+     * @param blockchainNetworkType
+     * @throws CantSubmitMerchandiseException
+     */
+    @Override
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException {
         try{
             //Checking the arguments
             Object[] arguments={referencePrice, cbpWalletPublicKey, contractHash};
@@ -273,7 +359,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             boolean isCryptoWalletSets=false;
             String cryptoWalletPublicKey="WalletNotSet";
             for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
-                cryptoBrokerWalletAssociatedSettingList){
+                    cryptoBrokerWalletAssociatedSettingList){
                 MoneyType moneyType =cryptoBrokerWalletAssociatedSetting.getMoneyType();
                 //System.out.println("Currency type: "+moneyType);
                 switch (moneyType){
@@ -302,19 +388,40 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     referencePrice,
                     cbpWalletPublicKey,
                     cryptoWalletPublicKey,
-                    contractHash);
+                    contractHash,
+                    blockchainNetworkType);
         } catch (CryptoBrokerWalletNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the crypto broker wallet");
         } catch (CantGetCryptoBrokerWalletSettingException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the Crypto Wallet Setting");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSubmitMerchandiseException(e,
                     "Creating Broker Submit Online Merchandise Business Transaction",
                     "Invalid input to this manager");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantSubmitMerchandiseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
 
@@ -338,6 +445,47 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
+        }
+    }
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
+            return this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.getCompletionDateByContractHash(
+                    contractHash);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "Unexpected exception from database");
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "The contract hash argument is null");
         }
     }
 }

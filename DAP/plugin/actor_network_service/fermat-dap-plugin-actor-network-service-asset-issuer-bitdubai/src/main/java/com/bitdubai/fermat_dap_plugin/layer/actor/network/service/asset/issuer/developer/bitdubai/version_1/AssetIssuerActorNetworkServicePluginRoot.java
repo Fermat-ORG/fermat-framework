@@ -24,7 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -49,15 +52,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -69,13 +71,21 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantConfirmActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDisconnectConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.agents.AssetIssuerActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.AssetIssuerNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -87,8 +97,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
@@ -116,6 +126,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
@@ -178,7 +189,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private AssetIssuerNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -296,7 +307,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                         /*
              * Initialize Developer Database Factory
              */
-                    communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+                    communicationNetworkServiceDeveloperDatabaseFactory = new AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
                     communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
                         /*
              * Initialize listeners
@@ -338,7 +349,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
                     contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                    contextBuffer.append("Database Name: " + AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                     String context = contextBuffer.toString();
                     String possibleCause = "The Asset Issuer Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -424,7 +435,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -440,14 +451,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            AssetIssuerNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new AssetIssuerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -812,19 +823,19 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     }
 
-    @Override
-    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
-        switch (dapMessage.getMessageContent().messageType()) {
-            case ASSET_APPROPRIATION:
-                assetAppropriated(dapMessage);
-                break;
-            case EXTENDED_PUBLIC_KEY:
-                requestPublicKeyExtended(dapMessage);
-                break;
-            default:
-                throw new CantSendMessageException("This message is not registered or can't be handled by this network service..");
-        }
-    }
+//    @Override
+//    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+//        switch (dapMessage.getMessageContent().messageType()) {
+//            case ASSET_APPROPRIATION:
+//                assetAppropriated(dapMessage);
+//                break;
+//            case EXTENDED_PUBLIC_KEY:
+//                requestPublicKeyExtended(dapMessage);
+//                break;
+//            default:
+//                throw new CantSendMessageException("This message is not registered or can't be handled by this network service..");
+//        }
+//    }
 
     private void requestPublicKeyExtended(DAPMessage dapMessage) {
         DAPActor actorRedeemPointSender = dapMessage.getActorSender();
@@ -833,13 +844,12 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorIssuerDestination.getActorPublicKey());
 
             if (true) {
-                Gson gson = DAPMessageGson.getGson();
 
 //                JsonObject jsonObject = new JsonObject();
 //                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(dapMessage.getActorSender().getProfileImage(), Base64.DEFAULT));
 //                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(dapMessage.getActorReceiver().getProfileImage(), Base64.DEFAULT));
 
-                String messageContentIntoJson = gson.toJson(dapMessage);
+                String messageContentIntoJson = XMLParser.parseObject(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 
@@ -948,9 +958,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             if (true) {
-                Gson gson = DAPMessageGson.getGson();
-
-                String messageContentIntoJson = gson.toJson(dapMessage);
+                String messageContentIntoJson = XMLParser.parseObject(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 
@@ -1095,6 +1103,51 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
 
         return actorAssetIssuerRegisteredList;
+    }
+
+    @Override
+    public void askConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetLoggedName, Actors senderType, String actorAssetToAddPublicKey, String actorAssetToAddName, Actors destinationType, byte[] profileImage, BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer ActorAssetAccepted) throws CantAcceptConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetReject) throws CantDenyConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void disconnectConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToDisconnectPublicKey) throws CantDisconnectConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException {
+
+    }
+
+    @Override
+    public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException {
+        return null;
+    }
+
+    @Override
+    public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException {
+
+    }
+
+    @Override
+    public void buildSendMessage(ActorNotification actorNotification) {
+
+    }
+
+    @Override
+    public void responseExtended(ActorNotification actorNotification, ExtendedPublicKey extendedPublicKey) {
+
     }
 
     @Override
@@ -1479,41 +1532,45 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
      *
      * @return List<FermatMessage>
      */
-    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
-
-        Map<String, Object> filters = new HashMap<>();
-        filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
-
-        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
-    }
+//    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
+//
+//        Map<String, Object> filters = new HashMap<>();
+//        filters.put(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
+//
+//        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+//    }
 
     public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
-        String context = "Message Type: " + type;
+//        String context = "Message Type: " + type;
         List<DAPMessage> listToReturn = new ArrayList<>();
-        try {
-            for (FermatMessage message : getNewReceivedMessageList()) {
-                Gson gson = DAPMessageGson.getGson();
-                try {
-                    DAPMessage dapMessage = gson.fromJson(message.getContent(), DAPMessage.class);
-                    if (dapMessage.getMessageContent().messageType() == type) {
-                        listToReturn.add(dapMessage);
-                        markAsRead(message);
-                    }
-                } catch (JsonSyntaxException jsonException) {
-                    //This is not a DAPMessage, that's not my business. Let's just continue.
-                    continue; //This statement is unnecessary but I'll keep it so people can understand better.
-                }
-            }
+//        try {
+//            for (FermatMessage message : getNewReceivedMessageList()) {
+//                try {
+//                    DAPMessage dapMessage = (DAPMessage) XMLParser.parseXML(message.getContent(), new DAPMessage());
+//                    if (dapMessage.getMessageContent().messageType() == type) {
+//                        listToReturn.add(dapMessage);
+//                        markAsRead(message);
+//                    }
+//                } catch (JsonSyntaxException jsonException) {
+//                    //This is not a DAPMessage, that's not my business. Let's just continue.
+//                    continue; //This statement is unnecessary but I'll keep it so people can understand better.
+//                }
+//            }
             return listToReturn;
-        } catch (CantReadRecordDataBaseException | CantUpdateRecordDataBaseException e) {
-            throw new CantGetDAPMessagesException(context, e);
-        }
+//        } catch (CantReadRecordDataBaseException | CantUpdateRecordDataBaseException e) {
+//            throw new CantGetDAPMessagesException(context, e);
+//        }
     }
 
-    @Override
-    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
-
-    }
+//    @Override
+//    public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
+//        return Collections.EMPTY_LIST;
+//    }
+//
+//    @Override
+//    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
+//
+//    }
 
     /**
      * Mark the message as read
@@ -1538,7 +1595,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
     }
 
     /**

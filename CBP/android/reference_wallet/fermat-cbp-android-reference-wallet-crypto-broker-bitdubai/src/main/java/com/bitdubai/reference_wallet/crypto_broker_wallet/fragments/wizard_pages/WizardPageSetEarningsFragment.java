@@ -36,6 +36,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by nelson on 22/12/15.
  */
@@ -67,13 +68,34 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            earningDataList = createEarningDataList();
+            List<String> temp = new ArrayList<>();
+            String tempS;
+
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
+
+
+
+            List<EarningsWizardData> _earningDataList = createEarningDataList();
+            earningDataList = new ArrayList<>();
+
+            for (EarningsWizardData EP : _earningDataList) {
+                tempS = EP.getEarningCurrency().getCode() + " - " + EP.getLinkedCurrency().getCode();
+                if (!temp.contains(tempS)) {
+                    temp.add(tempS);
+                    earningDataList.add(EP);
+                }
+            }
 
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                        ex
+                );
+            }
         }
 
     }
@@ -137,7 +159,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
 
-            Currency earningCurrency = data.getEarningCurrency();
+            final Currency earningCurrency = data.getEarningCurrency();
+            final Currency linkedCurrency = data.getLinkedCurrency();
+
             for (InstalledWallet wallet : installedWallets) {
                 Platforms platform = wallet.getPlatform();
                 switch (platform) {
@@ -145,7 +169,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         List<BankAccountNumber> accounts = walletManager.getAccounts(wallet.getWalletPublicKey());
                         for (BankAccountNumber account : accounts) {
                             FiatCurrency currencyType = account.getCurrencyType();
-                            if (currencyType.getCode().equals(earningCurrency.getCode())) {
+                            if (currencyType.equals(earningCurrency) || currencyType.equals(linkedCurrency)) {
                                 filteredList.add(wallet);
                                 break;
                             }
@@ -153,12 +177,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         break;
                     case CASH_PLATFORM:
                         FiatCurrency cashCurrency = walletManager.getCashCurrency(wallet.getWalletPublicKey());
-                        if (cashCurrency.getCode().equals(earningCurrency.getCode()))
+                        if (cashCurrency.equals(earningCurrency) || cashCurrency.equals(linkedCurrency))
                             filteredList.add(wallet);
                         break;
                     case CRYPTO_CURRENCY_PLATFORM:
                         CryptoCurrency cryptoCurrency = wallet.getCryptoCurrency();
-                        if (cryptoCurrency.getCode().equals(earningCurrency.getCode()))
+                        if (cryptoCurrency.equals(earningCurrency) || cryptoCurrency.equals(linkedCurrency))
                             filteredList.add(wallet);
                         break;
                 }
@@ -258,8 +282,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     Currency merchandise1 = associatedWallet1.getMerchandise();
                     Currency merchandise2 = associatedWallet2.getMerchandise();
 
-                    if (!merchandise1.equals(merchandise2))
-                        list.add(new EarningsWizardData(merchandise1, merchandise2));
+                    if (!merchandise1.equals(merchandise2)) {
+                        final EarningsWizardData data = new EarningsWizardData(merchandise1, merchandise2);
+                        if (!list.contains(data))
+                            list.add(data);
+                    }
+
                 }
             }
 

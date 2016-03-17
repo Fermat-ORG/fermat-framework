@@ -2,12 +2,15 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 08/01/16.
+ * Updated by Manuel Perez on 08/02/2016
  */
 public interface Chat {
     UUID getChatId();
@@ -30,4 +33,20 @@ public interface Chat {
     void setDate(Timestamp date);
     Timestamp getLastMessageDate();
     void setLastMessageDate(Timestamp lastMessageDate);
+    //New objects to make a relation between messages and this interface
+    List<Contact> getContactAssociated();
+    void setContactAssociated(List<Contact> chatContacts);
+    void setContactAssociated(Contact contact);
+    /**
+     * This method will return a String with xml format with the contact list
+     * @return
+     */
+    String getContactListString();
+
+    /**
+     * This method requires a valid List<Contact> XML String to set this list to this object
+     * @param chatContacts
+     * @throws CantGetContactListException
+     */
+    void setContactAssociated(String chatContacts) throws CantGetContactListException;
 }

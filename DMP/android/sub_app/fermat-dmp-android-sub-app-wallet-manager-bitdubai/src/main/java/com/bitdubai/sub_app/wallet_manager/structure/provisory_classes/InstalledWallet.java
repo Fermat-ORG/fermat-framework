@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.structure.provisory_classes;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -30,6 +31,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private int iconResource;
     private int position;
     private AppsStatus status;
+    private int bannerRes;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
@@ -99,6 +101,16 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public int getIconResource() {
         return iconResource;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return bannerRes;
     }
 
     @Override
@@ -174,6 +186,16 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public AppsStatus getAppStatus() {
         return status;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.WALLET;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
     }
 
 

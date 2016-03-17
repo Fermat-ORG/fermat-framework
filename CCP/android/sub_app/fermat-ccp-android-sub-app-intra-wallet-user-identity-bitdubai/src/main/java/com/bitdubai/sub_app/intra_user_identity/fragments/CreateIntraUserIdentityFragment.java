@@ -87,6 +87,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private EditText mBrokerPhrase;
     SettingsManager<IntraUserIdentitySettings> settingsManager;
     IntraUserIdentitySettings intraUserIdentitySettings = null;
+    private boolean updateProfileImage = false;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -273,6 +274,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             brokerImageByteArray = toByteArray(imageBitmap);
+                            updateProfileImage = true;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -338,7 +340,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                     if (!isUpdate)
                         moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                     else
+                    if(updateProfileImage)
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
+                    else
+                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, identitySelected.getImage());
                  } catch (CantCreateNewIntraUserIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
 

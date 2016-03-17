@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
@@ -28,11 +29,11 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
+    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener) {
 
     }
 
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
+    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener) {
 
     }
 
@@ -70,21 +71,35 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
 
         try {
             holder.getLabel().setText(data.getLabel());
+
+            if (data.isSelected())
+                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+
             switch (position) {
                 case 0:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
+                    if (data.getNotifications() != 0) {
+                        holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context)
+                                .setCount(data.getNotifications())
+                                .setTextSize(32)
+                                .setPosition(BadgeDrawable.Position.CENTER)
+                                .build());
+                    }
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_action_filters);
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
+                    break;
+                case 4:
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -233,7 +233,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOfflineMerchandiseBusinessTransactionDao=
                     new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager
@@ -255,7 +256,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             BrokerSubmitOfflineMerchandiseRecorderService brokerSubmitOfflineMerchandiseRecorderService=
                     new BrokerSubmitOfflineMerchandiseRecorderService(
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
             brokerSubmitOfflineMerchandiseRecorderService.start();
 
             /**
@@ -279,41 +281,78 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             //System.out.println("Broker submit offline merchandise starting");
             //testSubmit();
         } catch (CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Unexpected error");
         }
     }
 
     @Override
     public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
+        try{
+            this.serviceStatus = ServiceStatus.PAUSED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override
     public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
+
+        try{
+            this.serviceStatus = ServiceStatus.STARTED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override
     public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
+        try{
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override

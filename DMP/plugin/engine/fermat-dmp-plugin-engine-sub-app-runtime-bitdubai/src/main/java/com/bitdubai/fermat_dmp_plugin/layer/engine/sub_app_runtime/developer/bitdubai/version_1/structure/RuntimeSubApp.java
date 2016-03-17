@@ -27,12 +27,13 @@ public class RuntimeSubApp implements SubApp {
 
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    private List<Activities> startActivities = new ArrayList<>();;
+    private List<Activities> startActivities = new ArrayList<>();
     private int actualStart = 0;
 
     Activities lastActivity;
 
     Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+    private int bannerRes;
 
 
     /**
@@ -135,5 +136,30 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public AppsStatus getAppStatus() {
         return null;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.SUB_APP;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return bannerRes;
     }
 }

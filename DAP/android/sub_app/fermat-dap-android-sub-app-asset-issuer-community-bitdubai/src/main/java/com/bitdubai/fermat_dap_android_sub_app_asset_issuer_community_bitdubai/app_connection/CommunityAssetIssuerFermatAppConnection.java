@@ -1,11 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection;
 
-import android.app.Activity;
-
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
-import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -17,13 +13,18 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.factory.AssetIssuerCommunityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.navigation_drawer.IssuerCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetIssuerFermatAppConnection extends AppConnections {
+public class CommunityAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerCommunitySubAppSession> {
 
-    public CommunityAssetIssuerFermatAppConnection(Activity activity) {
+    private AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+
+    public CommunityAssetIssuerFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -51,7 +52,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IssuerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new IssuerCommunityNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override
@@ -62,5 +63,42 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        NotificationPainter notification = null;
+        try {
+            this.assetIssuerCommunitySubAppSession = (AssetIssuerCommunitySubAppSession) this.getSession();
+            if (assetIssuerCommunitySubAppSession != null)
+                manager = assetIssuerCommunitySubAppSession.getModuleManager();
+            String[] params = code.split("_");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
+
+            switch (notificationType) {
+                case "EXTENDED-RECEIVE":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Key", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new IssuerAssetCommunityNotificationPainter("Extended Key Arrive", "Was Received for: "+senderActorPublicKey, "", "");
+                    }
+                    break;
+                case "EXTENDED-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "A new connection request was received.", "", "");
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return notification;
     }
 }

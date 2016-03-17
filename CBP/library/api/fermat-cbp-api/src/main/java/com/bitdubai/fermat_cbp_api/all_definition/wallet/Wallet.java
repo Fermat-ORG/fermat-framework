@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
@@ -30,7 +31,7 @@ public interface Wallet {
      * @return StockBalance
      * @exception CantGetStockCryptoBrokerWalletException
      */
-    StockBalance getStockBalance()  throws CantGetStockCryptoBrokerWalletException;
+    StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException, CantStartPluginException;
     /**
      * This method load the instance the CryptoBrokerWalletSetting
      * @return StockBalance
@@ -73,7 +74,7 @@ public interface Wallet {
      * @return void
      * @exception CantGetTransactionCryptoBrokerWalletMatchingException
      */
-    void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
+    void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
 
     /**
      * This method load the list CurrencyMatching

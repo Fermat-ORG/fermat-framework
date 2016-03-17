@@ -18,7 +18,7 @@ public class CryptoCustomerWalletProviderSettingImpl implements CryptoCustomerWa
     private Currency currencyFrom;
     private Currency currencyTo;
 
-    public CryptoCustomerWalletProviderSettingImpl(){};
+    public CryptoCustomerWalletProviderSettingImpl(){}
 
     @Override
     public UUID getId() {

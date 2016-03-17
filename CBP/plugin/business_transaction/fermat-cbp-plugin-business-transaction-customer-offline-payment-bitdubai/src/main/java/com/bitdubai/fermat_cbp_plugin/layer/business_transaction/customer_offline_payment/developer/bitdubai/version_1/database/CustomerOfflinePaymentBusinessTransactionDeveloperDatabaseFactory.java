@@ -85,8 +85,6 @@ public class CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory i
                    */
                 throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
-        }catch(Exception exception){
-            throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected error","Check the cause");
         }
     }
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -111,6 +109,8 @@ public class CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory i
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Offline Payment addition.
          */

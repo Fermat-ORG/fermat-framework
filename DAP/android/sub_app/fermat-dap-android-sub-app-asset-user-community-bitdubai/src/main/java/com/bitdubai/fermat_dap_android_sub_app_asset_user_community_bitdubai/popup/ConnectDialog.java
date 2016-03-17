@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -13,18 +12,19 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
-
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Added by Jinmy Bohorquez 09/02/2016
@@ -47,30 +47,30 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
     private CharSequence username;
     private CharSequence title;
 
-    private final Actor   actor;
-    private final IdentityAssetUser identity            ;
+    private final Actor actor;
+    private final IdentityAssetUser identity;
 
+    List<ActorAssetUser> userConnect;
 
-    public ConnectDialog(final Activity                       a                     ,
-                         final AssetUserCommunitySubAppSession         actorUserSubAppSession,
-                         final SubAppResourcesProviderManager subAppResources       ,
-                         final Actor           actor  ,
-                         final IdentityAssetUser         identity              ) {
+    public ConnectDialog(final Activity a,
+                         final AssetUserCommunitySubAppSession actorUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources,
+                         final Actor actor,
+                         final IdentityAssetUser identity) {
 
         super(a, actorUserSubAppSession, subAppResources);
 
         this.actor = actor;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
 
     public ConnectDialog(Activity a,
-                         final AssetUserCommunitySubAppSession         actorUserSubAppSession,
-                         final SubAppResourcesProviderManager subAppResources ) {
+                         final AssetUserCommunitySubAppSession actorUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources) {
         super(a, actorUserSubAppSession, subAppResources);
-        this.actor  =   null;
+        this.actor = null;
         this.identity = null;
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -125,28 +125,32 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actor != null && identity != null) {
-//                    getSession().getModuleManager().askIntraUserForAcceptance(actor.getName(), actor.getPhrase(),actor.getPublicKey(),actor.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias());
-//                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
-//                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//                dismiss();
-//            } catch (CantStartRequestException e) {
-//                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+            try {
+                //image null
+                if (actor != null) {
+                    userConnect = new ArrayList<>();
 
+                    userConnect.add(actor);
+
+                    getSession().getModuleManager().askActorAssetUserForConnection(userConnect);
+
+                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                    sendLocalBroadcast(broadcast);
+                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                } else {
+                    super.toastDefaultError();
+                }
+            } catch (CantRequestAlreadySendActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (CantAskConnectionActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();
         }
     }
-
-
 }

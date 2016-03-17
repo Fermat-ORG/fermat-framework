@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetExtraDataActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
@@ -24,6 +26,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,14 +39,14 @@ import java.util.UUID;
  */
 public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
 
-    private CryptoBrokerActorDao dao;
-    private CryptoBrokerManager cryptoBrokerANSManager;
-    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final CryptoBrokerActorDao dao;
+    private final ErrorManager errorManager;
+    private final PluginVersionReference pluginVersionReference;
 
-    public BrokerActorManager(CryptoBrokerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager){
+    public BrokerActorManager(CryptoBrokerActorDao dao, ErrorManager errorManager, PluginVersionReference pluginVersionReference){
         this.dao = dao;
-        this.cryptoBrokerANSManager = cryptoBrokerANSManager;
-        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.pluginVersionReference = pluginVersionReference;
+        this.errorManager = errorManager;
     }
 
     /*==============================================================================================
@@ -52,22 +56,59 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
     *==============================================================================================*/
 
         @Override
-        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException {
-            return this.dao.createNewBrokerIdentityWalletRelationship(identity, walletPublicKey);
+        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException{
+            try {
+                return this.dao.createNewBrokerIdentityWalletRelationship(identity, walletPublicKey);
+            } catch (CantCreateNewBrokerIdentityWalletRelationshipException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateNewBrokerIdentityWalletRelationshipException(e.getMessage(), e,
+                    "identity.getPublicKey()= "+identity.getPublicKey()+
+                    "walletPublicKey= "+walletPublicKey
+                    ,
+                    "Invalid Data"
+                );
+            }
         }
 
         @Override
+        public void clearBrokerIdentityWalletRelationship(String walletPublicKey) throws CantClearBrokerIdentityWalletRelationshipException{
+            try {
+                this.dao.clearBrokerIdentityWalletRelationship(walletPublicKey);
+            } catch (CantClearBrokerIdentityWalletRelationshipException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantClearBrokerIdentityWalletRelationshipException(e.getMessage(), e, "walletPublicKey= " + walletPublicKey, "");
+            }
+        }
+
+
+
+    @Override
         public Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException {
-            return this.dao.getAllBrokerIdentityWalletRelationship();
+            try {
+                return this.dao.getAllBrokerIdentityWalletRelationship();
+            } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetListBrokerIdentityWalletRelationshipException(e.getMessage(), e, "", "Failed to get records database");
+            }
         }
 
         @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return this.dao.getBrokerIdentityWalletRelationshipByIdentity(publicKey);
+            try {
+                return this.dao.getBrokerIdentityWalletRelationshipByIdentity(publicKey);
+            } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetListBrokerIdentityWalletRelationshipException(e.getMessage(), e, "", "Failed to get records database");
+            }
         }
 
         @Override
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return this.dao.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
+            try {
+                return this.dao.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
+            } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
+                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetListBrokerIdentityWalletRelationshipException(e.getMessage(), e, "", "Failed to get records database");
+            }
         }
 }

@@ -21,17 +21,23 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -39,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -46,6 +53,7 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -121,6 +129,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         detailDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_rate);
         negotiationButton = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_contract_details_contract_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
@@ -139,30 +148,44 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private void bindData() {
 
-        String paymentCurrency=data.getPaymentCurrency();
+        negotiationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomerBrokerNegotiationInformation negotiationInfo;
+                try {
+                    negotiationInfo = walletManager.getNegotiationInformation(data.getNegotiationId());
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, negotiationInfo);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
+
+                } catch (FermatException ex) {
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    else
+                        Log.e(TAG, ex.getMessage(), ex);
+
+                    // TODO Just for testing. Add a Toast later
+                    negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, negotiationInfo);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
+                }
+            }
+        });
+        String paymentCurrency = data.getPaymentCurrency();
         brokerName.setText(data.getCryptoCustomerAlias());
-        sellingSummary.setText("SELLING "+paymentCurrency);
-        Date date=new Date(data.getLastUpdate());
-        //TODO: we can introduce locale for date format
+        customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
+        sellingSummary.setText("BUYING " + data.getMerchandise());
+        //TODO: averiguar el detailrate como escribirlo
+        //detailRate.setText("1 BTC @"+ data.getExchangeRateAmount() + " "+ data.getPaymentCurrency());
+        //detailRate.setText("1 BTC @ 254 USD");
+
+        Date date = new Date(data.getLastUpdate());
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
         detailDate.setText("Date:\n"+formatter.format(date));
-        //detailRate.setText("1 BTC @ 254 USD");
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
-        detailRate.setText(
-                exchangeRateAmount+" "+paymentCurrency+" @ "+amount+" "+data.getMerchandise()
-        );
-
-
-        //Create adapter
-        adapter = new ContractDetailAdapter(
-                getActivity(),
-                contractInformation,
-                appSession,
-                walletManager);
-        //adapter.setFooterListener(this);
-        //adapter.setClauseListener(this);
-
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
+        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
         recyclerView.setAdapter(adapter);
     }
 
@@ -175,80 +198,123 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
         ContractDetail contractDetail;
-        //Testing Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.BROKER_DETAIL,
-                MoneyType.CRYPTO.getCode(),
-                CryptoCurrency.BITCOIN.getFriendlyName(),
-                12,
-                ContractStatus.PENDING_MERCHANDISE,
-                "BTC Broker",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-        //Customer Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.CUSTOMER_DETAIL,
-                MoneyType.BANK.getCode(),
-                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-                12,
-                ContractStatus.PAYMENT_SUBMIT,
-                "BTC Customer",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-
-        /**
-         * Get the wallet module manager
-         */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        CryptoBrokerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager=
                 appSession.getModuleManager();
-        if(cryptoCustomerWalletModuleManager!=null){
-
+        if(walletManager!=null){
             try{
-                CryptoBrokerWalletManager cryptoCustomerWalletManager=
-                        cryptoCustomerWalletModuleManager.getCryptoBrokerWallet(
-                                appSession.getAppPublicKey()
-                        );
+                CryptoBrokerWalletManager cryptoCustomerWalletManager= cryptoBrokerWalletModuleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 //ContractDetail contractDetail;
-                CustomerBrokerContractSale customerBrokerContractPurchase=
-                        cryptoCustomerWalletManager.
-                                getCustomerBrokerContractSaleByNegotiationId(
-                                        data.getNegotiationId().toString());
+                CustomerBrokerContractSale customerBrokerContractSale= cryptoCustomerWalletManager.getCustomerBrokerContractSaleByNegotiationId(data.getNegotiationId().toString());
                 //Customer
-                contractDetail=new ContractDetail(
-                        ContractDetailType.CUSTOMER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
-                        data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                ContractStatus contractStatus = customerBrokerContractSale.getStatus();
+
+                String exchangeRate = "MK";
+                String paymentCurrency = "MK";
+                String paymentAmount = "-1";
+                String paymentPaymentMethod = "MK";
+                String merchandiseCurrency = "MK";
+                String merchandiseAmount = "-1";
+                String merchandisePaymentMethod = "MK";
+
+
+                try{
+                    Collection<Clause> clauses = walletManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
+
+                    //Extract info from clauses
+                    for(Clause clause : clauses)
+                    {
+                        if(clause.getType() == ClauseType.EXCHANGE_RATE)
+                            exchangeRate = clause.getValue();
+
+                        if(clause.getType() == ClauseType.BROKER_CURRENCY){
+                            try {
+                                if(FiatCurrency.codeExists(clause.getValue()))
+                                    paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                else if(CryptoCurrency.codeExists(clause.getValue()))
+                                    paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
+                            }catch(Exception e) {
+                                paymentCurrency = clause.getValue();
+                            }
+                        }
+                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
+                            paymentAmount = clause.getValue();
+                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD)
+                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+
+
+                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
+                            try {
+                                if (FiatCurrency.codeExists(clause.getValue()))
+                                    merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
+                                else if (CryptoCurrency.codeExists(clause.getValue()))
+                                    merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
+                            }catch(Exception e) {
+                                merchandiseCurrency = clause.getValue();
+                            }
+                        }
+                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
+                            merchandiseAmount = clause.getValue();
+                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD)
+                            paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                    }
+
+                }catch(Exception e) {e.printStackTrace();}
+
+
+                long paymentSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
+                long paymentAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PENDING_MERCHANDISE, paymentPaymentMethod);
+                long merchandiseSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.MERCHANDISE_SUBMIT, merchandisePaymentMethod);
+                long merchandiseAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
+
+
+
+                contractDetail = new ContractDetail(
+                        1,
+                        data.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        paymentAmount,
+                        paymentPaymentMethod,
+                        paymentCurrency,
+                        paymentSubmitDate);
                 contractDetails.add(contractDetail);
-                //Broker
-                contractDetail=new ContractDetail(
-                        ContractDetailType.BROKER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getMerchandise(),
-                        data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+
+                //Payment Reception step
+                contractDetail = new ContractDetail(
+                        2,
+                        data.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        paymentAmount,
+                        paymentPaymentMethod,
+                        paymentCurrency,
+                        paymentAckDate);
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail = new ContractDetail(
+                        3,
+                        data.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        merchandiseAmount,
+                        merchandisePaymentMethod,
+                        merchandiseCurrency,
+                        merchandiseSubmitDate);
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail = new ContractDetail(
+                        4,
+                        data.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        merchandiseAmount,
+                        merchandisePaymentMethod,
+                        merchandiseCurrency,
+                        merchandiseAckDate);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

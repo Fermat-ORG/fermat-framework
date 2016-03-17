@@ -5,7 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Before;
@@ -28,16 +28,16 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
     ReceivedNewDigitalAssetMetadataNotificationEvent event;
     @Before
     public void init() throws Exception {
-        EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
-        event = new ReceivedNewDigitalAssetMetadataNotificationEvent(eventType);
-        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
-        event.setSource(eventSource);
+//        EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
+//        event = new ReceivedNewDigitalAssetMetadataNotificationEvent(eventType);
+//        EventSource eventSource = EventSource.getByCode(EventSource.ASSETS_OVER_BITCOIN_VAULT.getCode());
+//        event.setSource(eventSource);
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
     }
 
     @Test
     public void receivedNewDigitalAssetMetadataNotificationrEventTest () throws CantSaveEventException {
-        assetDistributionRecorderService.receivedTransactionStatusNotificationrEvent(event);
+//        assetDistributionRecorderService.receivedTransactionStatusNotificationrEvent(event);
     }
 
 }

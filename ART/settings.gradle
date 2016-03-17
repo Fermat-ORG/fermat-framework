@@ -1,0 +1,61 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-art-api'
+project(':fermat-art-api').projectDir = new File('ART/library/api/fermat-art-api')
+
+include ':fermat-art-core'
+project(':fermat-art-core').projectDir = new File('ART/library/core/fermat-art-core')
+
+//Android
+
+//Android-Reference Wallet
+include ':fermat-art-android-reference-wallet-fan-wallet-bitdubai'
+project(':fermat-art-android-reference-wallet-fan-wallet-bitdubai').projectDir = new File('ART/android/reference_wallet/fermat-art-android-reference-wallet-fan-wallet-bitdubai')
+
+//Android-subapp-community
+include ':fermat-art-android-sub-app-artist-community-bitdubai'
+project(':fermat-art-android-sub-app-artist-community-bitdubai').projectDir = new File('ART/android/sub_app/fermat-art-android-sub-app-artist-community-bitdubai')
+
+include ':fermat-art-android-sub-app-fan-community-bitdubai'
+project(':fermat-art-android-sub-app-fan-community-bitdubai').projectDir = new File('ART/android/sub_app/fermat-art-android-sub-app-fan-community-bitdubai')
+
+//Android-subapp-identity
+include ':fermat-art-android-sub-app-artist-identity-bitdubai'
+project(':fermat-art-android-sub-app-artist-identity-bitdubai').projectDir = new File('ART/android/sub_app/fermat-art-android-sub-app-artist-identity-bitdubai')
+
+include ':fermat-art-android-sub-app-fan-identity-bitdubai'
+project(':fermat-art-android-sub-app-fan-identity-bitdubai').projectDir = new File('ART/android/sub_app/fermat-art-android-sub-app-fan-identity-bitdubai')
+
+//Plugins
+//Actor Network Service
+include  ':fermat-art-plugin-actor-network-service-artist-bitdubai'
+project(':fermat-art-plugin-actor-network-service-artist-bitdubai').projectDir = new File('ART/plugin/actor_network_service/fermat-art-plugin-actor-network-service-artist-bitdubai')
+
+include ':fermat-art-plugin-actor-network-service-fan-bitdubai'
+project(':fermat-art-plugin-actor-network-service-fan-bitdubai').projectDir = new File('ART/plugin/actor_network_service/fermat-art-plugin-actor-network-service-fan-bitdubai')
+
+//Identity
+include ':fermat-art-plugin-identity-artist-bitdubai'
+project(':fermat-art-plugin-identity-artist-bitdubai').projectDir = new File('ART/plugin/identity/fermat-art-plugin-identity-artist-bitdubai')
+
+include ':fermat-art-plugin-identity-fan-bitdubai'
+project(':fermat-art-plugin-identity-fan-bitdubai').projectDir = new File('ART/plugin/identity/fermat-art-plugin-identity-fan-bitdubai')
+
+
+//Sub app module
+include ':fermat-art-plugin-sub-app-module-artist-community-bitdubai'
+project(':fermat-art-plugin-sub-app-module-artist-community-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-artist-community-bitdubai')
+
+include ':fermat-art-plugin-sub-app-module-artist-identity-bitdubai'
+project(':fermat-art-plugin-sub-app-module-artist-identity-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-artist-identity-bitdubai')
+
+include ':fermat-art-plugin-sub-app-module-fan-community-bitdubai'
+project(':fermat-art-plugin-sub-app-module-fan-community-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-fan-community-bitdubai')
+
+include ':fermat-art-plugin-sub-app-module-fan-identity-bitdubai'
+project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai').projectDir = new File('ART/plugin/sub_app_module/fermat-art-plugin-sub-app-module-fan-identity-bitdubai')

@@ -42,8 +42,6 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     private String alias;
 
-    private String phrase;
-
     /**
      * Represent the name
      */

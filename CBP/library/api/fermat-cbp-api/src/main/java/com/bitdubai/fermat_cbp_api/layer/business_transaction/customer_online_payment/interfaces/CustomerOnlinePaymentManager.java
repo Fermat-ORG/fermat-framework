@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerPaymentManager;
 
@@ -12,9 +13,25 @@ public interface CustomerOnlinePaymentManager extends CustomerPaymentManager{
 
     /**
      * This method send a payment according the contract elements.
+     * @param walletPublicKey
      * @param contractHash
      * @throws CantSendPaymentException
      */
-    void sendPayment(String walletPublicKey, String contractHash)throws CantSendPaymentException;
+    void sendPayment(
+            String walletPublicKey,
+            String contractHash)throws
+            CantSendPaymentException;
+
+    /**
+     * This method send a payment according the contract elements.
+     * @param walletPublicKey
+     * @param contractHash
+     * @param blockchainNetworkType
+     * @throws CantSendPaymentException
+     */
+    void sendPayment(
+            String walletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType)throws CantSendPaymentException;
 
 }

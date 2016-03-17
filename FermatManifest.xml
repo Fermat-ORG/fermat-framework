@@ -27,15 +27,19 @@
         <layer name="Contract" language="java"></layer>
         <layer name="Negotiation" language="java"></layer>
         <layer name="Composite Wallet" language="java"></layer>
+	<layer name="Song Wallet" language="java"></layer>
         <layer name="Wallet" language="java"></layer>
         <layer name="World" language="java"></layer>
         <layer name="Identity" language="java"></layer>
         <layer name="Actor Connection" language="java"></layer>
         <layer name="Actor Network Service" language="java"></layer>
         <layer name="Network Service" language="java"></layer>
+	<layer name="External API" language="java"></layer>
         <!-- separator or empty layer -->
         <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
+        <!-- separator or empty layer -->
+        <layer name="World API" language="java" super_layer="WRD"></layer>
         <!-- separator or empty layer -->
         <layer name="Communication" language="java" super_layer="P2P"></layer>
         <!-- separator or empty layer -->
@@ -789,11 +793,11 @@
         <platform code="CHT" name="Chat Platform" logo="" dependsOn="PIP">
             <layer name="Sub App" language="java-android">
                 <androids>
-                    <android name="Chat" description="" difficulty="4" code-level="concept">
+                    <android name="Chat Sub App" description="" difficulty="4" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="josejcb" scope="implementation" percentage="0"></author>
+                            <author name="josejcb" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -802,11 +806,11 @@
             </layer>
             <layer name="Sub App Module" language="java">
                 <plugins>
-                    <plugin name="Chat" description="" difficulty="4" code-level="concept">
+                    <plugin name="Chat Sub App Module" description="" difficulty="4" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="josejcb" scope="implementation" percentage="0"></author>
+                            <author name="josejcb" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -815,11 +819,11 @@
             </layer>
             <layer name="Middleware" language="java">
                 <plugins>
-                    <plugin name="Chat" description="" difficulty="10" code-level="concept">
+                    <plugin name="Chat Middleware" description="" difficulty="10" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="lostwood" scope="implementation" percentage="0"></author>
+                            <author name="lostwood" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -828,11 +832,11 @@
             </layer>
             <layer name="Network Service" language="java">
                 <plugins>
-                    <plugin name="Transaction Transmission" description="" difficulty="8" code-level="concept">
+                    <plugin name="Chat Network Service" description="" difficulty="8" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="GaboHub" scope="implementation" percentage="0"></author>
+                            <author name="GaboHub" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -1154,6 +1158,21 @@
                     </android>
                 </androids>
             </layer>
+            <layer name="Wallets">
+                <androids>
+                    <android name="Bitcoin wallet" description="" difficulty="4" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin name="Crypto Wallet" description="" difficulty="6" code-level="qa">
@@ -1329,6 +1348,20 @@
                         </maintainers>
                         <certifications>
                             <certification signed-by="EzequielPostan" type="implementation"></certification>
+                        </certifications>
+                    </plugin>
+                    
+                    <plugin name="Outgoing Draft Transaction" description="" difficulty="10" code-level="qa">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification signed-by="furszy" type="implementation"></certification>
                         </certifications>
                     </plugin>
                     <plugin name="Inter Account" description="" difficulty="0" code-level="concept">
@@ -2378,7 +2411,25 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Asset Transfer" description="" difficulty="3" code-level="development">
+                    <plugin name="Asset Transfer" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Buyer" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Seller" description="" difficulty="10" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2697,6 +2748,181 @@
                     </plugin>
                 </plugins>
             </layer>
+        </platform>
+	<platform code="TKY" name="Tokenly Platform" logo="" dependsOn="MKT">
+            <layer name="Reference Wallet">
+                <androids>
+                    <android name="Fan Wallet" description="" difficulty="6" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="lostwood" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>
+        </platform>
+	<platform code="ART" name="Artist Platform" logo="" dependsOn="DAP">
+	    <layer name="Sub App">
+                <androids>
+                    <android name="Artist Community" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Fan Community" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Artist Identity" description="" difficulty="3" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Fan Identity" description="" difficulty="3" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+			</maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>	
+            <layer name="Wallet Module" language="java">
+                <plugins>
+                    <plugin name="Fan Wallet" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Sub App Module" language="java">
+                <plugins>
+                    <plugin name="Fan Community" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Artist Community" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+		    <plugin name="Fan Identity" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Artist Identity" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+            <layer name="Wallet" language="java">
+                <plugins>
+                    <plugin name="Fan Wallet" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Identity" language="java">
+                <plugins>
+                    <plugin name="Artist" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Fan" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Actor Network Service" language="java">
+                <plugins>
+                    <plugin name="Artist" description="" difficulty="8" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="gabohub" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Fan" description="" difficulty="8" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="gabohub" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+	    </layer>
         </platform>
         <platform code="CSH" name="Cash Handling Platform" logo="CSH_logo.png" dependsOn="WPD">
             <layer name="Reference Wallet">
@@ -3422,7 +3648,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="100"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4080,7 +4306,24 @@
                 </plugins>
             </layer>
         </super_layer>
-        <super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
+	<super_layer code="WRD" name="World" dependsOn="COR">
+            <layer name="World API" language="java">
+                <plugins>
+                    <plugin name="Tokenly" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="darkestpriest"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>            
+        </super_layer>        
+	<super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
             <layer name="Communication" language="java">
                 <plugins>
                     <plugin name="Cloud Client" description="" difficulty="10" code-level="production">
@@ -4366,6 +4609,19 @@
                         <certifications>
                             <certification type="implementation" signed-by="acostarodrigo"></certification>
                             <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                        </certifications>
+                    </addon>
+                    <addon name="Broadcaster" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
                         </certifications>
                     </addon>
                     <addon name="Logger" description="" difficulty="4" code-level="production">

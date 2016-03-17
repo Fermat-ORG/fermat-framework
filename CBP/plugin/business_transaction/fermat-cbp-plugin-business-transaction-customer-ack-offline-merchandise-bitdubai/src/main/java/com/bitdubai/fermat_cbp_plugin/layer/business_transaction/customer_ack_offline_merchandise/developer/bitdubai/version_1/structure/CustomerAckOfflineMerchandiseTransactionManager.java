@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
@@ -105,25 +106,53 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
             }
 
     } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Unexpected result from database");
     } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot get the contract from customerBrokerContractSaleManager");
     } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot insert the contract record in database");
     } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot update the contract status in database");
     } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "The contract hash/Id is null");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantAckMerchandiseException(e,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
     }
@@ -148,7 +177,48 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
+    }
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
+            return this.customerAckOfflineMerchandiseBusinessTransactionDao.getCompletionDateByContractHash(
+                    contractHash);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "Unexpected exception from database");
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCompletionDateException(
+                    e,
+                    "Getting completion date",
+                    "The contract hash argument is null");
+        }
     }
 }

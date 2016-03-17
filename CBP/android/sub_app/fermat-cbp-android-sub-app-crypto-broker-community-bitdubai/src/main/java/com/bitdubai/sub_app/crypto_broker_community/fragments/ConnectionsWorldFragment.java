@@ -39,6 +39,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -75,6 +76,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
 
     //UI
     private View rootView;
@@ -122,23 +124,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                     e.printStackTrace();
                 }
             }
-           // moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
+            //Check if a default identity is configured
             try{
-                CryptoBrokerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
-                if(i == null)
-                    launchActorCreationDialog = true;
-            }catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e){
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
                 launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
             }
 
             //Get notification requests count
             //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
-
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -171,8 +172,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -184,23 +183,33 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setImageRight(R.drawable.ic_profile_male)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-                                invalidate();
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-                                onRefresh();
-                            }
-                        });
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
                 presentationDialog.show();
+            }
+            else if(launchListIdentitiesDialog)
+            {
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                listIdentitiesDialog.show();
+                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
+                listIdentitiesDialog.show();
             }
             else
             {
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 invalidate();
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 onRefresh();
             }
 

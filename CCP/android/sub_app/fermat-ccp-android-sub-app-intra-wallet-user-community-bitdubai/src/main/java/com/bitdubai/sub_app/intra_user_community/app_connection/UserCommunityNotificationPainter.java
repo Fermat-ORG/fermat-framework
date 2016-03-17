@@ -21,6 +21,7 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
+        remoteViews = null;
 
 
     }
@@ -48,5 +49,15 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
     @Override
     public int getIcon() {
         return 0;
+    }
+
+    @Override
+    public String getActivityCodeResult() {
+        return null;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return true;
     }
 }

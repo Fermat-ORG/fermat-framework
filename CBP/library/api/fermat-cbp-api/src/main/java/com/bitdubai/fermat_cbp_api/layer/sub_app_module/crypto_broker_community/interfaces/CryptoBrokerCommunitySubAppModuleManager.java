@@ -42,14 +42,21 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
 
 
     /**
-     * The method <code>listSelectableIdentities</code> lists all the Crypto Broker identities
+     * The method <code>listSelectableIdentities</code> lists all the Crypto Broker and Crypto Customer identities
      * stored locally in the device.
      *
-     * @return a list of broker identities the current device user can use to log in.
+     * @return a list of broker and customer identities the current device the user can use to log in.
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
+
+
+    /**
+     * Through the method <code>setSelectedActorIdentity</code> we can set the selected actor identity.
+     */
+    void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
+
 
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
@@ -80,8 +87,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      */
     void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
                                          CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
-                                                                                                               ActorConnectionAlreadyRequestedException,
-                                                                                                               ActorTypeNotSupportedException          ;
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException          ;
 
     /**
      * The method <code>acceptCryptoBroker</code> takes the information of a connection request, accepts
@@ -135,8 +142,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                final int                                     max             ,
-                                                                final int                                     offset          ) throws CantListCryptoBrokersException;
+                                                                         final int                                     max             ,
+                                                                         final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto brokers waiting to be accepted
@@ -160,8 +167,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                       final int max,
-                                                                       final int offset) throws CantListCryptoBrokersException;
+                                                                                final int max,
+                                                                                final int offset) throws CantListCryptoBrokersException;
 
     /**
      * Count crypto broker waiting

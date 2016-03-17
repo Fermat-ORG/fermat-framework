@@ -7,9 +7,4 @@
         android:title="@string/dap_issuer_wallet_search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView" />
-
-    <item android:id="@+id/action_wallet_issuer_show_no_balance"
-        android:title="@string/dap_issuer_wallet_show_no_balance"
-        app:showAsAction="never|withText"
-        app:actionViewClass="android.widget.TextView"/>
 </menu>

@@ -28,6 +28,8 @@ public class BitcoinWalletDatabaseConstants {
     public static final String BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME = "runningBookBalance";
     public static final String BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME = "runningAvailableBalance";
     public static final String BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE ="runningNetworkType";
+    public static final String BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME ="transactionstateenv";
+
 
 
     // tabla nueva movimientos- balance y book balance, id

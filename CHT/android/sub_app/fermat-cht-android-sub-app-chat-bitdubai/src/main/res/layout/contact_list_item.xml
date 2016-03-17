@@ -1,22 +1,24 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    style="@style/listViewActivatedStyle">
+    style="@style/listViewActivatedStyle"
+    android:id="@+id/rel">
 
     <!-- Use standard android.R class icon id instead of app specific id. This is just useful for
          consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
          space -->
-    <QuickContactBadge android:id="@+id/icon"
+    <ImageView
+        android:id="@+id/icon"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
-        style="@style/quickContactBadgeStyle"
-        android:src="@drawable/ic_contact_picture_holo_light"/>
+        android:padding="10dp"
+        android:src="@drawable/cht_profile_list_icon"
+       />
 
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
          consistency. This is secondary text and not always visible so by default is has its
-         visibility set to gone
+         visibility set to gone-->
     <TextView android:id="@android:id/text2"
         android:paddingLeft="@dimen/listview_item_padding"
         android:paddingRight="@dimen/listview_item_padding"
@@ -31,7 +33,7 @@
         android:visibility="gone"
         android:textColor="@android:color/black"
         android:text="@string/search_match_other"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>-->
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <!-- Use standard android.R class text1 id instead of app specific id. This is just useful for
          consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
@@ -39,11 +41,10 @@
          its initial state).  android:layout_above="@android:id/text2" @android:id/text1
         android:textAppearance="?android:attr/textAppearanceLarge"-->
     <TextView android:id="@+id/text1"
-        android:paddingLeft="@dimen/listview_item_padding"
+        android:paddingLeft="1dp"
         android:paddingRight="@dimen/listview_item_padding"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
+        android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_toRightOf="@+id/icon"
         android:gravity="center_vertical"
         android:layout_alignParentRight="true"
@@ -51,6 +52,8 @@
         android:layout_alignWithParentIfMissing="true"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:layout_alignParentStart="false"
+        />
 
 </RelativeLayout>

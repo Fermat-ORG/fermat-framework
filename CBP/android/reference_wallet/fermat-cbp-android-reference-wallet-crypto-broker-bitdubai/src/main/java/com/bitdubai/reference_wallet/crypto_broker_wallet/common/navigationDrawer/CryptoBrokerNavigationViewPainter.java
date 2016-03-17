@@ -1,6 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -13,24 +13,31 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+
 
 /**
  * Created by Nelson Ramirez
@@ -43,11 +50,12 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private CryptoBrokerWalletManager walletManager;
     private CryptoBrokerWalletSession session;
     private CryptoBrokerIdentity actorIdentity;
-    private Activity activity;
+    private WeakReference<Context> activity;
     private ErrorManager errorManager;
+    private NumberFormat numberFormat;
 
-    public CryptoBrokerNavigationViewPainter(Activity activity, CryptoBrokerWalletSession session) {
-        this.activity = activity;
+    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSession session) {
+        this.activity = new WeakReference<>(activity);
         this.session = session;
 
         errorManager = session.getErrorManager();
@@ -61,15 +69,16 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             if (errorManager == null)
                 Log.e(TAG, ex.getMessage(), ex);
             else
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
+                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -82,7 +91,11 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             List<NavViewFooterItem> stockData = getStockData();
             List<NavViewFooterItem> earningsData = getEarningsData();
 
-            return new CryptoBrokerNavigationViewAdapter(activity, stockData, earningsData);
+            final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
+            adapter.setStockTitle("Current Stock");
+            adapter.setStockTitle("Daily Earnings");
+
+            return adapter;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +114,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
             options.inSampleSize = 5;
-            drawable = BitmapFactory.decodeResource(activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+            drawable = BitmapFactory.decodeResource(activity.get().getResources(), R.drawable.cbw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
@@ -133,7 +146,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
         try {
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
-            NumberFormat numberFormat = DecimalFormat.getInstance();
+            numberFormat = DecimalFormat.getInstance();
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                 Currency currency = associatedWallet.getMerchandise();
@@ -151,8 +164,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             if (errorManager == null)
                 Log.e(TAG, ex.getMessage(), ex);
             else
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
         return stockItems;
@@ -161,8 +173,36 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private List<NavViewFooterItem> getEarningsData() {
         ArrayList<NavViewFooterItem> earningsItems = new ArrayList<>();
 
-        earningsItems.add(new NavViewFooterItem("US Dollar", "1,400.01"));
-        earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
+        try {
+            final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(session.getAppPublicKey());
+            for (EarningsPair earningsPair : earningsPairs) {
+                final String linkedCurrency = earningsPair.getLinkedCurrency().getCode();
+                final String earningCurrency = earningsPair.getEarningCurrency().getCode();
+
+                String currencies = linkedCurrency + " / " + earningCurrency;
+                String value = "0.0";
+
+                final EarningsSearch search = earningsPair.getSearch();
+
+                final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(1, 0), TimeFrequency.DAILY);
+                if (!earningsDetails.isEmpty()) {
+                    final double amount = earningsDetails.get(0).getAmount();
+                    value = numberFormat.format(amount);
+                }
+
+                earningsItems.add(new NavViewFooterItem(currencies, value));
+            }
+
+        } catch (Exception ex) {
+
+            earningsItems.add(new NavViewFooterItem("USD/BTC", "1,400.01"));
+            earningsItems.add(new NavViewFooterItem("VEF/BTC", "350,251.87"));
+
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
 
         return earningsItems;
     }

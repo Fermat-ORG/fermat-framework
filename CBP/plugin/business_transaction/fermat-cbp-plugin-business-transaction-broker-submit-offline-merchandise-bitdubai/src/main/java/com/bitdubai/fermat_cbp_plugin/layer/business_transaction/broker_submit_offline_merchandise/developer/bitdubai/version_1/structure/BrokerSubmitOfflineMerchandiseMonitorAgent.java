@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -60,6 +61,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,16 +120,21 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -137,7 +144,14 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -269,7 +283,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 brokerSubmitOfflineMerchandiseBusinessTransactionDao =new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
 
@@ -459,6 +474,9 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.MERCHANDISE_SUBMIT);
+                            Date date=new Date();
+                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             //TODO: I'm going to set BANK, I need to look a better way to set this
                             raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
                         }
@@ -485,6 +503,9 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                brokerSubmitOfflineMerchandiseBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent(contractHash, businessTransactionRecord.getPaymentType());
                             }
                         }

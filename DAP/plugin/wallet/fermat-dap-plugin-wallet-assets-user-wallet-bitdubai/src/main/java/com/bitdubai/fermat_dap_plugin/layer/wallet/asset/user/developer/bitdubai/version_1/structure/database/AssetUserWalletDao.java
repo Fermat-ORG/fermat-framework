@@ -20,33 +20,39 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.LockStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.AssetUserWalletPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletBalance;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletTransactionWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetUserTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional.AssetUserWalletBalance;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional.AssetUserWalletTransactionWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -135,7 +141,19 @@ public final class AssetUserWalletDao {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
                 assetUserWalletBalance.setDigitalAsset(asset);
-            } catch (FileNotFoundException | CantCreateFileException e) {
+                List<AssetUserWalletTransaction> allTx = listsTransactionsByAssets(asset.getPublicKey());
+                int lockedAssets = 0;
+                Set<String> genesisTx = new HashSet<>();
+                for (AssetUserWalletTransaction tx : allTx) {
+                    genesisTx.add(tx.getGenesisTransaction());
+                }
+                for (String txHash : genesisTx) {
+                    if (getLockStatusForMetadata(txHash) == LockStatus.LOCKED) {
+                        lockedAssets++;
+                    }
+                }
+                assetUserWalletBalance.setLockedAssets(lockedAssets);
+            } catch (FileNotFoundException | CantCreateFileException | CantGetTransactionsException | RecordsNotFoundException | CantExecuteLockOperationException e) {
                 e.printStackTrace();
             }
             userWalletBalances.add(assetUserWalletBalance);
@@ -214,6 +232,7 @@ public final class AssetUserWalletDao {
     */
     public void addCredit(final AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterCreditException {
         try {
+            startAssetLock(assetUserWalletTransactionRecord.getDigitalAssetMetadata());
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetUserWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetUserWalletTransactionRecord.getAmount() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalanceByAsset(availableAmount, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey());
@@ -323,8 +342,82 @@ public final class AssetUserWalletDao {
         }
     }
 
-    public AssetUserWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
-        return null;
+    public ActorAssetIssuer getActorByAsset(DigitalAsset digitalAsset) {
+        String publicKey = digitalAsset.getIdentityAssetIssuer().getPublicKey();
+        return (ActorAssetIssuer) ActorUtils.getActorFromPublicKey(publicKey, Actors.DAP_ASSET_ISSUER, userManager, redeemPointManager, issuerManager);
+    }
+
+    private void startAssetLock(DigitalAssetMetadata metadata) throws CantExecuteLockOperationException {
+        try {
+            DatabaseTable lockTable = getLockTable();
+            lockTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, metadata.getGenesisTransaction(), DatabaseFilterType.EQUAL);
+            lockTable.loadToMemory();
+            if (!lockTable.getRecords().isEmpty()) {
+                return; //We already registered this asset
+            }
+            DatabaseTableRecord record = lockTable.getEmptyRecord();
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME, metadata.getMetadataId().toString());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, metadata.getGenesisTransaction());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME, LockStatus.UNLOCKED.getCode());
+            lockTable.insertRecord(record);
+        } catch (Exception e) {
+            throw new CantExecuteLockOperationException(e);
+        }
+    }
+
+    public void lockFunds(DigitalAssetMetadata assetMetadata) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        updateLockStatus(assetMetadata.getGenesisTransaction(), LockStatus.LOCKED);
+    }
+
+    public void unlockFunds(DigitalAssetMetadata assetMetadata) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        updateLockStatus(assetMetadata.getGenesisTransaction(), LockStatus.UNLOCKED);
+    }
+
+    private void updateLockStatus(String genesisTx, LockStatus lockStatus) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        try {
+            DatabaseTable lockTable = getLockTable();
+            lockTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
+            lockTable.loadToMemory();
+            if (lockTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = lockTable.getRecords().get(0);
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME, lockStatus.getCode());
+            lockTable.updateRecord(record);
+        } catch (CantUpdateRecordException | CantLoadTableToMemoryException e) {
+            throw new CantExecuteLockOperationException(e);
+        }
+    }
+
+    private LockStatus getLockStatusForMetadata(String genesisTx) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        try {
+            DatabaseTable lockTable = getLockTable();
+            lockTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, genesisTx, DatabaseFilterType.EQUAL);
+            lockTable.loadToMemory();
+            if (lockTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = lockTable.getRecords().get(0);
+            return LockStatus.getByCode(record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME));
+        } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new CantExecuteLockOperationException(e);
+        }
+    }
+
+    public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Tx Hash: " + transactionHash;
+        try {
+            String metadataXML = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
+        }
+    }
+
+    public DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Asset PK: " + assetPublicKey;
+        try {
+            String assetXML = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            return (DigitalAsset) XMLParser.parseXML(assetXML, new DigitalAsset());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
+        }
     }
 
     public void updateMemoField(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException {
@@ -389,7 +482,7 @@ public final class AssetUserWalletDao {
     }
 
     // Read record data and create transactions list
-    private List<AssetUserWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException {
+    private List<AssetUserWalletTransaction> createTransactionList(final Collection<DatabaseTableRecord> records) throws InvalidParameterException, RecordsNotFoundException, CantExecuteLockOperationException {
         List<AssetUserWalletTransaction> transactions = new ArrayList<>();
 
         for (DatabaseTableRecord record : records)
@@ -398,7 +491,7 @@ public final class AssetUserWalletDao {
         return transactions;
     }
 
-    private AssetUserWalletTransaction constructAsseUserWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private AssetUserWalletTransaction constructAsseUserWalletTransactionFromRecord(DatabaseTableRecord record) throws InvalidParameterException, RecordsNotFoundException, CantExecuteLockOperationException {
         String transactionId = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME);
         String assetPublicKey = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
         String transactionHash = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TRANSACTION_HASH_COLUMN_NAME);
@@ -419,7 +512,8 @@ public final class AssetUserWalletDao {
         long runningAvailableBalance = record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long timeStamp = record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME);
         String memo = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_MEMO_COLUMN_NAME);
-        return new AssetUserWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo) {
+        boolean isLocked = getLockStatusForMetadata(transactionHash) == LockStatus.LOCKED;
+        return new AssetUserWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, isLocked) {
         };
 
     }
@@ -519,6 +613,10 @@ public final class AssetUserWalletDao {
     private DatabaseTable getAssetUserWalletTable() {
         DatabaseTable databaseTable = database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
         return databaseTable;
+    }
+
+    private DatabaseTable getLockTable() {
+        return database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME);
     }
 
     private long getCurrentAvailableBalance() throws CantGetBalanceRecordException {

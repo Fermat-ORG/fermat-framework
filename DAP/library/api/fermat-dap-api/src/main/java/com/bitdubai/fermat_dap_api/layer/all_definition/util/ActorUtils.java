@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -25,25 +24,6 @@ public final class ActorUtils {
     }
 
     //PUBLIC METHODS
-    public static DAPActor constructActorFromIdentity(final ActiveActorIdentityInformation identity) {
-        return new DAPActor() {
-            @Override
-            public String getActorPublicKey() {
-                return identity.getPublicKey();
-            }
-
-            @Override
-            public String getName() {
-                return identity.getAlias();
-            }
-
-            @Override
-            public byte[] getProfileImage() {
-                return identity.getImage();
-            }
-        };
-    }
-
     public static Actors getActorType(DAPActor dapActor) {
         if (dapActor instanceof ActorAssetIssuer) {
             return Actors.DAP_ASSET_ISSUER;

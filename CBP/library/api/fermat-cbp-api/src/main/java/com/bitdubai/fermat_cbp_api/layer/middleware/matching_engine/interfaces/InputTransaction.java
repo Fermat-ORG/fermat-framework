@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionType;
 
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ public interface InputTransaction {
 
     UUID getId();
 
+    String getOriginTransactionId();
+
     Currency getCurrencyGiving();
 
     float getAmountGiving();
@@ -22,6 +25,8 @@ public interface InputTransaction {
     Currency getCurrencyReceiving();
 
     float getAmountReceiving();
+
+    InputTransactionType getType();
 
     InputTransactionState getState();
 

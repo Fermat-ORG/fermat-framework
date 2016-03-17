@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -38,9 +39,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletImpl;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantDeliveryDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional.AssetUserWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -74,6 +75,9 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
     private ActorAssetRedeemPointManager redeemPointManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
     public AssetUserWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -106,7 +110,16 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, userManager, issuerManager, redeemPointManager);
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
+                    errorManager,
+                    pluginDatabaseSystem,
+                    pluginFileSystem,
+                    pluginId,
+                    userManager,
+                    issuerManager,
+                    redeemPointManager,
+                    broadcaster);
+
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
             userWallet.initialize(internalAssetIssuerWalletId);
             return userWallet;
@@ -119,7 +132,16 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, userManager, issuerManager, redeemPointManager);
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
+                    errorManager,
+                    pluginDatabaseSystem,
+                    pluginFileSystem,
+                    pluginId,
+                    userManager,
+                    issuerManager,
+                    redeemPointManager,
+                    broadcaster);
+
             UUID internalAssetIssuerWalletId = userWallet.create(walletPublicKey, networkType);
             userWallets.add(internalAssetIssuerWalletId);
         } catch (CantCreateWalletException exception) {

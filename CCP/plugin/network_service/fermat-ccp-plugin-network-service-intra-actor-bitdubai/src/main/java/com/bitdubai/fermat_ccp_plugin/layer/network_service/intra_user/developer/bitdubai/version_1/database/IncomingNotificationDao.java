@@ -21,9 +21,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
@@ -297,10 +297,7 @@ public class IncomingNotificationDao implements DAO {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return true;
-            else
-                return false;
+            return !records.isEmpty();
 
         } catch (CantLoadTableToMemoryException exception) {
 

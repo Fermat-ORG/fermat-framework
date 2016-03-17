@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
@@ -583,6 +584,19 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
                 break;
+
+            case "loss_protected_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "loss_protected_wallet_icon",
+                        "Loss Protected Wallet",
+                        "loss_protected_wallet",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
+                break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
         }
@@ -787,6 +801,15 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public FermatApp getApp(String publicKey) throws Exception {
+        try {
+            return getInstalledWallet(publicKey);
+        } catch (CantCreateNewWalletException e) {
+            throw new Exception(e);
+        }
     }
 }
 

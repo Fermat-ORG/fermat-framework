@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateDigitalAssetCryptoStatusByTransactionHashTest {
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingDAO assetIssuingDAO;
     UUID pluginId;
 
     @Mock
@@ -54,8 +54,8 @@ public class UpdateDigitalAssetCryptoStatusByTransactionHashTest {
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
 
-        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
-        assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingDatabaseConstants.ASSET_ISSUING_DATABASE)).thenReturn(database);
+        assetIssuingDAO = new AssetIssuingDAO(pluginDatabaseSystem, pluginId);
 
         records = new LinkedList<>();
         records.add(databaseTableRecord);
@@ -68,19 +68,19 @@ public class UpdateDigitalAssetCryptoStatusByTransactionHashTest {
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
+        when(database.getTable(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_TABLE)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, cryptoStatus);
+        assetIssuingDAO.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, cryptoStatus);
     }
 
     @Test
     public void test_Throws_CantCheckAssetIssuingProgressException() throws Exception {
         when(databaseTable.getRecords()).thenReturn(recordsForException);
-        catchException(assetIssuingTransactionDao).updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, cryptoStatus);
+        catchException(assetIssuingDAO).updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, cryptoStatus);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

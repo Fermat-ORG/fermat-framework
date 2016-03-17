@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -104,6 +105,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
     private NegotiationTransmissionManager negotiationTransmissionManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
     /*Represent the dataBase*/
     private Database                                                        dataBase;
 
@@ -162,21 +166,14 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(
                     customerBrokerNewNegotiationTransactionDatabaseDao,
                     customerBrokerPurchaseNegotiationManager,
-                    customerBrokerSaleNegotiationManager
+                    customerBrokerSaleNegotiationManager,
+                    errorManager,
+                    this.getPluginVersionReference()
             );
 
             //Init event recorder service.
             customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
             customerBrokerNewServiceEventHandler.start();
-
-            //TEA
-            /*CustomerBrokerNewExecutorService executorService = new CustomerBrokerNewExecutorService();
-
-            //TEA
-            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2);
-            fermatEventListener.setEventHandler(new CustomerBromerNewEventHandler(executorService, this));
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);*/
 
             //Init monitor Agent
             customerBrokerNewAgent = new CustomerBrokerNewAgent(
@@ -189,46 +186,21 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerPurchaseNegotiation,
                     customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
-                    customerBrokerSaleNegotiationManager
-
+                    customerBrokerSaleNegotiationManager,
+                    broadcaster,
+                    this.getPluginVersionReference()
             );
             customerBrokerNewAgent.start();
-
-            //DELETE TRANSACTION FOR TEST
-//            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DELETE ALL FOR TEST ****\n");
-//            customerBrokerNewNegotiationTransactionDatabaseDao.deleteAllForTest();
-
-            //TEST CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION
-//            createCustomerBrokerNewPurchaseNegotiationTest();
-
-            //TEST MOCK GET ALL TRANSACTION
-//            getAllCustomerBrokerNewNegotiationTranasctionTest();
-//
-            //TEST MOCK CREATE AND GET NEGOTIATION
-//            createNegotiationsTest();
-
-            //TEST MOCK GET ALL NEGOTIATION
-//            getNegotiationsTest();
-//            getNegotiationsByIdTest(UUID.fromString("eac97ab3-034e-4e57-93dc-b9f4ccaf1a74"));
-
-            //TEST EVENT REGISTER
-//            registerEventTest();
-
-            //TEST GET ALL EVENT
-//            getAllEvent();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
 //            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - Database","Unexpected Exception");
-//        } catch (CantStartServiceException e){
-//            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-//            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - EventHandler","Unexpected Exception");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
         }
     }
@@ -333,320 +305,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
-    /*PRIVATE METHOD*/
-
-    /*TEST METHOD*/
-    private void createCustomerBrokerNewPurchaseNegotiationTest() {
-
-        try {
-
-            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
-
-            CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
-            System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION ****\n" +
-                            "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
-                            "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
-                            "\n*BrokerPublicKey = " + negotiationMock.getBrokerPublicKey()
-            );
-
-            //NEGOTIATION XML TEST
-            String negotiationMockXML = XMLParser.parseObject(negotiationMock);
-            System.out.print("\n\n --- NegotiationMockXML = " + negotiationMockXML);
-            CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
-            purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationMockXML, purchaseNegotiationXML);
-            System.out.print("\n\n --- Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
-                            "\n- CustomerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey()
-            );
-
-            //CREATE CUSTOMER BROKER NEW NEGOTIATION.
-            customerBrokerNewManagerImpl.createCustomerBrokerNewPurchaseNegotiationTranasction(negotiationMock);
-
-            //GET TRANSACTION OF NEGOTIATION
-            System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
-            CustomerBrokerNew ListNegotiation = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasctionFromNegotiationId(negotiationMock.getNegotiationId());
-            System.out.print("\n\n --- Negotiation Transaction Date" +
-                            "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
-                            "\n- TransactionId = " + ListNegotiation.getTransactionId() +
-                            "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
-                            "\n- BrokerPublicKey = " + ListNegotiation.getPublicKeyBroker() +
-                            "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
-                            "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
-            );
-
-            //GET NEGOTIATION OF XML
-            System.out.print("\n\n\n\n------------------------------- NEGOTIATION XML -------------------------------");
-            if (ListNegotiation.getNegotiationXML() != null) {
-                System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
-                CustomerBrokerPurchaseNegotiation purchaseNegotiationTestXML = new NegotiationPurchaseRecord();
-                purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationTestXML);
-                if(purchaseNegotiationXML.getNegotiationId() != null) {
-                    System.out.print("\n\n\n --- NegotiationXML Date" +
-                                    "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
-                                    "\n- CustomerPublicKey = " + purchaseNegotiationXML.getCustomerPublicKey() +
-                                    "\n- BrokerPublicKey = " + purchaseNegotiationXML.getBrokerPublicKey() +
-                                    "\n- Status = " + purchaseNegotiationXML.getStatus().getCode()
-                    );
-                }else{ System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");}
-            }else{ System.out.print("\n\n\n --- NegotiationXML Date IS NULL"); }
-
-        } catch (CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR CREATE CUSTOMER BROKER NEW. ****\n");
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER NEW NOT FOUNT. ****\n");
-        }
-
-    }
-
-    private void getAllCustomerBrokerNewNegotiationTranasctionTest() {
-
-        try {
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTranasction() ****\n");
-            //LIST CUSTOMER BROKER NEW TRANSACTION.
-            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
-            if (!list.isEmpty()) {
-
-                System.out.print("\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
-                for (CustomerBrokerNew ListNegotiation : list) {
-
-                    System.out.print("\n --- Negotiation Transaction Date" +
-                                    "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
-                                    "\n- TransactionId = " + ListNegotiation.getTransactionId() +
-                                    "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
-                                    "\n- BrokerPublicKey = " + ListNegotiation.getPublicKeyBroker() +
-                                    "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
-                                    "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
-                    );
-
-                    //GET NEGOTIATION OF XML
-                    if (ListNegotiation.getNegotiationXML() != null) {
-                        CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
-                        System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
-                        purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationXML);
-                        if (purchaseNegotiationXML.getNegotiationId() != null) {
-                            System.out.print("\n --- NegotiationXML Date" +
-                                            "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
-                                            "\n- CustomerPublicKey" + purchaseNegotiationXML.getCustomerPublicKey() +
-                                            "\n- BrokerPublicKey" + purchaseNegotiationXML.getBrokerPublicKey() +
-                                            "\n- Status" + purchaseNegotiationXML.getStatus().getCode()
-                            );
-                        } else {
-                            System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");
-                        }
-                    } else {
-                        System.out.print("\n\n\n --- NegotiationXML Date IS NULL");
-                    }
-                }
-                System.out.print("\n\n------------------------------- END LIST NEGOTIATION TRANSACTION -------------------------------");
-            } else {
-                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR LIST CUSTOMER BROKER NEW IS EMPTY . ****\n");
-            }
-
-        } catch (CantGetListCustomerBrokerNewNegotiationTransactionException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
-        }
-    }
-
-    private void getAllEvent(){
-
-        try {
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . GET ALL EVENT. ****\n");
-
-            List<String> eventList = customerBrokerNewNegotiationTransactionDatabaseDao.getAllEvents();
-            for (String event: eventList){
-                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT. ****\n"+"EVENT DATE\n "+event);
-            }
-
-
-        } catch (UnexpectedResultReturnedFromDatabaseException | CantGetNegotiationTransactionListException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. EVENT . ERROR GET ALL EVENT NOT FOUNT. ****\n");
-        }
-
-
-
-    }
-
-    private void createNegotiationsTest() {
-
-        try {
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: CreateNegotiation and GetNegotiation ****\n");
-
-            //MOCK NEGOTIATION
-            CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
-
-            //CREATE NEGOTIATION
-            customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(negotiationMock);
-
-            //GET NEGOTIATION
-            CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationMock.getNegotiationId());
-            if(purchaseNegotiation != null) {
-                System.out.print("\n\n\n --- Negotiation Date" +
-                                "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
-                                "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
-                                "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
-                                "\n- Status" + purchaseNegotiation.getStatus().getCode()
-                );
-            }else{ System.out.print("\n\n\n --- Negotiation Date IS NULL"); }
-
-        } catch (CantCreateCustomerBrokerPurchaseNegotiationException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
-        } catch (CantGetListPurchaseNegotiationsException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
-        }
-    }
-
-    private void getNegotiationsTest(){
-
-        try{
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getNegotiation() ****\n");
-
-            System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION -------------------------------");
-            Collection<CustomerBrokerPurchaseNegotiation> list = customerBrokerPurchaseNegotiationManager.getNegotiations();
-            if(list != null){
-                for (CustomerBrokerPurchaseNegotiation purchaseNegotiation : list) {
-
-                    System.out.print("\n\n\n --- Negotiation Date" +
-                                    "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
-                                    "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
-                                    "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
-                                    "\n- Status" + purchaseNegotiation.getStatus().getCode()
-                    );
-
-                }
-            }else{ System.out.print("\n\n\n --- List Negotiation IS NULL"); }
-
-            System.out.print("\n\n\n\n------------------------------- END LIST NEGOTIATION -------------------------------");
-
-
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
-        }
-
-    }
-
-    private void getNegotiationsByIdTest(UUID negotiationId){
-
-        try{
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getNegotiation() ****\n");
-
-            System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION -------------------------------");
-            CustomerBrokerPurchaseNegotiation purchaseNegotiation= customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiationId);
-            if(purchaseNegotiation != null){
-                System.out.print("\n\n\n --- Negotiation Date" +
-                                "\n- NegotiationId = " + purchaseNegotiation.getNegotiationId() +
-                                "\n- CustomerPublicKey" + purchaseNegotiation.getCustomerPublicKey() +
-                                "\n- BrokerPublicKey" + purchaseNegotiation.getBrokerPublicKey() +
-                                "\n- Status" + purchaseNegotiation.getStatus().getCode()
-                );
-            }else{ System.out.print("\n\n\n --- List Negotiation IS NULL"); }
-
-            System.out.print("\n\n\n\n------------------------------- END LIST NEGOTIATION -------------------------------");
-
-
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET ALL CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
-        }
-
-    }
-
-    private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
-
-        Date time = new Date();
-        long timestamp = time.getTime();
-        UUID                negotiationId               = UUID.randomUUID();
-        String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-//        String              publicKeyBroker             = "publicKeyBroker";
-        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
-//        String              publicKeyBroker             = "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-        long                startDataTime               = 0;
-        long                negotiationExpirationDate   = timestamp;
-        NegotiationStatus   statusNegotiation           = NegotiationStatus.SENT_TO_BROKER;
-        Collection<Clause>  clauses                     = getClausesTest();
-        Boolean             nearExpirationDatetime      = Boolean.FALSE;
-
-        return new PurchaseNegotiationMock(
-                negotiationId,
-                publicKeyCustomer,
-                publicKeyBroker,
-                startDataTime,
-                negotiationExpirationDate,
-                statusNegotiation,
-                clauses,
-                nearExpirationDatetime,
-                timestamp
-        );
-    }
-
-    private Collection<Clause> getClausesTest(){
-        Collection<Clause> clauses = new ArrayList<>();
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                MoneyType.BANK.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY_QUANTITY,
-                "1961"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_CURRENCY,
-                MoneyType.BANK.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_DATE_TIME_TO_DELIVER,
-                "1000"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY_QUANTITY,
-                "2000"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY,
-                MoneyType.CASH_ON_HAND.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
-                "100"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_PAYMENT_METHOD,
-                ContractClauseType.CASH_ON_HAND.getCode()));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.BROKER_PAYMENT_METHOD,
-                ContractClauseType.BANK_TRANSFER.getCode()));
-        return clauses;
-    }
-
-    //TEST REGISTER EVENT
-    private void registerEventTest(){
-
-        try {
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. REGISTER EVENT. EVENT REGISTER. ****\n");
-            IncomingNegotiationTransactionEvent eventTest = new IncomingNegotiationTransactionEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
-            eventTest.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-
-            customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler(eventTest);
-
-        } catch (CantSaveEventException e) {
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. REGISTER EVENT. ERROR IN EVENT REGISTER. ****\n");
-        }
-    }
-
-    //TEST LIST EVENT PENDING
-    private void getAllEventTest(){
-
-        try{
-
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ****\n");
-            List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-            for(UUID eventId : pendingEventsIdList){
-                System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. EVENT ID: "+eventId+" ****\n");
-            }
-
-        } catch (UnexpectedResultReturnedFromDatabaseException | CantGetNegotiationTransactionListException e){
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. GET ALL REGISTER EVENT. ERROR GET ALL EVENT REGISTER. ****\n");
-        }
-
-    }
-    /*END TEST METHOD*/
+    /*END PRIVATE METHOD*/
 
 }

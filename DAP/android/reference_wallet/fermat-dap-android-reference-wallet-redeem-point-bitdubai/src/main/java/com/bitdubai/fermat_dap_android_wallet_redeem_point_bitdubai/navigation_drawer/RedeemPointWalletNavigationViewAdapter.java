@@ -51,7 +51,7 @@ public class RedeemPointWalletNavigationViewAdapter extends FermatAdapter<MenuIt
                         Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_history_active : R.drawable.ic_nav_history_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_active : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
                         break;
 //                    case 2:
 //                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());

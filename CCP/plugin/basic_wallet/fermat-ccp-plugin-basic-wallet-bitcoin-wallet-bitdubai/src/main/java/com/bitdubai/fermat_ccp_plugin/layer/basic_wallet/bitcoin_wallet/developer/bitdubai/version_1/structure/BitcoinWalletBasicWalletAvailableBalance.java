@@ -89,7 +89,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction,BalanceType.AVAILABLE);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE);
 
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
@@ -97,6 +97,18 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
             throw exception;
         } catch(Exception exception){
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public void revertCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction, BalanceType.AVAILABLE);
+
+
+        } catch(Exception exception){
+            throw new CantRegisterCreditException("CANT REVERT CREDIT EN AVAILABLE", FermatException.wrapException(exception), null, null);
         }
     }
 }

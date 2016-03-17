@@ -1,9 +1,14 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatErrorReportFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ConnectionsListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactEditFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -25,23 +30,62 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         if (fragments == null) {
             throw createFragmentNotFoundException(null);
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT))
-            return ContactsListFragment.newInstance();
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT))
-            return ContactsListFragment.newInstance();
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT))
-            return ChatFragment.newInstance();
-           /* case CHT_CHAT_OPEN_CHAT_DETAIL:
-                return OpenChatDetailFragment.newInstance();
-           */
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT))
-            return ContactFragment.newInstance();
-           /* case CHT_CHAT_EDIT_CONTACT:
-                return EditContactFragment.newInstance();
-            case CHT_CHAT_OPEN_CONNECTIONLIST:
-                return OpenConnectionListFragment.newInstance();*/
-        throw createFragmentNotFoundException(fragments);
 
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT))
+        {
+            return ChatListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT))
+        {
+            return ContactsListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT))
+        {
+            return ChatErrorReportFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT))
+        {
+            return ConnectionsListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
+        {
+            return ContactsListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT))
+        {
+            return ChatFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT))
+        {
+            return ContactFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT))
+        {
+            return ContactEditFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT))
+        {
+            return ConnectionsListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT))
+        {
+            return ProfileFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT))
+        {
+            return ProfileListFragment.newInstance();
+        }
+        throw createFragmentNotFoundException(fragments);
     }
 
     @Override

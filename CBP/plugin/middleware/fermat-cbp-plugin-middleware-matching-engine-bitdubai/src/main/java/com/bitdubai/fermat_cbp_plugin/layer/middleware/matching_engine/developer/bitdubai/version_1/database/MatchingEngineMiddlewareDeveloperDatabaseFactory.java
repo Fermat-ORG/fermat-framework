@@ -37,16 +37,11 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
     private final UUID                 pluginId            ;
 
 
-    Database database;
+    private Database database;
 
-    /**
-     * Constructor
-     *
-     * @param pluginDatabaseSystem
-     * @param pluginId
-     */
     public MatchingEngineMiddlewareDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                             final UUID                 pluginId            ) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
     }
@@ -109,17 +104,32 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
+         * Table Wallets columns.
+         */
+        List<String> walletsColumns = new ArrayList<>();
+
+        walletsColumns.add(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME);
+
+        /**
+         * Table Wallets addition.
+         */
+        DeveloperDatabaseTable walletsTable = developerObjectFactory.getNewDeveloperDatabaseTable(MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME, walletsColumns);
+
+        tables.add(walletsTable);
+
+        /**
          * Table Earning Pair columns.
          */
         List<String> earningPairColumns = new ArrayList<>();
 
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                   );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME);
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                        );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME          );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME         );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                     );
 
         /**
          * Table Earning Pair addition.
@@ -137,6 +147,8 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME);
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME               );
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME                );
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TIME_COLUMN_NAME                 );
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME      );
 
         /**
          * Table Earning Transaction addition.
@@ -157,6 +169,7 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     );
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME);
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       );
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TYPE_COLUMN_NAME                   );
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME                  );
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME );
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        );
@@ -170,47 +183,46 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         return tables;
     }
 
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
-        /**
-         * I load the passed table name from the SQLite database.
-         */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
+            this.initializeDatabase();
+
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+
+            final DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
             selectedTable.loadToMemory();
-            List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
-                List<String> developerRow = new ArrayList<>();
-                /**
-                 * for each row in the table list
-                 */
-                for (DatabaseRecord field : row.getValues()){
-                    /**
-                     * I get each row and save them into a List<String>
-                     */
+
+            final List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow;
+
+            for (final DatabaseTableRecord row: records){
+
+                developerRow = new ArrayList<>();
+
+                for (final DatabaseRecord field : row.getValues())
                     developerRow.add(field.getValue());
-                }
-                /**
-                 * I create the Developer Database record
-                 */
+
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }
-            /**
-             * return the list of DeveloperRecords for the passed table.
-             */
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
+
             return returnedRecords;
-        } catch (Exception e){
-            return returnedRecords;
+
+        } catch (final CantLoadTableToMemoryException  |
+                       CantInitializeDatabaseException e) {
+
+            System.err.println(e);
+
+            return new ArrayList<>();
+
+        } catch (final Exception e){
+
+            return new ArrayList<>();
         }
-        return returnedRecords;
     }
 
 }

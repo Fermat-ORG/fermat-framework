@@ -53,6 +53,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -105,15 +106,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
         //LOG.info("Customer offline payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -132,38 +135,22 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        try{
-            this.errorManager=errorManager;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-        }
+        this.errorManager=errorManager;
     }
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        try{
-            this.eventManager=eventManager;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-        }
+        this.eventManager=eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        try{
-            this.logManager=logManager;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-        }
+        this.logManager=logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        try{
-            this.pluginDatabaseSystem=pluginDatabaseSystem;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-        }
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
     }
 
     @Override
@@ -275,7 +262,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 customerOfflinePaymentBusinessTransactionDao =new CustomerOfflinePaymentBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
 
@@ -400,6 +388,9 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                     contractHash,
                                     ContractStatus.PAYMENT_SUBMIT);
+                            Date date=new Date();
+                            customerOfflinePaymentBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent();
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -424,6 +415,9 @@ public class CustomerOfflinePaymentMonitorAgent implements
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                         contractHash,
                                         ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                customerOfflinePaymentBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent();
                             }
                         }

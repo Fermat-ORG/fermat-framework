@@ -13,21 +13,21 @@ public interface CryptoCustomerInformation {
      * The method <code>getPublicKet</code> returns the public key of the represented crypto customer
      * @return the public key of the crypto customer
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      * The method <code>getName</code> returns the name of the represented crypto customer
      *
      * @return the name of the crypto customer
      */
-    public String getName();
+    String getName();
 
     /**
      * The method <code>getProfileImage</code> returns the profile image of the represented crypto customer
      *
      * @return the profile image
      */
-    public byte[] getProfileImage();
+    byte[] getProfileImage();
 
 
 }

@@ -24,8 +24,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -63,6 +66,8 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     //VARIABLE DECLARATION
 
+    public static int SELL_TIMEOUT = 3 * 60 * 1000; //3 MINUTES FOR TESTING.
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
@@ -78,6 +83,12 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     private AssetVaultManager assetVaultManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
     private AssetUserWalletManager assetUserWalletManager;
 
@@ -89,6 +100,9 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
     private AssetTransmissionNetworkServiceManager assetTransmission;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.EXTRA_WALLET_USER)
+    private ExtraUserManager extraUserManager;
 
     private AssetSellerMonitorAgent agent;
     private AssetSellerRecorderService recorderService;
@@ -121,7 +135,6 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
         try {
             agent.stop();
             recorderService.stop();
-            super.stop();
         } catch (CantStopAgentException e) {
             e.printStackTrace();
         } finally {
@@ -148,7 +161,7 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     }
 
     private void initializeMonitorAgent() throws CantStartAgentException {
-        agent = new AssetSellerMonitorAgent(assetUserWalletManager, actorAssetUserManager, dao, errorManager, assetTransmission, assetVaultManager, bitcoinNetworkManager);
+        agent = new AssetSellerMonitorAgent(assetUserWalletManager, actorAssetUserManager, dao, errorManager, assetTransmission, assetVaultManager, bitcoinNetworkManager, cryptoVaultManager, cryptoAddressBookManager, extraUserManager);
         agent.start();
     }
 

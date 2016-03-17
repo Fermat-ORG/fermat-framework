@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantMarkAsSeenException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
@@ -20,7 +21,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
@@ -52,14 +52,13 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     /**
-     * This method load the list CryptoBrokerStockTransaction
+     * Through this method you can mark a transaction as seen by the matching engine plug-in.
      *
-     * @param transactionId
-     * @return void
-     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     * @param transactionIds a list with all the ids of the transaction that we want to mark as seen.
+     * @throws CantMarkAsSeenException if something goes wrong.
      */
     @Override
-    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
 
     }
 
@@ -70,7 +69,9 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
      * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     @Override
-    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException {
         return null;
     }
+
+
 }

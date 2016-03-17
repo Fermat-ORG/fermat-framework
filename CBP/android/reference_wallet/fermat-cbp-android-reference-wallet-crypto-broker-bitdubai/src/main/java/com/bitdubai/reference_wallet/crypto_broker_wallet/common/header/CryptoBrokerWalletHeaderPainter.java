@@ -1,9 +1,10 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -16,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -24,9 +24,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Market
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.LinePageIndicator;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+
 
 /**
  * Paint the header of the home, this is, a chart with the market exchange rate for the selected providers
@@ -39,12 +40,12 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "BrokerWalletHeader";
 
     private final CryptoBrokerWalletSession session;
-    private final Activity activity;
+    private final WeakReference<Context> activity;
     private CryptoBrokerWalletManager walletManager;
 
 
-    public CryptoBrokerWalletHeaderPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
-        this.activity = activity;
+    public CryptoBrokerWalletHeaderPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+        this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
         try {
@@ -56,7 +57,8 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        View container = activity.getLayoutInflater().inflate(R.layout.cbw_header_layout, viewGroup, true);
+        View container = ((LayoutInflater) activity.get()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.cbw_header_layout, viewGroup, true);
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.cbw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -65,7 +67,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
 
-        FermatWorker fermatWorker = new FermatWorker(activity) {
+        FermatWorker fermatWorker = new FermatWorker(activity.get()) {
             @Override
             protected Object doInBackground() throws Exception {
                 List<IndexInfoSummary> data = new ArrayList<>();
@@ -80,6 +82,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
+                    session.setActualExchangeRates(summaries);
 
                     progressBar.setVisibility(View.GONE);
 
@@ -91,6 +94,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
                         View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
                         marketRateViewPagerContainer.setVisibility(View.VISIBLE);
 
+                        final Activity activity = (Activity) CryptoBrokerWalletHeaderPainter.this.activity.get();
                         MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity, session, summaries);
 
                         ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
@@ -119,6 +123,6 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             }
         });
 
-        Executors.newSingleThreadExecutor().execute(fermatWorker);
+        fermatWorker.execute();
     }
 }

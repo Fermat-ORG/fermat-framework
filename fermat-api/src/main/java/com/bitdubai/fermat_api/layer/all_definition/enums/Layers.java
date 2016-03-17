@@ -16,6 +16,7 @@ public enum Layers implements FermatEnum {
     ACTOR                          ("ACT"),
     ACTOR_CONNECTION               ("ACC"),
     ACTOR_NETWORK_SERVICE          ("ANS"),
+    API                            ("API"),
     BANK_MONEY_TRANSACTION         ("BMT"),
     BASIC_WALLET                   ("BSW"),
     BUSINESS_TRANSACTION           ("BTX"),
@@ -42,6 +43,7 @@ public enum Layers implements FermatEnum {
     STOCK_TRANSACTIONS             ("STR"),
     SUB_APP_MODULE                 ("SAM"),
     SEARCH                         ("SCH"),
+    SONG_WALLET                    ("SWL"),
     SYSTEM                         ("SYS"),
     TRANSACTION                    ("TRA"),
     USER                           ("USR"),
@@ -65,6 +67,7 @@ public enum Layers implements FermatEnum {
             case "ACT":  return ACTOR;
             case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
+            case "API":  return API;
             case "BMT":  return BANK_MONEY_TRANSACTION;
             case "BSW":  return BASIC_WALLET;
             case "BTX":  return BUSINESS_TRANSACTION;
@@ -92,6 +95,7 @@ public enum Layers implements FermatEnum {
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "NTR":  return NEGOTIATION_TRANSACTION;
+            case "SWL":  return SONG_WALLET;
             case "STR":  return STOCK_TRANSACTIONS;
             case "USR":  return USER;
             case "WAL":  return WALLET;

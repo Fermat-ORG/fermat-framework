@@ -65,13 +65,13 @@ public class AssetBuyerDeveloperDatabaseFactory {
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            AssetBuyerDatabaseFactory assetAppropriationDatabaseFactory = new AssetBuyerDatabaseFactory(pluginDatabaseSystem);
+            AssetBuyerDatabaseFactory assetAppropriationDatabaseFactory = new AssetBuyerDatabaseFactory(pluginDatabaseSystem, pluginId);
 
             try {
                   /*
                    * We create the new database
                    */
-                assetAppropriationDatabaseFactory.createDatabase(pluginId);
+                assetAppropriationDatabaseFactory.createDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -98,19 +98,40 @@ public class AssetBuyerDeveloperDatabaseFactory {
         DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
 
-        List<String> assetSellerColumns = new ArrayList<>();
+        List<String> assetBuyerColumns = new ArrayList<>();
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_VALUE_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_VALUE_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_ENTRY_ID_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_OUTGOING_ID_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
+        assetBuyerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_TIMESTAMP_COLUMN_NAME);
 
-
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME);
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_METADATA_ID_COLUMN_NAME);
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_PUBLICKEY_COLUMN_NAME);
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME);
-        assetSellerColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_TIMESTAMP_COLUMN_NAME);
-
-        DeveloperDatabaseTable transactionMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_TABLE_NAME, assetSellerColumns);
+        DeveloperDatabaseTable transactionMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_TABLE_NAME, assetBuyerColumns);
         tables.add(transactionMetadataTable);
 
+        List<String> assetNegotiationColumns = new ArrayList<>();
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_OBJECT_XML_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ASSET_PUBLICKEY_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);
+        tables.add(assetNegotiationTable);
 
         return tables;
     }

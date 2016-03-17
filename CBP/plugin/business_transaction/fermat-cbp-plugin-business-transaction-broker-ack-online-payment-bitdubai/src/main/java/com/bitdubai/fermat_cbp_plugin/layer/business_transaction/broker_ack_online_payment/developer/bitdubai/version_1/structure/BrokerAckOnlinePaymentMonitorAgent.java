@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onl
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -55,6 +56,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -110,16 +112,20 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_ACK_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -129,7 +135,14 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -257,7 +270,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 brokerAckOnlinePaymentBusinessTransactionDao =new BrokerAckOnlinePaymentBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
                 /**
@@ -485,6 +499,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.PENDING_MERCHANDISE);
+                            Date date=new Date();
+                            brokerAckOnlinePaymentBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raiseAckConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -509,6 +526,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PENDING_MERCHANDISE);
+                                Date date=new Date();
+                                brokerAckOnlinePaymentBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raiseAckConfirmationEvent(contractHash);
                             }
                         }
