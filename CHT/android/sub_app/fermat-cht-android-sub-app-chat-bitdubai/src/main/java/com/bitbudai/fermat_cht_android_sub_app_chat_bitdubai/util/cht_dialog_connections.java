@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +58,8 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -76,6 +81,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     private List<ContactConnection> contactConnectionList;
+    Boolean act_vista = false;
     ListView list;
     private AdapterCallbackContacts mAdapterCallback;
     FermatTextView txt_title,txt_body;
@@ -112,74 +118,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
         text=(TextView) findViewById(R.id.text);
         list = (ListView) findViewById(R.id.list);
         btn_add = (Button) findViewById(R.id.btn_add);
-         setUpListeners();
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                try {
-//                    Contact contactexist = chatSession.getSelectedContactToUpdate();
-//                    if (contactexist != null) {
-//                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")) {
-//                            UUID contactidnew = contactexist.getContactId();
-//                            contactexist = chatManager.getContactByContactId(contactid.get(position));
-//                            Chat chat = chatManager.getChatByChatId((UUID) getSession().getData("chatid"));
-//                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            chatManager.saveChat(chat);
-//                            Contact contactnew = new ContactImpl();
-//                            contactnew = chatManager.getContactByContactId(contactidnew);
-//                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-//                            contactnew.setAlias(contactexist.getAlias());
-//                            contactnew.setRemoteName(contactexist.getRemoteName());
-//                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-//                            chatManager.saveContact(contactnew);
-//                            Contact deleteContact;
-//                            for (int i = 0; i < chatManager.getContacts().size(); i++) {
-//                                deleteContact = chatManager.getContacts().get(i);
-//                                if (deleteContact.getRemoteName().equals("Not registered contact")) {
-//                                    if (deleteContact.getContactId().equals(contactidnew)) {
-//                                        chatManager.deleteContact(deleteContact);
-//                                    }
-//                                }
-//
-//                            }
-//                            chatManager.deleteContact(contactexist);
-//                            getSession().setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-//                            getSession().setData("whocallme", "contact");
-//                            getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-//                            Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-//                            //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
-//                            dismiss();
-//
-//                        }
-//                    } else {
-//                        final int pos = position;
-//                        final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
-//
-//                        if (contactConn.getRemoteName() != null) {
-//                            cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
-//                            customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
-//                            customAlert.setTextTitle("Add connections");
-//                            customAlert.setType("add-connections");
-//                            customAlert.show();
-//                        } else {
-//                            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//                            dismiss();
-//                        }
-//                    }
-//                } catch (CantSaveChatException e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                } catch (CantDeleteContactException e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                } catch (CantSaveContactException e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                } catch (CantGetContactException e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                } catch (Exception e) {
-//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                }
-//            }
-//        });
+        setUpListeners();
 
         try {
             //final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -224,81 +163,100 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                             adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
                             list.setAdapter(adapter);
                             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    try {
-                                        Contact contactexist = chatSession.getSelectedContactToUpdate();
-                                        if (contactexist != null) {
-                                            if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")) {
-                                                UUID contactidnew = contactexist.getContactId();
-                                                contactexist = chatManager.getContactByContactId(contactid.get(position));
-                                                Chat chat = chatManager.getChatByChatId((UUID) getSession().getData("chatid"));
-                                                chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-                                                chatManager.saveChat(chat);
-                                                Contact contactnew = new ContactImpl();
-                                                contactnew = chatManager.getContactByContactId(contactidnew);
-                                                contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-                                                contactnew.setAlias(contactexist.getAlias());
-                                                contactnew.setRemoteName(contactexist.getRemoteName());
-                                                contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-                                                chatManager.saveContact(contactnew);
-                                                Contact deleteContact;
-                                                for (int i = 0; i < chatManager.getContacts().size(); i++) {
-                                                    deleteContact = chatManager.getContacts().get(i);
-                                                    if (deleteContact.getRemoteName().equals("Not registered contact")) {
-                                                        if (deleteContact.getContactId().equals(contactidnew)) {
-                                                            chatManager.deleteContact(deleteContact);
-                                                        }
+       
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                try {
+                                    Contact contactexist = chatSession.getSelectedContactToUpdate();
+                                    if (contactexist != null) {
+                                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")) {
+                                            UUID contactidnew = contactexist.getContactId();
+                                            contactexist = chatManager.getContactByContactId(contactid.get(position));
+                                            Chat chat = chatManager.getChatByChatId((UUID) getSession().getData("chatid"));
+                                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                                            chatManager.saveChat(chat);
+                                            Contact contactnew = new ContactImpl();
+                                            contactnew = chatManager.getContactByContactId(contactidnew);
+                                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                                            contactnew.setAlias(contactexist.getAlias());
+                                            contactnew.setRemoteName(contactexist.getRemoteName());
+                                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
+                                            chatManager.saveContact(contactnew);
+                                            Contact deleteContact;
+                                            for (int i = 0; i < chatManager.getContacts().size(); i++) {
+                                                deleteContact = chatManager.getContacts().get(i);
+                                                if (deleteContact.getRemoteName().equals("Not registered contact")) {
+                                                    if (deleteContact.getContactId().equals(contactidnew)) {
+                                                        chatManager.deleteContact(deleteContact);
                                                     }
-
                                                 }
-                                                chatManager.deleteContact(contactexist);
-                                                getSession().setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-                                                getSession().setData("whocallme", "contact");
-                                                getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-                                                Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-                                                //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
-                                                dismiss();
-
                                             }
-                                        } else {
-                                            final int pos = position;
-                                            final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
-
-                                            if (contactConn.getRemoteName() != null) {
-                                                cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
-                                                customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
-                                                customAlert.setTextTitle("Add connections");
-                                                customAlert.setType("add-connections");
-                                                customAlert.show();
-                                            } else {
-                                                //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                                                dismiss();
-                                            }
+                                            chatManager.deleteContact(contactexist);
+                                            getSession().setData(ChatSession.CONTACTTOUPDATE_DATA, null);
+                                            getSession().setData("whocallme", "contact");
+                                            getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
+                                            Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
+                                            //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
+                                            dismiss();
                                         }
-                                    } catch (CantSaveChatException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantDeleteContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantSaveContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantGetContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (Exception e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                            if (contactConnectionList.isEmpty()) {
+                                                showEmpty(true, text);
+                                            } else {
+                                                showEmpty(false, text);
+                                            }
+                                            chatManager.deleteContact(contactexist);
+                                            getSession().setData(ChatSession.CONTACTTOUPDATE_DATA, null);
+                                            getSession().setData("whocallme", "contact");
+                                            getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
+                                            Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
+                                          //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
+                                            dismiss();
+                                        }
+                                } else {
+                                    final int pos = position;
+                                    final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
+
+                                    if (contactConn.getRemoteName() != null) {
+                                        final cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
+                                        customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
+                                        customAlert.setTextTitle("Add connections");
+                                        customAlert.setType("add-connections");
+                                        customAlert.show();
+                                        customAlert.setOnDismissListener(new OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                if (customAlert.getStatusAddContact() == true) {
+                                                    act_vista = true;
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+                                        dismiss();
                                     }
                                 }
-                            });
-                            if (contactConnectionList.isEmpty()) {
-                                showEmpty(true, text);
-                            } else {
-                                showEmpty(false, text);
+                            } catch (CantSaveChatException e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                } catch (CantDeleteContactException e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                } catch (CantSaveContactException e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                } catch (CantGetContactException e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                } catch (Exception e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                }
                             }
+                        });
+                        if (contactConnectionList.isEmpty()) {
+                            showEmpty(true, text);
+                        } else {
+                            showEmpty(false, text);
                         }
-                    } else {
-                        showEmpty(true, text);
                     }
+                } else {
+                    showEmpty(true, text);
                 }
 
                 @Override
@@ -315,7 +273,36 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
+});
+final EditText inputSearch = (EditText) findViewById(R.id.SearchFilterAddContacts);
+        inputSearch.addTextChangedListener(new TextWatcher() {
 
+@Override
+public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+        // When user changed the Text
+        cht_dialog_connections.this.adapter.getFilter().filter(cs);
+        adapter.notifyDataSetChanged();
+        }
+
+@Override
+public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+        int arg3) {
+        // TODO Auto-generated method stub
+
+        }
+
+@Override
+public void afterTextChanged(Editable arg0) {
+        // TODO Auto-generated method stub
+        }
+        });
+
+
+
+        }
+public boolean getAct(){
+        return act_vista;
+        }
 
     protected int setLayoutId() {
             return R.layout.cht_dialog_connections;

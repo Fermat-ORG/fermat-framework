@@ -149,7 +149,7 @@ public class NotificationService extends Service {
     }
 
 
-    public void notificateProgress(final String code){
+    public void notificateProgress(final String code,int progress){
         if(!lstNotifications.containsKey(code)){
             notificationIdCount++;
             lstNotifications.put(code,notificationIdCount);

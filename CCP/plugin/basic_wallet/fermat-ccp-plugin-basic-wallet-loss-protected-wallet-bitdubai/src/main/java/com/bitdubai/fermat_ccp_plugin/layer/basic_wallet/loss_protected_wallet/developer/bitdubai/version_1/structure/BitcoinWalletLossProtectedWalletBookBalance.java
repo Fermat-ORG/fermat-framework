@@ -40,11 +40,12 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         this.broadcaster = broadcaster;
     }
 
+
     @Override
-    public long getBalance() throws CantCalculateBalanceException {
+    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getBookBalance();
+            return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
         } catch(CantCalculateBalanceException exception){
             database.closeDatabase();
             throw exception;
@@ -55,7 +56,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     }
 
     @Override
-    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+    public long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);

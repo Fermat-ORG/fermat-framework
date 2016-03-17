@@ -126,6 +126,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         super.onCreate(savedInstanceState);
         setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
+
+            bitcoinConverter = new BitcoinConverter();
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -166,7 +168,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             if (networkStatus != null) {
                 switch (networkStatus) {
                     case CONNECTED:
-                        bitcoinConverter = new BitcoinConverter();
+
                         setUpUI();
                         setUpActions();
                         setUpUIData();
@@ -181,7 +183,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         break;
                 }
             } else {
-                bitcoinConverter = new BitcoinConverter();
+
                 setUpUI();
                 setUpActions();
                 setUpUIData();
@@ -249,40 +251,44 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
                 String newAmount = "";
-                switch (position) {
-                    case 0:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
 
-                        break;
-                    case 1:
-                        text = "[bits]";
-                        if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBits(amount);
-                        } else {
-                            newAmount = amount;
-                        }
 
-                        break;
-                    case 2:
-                        text = "[satoshis]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                        } else if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
-                        break;
-                }
+                    switch (position) {
+                        case 0:
+                            text = "[btc]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 1:
+                            text = "[bits]";
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 2:
+                            text = "[satoshis]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                            } else if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                            break;
+                    }
+
+
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
                 alphaAnimation.setDuration(300);
                 final String finalText = text;
@@ -613,9 +619,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     }
 
 
-                   if(Long.valueOf(newAmount) >= BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) {
-
-                           BigDecimal operator = new BigDecimal(newAmount);
+                    BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                    BigDecimal operator = new BigDecimal(newAmount);
+                    if(operator.compareTo(minSatoshis) == 1 )
+                    {
 
                            String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
@@ -677,7 +684,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
-                if (wcr.getReceivedCryptoAddress().size() > 0)
+                if (wcr.getReceivedCryptoAddress().get(blockchainNetworkType) != null)
                     contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
