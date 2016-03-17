@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
-import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
@@ -76,17 +75,6 @@ public interface TokenlyArtistIdentityManager extends FermatManager{
      */
     Artist getArtistIdentity(UUID publicKey) throws
             CantGetArtistIdentityException,
-            IdentityNotFoundException;
-
-    /**
-     * The method <code>hideIdentity</code> is used to publish a Artist identity
-     * @param publicKey
-     *
-     * @throws CantHideIdentityException
-     * @throws IdentityNotFoundException
-     */
-    void hideIdentity(String publicKey) throws
-            CantHideIdentityException,
             IdentityNotFoundException;
 
 }
