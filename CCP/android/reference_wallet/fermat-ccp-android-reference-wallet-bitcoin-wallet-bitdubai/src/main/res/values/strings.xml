@@ -266,19 +266,20 @@
     <!-- TAB TRANSACTIONS -->
 <string name="nullActorName">Unknown</string>
     <!-- SEND FRAGMENT -->
-<string name="debit">Send</string>
-<string name="credit">Received</string>
-<string name="fragment_send_change_contact"><u>Change Contact</u></string>
-<string name="fragment_send_header_summary">Be sure to properly fill out\nthe information.</string>
-<string name="fragment_send_account_details_summary">Account Details</string>
-<string name="fragment_send_account_name_hint">Name (*)</string>
-<string name="fragment_send_account_number_hint">Address (*)</string>
-<string name="fragment_send_amount_hint">Amount (bits) (*)</string>
-<string name="fragment_send_notes_hint">Notes (optional)</string>
-<string name="clear_text_button">Clear</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-<string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="debit">Send</string>
+    <string name="credit">Received</string>
+    <string name="fragment_send_change_contact"><u>Change Contact</u></string>
+    <string name="fragment_send_header_summary">Be sure to properly fill out\nthe information.</string>
+    <string name="fragment_send_account_details_summary">Account Details</string>
+    <string name="fragment_send_account_name_hint">Name (*)</string>
+    <string name="fragment_send_account_number_hint">Address (*)</string>
+    <string name="fragment_send_amount_hint">Amount (bits) (*)</string>
+    <string name="fragment_send_notes_hint">Notes (optional)</string>
+    <string name="clear_text_button">Clear</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    </resources>
+</resources>

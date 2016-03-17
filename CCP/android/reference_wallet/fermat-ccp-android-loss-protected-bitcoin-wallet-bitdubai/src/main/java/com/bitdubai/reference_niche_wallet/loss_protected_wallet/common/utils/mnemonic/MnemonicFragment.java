@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 
 //import com.bitdubai.fermat.R;
@@ -27,16 +28,16 @@ public class MnemonicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.mnemonic_fragment_main,container,false);
-
-        FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
-        txt_mnemonic.setText("mnemonic");
-        txt_mnemonic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        View view = inflater.inflate(R.layout.mnemonic_fragment_main,container,false);
+//
+//        FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
+//        txt_mnemonic.setText("mnemonic");
+//        txt_mnemonic.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
 
         return super.onCreateView(inflater, container, savedInstanceState);
