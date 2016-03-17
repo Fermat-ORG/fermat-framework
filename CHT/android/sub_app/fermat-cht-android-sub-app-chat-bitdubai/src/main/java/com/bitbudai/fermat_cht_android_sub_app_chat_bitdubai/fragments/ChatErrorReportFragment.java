@@ -84,12 +84,25 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageText = messageEdit.getText().toString();
+                final String messageText = messageEdit.getText().toString();
                 if (TextUtils.isEmpty(messageText)) {
                     return;
                 }else {
                     try {
-                        sendErrorReport(messageText);
+                        //TODO: esto no se hace así pero bueno, me hacen arreglarlo y es tarde...
+                        //TODO: y otra cosa, el mail que tiene que ingresar es a donde lo quiere mandar.
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    sendErrorReport(messageText);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        thread.start();
+
                         Toast.makeText(getActivity(), "Report Sent", Toast.LENGTH_SHORT).show();
                         messageEdit.getText().clear();
                     } catch (Exception e) {
