@@ -119,7 +119,6 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"     ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"      ),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"      ),
-    BITDUBAI_DIRECT_SELL_NEGOTIATION                      ("BDSN"      ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"     ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"      ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"     ),
