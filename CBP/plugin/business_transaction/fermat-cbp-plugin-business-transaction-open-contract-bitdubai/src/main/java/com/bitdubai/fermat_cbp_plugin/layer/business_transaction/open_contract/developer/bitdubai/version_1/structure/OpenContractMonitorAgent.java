@@ -412,13 +412,13 @@ public class OpenContractMonitorAgent implements
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.confirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
                 }
@@ -439,13 +439,13 @@ public class OpenContractMonitorAgent implements
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.ackConfirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
 
@@ -477,13 +477,13 @@ public class OpenContractMonitorAgent implements
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.ackConfirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                             raiseNewContractEvent(contractHash);
                         }
                     }
