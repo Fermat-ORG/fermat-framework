@@ -4,7 +4,7 @@ package com.bitdubai.fermat_dap_plugin.layer.business_transaction.asset_direct_s
  * Luis Torres (lutor1106@gmail.com") 16/03/16
  */
 public class AssetDirectSellDatabaseConstants {
-    public static final String ASSET_DIRECT_SELL_DATABASE = "assetDirectSellDatabase";
+    public static final String ASSET_DIRECT_SELL_DATABASE = "asset_direct_sell_database";
     /**
      * Asset direct sell database table definition.
      */
