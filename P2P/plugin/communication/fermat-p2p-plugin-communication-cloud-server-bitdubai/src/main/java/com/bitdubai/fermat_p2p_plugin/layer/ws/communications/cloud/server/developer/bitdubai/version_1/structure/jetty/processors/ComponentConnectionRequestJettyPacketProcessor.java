@@ -82,7 +82,7 @@ public class  ComponentConnectionRequestJettyPacketProcessor extends FermatJetty
              * Get the packet content from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
-            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
+            LOG.debug("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Get the list
