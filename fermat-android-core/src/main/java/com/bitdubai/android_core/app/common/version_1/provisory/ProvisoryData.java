@@ -94,6 +94,24 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ASSETS_IDENTITY_ARTIST,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "artist",
+                "public_key_art_artist_identity",
+                "sub_app_art_artist_identity",
+                new Version(1, 0, 0),
+                Platforms.CRYPTO_BROKER_PLATFORM);
+
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.crypto_customer_identity);
+        item2.setPosition(6);
+        lstIdentities.add(item2);
+
+
+
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
         identityFolder.setIconResource(R.drawable.identities_xxhdpi);
@@ -176,6 +194,24 @@ public class ProvisoryData {
         item1.setIconResource(R.drawable.customer);
         item1.setPosition(6);
         lstCommunities.add(item1);
+
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ASSETS_COMMUNITY_ARTIST,
+                null,
+                null,
+                "sub_app_art_artist_community",
+                "artist",
+                "public_key_art_artist_community",
+                "sub_app_art_artist_community",
+                new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
+        item1 = new Item(installedSubApp);
+        item1.setIconResource(R.drawable.bitcoin_icon);
+        item1.setPosition(7);
+        lstCommunities.add(item1);
+
+
+
 
 
 

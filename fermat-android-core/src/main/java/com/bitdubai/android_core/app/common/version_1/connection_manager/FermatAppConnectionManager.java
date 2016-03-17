@@ -142,6 +142,15 @@ public class FermatAppConnectionManager {
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
+
+            // Art Sub apps
+            case "sub_app_art_artist_community":
+                fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+            case "sub_app_art_artist_identity":
+                fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+
         }
 
         return fermatAppConnection;
