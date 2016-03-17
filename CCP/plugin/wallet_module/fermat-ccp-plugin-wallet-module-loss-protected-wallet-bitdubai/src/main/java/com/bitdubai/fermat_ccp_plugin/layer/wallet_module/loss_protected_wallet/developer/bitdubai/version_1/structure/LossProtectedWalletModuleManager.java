@@ -1004,6 +1004,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
+    public void sendToWallet(long cryptoAmount, String walletPublicKey, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+
+    }
+
+    @Override
     public List<LossProtectedPaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListLossProtectedSentPaymentRequestException {
         try {
             List<LossProtectedPaymentRequest> lst =  new ArrayList<>();
