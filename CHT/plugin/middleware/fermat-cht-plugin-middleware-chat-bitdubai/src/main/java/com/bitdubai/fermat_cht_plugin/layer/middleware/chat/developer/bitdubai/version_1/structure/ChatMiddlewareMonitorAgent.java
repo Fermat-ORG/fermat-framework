@@ -304,7 +304,7 @@ public class ChatMiddlewareMonitorAgent implements
                 List<ContactConnection> contactList;
                 if (discoverIteration == 0) {
                     //increase counter
-                    System.out.println("Chat Middleware discovery contact process " + discoverIteration + ":");
+                    //System.out.println("Chat Middleware discovery contact process " + discoverIteration + ":");
                     //deleteActorConnections();
 //                    contactList=chatMiddlewareManager.discoverActorsRegistered();
 //                    if(!contactList.isEmpty()){
