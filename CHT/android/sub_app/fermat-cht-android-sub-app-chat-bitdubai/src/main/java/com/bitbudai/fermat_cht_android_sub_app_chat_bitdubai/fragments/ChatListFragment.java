@@ -166,6 +166,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             Message mess = messageChat.get(0);
                             noreadmsgs=0;
                             if (mess != null) {
+                                //TODO: mejorar esto con un metodo en el module que me pida el chatID y me devuelva el numero de msjs no leidos
                                 List<Message> messl = chatManager.getMessageByChatId(chatidtemp);
                                 if (messl != null && messl.size() > 0) {
                                     for (Message mss : messl) {
@@ -174,10 +175,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                                         }
                                     }
                                 }
+
                                 contactid = String.valueOf(mess.getContactId());
                                 Contact cont = chatManager.getContactByContactId(mess.getContactId());
                                 name = cont.getRemoteName();
+                                //TODO: mejorar esto con un metodo en el module que me pida el chatID y me devuelva el numero de msjs no leidos
                                 message = messl.get(messl.size() - 1).getMessage();
+
                                 status = messl.get(messl.size() - 1).getStatus().toString();
                                 from = messl.get(messl.size() - 1).getType().toString();
                                 Chat chatl = chatManager.getChatByChatId(chatidtemp);
