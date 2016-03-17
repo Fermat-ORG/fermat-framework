@@ -310,6 +310,7 @@ public enum Plugins implements FermatPluginsEnum {
     //TKY
     API_TOKENLY                         ("TOKAP"),
     TOKENLY_ARTIST                      ("TARTIST"),
+    TOKENLY_FAN                         ("TFAN"),
     TOKENLY_WALLET                      ("TWALLET");
 
     // End  new Plugins
@@ -454,6 +455,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
             case "TOKAP":       return API_TOKENLY                              ;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
+            case "TFAN":        return TOKENLY_FAN                              ;
             case "TWALLET":     return TOKENLY_WALLET                           ;
 
             default:
