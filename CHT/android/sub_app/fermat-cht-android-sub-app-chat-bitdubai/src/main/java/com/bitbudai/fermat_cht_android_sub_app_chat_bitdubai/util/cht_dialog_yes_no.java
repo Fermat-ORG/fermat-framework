@@ -38,6 +38,7 @@ import java.util.UUID;
 
 /**
  * Created by richardalexander on 09/03/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 17/03/16.
  */
 public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickListener {
     private final ContactConnection contactConn;
@@ -62,8 +63,6 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
         this.contactConn = contactConnm;
         this.mAdapterCallback = mAdapterCallback;
     }
-
-
 
     public static interface AdapterCallbackContacts {
         void onMethodCallbackContacts();
@@ -142,22 +141,23 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                         addcontact = true;
                         Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
                         //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                        dismiss();
+                        //dismiss();
                     } else {
                         Toast.makeText(getActivity(), "Contact already exist", Toast.LENGTH_SHORT).show();
 
                         //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                        dismiss();
+                        //dismiss();
                     }
+                    dismiss();
+                    mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
+
                 } catch (CantSaveContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                dismiss();
-                mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
-            }if(AlertType == 2){
+                }else if(AlertType == 2){
                 try {
                     Contact con = chatSession.getSelectedContact();
                     chatManager.deleteContact(con);
