@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -543,7 +544,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -555,7 +556,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_issuer",
                         "asset issuer",
-                        "asset_issuer",
+                        WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -567,7 +568,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_user",
                         "asset user",
-                        "asset_user",
+                        WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -579,7 +580,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "redeem_point",
                         "redeem point",
-                        "redeem_point",
+                        WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -592,7 +593,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "loss_protected_wallet_icon",
                         "Loss Protected Wallet",
-                        "loss_protected_wallet",
+                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -619,7 +620,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
