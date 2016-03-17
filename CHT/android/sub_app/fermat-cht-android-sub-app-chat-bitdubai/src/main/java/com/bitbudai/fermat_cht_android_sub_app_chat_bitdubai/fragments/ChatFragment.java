@@ -118,7 +118,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
-//
+    //
     void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
         try {
             if (contact != null){
@@ -154,7 +154,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-    //    Toast.makeText(getActivity(),"broadcaster chat", Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(getActivity(),"broadcaster chat", Toast.LENGTH_SHORT).show();
 
         if(code.equals("13")){
             adapter.refreshEvents();
