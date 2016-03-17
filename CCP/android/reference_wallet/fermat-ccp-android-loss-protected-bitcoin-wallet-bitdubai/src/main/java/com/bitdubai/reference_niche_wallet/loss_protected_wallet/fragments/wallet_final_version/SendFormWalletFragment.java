@@ -107,7 +107,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
      * UI
      */
     private View rootView;
-    private AutoCompleteTextView contactName;
     private EditText editTextAmount;
     private ImageView imageView_contact;
     private FermatButton send_button;
@@ -129,6 +128,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
+    private Spinner spinner_name;
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
 
@@ -188,7 +188,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 switch (networkStatus) {
                     case CONNECTED:
                         setUpUI();
-                        contactName.setText("");
                         setUpActions();
                         setUpUIData();
                         setUpContactAddapter();
@@ -196,7 +195,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                     case DISCONNECTED:
                         showErrorConnectionDialog();
                         setUpUI();
-                        contactName.setText("");
                         setUpActions();
                         setUpUIData();
                         setUpContactAddapter();
@@ -204,7 +202,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 }
             } else {
                 setUpUI();
-                contactName.setText("");
                 setUpActions();
                 setUpUIData();
                 setUpContactAddapter();
@@ -249,13 +246,13 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     }
 
     private void setUpUI() {
-        contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
+        spinner_name = (Spinner) rootView.findViewById(R.id.spinner_name);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("Bits");
@@ -356,53 +353,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
-        contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    //Commented line is for hide keyboard. Just make above code as comment and test your requirement
-                    //It will work for your need. I just putted that line for your understanding only
-                    //You can use own requirement here also.
-
-                    if (!connectionDialogIsShow) {
-                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
-                        connectionWithCommunityDialog.show();
-                        connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                contactName.setText("");
-                                connectionDialogIsShow = false;
-                            }
-                        });
-                        connectionDialogIsShow = true;
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-        contactName.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                keyboard.showSoftInput(contactName, 0);
-            }
-        }, 50);
-        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                onFocus = hasFocus;
-                if (!onFocus) {
-                    if (walletContact == null) {
-                        contactName.setText("");
-                    }
-                }
-            }
-        });
         /**
          *  Amount observer
          */
@@ -443,7 +394,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
-            contactName.setText(cryptoWalletWalletContact.getActorName());
 
         } else {
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
@@ -454,118 +404,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     private void setUpContactAddapter() {
         contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
 
-        contactName.setAdapter(contactsAdapter);
-        //autocompleteContacts.setTypeface(tf);
-        contactName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                walletContact = (WalletContact) arg0.getItemAtPosition(position);
-
-                //add connection like a wallet contact
-                try {
-                    if (walletContact.isConnection) {
-                        cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
-                                walletContact.name,
-                                Actors.INTRA_USER,
-                                walletContact.actorPublicKey,
-                                walletContact.profileImage,
-                                Actors.INTRA_USER,
-                                appSession.getIntraUserModuleManager().getPublicKey(),
-                                appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
-                                blockchainNetworkType);
-                    } else {
-                        try {
-                            cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
-                        } catch (CantFindLossProtectedWalletContactException e) {
-                            e.printStackTrace();
-                        } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    walletContact.name = cryptoWalletWalletContact.getActorName();
-                    walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                    if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
-                        appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
-                                appSession.getIntraUserModuleManager().getPublicKey(),
-                                Actors.INTRA_USER,
-                                cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getActorType(),
-                                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                VaultType.CRYPTO_CURRENCY_VAULT,
-                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                blockchainNetworkType
-                        );
-                    } else {
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                        if (cryptoWalletWalletContact != null) {
-                            walletContact.name = cryptoWalletWalletContact.getActorName();
-                            walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                            if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
-                                appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
-                                        appSession.getIntraUserModuleManager().getPublicKey(),
-                                        Actors.INTRA_USER,
-                                        cryptoWalletWalletContact.getActorPublicKey(),
-                                        cryptoWalletWalletContact.getActorType(),
-                                        Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                        VaultType.CRYPTO_CURRENCY_VAULT,
-                                        CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                        appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                        blockchainNetworkType
-                                );
-                            } else {
-                                walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                            }
-                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                        }
-
-                        setUpUIData();
-
-                    }
-                } catch (CantCreateLossProtectedWalletContactException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
-
-                } catch (ContactNameAlreadyExistsException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
-
-
-                } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                    e.printStackTrace();
-
-                } catch (CantRequestLossProtectedAddressException e) {
-                    e.printStackTrace();
-                } catch (CantGetCryptoLossProtectedWalletException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-
-        contactName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-//                    linear_address.setVisibility(activeAddress ? View.VISIBLE : View.GONE);
-//                    // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
 
