@@ -24,6 +24,7 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
 
     private String alias;
     private UUID id;
+    private String publicKey;
     private byte[] imageProfile;
     private String externalUserName;
     private String externalAccessToken;
@@ -44,6 +45,7 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      *
      * @param alias
      * @param id
+     * @param publicKey
      * @param externalUserName
      * @param externalAccessToken
      * @param externalPlatform
@@ -52,9 +54,10 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.id = id;
+        this.publicKey = publicKey;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
         this.externalPlatform = externalPlatform;
@@ -68,6 +71,7 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      *
      * @param alias
      * @param id
+     * @param publicKey
      * @param imageProfile
      * @param externalUserName
      * @param externalAccessToken
@@ -75,9 +79,10 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      * @param exposureLevel
      * @param artistAcceptConnectionsType
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) {
+    public TokenlyArtistIdentityImp(String alias, UUID id, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) {
         this.alias = alias;
         this.id = id;
+        this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
@@ -99,9 +104,10 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.id = id;
+        this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
@@ -120,12 +126,22 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id, byte[] imageProfile, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, byte[] imageProfile, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.id = id;
+        this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     /**
@@ -156,7 +172,7 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    TokenlyArtistIdentityPluginRoot.TOKENLY_ARTIST_IDENTITY_PROFILE_IMAGE + "_" + id.toString(),
+                    TokenlyArtistIdentityPluginRoot.TOKENLY_ARTIST_IDENTITY_PROFILE_IMAGE + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

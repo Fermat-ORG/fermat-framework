@@ -136,10 +136,10 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
         }
         return artist;
     }
-    public Artist getIdentitArtist(UUID publicKey) throws CantGetArtistIdentityException {
+    public Artist getIdentitArtist(UUID id) throws CantGetArtistIdentityException {
         Artist artist = null;
         try {
-            artist = getArtistIdentityDao().getIdentityArtist(publicKey);
+            artist = getArtistIdentityDao().getIdentityArtist(id);
         } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
             e.printStackTrace();
         }
@@ -151,11 +151,12 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
 
             ECCKeyPair keyPair = new ECCKeyPair();
             UUID id =UUID.randomUUID();
+            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getArtistIdentityDao().createNewUser(alias, id, privateKey, loggedUser, profileImage);
+            getArtistIdentityDao().createNewUser(alias, id, publicKey, privateKey, loggedUser, profileImage);
 
-            return new TokenlyArtistIdentityImp(alias, id, profileImage, pluginFileSystem, pluginId);
+            return new TokenlyArtistIdentityImp(alias, id, publicKey, profileImage, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -170,13 +171,14 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
             DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            UUID publicKey = UUID.randomUUID();
+            UUID id = UUID.randomUUID();
+            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getArtistIdentityDao().createNewUser(alias,publicKey,privateKey,deviceUser,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            getArtistIdentityDao().createNewUser(alias,id,publicKey,privateKey,deviceUser,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
 
 
-            return new TokenlyArtistIdentityImp(alias,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType, pluginFileSystem, pluginId);
+            return new TokenlyArtistIdentityImp(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -184,11 +186,11 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
         }
     }
 
-    public void updateIdentityArtist(String alias,UUID publicKey, byte[] profileImage,
+    public void updateIdentityArtist(String alias,UUID id,String publicKey, byte[] profileImage,
                                      String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
                                      ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         try {
-            getArtistIdentityDao().updateIdentityArtistUser(publicKey, alias, profileImage, externalUserName,
+            getArtistIdentityDao().updateIdentityArtistUser(id,publicKey, alias, profileImage, externalUserName,
                     externalAccessToken, externalPlatform, exposureLevel, artistAcceptConnectionsType);
 
         } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
