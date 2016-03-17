@@ -8,6 +8,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatu
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,19 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/03/16.
  */
 public class TokenlyWalletManager implements SongWalletTokenlyManager {
+
+    /**
+     * Represents the TokenlySongWalletDao.
+     */
+    TokenlySongWalletDao tokenlySongWalletDao;
+
+    /**
+     * Constructor with parameters
+     * @param tokenlySongWalletDao
+     */
+    public TokenlyWalletManager(TokenlySongWalletDao tokenlySongWalletDao){
+        this.tokenlySongWalletDao = tokenlySongWalletDao;
+    }
     //TODO: implement this methods
     /**
      * This method returns a songs list by SongStatus enum
@@ -24,8 +38,9 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      * @throws CantGetSongListException
      */
     @Override
-    public List<WalletSong> getSongsBySongStatus(SongStatus songStatus) throws CantGetSongListException {
-        return null;
+    public List<WalletSong> getSongsBySongStatus(SongStatus songStatus) throws
+            CantGetSongListException {
+        return this.tokenlySongWalletDao.getSongsBySongStatus(songStatus);
     }
 
     /**
@@ -36,7 +51,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     @Override
     public List<WalletSong> getAvailableSongs() throws CantGetSongListException {
-        return null;
+        return getSongsBySongStatus(SongStatus.AVAILABLE);
     }
 
     /**
@@ -47,7 +62,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     @Override
     public List<WalletSong> getDeletedSongs() throws CantGetSongListException {
-        return null;
+        return getSongsBySongStatus(SongStatus.DELETED);
     }
 
     /**
@@ -60,7 +75,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     @Override
     public SongStatus getSongStatus(UUID songId) throws CantGetSongStatusException {
-        return null;
+        return this.tokenlySongWalletDao.getSongStatus(songId);
     }
 
     /**
