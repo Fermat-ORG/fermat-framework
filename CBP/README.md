@@ -63,9 +63,6 @@ Los **Contracts** establecen los diferentes tipos de acuerdos negociados entre d
 ### Agent
 * [Crypto Broker](plugin/agent/fermat-cbp-plugin-agent-crypto-broker-bitdubai/)
 
-### World
-* [Fiat Index](plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai/)
-
 ### Business Transaction
 Una **Business Transaction** define una actividad relacionada con una o mas **Money Transactions** segun su especificacion. Estas **Money Transactions** deben ser definidas en las plataformas correspondientes([CCP](../CCP/), [CSH](../CSH), [BNK](../BNK/))
 

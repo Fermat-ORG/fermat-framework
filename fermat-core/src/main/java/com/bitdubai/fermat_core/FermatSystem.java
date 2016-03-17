@@ -130,6 +130,7 @@ public final class FermatSystem {
 
             //TODO Desactivacion debido a un tema de P2P
             //fermatSystemContext.registerPlatform(new ARTPlatform());
+
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
