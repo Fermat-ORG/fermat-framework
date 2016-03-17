@@ -39,7 +39,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bit
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
-import android.graphics.Color;
+//import android.graphics.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -3159,8 +3159,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTabStrip.setTabsColor("#000000");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
-        runtimeTabStrip.setDividerColor(Color.parseColor("#F9F9F9"));
-        runtimeTabStrip.setBackgroundColor(Color.parseColor("#F9F9F9"));
+        //runtimeTabStrip.setDividerColor(Color.parseColor("#F9F9F9"));
+        //runtimeTabStrip.setBackgroundColor(Color.parseColor("#F9F9F9"));
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats

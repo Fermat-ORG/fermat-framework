@@ -79,6 +79,7 @@ import java.util.UUID;
 /**
  * Created by miguel payarez miguel_payarez@hotmail.com on 06/01/16.
  * Modified by Franklin Marcano 09-01-2016
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatMiddlewareDatabaseDao {
 

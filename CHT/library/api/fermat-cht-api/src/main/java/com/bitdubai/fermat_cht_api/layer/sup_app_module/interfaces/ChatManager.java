@@ -34,6 +34,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public interface ChatManager {
     //TODO: Implementar los metodos que necesiten manejar el module

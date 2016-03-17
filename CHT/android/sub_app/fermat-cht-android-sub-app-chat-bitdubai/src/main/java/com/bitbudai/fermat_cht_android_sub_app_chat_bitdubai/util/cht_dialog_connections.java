@@ -65,6 +65,7 @@ import java.util.UUID;
 
 /**
  * Created by Lozadaa on 05/03/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 

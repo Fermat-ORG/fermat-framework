@@ -81,6 +81,7 @@ import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatMiddlewareMonitorAgent implements
         CHTTransactionAgent,
