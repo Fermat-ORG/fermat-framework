@@ -313,6 +313,12 @@ public interface LossProtectedWallet extends Serializable {
               BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
+    void sendToWallet (long cryptoAmount,
+                       String walletPublicKey,
+                       ReferenceWallet referenceWallet,
+                       BlockchainNetworkType blockchainNetworkType)throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+
+
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
      *
