@@ -1,8 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.Presentation;
+import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -426,7 +428,17 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             return true;
         }
         if (id == R.id.menu_add_contact) {
-            cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            final cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            dialog_conn.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if(dialog_conn.getAct() == true) {
+                        text.setVisibility(View.GONE);
+                        text.setBackgroundColor(Color.WHITE);
+                        noData.setVisibility(View.GONE);
+                    }
+                }
+            });
             dialog_conn.show();
             return true;
         }else if (id == R.id.menu_switch_profile) {
