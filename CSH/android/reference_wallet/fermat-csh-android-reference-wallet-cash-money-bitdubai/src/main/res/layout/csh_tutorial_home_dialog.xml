@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/csh_bg_home_balance"/>
+                    android:src="@drawable/csh_banner"/>
             </RelativeLayout>
 
 
