@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -74,9 +75,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     private void createTestWalletIfNotExists() {
         //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        if(!cashMoneyWalletExists("cash_wallet")) {
+        if(!cashMoneyWalletExists(WalletsPublicKeys.CSH_MONEY_WALLET.getCode())) {
             try {
-                createCashMoneyWallet("cash_wallet", FiatCurrency.US_DOLLAR);
+                createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), FiatCurrency.US_DOLLAR);
             } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
@@ -85,7 +86,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
-            CashMoneyWallet wallet = loadCashMoneyWallet("cash_wallet");
+            CashMoneyWallet wallet = loadCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());//"cash_wallet");
             wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
             wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
