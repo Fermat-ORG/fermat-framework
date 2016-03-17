@@ -428,12 +428,12 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             return true;
         }
         if (id == R.id.menu_add_contact) {
-            try {
-                chatManager.discoverActorsRegistered();
-            }catch (CantGetContactConnectionException e)
-            {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+//            try {
+//                chatManager.discoverActorsRegistered();
+//            }catch (CantGetContactConnectionException e)
+//            {
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
             cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
             dialog_conn.show();
             return true;

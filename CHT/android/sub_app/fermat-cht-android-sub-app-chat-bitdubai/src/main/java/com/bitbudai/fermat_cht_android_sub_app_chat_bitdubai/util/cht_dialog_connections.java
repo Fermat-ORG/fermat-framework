@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +31,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -70,11 +75,14 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
+    private ArrayList<ContactConnection> contactConnectionList;
     ListView list;
     private AdapterCallbackContacts mAdapterCallback;
     FermatTextView txt_title,txt_body;
+    TextView text;
     FermatButton btn_yes,btn_no;
     Button btn_add, btn_cancel;
+    DialogConnectionListAdapter adapter;
     public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,
                                   ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
         super(activity, fermatSession, null);
@@ -83,8 +91,6 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
         this.mAdapterCallback = mAdapterCallback;
 
     }
-
-
 
     public static interface AdapterCallbackContacts extends cht_dialog_yes_no.AdapterCallbackContacts {
         void onMethodCallbackContacts();
@@ -103,42 +109,107 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
             if(errorManager!=null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
-         TextView text=(TextView) findViewById(R.id.text);
+        text=(TextView) findViewById(R.id.text);
 
-             btn_add = (Button) findViewById(R.id.btn_add);
-                setUpListeners();
+        btn_add = (Button) findViewById(R.id.btn_add);
+         setUpListeners();
+
         try {
-            List<ContactConnection> con = chatManager.getContactConnections();
-            int size = con.size();
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    if(!con.get(i).getAlias().isEmpty() && !con.get(i).getContactId().equals("") && !con.get(i).getProfileImage().equals("")) {
-                        try {
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            if (bmd.getBitmap().getWidth() != 0) {
-                                contactname.add(con.get(i).getAlias());
-                                contactid.add(con.get(i).getContactId());
-                                contacticon.add(bmd.getBitmap());
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Please wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            FermatWorker worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return getMoreData();
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    if (result != null &&
+                            result.length > 0) {
+                        progressDialog.dismiss();
+                        if (getActivity() != null && adapter != null) {
+                            contactConnectionList = (ArrayList<ContactConnection>) result[0];
+                            for (ContactConnection con : contactConnectionList) {
+                                if(!con.getAlias().isEmpty() &&
+                                        !con.getContactId().equals("") &&
+                                        !con.getProfileImage().equals("")) {
+                                    try {
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        if (bmd.getBitmap().getWidth() != 0) {
+                                            contactname.add(con.getAlias());
+                                            contactid.add(con.getContactId());
+                                            contacticon.add(bmd.getBitmap());
+                                        }
+                                    }catch(Exception e){
+                                        //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                        Log.i("CHT add contacts", "se ha ignorado contacto mal creado.");
+                                    }
+                                }
                             }
-                        }catch(Exception e){
-                            //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            Log.i("CHT add contacts", "se ha ignorado contacto mal creado.");
+
+                            adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+                            if (contactConnectionList.isEmpty()) {
+                                showEmpty(true, text);
+                            } else {
+                                showEmpty(false, text);
+                            }
                         }
+                    } else {
+                        showEmpty(true, text);
                     }
                 }
-                text.setVisibility(View.GONE);
-            } else {
-                text.setVisibility(View.VISIBLE);
-                text.setText("No Connections");
-            }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    progressDialog.dismiss();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+                }
+            });
+            worker.execute();
+
+
+//
+//            List<ContactConnection> con = chatManager.getContactConnections();
+//
+//            int size = con.size();
+//            if (size > 0) {
+//                for (int i = 0; i < size; i++) {
+//                    if(!con.get(i).getAlias().isEmpty() && !con.get(i).getContactId().equals("") && !con.get(i).getProfileImage().equals("")) {
+//                        try {
+//                            ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+//                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                            if (bmd.getBitmap().getWidth() != 0) {
+//                                contactname.add(con.get(i).getAlias());
+//                                contactid.add(con.get(i).getContactId());
+//                                contacticon.add(bmd.getBitmap());
+//                            }
+//                        }catch(Exception e){
+//                            //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                            Log.i("CHT add contacts", "se ha ignorado contacto mal creado.");
+//                        }
+//                    }
+//                }
+//                text.setVisibility(View.GONE);
+//            } else {
+//                text.setVisibility(View.VISIBLE);
+//                text.setText("No Connections");
+//            }
 
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        DialogConnectionListAdapter adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -212,6 +283,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
 
     }
 
+
     protected int setLayoutId() {
             return R.layout.cht_dialog_connections;
     }
@@ -230,5 +302,46 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
+
+    private synchronized List<ContactConnection> getMoreData() {
+        List<ContactConnection> dataSet = new ArrayList<>();
+
+        try {
+            List<ContactConnection> result = chatManager.discoverActorsRegistered();//moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            dataSet.addAll(result);
+            //offset = dataSet.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dataSet;
+    }
+
+    public void showEmpty(boolean show, TextView text) {
+        if (show &&
+                (text.getVisibility() == View.GONE || text.getVisibility() == View.INVISIBLE)) {
+            text.setVisibility(View.VISIBLE);
+            text.setText("No Connections");
+            if (adapter != null)
+                adapter.refreshEvents(null, null, null);
+        } else if (!show && text.getVisibility() == View.VISIBLE) {
+            text.setVisibility(View.GONE);
+        }
+    }
+//
+//    public void showEmpty(boolean show, View emptyView) {
+//        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+//                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+//        if (show &&
+//                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+//            emptyView.setAnimation(anim);
+//            emptyView.setVisibility(View.VISIBLE);
+//            if (adapter != null)
+//                adapter.refreshEvents(null, null, null);
+//        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+//            emptyView.setAnimation(anim);
+//            emptyView.setVisibility(View.GONE);
+//        }
+//    }
 
 }
