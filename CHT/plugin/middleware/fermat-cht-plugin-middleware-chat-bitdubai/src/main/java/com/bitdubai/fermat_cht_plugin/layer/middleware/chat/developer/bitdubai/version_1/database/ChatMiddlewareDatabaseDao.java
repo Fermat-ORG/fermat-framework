@@ -803,7 +803,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
+    public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
     {
         Database database = null;
         try {
@@ -841,6 +841,47 @@ public class ChatMiddlewareDatabaseDao {
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(e));
             throw new CantGetMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Message from the database with filter: " + chatId.toString(),
+                    null);
+        }
+    }
+
+    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
+    {
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Message> messages = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            // I will add the message information from the database
+            for (DatabaseTableRecord record : getMessageData(filter)) {
+                final Message message = getMessageTransaction(record);
+
+                messages.add(message);
+            }
+
+            database.closeDatabase();
+
+            if(messages.isEmpty()){
+                return null;
+            }
+
+            return messages.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
                     "error trying to get Message from the database with filter: " + chatId.toString(),

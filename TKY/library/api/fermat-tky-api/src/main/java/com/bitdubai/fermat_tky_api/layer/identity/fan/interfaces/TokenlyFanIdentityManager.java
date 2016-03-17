@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
@@ -10,14 +10,16 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
 public interface TokenlyFanIdentityManager extends FermatManager {
 
+
     /**
-     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
+     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the fan
      * identities linked to the current logged device user.
      * @return
      * @throws CantListFanIdentitiesException
@@ -25,28 +27,36 @@ public interface TokenlyFanIdentityManager extends FermatManager {
     List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
-     * Through the method <code>createArtistIdentity</code> you can create a new artist identity.
+     *
      * @param alias
-     * @param imageBytes
+     * @param profileImage
+     * @param externalUserName
+     * @param externalAccessToken
+     * @param externalPlatform
      * @return
-     * @throws
+     * @throws CantCreateFanIdentityException
+     * @throws FanIdentityAlreadyExistsException
      */
-    Fan createArtistIdentity(
-            final String alias,
-            final byte[] imageBytes) throws
+    Fan createFanIdentity(
+            String alias, byte[] profileImage,
+            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
+
     /**
-     * This method updates the fan identity
+     *
      * @param alias
+     * @param id
      * @param publicKey
-     * @param imageProfile
+     * @param profileImage
+     * @param externalUserName
+     * @param externalAccessToken
+     * @param externalPlatform
+     * @throws CantUpdateFanIdentityException
      */
     void updateFanIdentity(
-            String alias,
-            String publicKey,
-            byte[] imageProfile,
-            String external) throws
+            String alias, UUID id,String publicKey, byte[] profileImage,
+            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws
             CantUpdateFanIdentityException;
 
     /**
@@ -56,19 +66,8 @@ public interface TokenlyFanIdentityManager extends FermatManager {
      * @throws CantGetFanIdentityException
      * @throws IdentityNotFoundException
      */
-    Fan getFanIdentity(String publicKey) throws
+    Fan getFanIdentity(UUID publicKey) throws
             CantGetFanIdentityException,
-            IdentityNotFoundException;
-
-    /**
-     * The method <code>validateUser</code> is used to publish a Artist identity.
-     * @param publicKey
-     *
-     * @throws CantPublishIdentityException
-     * @throws IdentityNotFoundException
-     */
-    void publishIdentity(String publicKey) throws
-            CantPublishIdentityException,
             IdentityNotFoundException;
 
 

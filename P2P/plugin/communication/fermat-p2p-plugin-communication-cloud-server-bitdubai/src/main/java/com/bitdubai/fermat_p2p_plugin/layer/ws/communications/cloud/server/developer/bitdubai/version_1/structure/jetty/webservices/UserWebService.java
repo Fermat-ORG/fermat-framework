@@ -70,7 +70,7 @@ public class UserWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Credential credential) {
 
-        LOG.info("Executing login()");
+        LOG.debug("Executing login()");
         LoginResponse loginResponse;
 
        if (credential.getUser().equals(ConfigurationManager.getValue(ConfigurationManager.USER)) && credential.getPassword().equals(ConfigurationManager.getValue(ConfigurationManager.PASSWORD))){

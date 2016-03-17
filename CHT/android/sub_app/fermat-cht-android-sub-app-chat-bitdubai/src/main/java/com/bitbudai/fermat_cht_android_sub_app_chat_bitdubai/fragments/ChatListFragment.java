@@ -161,7 +161,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        List<Message> messageChat = chatManager.getMessageByChatId(chatidtemp);//
+                        List<Message> messageChat = chatManager.getMessagesByChatId(chatidtemp);//
                         if (messageChat != null) {
                             Message mess = messageChat.get(0);
                             noreadmsgs=0;
