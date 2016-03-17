@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatUserIde
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 
@@ -116,5 +117,12 @@ public interface MiddlewareChatManager extends FermatManager{
     ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
 
     void createSelfIdentities() throws CantCreateSelfIdentityException;
+
+    /**
+     * This method sends the message through the Chat Network Service
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
 }

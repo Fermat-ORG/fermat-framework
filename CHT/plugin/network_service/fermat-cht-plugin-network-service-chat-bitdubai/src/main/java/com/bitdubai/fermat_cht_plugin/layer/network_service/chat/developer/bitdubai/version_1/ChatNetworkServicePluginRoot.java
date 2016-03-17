@@ -938,7 +938,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final String remote = chatMetadataRecord.getRemoteActorPublicKey();
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
-            System.out.println("*** 12345 case 5:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
+            System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
 //            executorService.submit(new Runnable() {
 //                @Override
 //                public void run() {

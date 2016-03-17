@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
@@ -93,7 +94,7 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
-        System.out.println("*** 12345 case 1:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
+        System.out.println("*** 12345 case 2:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
         middlewareChatManager.saveMessage(message);
     }
 
@@ -235,5 +236,16 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
         return middlewareChatManager.getContactConnection(contactId);
+    }
+
+    /**
+     * This method sends the message through the Chat Network Service
+     *
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    @Override
+    public void sendMessage(Message createdMessage) throws CantSendChatMessageException {
+        middlewareChatManager.sendMessage(createdMessage);
     }
 }
