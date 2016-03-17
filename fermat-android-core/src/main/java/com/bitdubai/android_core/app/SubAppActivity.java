@@ -414,7 +414,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected void loadUI(FermatSession<FermatApp,?> subAppSession) {
         try {
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(), this, subAppSession);
-            FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+            FermatStructure fermatStructure = getFermatAppManager().getAppStructure(subAppSession.getAppPublicKey());
             Activity activity = fermatStructure.getLastActivity();
             loadBasicUI(activity, fermatAppConnection);
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
