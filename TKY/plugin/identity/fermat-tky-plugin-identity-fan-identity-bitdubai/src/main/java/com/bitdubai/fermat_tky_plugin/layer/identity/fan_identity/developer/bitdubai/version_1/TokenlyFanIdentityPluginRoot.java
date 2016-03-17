@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1;
+package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -25,22 +25,19 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
-import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.database.TokenlyArtistIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyArtistIdentityDatabaseException;
-import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyArtistIdentityImp;
-import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyIdentityArtistManagerImpl;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
+import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.database.TokenlyFanIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyFanIdentityDatabaseException;
+import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.structure.TokenlyFanIdentityImp;
+import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.structure.TokenlyIdentityFanManagerImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,9 +49,9 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo on 10/03/16.
  */
-public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
+public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        TokenlyArtistIdentityManager,
+        TokenlyFanIdentityManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -77,21 +74,21 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    public static final String TOKENLY_ARTIST_IDENTITY_PROFILE_IMAGE = "tokenlyartistIdentityProfileImage";
-    public static final String TOKENLY_ARTIST_IDENTITY_PRIVATE_KEY = "tokenlyartistIdentityPrivateKey";
+    public static final String TOKENLY_FAN_IDENTITY_PROFILE_IMAGE = "tokenlyfanIdentityProfileImage";
+    public static final String TOKENLY_FAN_IDENTITY_PRIVATE_KEY = "tokenlyfanIdentityPrivateKey";
 
-    private TokenlyIdentityArtistManagerImpl identityArtistManager;
+    private TokenlyIdentityFanManagerImpl identityArtistManager;
     /**
      * Default constructor
      */
-    public TokenlyArtistIdentityPluginRoot() {
+    public TokenlyFanIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
     @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityArtistManager = new TokenlyIdentityArtistManagerImpl(
+            identityArtistManager = new TokenlyIdentityFanManagerImpl(
                     this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -100,12 +97,12 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.tokenlyApiManager);
 
-            //System.out.println("############\n TKY IDENTITY ARTIST STARTED\n");
-            //testCreateArtist();
+            System.out.println("############\n TKY IDENTITY FAN STARTED\n");
+            testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.TOKENLY_ARTIST);
+            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.ARTIST_IDENTITY);
         }
 
 //        try {
@@ -119,17 +116,15 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
             String alias = "Gabo";
             byte[] image = new byte[0];
-            String externalName = "El gabo artist";
+            String externalName = "El gabo fan";
             String externalAccessToken = "El access token";
             ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
-            ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
-            ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
-            Artist artist = createArtistIdentity(alias,image,externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-            Artist artist1 = getArtistIdentity(artist.getId());
+            Fan fan = createFanIdentity(alias, image, externalName, externalAccessToken, externalPlatform);
+            Fan fan1 = getFanIdentity(fan.getId());
             System.out.println("##############################\n");
-            System.out.println("artist1 = " + XMLParser.parseObject(new TokenlyArtistIdentityImp(artist1.getAlias(),artist1.getId(),artist1.getPublicKey(),artist1.getProfileImage(),artist1.getExternalUsername(),
-                    artist1.getExternalAccesToken(),artist1.getExternalPlatform(),artist1.getExposureLevel(),artist1.getArtistAcceptConnectionsType())));
-        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
+            System.out.println("fan1 = " + XMLParser.parseObject(new TokenlyFanIdentityImp(fan1.getAlias(), fan1.getId(), fan1.getPublicKey(), fan1.getProfileImage(), fan1.getExternalUsername(),
+                    fan1.getExternalAccesToken(), fan1.getExternalPlatform())));
+        } catch (CantCreateFanIdentityException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,19 +138,19 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 //        ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
 //        try {
 //            updateArtistIdentity(artist.getAlias(),artist.getPublicKey(),artist.getProfileImage(),externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-//        } catch (CantUpdateArtistIdentityException e) {
+//        } catch (CantCreateFanIdentityException e) {
 //            e.printStackTrace();
 //        }
 //    }
     @Override
-    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
-        return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
+    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return identityArtistManager.getIdentityFanFromCurrentDeviceUser();
     }
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Fan createFanIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws  CantCreateFanIdentityException {
         if(tokenlyApiManager.isTokenlyAccessVaild(externalUserName,externalAccessToken)){
-            return identityArtistManager.createNewIdentityArtist(alias,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            return identityArtistManager.createNewIdentityFan(alias, profileImage, externalUserName, externalAccessToken, externalPlatform);
         }else{
             return null;
         }
@@ -163,35 +158,35 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateArtistIdentity(String alias, UUID id,String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        identityArtistManager.updateIdentityArtist(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+    public void updateFanIdentity(String alias, UUID id,String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+        identityArtistManager.updateIdentityFan(alias, id, publicKey, profileImage, externalUserName, externalAccessToken, externalPlatform);
     }
 
     @Override
-    public Artist getArtistIdentity(UUID id) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitArtist(id);
+    public Fan getFanIdentity(UUID id) throws CantGetFanIdentityException, IdentityNotFoundException {
+        return identityArtistManager.getIdentitFan(id);
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        TokenlyArtistIdentityDeveloperDatabaseFactory dbFactory = new TokenlyArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        TokenlyFanIdentityDeveloperDatabaseFactory dbFactory = new TokenlyFanIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        TokenlyArtistIdentityDeveloperDatabaseFactory dbFactory = new TokenlyArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        TokenlyFanIdentityDeveloperDatabaseFactory dbFactory = new TokenlyFanIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            TokenlyArtistIdentityDeveloperDatabaseFactory dbFactory = new TokenlyArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            TokenlyFanIdentityDeveloperDatabaseFactory dbFactory = new TokenlyFanIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_FAN, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
