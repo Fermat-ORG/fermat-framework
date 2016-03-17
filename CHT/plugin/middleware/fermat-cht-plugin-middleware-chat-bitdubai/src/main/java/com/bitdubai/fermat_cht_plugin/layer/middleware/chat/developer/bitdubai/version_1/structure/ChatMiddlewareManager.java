@@ -738,7 +738,14 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
         try {
-            return this.chatMiddlewareContactFactory.discoverDeviceActors();
+            List<ContactConnection> contactList;
+            contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
+            if(!contactList.isEmpty()){
+                for(ContactConnection contact : contactList){
+                    saveContactConnection(contact);
+                }
+            }
+            return contactList;
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,

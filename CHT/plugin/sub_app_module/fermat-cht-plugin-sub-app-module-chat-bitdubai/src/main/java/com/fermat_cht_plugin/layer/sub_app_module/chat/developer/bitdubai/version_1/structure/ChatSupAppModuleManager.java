@@ -37,6 +37,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatSupAppModuleManager implements ChatManager {
 
@@ -135,8 +136,32 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
+        try
+        {
+            List<ContactConnection> contactConnections = middlewareChatManager.getContactConnections();
+
+            for (ContactConnection contactConnection : contactConnections)
+            {
+                middlewareChatManager.deleteContactConnection(contactConnection);
+            }
+
+        } catch (CantGetContactConnectionException e) {
+            throw new CantGetContactConnectionException(
+                    e,
+                    "delete contact connections",
+                    "Cannot get the contact connection"
+            );
+        } catch (CantDeleteContactConnectionException e) {
+            throw new CantGetContactConnectionException(
+                    e,
+                    "delete contact connections",
+                    "Cannot delete contact connections"
+            );
+        }
+
         return middlewareChatManager.discoverActorsRegistered();
     }
+
 
     /**
      * This method returns the Network Service public key

@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
@@ -78,6 +79,7 @@ import java.util.UUID;
 /**
  * Created by miguel payarez miguel_payarez@hotmail.com on 06/01/16.
  * Modified by Franklin Marcano 09-01-2016
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatMiddlewareDatabaseDao {
 
@@ -497,7 +499,7 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     public void deleteContactConnection(ContactConnection contactConnection) throws
-            CantDeleteContactException,
+            CantDeleteContactConnectionException,
             DatabaseOperationException
     {
         try

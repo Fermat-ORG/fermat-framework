@@ -34,6 +34,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public interface ChatManager {
     //TODO: Implementar los metodos que necesiten manejar el module
@@ -102,6 +103,8 @@ public interface ChatManager {
     ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
 
     void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
+
+    //void deleteContactConnections( ) throws CantDeleteContactConnectionException;
 
     void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
 
