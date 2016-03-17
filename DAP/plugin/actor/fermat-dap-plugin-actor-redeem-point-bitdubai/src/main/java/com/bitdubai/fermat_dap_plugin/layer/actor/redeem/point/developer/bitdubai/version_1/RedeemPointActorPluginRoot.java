@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -41,7 +42,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -395,6 +395,20 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantGetAssetRedeemPointActorsException {
+
+        try {
+            this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
+        }
+        catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T UPDATE ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
+        }
+
+    }
+
 
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException {
         try {
@@ -447,7 +461,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     destinationActorType,
                     senderActorPublicKey,
                     destinationActorPublicKey,
-                    CryptoAddressDealers.DAP_ASSET,
+                    CryptoAddressDealers.DAP_WATCH_ONLY,
                     blockchainNetworkType);
 
 //                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, null, blockchainNetworkType);
@@ -679,7 +693,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                             System.out.println("Actor Redeem Point: " + ActorAssetRedeemPoint1.getDapConnectionState());
 
                             broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_REDEEM.getCode(), "CRYPTO-REQUEST_" + ActorAssetRedeemPoint1.getName());
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(), "CRYPTO-REQUEST_" + ActorAssetRedeemPoint1.getName());
 
                         } else {
                             System.out.println("Actor Redeem Point FALLO Recepcion CryptoAddress: " + ActorAssetRedeemPoint1.getName());
@@ -741,7 +755,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-RECEIVE_" + actorNotification.getActorSenderAlias());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-RECEIVE_" + actorNotification.getActorSenderAlias());
         }
     }
 

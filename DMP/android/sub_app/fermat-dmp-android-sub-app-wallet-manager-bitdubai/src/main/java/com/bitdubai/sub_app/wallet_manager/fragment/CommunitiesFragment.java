@@ -197,9 +197,6 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp> 
         installedSubApp.setIconResource(R.drawable.cbroker_community);
         data.add(installedSubApp);
 
-
-
-
         installedSubApp = new InstalledSubApp(
                 SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
                 null,
@@ -218,8 +215,6 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp> 
         return data;
     }
 
-
-
     @Override
     public void onItemClickListener(InstalledApp data, int position) {
         //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
@@ -235,8 +230,5 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp> 
     public void onLongItemClickListener(InstalledApp data, int position) {
 
     }
-
-
-
 
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_tky_core.layer.external_api.ExternalApiLayer;
+import com.bitdubai.fermat_tky_core.layer.identity.IdentityLayer;
 
 /**
  * This class has all the necessary business logic to start the WRD platform.
@@ -23,6 +24,7 @@ public class TKYPlatform extends AbstractPlatform {
         try {
 
             registerLayer(new ExternalApiLayer() );
+            registerLayer(new IdentityLayer());
 
         } catch (CantRegisterLayerException e) {
 

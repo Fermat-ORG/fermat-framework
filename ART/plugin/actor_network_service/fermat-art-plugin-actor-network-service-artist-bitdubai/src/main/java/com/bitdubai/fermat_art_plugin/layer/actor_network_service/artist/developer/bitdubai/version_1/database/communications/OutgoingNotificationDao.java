@@ -2,8 +2,6 @@ package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develo
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -35,7 +33,6 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPendingRequestActorArtistNotificationException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.ArrayList;
@@ -120,14 +117,14 @@ public class OutgoingNotificationDao {
         }
     }
 
-    public void createNotification(ArtistActorNetworkServiceRecord assetUserNetworkServiceRecord) throws CantCreateActorArtistNotificationException {
+    public void createNotification(ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord) throws CantCreateActorArtistNotificationException {
         try {
-            if (!existNotification(assetUserNetworkServiceRecord.getId())) {
-                DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            if (!existNotification(artistActorNetworkServiceRecord.getId())) {
+                DatabaseTable databaseTable = getDatabaseTable();
 
-                DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+                DatabaseTableRecord entityRecord = databaseTable.getEmptyRecord();
 
-                cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, assetUserNetworkServiceRecord));
+                databaseTable.insertRecord(buildDatabaseRecord(entityRecord, artistActorNetworkServiceRecord));
             }
         } catch (CantInsertRecordException e) {
             throw new CantCreateActorArtistNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
@@ -481,14 +478,14 @@ public class OutgoingNotificationDao {
             ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = new ArtistActorNetworkServiceRecord();
             artistActorNetworkServiceRecord.setId(record.getUUIDValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME));
             artistActorNetworkServiceRecord.setActorSenderAlias(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME));
-            artistActorNetworkServiceRecord.setNotificationDescriptor(NotificationDescriptor.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME)));
+            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setActorDestinationType(PlatformComponentType.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setActorSenderType(PlatformComponentType.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setActorSenderPublicKey(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
             artistActorNetworkServiceRecord.setActorDestinationPublicKey(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME));
             long timestamp = record.getLongValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
             artistActorNetworkServiceRecord.setSentDate(timestamp);
-            artistActorNetworkServiceRecord.setProtocolState(ProtocolState.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME)));
+            artistActorNetworkServiceRecord.changeState(ProtocolState.getByCode(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setFlagRead(Boolean.valueOf(record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME)));
             artistActorNetworkServiceRecord.setSentCount(record.getIntegerValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME));
             artistActorNetworkServiceRecord.setResponseToNotificationId(record.getUUIDValue(ArtistActorNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME));

@@ -125,7 +125,24 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingEditTextViewHolder.getTextView().setText(preferenceSettingsEditText.getTitleText());
                 settingEditTextViewHolder.getSettingsEditText().setHint(preferenceSettingsEditText.getEditHint());
                 settingEditTextViewHolder.getSettingsEditText().setText(preferenceSettingsEditText.getEditText());
-                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsEditText,position));
+                //settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this, preferenceSettingsEditText, position));
+
+                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCallback().optionSelected(preferenceSettingsEditText, position);
+                    }
+                });
+                settingEditTextViewHolder.getSettingsEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            getCallback().optionSelected(preferenceSettingsEditText, position);
+                        }
+                    }
+                });
+
+
                 break;
             case TEXT_PLUS_RADIO_TYPE:
                 SettingsTextPlusRadioHolder settingsTextPlusRadioHolder = (SettingsTextPlusRadioHolder) holder;
