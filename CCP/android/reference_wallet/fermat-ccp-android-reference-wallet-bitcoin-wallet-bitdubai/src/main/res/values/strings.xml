@@ -102,8 +102,11 @@
     <!-- presentation_bitcoin_wallet_without_identities.xml -->
 <string name="welcome_text">Welcome!</string>
 <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
-    <string name="see_your_balance_text">* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history.</string>
+    <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
     <string name="close_text">Close</string>
+
+
+
 
     <!-- presentation_wallet.xml -->
 <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
