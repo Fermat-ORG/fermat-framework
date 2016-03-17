@@ -157,6 +157,7 @@ public class ChatSupAppModuleManager implements ChatManager {
                     "Cannot delete contact connections"
             );
         }
+
         return middlewareChatManager.discoverActorsRegistered();
     }
 
