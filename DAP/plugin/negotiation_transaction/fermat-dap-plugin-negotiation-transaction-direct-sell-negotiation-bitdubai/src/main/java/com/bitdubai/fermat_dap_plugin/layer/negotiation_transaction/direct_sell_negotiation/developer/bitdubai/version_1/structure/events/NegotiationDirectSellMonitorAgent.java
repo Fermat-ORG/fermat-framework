@@ -108,10 +108,10 @@ public class NegotiationDirectSellMonitorAgent implements Agent {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
                     */
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DIRECT_SELL_NEGOTIATION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_DIRECT_SELL, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DIRECT_SELL_NEGOTIATION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_DIRECT_SELL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
