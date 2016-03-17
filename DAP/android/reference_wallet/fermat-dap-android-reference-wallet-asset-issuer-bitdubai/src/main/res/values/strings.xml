@@ -11,11 +11,11 @@
 
     <!-- empty list views -->
     <string name="no_assets_issuer">No Assets?</string>
-    <string name="no_assets_issuer_message">Don\'t  worry!</br>As an Asset Issuer you are able to create new ones using the Asset Factory.</br>Once created, all the assets you publish there, will be stored in this Asset Issuer Wallet.</string>
+    <string name="no_assets_issuer_message">Don\'t  worry!\nAs an Asset Issuer you are able to create new ones using the Asset Factory.\nOnce created, all the assets you publish there, will be stored in this Asset Issuer Wallet.</string>
     <string name="no_assets_user">No Assets?</string>
-    <string name="no_assets_user_message">Don\'t worry!</br>Use the community app to connect to Asset Issuers and/or other Asset Users like you, and then you will be able to receive assets from them !</string>
+    <string name="no_assets_user_message">Don\'t worry!\nUse the community app to connect to Asset Issuers and/or other Asset Users like you, and then you will be able to receive assets from them !</string>
     <string name="no_assets_redeem_point">No Assets?</string>
-    <string name="no_assets_redeem_point_message">Don\'t worry!</br>To act as a Redeem Point you need to use the Community App to connect your device to an Assets Issuer whose assets you want to redeem.</string>
+    <string name="no_assets_redeem_point_message">Don\'t worry!\nTo act as a Redeem Point you need to use the Community App to connect your device to an Assets Issuer whose assets you want to redeem.</string>
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
     <string name="no_transactions">No Transactions</string>
