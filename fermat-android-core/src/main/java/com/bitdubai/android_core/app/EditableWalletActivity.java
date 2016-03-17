@@ -205,7 +205,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
 
             //loadFragment(frgBackType);
-            changeWalletFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
+//            changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
 
 
         } else if (activity != null && activity.getBackActivity() != null) {
@@ -240,12 +240,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 //        }
     }
 
-
-    @Override
-    protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
-        return getWalletRuntimeManager().getLastWallet().getLastActivity().getSideMenu().getMenuItems();
-    }
-
     @Override
     protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
 
@@ -274,7 +268,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
                 setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,walletSession);
+                setOneFragmentInScreen(fermatFragmentFactory,walletSession,walletNavigationStructure);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -437,36 +431,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         super.onDestroy();
 
 
-    }
-
-    @Override
-    public FermatStructure getAppInUse() {
-        return null;
-    }
-
-    @Override
-    public FermatStructure getAppInUse(String publicKey) throws Exception {
-        return null;
-    }
-
-    //TODO: Este metodo tiene que desaparecer
-    @Override
-    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-        try {
-//            getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
-//            FermatFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-//            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager().getAndLoadSettingsFile(walletPublicKey), getWalletResourcesProviderManager());
-//            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
-//            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//            FT.replace(R.id.fragment_container2, fragment);
-//            FT.addToBackStack(null);
-//            FT.attach(fragment);
-//            FT.show(fragment);
-//            FT.commit();
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override

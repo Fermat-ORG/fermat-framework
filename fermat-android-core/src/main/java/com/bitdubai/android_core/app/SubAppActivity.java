@@ -271,7 +271,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             loadFragment(idContainer, screen, FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(), this, getFermatAppManager().getAppsSession(subApp.getAppPublicKey())).getFragmentFactory(),getFermatAppManager().getAppsSession(subApp.getAppPublicKey()));
 
         } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeFragment"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
@@ -355,10 +355,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-    }
-
-    @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
     }
 
@@ -418,7 +414,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected void loadUI(FermatSession<FermatApp,?> subAppSession) {
         try {
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(), this, subAppSession);
-            Activity activity = getFermatAppManager().getLastAppStructure().getLastActivity();
+            FermatStructure fermatStructure = getFermatAppManager().getAppStructure(subAppSession.getAppPublicKey());
+            Activity activity = fermatStructure.getLastActivity();
             loadBasicUI(activity, fermatAppConnection);
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             hideBottonIcons();
@@ -429,7 +426,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 setPagerTabs(activity.getTabStrip(), subAppSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,subAppSession);
+                setOneFragmentInScreen(fermatFragmentFactory,subAppSession,fermatStructure);
             }
         }catch (NullPointerException e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -440,12 +437,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-
-    @Override
-    protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
-        return getSubAppRuntimeMiddleware().getLastApp().getLastActivity().getSideMenu().getMenuItems();
     }
 
     @Override
@@ -460,16 +451,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in onNavigationMenuItemTouchListener"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public FermatStructure getAppInUse() {
-        return getSubAppRuntimeMiddleware().getLastApp();
-    }
-
-    @Override
-    public FermatStructure getAppInUse(String publicKey)throws Exception {
-        return getSubAppRuntimeMiddleware().getSubAppByPublicKey(publicKey);
     }
 
 
