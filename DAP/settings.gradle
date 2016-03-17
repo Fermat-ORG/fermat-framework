@@ -52,6 +52,10 @@ project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new
 include ':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai'
 project(':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai').projectDir = new File('DAP/plugin/negotiation_transaction/fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai')
 
+// business transaction
+include ':fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai'
+project(':fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai').projectDir = new File('DAP/plugin/business_transaction/fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai')
+
 // digital asset transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
