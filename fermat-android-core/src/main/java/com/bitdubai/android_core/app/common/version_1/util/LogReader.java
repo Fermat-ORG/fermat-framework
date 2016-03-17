@@ -18,6 +18,8 @@ public class LogReader {
 
     public static StringBuilder getLog() {
 
+        int lineNumber = 0;
+
         StringBuilder builder = new StringBuilder();
 
         try {
@@ -32,7 +34,11 @@ public class LogReader {
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.contains(processId)) {
                     builder.append(line);
+                    lineNumber++;
                     //Code here
+                }
+                if(lineNumber==500){
+                    break;
                 }
             }
         } catch (IOException ex) {
