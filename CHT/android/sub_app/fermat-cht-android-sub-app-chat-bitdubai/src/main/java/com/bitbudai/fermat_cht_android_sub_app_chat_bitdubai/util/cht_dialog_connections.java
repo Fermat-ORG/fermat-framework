@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,8 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -70,11 +75,13 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
+    Boolean act_vista = false;
     ListView list;
     private AdapterCallbackContacts mAdapterCallback;
     FermatTextView txt_title,txt_body;
     FermatButton btn_yes,btn_no;
     Button btn_add, btn_cancel;
+    DialogConnectionListAdapter adapter;
     public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,
                                   ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
         super(activity, fermatSession, null);
@@ -103,7 +110,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
             if(errorManager!=null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
-         TextView text=(TextView) findViewById(R.id.text);
+         final TextView text=(TextView) findViewById(R.id.text);
 
              btn_add = (Button) findViewById(R.id.btn_add);
                 setUpListeners();
@@ -138,7 +145,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        DialogConnectionListAdapter adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+        adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,7 +158,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                         if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")) {
                             UUID contactidnew = contactexist.getContactId();
                             contactexist = chatManager.getContactByContactId(contactid.get(position));
-                            Chat chat = chatManager.getChatByChatId((UUID)  getSession().getData("chatid"));
+                            Chat chat = chatManager.getChatByChatId((UUID) getSession().getData("chatid"));
                             chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                             chatManager.saveChat(chat);
                             Contact contactnew = new ContactImpl();
@@ -176,7 +183,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                             getSession().setData("whocallme", "contact");
                             getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
                             Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
-                          //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
+                            //  changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
                             dismiss();
 
                         }
@@ -185,11 +192,20 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                         final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
 
                         if (contactConn.getRemoteName() != null) {
-                            cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(),getSession(),null,contactConn, mAdapterCallback);
+                            final cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
                             customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
-                           customAlert.setTextTitle("Add connections");
+                            customAlert.setTextTitle("Add connections");
                             customAlert.setType("add-connections");
                             customAlert.show();
+                            customAlert.setOnDismissListener(new OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (customAlert.getStatusAddContact() == true) {
+                                        act_vista = true;
+                                    }
+                                }
+                            });
+
                         } else {
                             //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                             dismiss();
@@ -208,8 +224,34 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 }
             }
         });
+        final EditText inputSearch = (EditText) findViewById(R.id.SearchFilterAddContacts);
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                cht_dialog_connections.this.adapter.getFilter().filter(cs);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
 
 
+
+    }
+    public boolean getAct(){
+        return act_vista;
     }
 
     protected int setLayoutId() {
