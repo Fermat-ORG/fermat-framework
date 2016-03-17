@@ -310,8 +310,8 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
             List<ContactConnection> result = chatManager.discoverActorsRegistered();//moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             dataSet.addAll(result);
             //offset = dataSet.size();
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
         return dataSet;
