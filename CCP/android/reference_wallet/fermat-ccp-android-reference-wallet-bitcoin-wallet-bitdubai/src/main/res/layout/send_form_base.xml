@@ -235,7 +235,8 @@
                         android:textColor="#1d1d26"
                         android:textColorHint="#9a9a9c"
                         android:textSize="20sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:maxLength="35" />
                 </LinearLayout>
 
                 <View

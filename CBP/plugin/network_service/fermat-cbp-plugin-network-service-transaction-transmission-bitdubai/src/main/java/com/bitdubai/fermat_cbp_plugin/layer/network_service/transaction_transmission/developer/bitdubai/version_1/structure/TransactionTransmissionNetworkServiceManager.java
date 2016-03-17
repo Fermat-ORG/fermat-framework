@@ -40,26 +40,29 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
 public class TransactionTransmissionNetworkServiceManager implements TransactionTransmissionManager {
 
-    private final TransactionTransmissionNetworkServicePluginRoot pluginRoot                            ;
-    private final ErrorManager                                    errorManager                          ;
-    private final TransactionTransmissionContractHashDao          transactionTransmissionContractHashDao;
+    private final TransactionTransmissionNetworkServicePluginRoot pluginRoot;
+    private final ErrorManager errorManager;
+    private final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
+    private final Gson gson;
 
-    ExecutorService executorService;
+    private final ExecutorService executorService;
 
-    public TransactionTransmissionNetworkServiceManager(final TransactionTransmissionNetworkServicePluginRoot pluginRoot                            ,
-                                                        final ErrorManager                                    errorManager                          ,
-                                                        final TransactionTransmissionContractHashDao          transactionTransmissionContractHashDao){
+    public TransactionTransmissionNetworkServiceManager(final TransactionTransmissionNetworkServicePluginRoot pluginRoot,
+                                                        final ErrorManager errorManager,
+                                                        final TransactionTransmissionContractHashDao transactionTransmissionContractHashDao) {
 
-        this.pluginRoot                             = pluginRoot                            ;
-        this.errorManager                           = errorManager                          ;
+        this.pluginRoot = pluginRoot;
+        this.errorManager = errorManager;
         this.transactionTransmissionContractHashDao = transactionTransmissionContractHashDao;
+        this.gson = new Gson();
 
-        this.executorService                        = Executors.newFixedThreadPool(3)       ;
+        this.executorService = Executors.newFixedThreadPool(3);
     }
 
     @Override
@@ -69,12 +72,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String transactionHash,
             String negotiationId,
-            Plugins remoteBusinessTransaction ,PlatformComponentType senderComponent,PlatformComponentType receiverComponent
-            ) throws CantSendBusinessTransactionHashException {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantSendBusinessTransactionHashException {
+
         //TODO: Check is contractId is necessary
-        Date date=new Date();
-        Timestamp timestamp=new Timestamp(date.getTime());
-        BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 transactionHash,
                 ContractTransactionStatus.PENDING_CONFIRMATION,
                 cryptoBrokerActorSenderPublicKey,
@@ -91,53 +96,42 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
-            Gson gson = new Gson();
 
-            sendMessage(
-                    gson.toJson(businessTransactionMetadata),
-                    pluginRoot.getProfileSenderToRequestConnection(
-                            businessTransactionMetadata.getSenderId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            senderComponent
-                    ),
+            sendMessage(businessTransactionMetadata);
 
-                    pluginRoot.getProfileDestinationToRequestConnection(
-                            businessTransactionMetadata.getReceiverId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            receiverComponent
-                    )
-            );
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",
-                    "database corrupted");
+                    "Unhandled Exception.");
         }
 
     }
 
     @Override
     public void sendContractStatusNotification(
-            String cryptoBrokerActorSenderPublicKey,
-            String cryptoCustomerActorReceiverPublicKey,
+            String senderPublicKey,
+            String receiverPublicKey,
             String transactionHash,
             String transactionId,
             ContractTransactionStatus contractStatus,
-            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantSendContractNewStatusNotificationException {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantSendContractNewStatusNotificationException {
 
-        Date date=new Date();
-        Timestamp timestamp=new Timestamp(date.getTime());
-        UUID uuidTransactionId=UUID.fromString(transactionId);
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        UUID uuidTransactionId = UUID.fromString(transactionId);
 
-        BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
+        BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 transactionHash,
                 contractStatus,
-                cryptoBrokerActorSenderPublicKey,
+                senderPublicKey,
                 receiverComponent,
-                cryptoCustomerActorReceiverPublicKey,
+                receiverPublicKey,
                 senderComponent,
                 null,
                 null,
@@ -145,28 +139,12 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 timestamp.getTime(),
                 uuidTransactionId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
-                remoteBusinessTransaction
-        );
-        try {
+                remoteBusinessTransaction);
 
+        try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
-            Gson gson = new Gson();
-
-            sendMessage(
-                    gson.toJson(businessTransactionMetadata),
-                        pluginRoot.getProfileSenderToRequestConnection(
-                                businessTransactionMetadata.getSenderId(),
-                                NetworkServiceType.TRANSACTION_TRANSMISSION,
-                                senderComponent
-                    ),
-
-                        pluginRoot.getProfileDestinationToRequestConnection(
-                                businessTransactionMetadata.getReceiverId(),
-                                NetworkServiceType.TRANSACTION_TRANSMISSION,
-                                receiverComponent
-                    )
-            );
+            sendMessage(businessTransactionMetadata);
 
         } catch (CantInsertRecordDataBaseException e) {
             throw new CantSendContractNewStatusNotificationException(
@@ -174,7 +152,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantSendContractNewStatusNotificationException(
                     CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                     e,
@@ -184,45 +162,27 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
 
     }
 
-    public void sendMessage(final String                   jsonMessage       ,
-                             final PlatformComponentProfile senderProfile     ,
-                             final PlatformComponentProfile destinationProfile) {
-
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    pluginRoot.sendNewMessage(
-                            senderProfile,
-                            destinationProfile,
-                            jsonMessage
-                    );
-                } catch (CantSendMessageException e) {
-                    errorManager.reportUnexpectedPluginException(pluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        });
-    }
-
     @Override
     public void confirmNotificationReception(
-            String cryptoBrokerActorSenderPublicKey,
-            String cryptoCustomerActorReceiverPublicKey,
+            String senderPublicKey,
+            String receiverPublicKey,
             String contractHash,
             String transactionId,
-            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
 
-        Date date=new Date();
-        Timestamp timestamp=new Timestamp(date.getTime());
-        UUID uuidTransactionId=UUID.fromString(transactionId);
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        UUID uuidTransactionId = UUID.fromString(transactionId);
+
         //TODO: verificar los parametros del businessTransactionMetadata
-        BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
+        BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 contractHash,
-                null,
-                cryptoBrokerActorSenderPublicKey,
+                ContractTransactionStatus.NOTIFICATION_CONFIRMED,
+                senderPublicKey,
                 receiverComponent,
-                cryptoCustomerActorReceiverPublicKey,
+                receiverPublicKey,
                 senderComponent,
                 null,
                 null,
@@ -236,35 +196,20 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
-            Gson gson = new Gson();
+            sendMessage(businessTransactionMetadata);
 
-            sendMessage(
-                    gson.toJson(businessTransactionMetadata),
-                    pluginRoot.getProfileSenderToRequestConnection(
-                            businessTransactionMetadata.getSenderId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            businessTransactionMetadata.getSenderType()
-                    ),
-
-                    pluginRoot.getProfileDestinationToRequestConnection(
-                            businessTransactionMetadata.getReceiverId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            businessTransactionMetadata.getReceiverType()
-                    )
-            );
-
-        }  catch (CantInsertRecordDataBaseException e) {
+        } catch (CantInsertRecordDataBaseException e) {
             throw new CantConfirmNotificationReception(
                     CantConfirmNotificationReception.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantConfirmNotificationReception(
                     CantConfirmNotificationReception.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
-                    "database corrupted");
+                    "Unhandled Exception.");
         }
     }
 
@@ -274,15 +219,18 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
-            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+            Plugins remoteBusinessTransaction,
+            PlatformComponentType senderComponent,
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
 
-        Date date=new Date();
-        Timestamp timestamp=new Timestamp(date.getTime());
-        UUID uuidTransactionId=UUID.fromString(transactionId);
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        UUID uuidTransactionId = UUID.fromString(transactionId);
+
         //TODO: verificar los parametros del businessTransactionMetadata
-        BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
+        BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 contractHash,
-                null,
+                ContractTransactionStatus.NOTIFICATION_CONFIRMED,
                 cryptoBrokerActorSenderPublicKey,
                 receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
@@ -299,43 +247,28 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
-            Gson gson = new Gson();
+            sendMessage(businessTransactionMetadata);
 
-            sendMessage(
-                    gson.toJson(businessTransactionMetadata),
-                    pluginRoot.getProfileSenderToRequestConnection(
-                            businessTransactionMetadata.getSenderId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            businessTransactionMetadata.getSenderType()
-                    ),
-
-                    pluginRoot.getProfileDestinationToRequestConnection(
-                            businessTransactionMetadata.getReceiverId(),
-                            NetworkServiceType.TRANSACTION_TRANSMISSION,
-                            businessTransactionMetadata.getReceiverType()
-                    )
-            );
-
-        }  catch (CantInsertRecordDataBaseException e) {
+        } catch (CantInsertRecordDataBaseException e) {
             throw new CantConfirmNotificationReception(
                     CantConfirmNotificationReception.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantConfirmNotificationReception(
                     CantConfirmNotificationReception.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
-                    "database corrupted");
+                    "Unhandled Exception.");
         }
     }
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-
         try {
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
+
         } catch (CantUpdateRecordDataBaseException e) {
             throw new CantConfirmTransactionException(
                     CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,
@@ -345,15 +278,15 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         } catch (PendingRequestNotFoundException e) {
             throw new CantConfirmTransactionException(
                     PendingRequestNotFoundException.DEFAULT_MESSAGE,
-                    e,"Confirm reception",
-                    "Cannot find the transaction id in database\n"+transactionID);
+                    e, "Confirm reception",
+                    "Cannot find the transaction id in database\n" + transactionID);
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(
                     CantGetTransactionTransmissionException.DEFAULT_MESSAGE,
                     e,
                     "Confirm reception",
                     "Cannot get the business transaction record from the database");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CantConfirmTransactionException(
                     CantConfirmTransactionException.DEFAULT_MESSAGE,
                     e,
@@ -363,21 +296,19 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(
-            Specialist specialist) throws CantDeliverPendingTransactionsException {
-        List<Transaction<BusinessTransactionMetadata>> pendingTransaction=new ArrayList<>();
+    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        List<Transaction<BusinessTransactionMetadata>> pendingTransaction = new ArrayList<>();
         try {
 
             Map<String, Object> filters = new HashMap<>();
-            filters.put(
-                    TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME,
-                    "false");
+            filters.put(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, "false");
 
-            List<BusinessTransactionMetadata> businessTransactionMetadataList =transactionTransmissionContractHashDao.findAllToReceive(filters);
-            if(!businessTransactionMetadataList.isEmpty()){
+            List<BusinessTransactionMetadata> businessTransactionMetadataList = transactionTransmissionContractHashDao.findAllToReceive(filters);
+            if (!businessTransactionMetadataList.isEmpty()) {
 
-                for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
-                    Transaction<BusinessTransactionMetadata> transaction = new Transaction<>(businessTransactionMetadata.getTransactionId(),
+                for (BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList) {
+                    Transaction<BusinessTransactionMetadata> transaction = new Transaction<>(
+                            businessTransactionMetadata.getTransactionId(),
                             businessTransactionMetadata,
                             Action.APPLY,
                             businessTransactionMetadata.getTimestamp());
@@ -399,8 +330,29 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "CAN'T GET PENDING METADATA NOTIFICATIONS",
                     e,
                     "Transaction Transmission network service",
-                    "database error");
+                    "Unhandled Exception.");
 
         }
+    }
+
+    public void sendMessage(final BusinessTransactionMetadata metadata) {
+
+        final PlatformComponentProfile senderProfile = pluginRoot.getProfileSenderToRequestConnection(metadata.getSenderId(),
+                NetworkServiceType.TRANSACTION_TRANSMISSION, metadata.getSenderType());
+
+        final PlatformComponentProfile destinationProfile = pluginRoot.getProfileDestinationToRequestConnection(metadata.getReceiverId(),
+                NetworkServiceType.TRANSACTION_TRANSMISSION, metadata.getReceiverType());
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    pluginRoot.sendNewMessage(senderProfile, destinationProfile, gson.toJson(metadata));
+                } catch (CantSendMessageException e) {
+                    errorManager.reportUnexpectedPluginException(pluginRoot.getPluginVersionReference(),
+                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+            }
+        });
     }
 }

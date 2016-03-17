@@ -18,12 +18,12 @@ public class ClauseImpl implements Clause {
     private String value;
     private ClauseStatus status;
 
-    public ClauseImpl(ClauseInformation clauseInformation, String brokerPublicKey) {
+    public ClauseImpl(ClauseInformation clauseInformation, String proposer) {
         this.id = clauseInformation.getClauseID();
         this.type = clauseInformation.getType();
         this.value = clauseInformation.getValue();
         this.status = clauseInformation.getStatus();
-        this.proposedBy = "";
+        this.proposedBy = proposer;
     }
 
     @Override
