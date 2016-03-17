@@ -51,7 +51,9 @@ public interface ChatManager {
 
     List<Message> getMessages() throws CantGetMessageException;
 
-    List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException;
+    List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
+
+    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
