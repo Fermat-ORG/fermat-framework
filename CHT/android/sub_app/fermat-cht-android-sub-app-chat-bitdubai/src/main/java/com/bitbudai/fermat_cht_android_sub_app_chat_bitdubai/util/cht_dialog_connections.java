@@ -75,7 +75,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
-    private ArrayList<ContactConnection> contactConnectionList;
+    private List<ContactConnection> contactConnectionList;
     ListView list;
     private AdapterCallbackContacts mAdapterCallback;
     FermatTextView txt_title,txt_body;
@@ -110,15 +110,16 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
         text=(TextView) findViewById(R.id.text);
-
+        list = (ListView) findViewById(R.id.list);
         btn_add = (Button) findViewById(R.id.btn_add);
          setUpListeners();
 
         try {
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            //final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            //progressDialog.setMessage("Please wait");
+           // progressDialog.setCancelable(false);
+           // progressDialog.show();
+            text.setText("Please wait...");
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -130,11 +131,10 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    if (result != null &&
-                            result.length > 0) {
-                        progressDialog.dismiss();
-                        if (getActivity() != null && adapter != null) {
-                            contactConnectionList = (ArrayList<ContactConnection>) result[0];
+                    if (result != null && result.length > 0) {
+                        //progressDialog.dismiss();
+                        if (getActivity() != null) {
+                            contactConnectionList = (List<ContactConnection>) result[0];
                             for (ContactConnection con : contactConnectionList) {
                                 if(!con.getAlias().isEmpty() &&
                                         !con.getContactId().equals("") &&
@@ -155,6 +155,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                             }
 
                             adapter=new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+                            list.setAdapter(adapter);
                             if (contactConnectionList.isEmpty()) {
                                 showEmpty(true, text);
                             } else {
@@ -168,7 +169,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
@@ -209,9 +210,6 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
