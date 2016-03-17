@@ -20,6 +20,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
@@ -85,6 +86,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
 
+
+
+        list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
+
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -117,9 +122,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
 
-            if (preferenceSettingsItem.getId() == 1){
-                //enable notifications settings
-                bitcoinWalletSettings.setNotificationEnabled(((PreferenceSettingsSwithItem)preferenceSettingsItem).getSwitchChecked());
+
+            if (preferenceSettingsItem.getId() == 9) {
+                //export key open dialog
             }
             else {
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;

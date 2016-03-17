@@ -21,4 +21,5 @@ public class ApplicationConstants {
     public static final String INTENT_DESKTOP_APP_PUBLIC_KEY = "publicKey";
     public static final String INSTALLED_FERMAT_APP = "installedFermatApp";
     public static final String INTENT_APP_TYPE = "appType";
+    public static final String RECENT_APPS = "recentApps";
 }

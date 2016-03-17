@@ -2,7 +2,8 @@ package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.*;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+//import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.*;
 
 /**
  * Created by Matias Furszyfer on 2015.09.03..
@@ -18,7 +19,7 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
     private String intraUserIdentityPublicKey;
 
 
-    public IncomingMoneyNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
+    public IncomingMoneyNotificationEvent(EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
         super(eventType);
         this.walletPublicKey = walletPublicKey;
         this.amount = amount;

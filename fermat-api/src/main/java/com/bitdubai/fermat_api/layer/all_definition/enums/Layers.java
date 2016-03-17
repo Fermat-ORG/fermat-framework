@@ -16,6 +16,7 @@ public enum Layers implements FermatEnum {
     ACTOR                          ("ACT"),
     ACTOR_CONNECTION               ("ACC"),
     ACTOR_NETWORK_SERVICE          ("ANS"),
+    API                            ("API"),
     BANK_MONEY_TRANSACTION         ("BMT"),
     BASIC_WALLET                   ("BSW"),
     BUSINESS_TRANSACTION           ("BTX"),
@@ -30,6 +31,7 @@ public enum Layers implements FermatEnum {
     DESKTOP_MODULE                 ("DKM"),
     DIGITAL_ASSET_TRANSACTION      ("DAT"),
     ENGINE                         ("ENG"),
+    FUNDS_TRANSACTION              ("FTX"),
     HARDWARE                       ("HAR"),
     IDENTITY                       ("IDT"),
     MIDDLEWARE                     ("MID"),
@@ -65,6 +67,7 @@ public enum Layers implements FermatEnum {
             case "ACT":  return ACTOR;
             case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
+            case "API":  return API;
             case "BMT":  return BANK_MONEY_TRANSACTION;
             case "BSW":  return BASIC_WALLET;
             case "BTX":  return BUSINESS_TRANSACTION;
@@ -79,6 +82,7 @@ public enum Layers implements FermatEnum {
             case "DEF":  return DEFINITION;
             case "DKM":  return DESKTOP_MODULE;
             case "ENG":  return ENGINE;
+            case "FTX":  return FUNDS_TRANSACTION;
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;
             case "MID":  return MIDDLEWARE;

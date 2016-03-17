@@ -369,7 +369,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                             // El sender es el otro y es a quien le voy a responder
 
                             transactionTransmissionNetworkServiceManager.sendMessage(
-                                    gson.toJson(businessTransactionMetadata),
+                                    message,
                                     this.getProfileSenderToRequestConnection(
                                             businessTransactionMetadata.getSenderId(),
                                             NetworkServiceType.UNDEFINED,

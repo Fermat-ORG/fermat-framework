@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
@@ -18,8 +19,11 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
  * Created by mati on 2016.03.01..
@@ -139,6 +143,12 @@ public class NotificationService extends Service {
             notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
         }
     }
+    public void notificate(String code,FermatBundle bundle){
+
+
+    }
+
+
     public void notificateProgress(final String code){
         if(!lstNotifications.containsKey(code)){
             notificationIdCount++;

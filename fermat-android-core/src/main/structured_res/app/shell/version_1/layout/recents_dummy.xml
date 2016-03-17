@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="250dp"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal|top"
         >
@@ -40,15 +40,17 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:id="@+id/img_recent_icon"
                 android:src="@drawable/bitcoin_wallet"
                 android:layout_gravity="center_vertical"
                 />
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
+                android:id="@+id/recent_title"
                 android:text="Bitcoin Wallet"
                 android:textSize="28sp"
                 android:paddingLeft="28dp"
@@ -75,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/app_container"
-            android:background="@drawable/stack">
+            android:background="@drawable/cbroker_community">
 
 
         </FrameLayout>

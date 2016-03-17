@@ -26,23 +26,28 @@ public class AppStatusListener implements AppStatusCallbackChanges {
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
         for (AbstractFermatFragment fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
-            fragment.onUpdateViewUIThred(appsStatus.getCode());
+            //TODO: ver que pasa acá
+            try {
+                fragment.onUpdateViewUIThred(appsStatus.getCode());
+            }catch (Exception e){
+
+            }
         }
         switch (appsStatus){
             case RELEASE:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icon_relese);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.relese_icon);
                 break;
             case BETA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icons_beta);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_icon);
                 break;
             case ALPHA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icons_alfa);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alfa_icon);
                 break;
             case DEV:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icons_developer);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.developer_icon);
                 break;
             default:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icon_relese);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.relese_icon);
                 break;
         }
     }
