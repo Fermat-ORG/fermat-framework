@@ -25,9 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -938,7 +938,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final String remote = chatMetadataRecord.getRemoteActorPublicKey();
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
-            System.out.println("*** 12345 case 5:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
+            System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
 //            executorService.submit(new Runnable() {
 //                @Override
 //                public void run() {

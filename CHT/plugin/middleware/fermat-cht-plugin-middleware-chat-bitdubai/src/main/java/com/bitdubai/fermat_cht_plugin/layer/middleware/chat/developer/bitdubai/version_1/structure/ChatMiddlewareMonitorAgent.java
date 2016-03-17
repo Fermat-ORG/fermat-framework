@@ -182,7 +182,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 2000;
+        public final int SLEEP_TIME = 1000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE="13";
         int discoverIteration = 0;
@@ -303,12 +303,12 @@ public class ChatMiddlewareMonitorAgent implements
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
                     //deleteActorConnections();
-                    contactList=chatMiddlewareManager.discoverActorsRegistered();
-                    if(!contactList.isEmpty()){
-                        for(ContactConnection contact : contactList){
-                            saveContactConnection(contact);
-                        }
-                    }
+//                    contactList=chatMiddlewareManager.discoverActorsRegistered();
+//                    if(!contactList.isEmpty()){
+//                        for(ContactConnection contact : contactList){
+//                            saveContactConnection(contact);
+//                        }
+//                    }
                 }
                 discoverIteration++;
                 if(discoverIteration==DISCOVER_ITERATION_LIMIT){
@@ -390,23 +390,23 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the pending transaction from Network Service plugin"
                 );
-            } catch (CantGetContactConnectionException e) {
-                //For now, I'm gonna handle this print the exception and continue the thread
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        e);
-                e.printStackTrace();
-            } catch (CantSaveContactConnectionException e) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        e);
-                throw new CantSendChatMessageException(
-                        e,
-                        "Executing Monitor Agent",
-                        "Cannot save a new contact"
-                );
+//            } catch (CantGetContactConnectionException e) {
+//                //For now, I'm gonna handle this print the exception and continue the thread
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.CHAT_MIDDLEWARE,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                        e);
+//                e.printStackTrace();
+//            } catch (CantSaveContactConnectionException e) {
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.CHAT_MIDDLEWARE,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                        e);
+//                throw new CantSendChatMessageException(
+//                        e,
+//                        "Executing Monitor Agent",
+//                        "Cannot save a new contact"
+//                );
             } catch (Exception exception){
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
@@ -883,7 +883,7 @@ public class ChatMiddlewareMonitorAgent implements
          */
         private void sendMessage(Message createdMessage) throws CantSendChatMessageException {
             try{
-                System.out.println("*** 12345 case 4:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
+                System.out.println("*** 12345 case 5:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
                 UUID chatId=createdMessage.getChatId();
                 Chat chat=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
                 if(chat==null){

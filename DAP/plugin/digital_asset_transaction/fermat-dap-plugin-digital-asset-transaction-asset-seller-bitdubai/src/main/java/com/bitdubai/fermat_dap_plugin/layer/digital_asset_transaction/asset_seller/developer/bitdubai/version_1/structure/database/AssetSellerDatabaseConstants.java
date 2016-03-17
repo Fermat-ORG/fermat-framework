@@ -14,6 +14,9 @@ public class AssetSellerDatabaseConstants {
     public static final String ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME = "genesisTx";
     public static final String ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME = "network";
     public static final String ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME = "buyerPublicKey";
+    public static final String ASSET_SELLER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME = "buyerCryptoAddress";
+    public static final String ASSET_SELLER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME = "sellerCryptoAddress";
+    public static final String ASSET_SELLER_CRYPTO_CURRENCY_COLUMN_NAME = "cryptoCurrency";
     public static final String ASSET_SELLER_SELL_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME = "negotiation";
     public static final String ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME = "unsignedTransaction"; //This will be encode as string using Apache Commons base 64 encoding.

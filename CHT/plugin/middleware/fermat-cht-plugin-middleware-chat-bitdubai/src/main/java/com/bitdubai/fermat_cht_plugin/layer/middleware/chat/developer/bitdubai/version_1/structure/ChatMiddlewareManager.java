@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -33,6 +35,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatUserIde
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
@@ -45,7 +48,10 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatMan
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatUserIdentityImpl;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -99,13 +105,20 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     private DeviceUserManager deviceUserManager;
 
+    NetworkServiceChatManager chatNetworkServiceManager;
+
+    private final Broadcaster broadcaster;
+    public final String BROADCAST_CODE="13";
+
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             ChatMiddlewareContactFactory chatMiddlewareContactFactory,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
             NetworkServiceChatManager networkServiceChatManager,
             ErrorManager errorManager,
-            DeviceUserManager deviceUserManager
+            DeviceUserManager deviceUserManager,
+            NetworkServiceChatManager chatNetworkServiceManager,
+            Broadcaster broadcaster
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
@@ -113,6 +126,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         this.networkServiceChatManager = networkServiceChatManager;
         this.errorManager = errorManager;
         this.deviceUserManager = deviceUserManager;
+        this.chatNetworkServiceManager = chatNetworkServiceManager;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -1074,6 +1089,104 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         } catch (CantSaveChatUserIdentityException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This method sends the message through the Chat Network Service
+     *
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    @Override
+    public void sendMessage(Message createdMessage) throws CantSendChatMessageException {
+        try{
+            System.out.println("*** 12345 case 5:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
+            UUID chatId=createdMessage.getChatId();
+            Chat chat=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if(chat==null){
+                return;
+            }
+            String localActorPublicKey=chat.getLocalActorPublicKey();
+            String remoteActorPublicKey=chat.getRemoteActorPublicKey();
+            ChatMetadata chatMetadata=constructChatMetadata(
+                    chat,
+                    createdMessage
+            );
+            System.out.println("ChatMetadata to send:\n" + chatMetadata);
+            try{
+                chatNetworkServiceManager.sendChatMetadata(
+                        localActorPublicKey,
+                        remoteActorPublicKey,
+                        chatMetadata
+                );
+                createdMessage.setStatus(MessageStatus.SEND);
+            } catch (IllegalArgumentException e) {
+                /**
+                 * In this case, any argument in chat or message was null or not properly set.
+                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+                 */
+                createdMessage.setStatus(MessageStatus.CANNOT_SEND);
+            }
+            chatMiddlewareDatabaseDao.saveMessage(createdMessage);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+        } catch (DatabaseOperationException e) {
+            throw new CantSendChatMessageException(
+                    e,
+                    "Sending a message",
+                    "Unexpected error in database"
+            );
+        } catch (CantGetChatException e) {
+            throw new CantSendChatMessageException(
+                    e,
+                    "Sending a message",
+                    "Cannot get the chat"
+            );
+        } catch (CantSendChatMessageMetadataException e) {
+            throw new CantSendChatMessageException(
+                    e,
+                    "Sending a message",
+                    "Cannot send the ChatMetadata"
+            );
+        } catch (CantSaveMessageException e) {
+            throw new CantSendChatMessageException(
+                    e,
+                    "Sending a message",
+                    "Cannot save the message"
+            );
+        }
+
+
+
+
+
+    }
+
+    /**
+     * This method return a ChatMetadata from a Chat and Message objects.
+     * @param chat
+     * @param message
+     * @return
+     */
+    private ChatMetadata constructChatMetadata(
+            Chat chat,
+            Message message){
+        Timestamp timestamp=new Timestamp(message.getMessageDate().getTime());
+        ChatMetadata chatMetadata=new ChatMetadataRecord(
+                chat.getChatId(),
+                chat.getObjectId(),
+                chat.getLocalActorType(),
+                chat.getLocalActorPublicKey(),
+                chat.getRemoteActorType(),
+                chat.getRemoteActorPublicKey(),
+                chat.getChatName(),
+                ChatMessageStatus.READ_CHAT,
+                MessageStatus.SEND,
+                timestamp,
+                message.getMessageId(),
+                message.getMessage(),
+                DistributionStatus.OUTGOING_MSG
+        );
+        return chatMetadata;
     }
 
 

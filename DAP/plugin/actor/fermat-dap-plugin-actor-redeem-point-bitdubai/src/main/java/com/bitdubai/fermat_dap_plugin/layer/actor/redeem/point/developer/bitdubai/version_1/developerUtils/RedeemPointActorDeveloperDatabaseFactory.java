@@ -124,8 +124,8 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME);
+        //redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME);
+        //redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ACTOR_TYPE_COLUMN_NAME);
@@ -153,8 +153,8 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_CITY_NAME_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_STREET_NAME_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_HOUSE_NUMBER_COLUMN_NAME);
-        registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
-        registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
+        //registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
+        //registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME);

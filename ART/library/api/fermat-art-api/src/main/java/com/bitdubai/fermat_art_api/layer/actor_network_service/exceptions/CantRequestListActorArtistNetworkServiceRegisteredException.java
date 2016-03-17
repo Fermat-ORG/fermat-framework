@@ -3,7 +3,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 
 /**
- * Created by franklin on 15/10/15.
+ * Created by Gabriel Araujo (gabe_512@hotmail.com) on 14/03/16.
  */
 public class CantRequestListActorArtistNetworkServiceRegisteredException extends ARTException {
 

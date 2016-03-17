@@ -436,7 +436,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        toolbar.setTitle(digitalAsset.getName());
+//        toolbar.setTitle(digitalAsset.getName());
 
 //        if (digitalAsset.getImage() != null) {
 //            assetDeliveryImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));

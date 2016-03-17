@@ -37,9 +37,8 @@ import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.v
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
