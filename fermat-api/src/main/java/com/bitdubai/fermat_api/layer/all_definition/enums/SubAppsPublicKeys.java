@@ -38,6 +38,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
     //TODO PIP Platform
     PIP_DEVELOPER               ("public_key_pip_developer_sub_app"),
 
+    SETTINGS                    ("public_key_settings");
     ;
 
     private String code;
@@ -77,6 +78,8 @@ public enum SubAppsPublicKeys implements FermatEnum {
             case "public_key_dap_factory":                  return DAP_FACTORY              ;
             //TODO PIP Platform
             case "public_key_pip_developer_sub_app":        return PIP_DEVELOPER            ;
+
+            case "public_key_settings":                     return SETTINGS                 ;
 
             default:
                 throw new InvalidParameterException(
