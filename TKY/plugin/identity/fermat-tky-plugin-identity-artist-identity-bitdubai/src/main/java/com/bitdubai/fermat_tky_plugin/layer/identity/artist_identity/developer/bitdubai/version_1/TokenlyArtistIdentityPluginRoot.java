@@ -28,7 +28,6 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
-import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
@@ -101,12 +100,12 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.tokenlyApiManager);
 
-            System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
-            testCreateArtist();
+            //System.out.println("############\n TKY IDENTITY ARTIST STARTED\n");
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.ARTIST_IDENTITY);
+            errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.TOKENLY_ARTIST);
         }
 
 //        try {
@@ -173,12 +172,6 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         return identityArtistManager.getIdentitArtist(id);
     }
 
-
-    @Override
-    public void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException {
-
-    }
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         TokenlyArtistIdentityDeveloperDatabaseFactory dbFactory = new TokenlyArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
@@ -198,7 +191,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
