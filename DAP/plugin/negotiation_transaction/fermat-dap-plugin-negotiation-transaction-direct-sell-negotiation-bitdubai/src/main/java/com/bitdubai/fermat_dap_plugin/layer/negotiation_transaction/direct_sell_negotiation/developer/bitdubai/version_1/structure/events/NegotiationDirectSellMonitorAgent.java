@@ -33,7 +33,6 @@ public class NegotiationDirectSellMonitorAgent implements Agent {
     }
 
     private final ErrorManager errorManager;
-    private final LogManager logManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private final ExtraUserManager extraUserManager;
@@ -44,12 +43,10 @@ public class NegotiationDirectSellMonitorAgent implements Agent {
 
 
     public NegotiationDirectSellMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
-                                             LogManager logManager,
                                              ErrorManager errorManager,
                                              UUID pluginId,
                                              ExtraUserManager extraUserManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
-        this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.extraUserManager = Validate.verifySetter(extraUserManager, "extraUserManager is null");
@@ -60,8 +57,6 @@ public class NegotiationDirectSellMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         try {
-            logManager.log(NegotiationDirectSellNegotiationTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Direct Sell Negotiation Protocol Notification Agent: starting...", null, null);
-
             directSellNegotiationAgent = new DirectSellNegotiationAgent();
             Thread eventThread = new Thread(directSellNegotiationAgent, "Direct Sell Negotiation MonitorAgent");
             eventThread.start();
@@ -69,15 +64,12 @@ public class NegotiationDirectSellMonitorAgent implements Agent {
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
-        logManager.log(NegotiationDirectSellNegotiationTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Direct Sell Negotiation Protocol Notification Agent: successfully started...", null, null);
-    }
+   }
 
     @Override
     public void stop() {
-        logManager.log(NegotiationDirectSellNegotiationTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Direct Sell Negotiation Protocol Notification Agent: stopping...", null, null);
         directSellNegotiationAgent.stopAgent();
         directSellNegotiationAgent = null; //RELEASE RESOURCES.
-        logManager.log(NegotiationDirectSellNegotiationTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Direct Sell Negotiation Protocol Notification Agent: successfully stopped...", null, null);
         this.status = ServiceStatus.STOPPED;
     }
 

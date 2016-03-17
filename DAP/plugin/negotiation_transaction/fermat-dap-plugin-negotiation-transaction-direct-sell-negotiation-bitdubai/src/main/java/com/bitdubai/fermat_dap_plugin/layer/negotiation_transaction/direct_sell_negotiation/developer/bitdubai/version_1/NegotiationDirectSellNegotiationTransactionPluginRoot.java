@@ -68,9 +68,6 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
@@ -127,7 +124,6 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
                 "ErrorManager : " + errorManager + "\n" +
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
                 "pluginFileSystem : " + pluginFileSystem + "\n" +
-                "logManager : " + logManager + "\n" +
                 "eventManager : " + eventManager + "\n" +
                 "recorderService : " + recorderService + "\n";
 
@@ -140,7 +136,6 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
             recorderService = new NegotiationDirectSellRecorderService(pluginId, eventManager, pluginDatabaseSystem);
             recorderService.start();
             monitorAgent = new NegotiationDirectSellMonitorAgent(pluginDatabaseSystem,
-                    logManager,
                     errorManager,
                     pluginId,
                     extraUserManager);
