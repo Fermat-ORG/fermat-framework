@@ -311,6 +311,9 @@ public enum Plugins implements FermatPluginsEnum {
     API_TOKENLY                         ("TOKAP"),
     TOKENLY_ARTIST                      ("TARTIST"),
     TOKENLY_FAN                         ("TFAN"),
+    TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
+    TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
+    TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
     TOKENLY_WALLET                      ("TWALLET");
 
     // End  new Plugins
@@ -456,6 +459,9 @@ public enum Plugins implements FermatPluginsEnum {
             case "TOKAP":       return API_TOKENLY                              ;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
+            case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;
+            case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
+            case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
             case "TWALLET":     return TOKENLY_WALLET                           ;
 
             default:
