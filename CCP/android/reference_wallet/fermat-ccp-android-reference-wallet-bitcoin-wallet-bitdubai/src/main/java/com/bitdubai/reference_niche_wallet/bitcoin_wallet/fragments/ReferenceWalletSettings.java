@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.WindowManager;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -17,6 +18,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicSendDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
@@ -125,6 +128,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             if (preferenceSettingsItem.getId() == 9) {
                 //export key open dialog
+                MnemonicSendDialog MnemonicDialog = new MnemonicSendDialog(getActivity());
+                MnemonicDialog.show();
+
             }
             else {
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
