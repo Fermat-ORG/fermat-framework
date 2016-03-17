@@ -3788,37 +3788,36 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
      */
     @Override
     public WalletNavigationStructure getNavigationStructure(String walletPublicKey) {
-        WalletNavigationStructure walletNavigationStructure = null;
+        WalletNavigationStructure fermatStructure = null;
         if (walletPublicKey != null) {
-            String navigationStructureName = walletPublicKey + ".xml";
-
-            try {
-
-                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.loadFromMedia();
-                String xml = pluginTextFile.getContent();
-
-
-                walletNavigationStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, walletNavigationStructure);
-
-            } catch (FileNotFoundException e) {
+            if (lstWalletNavigationStructureOpen.containsKey(walletPublicKey)) {
+                fermatStructure = lstWalletNavigationStructureOpen.get(walletPublicKey);
+            } else {
+                String navigationStructureName = walletPublicKey + ".xml";
                 try {
-                    PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    layoutFile.setContent("");
+                    PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    pluginTextFile.loadFromMedia();
+                    String xml = pluginTextFile.getContent();
+                    fermatStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, fermatStructure);
+                    lstWalletNavigationStructureOpen.put(walletPublicKey,fermatStructure);
+                } catch (FileNotFoundException e) {
+                    try {
+                        PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                        layoutFile.setContent("");
 
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+
+                } catch (CantCreateFileException e) {
+                    e.printStackTrace();
+                } catch (CantLoadFileException e) {
+                    e.printStackTrace();
                 }
-
-
-            } catch (CantCreateFileException e) {
-                e.printStackTrace();
-            } catch (CantLoadFileException e) {
-                e.printStackTrace();
             }
         }
-
-        return walletNavigationStructure;
+    return fermatStructure;
     }
 
     @Override
