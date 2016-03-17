@@ -116,6 +116,11 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     private URI uri;
 
+    /*
+     * Represent if it must reconnect to cloud server
+     */
+    private boolean tryToReconnect;
+
     /**
      * Constructor whit parameters
      *
@@ -130,6 +135,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         this.locationManager                         = locationManager;
         this.webSocketContainer = ClientManager.createClient();
         this.WsCommunicationsCloudClientPluginRoot = WsCommunicationsCloudClientPluginRoot;
+        this.tryToReconnect = Boolean.TRUE;
     }
 
     /**
@@ -161,6 +167,10 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
     }
 
+    public void setNotTryToReconnectToCloud(){
+        tryToReconnect = Boolean.FALSE;
+    }
+
     /**
      * Method that initialize the component and open a new connection
      */
@@ -185,7 +195,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
                 System.out.println("############################################################");
                 System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
                 System.out.println("############################################################");
-                return true;
+                return tryToReconnect;
             }
 
             @Override
@@ -199,7 +209,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                return true;
+                return tryToReconnect;
             }
 
         };
@@ -592,7 +602,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
             // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.getServerIp() + ":" + WsCommunicationsCloudClientPluginRoot.getServerPort() + "/fermat/components/registered", parameters, String.class);
+            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.getServerIp() + ":" + WsCommunicationsCloudClientPluginRoot.getServerPort() + "/fermat/api/components/registered", parameters, String.class);
 
             /*
              * if respond have the result list
