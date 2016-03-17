@@ -30,6 +30,11 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
         return childCount;
     }
 
+    @Override
+    public Object getItem() {
+        return null;
+    }
+
     /**
      * Getter method for the list of children associated with this parent list item
      *

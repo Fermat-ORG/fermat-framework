@@ -25,7 +25,9 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
     static final String TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
     static final String TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
-    static final String TRANSACTIONS_VALUE_COLUMN_NAME = "value";
+    static final String TRANSACTIONS_BTC_AMOUNT_COLUMN_NAME = "btc_amount";
+    static final String TRANSACTIONS_FEE_AMOUNT_COLUMN_NAME = "fee";
+    static final String TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     static final String TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
     static final String TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
     static final String TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";

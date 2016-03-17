@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface for implementing required methods in a parent list item.
  */
-public interface ParentListItem {
+public interface ParentListItem<ITEM> {
 
     /**
      * Getter for the list of this parent list item's child list items.
@@ -23,4 +23,9 @@ public interface ParentListItem {
      * @return true if expanded, false if not
      */
     boolean isInitiallyExpanded();
+
+
+    int getChildCount();
+
+    ITEM getItem();
 }
