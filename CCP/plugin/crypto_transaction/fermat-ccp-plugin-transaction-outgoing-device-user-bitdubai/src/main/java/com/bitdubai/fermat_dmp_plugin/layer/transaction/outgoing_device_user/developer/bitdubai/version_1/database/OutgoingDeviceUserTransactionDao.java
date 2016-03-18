@@ -84,6 +84,7 @@ public class OutgoingDeviceUserTransactionDao {
                                        ReferenceWallet reference_wallet_receiving,
                                        String wallet_public_key_sending,
                                        String wallet_public_key_receiving,
+                                       TransactionState transactionState,
                                        BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_DATABASE_NAME);
@@ -99,6 +100,7 @@ public class OutgoingDeviceUserTransactionDao {
                     reference_wallet_receiving,
                     wallet_public_key_sending,
                     wallet_public_key_receiving,
+                    transactionState,
                     blockchainNetworkType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
@@ -189,6 +191,7 @@ public class OutgoingDeviceUserTransactionDao {
                                  ReferenceWallet reference_wallet_receiving,
                                  String wallet_public_key_sending,
                                  String wallet_public_key_receiving,
+                                 TransactionState transactionState,
                                  BlockchainNetworkType blockchainNetworkType) {
 
         databaseTableRecord.setUUIDValue(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_TRANSACTION_ID_COLUMN_NAME, trxId);
@@ -197,7 +200,7 @@ public class OutgoingDeviceUserTransactionDao {
 
         databaseTableRecord.setLongValue(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
 
-        databaseTableRecord.setStringValue(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.SENT_TO_WALLET.getCode());
+        databaseTableRecord.setStringValue(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode());
 
         databaseTableRecord.setStringValue(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_DESCRIPTION_COLUMN_NAME, notes);
 

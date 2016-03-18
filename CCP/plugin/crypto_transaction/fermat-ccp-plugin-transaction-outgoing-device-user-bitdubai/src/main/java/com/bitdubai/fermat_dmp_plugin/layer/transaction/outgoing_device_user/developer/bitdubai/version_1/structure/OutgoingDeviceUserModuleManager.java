@@ -3,8 +3,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.de
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
@@ -24,8 +26,13 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDao;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.enums.TransactionState;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.utils.BitcoinLossProtectedWalletTransactionWalletRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.utils.BitcoinWalletTransactionWalletRecord;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.utils.OutgoingDeviceUserTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
@@ -41,14 +48,17 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
     private final BitcoinLossProtectedWalletManager bitcoinLossWalletManager;
     private final BitcoinWalletManager bitcoinWalletManager;
     private final ErrorManager errorManager;
+    private final OutgoingDeviceUserTransactionDao dao;
 
 
     public OutgoingDeviceUserModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                            final BitcoinWalletManager bitcoinWalletManager,
-                                           final ErrorManager errorManager) {
+                                           final ErrorManager errorManager,
+                                           final OutgoingDeviceUserTransactionDao dao) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
+        this.dao = dao;
     }
 
     @Override
@@ -67,10 +77,12 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
         Long balanceBeforeCredit = null;
         Long balanceAfterCredit = null;
 
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
+        UUID id = UUID.randomUUID();
 
-        BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord(id1,
+
+
+
+        BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord(id,
                 null,
                 null,
                 cryptoAmount,
@@ -83,7 +95,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                 actortype,
                 actortype,
                 blockchainNetworkType);
-        BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionWalletRecord =  buildLossWalletRecord(id2,
+        BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionWalletRecord =  buildLossWalletRecord(id,
                 null,
                 null,
                 cryptoAmount,
@@ -125,6 +137,24 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                     }
                 }
 
+                //Register the new transaction
+
+                try {
+                    dao.registerNewTransaction(id,
+                            txHash,
+                            cryptoAmount,
+                            notes,
+                            actortype,
+                            reference_wallet_sending,
+                            reference_wallet_receiving,
+                            wallet_public_key_sending,
+                            wallet_public_key_receiving,
+                            TransactionState.SENT_TO_WALLET,
+                            blockchainNetworkType);
+                } catch (OutgoingIntraActorCantInsertRecordException e) {
+                    e.printStackTrace();
+                }
+
 
                 try {
                     balanceAfterCredit =   this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinWalletTransactionWalletRecord.getTransactionId()).getAmount();
@@ -152,6 +182,19 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                             } catch (CantRegisterDebitException e) {
                                 e.printStackTrace();
                             } catch (CantLoadWalletException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            try {
+                                OutgoingDeviceUserTransactionWrapper transactionWrapper = dao.getTransaction(id);
+                                dao.setToCompleted(transactionWrapper);
+
+                            } catch (CantLoadTableToMemoryException e) {
+                                e.printStackTrace();
+                            } catch (InvalidParameterException e) {
+                                e.printStackTrace();
+                            } catch (OutgoingIntraActorCantCancelTransactionException e) {
                                 e.printStackTrace();
                             }
 
@@ -193,6 +236,23 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
 
                 try {
+                    dao.registerNewTransaction(id,
+                            txHash,
+                            cryptoAmount,
+                            notes,
+                            actortype,
+                            reference_wallet_sending,
+                            reference_wallet_receiving,
+                            wallet_public_key_sending,
+                            wallet_public_key_receiving,
+                            TransactionState.SENT_TO_WALLET,
+                            blockchainNetworkType);
+                } catch (OutgoingIntraActorCantInsertRecordException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
                     balanceAfterCredit =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinLossProtectedWalletTransactionWalletRecord.getTransactionId()).getAmount();
                 } catch (CantFindTransactionException e) {
                     e.printStackTrace();
@@ -218,6 +278,22 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                             } catch (CantLoadWalletsException e) {
                                 e.printStackTrace();
                             }
+
+                            try {
+                                OutgoingDeviceUserTransactionWrapper transactionWrapper = dao.getTransaction(id);
+                                dao.setToCompleted(transactionWrapper);
+
+                            } catch (CantLoadTableToMemoryException e) {
+                                e.printStackTrace();
+                            } catch (InvalidParameterException e) {
+                                e.printStackTrace();
+                            } catch (OutgoingIntraActorCantCancelTransactionException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
                             break;
                         case BASIC_WALLET_DISCOUNT_WALLET:
                             break;
