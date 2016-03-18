@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure.ArtistIdentityManager;
 
 /**
@@ -22,6 +23,10 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin {
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
+
+
     ArtistIdentityManager artistIdentityManager;
     /**
      * Default constructor
@@ -30,7 +35,9 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin {
         super(new PluginVersionReference(new Version()));
     }
     private void initPluginManager(){
-        this.artistIdentityManager = new ArtistIdentityManager();
+        this.artistIdentityManager = new ArtistIdentityManager(
+                errorManager,
+                tokenlyArtistIdentityManager);
     }
 
     public void start() throws CantStartPluginException {
