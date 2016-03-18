@@ -49,7 +49,7 @@ public class BitcoinWalletSender {
         this.actorType = actorType;
     }
 
-    public boolean sendBtcToWallet(){
+    public void sendBtcToWallet(){
 
         Long balanceBeforeCredit = null;
         Long balanceAfterCredit = null;
@@ -198,7 +198,7 @@ public class BitcoinWalletSender {
 
 
        }
-        return true;
+
     }
 
 
