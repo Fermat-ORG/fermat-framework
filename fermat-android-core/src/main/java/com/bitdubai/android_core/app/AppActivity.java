@@ -271,7 +271,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
+                setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -281,10 +281,16 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     }
 
     private void paintScreen(Activity activity) {
-        String backgroundColor = activity.getBackgroundColor();
-        if(backgroundColor!=null){
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
-            getWindow().setBackgroundDrawable(colorDrawable);
+        try {
+            String backgroundColor = activity.getBackgroundColor();
+            if (backgroundColor != null) {
+                Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
+                getWindow().setBackgroundDrawable(colorDrawable);
+            }
+        }catch (Exception e){
+//            getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+//                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -319,17 +325,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void changeActivity(String activityName,String appBackPublicKey, Object... objects) {
-//        Method m = null;
-//        try {
-//            m = StrictMode.class.getMethod("incrementExpectedActivityCount", Class.class);
-//            m.invoke(null, WalletActivity.class);
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
         Activity lastActivity = null;
         Activity nextActivity = null;
         try {
@@ -497,6 +492,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
 //        ImageView imageView = new ImageView(this);
 //        imageView.setImageDrawable(new BadgeDrawable.BadgeDrawableBuilder(this).setCount().setPosition(BadgeDrawable.Position.CENTER).build());
-        tab.setCustomView(view);
+        if(tab!=null) tab.setCustomView(view);
     }
 }

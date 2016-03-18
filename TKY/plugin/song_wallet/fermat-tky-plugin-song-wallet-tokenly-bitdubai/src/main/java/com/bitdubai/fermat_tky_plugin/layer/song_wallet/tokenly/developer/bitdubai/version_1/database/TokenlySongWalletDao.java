@@ -18,6 +18,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatu
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CanGetTokensArrayFromSongWalletException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
 import java.sql.Date;
@@ -392,6 +393,62 @@ public class TokenlySongWalletDao {
             throw new CantGetSongStatusException(
                     e,
                     "Getting Song Status from Database",
+                    "Cannot get song from database");
+        }
+    }
+
+    /**
+     * This method returns a SongStatus by songId.
+     * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
+     * Tonkenly Id.
+     * @param songId
+     * @return
+     * @throws CantGetSongStatusException
+     */
+    public String getSongTokenlyId(UUID songId) throws CantGetSongTokenlyIdException {
+        try{
+            openDatabase();
+            WalletSong walletSong;
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
+                    songId.toString(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                //I'll return null
+                return null;
+            }
+            walletSong = buildWalletSong(records.get(0));
+            //This Id represents the tokenly Id.
+            return walletSong.getId();
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetSongTokenlyIdException(
+                    e,
+                    "Getting Tokenly Id from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetSongTokenlyIdException(
+                    e,
+                    "Getting Tokenly Id from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetSongTokenlyIdException(
+                    e,
+                    "Getting Tokenly Id from Database",
+                    "Cannot load database table");
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongTokenlyIdException(
+                    e,
+                    "Getting Tokenly Id from Database",
+                    "Cannot get song from database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantGetSongTokenlyIdException(
+                    e,
+                    "Getting Tokenly Id from Database",
                     "Cannot get song from database");
         }
     }

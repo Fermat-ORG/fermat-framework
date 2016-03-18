@@ -42,6 +42,7 @@ public class TokenlyWalletSongVault {
     /**
      * Default values
      */
+
     /**
      * Represents the directory to storage the song.
      */
@@ -51,6 +52,7 @@ public class TokenlyWalletSongVault {
      * TODO: for testing, I'll put this as public file.
      */
     private final FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
+
     /**
      * Represents the file life span.
      */
@@ -93,6 +95,13 @@ public class TokenlyWalletSongVault {
         }
     }
 
+    /**
+     * This method contains the basic logic to download a file.
+     * Is required to review the tokenly API to use the download URL.
+     * @param downloadUrl
+     * @param songName
+     * @throws CantDownloadFileException
+     */
     private void downloadFile(String downloadUrl, String songName) throws CantDownloadFileException{
         try{
             URL url = new URL(downloadUrl);

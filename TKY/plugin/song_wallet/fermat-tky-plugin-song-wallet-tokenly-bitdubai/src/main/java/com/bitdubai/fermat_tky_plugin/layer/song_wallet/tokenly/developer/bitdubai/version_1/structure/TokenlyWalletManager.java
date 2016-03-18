@@ -9,6 +9,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeW
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 
 import java.util.List;
 import java.util.UUID;
@@ -130,6 +131,16 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     @Override
     public void downloadSong(UUID songId) throws CantDownloadSongException {
-        //TODO: create a method in DAO to get Song by songId, then download the real song from the Vault.
+        try{
+            //Getting tokenly Id.
+            String tokenlyId = this.tokenlySongWalletDao.getSongTokenlyId(songId);
+            //Request download song.
+            this.tokenlyWalletSongVault.downloadSong(tokenlyId);
+        } catch (CantGetSongTokenlyIdException e) {
+            throw new CantDownloadSongException(
+                    e,
+                    "Downloading song by id:"+songId,
+                    "Cannot get the tokenly id from Database");
+        }
     }
 }
