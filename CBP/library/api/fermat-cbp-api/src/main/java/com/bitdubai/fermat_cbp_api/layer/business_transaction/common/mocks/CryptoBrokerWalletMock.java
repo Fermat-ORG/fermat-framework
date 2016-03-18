@@ -42,6 +42,11 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     @Override
+    public List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
+        return null;
+    }
+
+    @Override
     public FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException {
         return null;
     }

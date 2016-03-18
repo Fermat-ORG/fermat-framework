@@ -16,11 +16,16 @@ public interface Identity {
     String getAlias();
 
     /**
-     * This method returns the identity public key.
+     * This method returns the identity id.
      * @return
      */
     UUID getId();
 
+    /**
+     * This method returns the identity id.
+     * @return
+     */
+    String getPublicKey();
     /**
      * This method returns the profile image.
      * @return

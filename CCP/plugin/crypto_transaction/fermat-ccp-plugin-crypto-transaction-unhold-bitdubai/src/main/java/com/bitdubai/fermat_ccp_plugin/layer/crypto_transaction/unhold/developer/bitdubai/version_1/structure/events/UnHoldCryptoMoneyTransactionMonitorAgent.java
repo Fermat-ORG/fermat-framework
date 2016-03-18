@@ -17,6 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database.UnHoldCryptoMoneyTransactionDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -203,7 +204,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             "UNHOLD",
                             cryptoUnholdTransaction.getBlockchainNetworkType());
 
-                    bitcoinWalletManager.loadWallet(cryptoUnholdTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
+                    bitcoinWalletManager.loadWallet(cryptoUnholdTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionRecord);
                     cryptoUnholdTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
                     cryptoUnholdTransaction.setTimestampAcknowledged(new Date().getTime() / 1000);
                     unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(cryptoUnholdTransaction);
@@ -225,7 +226,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCalculateBalanceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantRegisterCreditException e) {
+        } catch (CantRegisterDebitException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

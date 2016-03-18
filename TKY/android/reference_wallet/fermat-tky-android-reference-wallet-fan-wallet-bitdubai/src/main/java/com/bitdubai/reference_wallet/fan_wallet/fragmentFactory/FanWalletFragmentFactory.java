@@ -13,19 +13,19 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
-public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSession,WalletResourcesProviderManager,FanWalletEnumtype> {
+public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSession,WalletResourcesProviderManager,FanWalletEnumType> {
     @Override
-    protected AbstractFermatFragment getFermatFragment(FanWalletEnumtype fragments) throws FragmentNotFoundException {
+    protected AbstractFermatFragment getFermatFragment(FanWalletEnumType fragments) throws FragmentNotFoundException {
         if (fragments == null) {
             throw createFragmentNotFoundException(null);
         }
 
-        if (fragments.equals(FanWalletEnumtype.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT))
+        if (fragments.equals(FanWalletEnumType.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT))
         {
             return SongFragment.newInstance();
         }
 
-        if (fragments.equals(FanWalletEnumtype.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT))
+        if (fragments.equals(FanWalletEnumType.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT))
         {
             return FollowingFragment.newInstance();
         }
@@ -35,8 +35,8 @@ public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSes
     }
 
     @Override
-    public FanWalletEnumtype getFermatFragmentEnumType(String key) {
-        return FanWalletEnumtype.getValues(key);
+    public FanWalletEnumType getFermatFragmentEnumType(String key) {
+        return FanWalletEnumType.getValues(key);
     }
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {

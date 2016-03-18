@@ -3700,14 +3700,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setLabel("Transaction detail");
-        runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor(titleBarLabelColor);
-        runtimeTitleBar.setColor(titleBarColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setIconName("back");
+//        runtimeTitleBar.setLabel("Transaction detail");
+//        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+//        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+//        runtimeTitleBar.setColor(titleBarColor);
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -3788,37 +3788,36 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
      */
     @Override
     public WalletNavigationStructure getNavigationStructure(String walletPublicKey) {
-        WalletNavigationStructure walletNavigationStructure = null;
+        WalletNavigationStructure fermatStructure = null;
         if (walletPublicKey != null) {
-            String navigationStructureName = walletPublicKey + ".xml";
-
-            try {
-
-                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.loadFromMedia();
-                String xml = pluginTextFile.getContent();
-
-
-                walletNavigationStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, walletNavigationStructure);
-
-            } catch (FileNotFoundException e) {
+            if (lstWalletNavigationStructureOpen.containsKey(walletPublicKey)) {
+                fermatStructure = lstWalletNavigationStructureOpen.get(walletPublicKey);
+            } else {
+                String navigationStructureName = walletPublicKey + ".xml";
                 try {
-                    PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    layoutFile.setContent("");
+                    PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    pluginTextFile.loadFromMedia();
+                    String xml = pluginTextFile.getContent();
+                    fermatStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, fermatStructure);
+                    lstWalletNavigationStructureOpen.put(walletPublicKey,fermatStructure);
+                } catch (FileNotFoundException e) {
+                    try {
+                        PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                        layoutFile.setContent("");
 
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+
+                } catch (CantCreateFileException e) {
+                    e.printStackTrace();
+                } catch (CantLoadFileException e) {
+                    e.printStackTrace();
                 }
-
-
-            } catch (CantCreateFileException e) {
-                e.printStackTrace();
-            } catch (CantLoadFileException e) {
-                e.printStackTrace();
             }
         }
-
-        return walletNavigationStructure;
+    return fermatStructure;
     }
 
     @Override
@@ -4551,6 +4550,47 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey(), runtimeFragment);
 
+        //Export Mnemonic key activity
+
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Export Private key");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
+
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         return runtimeWalletNavigationStructure;
@@ -5278,6 +5318,50 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_FRAGMENT.getKey(), runtimeFragment);
+
+
+        //Export Mnemonic key activity
+
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Export Private key");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
+
+        //---
 
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 

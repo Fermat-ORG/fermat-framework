@@ -171,10 +171,6 @@ project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai').projectDir = 
 include ':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai'
 project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
 
-//World
-include ':fermat-cbp-plugin-world-fiat-index-bitdubai'
-project(':fermat-cbp-plugin-world-fiat-index-bitdubai').projectDir = new File('CBP/plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai')
-
 //Network Service
 include ':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai'
 project(':fermat-cbp-plugin-network-service-transaction-transmission-bitdubai').projectDir = new File('CBP/plugin/network_service/fermat-cbp-plugin-network-service-transaction-transmission-bitdubai')

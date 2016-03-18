@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     style="@style/listViewActivatedStyle"
-    android:id="@+id/rel">
+    android:id="@+id/rel"
+    android:background="@color/background_activity">
 
     <!-- Use standard android.R class icon id instead of app specific id. This is just useful for
          consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned

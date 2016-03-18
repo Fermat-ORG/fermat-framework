@@ -18,41 +18,20 @@
         android:layout_height="180dp"
         android:layout_marginTop="-180dp"
         android:orientation="vertical"
-        android:background="@drawable/csh_background_top">
+        android:background="@drawable/csh_top_lip_medium">
 
-        <LinearLayout
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/titleBar_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginBottom="@dimen/csh_setup_titlebar_margin_bottom"
+            android:layout_marginTop="@dimen/csh_setup_titlebar_margin_top"
+            android:gravity="center"
+            android:text="@string/csh_home_titlebar_title"
+            android:textColor="@color/csh_text_white"
+            android:textSize="@dimen/csh_large_text_size"
+            android:textStyle="bold" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/titleBar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/csh_setup_titlebar_margin_bottom"
-                android:layout_marginTop="@dimen/csh_setup_titlebar_margin_top"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right"
-                android:paddingRight="@dimen/csh_titlebar_intertitle_padding"
-                android:text="@string/csh_home_titlebar_title"
-                android:textColor="@color/csh_text_white"
-                android:textSize="@dimen/csh_large_text_size"
-                android:textStyle="bold" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/titleBar_title_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/csh_setup_titlebar_margin_bottom"
-                android:layout_marginTop="@dimen/csh_setup_titlebar_margin_top"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/csh_home_titlebar_title_2"
-                android:textColor="@color/csh_text_white"
-                android:textSize="@dimen/csh_large_text_size" />
-        </LinearLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
@@ -94,7 +73,7 @@
             android:orientation="vertical"
             android:layout_weight="0.7"
             android:layout_gravity="center_horizontal"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <!--TODO: Need to style this spinner according to design-->
             <!--<RelativeLayout-->
