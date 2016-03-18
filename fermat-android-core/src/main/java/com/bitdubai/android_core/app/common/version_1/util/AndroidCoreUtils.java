@@ -28,7 +28,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType, code);
+                    if(context!=null) context.publish(broadcasterType, code);
                 }
             });
         }catch (Exception e){
@@ -42,7 +42,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType,appCode,code);
+                    if(context!=null) context.publish(broadcasterType,appCode,code);
                 }
             });
         }catch (Exception e){
@@ -56,7 +56,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType,appCode,bundle);
+                    if(context!=null) context.publish(broadcasterType,appCode,bundle);
                 }
             });
         }catch (Exception e){
@@ -70,7 +70,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType,bundle);
+                    if(context!=null) context.publish(broadcasterType,bundle);
                 }
             });
         }catch (Exception e){

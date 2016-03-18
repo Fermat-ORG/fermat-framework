@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantDeleteRecordDataBaseException;
@@ -31,6 +30,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_pip_api.layer.module.notification.exception.CantGetNotificationsException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -684,7 +684,7 @@ public final class OutgoingMessageDao {
 
     }
 
-    public boolean existPendingNotification(final UUID notificationId) throws CantGetNotificationException {
+    public boolean existPendingNotification(final UUID notificationId) throws CantGetNotificationsException {
 
 
         try {
@@ -706,7 +706,7 @@ public final class OutgoingMessageDao {
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+            throw new CantGetNotificationsException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         }
 
     }

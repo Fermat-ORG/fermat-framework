@@ -17,7 +17,6 @@ import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatA
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
@@ -81,7 +80,7 @@ public class NotificationService extends Service {
             if (notificationPainter != null) {
                 if(notificationPainter.showNotification()) {  //get if notification settings enabled view
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                    Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                    Intent intent = new Intent(this,AppActivity.class);
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -113,7 +112,7 @@ public class NotificationService extends Service {
 
 
             }else{
-                Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                Intent intent = new Intent(this,AppActivity.class);
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
@@ -149,7 +148,7 @@ public class NotificationService extends Service {
     }
 
 
-    public void notificateProgress(final String code){
+    public void notificateProgress(final String code,int progress){
         if(!lstNotifications.containsKey(code)){
             notificationIdCount++;
             lstNotifications.put(code,notificationIdCount);
