@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseConstants;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseFactory;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDeveloperDatabaseFactory;
@@ -86,13 +87,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
      */
     public FermatManager getFermatManager(){
         return this.tokenlyWalletManager;
-    }
-
-    /**
-     * This method initialize the plugin manager.
-     */
-    private void initializePluginManager(){
-        this.tokenlyWalletManager = new TokenlyWalletManager();
     }
 
     /**
@@ -172,9 +166,17 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             tokenlySongWalletDeveloperDatabaseFactory.initializeDatabase();
 
             /**
+             * Init Database DAO.
+             */
+            TokenlySongWalletDao tokenlySongWalletDao = new TokenlySongWalletDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager);
+            /**
              * Init plugin manager
              */
-            initializePluginManager();
+            this.tokenlyWalletManager = new TokenlyWalletManager(tokenlySongWalletDao);
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.API_TOKENLY,
