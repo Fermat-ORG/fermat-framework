@@ -57,7 +57,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //testGetDownloadSong();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
-                    Plugins.API_TOKENLY,
+                    Plugins.TOKENLY_API,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantStartPluginException(

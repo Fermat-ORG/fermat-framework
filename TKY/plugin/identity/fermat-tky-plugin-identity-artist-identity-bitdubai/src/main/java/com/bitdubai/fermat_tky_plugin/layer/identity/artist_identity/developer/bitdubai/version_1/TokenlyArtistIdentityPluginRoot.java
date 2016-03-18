@@ -72,7 +72,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.API, plugin = Plugins.API_TOKENLY)
+    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.API, plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
