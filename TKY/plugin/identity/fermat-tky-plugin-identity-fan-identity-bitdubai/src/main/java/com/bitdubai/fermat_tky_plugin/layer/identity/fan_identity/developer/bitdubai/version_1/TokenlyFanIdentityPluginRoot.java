@@ -98,7 +98,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
                     this.tokenlyApiManager);
 
             System.out.println("############\n TKY IDENTITY FAN STARTED\n");
-            testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
