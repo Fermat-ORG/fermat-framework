@@ -108,7 +108,7 @@
                     android:paddingBottom="5dp"
                     android:text="@string/no_id_Users_of_other_text_Fermat_wallets"
                     android:gravity="right"
-                    android:layout_gravity="center_horizontal"no_id_Users_of_other_text_Fermat_wallets
+                    android:layout_gravity="center_horizontal"
                     android:paddingLeft="16dp"
                     android:textColor="#1d1d26"
                     android:paddingRight="30dp"
