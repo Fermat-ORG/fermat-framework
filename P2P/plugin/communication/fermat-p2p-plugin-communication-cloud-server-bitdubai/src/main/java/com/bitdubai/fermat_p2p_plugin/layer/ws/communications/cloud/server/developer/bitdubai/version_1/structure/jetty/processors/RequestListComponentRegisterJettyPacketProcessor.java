@@ -90,7 +90,7 @@ public class RequestListComponentRegisterJettyPacketProcessor extends FermatJett
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
 
-            LOG.info("Starting packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
+            LOG.debug("Starting packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Construct the json object

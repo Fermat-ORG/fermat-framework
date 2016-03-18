@@ -17,6 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegi
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 
 
 /**
@@ -33,6 +34,8 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     private BitcoinWalletLossProtectedWalletDao bitcoinWalletBasicWalletDao;
 
     private Broadcaster broadcaster;
+
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
     /**
      * Constructor.
@@ -104,6 +107,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
+    //get exchange rate
     @Override
     public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
@@ -131,4 +135,6 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
 
     }
+
+
 }

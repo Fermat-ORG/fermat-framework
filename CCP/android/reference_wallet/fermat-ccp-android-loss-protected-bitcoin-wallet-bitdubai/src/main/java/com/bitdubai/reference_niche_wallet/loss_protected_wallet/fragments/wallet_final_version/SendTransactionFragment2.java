@@ -331,7 +331,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
-
+        getAndShowMarketExchangeRateData(rootView);
         return rootView;
     }
 
@@ -1065,7 +1065,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     }
 
-    private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
+    private void getAndShowMarketExchangeRateData(final View container) {
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -1085,7 +1085,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (result != null && result.length > 0) {
 
 
-                    progressBar.setVisibility(View.GONE);
+                   int len = result.length;
+                   // progressBar.setVisibility(View.GONE);
 
                  /*   if (summaries.isEmpty()) {
                         FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);

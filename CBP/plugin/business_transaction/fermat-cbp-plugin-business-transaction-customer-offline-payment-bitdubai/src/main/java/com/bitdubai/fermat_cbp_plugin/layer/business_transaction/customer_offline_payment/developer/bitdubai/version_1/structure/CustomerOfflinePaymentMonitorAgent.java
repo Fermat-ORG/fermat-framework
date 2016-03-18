@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -32,13 +33,13 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.events.CustomerOfflinePaymentConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -46,7 +47,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -56,6 +56,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 14/12/15.
@@ -88,15 +89,15 @@ public class CustomerOfflinePaymentMonitorAgent implements
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager){
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.logManager=logManager;
-        this.transactionTransmissionManager=transactionTransmissionManager;
-        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.logManager = logManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
     }
 
     @Override
@@ -114,55 +115,55 @@ public class CustomerOfflinePaymentMonitorAgent implements
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
+        this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.agentThread.interrupt();
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -180,13 +181,14 @@ public class CustomerOfflinePaymentMonitorAgent implements
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
+
         @Override
         public void run() {
 
-            threadWorking=true;
+            threadWorking = true;
             logManager.log(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Customer Offline Payment Monitor Agent: running...", null, null);
-            while(threadWorking){
+            while (threadWorking) {
                 /**
                  * Increase the iteration counter
                  */
@@ -203,7 +205,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 try {
 
                     logManager.log(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(
-                            this.getClass().getName()),
+                                    this.getClass().getName()),
                             "Iteration number " + iterationNumber,
                             null,
                             null);
@@ -218,17 +220,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
             }
 
         }
+
         public void Initialize() throws CantInitializeCBPAgent {
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId,
                         CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory=
+                CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory =
                         new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = customerOfflinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId,
@@ -258,8 +260,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 CantUpdateRecordException,
                 CantSendContractNewStatusNotificationException {
 
-            try{
-                customerOfflinePaymentBusinessTransactionDao =new CustomerOfflinePaymentBusinessTransactionDao(
+            try {
+                customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
                         database,
@@ -272,17 +274,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 /**
                  * Check contract status to send.
                  */
-                List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList=
+                List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList =
                         customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
-                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+                for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -293,17 +295,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 /**
                  * Check pending notifications - Broker side
                  */
-                List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList=
+                List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList =
                         customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
-                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
+                for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT,
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -314,8 +316,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 /**
                  * Check if pending events
                  */
-                List<String> pendingEventsIdList= customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<String> pendingEventsIdList = customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
+                for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
@@ -330,24 +332,11 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            }  /*catch (CantSendBusinessTransactionHashException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
             }
-            catch (CantSendContractNewStatusNotificationException e) {
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }*/
-
         }
 
 
-        private void raisePaymentConfirmationEvent(){
+        private void raisePaymentConfirmationEvent() {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_OFFLINE_PAYMENT_CONFIRMED);
             CustomerOfflinePaymentConfirmed customerOnlinePaymentConfirmed = (CustomerOfflinePaymentConfirmed) fermatEvent;
             customerOnlinePaymentConfirmed.setSource(EventSource.CUSTOMER_OFFLINE_PAYMENT);
@@ -355,77 +344,91 @@ public class CustomerOfflinePaymentMonitorAgent implements
         }
 
 
-        private void checkPendingEvent(String eventId) throws  UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             //TODO: events from customer side, listen contract status confirmation, the record must be in PENDING_ONLINE_PAYMENT_NOTIFICATION, raise an event
-            try{
+            try {
 
-                String eventTypeCode= customerOfflinePaymentBusinessTransactionDao.getEventType(eventId);
+                String eventTypeCode = customerOfflinePaymentBusinessTransactionDao.getEventType(eventId);
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
                 CustomerOfflinePaymentRecord customerOnlinePaymentRecord;
-                if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
-                    //This will happen in broker side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
-                            transactionTransmissionManager.getPendingTransactions(
-                                    Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            contractTransactionStatus= customerOfflinePaymentBusinessTransactionDao.
+
+                //This will happen in broker side
+                if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
+                        if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+                            contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.
                                     getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
-                        }else{
-                            CustomerBrokerContractSale customerBrokerContractSale=
+                        } else {
+                            CustomerBrokerContractSale customerBrokerContractSale =
                                     customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
                                             contractHash);
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractSale);
-                            customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
-                                    customerBrokerContractSale);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
-                                    contractHash,
-                                    ContractStatus.PAYMENT_SUBMIT);
-                            Date date=new Date();
-                            customerOfflinePaymentBusinessTransactionDao.
-                                    setCompletionDateByContractHash(contractHash, date.getTime());
+                            customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
+                            Date date = new Date();
+                            customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent();
                         }
+
+                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+                        transactionTransmissionManager.confirmNotificationReception(
+                                businessTransactionMetadata.getReceiverId(),
+                                businessTransactionMetadata.getSenderId(),
+                                contractHash,
+                                transactionId.toString(),
+                                Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                                businessTransactionMetadata.getReceiverType(),
+                                businessTransactionMetadata.getSenderType());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
-                    //This will happen in customer side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
-                            transactionTransmissionManager.getPendingTransactions(
-                                    Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            customerOnlinePaymentRecord=
-                                    customerOfflinePaymentBusinessTransactionDao.
-                                            getCustomerOfflinePaymentRecord(contractHash);
-                            contractTransactionStatus=customerOnlinePaymentRecord.getContractTransactionStatus();
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())){
+
+                //This will happen in customer side
+                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
+
+                        if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+                            customerOnlinePaymentRecord = customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(contractHash);
+                            contractTransactionStatus = customerOnlinePaymentRecord.getContractTransactionStatus();
+                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())) {
                                 customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
-                                        contractHash,
-                                        ContractStatus.PAYMENT_SUBMIT);
-                                Date date=new Date();
-                                customerOfflinePaymentBusinessTransactionDao.
-                                        setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
+                                Date date = new Date();
+                                customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent();
                             }
                         }
+
+                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+                        transactionTransmissionManager.ackConfirmNotificationReception(
+                                businessTransactionMetadata.getReceiverId(),
+                                businessTransactionMetadata.getSenderId(),
+                                contractHash,
+                                transactionId.toString(),
+                                Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                                businessTransactionMetadata.getReceiverType(),
+                                businessTransactionMetadata.getSenderType());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
-                //TODO: look a better way to deal with this exceptions
+
+                //TODO: REVISAR SI ES NECESARIO UN EVENTO PARA EL ACK_CONFIRM_MESSAGE
+
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
@@ -460,12 +463,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
                         "Checking pending events",
-                        "Cannot update the contract sale status");
+                        "Cannot get the list of contract sale status");
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
                         "Checking pending events",
                         "The customerBrokerContractSale is null");
+            } catch (CantConfirmNotificationReception e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending events",
+                        "cant send notification confirmation.");
             }
 
         }
