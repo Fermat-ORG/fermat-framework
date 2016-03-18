@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1;
 
 /**
  * Created by ciencias on 2/16/15.
@@ -6,10 +6,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_device_user.OutgoingDeviceUserManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -25,7 +25,7 @@ import java.util.UUID;
  * Every Device User transaction sent outside of the system is a handled and recorded by this plugin.
  */
 
-public class OutgoingDeviceUserTransactionPluginRoot implements Service, OutgoingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class OutgoingDeviceUserTransactionPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**
@@ -135,5 +135,8 @@ public class OutgoingDeviceUserTransactionPluginRoot implements Service, Outgoin
     }
 
 
-
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 }

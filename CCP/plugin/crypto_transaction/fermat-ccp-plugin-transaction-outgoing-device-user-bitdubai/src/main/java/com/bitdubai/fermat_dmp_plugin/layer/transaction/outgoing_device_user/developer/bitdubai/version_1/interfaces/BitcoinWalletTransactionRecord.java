@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import java.util.UUID;
 
 /**
- * Joaquin Carrasquero on 17/03/16.
+ * Created by eze on 2015.06.17..
  */
 public interface BitcoinWalletTransactionRecord {
 
