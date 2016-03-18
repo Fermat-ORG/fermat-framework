@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.de
 
 /**
  * Created by ciencias on 2/16/15.
+ * Modified by Joaquin Carrasquero on 17/03/16.
  */
 
 import com.bitdubai.fermat_api.Plugin;
