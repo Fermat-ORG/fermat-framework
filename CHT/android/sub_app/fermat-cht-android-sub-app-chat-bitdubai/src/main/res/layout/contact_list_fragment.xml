@@ -1,8 +1,8 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<!--<android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent">-->
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -19,12 +19,13 @@
 
         <ImageView
             android:id="@+id/nodata"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:src="@drawable/cht_empty_contats_icon"
             android:gravity="center"
+            android:layout_gravity="center"
             />
-        <TextView android:id="@+id/text"
+       <!-- <TextView android:id="@+id/text"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,6 +33,6 @@
             android:fontFamily="sans-serif-light"
             android:focusable="true"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
-
+-->
     </FrameLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+<!--</android.support.v4.widget.SwipeRefreshLayout>-->

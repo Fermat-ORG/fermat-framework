@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -516,4 +517,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListReceivePaymentRequestException
      */
     PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
+
+    /**
+     * Through the method <code>getMnemonicText</code> you can get the Mnemonic Text from Vault
+     * @return
+     * @throws CantGetMnemonicTextException
+     */
+    String getMnemonicText() throws CantGetMnemonicTextException;
 }

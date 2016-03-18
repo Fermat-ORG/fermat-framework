@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedTransactionNotFoundException;
-
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -562,4 +562,7 @@ public interface LossProtectedWallet extends Serializable {
     LossProtectedPaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
 
     long getActualExchangeRate() throws CantListReceivePaymentRequestException;
+
+
+    String getMnemonicText() throws CantGetMnemonicTextException;
 }
