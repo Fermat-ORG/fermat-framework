@@ -24,11 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.AbstractBusinessTransactionEvent;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionContract;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -36,9 +32,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.messages.TransactionTransmissionResponseMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
@@ -326,6 +319,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             if (businessTransactionMetadata.getContractHash() != null) {
                 transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
+                final Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
                 switch (businessTransactionMetadata.getType()) {
                     case ACK_CONFIRM_MESSAGE:
                         //TODO: verificar si es necesario disparar un evento a las business transactions para hacer ACK de la confirmacion del msj
@@ -333,29 +327,32 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                         break;
                     case CONFIRM_MESSAGE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
-                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                        if (remoteBusinessTransaction == Plugins.OPEN_CONTRACT) {
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
                         } else {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         }
                         break;
                     case CONTRACT_STATUS_UPDATE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
-                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        if (remoteBusinessTransaction == Plugins.OPEN_CONTRACT) {
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         } else {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         }
                         break;
                     case TRANSACTION_HASH:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
-                        launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
+                        launchNotification(remoteBusinessTransaction, EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
                         break;
-                    default: //TODO: definir que se va a hacer aqui
                 }
             }
+
+            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
+
         } catch (FermatException e) {
-            //TODO: implementar error manager.
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
