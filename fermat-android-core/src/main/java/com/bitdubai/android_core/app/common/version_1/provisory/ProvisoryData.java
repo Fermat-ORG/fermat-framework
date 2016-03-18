@@ -94,6 +94,8 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
+/*
+prontoa a agregar
         installedSubApp = new InstalledSubApp(
                 SubApps.ART_ASSETS_IDENTITY_ARTIST,
                 null,
@@ -108,6 +110,10 @@ public class ProvisoryData {
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_customer_identity);
         item2.setPosition(6);
+ */
+
+
+
         lstIdentities.add(item2);
 
 
