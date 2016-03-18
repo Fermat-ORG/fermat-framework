@@ -861,7 +861,7 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageData(filter)) {
+            for (DatabaseTableRecord record : getMessageDataDesceding(filter)) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
@@ -1647,6 +1647,20 @@ public class ChatMiddlewareDatabaseDao {
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+        table.loadToMemory();
+
+        return table.getRecords();
+    }
+
+    private List<DatabaseTableRecord> getMessageDataDesceding(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
+    {
+        DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+
+        if (filter != null)
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
         table.loadToMemory();
 
