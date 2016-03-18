@@ -1660,14 +1660,14 @@ public class ChatMiddlewareDatabaseDao {
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         table.loadToMemory();
-
-        int limit = 20;
-        int size = table.getRecords().size();
-        if(size>limit) {
-            for (int i = 0; i < (size - limit); i++) {
-                table.getRecords().remove(0);
-            }
-        }
+//
+//        int limit = 20;
+//        int size = table.getRecords().size();
+//        if(size>limit) {
+//            for (int i = 0; i < (size - limit); i++) {
+//                table.getRecords().remove(0);
+//            }
+//        }
 
         return table.getRecords();
     }
