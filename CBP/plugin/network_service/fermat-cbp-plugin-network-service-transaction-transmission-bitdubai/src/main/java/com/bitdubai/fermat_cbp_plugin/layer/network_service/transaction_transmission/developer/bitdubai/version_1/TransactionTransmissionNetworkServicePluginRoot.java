@@ -333,22 +333,19 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                         break;
                     case CONFIRM_MESSAGE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
-                        switch (businessTransactionMetadata.getRemoteBusinessTransaction()){
-                            case OPEN_CONTRACT:
-                                //launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
-                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
-                                //launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
-                                break;
-                            default:
-                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
+                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                        } else {
+                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         }
                         break;
                     case CONTRACT_STATUS_UPDATE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
-                        switch (businessTransactionMetadata.getRemoteBusinessTransaction()){
-                            case OPEN_CONTRACT: launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
+                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        } else {
+                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         }
-                        launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(),EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         break;
                     case TRANSACTION_HASH:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
@@ -491,7 +488,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
     }*/
 
 
-    private void launchNotification(Plugins remoteBusinessTransaction){
+    private void launchNotification(Plugins remoteBusinessTransaction) {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
@@ -499,7 +496,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
-    private void launchNotification(Plugins remoteBusinessTransaction,EventType eventType){
+    private void launchNotification(Plugins remoteBusinessTransaction, EventType eventType) {
         FermatEvent fermatEvent = eventManager.getNewEvent(eventType);
         AbstractBusinessTransactionEvent incomingNewContractStatusUpdate = (AbstractBusinessTransactionEvent) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
