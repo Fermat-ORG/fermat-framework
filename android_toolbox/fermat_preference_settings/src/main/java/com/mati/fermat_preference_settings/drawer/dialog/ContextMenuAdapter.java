@@ -1,8 +1,6 @@
 package com.mati.fermat_preference_settings.drawer.dialog;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -21,6 +19,8 @@ import java.util.List;
 public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlusRadioItem,SettingsTextPlusRadioHolder> {
 
     private DialogCallback callBack;
+    private static RadioButton lastChecked = null;
+    private static int lastCheckedPos = 0;
 
     protected ContextMenuAdapter(Context context) {
         super(context);
@@ -45,13 +45,41 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
     protected void bindHolder(SettingsTextPlusRadioHolder holder, final PreferenceSettingsTextPlusRadioItem data, final int position) {
         holder.getRadio().setText(data.getText());
         holder.getRadio().setChecked(data.isRadioTouched());
+        holder.getRadio().setTag(new Integer(position));
+
+        //for default check in first item
+        if(position == 0 && data.isRadioTouched() && holder.getRadio().isChecked()) {
+            lastChecked = holder.getRadio();
+            lastCheckedPos = 0;
+        }
 
         holder.getRadio().setOnClickListener(new CompoundButton.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                 clearNotSelectedRadioButton(position,view);
+                 //getItem(position).setIsRadioTouched(true);
+                 //clearNotSelectedRadioButton(position,view);
                  callBack.optionSelected(data,position);
+
+
+                RadioButton cb = (RadioButton)view;
+                int clickedPos = ((Integer)cb.getTag()).intValue();
+
+                if(cb.isChecked())
+                {
+                    if(lastChecked != null)
+                    {
+                        lastChecked.setChecked(false);
+                        getItem(lastCheckedPos).setIsRadioTouched(false);
+                    }
+
+                    lastChecked = cb;
+                    lastCheckedPos = clickedPos;
+                }
+                else
+                    lastChecked = null;
+
+                getItem(clickedPos).setIsRadioTouched(cb.isChecked());
             }
         });
     }
@@ -59,20 +87,11 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
     private void clearNotSelectedRadioButton(int positionSelected,View view){
         for (int i = 0; i < getItemCount(); i++) {
             if(i!=positionSelected){
-                getItem(i).setIsRadioTouched(false);
+                getItem(positionSelected).setIsRadioTouched(false);
                 ((RadioButton)view).setChecked(false);
-                Drawable icon;
-                icon =  context.getResources().getDrawable(android.R.drawable.radiobutton_off_background);
-                ((RadioButton)view).setCompoundDrawablesRelative(null, null, icon, null);
             }
-            else
-            {
-                getItem(i).setIsRadioTouched(true);
+            else {
                 ((RadioButton)view).setChecked(true);
-
-                Drawable icon;
-                icon =  context.getResources().getDrawable(android.R.drawable.radiobutton_on_background);
-                ((RadioButton)view).setCompoundDrawablesRelative(null,null,icon,null);
             }
         }
     }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
@@ -97,6 +98,10 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                     break;
                 case CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT:
                     currentFragment = NoIdentityFragment.newInstance();
+                    break;
+
+                case CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT:
+                    currentFragment = MnemonicFragment.newInstance();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

@@ -31,7 +31,7 @@
         android:layout_marginTop="64dp"
         android:textColor="#fff"
         android:textStyle="bold"
-        tools:text="dui. Etiam rhoncus. Maecenas nenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget "/>
+        tools:text=" "/>
 
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -283,19 +284,20 @@ public class CloseContractMonitorAgent implements
                                     hashToSubmit,
                                     transactionId,
                                     ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
                                     contractXML,
                                     saleContract);
+                            //TODO: revisar estos publickey del sender y receiver
                             transactionTransmissionManager.sendContractStatusNotification(
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
                                     ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
                 }
@@ -322,7 +324,7 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -333,7 +335,7 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    Plugins.CLOSE_CONTRACT);
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
                 }
