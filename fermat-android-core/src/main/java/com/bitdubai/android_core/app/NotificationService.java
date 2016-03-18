@@ -18,6 +18,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.util.HashMap;
@@ -36,6 +37,8 @@ public class NotificationService extends Service {
     //for progress notifications
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
+
+
     public class LocalBinder extends Binder {
         NotificationService getService() {
             return NotificationService.this;
@@ -142,11 +145,29 @@ public class NotificationService extends Service {
             notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
         }
     }
-    public void notificate(String code,FermatBundle bundle){
 
 
+    public void notificateProgress(FermatBundle bundle) {
+        try {
+            int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
+            mNotifyManager = (NotificationManager)
+                    getSystemService(NOTIFICATION_SERVICE);
+            if(progress==0 || progress==100){
+                mNotifyManager.cancel(87);
+            }else {
+                mBuilder = new NotificationCompat.Builder(this);
+                mBuilder.setContentTitle("Downloading blockchain blocks")
+                        .setContentText("Download in progress")
+                        .setSmallIcon(R.drawable.fermat_logo_310_x_310);
+
+                mBuilder.setProgress(100, progress, false);
+// Displays the progress bar for the first time.
+                mNotifyManager.notify(87, mBuilder.build());
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
-
 
     public void notificateProgress(final String code,int progress){
         if(!lstNotifications.containsKey(code)){

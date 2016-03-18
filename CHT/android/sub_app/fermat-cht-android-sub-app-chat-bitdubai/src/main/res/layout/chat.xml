@@ -7,7 +7,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/cht_background"
     android:windowSoftInputMode="stateVisible|adjustPan"
     >
    <!-- <ScrollView
@@ -22,7 +22,6 @@
             android:orientation="vertical"
             android:padding="20dp"
             android:windowSoftInputMode="stateVisible|adjustPan"
-            android:background="@drawable/cht_background"
             android:layout_above="@+id/inputContainer"
             >
                 <android.support.v7.widget.RecyclerView
