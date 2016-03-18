@@ -8,7 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager</code>

@@ -2,8 +2,10 @@
     <string name="app_name">Cash Wallet</string>
 
     <!-- Home balances -->
-    <string name="csh_home_titlebar_title">CASH</string>
-    <string name="csh_home_titlebar_title_2">WALLET</string>
+    <string name="csh_home_titlebar_title">CASH WALLET</string>
+    <string name="csh_home_titlebar_balance">BALANCE</string>
+    <string name="csh_home_titlebar_available">Available</string>
+    <string name="csh_home_titlebar_book">Book</string>
 
 
     <!-- Home transactions -->

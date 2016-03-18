@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -43,6 +44,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
     //UI
     LinearLayout buttonContainer;
+    ImageView backButton;
     FermatTextView amount;
     FermatTextView memo;
     FermatTextView date;
@@ -101,6 +103,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         View layout = inflater.inflate(R.layout.csh_transaction_detail_page, container, false);
 
         buttonContainer = (LinearLayout) layout.findViewById(R.id.csh_transaction_detail_btn_container);
+        backButton = (ImageView) layout.findViewById(R.id.csh_transaction_detail_back_btn);
         amount = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_amount);
         memo = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_memo);
         date = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_date);
@@ -114,6 +117,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         memo.setText(transaction.getMemo());
         //date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
         transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
+        layout.findViewById(R.id.csh_transaction_detail_back_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_delete_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_update_btn).setOnClickListener(this);
 
@@ -123,7 +127,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        if (i == R.id.csh_transaction_detail_delete_btn) {
+        if (i == R.id.csh_transaction_detail_delete_btn || i == R.id.csh_transaction_detail_back_btn) {
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }else if(i == R.id.csh_transaction_detail_update_btn) {
             transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());

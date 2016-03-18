@@ -12,7 +12,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -218,8 +218,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
 
                             //TODO:Solo para testear
                             cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
 
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
@@ -235,7 +235,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetStockCryptoBrokerWalletException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantAddDebitCryptoBrokerWalletException e) {
+        } catch (CantAddCreditCryptoBrokerWalletException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

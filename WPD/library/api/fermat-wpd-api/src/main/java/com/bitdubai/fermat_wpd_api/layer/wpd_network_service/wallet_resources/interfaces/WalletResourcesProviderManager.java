@@ -55,7 +55,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager 
     String getLanguageFile(UUID skinId, String walletPublicKey, String fileName) throws CantGetLanguageFileException;
 
 
-     Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
+    Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
 
 
     /**

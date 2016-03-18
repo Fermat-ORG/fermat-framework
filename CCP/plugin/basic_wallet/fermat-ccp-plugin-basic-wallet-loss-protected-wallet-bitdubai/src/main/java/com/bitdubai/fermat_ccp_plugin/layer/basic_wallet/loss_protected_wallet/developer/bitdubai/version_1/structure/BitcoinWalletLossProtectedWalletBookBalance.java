@@ -10,7 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
@@ -56,16 +58,21 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     }
 
     @Override
-    public long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
+    public long getBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
         try {
+
+            //calculate how many btc can spend based on the exchangeRate
+
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
-        } catch(CantCalculateBalanceException exception){
-            database.closeDatabase();
-            throw exception;
+
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(balanceType, blockchainNetworkType, exchangeRate);
+
+
+        } catch(CantListTransactionsException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+
         } catch(Exception exception){
-            database.closeDatabase();
-            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
         }
     }
 

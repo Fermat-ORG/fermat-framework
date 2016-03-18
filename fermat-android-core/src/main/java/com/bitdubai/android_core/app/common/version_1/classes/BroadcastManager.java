@@ -135,6 +135,9 @@ public class BroadcastManager implements BroadcasterInterface {
                 case NOTIFICATION_SERVICE:
                     fermatActivity.get().notificateBroadcast(null,bundle);
                     break;
+                case NOTIFICATION_PROGRESS_SERVICE:
+                    fermatActivity.get().notificateProgressBroadcast(bundle);
+                    break;
             }
         }catch (Exception e){
             Log.e(TAG,"Cant broadcast excepcion");

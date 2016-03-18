@@ -33,6 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
@@ -1451,6 +1452,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         intraWalletUserIdentityManager.registerIdentities();
     }
 
+    @Override
+    public String getMnemonicText() throws CantGetMnemonicTextException {
+        return "mnemonic text";
+    }
 
     private  String convertTime(long time){
         Date date = new Date(time);

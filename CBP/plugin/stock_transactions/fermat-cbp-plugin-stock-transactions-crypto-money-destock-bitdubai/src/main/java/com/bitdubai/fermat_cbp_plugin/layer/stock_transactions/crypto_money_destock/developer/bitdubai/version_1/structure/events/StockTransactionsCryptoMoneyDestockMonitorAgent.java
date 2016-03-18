@@ -14,7 +14,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -192,8 +192,8 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
 
                             //TODO:Solo para testear
                             cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                             stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
 
@@ -202,7 +202,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
 
                         } catch (CantGetStockCryptoBrokerWalletException e) {
                             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                        } catch (CantAddCreditCryptoBrokerWalletException e) {
+                        } catch (CantAddDebitCryptoBrokerWalletException e) {
                             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         } catch (CantCalculateBalanceException e) {
                             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -230,15 +230,17 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                         break;
                     case IN_EJECUTION:
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoHoldTransactionManager.getCryptoHoldTransactionStatus(cryptoMoneyTransaction.getTransactionId());
-                        if (Objects.equals(CryptoTransactionStatus.CONFIRMED.getCode(), cryptoTransactionStatus.getCode())) {
-                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                            stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                        if( cryptoTransactionStatus != null){
+                            if (Objects.equals(CryptoTransactionStatus.CONFIRMED.getCode(), cryptoTransactionStatus.getCode())) {
+                                cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                                stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                            }
+                            if (Objects.equals(CryptoTransactionStatus.REJECTED.getCode(), cryptoTransactionStatus.getCode())) {
+                                cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
+                                stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                            }
                         }
-                        if (Objects.equals(CryptoTransactionStatus.REJECTED.getCode(), cryptoTransactionStatus.getCode())) {
-                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
-                            stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
-                        }
-                        break;
+                    break;
                     case REJECTED:
                         WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
                                 cryptoMoneyTransaction.getTransactionId(),

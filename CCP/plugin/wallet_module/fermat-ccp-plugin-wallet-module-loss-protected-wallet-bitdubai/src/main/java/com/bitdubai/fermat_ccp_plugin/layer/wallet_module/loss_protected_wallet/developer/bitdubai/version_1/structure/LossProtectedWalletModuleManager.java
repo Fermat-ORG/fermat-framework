@@ -109,7 +109,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterLossProtectedAddressException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.text.Format;
@@ -744,7 +744,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                            long exchangeRate) throws CantGetLossProtectedBalanceException {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType,exchangeRate);
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(balanceType,blockchainNetworkType,exchangeRate);
         } catch (CantLoadWalletException e) {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {
@@ -1458,6 +1458,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         intraWalletUserIdentityManager.registerIdentities();
     }
 
+    @Override
+    public String getMnemonicText() throws CantGetMnemonicTextException {
+        return "mnemonic text";
+    }
 
     private  String convertTime(long time){
         Date date = new Date(time);
