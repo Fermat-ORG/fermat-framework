@@ -153,59 +153,47 @@ public class ChatListFragment extends AbstractFermatFragment{
         String name="",message="",datemessage="",chatid="";
         int noreadmsgs=0;
         try {
-
-            //for (int i=0;i<chatManager.getChats().size();i++){
             List<Chat> chats = chatManager.getChats();
             if (chats != null && chats.size() > 0) {
                 infochat.clear();
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
+                    noreadmsgs=0;
                     if (chatidtemp != null) {
-                        List<Message> messageChat = chatManager.getMessagesByChatId(chatidtemp);//
-                        if (messageChat != null) {
-                            Message mess = messageChat.get(0);
-                            noreadmsgs=0;
-                            if (mess != null) {
-                                List<Message> messl = chatManager.getMessagesByChatId(chatidtemp);
-                                if (messl != null && messl.size() > 0) {
-                                    for (Message mss : messl) {
-                                        if(mss.getType().toString().equals(TypeMessage.INCOMMING.toString()) && !(mss.getStatus().toString().equals(MessageStatus.READ.toString()))){
-                                            noreadmsgs++;
-                                        }
-                                    }
-                                }
-                                contactid = String.valueOf(mess.getContactId());
-                                Contact cont = chatManager.getContactByContactId(mess.getContactId());
-                                name = cont.getRemoteName();
-                                message = messl.get(messl.size() - 1).getMessage();
-                                status = messl.get(messl.size() - 1).getStatus().toString();
-                                from = messl.get(messl.size() - 1).getType().toString();
-                                Chat chatl = chatManager.getChatByChatId(chatidtemp);
-                                long timemess = chatl.getLastMessageDate().getTime();
-                                long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
-                                long milliseconds = timemess + nanos;
-                                Date dated= new java.util.Date(milliseconds);
-                                if (Validate.isDateToday(dated)) {
-                                    datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                                }else {
-                                    Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
-                                    Date today = new Date();
-                                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                    if (dias == 1) {
-                                        datemessage = "YESTERDAY";
-                                    } else
-                                        datemessage = new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds));//.toString();
-                                }
-                                chatid = chatidtemp.toString();
-                                infochat.add(name + "@#@#" + message + "@#@#" + datemessage + "@#@#" + chatid + "@#@#" + contactid + "@#@#"+ status + "@#@#"+ from + "@#@#"+ noreadmsgs + "@#@#");
-                                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
-                                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                imgid.add(bmd.getBitmap());
+                        Message mess = chatManager.getMessageByChatId(chatidtemp);
+                        if (mess != null) {
+                            noreadmsgs=chatManager.getCountMessageByChatId(chatidtemp);
+                            contactid = String.valueOf(mess.getContactId());
+                            Contact cont = chatManager.getContactByContactId(mess.getContactId());
+                            name = cont.getRemoteName();
+                            message =mess.getMessage();
+                            status = mess.getStatus().toString();
+                            from = mess.getType().toString();
+                            Chat chatl = chatManager.getChatByChatId(chatidtemp);
+                            long timemess = chatl.getLastMessageDate().getTime();
+                            long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
+                            long milliseconds = timemess + nanos;
+                            Date dated= new java.util.Date(milliseconds);
+                            if (Validate.isDateToday(dated)) {
+                                datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
+                            }else {
+                                Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                                Date today = new Date();
+                                long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                if (dias == 1) {
+                                    datemessage = "YESTERDAY";
+                                } else
+                                    datemessage = new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds));//.toString();
                             }
+                            chatid = chatidtemp.toString();
+                            infochat.add(name + "@#@#" + message + "@#@#" + datemessage + "@#@#" + chatid + "@#@#" + contactid + "@#@#"+ status + "@#@#"+ from + "@#@#"+ noreadmsgs + "@#@#");
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            imgid.add(bmd.getBitmap());
                         }
                     }
                 }
-        }
+            }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (CantGetMessageException e) {
