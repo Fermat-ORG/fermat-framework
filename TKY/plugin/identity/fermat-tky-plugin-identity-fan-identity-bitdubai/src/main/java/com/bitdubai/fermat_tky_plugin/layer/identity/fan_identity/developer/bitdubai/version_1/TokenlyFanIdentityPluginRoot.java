@@ -69,7 +69,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.API, plugin = Plugins.API_TOKENLY)
+    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.EXTERNAL_API, plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -98,7 +98,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
                     this.tokenlyApiManager);
 
             System.out.println("############\n TKY IDENTITY FAN STARTED\n");
-            testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
