@@ -140,7 +140,8 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
                     intraWalletUserIdentityManager,
                     outgoingExtraUserManager      ,
                     outgoingIntraActorManager     ,
-                    walletContactsManager
+                    walletContactsManager,
+                    exchangeProviderFilterManagerproviderFilter
             );
 
             walletModuleLossProtectedWallet.initialize();

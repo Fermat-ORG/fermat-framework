@@ -88,3 +88,6 @@ project(':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai').proje
 
 include ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai'
 project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai').projectDir = new File('CCP/plugin/basic_wallet/fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')
+
+include ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai'
+project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
