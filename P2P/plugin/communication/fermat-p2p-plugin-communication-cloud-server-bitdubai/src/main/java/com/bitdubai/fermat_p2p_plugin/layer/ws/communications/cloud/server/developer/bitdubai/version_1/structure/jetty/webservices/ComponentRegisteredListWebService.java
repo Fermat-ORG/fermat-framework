@@ -85,8 +85,8 @@ public class ComponentRegisteredListWebService {
              */
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(discoveryParam);
 
-            LOG.info("clientIdentityPublicKey  = " + clientIdentityPublicKey);
-            LOG.info("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
+            LOG.debug("clientIdentityPublicKey  = " + clientIdentityPublicKey);
+            LOG.debug("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
             /*
              * hold the result list
@@ -119,14 +119,14 @@ public class ComponentRegisteredListWebService {
 
         }catch (Exception e){
 
-            LOG.info("requested list is not available");
+            LOG.warn("requested list is not available");
             jsonObjectRespond.addProperty(JsonAttNamesConstants.FAILURE, "Requested list is not available");
             e.printStackTrace();
         }
 
         String jsonString = gson.toJson(jsonObjectRespond);
 
-        LOG.info("jsonString.length() = " + jsonString.length());
+        LOG.debug("jsonString.length() = " + jsonString.length());
 
         return Response.status(200).entity(jsonString).build();
 

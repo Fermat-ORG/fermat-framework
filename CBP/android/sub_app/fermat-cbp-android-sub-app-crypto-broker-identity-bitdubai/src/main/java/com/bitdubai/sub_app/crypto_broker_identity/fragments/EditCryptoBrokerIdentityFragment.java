@@ -80,7 +80,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     private ImageView camara;
     private ImageView galeria;
 
-    private Switch publishIdentityCheckBox;
+    private Button botonU;
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -104,7 +104,19 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        TextView botonU = (TextView) layout.findViewById(R.id.update_crypto_broker_button);
+        botonU = (Button) layout.findViewById(R.id.update_crypto_broker_button);
+
+        actualizable = true;
+
+        mBrokerName    = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerImage   = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        sw             = (ImageView) layout.findViewById(R.id.sw);
+        camara         = (ImageView) layout.findViewById(R.id.camara);
+        galeria        = (ImageView) layout.findViewById(R.id.galeria);
+
+        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
+
+
         botonU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,78 +125,71 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             }
         });
 
-        actualizable = true;
-        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        sw = (ImageView) layout.findViewById(R.id.sw);
-        publishIdentityCheckBox = (Switch) layout.findViewById(R.id.publish_identity);
-        camara = (ImageView) layout.findViewById(R.id.camara);
-        galeria = (ImageView) layout.findViewById(R.id.galeria);
-        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
-        cryptoBrokerPublicKey = identityInfo.getPublicKey();
         if (identityInfo != null) {
+
+            cryptoBrokerPublicKey = identityInfo.getPublicKey();
             mBrokerName.setText(identityInfo.getAlias());
             mBrokerName.selectAll();
             mBrokerName.requestFocus();
             mBrokerName.performClick();
-            profileImage = identityInfo.getProfileImage();
-            ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            mBrokerImage.setImageBitmap(bmd.getBitmap());
             wantPublishIdentity = identityInfo.isPublished();
-            publishIdentityCheckBox.setChecked(wantPublishIdentity);
+
+            profileImage = identityInfo.getProfileImage();
+
+            if(profileImage.length == 0){
+                mBrokerImage.setImageResource(R.drawable.pic_space);
+            }else{
+                ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
+                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                mBrokerImage.setImageBitmap(bmd.getBitmap());
+            }
+
         }
+
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (actualizable) {
                     actualizable = false;
-                    editIdentityInfoInBackDevice("onFocus");
+                    //editIdentityInfoInBackDevice("onFocus");
                 }
             }
         });
-        if(publishIdentityCheckBox.isChecked()){
-            sw.setImageResource(R.drawable.visible2);
-            publishIdentityCheckBox.setChecked(true);
-            wantPublishIdentity = true;
+
+        if(wantPublishIdentity){
+            sw.setImageResource(R.drawable.visible);
         }else{
-            sw.setImageResource(R.drawable.not_visible2);
-            publishIdentityCheckBox.setChecked(false);
-            wantPublishIdentity = false;
+            sw.setImageResource(R.drawable.notvisible);
         }
-        publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
-                wantPublishIdentity = value;
-            }
-        });
+
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
+
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadImageFromGallery();
             }
         });
+
         sw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (publishIdentityCheckBox.isChecked()) {
-                    sw.setImageResource(R.drawable.not_visible2);
-                    publishIdentityCheckBox.setChecked(false);
+                if (wantPublishIdentity) {
+                    sw.setImageResource(R.drawable.notvisible);
                     wantPublishIdentity = false;
                 } else {
-                    sw.setImageResource(R.drawable.visible2);
-                    publishIdentityCheckBox.setChecked(true);
+                    sw.setImageResource(R.drawable.visible);
                     wantPublishIdentity = true;
                 }
             }
         });
+
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
@@ -232,7 +237,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(brokerNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }else{
             if(imgInBytes == null){
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();

@@ -4,7 +4,7 @@
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_general">
+    android:background="@drawable/background">
 
     <RelativeLayout
         android:id="@+id/no_crypto_broker_identities"
@@ -18,7 +18,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_gravity="center"
-            android:src="@drawable/building"
+            android:src="@drawable/bi_icon"
             android:id="@+id/imageView"
             android:layout_alignParentTop="false"
             android:layout_alignWithParentIfMissing="false"

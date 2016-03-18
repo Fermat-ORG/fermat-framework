@@ -77,6 +77,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -849,7 +850,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(destination.getIdentityPublicKey());
 
             if (communicationNetworkServiceLocal != null) {
-
+                System.out.println("*** 12345 case 7:send msg in NS P2P layer active connection" + new Timestamp(System.currentTimeMillis()));
                 //Send the message
                 communicationNetworkServiceLocal.sendMessage(
                         sender.getIdentityPublicKey()    ,
@@ -859,7 +860,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 );
 
             } else {
-
+                System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
                 /*
                  * Created the message
                  */

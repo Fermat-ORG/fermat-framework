@@ -1,0 +1,328 @@
+package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CanGetTokensArrayFromSongWalletException;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.UUID;
+
+/**
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/03/16.
+ */
+public class WalletSongRecord implements WalletSong {
+
+    //WALLET SONG FIELDS
+    private SongStatus songStatus;
+    private UUID songId;
+    //TOKENLY SONG FIELDS
+    private String id;
+    private String name;
+    private String[] tokens;
+    private String performers;
+    private String composers;
+    private Date releaseDate;
+    private String lyrics;
+    private String credits;
+    private String copyright;
+    private String ownership;
+    private String usageRights;
+    private String usageProhibitions;
+    private String bitcoinAddress;
+    private String other;
+
+    /**
+     * Default constructor
+     * @param songStatus
+     * @param songId
+     * @param id
+     * @param name
+     * @param tokens
+     * @param performers
+     * @param composers
+     * @param releaseDate
+     * @param lyrics
+     * @param credits
+     * @param copyright
+     * @param ownership
+     * @param usageRights
+     * @param usageProhibitions
+     * @param bitcoinAddress
+     * @param other
+     */
+    public WalletSongRecord(
+            SongStatus songStatus,
+            UUID songId,
+            String id,
+            String name,
+            String[] tokens,
+            String performers,
+            String composers,
+            Date releaseDate,
+            String lyrics,
+            String credits,
+            String copyright,
+            String ownership,
+            String usageRights,
+            String usageProhibitions,
+            String bitcoinAddress,
+            String other) {
+        this.songStatus = songStatus;
+        this.songId = songId;
+        this.id = id;
+        this.name = name;
+        this.tokens = tokens;
+        this.performers = performers;
+        this.composers = composers;
+        this.releaseDate = releaseDate;
+        this.lyrics = lyrics;
+        this.credits = credits;
+        this.copyright = copyright;
+        this.ownership = ownership;
+        this.usageRights = usageRights;
+        this.usageProhibitions = usageProhibitions;
+        this.bitcoinAddress = bitcoinAddress;
+        this.other = other;
+    }
+
+    /**
+     * Constructor that uses String to define String[] tokens
+     * @param songStatus
+     * @param songId
+     * @param id
+     * @param name
+     * @param tokensXML
+     * @param performers
+     * @param composers
+     * @param releaseDate
+     * @param lyrics
+     * @param credits
+     * @param copyright
+     * @param ownership
+     * @param usageRights
+     * @param usageProhibitions
+     * @param bitcoinAddress
+     * @param other
+     */
+    public WalletSongRecord(
+            SongStatus songStatus,
+            UUID songId,
+            String id,
+            String name,
+            String tokensXML,
+            String performers,
+            String composers,
+            Date releaseDate,
+            String lyrics,
+            String credits,
+            String copyright,
+            String ownership,
+            String usageRights,
+            String usageProhibitions,
+            String bitcoinAddress,
+            String other) throws
+            CanGetTokensArrayFromSongWalletException {
+        this.songStatus = songStatus;
+        this.songId = songId;
+        this.id = id;
+        this.name = name;
+        //Set the Array tokens from a String XML
+        setTokens(tokensXML);
+        this.performers = performers;
+        this.composers = composers;
+        this.releaseDate = releaseDate;
+        this.lyrics = lyrics;
+        this.credits = credits;
+        this.copyright = copyright;
+        this.ownership = ownership;
+        this.usageRights = usageRights;
+        this.usageProhibitions = usageProhibitions;
+        this.bitcoinAddress = bitcoinAddress;
+        this.other = other;
+    }
+
+    //WALLET SONG IMPLEMENTATIONS
+    /**
+     * This method returns the Song status.
+     * @return
+     */
+    @Override
+    public SongStatus getSongStatus() {
+        return this.songStatus;
+    }
+
+    /**
+     * This method returns the WalletSong Id.
+     * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
+     * Tonkenly Id.
+     * @return
+     */
+    @Override
+    public UUID getSongId() {
+        return this.songId;
+    }
+
+    //TOKENLY SONG IMPLEMENTATIONS
+    /**
+     * This method returns the Song Id.
+     * @return
+     */
+    @Override
+    public String getId() {
+        return this.id;
+    }
+
+    /**
+     * This method returns the Song name.
+     * @return
+     */
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * This method returns the Song tokens
+     * @return
+     */
+    @Override
+    public String[] getTokens() {
+        return this.tokens;
+    }
+
+    /**
+     * This method returns a XML String with the String[] associated to this object
+     * @return
+     */
+    public String getTokensXML(){
+        if(this.tokens==null){
+            this.tokens=new String[]{""};
+        }
+        return XMLParser.parseObject(this.tokens);
+    }
+
+    /**
+     * This method requires a valid String[] XML String to set this list to this object
+     * @param songTokens
+     * @throws CanGetTokensArrayFromSongWalletException
+     */
+    public void setTokens(String songTokens) throws CanGetTokensArrayFromSongWalletException {
+        if(songTokens==null||songTokens.isEmpty()){
+            throw new CanGetTokensArrayFromSongWalletException(
+                    "The XML with the tokens is null or empty");
+        }
+        try{
+            String[] tokensFromXML=new String[0];
+            Object xmlObject =XMLParser.parseXML(songTokens, tokensFromXML);
+            tokensFromXML=(String[]) xmlObject;
+            this.tokens=tokensFromXML;
+        } catch (Exception exception){
+            throw new CanGetTokensArrayFromSongWalletException(
+                    exception,
+                    "Parsing the XML String to a String array",
+                    "Unexpected exception");
+        }
+
+    }
+
+    /**
+     * This method returns the song performers.
+     * @return
+     */
+    @Override
+    public String getPerformers() {
+        return this.performers;
+    }
+
+    /**
+     * This method returns the song composers.
+     * @return
+     */
+    @Override
+    public String getComposers() {
+        return this.composers;
+    }
+
+    /**
+     * This method returns the song release date.
+     * @return
+     */
+    @Override
+    public Date getReleaseDate() {
+        return this.releaseDate;
+    }
+
+    /**
+     * This method returns the song lyrics.
+     * @return
+     */
+    @Override
+    public String getLyrics() {
+        return this.lyrics;
+    }
+
+    /**
+     * This method returns the song credits
+     * @return
+     */
+    @Override
+    public String credits() {
+        return this.credits;
+    }
+
+    /**
+     * This method returns the song copyright.
+     * @return
+     */
+    @Override
+    public String getCopyright() {
+        return this.copyright;
+    }
+
+    /**
+     * This method returns the song ownership.
+     * @return
+     */
+    @Override
+    public String getOwnership() {
+        return this.ownership;
+    }
+
+    /**
+     * This method returns the song usage rights.
+     * @return
+     */
+    @Override
+    public String getUsageRights() {
+        return this.usageRights;
+    }
+
+    /**
+     * This method returns the song usage prohibitions.
+     * @return
+     */
+    @Override
+    public String getUsageProhibitions() {
+        return this.usageProhibitions;
+    }
+
+    /**
+     * This method returns the song bitcoin address.
+     * @return
+     */
+    @Override
+    public String getBitcoinAddress() {
+        return this.bitcoinAddress;
+    }
+
+    /**
+     * This method returns the song 'other' field.
+     * @return
+     */
+    @Override
+    public String getOther() {
+        return this.other;
+    }
+}

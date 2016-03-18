@@ -23,8 +23,9 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatUserIde
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,11 @@ public interface MiddlewareChatManager extends FermatManager{
 
     List<Message> getMessages() throws CantGetMessageException;
 
-    List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException;
+    List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
+
+    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
+
+    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
@@ -59,7 +64,9 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
 
-    void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException;
+    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
+
+    void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
     List<Contact> getContacts() throws CantGetContactException;
 
@@ -114,5 +121,12 @@ public interface MiddlewareChatManager extends FermatManager{
     ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
 
     void createSelfIdentities() throws CantCreateSelfIdentityException;
+
+    /**
+     * This method sends the message through the Chat Network Service
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
 }

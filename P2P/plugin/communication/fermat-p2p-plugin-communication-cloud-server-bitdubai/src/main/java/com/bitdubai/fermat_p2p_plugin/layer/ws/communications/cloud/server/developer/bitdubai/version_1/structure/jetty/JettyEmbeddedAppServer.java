@@ -28,14 +28,17 @@ import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.UnsupportedAddressTypeException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.DispatcherType;
@@ -140,25 +143,17 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
 
-        String resourceBase = "";
-        URL webAppUri = this.getClass().getClassLoader().getResource("webapp");
-        LOG.info("WebAppUri = "+webAppUri);
-
-        if (webAppUri != null) {
-            resourceBase = webAppUri.toURI().toASCIIString();
-        }
-
         /*
          * Initialize web layer
          */
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
-        webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
-        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        webAppContext.setResourceBase(resourceBase);
+        webAppContext.setDescriptor("./webapp/WEB_INF/web.xml");
+        webAppContext.setResourceBase("./webapp");
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
         webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
+        webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         server.setHandler(webAppContext);
 
         /*
@@ -181,7 +176,6 @@ public class JettyEmbeddedAppServer {
         this.wsServerContainer.addEndpoint(WebSocketVpnServerChannel.class);
 
         this.server.dump(System.err);
-
 
     }
 
@@ -212,6 +206,31 @@ public class JettyEmbeddedAppServer {
         );
 
         upnpService.getControlPoint().search();*/
+
+        /* Use this is OK, load the ip dynamically
+
+        UpnpServiceImpl upnpService = null;
+        PortMapping[] arr = null;
+        List<String> addressList;
+        int i = 0;
+        addressList = getIPv4Address();
+
+        if(addressList != null) {
+
+            arr = new PortMapping[addressList.size()];
+
+            for (String address : addressList) {
+
+                LOG.info("Ip Address " + address);
+                arr[i] = new PortMapping(9090, address, PortMapping.Protocol.TCP, "My Port Mapping1");
+                i++;
+
+            }
+
+            upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
+            upnpService.getControlPoint().search();
+
+        }*/
 
         this.initialize();
         LOG.info("Starting the internal server");
@@ -244,6 +263,53 @@ public class JettyEmbeddedAppServer {
         }
 
         throw new UnsupportedAddressTypeException();
+    }
+
+    /*
+     * Return Inet4Address List of All the IpAddress Assignaded to the interfaces
+     * example a T2000 of Sun has four interfaces
+     */
+    private static List<String> getIPv4Address() throws Exception {
+
+        Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+        List<String> addressList = new ArrayList<>();
+        String address = null;
+
+        while (en.hasMoreElements()) {
+
+            NetworkInterface ni = en.nextElement();
+            address = constructAddress(ni);
+
+            if(address!=null)
+                addressList.add(address);
+
+        }
+
+        return addressList;
+
+    }
+
+    private static String constructAddress(NetworkInterface ni) throws Exception {
+
+        String address = null;
+
+        List<InterfaceAddress> list = ni.getInterfaceAddresses();
+        Iterator<InterfaceAddress> it = list.iterator();
+
+        while (it.hasNext()) {
+
+            InterfaceAddress ia = it.next();
+            String dir = ia.getAddress().toString();
+            dir = dir.replace("/", "");
+
+            if(ia.getNetworkPrefixLength() > 8 && ia.getNetworkPrefixLength() < 32)
+                address = dir;
+
+
+        }
+
+        return address;
+
     }
 
     /**

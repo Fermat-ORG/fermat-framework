@@ -394,7 +394,7 @@ public class OpenContractMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
-
+                        System.out.print("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
                         if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
                             negotiationId = businessTransactionMetadata.getNegotiationId();
                             negotiationIdFromDatabase = businessTransactionMetadata.getNegotiationId();
@@ -407,18 +407,16 @@ public class OpenContractMonitorAgent implements
                             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, contractTransactionStatus);
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
-                            System.out.print("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
-
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.confirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
                 }
@@ -429,23 +427,20 @@ public class OpenContractMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
-
+                        System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation");
                         if (openContractBusinessTransactionDao.isContractHashSentConfirmation(contractHash)) {
                             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.PENDING_RESPONSE);
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-
-                            System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation");
-
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.ackConfirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
 
@@ -453,6 +448,7 @@ public class OpenContractMonitorAgent implements
 
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
                     //TODO: check if contract hash was sent.
+                    System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONTRACT_OPENED");
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
@@ -472,18 +468,16 @@ public class OpenContractMonitorAgent implements
                                             ContractStatus.PENDING_PAYMENT);
                             }
 
-                            System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Sending confirmation");
-
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.ackConfirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                             raiseNewContractEvent(contractHash);
                         }
                     }
