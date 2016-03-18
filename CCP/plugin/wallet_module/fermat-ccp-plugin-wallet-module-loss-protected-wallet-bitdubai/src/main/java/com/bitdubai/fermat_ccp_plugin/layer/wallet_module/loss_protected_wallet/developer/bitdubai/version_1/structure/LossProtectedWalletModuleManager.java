@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinWalletSender;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -1006,6 +1007,9 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     @Override
     public void sendToWallet(long cryptoAmount, String walletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
+
+        BitcoinWalletSender bitcoinWalletSender = new BitcoinWalletSender(cryptoAmount,walletPublicKey,sendingWallet,receivingWallet,notes,blockchainNetworkType,deliveredToActorType);
+            bitcoinWalletSender.sendBtcToWallet();
     }
 
     @Override

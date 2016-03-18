@@ -39,9 +39,6 @@ public class BitcoinWalletSender {
     private BitcoinWalletManager bitcoinWalletManager;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
-    public BitcoinWalletSender() {
-    }
-
     public BitcoinWalletSender(long cryptoAmount, String sendingWalletPublicKey, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, String notes, BlockchainNetworkType blockchainNetworkType, Actors actorType) {
         this.cryptoAmount = cryptoAmount;
         this.sendingWalletPublicKey = sendingWalletPublicKey;
