@@ -25,6 +25,7 @@ public class Asset {
     private Timestamp expDate;
     private Status status;
     private String actorName;
+    private byte[] actorImage;
 
     public enum Status {
         PENDING("PENDING"),
@@ -55,6 +56,7 @@ public class Asset {
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
         setStatus(status);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
+        setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
     }
 
     public byte[] getImage() {
@@ -123,5 +125,13 @@ public class Asset {
 
     public DigitalAsset getDigitalAsset() {
         return digitalAsset;
+    }
+
+    public byte[] getActorImage() {
+        return actorImage;
+    }
+
+    public void setActorImage(byte[] actorImage) {
+        this.actorImage = actorImage;
     }
 }
