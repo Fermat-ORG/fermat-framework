@@ -15,44 +15,33 @@ public class OutgoingDeviceUserTransactionWrapper implements OutgoingDeviceUserT
 
 
 
-    UUID TransactionId;
-
-    String TransactionHash;
-
-    long cryptoAmount;
-
-    TransactionState TransactionState;
-
-    String Memo;
-
-    long Timestamp;
-
-    Actors ActoType;
-
-    ReferenceWallet ReferenceWalletSending;
-
-    ReferenceWallet ReferenceWalletReceiving;
-
-    String WalletSendingPlublicKey;
-
-    String WalletReceivingPublicKey;
-
-    BlockchainNetworkType BlockchainNetworkType;
+    private UUID TransactionId;
+    private String TransactionHash;
+    private long cryptoAmount;
+    private TransactionState TransactionState;
+    private String Memo;
+    private long Timestamp;
+    private Actors ActoType;
+    private ReferenceWallet ReferenceWalletSending;
+    private ReferenceWallet ReferenceWalletReceiving;
+    private String WalletSendingPlublicKey;
+    private String WalletReceivingPublicKey;
+    private BlockchainNetworkType BlockchainNetworkType;
 
 
     public OutgoingDeviceUserTransactionWrapper(UUID transactionId, String transactionHash, long cryptoAmount, com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.enums.TransactionState transactionState, String memo, long timestamp, Actors actoType, ReferenceWallet referenceWalletSending, ReferenceWallet referenceWalletReceiving, String walletSendingPlublicKey, String walletReceivingPublicKey, com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
-        TransactionId = transactionId;
-        TransactionHash = transactionHash;
+        this.TransactionId = transactionId;
+        this.TransactionHash = transactionHash;
         this.cryptoAmount = cryptoAmount;
-        TransactionState = transactionState;
-        Memo = memo;
-        Timestamp = timestamp;
-        ActoType = actoType;
-        ReferenceWalletSending = referenceWalletSending;
-        ReferenceWalletReceiving = referenceWalletReceiving;
-        WalletSendingPlublicKey = walletSendingPlublicKey;
-        WalletReceivingPublicKey = walletReceivingPublicKey;
-        BlockchainNetworkType = blockchainNetworkType;
+        this.TransactionState = transactionState;
+        this.Memo = memo;
+        this.Timestamp = timestamp;
+        this.ActoType = actoType;
+        this.ReferenceWalletSending = referenceWalletSending;
+        this.ReferenceWalletReceiving = referenceWalletReceiving;
+        this.WalletSendingPlublicKey = walletSendingPlublicKey;
+        this.WalletReceivingPublicKey = walletReceivingPublicKey;
+        this.BlockchainNetworkType = blockchainNetworkType;
     }
 
     @Override

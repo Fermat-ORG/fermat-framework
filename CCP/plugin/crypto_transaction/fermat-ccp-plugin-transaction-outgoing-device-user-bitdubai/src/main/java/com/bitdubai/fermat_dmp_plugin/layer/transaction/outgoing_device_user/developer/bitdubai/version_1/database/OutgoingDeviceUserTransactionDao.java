@@ -84,7 +84,6 @@ public class OutgoingDeviceUserTransactionDao {
                                        ReferenceWallet reference_wallet_receiving,
                                        String wallet_public_key_sending,
                                        String wallet_public_key_receiving,
-                                       boolean sameDevice,
                                        BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoinDeviceUserTransactionDatabaseConstants.OUTGOING_DEVICE_DATABASE_NAME);
