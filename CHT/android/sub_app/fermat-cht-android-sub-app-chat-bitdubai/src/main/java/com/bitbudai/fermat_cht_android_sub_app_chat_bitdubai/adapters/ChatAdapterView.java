@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -302,7 +303,7 @@ public class ChatAdapterView extends LinearLayout {
         //messageET.setText("Type message");
         //TextView meLabel = (TextView) findViewById(R.id.meLbl);
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
+        ScrollView container = (ScrollView) findViewById(R.id.container);
 
         if(chatSession!= null){
             whatToDo();

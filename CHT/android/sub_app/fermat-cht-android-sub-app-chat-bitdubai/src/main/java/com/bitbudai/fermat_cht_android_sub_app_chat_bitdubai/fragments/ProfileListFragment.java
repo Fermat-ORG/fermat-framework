@@ -223,7 +223,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
-        layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        layout = inflater.inflate(R.layout.profile_list_fragment, container, false);
         text=(TextView) layout.findViewById(R.id.text);
         //text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
@@ -239,7 +239,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                     profileicon.add(bmd.getBitmap());
                 }
-                text.setVisibility(View.GONE);
+                //text.setVisibility(View.GONE);
             }else{
                 //Comentar, solo para pruebas
 //                ContactImpl cadded=new ContactImpl();
@@ -255,7 +255,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //                cadded.setRemoteName("No hay nadie conectado");
 //                chatManager.saveContact(cadded);
                 //Fin Comentar
-                text.setVisibility(View.VISIBLE);
+                //text.setVisibility(View.VISIBLE);
                 text.setText("No Registered Profile. Please create one in any Fermat Community.");
             }
 
