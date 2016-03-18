@@ -76,6 +76,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
         LOG.info("--------------------------------------------------------------------- ");
         LOG.info("processingPackage");
+        JsonObject contentJsonObject = null;
         String packetContentJsonStringRepresentation = null;
         NetworkServiceType networkServiceTypeApplicant = null;
         PlatformComponentProfile platformComponentProfileToRegister = null;
@@ -90,33 +91,48 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
             /*
              * Construct the json object
              */
-            JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
             platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
 
-            LOG.info("Identity = " + platformComponentProfileToRegister.getIdentityPublicKey());
-            LOG.info("Alias    = " + platformComponentProfileToRegister.getAlias());
-            LOG.info("Name     = " + platformComponentProfileToRegister.getName());
-            LOG.info("Type     = " + platformComponentProfileToRegister.getPlatformComponentType());
-            LOG.info("NSType   = " + platformComponentProfileToRegister.getNetworkServiceType());
+            if(networkServiceTypeApplicant != null &&
+                    platformComponentProfileToRegister.getPlatformComponentType() != null &&
+                    platformComponentProfileToRegister.getNetworkServiceType() != null) {
+
+                LOG.info("Identity = " + platformComponentProfileToRegister.getIdentityPublicKey());
+                LOG.info("Alias    = " + platformComponentProfileToRegister.getAlias());
+                LOG.info("Name     = " + platformComponentProfileToRegister.getName());
+                LOG.info("Type     = " + platformComponentProfileToRegister.getPlatformComponentType());
+                LOG.info("NSType   = " + platformComponentProfileToRegister.getNetworkServiceType());
 
             /*
              * Switch between platform component type
              */
-            switch (platformComponentProfileToRegister.getPlatformComponentType()){
+                switch (platformComponentProfileToRegister.getPlatformComponentType()) {
 
-                case COMMUNICATION_CLOUD_CLIENT :
-                    registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
-                    break;
+                    case COMMUNICATION_CLOUD_CLIENT:
+                        registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
+                        break;
 
-                case NETWORK_SERVICE :
-                    registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
-                    break;
+                    case NETWORK_SERVICE:
+                        registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
+                        break;
 
-                //Others
-                default :
-                    registerOtherComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
-                    break;
+                    //Others
+                    default:
+                        registerOtherComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, networkServiceTypeApplicant);
+                        break;
+
+                }
+            }else{
+
+                String messageException = (networkServiceTypeApplicant == null ||
+                        platformComponentProfileToRegister.getNetworkServiceType() == null)?
+                        "The NetworkServiceType " + contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString() + " not exist in the Server" :
+                        "The PlatformComponentType  not exist in the Server";
+
+
+                throw new Exception(messageException);
 
             }
 
@@ -129,8 +145,8 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
              * Construct the json object
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString());
+            packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in registration component: "+e.getMessage());
 
             /*

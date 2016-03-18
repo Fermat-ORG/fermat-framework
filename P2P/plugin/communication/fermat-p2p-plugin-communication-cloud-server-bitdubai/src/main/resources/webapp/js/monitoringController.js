@@ -100,7 +100,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
             requestMonitoringData();
             requestMonitInfo();
-            $interval(requestMonitoringData, 60000);
+            $interval(requestMonitoringData, 30000);
             $interval(requestMonitInfo, 30000);
         }
 
