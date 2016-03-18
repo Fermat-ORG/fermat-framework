@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.layer.sub_app_module.fan;
+package com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
@@ -17,13 +17,6 @@ import java.util.UUID;
  */
 public interface TokenlyFanIdentityManagerModule {
 
-    /**
-     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the fan
-     * identities linked to the current logged device user.
-     * @return
-     * @throws CantListFanIdentitiesException
-     */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      *

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.layer.sub_app_module.artist;
+package com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
@@ -19,13 +19,7 @@ import java.util.UUID;
  */
 public interface TokenlyArtistIdentityManagerModule {
 
-    /**
-     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
-     * identities linked to the current logged device user.
-     * @return
-     * @throws CantListArtistIdentitiesException
-     */
-    List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
+
 
     /**
      *
