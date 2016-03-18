@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,7 +48,7 @@ public class TokenlyWalletSongVault {
     /**
      * Represents the directory to storage the song.
      */
-    private final String DIRECTORY_NAME = "TokenlySongs";
+    private final String DIRECTORY_NAME = "tokenly-wallet-song";
     /**
      * Represents the file privacy.
      * TODO: for testing, I'll put this as public file.
@@ -99,11 +101,12 @@ public class TokenlyWalletSongVault {
      * This method contains the basic logic to download a file.
      * Is required to review the tokenly API to use the download URL.
      * @param downloadUrl
-     * @param songName
+     * @param fileName
      * @throws CantDownloadFileException
      */
-    private void downloadFile(String downloadUrl, String songName) throws CantDownloadFileException{
+    public void downloadFile(String downloadUrl, String fileName) throws CantDownloadFileException{
         try{
+            //TODO: study if this method will fix better in external API
             URL url = new URL(downloadUrl);
             URLConnection urlCon = url.openConnection();
             //Get web access.
@@ -112,17 +115,34 @@ public class TokenlyWalletSongVault {
             PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
                     pluginId,
                     DIRECTORY_NAME,
-                    songName,
+                    fileName,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             //Reading buffer.
-            byte [] array = new byte[1000];
+            byte [] data = new byte[1024];
             //Put the inputStream into the array bytes.
-            is.read(array);
+            int bytesRead = is.read(data);
+            List<Byte> byteList = new ArrayList<>();
+            while(bytesRead != -1) {
+                for(byte byteRead : data){
+                    byteList.add(byteRead);
+                }
+                bytesRead = is.read(data);
+            }
+            int byteListSize = byteList.size();
+            byte[] array = new byte[byteListSize];
+            Object[] objectArray = byteList.toArray();
+            int loopCounter = 0;
+            for(Object object : objectArray){
+                array[loopCounter] = Byte.parseByte(object.toString());
+                loopCounter++;
+            }
             pluginBinaryFile.setContent(array);
             pluginBinaryFile.persistToMedia();
             //Close connection
             is.close();
+            //Only for testing:
+            //testReadFile(filegName);
         } catch (MalformedURLException e) {
             throw new CantDownloadFileException(
                     e,
@@ -143,6 +163,31 @@ public class TokenlyWalletSongVault {
                     e,
                     "Downloading file from URL "+downloadUrl,
                     "Cannot create the file");
+        }
+    }
+
+    //Test method
+    private void testReadFile(String fileName){
+        try{
+            System.out.println("TKY: READ " + DIRECTORY_NAME + "/fileName");
+            PluginBinaryFile pluginBinaryFile=pluginFileSystem.getBinaryFile(
+                    pluginId,
+                    DIRECTORY_NAME,
+                    fileName,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            pluginBinaryFile.loadFromMedia();
+            byte[] bytes = pluginBinaryFile.getContent();
+            System.out.println("TKY: CONTENT SIZE" + bytes.length);
+            int loopCounter = 0;
+            for(byte byteRead : bytes){
+                System.out.println("TKY: "+loopCounter+" CONTENT "+byteRead);
+                loopCounter++;
+            }
+
+        } catch (Exception e){
+            System.out.println("TKY: Test Read exception");
+            e.printStackTrace();
         }
     }
 
