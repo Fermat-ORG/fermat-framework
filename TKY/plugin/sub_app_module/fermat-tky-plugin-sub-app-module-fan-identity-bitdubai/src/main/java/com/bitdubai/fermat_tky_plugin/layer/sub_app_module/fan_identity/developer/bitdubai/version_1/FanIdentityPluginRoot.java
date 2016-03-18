@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure.FanIdentityManager;
 
 /**
@@ -20,6 +21,9 @@ import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.fan_identity.develope
 public class FanIdentityPluginRoot extends AbstractPlugin {
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
     FanIdentityManager fanIdentityManager;
     /**
@@ -31,7 +35,7 @@ public class FanIdentityPluginRoot extends AbstractPlugin {
 
 
     private void initPluginManager(){
-        this.fanIdentityManager = new FanIdentityManager();
+        this.fanIdentityManager = new FanIdentityManager(errorManager,tokenlyFanIdentityManager);
     }
 
     public void start() throws CantStartPluginException {
