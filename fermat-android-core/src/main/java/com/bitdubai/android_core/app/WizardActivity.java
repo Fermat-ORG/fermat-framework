@@ -32,7 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardP
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
@@ -425,7 +424,7 @@ public class WizardActivity extends FermatActivity
     }
 
     private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
-        Intent intent = new Intent(this, SubAppActivity.class);
+        Intent intent = new Intent(this, AppActivity.class);
         intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
         intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
         intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());

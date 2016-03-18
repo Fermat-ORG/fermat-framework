@@ -187,18 +187,19 @@ public enum Plugins implements FermatPluginsEnum {
     // Init new Plugins
 
     ASSET_APPROPRIATION         ("ASAP"),
+    ASSET_BUYER                 ("ASBU"),
+    ASSET_DIRECT_SELL           ("ASDS"),
     ASSET_DISTRIBUTION          ("ASD"),
-    ASSET_TRANSFER              ("ASTT"),
     ASSET_FACTORY               ("ASF"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
-    ASSET_SELLER("ASSE"),
-    ASSET_BUYER("ASBU"),
+    ASSET_SELLER                ("ASSE"),
+    ASSET_TRANSFER              ("ASTT"),
+    ASSET_TRANSMISSION          ("AST"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
-    ASSET_TRANSMISSION          ("AST"),
     BITCOIN_ASSET_VAULT         ("BAV"),
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
@@ -228,11 +229,12 @@ public enum Plugins implements FermatPluginsEnum {
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
-    INTRA_IDENTITY_USER          ("IIA"),
+    INTRA_IDENTITY_USER         ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
-    ISSUER_APPROPRIATION("ISAP"),
+    ISSUER_APPROPRIATION        ("ISAP"),
     NOTIFICATION                ("NOT"),
+    NEGOTIATION_DIRECT_SELL     ("NDS"),
     ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
@@ -308,7 +310,7 @@ public enum Plugins implements FermatPluginsEnum {
 
 
     //TKY
-    API_TOKENLY                         ("TOKAP"),
+    TOKENLY_API                         ("TOKAP"),
     TOKENLY_ARTIST                      ("TARTIST"),
     TOKENLY_FAN                         ("TFAN"),
     TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
@@ -331,16 +333,15 @@ public enum Plugins implements FermatPluginsEnum {
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASDS" :   return ASSET_DIRECT_SELL        ;
             case "ASTT"  :  return ASSET_TRANSFER           ;
             case "ASF"  :   return ASSET_FACTORY            ;
             case "ASI"  :   return ASSET_ISSUER             ;
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
-            case "ASSE":
-                return ASSET_SELLER;
-            case "ASBU":
-                return ASSET_BUYER;
+            case "ASSE":    return ASSET_SELLER;
+            case "ASBU":    return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -378,6 +379,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IR"   :   return ISSUER_REDEMPTION        ;
             case "ISAP":    return ISSUER_APPROPRIATION     ;
             case "NOT"  :   return NOTIFICATION             ;
+            case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
             case "PBL"  :   return PUBLISHER                ;
@@ -456,7 +458,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
             case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
-            case "TOKAP":       return API_TOKENLY                              ;
+            case "TOKAP":       return TOKENLY_API;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
             case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;

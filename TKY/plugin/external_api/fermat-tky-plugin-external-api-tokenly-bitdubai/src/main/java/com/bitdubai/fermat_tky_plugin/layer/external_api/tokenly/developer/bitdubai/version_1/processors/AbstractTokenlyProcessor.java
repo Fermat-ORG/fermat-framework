@@ -59,8 +59,8 @@ public abstract class AbstractTokenlyProcessor {
         String dateString = jsonElement.getAsString();
         Date dateFromJson;
         try {
-            java.util.Date birthDate = simpleDateFormat.parse(dateString);
-            dateFromJson = new Date(birthDate.getTime());
+            java.util.Date utilDate = simpleDateFormat.parse(dateString);
+            dateFromJson = new Date(utilDate.getTime());
         } catch (ParseException e) {
             //Default date
             return new Date(2016);

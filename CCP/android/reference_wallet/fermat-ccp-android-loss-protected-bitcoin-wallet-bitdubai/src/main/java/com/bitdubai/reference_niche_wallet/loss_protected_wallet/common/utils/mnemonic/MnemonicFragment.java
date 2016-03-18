@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 
 //import com.bitdubai.fermat.R;
