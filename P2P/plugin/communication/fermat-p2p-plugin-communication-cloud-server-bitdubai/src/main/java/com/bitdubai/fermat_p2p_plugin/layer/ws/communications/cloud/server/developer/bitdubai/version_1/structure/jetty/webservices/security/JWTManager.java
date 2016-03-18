@@ -29,7 +29,7 @@ public class JWTManager {
     /**
      * Represent the expirationTime time
      */
-    private static final Long expirationTime = new Long(600000);
+    private static final Long expirationTime = new Long(1800000);
 
     /**
      * Get the key value

@@ -64,30 +64,30 @@
     <!-- -->
 
     <!--Dialog Help - Init-->
-    <string name="dap_issuer_wallet_welcome_subTitle">Welcome to the Asset Issuer Wallet.</string>
-    <string name="dap_issuer_wallet_welcome_body">You will be using this wallet to store all the assets created with the Asset Factory Application. From here you will be able to distribute them to whom ever uses the Asset User Wallet and get statistics of its usage.</string>
+    <string name="dap_issuer_wallet_welcome_subTitle">Use it for distribution of assets.</string>
+    <string name="dap_issuer_wallet_welcome_body">Features:\n Assets storage \n Assets distribution (to Asset Users)\n Statistics \n NOTE: Assets must be created first in Asset Factory.</string>
     <string name="dap_issuer_wallet_welcome_Footer">* You will be able to edit your profile in the Asset Issuer Identity application.</string>
     <string name="dap_issuer_wallet_welcome_name_left">Asset Issuer</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_detail_subTitle">Asset detail section.</string>
-    <string name="dap_issuer_wallet_detail_body">This section will show you detailed information of your selected asset.\n\nYou will be able to see statistics of its usage, like to which users it has been distributed and much more\n\nYou will also be able to deliver the asset to any user you are connected to. If needed, you can appropriate this asset in order to get your bitcoins back.</string>
+    <string name="dap_issuer_wallet_detail_body">Features: \n Statistics of the distribution\n\n\n Delivery of the asset to any connected user \n\n Appropriation of this asset (recovery of the attached bitcoin value) </string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_appropriate_list_subTitle">Asset Issuer appropriation list.</string>
-    <string name="dap_issuer_wallet_appropriate_list_body">Users that have decided to appropriate an asset instead of redeem it is also important data.\n\nOn this section, we are showing you those users that have decided to appropriate your selected asset.</string>
+    <string name="dap_issuer_wallet_appropriate_list_body">List of those users who appropriated the asset instead of redeem it.</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_delivery_list_subTitle">Asset Issuer Delivery List.</string>
-    <string name="dap_issuer_wallet_delivery_list_body">On this section you are able to see delivery statistics of your selected asset.\n\nAll the users that have receive this asset will be collected here so you can better define the success of your marketing campaign.</string>
+    <string name="dap_issuer_wallet_delivery_list_body">List of users to whom you delivered an asset, of those who received it, and statistics to analyse your campaigns results.</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_redeemed_list_subTitle">Asset Issuer Redeemed List.</string>
-    <string name="dap_issuer_wallet_redeemed_list_body">Assets that have been redeemed at redeem points connected to you are a very important data.\n\nWe are collecting those statistics in this section for you to analize it.</string>
+    <string name="dap_issuer_wallet_redeemed_list_body">List of assets redeemed, at which Redeem Point, and statistics to analyse your campaigns results.</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->

@@ -91,16 +91,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         System.gc();
     }
 
-    @Override
-    public FermatStructure getAppInUse() {
-        return getDesktopRuntimeManager().getLastDesktopObject();
-    }
-
-    @Override
-    public FermatStructure getAppInUse(String publicKey) throws Exception {
-        return getDesktopRuntimeManager().getDesktopObject(publicKey);
-    }
-
 
     private void unbindDrawables(View view) {
         if(view!=null) {
@@ -198,7 +188,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
                 String ip = ipPort[0];
                 String port = ipPort[1];
-                getCloudClient().changeIpAndPortProperties(ip,Integer.getInteger(port));
+                getCloudClient().changeIpAndPortProperties(ip,Integer.parseInt(port));
             }
 
             if (fragment != null) frgBackType = fragment.getBack();
@@ -239,7 +229,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //loadFragment(subAppRuntimeManager.getLastApp().getType(), idContainer, screen);
 
         } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeFragment"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
@@ -391,10 +381,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
-    @Override
-    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-
-    }
 
     @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
@@ -441,7 +427,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                  * Get current activity to paint
                  */
 
-                activity = getFermatAppManager().getLastAppStructure().getLastActivity();
+                FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+                activity = fermatStructure.getLastActivity();
                 loadBasicUI(activity, fermatAppConnection);
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
@@ -458,7 +445,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     paintScreen(activity);
 
                     if (activity.getFragments().size() == 1) {
-                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(),getFermatAppManager().lastAppSession());
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(),getFermatAppManager().lastAppSession(),fermatStructure);
                     }
                 }
             } catch (Exception e) {
@@ -502,11 +489,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     }
 
-
-    @Override
-    protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
-        return getSubAppRuntimeMiddleware().getLastApp().getLastActivity().getSideMenu().getMenuItems();
-    }
 
     @Override
     protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {

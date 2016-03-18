@@ -307,11 +307,19 @@ public enum Plugins implements FermatPluginsEnum {
 
     ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
     ARTIST_IDENTITY                    ("ARTIDNTY"),
-    //WRD
-    API_TOKENLY                         ("TOKAP")
+
+
+    //TKY
+    API_TOKENLY                         ("TOKAP"),
+    TOKENLY_ARTIST                      ("TARTIST"),
+    TOKENLY_FAN                         ("TFAN"),
+    TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
+    TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
+    TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
+    TOKENLY_WALLET                      ("TWALLET");
 
     // End  new Plugins
-    ;
+
     private final String code;
 
     Plugins(final String code) {
@@ -442,15 +450,21 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
             case "MAEN":    return MATCHING_ENGINE;
 
-            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
-            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
+            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
-            case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
-            case "ANSART":   return ACTOR_NETWORK_SERVICE_ARTIST;
-            case "ARTIDNTY": return ARTIST_IDENTITY;
-            case "TOKAP":   return API_TOKENLY                      ;
+            case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
+            case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
+            case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "TOKAP":       return API_TOKENLY                              ;
+            case "TARTIST":     return TOKENLY_ARTIST                           ;
+            case "TFAN":        return TOKENLY_FAN                              ;
+            case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;
+            case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
+            case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
+            case "TWALLET":     return TOKENLY_WALLET                           ;
 
             default:
                 throw new InvalidParameterException(
