@@ -152,7 +152,7 @@ public class TokenlySongWalletDeveloperDatabaseFactory implements
          * Table Synchronize addition.
          */
         DeveloperDatabaseTable synchronizeTable = developerObjectFactory.getNewDeveloperDatabaseTable(
-                TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TABLE_NAME, songColumns);
+                TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TABLE_NAME, synchronizeColumns);
         tables.add(synchronizeTable);
 
         return tables;

@@ -100,7 +100,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
      * This method returns the Plugin Manager.
      * @return
      */
-    public FermatManager getFermatManager(){
+    public FermatManager getManager(){
         return this.tokenlyWalletManager;
     }
 
@@ -124,10 +124,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.TOKENLY_WALLET,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -153,10 +149,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.TOKENLY_WALLET,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(
                         cantOpenDatabaseException.getLocalizedMessage());
 
