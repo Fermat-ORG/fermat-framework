@@ -21,13 +21,13 @@ public class P2PAppsRuntimeManager implements com.bitdubai.fermat_api.layer.dmp_
 
     public P2PAppsRuntimeManager() {
         installedApps = new HashMap<>();
-        InstalledApp installedApp = new InstalledApp("Tinder","tinder_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_empresa_tinder,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+        InstalledApp installedApp = new InstalledApp("Tinder","tinder_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_empresa_tinder,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
         installedApps.put("tinder_public_key", installedApp);
-        installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_empresa_aribnb,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+        installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_empresa_aribnb,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
         installedApps.put("Airbnb_public_key", installedApp);
-        installedApp = new InstalledApp("eBay","eBay_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_ebay,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+        installedApp = new InstalledApp("eBay","eBay_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_ebay,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
         installedApps.put("eBay_public_key", installedApp);
-        installedApp = new InstalledApp("Mercado libre","mercado_libre_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus());
+        installedApp = new InstalledApp("Mercado libre","mercado_libre_public_key",new Version(), com.bitdubai.fermat_dmp.wallet_manager.R.drawable.icon_mercado_libre,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
         installedApps.put("mercado_libre_public_key", installedApp);
     }
 

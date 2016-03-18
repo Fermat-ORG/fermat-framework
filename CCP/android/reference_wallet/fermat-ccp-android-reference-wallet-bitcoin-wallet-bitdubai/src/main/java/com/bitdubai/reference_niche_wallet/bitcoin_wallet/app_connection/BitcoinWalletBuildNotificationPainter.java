@@ -41,7 +41,7 @@ public class BitcoinWalletBuildNotificationPainter {
                             notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true);
                         }
                         break;
-                    case "TRANSACTION_REVERSE":
+                    case "TRANSACTIONREVERSE":
                         if(moduleManager != null) {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                             transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);

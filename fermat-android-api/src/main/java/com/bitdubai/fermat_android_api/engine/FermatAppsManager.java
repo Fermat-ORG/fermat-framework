@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
+import java.util.List;
+
 /**
  * Created by mati on 2016.02.26..
  */
@@ -49,4 +51,6 @@ public interface FermatAppsManager {
     FermatStructure getAppStructure(String appPublicKey);
 
     FermatStructure getLastAppStructure();
+
+    List<FermatRecentApp> getRecentsAppsStack();
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,115 +18,133 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@drawable/communities_bar">
+                android:background="@drawable/communities_bar"
+                >
+
 
                 <ImageView
-                    android:id="@+id/btn_close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:id="@+id/btn_close"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/close_button" />
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/close_button"/>
 
-            </FrameLayout>
+                </FrameLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
                 <ImageView
-                    android:id="@+id/img_icon"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
+                    android:id="@+id/img_icon"
+                    android:src="@drawable/communities_icon"
                     android:background="@drawable/background_circle_icon"
-                    android:src="@drawable/communities_icon" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:paddingTop="7dp"
                     android:text="Communities"
-                    android:textColor="#59595B"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
                     android:textSize="20sp"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"
+                    android:textColor="#59595B"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="7dp"
+                    />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:background="#59595B"
                     android:layout_marginTop="7dp"
-                    android:background="#59595B" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
+
 
             </LinearLayout>
+
+
+
         </RelativeLayout>
+
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/communities_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="7dp"
+            android:id="@+id/communities_recycler_view"
             android:paddingRight="7dp"
-            tools:listitem="@layout/communities_row" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+            android:paddingLeft="7dp"
+            tools:listitem="@layout/communities_row"
+            android:layout_weight="50"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
             android:elevation="30dp"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            >
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#69f99b" />
+                android:background="#69f99b"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="#fff"
-                android:orientation="horizontal"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:orientation="horizontal"
+                >
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="10"
-                    android:backgroundTint="#59595B"
-                    android:gravity="center_vertical"
-                    android:hint="Enter Community Name"
+                    android:text="Enter Community Name"
+                    android:textColorHint="#59595B"
                     android:textColor="#59595B"
-                    android:textColorHint="#59595B" />
+                    android:hint="Enter Community Name"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:backgroundTint="#59595B"
+                    android:layout_weight="10"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/search_24dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:src="@drawable/search_24dp" />
+                    />
+
+
             </LinearLayout>
+
         </LinearLayout>
-    </FrameLayout>
+
+
+    </LinearLayout>
+
+
 </LinearLayout>
