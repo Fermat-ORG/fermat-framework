@@ -24,11 +24,19 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
     TokenlySongWalletDao tokenlySongWalletDao;
 
     /**
+     * Represents the TokenlyWalletSongVault
+     */
+    TokenlyWalletSongVault tokenlyWalletSongVault;
+
+    /**
      * Constructor with parameters
      * @param tokenlySongWalletDao
      */
-    public TokenlyWalletManager(TokenlySongWalletDao tokenlySongWalletDao){
+    public TokenlyWalletManager(
+            TokenlySongWalletDao tokenlySongWalletDao,
+            TokenlyWalletSongVault tokenlyWalletSongVault){
         this.tokenlySongWalletDao = tokenlySongWalletDao;
+        this.tokenlyWalletSongVault = tokenlyWalletSongVault;
     }
     //TODO: implement this methods
     /**
@@ -122,6 +130,6 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     @Override
     public void downloadSong(UUID songId) throws CantDownloadSongException {
-
+        //TODO: create a method in DAO to get Song by songId, then download the real song from the Vault.
     }
 }

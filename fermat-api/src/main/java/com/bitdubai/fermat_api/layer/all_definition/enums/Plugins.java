@@ -310,7 +310,7 @@ public enum Plugins implements FermatPluginsEnum {
 
 
     //TKY
-    API_TOKENLY                         ("TOKAP"),
+    TOKENLY_API                         ("TOKAP"),
     TOKENLY_ARTIST                      ("TARTIST"),
     TOKENLY_FAN                         ("TFAN"),
     TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
@@ -458,7 +458,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
             case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
-            case "TOKAP":       return API_TOKENLY                              ;
+            case "TOKAP":       return TOKENLY_API;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
             case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;

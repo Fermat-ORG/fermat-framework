@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
 import java.util.UUID;
 
@@ -25,6 +26,15 @@ public class CryptoCustomerWalletModuleClausesImpl implements Clause{
         this.status     = status;
         this.proposedBy = proposedBy;
         this.indexOrder = indexOrder;
+    }
+
+    public CryptoCustomerWalletModuleClausesImpl(ClauseInformation clauseInformation, String proposer) {
+        this.clauseId = clauseInformation.getClauseID();
+        this.type = clauseInformation.getType();
+        this.value = clauseInformation.getValue();
+        this.status = clauseInformation.getStatus();
+        this.proposedBy = proposer;
+        indexOrder = 0;
     }
 
     @Override

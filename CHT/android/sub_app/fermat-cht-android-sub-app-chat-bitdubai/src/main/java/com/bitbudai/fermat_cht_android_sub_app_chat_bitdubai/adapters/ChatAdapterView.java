@@ -190,7 +190,8 @@ public class ChatAdapterView extends LinearLayout {
 
             if(chatId !=null){
                 //messSize=chatManager.getMessageByChatId(chatId).size();
-                List<Message> messL=  chatManager.getMessageByChatId(chatId);
+                List<Message> messL=  chatManager.getMessagesByChatId(chatId);
+                //TODO El metodo se llama chatManager.getMessageByChatId(chatId) devuelve una instancia tipo mensaje;
                 MessageImpl messagei;
                 // messSize= messL.size();
                 //for (int i = 0; i < messSize; i++) {
@@ -446,6 +447,7 @@ public class ChatAdapterView extends LinearLayout {
                     adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                     messagesContainer.setAdapter(adapter);
                     displayMessage(chatMessage);
+                    System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
 
 
                 } catch (CantSaveMessageException e) {
