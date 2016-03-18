@@ -3158,8 +3158,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTabStrip.setTabsColor("#000000");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
-        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
-        runtimeTabStrip.setDividerColor(0xFFFFFF);
+//        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
+//        runtimeTabStrip.setDividerColor(0xFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats
@@ -3169,7 +3169,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -3179,18 +3178,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
-        runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
-
-//        //Tabs Connections
-//        runtimeTab = new Tab();
-//        runtimeTab.setLabel("CONNECTIONS");
-//        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT);
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey());
-//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-//        runtimeTabStrip.addTab(runtimeTab);
 
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
@@ -3223,8 +3212,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTabStrip.setTabsColor("#000000");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
-        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
-        runtimeTabStrip.setDividerColor(0xFFFFFF);
+        //runtimeTabStrip.setBackgroundColor(0xFFFFFF);
+        //runtimeTabStrip.setDividerColor(0xFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats
@@ -3234,7 +3223,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeTabStrip.addTab(runtimeTab);
 
         //Tabs Contacts
@@ -3244,7 +3232,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
