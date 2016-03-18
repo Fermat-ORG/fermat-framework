@@ -194,7 +194,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         return memo;
     }
 
-    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo) {
 
         dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
@@ -203,6 +203,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         memo = negotiationInfo.getMemo();
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
+        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
+
         clauses = new ArrayList<>();
         for (final ClauseInformation value : values) {
             dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);

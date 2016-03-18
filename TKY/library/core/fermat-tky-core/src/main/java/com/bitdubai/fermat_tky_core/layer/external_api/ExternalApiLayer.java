@@ -12,7 +12,7 @@ import com.bitdubai.fermat_tky_core.layer.external_api.tokenly.TokenlyPluginSubs
 public class ExternalApiLayer extends AbstractLayer {
 
     public ExternalApiLayer() {
-        super(Layers.API);
+        super(Layers.EXTERNAL_API);
     }
 
     public void start() throws CantStartLayerException {

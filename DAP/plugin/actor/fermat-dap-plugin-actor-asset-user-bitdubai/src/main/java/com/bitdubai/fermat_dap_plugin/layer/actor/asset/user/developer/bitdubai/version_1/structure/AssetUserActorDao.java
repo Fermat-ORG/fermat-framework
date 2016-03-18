@@ -378,6 +378,46 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
+    public void updateOfflineUserRegisterInNetworkService(List<ActorAssetUser> onlineUsersInNetworkService) throws CantGetAssetUsersListException, CantUpdateAssetUserConnectionException {
+
+        try {
+            List<ActorAssetUser> list = getAllAssetUserActorRegistered();
+
+            for (ActorAssetUser registeredUser : list)
+            {
+                if (notInNetworkService(registeredUser,onlineUsersInNetworkService))
+                {
+                    if (registeredUser.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.CONNECTED_OFFLINE, registeredUser.getCryptoAddress());
+                    else if (registeredUser.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.REGISTERED_OFFLINE,registeredUser.getCryptoAddress());
+                }
+                else
+                {
+                    if (registeredUser.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.CONNECTED_ONLINE, registeredUser.getCryptoAddress());
+                    else if (registeredUser.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.REGISTERED_ONLINE,registeredUser.getCryptoAddress());
+                }
+            }
+
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateAssetUserConnectionException e) {
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "Asset User Actor", "Cant update state in " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + "");
+        }
+
+    }
+
+    private boolean notInNetworkService(ActorAssetUser registeredUser, List<ActorAssetUser> onlineUsersInNetworkService) {
+
+        for (ActorAssetUser onlineUser : onlineUsersInNetworkService) {
+            if (onlineUser.getActorPublicKey().equals(registeredUser.getActorPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
     public int createNewAssetUserRegisterInNetworkServiceByList(List<ActorAssetUser> actorAssetUserRecord) throws CantAddPendingActorAssetException {
         int recordInsert = 0;
         try {
@@ -425,7 +465,7 @@ public class AssetUserActorDao implements Serializable {
 
 
 //                        if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
 //                        } else {
 //                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
 //                        }
@@ -1158,7 +1198,7 @@ public class AssetUserActorDao implements Serializable {
         return actorAssetUser;
     }
 
-    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetAssetUserActorProfileImageException, CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException {
+    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetAssetUserActorProfileImageException, CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException, CantUpdateAssetUserConnectionException {
 
         for (DatabaseTableRecord record : records) {
             Genders genders = Genders.INDEFINITE;
@@ -1182,6 +1222,31 @@ public class AssetUserActorDao implements Serializable {
 
             if (blockchainNetworkType != null) {
                 getCryptoAddressNetwork(user, blockchainNetworkType);
+            }
+
+            if (user.getCryptoAddress() != null)
+            {
+                if (user.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE)) {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.CONNECTED_ONLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.CONNECTED_ONLINE);
+                }
+                else if (user.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.CONNECTED_OFFLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.CONNECTED_OFFLINE);
+                }
+            }
+            else
+            {
+                if (user.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE)) {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.REGISTERED_ONLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.REGISTERED_ONLINE);
+                }
+                else if (user.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.REGISTERED_OFFLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.REGISTERED_OFFLINE);
+                }
             }
             list.add(user);
             

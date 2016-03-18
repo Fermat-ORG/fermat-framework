@@ -61,7 +61,7 @@ public class ConfigurationWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConfiguration() {
 
-        LOG.info("Executing getConfiguration()");
+        LOG.debug("Executing getConfiguration()");
 
         Configuration configuration = new Configuration();
         configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
@@ -79,7 +79,7 @@ public class ConfigurationWebService {
     @Produces(MediaType.TEXT_PLAIN)
     public Response saveConfiguration(Configuration configuration) {
 
-        LOG.info("Executing saveConfiguration()");
+        LOG.debug("Executing saveConfiguration()");
 
         try {
 

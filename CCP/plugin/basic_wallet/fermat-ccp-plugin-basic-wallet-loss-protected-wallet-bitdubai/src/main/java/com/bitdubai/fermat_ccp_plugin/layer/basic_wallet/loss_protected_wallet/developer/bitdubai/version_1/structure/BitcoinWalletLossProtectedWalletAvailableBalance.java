@@ -8,8 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
@@ -41,17 +44,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         this.broadcaster = broadcaster;
     }
 
-    @Override
-    public long getBalance() throws CantCalculateBalanceException {
-        try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getAvailableBalance(BlockchainNetworkType.REG_TEST); //TODO red harcoder
-        } catch(CantCalculateBalanceException exception){
-            throw exception;
-        } catch(Exception exception){
-            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
-        }
-    }
+
 
     @Override
     public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
@@ -65,7 +58,27 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         }
     }
 
-    /*
+
+    @Override
+    public long getBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
+        try {
+
+            //calculate how many btc can spend based on the exchangeRate
+
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(balanceType,blockchainNetworkType,exchangeRate);
+
+
+        } catch(CantListTransactionsException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+
+        } catch(Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+        }
+    }
+
+    /*d
         * NOTA:
         *  El debit y el credit debería mirar primero si la transacción que
         *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
