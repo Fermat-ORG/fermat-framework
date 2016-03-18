@@ -1,4 +1,5 @@
-package com.bitdubai.android_core.app.common.version_1;
+package com.bitdubai.android_core.app;
+
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -14,14 +15,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.DesktopActivity;
-import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
@@ -40,53 +42,45 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
-import java.util.List;
+import java.util.Objects;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
- * Created by mati on 2016.03.16..
+ * Created by Matias Furszyfer
  */
-public class AppActivity extends FermatActivity{
 
-    /**
-     * Called when the activity is first created
-     *
-     * @param savedInstanceState
-     */
+
+public class AppActivity extends FermatActivity implements FermatScreenSwapper {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
-
         try {
-
             loadUI(createOrOpenApplication());
-
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialize the contents of the Activity's standard options menu
@@ -155,7 +149,6 @@ public class AppActivity extends FermatActivity{
 
     }
 
-
     /**
      * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
      * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
@@ -166,7 +159,6 @@ public class AppActivity extends FermatActivity{
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         try {
-
             if (savedInstanceState == null) {
                 savedInstanceState = new Bundle();
             } else
@@ -178,9 +170,7 @@ public class AppActivity extends FermatActivity{
 
     }
 
-    public void onControlledActivityBack(String ActivityBackCode){
-        // get actual fragment on execute
-
+    public void onControlledActivityBack(String activityBackCode){
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -190,21 +180,27 @@ public class AppActivity extends FermatActivity{
 
         String frgBackType = null;
 
-        WalletRuntimeManager walletRuntimeManager = getWalletRuntimeManager();
+        RuntimeManager runtimeManager = null;
+        FermatStructure fermatStructure = null;
+        FermatAppsManager fermatAppsManager = getFermatAppManager();
+        if(activityBackCode!=null){
+            try {
+                runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppsManager.getApp(activityBackCode).getAppType());
+                fermatStructure = runtimeManager.getAppByPublicKey(activityBackCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        WalletNavigationStructure walletNavigationStructure = walletRuntimeManager.getLastWallet();
-
-        Activity activity = walletNavigationStructure.getLastActivity();
-
-        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
-
+        }else{
+            fermatStructure = fermatAppsManager.getLastAppStructure();
+        }
+        Activity activity = (fermatStructure != null) ? fermatStructure.getLastActivity() : null;
+        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
         if (fragment != null) frgBackType = fragment.getBack();
-
         if (frgBackType != null) {
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
-            changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
-        } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
-            if(ActivityBackCode!=null){
+            changeFragment(fermatStructure.getPublicKey(), frgBackType);
+        } else if (( (activity != null) ? activity.getBackActivity() : null) != null && activity.getBackAppPublicKey() != null) {
+            if(activityBackCode!=null){
                 changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
             }else changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
@@ -214,6 +210,11 @@ public class AppActivity extends FermatActivity{
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
+    }
+
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+        getFermatAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
     }
 
 
@@ -230,35 +231,47 @@ public class AppActivity extends FermatActivity{
     /**
      * Method that loads the UI
      */
-    protected void loadUI(FermatSession walletSession) {
-
+    protected void loadUI(FermatSession fermatSession) {
         try {
-
-            FermatStructure wallet = getFermatAppManager().getLastAppStructure();
-
-
-//            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(), this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(), this, walletSession);
-
-
+            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-            Activity activity = wallet.getLastActivity();
-
+            Activity activity = appStructure.getLastActivity();
             loadBasicUI(activity,fermatAppConnection);
-
             hideBottonIcons();
-
             paintScreen(activity);
-
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(activity.getTabStrip(), walletSession,fermatFragmentFactory);
+                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,walletSession,wallet);
+                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
+            }
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void loadUI(FermatSession fermatSession, Activity activity) {
+        try{
+            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
+            loadBasicUI(activity,fermatAppConnection);
+            hideBottonIcons();
+            paintScreen(activity);
+            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
+                initialisePaging();
+            }
+            if (activity.getTabStrip() != null) {
+                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
+            }
+            if (activity.getFragments().size() == 1) {
+                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -273,7 +286,6 @@ public class AppActivity extends FermatActivity{
             Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
             getWindow().setBackgroundDrawable(colorDrawable);
         }
-
     }
 
     /**
@@ -318,32 +330,21 @@ public class AppActivity extends FermatActivity{
 //        } catch (IllegalAccessException e) {
 //            e.printStackTrace();
 //        }
-
-        boolean isConnectionWithOtherApp = false;
         Activity lastActivity = null;
         Activity nextActivity = null;
-        SubApp subApp = null;
         try {
-            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
-            if(walletNavigationStructure.getPublicKey().equals(appBackPublicKey)) {
-                lastActivity = walletNavigationStructure.getLastActivity();
-                nextActivity = walletNavigationStructure.getActivity(Activities.getValueFromString(activityName));
-            }else{
-                subApp= getSubAppRuntimeMiddleware().getSubAppByPublicKey(appBackPublicKey);
-                if(subApp!=null){
-                    isConnectionWithOtherApp = true;
-                    subApp.getActivity(Activities.getValueFromString(activityName));
-                }
-            }
-            if(!isConnectionWithOtherApp) {
+            FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+            lastActivity = fermatStructure.getLastActivity();
+            nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+
+            if(fermatStructure.getFermatAppType() == FermatAppType.WALLET) {
                 if (!nextActivity.equals(lastActivity)) {
                     resetThisActivity();
-                    loadUI(getFermatAppManager().getAppsSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
+                    loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
-//                connectWithSubApp(null,objects,subApp);
+                connectWithSubApp(null,objects,getFermatAppManager().getApp(fermatStructure.getPublicKey()));
             }
-
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
@@ -355,6 +356,7 @@ public class AppActivity extends FermatActivity{
 
     }
 
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -363,19 +365,30 @@ public class AppActivity extends FermatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindDrawables(findViewById(R.id.drawer_layout));
+        System.gc();
     }
 
+    private void unbindDrawables(View view) {
+        if(view!=null) {
+            if (view.getBackground() != null) {
+                view.getBackground().setCallback(null);
+            }
+            if (view instanceof ViewGroup) {
+                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                    unbindDrawables(((ViewGroup) view).getChildAt(i));
+                }
+                ((ViewGroup) view).removeAllViews();
+            }
+        }
+    }
 
-    public void changeFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
+    public void changeFragment(String appPublicKey, String fragmentType) {
         try {
-            getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
-
-//            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getFermatAppManager().getAppsSession(walletPublicKey));
-
-            FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getFermatAppManager().getAppsSession(getWalletRuntimeManager().getLastWallet().getPublicKey()),getWalletResourcesProviderManager());
+            getFermatAppManager().getLastAppStructure().getLastActivity().getFragment(fragmentType);
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey,this,getFermatAppManager().getAppsSession(appPublicKey));
+            FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
+            Fragment fragment = fragmentFactory.getFragment(fragmentType,getFermatAppManager().getAppsSession(appPublicKey),getWalletResourcesProviderManager());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.fragment_container2, fragment);
@@ -386,7 +399,57 @@ public class AppActivity extends FermatActivity{
         }
     }
 
+    @Override
+    public void onCallbackViewObserver(FermatCallback fermatCallback) {
 
+    }
+
+    @Override
+    public void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses) {
+        try {
+            selectApp(getFermatAppManager().getApp(fermatAppPublicKey));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void selectApp(FermatApp fermatApp) {
+        Intent intent;
+        try {
+            intent = new Intent();
+            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,fermatApp.getAppPublicKey());
+            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, fermatApp.getAppType());
+            intent.setAction("org.fermat.APP_LAUNCHER");
+            sendBroadcast(intent);
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void connectWithSubApp(Engine engine, Object[] objects,FermatApp fermatApp){
+        Intent intent = new Intent(this, AppActivity.class);
+        intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
+        intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
+        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,fermatApp.getAppPublicKey());
+        intent.putExtra(ApplicationConstants.INTENT_APP_TYPE,fermatApp.getAppStatus());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+    }
+
+    @Override
+    public Object[] connectBetweenAppsData() {
+        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
+        return objectses;
+    }
+
+    @Override
+    public void changeScreen(String fragment, int containerId, Object[] objects) {
+
+
+    }
 
 
     @Override
@@ -401,14 +464,7 @@ public class AppActivity extends FermatActivity{
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
-        try {
-            String walletPublicKey = savedInstanceState.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
 
-            getWalletRuntimeManager().getWallet(walletPublicKey);
-
-        } catch (WalletRuntimeExceptions walletRuntimeExceptions) {
-            walletRuntimeExceptions.printStackTrace();
-        }
     }
 
     /**
@@ -420,10 +476,6 @@ public class AppActivity extends FermatActivity{
 
     }
 
-    @Override
-    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey, Object[] objectses) {
-
-    }
 
     @Override
     protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
