@@ -4,6 +4,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -206,6 +207,20 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                            } catch (OutOfMemoryError o) {
+                                o.printStackTrace();
+                            }
+                        }
+                    });
+                }
 
         try {
             chatSession = ((ChatSession) appSession);
