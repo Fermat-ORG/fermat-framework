@@ -378,11 +378,14 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent();
                         }
+
+                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                         transactionTransmissionManager.confirmNotificationReception(
                                 businessTransactionMetadata.getReceiverId(),
                                 businessTransactionMetadata.getSenderId(),
-                                contractHash, businessTransactionMetadata.getContractId(),
+                                contractHash,
+                                transactionId.toString(),
                                 Plugins.CUSTOMER_OFFLINE_PAYMENT,
                                 businessTransactionMetadata.getReceiverType(),
                                 businessTransactionMetadata.getSenderType());
@@ -405,17 +408,18 @@ public class CustomerOfflinePaymentMonitorAgent implements
                                 customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                                 Date date = new Date();
-                                customerOfflinePaymentBusinessTransactionDao.
-                                        setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent();
                             }
                         }
+
+                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                         transactionTransmissionManager.ackConfirmNotificationReception(
                                 businessTransactionMetadata.getReceiverId(),
                                 businessTransactionMetadata.getSenderId(),
                                 contractHash,
-                                businessTransactionMetadata.getContractId(),
+                                transactionId.toString(),
                                 Plugins.CUSTOMER_OFFLINE_PAYMENT,
                                 businessTransactionMetadata.getReceiverType(),
                                 businessTransactionMetadata.getSenderType());

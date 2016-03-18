@@ -71,7 +71,7 @@ public class MonitoringWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response monitoringData() {
 
-        LOG.info("Executing monitoringData()");
+        LOG.debug("Executing monitoringData()");
 
         JsonObject globalData = new JsonObject();
         globalData.addProperty("pendingClientConnection", MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
@@ -99,14 +99,16 @@ public class MonitoringWebService {
 
         Map<NetworkServiceType, Map<String, VpnClientConnection>> vpnMap = ShareMemoryCacheForVpnClientsConnections.getConnectionMapCopy();
 
-        globalData.addProperty("vpnTotal", vpnMap.size());
 
+        int totalVpn = 0;
         JsonObject vpnNetworkServiceData = new JsonObject();
 
         for (NetworkServiceType networkServiceType : vpnMap.keySet()) {
+            totalVpn = totalVpn + vpnMap.get(networkServiceType).size();
             vpnNetworkServiceData.addProperty(networkServiceType.toString(), vpnMap.get(networkServiceType).size());
         }
 
+        globalData.addProperty("vpnTotal", totalVpn);
         globalData.addProperty("vpnByNetworkServiceDetails", gson.toJson(vpnNetworkServiceData));
 
         return Response.status(200).entity(gson.toJson(globalData)).build();
@@ -119,7 +121,7 @@ public class MonitoringWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response systemData() {
 
-        LOG.info("Executing systemData()");
+        LOG.debug("Executing systemData()");
         JsonObject respond = new JsonObject();
 
         if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED))){
@@ -130,7 +132,7 @@ public class MonitoringWebService {
 
                 data = monitClient.getComponents();
 
-                LOG.info("data = "+data);
+                LOG.debug("data = "+data);
 
                 respond.addProperty("success", Boolean.TRUE);
                 respond.addProperty("data", gson.toJson(data));

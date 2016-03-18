@@ -409,14 +409,16 @@ public class OpenContractMonitorAgent implements
 
                             System.out.print("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
 
+                            final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             transactionTransmissionManager.confirmNotificationReception(
-                                    businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
-                                    contractHash, businessTransactionMetadata.getContractId(),
+                                    businessTransactionMetadata.getReceiverId(),
+                                    contractHash,
+                                    transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
-                                    businessTransactionMetadata.getReceiverType(),
-                                    businessTransactionMetadata.getSenderType());
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
                 }
@@ -433,7 +435,17 @@ public class OpenContractMonitorAgent implements
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
                             System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation");
+
+                            final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            transactionTransmissionManager.ackConfirmNotificationReception(
+                                    businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
+                                    contractHash,
+                                    transactionId.toString(),
+                                    Plugins.OPEN_CONTRACT,
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                         }
                     }
 
@@ -461,7 +473,17 @@ public class OpenContractMonitorAgent implements
                             }
 
                             System.out.print("INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Sending confirmation");
+
+                            final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            transactionTransmissionManager.ackConfirmNotificationReception(
+                                    businessTransactionMetadata.getSenderId(),
+                                    businessTransactionMetadata.getReceiverId(),
+                                    contractHash,
+                                    transactionId.toString(),
+                                    Plugins.OPEN_CONTRACT,
+                                    businessTransactionMetadata.getSenderType(),
+                                    businessTransactionMetadata.getReceiverType());
                             raiseNewContractEvent(contractHash);
                         }
                     }

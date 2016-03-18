@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSentPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRefuseLossProtectedRequestPaymentException;
@@ -40,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedTransactionNotFoundException;
-
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -51,7 +53,7 @@ import java.util.concurrent.BlockingDeque;
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
  * haves all consumable methods from the plugin
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 10/06/15.
+ * Created by Natalia Cortez 03/14/2016
  * @version 1.0
  */
 public interface LossProtectedWallet extends Serializable {
@@ -325,6 +327,21 @@ public interface LossProtectedWallet extends Serializable {
                     String      walletPublicKey,
                     BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException;
 
+
+    /**
+     * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need and actual exange rate.
+     * @param balanceType
+     * @param walletPublicKey
+     * @param blockchainNetworkType
+     * @param exangeRate
+     * @return
+     * @throws CantGetLossProtectedBalanceException
+     */
+    long getBalance(BalanceType balanceType,
+                    String walletPublicKey,
+                    BlockchainNetworkType blockchainNetworkType,
+                    long exangeRate) throws CantGetLossProtectedBalanceException;
+
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
      *
@@ -423,6 +440,16 @@ public interface LossProtectedWallet extends Serializable {
                                                                  int max,
                                                                  int offset) throws CantListLossProtectedTransactionsException;
 
+
+    /**
+     * Throw the method <code>listSpendingBlocksValue</code> you can list the btc spending, value blocks.
+     * @param walletPublicKey
+     * @param transactionId
+     * @return
+     * @throws CantListLossProtectedSpendingException
+     */
+    List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException;
+
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
@@ -452,14 +479,6 @@ public interface LossProtectedWallet extends Serializable {
      * @return List of PaymentRequest object
      */
     List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListLossProtectedReceivePaymentRequestException;
-
-    /**
-     * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
-     *
-     * @param walletPublicKey
-     * @return List of PaymentRequest object
-     */
-    List<LossProtectedPaymentRequest> listPaymentRequestDateOrder(String  walletPublicKey,int max,int offset) throws CantListLossProtectedPaymentRequestDateOrderException;
 
 
     /**
@@ -541,4 +560,9 @@ public interface LossProtectedWallet extends Serializable {
      * @throws CantListReceivePaymentRequestException
      */
     LossProtectedPaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
+
+    long getActualExchangeRate() throws CantListReceivePaymentRequestException;
+
+
+    String getMnemonicText() throws CantGetMnemonicTextException;
 }
