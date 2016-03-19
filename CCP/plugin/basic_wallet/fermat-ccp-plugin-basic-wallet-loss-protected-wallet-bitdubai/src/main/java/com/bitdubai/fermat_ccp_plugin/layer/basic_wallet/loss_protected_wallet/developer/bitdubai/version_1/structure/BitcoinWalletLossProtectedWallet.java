@@ -38,6 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.inte
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     private final Broadcaster broadcaster;
+    private LossProtectedWalletManager lossProtectedWalletManager;
 
     public BitcoinWalletLossProtectedWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
@@ -280,11 +282,11 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
 
         switch (balanceType) {
             case AVAILABLE:
-                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,lossProtectedWalletManager);
             case BOOK:
-                return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster,lossProtectedWalletManager);
             default:
-                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,lossProtectedWalletManager);
         }
     }
 
