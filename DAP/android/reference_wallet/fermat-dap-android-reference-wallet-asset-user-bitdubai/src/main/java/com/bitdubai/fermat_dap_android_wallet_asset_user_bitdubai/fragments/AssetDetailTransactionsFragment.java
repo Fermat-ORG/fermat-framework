@@ -407,7 +407,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
-            toolbar.setTitle(digitalAsset.getName());
+//            toolbar.setTitle(digitalAsset.getName());
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
                 window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));

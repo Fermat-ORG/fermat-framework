@@ -32,7 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardP
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
@@ -291,23 +290,6 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    public FermatStructure getAppInUse() {
-        //TODO: a implementar
-        return null;
-    }
-
-    @Override
-    public FermatStructure getAppInUse(String publicKey) throws Exception {
-        return null;
-    }
-
-
-    @Override
-    protected List<MenuItem> getNavigationMenu() {
-        return null;
-    }
-
-    @Override
     protected void onNavigationMenuItemTouchListener(MenuItem data, int position) {
 
     }
@@ -370,7 +352,7 @@ public class WizardActivity extends FermatActivity
 
         if (frgBackType != null) {
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
-            //changeWalletFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
+            //changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
         } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
             //changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
@@ -392,10 +374,6 @@ public class WizardActivity extends FermatActivity
 
     }
 
-    @Override
-    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-
-    }
 
     @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
@@ -446,7 +424,7 @@ public class WizardActivity extends FermatActivity
     }
 
     private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
-        Intent intent = new Intent(this, SubAppActivity.class);
+        Intent intent = new Intent(this, AppActivity.class);
         intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
         intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
         intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());
@@ -469,6 +447,11 @@ public class WizardActivity extends FermatActivity
 
     @Override
     public void setChangeBackActivity(Activities activityCodeBack) {
+
+    }
+
+    @Override
+    public void setTabCustomImageView(int position,View view) {
 
     }
 }

@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
-import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
@@ -129,7 +128,9 @@ public final class FermatSystem {
 
         try {
 
-            fermatSystemContext.registerPlatform(new ARTPlatform());
+            //TODO Desactivacion debido a un tema de P2P
+            //fermatSystemContext.registerPlatform(new ARTPlatform());
+
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
@@ -142,6 +143,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
 
 
         } catch(CantRegisterPlatformException e) {

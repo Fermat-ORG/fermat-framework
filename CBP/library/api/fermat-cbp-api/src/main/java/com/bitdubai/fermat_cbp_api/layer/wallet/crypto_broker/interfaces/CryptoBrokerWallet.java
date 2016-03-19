@@ -47,6 +47,21 @@ public interface CryptoBrokerWallet  {
      */
     List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
+
+    /**
+     * This method load the list CryptoBrokerStockTransaction
+     *
+     * @param merchandise
+     * @param moneyType
+     * @param offset
+     * @param timeStamp
+     *
+     * @return List<CryptoBrokerStockTransaction>
+     *
+     * @throws CantGetCryptoBrokerStockTransactionException
+     */
+    List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException;
+
     /**
      * This method load the list CryptoBrokerStockTransaction
      * @param merchandise

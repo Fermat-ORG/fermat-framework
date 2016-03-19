@@ -1,20 +1,16 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 
 import org.bitcoinj.core.AbstractBlockChain;
-import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChainListener;
 import org.bitcoinj.core.Coin;
@@ -31,21 +27,14 @@ import org.bitcoinj.core.ScriptException;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptChunk;
-import org.bitcoinj.script.ScriptOpCodes;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -55,6 +44,9 @@ import javax.annotation.Nullable;
  * Created by rodrigo on 10/4/15.
  */
 public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener, BlockChainListener {
+
+
+
     /**
      * Class variables
      */
@@ -63,24 +55,30 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final BlockchainNetworkType NETWORK_TYPE;
     final Context context;
     final NetworkParameters NETWORK_PARAMETERS;
+    BlockchainDownloadProgress blockchainDownloadProgress;
 
     /**
      * Platform variables
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
+    Broadcaster broadcaster;
 
     /**
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context) {
+    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context, Broadcaster broadcaster) {
         this.NETWORK_TYPE = blockchainNetworkType;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.walletFilename = walletFilename;
         this.context = context;
         this.NETWORK_PARAMETERS = context.getParams();
+        this.broadcaster = broadcaster;
+
+        //define the blockchain download progress class with zero values
+        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 100);
     }
 
     @Override
@@ -92,7 +90,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
-        //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
+
+        /**
+         * sets the blockchainDownloader data
+         */
+        blockchainDownloadProgress.setPendingBlocks(blocksLeft);
+        if (blockchainDownloadProgress.getTotalBlocks() == 0)
+            blockchainDownloadProgress.setTotalBlocks(blocksLeft);
+
+        blockchainDownloadProgress.setDownloader(peer.toString());
+
+        /**
+         * broadcast the progress bar
+         */
+        FermatBundle fermatBundle = new FermatBundle();
+        fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
     }
 
 
@@ -100,6 +113,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
         System.out.println("***CryptoNetwork*** Blockchain Download started for " + NETWORK_TYPE.getCode() + " network. Blocks left: " + blocksLeft);
+        blockchainDownloadProgress.setTotalBlocks(blocksLeft);
     }
 
     @Override
@@ -269,6 +283,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
         return true;
+    }
+
+    /**
+     * returns the blockchain download progress class.
+     * @return
+     */
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(){
+        return blockchainDownloadProgress;
     }
 }
 

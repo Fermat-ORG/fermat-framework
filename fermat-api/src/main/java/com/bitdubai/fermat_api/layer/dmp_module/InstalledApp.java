@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -24,8 +25,10 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     private int position;
     private int notifications;
     private AppsStatus appsStatus;
+    private int bannerRes;
+    private Platforms platform;
 
-    public InstalledApp(String name, String publicKey, Version version, int iconResource, int position, int notifications,AppsStatus appsStatus) {
+    public InstalledApp(String name, String publicKey, Version version, int iconResource, int position, int notifications,AppsStatus appsStatus,Platforms platform) {
         this.name = name;
         this.publicKey = publicKey;
         this.version = version;
@@ -33,6 +36,7 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
         this.position = position;
         this.notifications = notifications;
         this.appsStatus = appsStatus;
+        this.platform = platform;
     }
 
     @Override
@@ -58,6 +62,11 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     @Override
     public int getIconResource() {
         return iconResource;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
     }
 
     @Override
@@ -91,6 +100,11 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     }
 
     @Override
+    public Platforms getPlatform() {
+        return platform;
+    }
+
+    @Override
     public String getAppName() {
         return name;
     }
@@ -115,4 +129,7 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
         return new byte[0];
     }
 
+    public int getBannerRes() {
+        return bannerRes;
+    }
 }

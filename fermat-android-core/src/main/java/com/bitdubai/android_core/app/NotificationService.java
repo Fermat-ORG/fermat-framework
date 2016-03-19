@@ -11,15 +11,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
  * Created by mati on 2016.03.01..
@@ -33,6 +37,8 @@ public class NotificationService extends Service {
     //for progress notifications
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
+
+
     public class LocalBinder extends Binder {
         NotificationService getService() {
             return NotificationService.this;
@@ -77,7 +83,7 @@ public class NotificationService extends Service {
             if (notificationPainter != null) {
                 if(notificationPainter.showNotification()) {  //get if notification settings enabled view
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                    Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                    Intent intent = new Intent(this,AppActivity.class);
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -109,7 +115,7 @@ public class NotificationService extends Service {
 
 
             }else{
-                Intent intent = new Intent(this, (fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.class : SubAppActivity.class);
+                Intent intent = new Intent(this,AppActivity.class);
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
@@ -139,7 +145,31 @@ public class NotificationService extends Service {
             notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
         }
     }
-    public void notificateProgress(final String code){
+
+
+    public void notificateProgress(FermatBundle bundle) {
+        try {
+            int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
+            mNotifyManager = (NotificationManager)
+                    getSystemService(NOTIFICATION_SERVICE);
+            if(progress==0 || progress==100){
+                mNotifyManager.cancel(87);
+            }else {
+                mBuilder = new NotificationCompat.Builder(this);
+                mBuilder.setContentTitle("Downloading blockchain blocks")
+                        .setContentText("Download in progress")
+                        .setSmallIcon(R.drawable.fermat_logo_310_x_310);
+
+                mBuilder.setProgress(100, progress, false);
+// Displays the progress bar for the first time.
+                mNotifyManager.notify(87, mBuilder.build());
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void notificateProgress(final String code,int progress){
         if(!lstNotifications.containsKey(code)){
             notificationIdCount++;
             lstNotifications.put(code,notificationIdCount);

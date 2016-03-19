@@ -20,9 +20,11 @@
                 android:layout_height="100dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    tools:src="@drawable/wallet_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="20dp"
+                    tools:src="@drawable/wallets_title"
                     android:id="@+id/container_title"/>
 
             </RelativeLayout>

@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/radio_context"
         tools:text="menu1"
-        android:button="@null"
-        android:drawableRight="@android:drawable/btn_radio"
         android:textSize="20sp"
         android:paddingLeft="24dp"
         android:paddingRight="32dp"
