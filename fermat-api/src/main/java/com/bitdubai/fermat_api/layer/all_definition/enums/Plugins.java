@@ -177,6 +177,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
     BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
     BITDUBAI_CER_PROVIDER_BITFINEX              ("BCERPBF"  ),
+    BITDUBAI_CER_PROVIDER_BTER                  ("BCERPBT"  ),
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
     BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
     BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
@@ -430,6 +431,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
             case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
             case "BCERPBF": return BITDUBAI_CER_PROVIDER_BITFINEX;
+            case "BCERPBT": return BITDUBAI_CER_PROVIDER_BTER;
             case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
             case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
