@@ -262,44 +262,48 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 
             }
         }catch (IllegalArgumentException i){
-            switch (SubAppsPublicKeys.valueOf(key)) {
-                case CHT_OPEN_CHAT:
-                    break;
-                case CBP_BROKER_COMMUNITY:
-                    break;
-                case CBP_BROKER_IDENTITY:
-                    break;
-                case CBP_CUSTOMER_COMMUNITY:
-                    break;
-                case CBP_CUSTOMER_IDENTITY:
-                    break;
-                case CCP_COMMUNITY:
-                    res = R.drawable.cryptou_community;
-                    break;
-                case CCP_IDENTITY:
-                    res = R.drawable.identity_banner;
-                    break;
-                case CWP_PUBLISHER:
-                    break;
-                case CWP_STORE:
-                    break;
-                case DAP_COMMUNITY_ISSUER:
-                    break;
-                case DAP_COMMUNITY_USER:
-                    break;
-                case DAP_COMMUNITY_REDEEM:
-                    break;
-                case DAP_IDENTITY_ISSUER:
-                    break;
-                case DAP_IDENTITY_USER:
-                    break;
-                case DAP_IDENTITY_REDEEM:
-                    break;
-                case DAP_FACTORY:
-                    break;
-                case PIP_DEVELOPER:
-                    break;
+            try {
+                switch (SubAppsPublicKeys.valueOf(key)) {
+                    case CHT_OPEN_CHAT:
+                        break;
+                    case CBP_BROKER_COMMUNITY:
+                        break;
+                    case CBP_BROKER_IDENTITY:
+                        break;
+                    case CBP_CUSTOMER_COMMUNITY:
+                        break;
+                    case CBP_CUSTOMER_IDENTITY:
+                        break;
+                    case CCP_COMMUNITY:
+                        res = R.drawable.cryptou_community;
+                        break;
+                    case CCP_IDENTITY:
+                        res = R.drawable.identity_banner;
+                        break;
+                    case CWP_PUBLISHER:
+                        break;
+                    case CWP_STORE:
+                        break;
+                    case DAP_COMMUNITY_ISSUER:
+                        break;
+                    case DAP_COMMUNITY_USER:
+                        break;
+                    case DAP_COMMUNITY_REDEEM:
+                        break;
+                    case DAP_IDENTITY_ISSUER:
+                        break;
+                    case DAP_IDENTITY_USER:
+                        break;
+                    case DAP_IDENTITY_REDEEM:
+                        break;
+                    case DAP_FACTORY:
+                        break;
+                    case PIP_DEVELOPER:
+                        break;
 
+                }
+            }catch (Exception e){
+                res = R.drawable.banner_bitcoin_wallet;
             }
 
 
