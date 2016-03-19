@@ -26,7 +26,7 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
     private final String        memo              ;
     private final BlockchainNetworkType blockchainNetworkType;
 
-    public IncomingIntraUserLossProtectedTransactionWrapper(final UUID          transactionId     ,
+    public IncomingIntraUserLossProtectedTransactionWrapper(final UUID        transactionId     ,
                                                final UUID          requestId     ,
                                                final String        actorFromPublicKey,
                                                final String        actorToPublicKey  ,

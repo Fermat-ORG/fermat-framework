@@ -1111,7 +1111,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                progressBar.setVisibility(View.GONE);
+              //  progressBar.setVisibility(View.GONE);
 
                 //FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
                // noMarketRateTextView.setVisibility(View.VISIBLE);

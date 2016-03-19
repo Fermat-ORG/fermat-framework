@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ReferenceWalletSettings;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.LossProtectedSettingsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.AddConnectionFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
@@ -84,7 +84,7 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     currentFragment = RequestFormFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT:
-                    currentFragment = ReferenceWalletSettings.newInstance();
+                    currentFragment = LossProtectedSettingsFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
                     currentFragment = SettingsNotificationsFragment.newInstance();
