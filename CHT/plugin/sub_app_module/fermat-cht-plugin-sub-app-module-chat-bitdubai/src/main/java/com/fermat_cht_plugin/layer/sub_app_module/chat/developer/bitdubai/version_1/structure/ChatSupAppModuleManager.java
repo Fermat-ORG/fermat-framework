@@ -115,6 +115,11 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
+    public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException {
+        return middlewareChatManager.getChatByRemotePublicKey(publicKey);
+    }
+
+    @Override
     public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
         middlewareChatManager.sendReadMessageNotification(message);
     }

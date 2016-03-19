@@ -451,6 +451,41 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    @Override
+    public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException {
+        try {
+            ObjectChecker.checkArgument(publicKey, "The publicKey argument is null");
+            return this.chatMiddlewareDatabaseDao.getChatByRemotePublicKey(publicKey);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetChatException(
+                    e,
+                    "Getting a chat by UUID",
+                    "The chat Id probably is null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetChatException(
+                    e,
+                    "Getting a chat by UUID",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetChatException(
+                    FermatException.wrapException(exception),
+                    "Getting a chat by UUID",
+                    "Unexpected exception");
+        }
+    }
+
     /**
      * This method return a message by message id.
      *
