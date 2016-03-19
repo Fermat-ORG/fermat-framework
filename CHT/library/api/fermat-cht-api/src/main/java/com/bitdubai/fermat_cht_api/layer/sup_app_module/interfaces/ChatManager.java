@@ -20,7 +20,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -33,6 +34,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public interface ChatManager {
     //TODO: Implementar los metodos que necesiten manejar el module
@@ -49,7 +51,11 @@ public interface ChatManager {
 
     List<Message> getMessages() throws CantGetMessageException;
 
-    List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException;
+    List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
+
+    Message getMessageByChatId(UUID chatId) throws CantGetMessageException;
+
+    int getCountMessageByChatId(UUID chatId) throws CantGetMessageException;
 
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
@@ -59,7 +65,9 @@ public interface ChatManager {
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
 
-    void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException;
+    Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
+
+    void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
     List<Contact> getContacts() throws CantGetContactException;
 
@@ -102,9 +110,18 @@ public interface ChatManager {
 
     void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
 
+    //void deleteContactConnections( ) throws CantDeleteContactConnectionException;
+
     void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
 
     List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
 
     ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException;
+
+    /**
+     * This method sends the message through the Chat Network Service
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 }

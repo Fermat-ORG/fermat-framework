@@ -357,7 +357,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this,
                     this.networkServiceChatManager,
                     this.errorManager,
-                    this.deviceUserManager
+                    this.deviceUserManager,
+                    this.networkServiceChatManager,
+                    this.broadcaster
             );
 
             /**
