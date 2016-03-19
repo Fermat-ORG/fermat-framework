@@ -3,6 +3,7 @@ package com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitduba
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -29,6 +30,13 @@ public class FanWalletModulePluginRoot extends AbstractPlugin {
         super(new PluginVersionReference(new Version()));
     }
 
+    /**
+     * This method is used by the fermat-core to get the plugin manager in execution time.
+     * @return
+     */
+    public FermatManager getManager(){
+        return this.fanWalletModuleManager;
+    }
 
     private void initPluginManager(){
         this.fanWalletModuleManager = new FanWalletModuleManager();
