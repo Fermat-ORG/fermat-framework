@@ -19,7 +19,13 @@ import java.util.UUID;
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
  */
 public interface TokenlyArtistIdentityManagerModule extends FermatManager {
-
+    /**
+     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
+     * identities linked to the current logged device user.
+     * @return
+     * @throws CantListArtistIdentitiesException
+     */
+    List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
 
 
     /**
