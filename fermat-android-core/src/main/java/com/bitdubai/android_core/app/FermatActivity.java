@@ -1445,6 +1445,21 @@ public abstract class FermatActivity extends AppCompatActivity implements
         linearLayout.setVisibility(View.GONE);
     }
 
+    public void notificateProgressBroadcast(FermatBundle bundle) {
+        try {
+            if(mNotificationServiceConnected){
+                notificationService.notificateProgress(bundle);
+            }else{
+                Intent intent = new Intent(this, NotificationService.class);
+                //acá puedo mandarle el messenger con el handler para el callback
+                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+                startService(intent);
+                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
@@ -1465,7 +1480,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public void notificateBroadcast(String appPublicKey,FermatBundle bundle){
         try {
             if(mNotificationServiceConnected){
-                notificationService.notificate(appPublicKey,bundle);
+                //notificationService.notificate(appPublicKey,bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback
@@ -1825,5 +1840,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
+
 
 }
