@@ -170,9 +170,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                             message =mess.getMessage();
                             status = mess.getStatus().toString();
                             from = mess.getType().toString();
-                            Chat chatl = chatManager.getChatByChatId(chatidtemp);
-                            long timemess = chatl.getLastMessageDate().getTime();
-                            long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
+                            //Chat chatl = chatManager.getChatByChatId(chatidtemp);
+                            long timemess = chat.getLastMessageDate().getTime();
+                            long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
                             long milliseconds = timemess + nanos;
                             Date dated= new java.util.Date(milliseconds);
                             if (Validate.isDateToday(dated)) {
