@@ -13,6 +13,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 /**
@@ -38,11 +39,14 @@ public class IncomingExtraUserTransactionHandler {
 
     private Broadcaster broadcaster;
 
-    public IncomingExtraUserTransactionHandler(BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager, EventManager eventManager,Broadcaster broadcaster) {
+    private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
+
+    public IncomingExtraUserTransactionHandler(BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager, EventManager eventManager,Broadcaster broadcaster,BitcoinLossProtectedWalletManager lossProtectedWalletManager) {
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.eventManager = eventManager;
         this.broadcaster = broadcaster;
+        this.lossProtectedWalletManager = lossProtectedWalletManager;
     }
 
     public void handleTransaction(Transaction<CryptoTransaction> transaction) throws CantGetCryptoAddressBookRecordException, CantLoadWalletsException, CantRegisterCreditException, CantRegisterDebitException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException {
@@ -52,7 +56,7 @@ public class IncomingExtraUserTransactionHandler {
                 ReferenceWallet         referenceWallet         = cryptoAddressBookRecord.getWalletType();
                 String                  walletPublicKey         = cryptoAddressBookRecord.getWalletPublicKey();
 
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager);
+                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager,lossProtectedWalletManager);
                 com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor executor        = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);
