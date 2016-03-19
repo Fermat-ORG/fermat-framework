@@ -8,11 +8,13 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundEx
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistIdentityManagerModule;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,6 +29,11 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
                                  TokenlyArtistIdentityManager tokenlyArtistIdentityManager) {
         this.errorManager = errorManager;
         this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
+    }
+
+    @Override
+    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+        return tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
