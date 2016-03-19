@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -36,6 +37,13 @@ public class FanIdentityPluginRoot extends AbstractPlugin {
         super(new PluginVersionReference(new Version()));
     }
 
+    /**
+     * This method is used by the fermat-core to get the plugin manager in execution time.
+     * @return
+     */
+    public FermatManager getManager(){
+        return this.fanIdentityManager;
+    }
 
     private void initPluginManager(){
         this.fanIdentityManager = new FanIdentityManager(errorManager,tokenlyFanIdentityManager);
