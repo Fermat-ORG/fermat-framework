@@ -7,41 +7,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cht_background"
+    android:windowSoftInputMode="stateVisible|adjustPan"
     >
-    <ScrollView
+   <!-- <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+    android:background="@drawable/cht_background"
+    android:windowSoftInputMode="stateVisible|adjustPan"
+        >-->
+    <RelativeLayout
         android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:fillViewport="true"
-        android:background="@drawable/cht_background"
         android:padding="20dp"
+        android:fillViewport="true"
         android:layout_above="@+id/inputContainer"
         >
-    <!-- <RelativeLayout
-         android:id="@+id/container"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:orientation="vertical"
-         android:padding="20dp"
-         android:windowSoftInputMode="stateVisible|adjustPan"
-         android:layout_above="@+id/inputContainer"
-         >-->
-             <android.support.v7.widget.RecyclerView
-                 android:id="@+id/messagesContainer"
-                 android:layout_width="fill_parent"
-                 android:layout_height="fill_parent"
-                 android:layout_alignParentLeft="false"
-                 android:layout_alignParentTop="false"
-                 android:listSelector="@android:color/transparent"
-                 android:transcriptMode="alwaysScroll"
-                 android:divider="@null"
-                 android:layout_marginTop="30dp"
-                 android:layout_marginBottom="35dp"
-                 />
-    <!-- </RelativeLayout>-->
-    </ScrollView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/messagesContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="false"
+                android:listSelector="@android:color/transparent"
+                android:transcriptMode="alwaysScroll"
+                android:divider="@null"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="35dp"
+                />
+    </RelativeLayout>
+    <!--</ScrollView>-->
 
     <RelativeLayout
         android:id="@+id/inputContainer"

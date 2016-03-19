@@ -190,12 +190,8 @@ public class ChatAdapterView extends LinearLayout {
             }
 
             if(chatId !=null){
-                //messSize=chatManager.getMessageByChatId(chatId).size();
                 List<Message> messL=  chatManager.getMessagesByChatId(chatId);
-                //TODO El metodo se llama chatManager.getMessageByChatId(chatId) devuelve una instancia tipo mensaje;
                 MessageImpl messagei;
-                // messSize= messL.size();
-                //for (int i = 0; i < messSize; i++) {
                 for(Message mess : messL){
                     msg = new ChatMessage();
                     message = mess.getMessage();
@@ -303,11 +299,12 @@ public class ChatAdapterView extends LinearLayout {
         //messageET.setText("Type message");
         //TextView meLabel = (TextView) findViewById(R.id.meLbl);
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
-        ScrollView container = (ScrollView) findViewById(R.id.container);
+        //ScrollView container = (ScrollView) findViewById(R.id.container);
 
         if(chatSession!= null){
             whatToDo();
             findMessage();
+            scroll();
         
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
@@ -326,9 +323,9 @@ public class ChatAdapterView extends LinearLayout {
 //            companionLabel.setText("Contacto");
 //        }
         
-        if (background != -1) {
-            container.setBackgroundColor(background);
-        }
+        //if (background != -1) {
+        //    container.setBackgroundColor(background);
+        //}
 
         messageET.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,17 +346,23 @@ public class ChatAdapterView extends LinearLayout {
                     ChatImpl chat = new ChatImpl();
                     MessageImpl message = new MessageImpl();
                     Long dv = System.currentTimeMillis();
-
+                    String remotePublicKey;
                     if (chatWasCreate) {
 
                         chat = (ChatImpl) chatManager.getChatByChatId(chatId);
                         chat.setLastMessageDate(new Timestamp(dv));
+                        remotePublicKey=chat.getRemoteActorPublicKey();
+                        Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
+                        UUID newChatId;
+                        if(chatPrevious.getChatId() != chatId){
+                            newChatId = chatPrevious.getChatId();
+                        }else{
+                            newChatId = chatId;
+                        }
+                        chat.setChatId(newChatId);
                         chatManager.saveChat(chat);
 
-//                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
-//                        chatManager.saveChat(chat);
-
-                        message.setChatId(chatId);
+                        message.setChatId(newChatId);
                         message.setMessageId(UUID.randomUUID());
                         message.setMessage(messageText);
                         message.setMessageDate(new Timestamp(dv));
@@ -368,14 +371,33 @@ public class ChatAdapterView extends LinearLayout {
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
                     } else {
-                        UUID newChatId = UUID.randomUUID();
+                        /**
+                         * This case is when I got an unregistered contact, I'll set the
+                         * LocalActorType as is defined in database
+                         */
+                        //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        Contact newContact = chatManager.getContactByContactId(
+                                contactId);
+                        PlatformComponentType remoteActorType = newContact.getRemoteActorType();
+                        remotePublicKey = newContact.getRemoteActorPublicKey();
+                        //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        //chat.setRemoteActorPublicKey(remotePk);
+                        //chat.setRemoteActorType(remotePCT);
+                        chat.setRemoteActorType(remoteActorType);
+                        chat.setRemoteActorPublicKey(remotePublicKey);
+                        Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
+                        UUID newChatId;
+                        if(chatPrevious != null){
+                            newChatId = chatPrevious.getChatId();
+                        }else{
+                            newChatId = UUID.randomUUID();
+                        }
                         chat.setChatId(newChatId);
                         chat.setObjectId(UUID.randomUUID());
                         chat.setStatus(ChatStatus.VISSIBLE);
-                        //Todo: find another chat name
-                        chat.setChatName("Chat_" + remotePk);
+                        chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));                       ;
+                        chat.setLastMessageDate(new Timestamp(dv));
                         Calendar c = Calendar.getInstance(Locale.getDefault());
                         /**
                          * Now we got the identities registered in the device.
@@ -388,30 +410,6 @@ public class ChatAdapterView extends LinearLayout {
                             chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
                             chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
                         }
-
-                        //Revisar esto ya que cambio el mapa por el actor como tal
-//                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
-//                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
-//                        for(PlatformComponentType key : keySet) {
-//                            chat.setLocalActorPublicKey(identitiesMap.get(key));
-//                            chat.setLocalActorType(key);
-//                            break;
-//                        }
-                        //chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        /**
-                         * This case is when I got an unregistered contact, I'll set the
-                         * LocalActorType as is defined in database
-                         */
-                        //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact = chatManager.getContactByContactId(
-                                contactId);
-                        PlatformComponentType remoteActorType = newContact.getRemoteActorType();
-                        String remotePublicKey = newContact.getRemoteActorPublicKey();
-                        //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        //chat.setRemoteActorPublicKey(remotePk);
-                        //chat.setRemoteActorType(remotePCT);
-                        chat.setRemoteActorType(remoteActorType);
-                        chat.setRemoteActorPublicKey(remotePublicKey);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);

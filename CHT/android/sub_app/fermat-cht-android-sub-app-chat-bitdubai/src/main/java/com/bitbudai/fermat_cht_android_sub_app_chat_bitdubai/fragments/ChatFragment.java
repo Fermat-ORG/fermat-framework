@@ -194,6 +194,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
             }
         });
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)

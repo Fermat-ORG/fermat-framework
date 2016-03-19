@@ -208,7 +208,7 @@ public class ChatListFragment extends AbstractFermatFragment{
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
+        /*final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -218,7 +218,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     o.printStackTrace();
                 }
             }
-        });
+        });*/
 
         try {
             chatSession = ((ChatSession) appSession);
@@ -245,7 +245,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             try {
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
         try {
@@ -319,6 +320,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
