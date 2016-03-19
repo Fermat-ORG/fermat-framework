@@ -5,12 +5,12 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/03/16.
  */
-public class CantUpdateSongDevicePathException extends TKYException {
+public class CantGetSongNameException extends TKYException {
 
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CANNOT UPDATE SONG DEVICE PATH";
+    public static final String DEFAULT_MESSAGE = "CANNOT GET THE SONG NAME FROM DATABASE";
 
     /**
      * Constructor with parameters
@@ -20,7 +20,7 @@ public class CantUpdateSongDevicePathException extends TKYException {
      * @param context
      * @param possibleReason
      */
-    public CantUpdateSongDevicePathException(
+    public CantGetSongNameException(
             final String message,
             final Exception cause,
             final String context,
@@ -35,7 +35,7 @@ public class CantUpdateSongDevicePathException extends TKYException {
      * @param context
      * @param possibleReason
      */
-    public CantUpdateSongDevicePathException(
+    public CantGetSongNameException(
             Exception cause,
             String context,
             String possibleReason) {
@@ -48,7 +48,9 @@ public class CantUpdateSongDevicePathException extends TKYException {
      * @param message
      * @param cause
      */
-    public CantUpdateSongDevicePathException(final String message, final Exception cause) {
+    public CantGetSongNameException(
+            final String message,
+            final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -57,7 +59,7 @@ public class CantUpdateSongDevicePathException extends TKYException {
      *
      * @param message
      */
-    public CantUpdateSongDevicePathException(final String message) {
+    public CantGetSongNameException(final String message) {
         this(message, null);
     }
 
@@ -66,7 +68,7 @@ public class CantUpdateSongDevicePathException extends TKYException {
      *
      * @param exception
      */
-    public CantUpdateSongDevicePathException(final Exception exception) {
+    public CantGetSongNameException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -74,9 +76,9 @@ public class CantUpdateSongDevicePathException extends TKYException {
     /**
      * Constructor
      */
-    public CantUpdateSongDevicePathException() {
+    public CantGetSongNameException() {
         this(DEFAULT_MESSAGE);
     }
 
-
 }
+

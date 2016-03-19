@@ -6,9 +6,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantDownloadFileException;
 
@@ -77,13 +79,14 @@ public class TokenlyWalletSongVault {
      * @param tokenlyId
      * @throws CantDownloadSongException
      */
-    public void downloadSong(String tokenlyId) throws CantDownloadSongException {
+    public String downloadSong(String tokenlyId) throws CantDownloadSongException {
         try{
             //Get DownloadSOng object from Tokenly public API
             DownloadSong downloadSong = this.tokenlyApiManager.getDownloadSongBySongId(tokenlyId);
             String downloadUrl = downloadSong.getDownloadURL();
             String songName = downloadSong.getName();
             downloadFile(downloadUrl,songName);
+            return DIRECTORY_NAME+"/"+songName;
         } catch (CantGetSongException e) {
             throw new CantDownloadSongException(
                     e,
@@ -94,6 +97,34 @@ public class TokenlyWalletSongVault {
                     e,
                     "Downloading song with id: "+tokenlyId,
                     "Cannot download Song Tokenly Music manager");
+        }
+    }
+
+    /**
+     * This method delete the song from device storage
+     * @param songName
+     * @throws CantDeleteSongException
+     */
+    public void deleteSong(String songName) throws CantDeleteSongException {
+        try{
+            //Prepare the plugin file system to persist the file
+            PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
+                    pluginId,
+                    DIRECTORY_NAME,
+                    songName,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            pluginBinaryFile.delete();
+        } catch (CantCreateFileException e) {
+            throw new CantDeleteSongException(
+                    e,
+                    "Deleting song "+songName,
+                    "Cannot create the file");
+        } catch (FileNotFoundException e) {
+            throw new CantDeleteSongException(
+                    e,
+                    "Deleting song "+songName,
+                    "File not found");
         }
     }
 
@@ -142,7 +173,7 @@ public class TokenlyWalletSongVault {
             //Close connection
             is.close();
             //Only for testing:
-            //testReadFile(filegName);
+            //testReadFile(fileName);
         } catch (MalformedURLException e) {
             throw new CantDownloadFileException(
                     e,
