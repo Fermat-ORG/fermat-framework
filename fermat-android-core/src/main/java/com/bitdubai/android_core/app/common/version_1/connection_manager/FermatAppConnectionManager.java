@@ -2,9 +2,12 @@ package com.bitdubai.android_core.app.common.version_1.connection_manager;
 
 import android.app.Activity;
 import android.content.Context;
+
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.app_connection.ArtArtistIdentityAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection.CommunityAssetIssuerFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.app_connection.AssetIssuerFermatAppConnection;
@@ -142,6 +145,15 @@ public class FermatAppConnectionManager {
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
+
+            // Art Sub apps
+            case "sub_app_art_artist_community":
+                //fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+            case "sub_app_art_artist_identity":
+                //fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
+                break;
+
         }
 
         return fermatAppConnection;
