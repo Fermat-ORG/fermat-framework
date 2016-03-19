@@ -487,15 +487,12 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
                             if (operator.compareTo(minSatoshis) == 1) {
-                                cryptoWallet.send(
+                                cryptoWallet.sendToWallet(
                                         operator.longValueExact(),
-                                        validAddress,
-                                        notes,
                                         appSession.getAppPublicKey(),
-                                        cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                        notes,
                                         Actors.INTRA_USER,
-                                        cryptoWalletWalletContact.getActorPublicKey(),
-                                        cryptoWalletWalletContact.getActorType(),
+                                        ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                         blockchainNetworkType
 
