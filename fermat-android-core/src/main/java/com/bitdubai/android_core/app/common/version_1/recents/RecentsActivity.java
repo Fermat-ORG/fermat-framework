@@ -28,6 +28,8 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.wirelesspienetwork.overview.misc.Utilities;
 import com.wirelesspienetwork.overview.model.OverviewAdapter;
@@ -230,10 +232,77 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
     // metodo totalmente innecesario que será eliminado una vez que se puedan instalar las apps desde la store
     private int selectBannerSwitch(String key){
         int res = 0;
-        switch (key){
-            case "reference_wallet":
-                res = R.drawable.banner_bitcoin_wallet;
-                break;
+
+        try {
+            switch (WalletsPublicKeys.valueOf(key)) {
+                case CCP_REFERENCE_WALLET:
+                    res = R.drawable.banner_bitcoin_wallet;
+                    break;
+                case BNK_BANKING_WALLET:
+                    break;
+                case CSH_MONEY_WALLET:
+                    break;
+                case CBP_CRYPTO_BROKER_WALLET:
+                    res = R.drawable.banner_crypto_broker;
+                    break;
+                case CBP_CRYPTO_CUSTOMER_WALLET:
+                    res = R.drawable.banner_crypto_customer_wallet;
+                    break;
+                case DAP_ISSUER_WALLET:
+                    res = R.drawable.banner_asset_issuer_wallet;
+                    break;
+                case DAP_USER_WALLET:
+                    res = R.drawable.banner_asset_user_wallet;
+                    break;
+                case DAP_REDEEM_WALLET:
+                    res = R.drawable.banner_redeem_point;
+                    break;
+                default:
+                    break;
+
+            }
+        }catch (IllegalArgumentException i){
+            switch (SubAppsPublicKeys.valueOf(key)) {
+                case CHT_OPEN_CHAT:
+                    break;
+                case CBP_BROKER_COMMUNITY:
+                    break;
+                case CBP_BROKER_IDENTITY:
+                    break;
+                case CBP_CUSTOMER_COMMUNITY:
+                    break;
+                case CBP_CUSTOMER_IDENTITY:
+                    break;
+                case CCP_COMMUNITY:
+                    res = R.drawable.cryptou_community;
+                    break;
+                case CCP_IDENTITY:
+                    res = R.drawable.identity_banner;
+                    break;
+                case CWP_PUBLISHER:
+                    break;
+                case CWP_STORE:
+                    break;
+                case DAP_COMMUNITY_ISSUER:
+                    break;
+                case DAP_COMMUNITY_USER:
+                    break;
+                case DAP_COMMUNITY_REDEEM:
+                    break;
+                case DAP_IDENTITY_ISSUER:
+                    break;
+                case DAP_IDENTITY_USER:
+                    break;
+                case DAP_IDENTITY_REDEEM:
+                    break;
+                case DAP_FACTORY:
+                    break;
+                case PIP_DEVELOPER:
+                    break;
+
+            }
+
+
         }
 
         return res;

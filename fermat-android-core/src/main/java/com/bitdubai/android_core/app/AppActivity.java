@@ -61,6 +61,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         try {
             loadUI(createOrOpenApplication());
         } catch (Exception e) {
@@ -243,30 +248,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }
     }
 
-    private void loadUI(FermatSession fermatSession, Activity activity) {
-        try{
-            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
-            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-            loadBasicUI(activity,fermatAppConnection);
-            hideBottonIcons();
-            paintScreen(activity);
-            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
-                initialisePaging();
-            }
-            if (activity.getTabStrip() != null) {
-                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
-            }
-            if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
-            }
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void paintScreen(Activity activity) {
         try {
             String backgroundColor = activity.getBackgroundColor();
@@ -292,7 +273,12 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             if (!nextActivity.equals(lastActivity)) {
                 resetThisActivity();
-                loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                Intent intent = getIntent();//new Intent(this,LoadingScreenActivity.class);
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                recreate();
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
