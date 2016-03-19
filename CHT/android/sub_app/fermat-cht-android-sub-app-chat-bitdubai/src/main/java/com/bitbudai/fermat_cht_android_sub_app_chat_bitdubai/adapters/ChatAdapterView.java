@@ -304,6 +304,7 @@ public class ChatAdapterView extends LinearLayout {
         if(chatSession!= null){
             whatToDo();
             findMessage();
+            scroll();
         
 //        if (rightName != null) {
 //            meLabel.setText(rightName);

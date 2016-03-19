@@ -208,7 +208,7 @@ public class ChatListFragment extends AbstractFermatFragment{
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
+        /*final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -218,7 +218,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     o.printStackTrace();
                 }
             }
-        });
+        });*/
 
         try {
             chatSession = ((ChatSession) appSession);
