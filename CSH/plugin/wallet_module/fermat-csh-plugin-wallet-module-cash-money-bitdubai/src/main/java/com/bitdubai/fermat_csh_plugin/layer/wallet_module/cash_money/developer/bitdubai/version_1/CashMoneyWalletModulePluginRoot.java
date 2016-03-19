@@ -290,6 +290,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                         UUID europCentBankKey = null;
                         UUID yahooKey = null;
                         UUID bitfinex = null;
+                        UUID bter = null;
 
                         System.out.println("CERTEST - ---Listing ALL CER Providers and their supported currencies---");
                         for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
@@ -306,22 +307,24 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                                 yahooKey = provider.getKey();
                             if(provider.getValue().toString().equals("Bitfinex"))
                                 bitfinex = provider.getKey();
+                            if(provider.getValue().toString().equals("Bter"))
+                                bter = provider.getKey();
                         }
                         System.out.println(" ");
 
                         try{
-                            System.out.println("CERTEST - BF ---Getting all ExchangeRates from Bitfinex Provider");
-                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(bitfinex);
+                            System.out.println("CERTEST - BTER ---Getting all ExchangeRates from Bter Provider");
+                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(bter);
                             for(CurrencyPair p : bitfinexProvider.getSupportedCurrencyPairs()){
                                 //p = new CurrencyPairImpl(p.getTo(), p.getFrom());
-                                System.out.println("CERTEST - BF    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+                                System.out.println("CERTEST - BTER    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
                                 ExchangeRate e = bitfinexProvider.getCurrentExchangeRate(p);
-                                System.out.println("CERTEST - BF    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
+                                System.out.println("CERTEST - BTER    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
                                         + " Purchase: " + e.getPurchasePrice() + "Sale: " + e.getSalePrice());
 
                                 for(ExchangeRate er : bitfinexProvider.getQueriedExchangeRates(p)){
-                                    System.out.println("CERTEST - BF    QueriedExchangeRates:");
-                                    System.out.println("CERTEST - BF    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
+                                    System.out.println("CERTEST - BTER    QueriedExchangeRates:");
+                                    System.out.println("CERTEST - BTER    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
                                             + " Purchase: " + er.getPurchasePrice() + "Sale: " + er.getSalePrice());
                                 }
                             }
@@ -331,6 +334,30 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                         }catch (Exception e) {
                             System.out.println("CERTEST - ECB - Exception!!! " + e.toString());
                         }
+
+
+//                        try{
+//                            System.out.println("CERTEST - BF ---Getting all ExchangeRates from Bitfinex Provider");
+//                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(bitfinex);
+//                            for(CurrencyPair p : bitfinexProvider.getSupportedCurrencyPairs()){
+//                                //p = new CurrencyPairImpl(p.getTo(), p.getFrom());
+//                                System.out.println("CERTEST - BF    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                                ExchangeRate e = bitfinexProvider.getCurrentExchangeRate(p);
+//                                System.out.println("CERTEST - BF    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
+//                                        + " Purchase: " + e.getPurchasePrice() + "Sale: " + e.getSalePrice());
+//
+//                                for(ExchangeRate er : bitfinexProvider.getQueriedExchangeRates(p)){
+//                                    System.out.println("CERTEST - BF    QueriedExchangeRates:");
+//                                    System.out.println("CERTEST - BF    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
+//                                            + " Purchase: " + er.getPurchasePrice() + "Sale: " + er.getSalePrice());
+//                                }
+//                            }
+//
+//
+//
+//                        }catch (Exception e) {
+//                            System.out.println("CERTEST - ECB - Exception!!! " + e.toString());
+//                        }
 
 
 //                        try{
