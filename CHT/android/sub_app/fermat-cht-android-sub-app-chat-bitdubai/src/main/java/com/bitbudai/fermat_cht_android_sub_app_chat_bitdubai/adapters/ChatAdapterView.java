@@ -190,12 +190,8 @@ public class ChatAdapterView extends LinearLayout {
             }
 
             if(chatId !=null){
-                //messSize=chatManager.getMessageByChatId(chatId).size();
                 List<Message> messL=  chatManager.getMessagesByChatId(chatId);
-                //TODO El metodo se llama chatManager.getMessageByChatId(chatId) devuelve una instancia tipo mensaje;
                 MessageImpl messagei;
-                // messSize= messL.size();
-                //for (int i = 0; i < messSize; i++) {
                 for(Message mess : messL){
                     msg = new ChatMessage();
                     message = mess.getMessage();
@@ -303,7 +299,7 @@ public class ChatAdapterView extends LinearLayout {
         //messageET.setText("Type message");
         //TextView meLabel = (TextView) findViewById(R.id.meLbl);
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
-        ScrollView container = (ScrollView) findViewById(R.id.container);
+        //ScrollView container = (ScrollView) findViewById(R.id.container);
 
         if(chatSession!= null){
             whatToDo();
@@ -326,9 +322,9 @@ public class ChatAdapterView extends LinearLayout {
 //            companionLabel.setText("Contacto");
 //        }
         
-        if (background != -1) {
-            container.setBackgroundColor(background);
-        }
+        //if (background != -1) {
+        //    container.setBackgroundColor(background);
+        //}
 
         messageET.setOnClickListener(new View.OnClickListener() {
             @Override
