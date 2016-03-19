@@ -55,9 +55,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isObjectNull;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
-
 /**
  * Created by rodrigo on 10/9/15.
  */
@@ -1101,7 +1098,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          */
         try{
             String xmlException = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
-            if (isValidString(xmlException)){
+            if (!StringUtils.isBlank(xmlException)){
                 Exception broadcastException = null;
                 broadcastException = (Exception) XMLParser.parseXML(xmlException, new Exception());
                 broadcastStatus.setLastException(broadcastException);

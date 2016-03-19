@@ -73,7 +73,7 @@ public class MnemonicFragment extends AbstractFermatFragment {
         //get mnemonic text from Crypto Wallet Module
 
         try {
-            txt_mnemonic.setText(cryptoWalletManager.getCryptoWallet().getMnemonicText());
+            txt_mnemonic.setText(cryptoWalletManager.getCryptoWallet().getMnemonicText().get(0));
         } catch (CantGetMnemonicTextException e) {
             Toast.makeText(getActivity(), "Error Getting Mnemonic Text", Toast.LENGTH_SHORT).show();
         } catch (CantGetCryptoWalletException e) {

@@ -355,6 +355,7 @@ public class CryptoTransaction{
         cryptoTransaction.setOp_Return(previousCryptoTransaction.getOp_Return());
         cryptoTransaction.setCryptoTransactionType(previousCryptoTransaction.getCryptoTransactionType());
 
+
         return cryptoTransaction;
     }
 

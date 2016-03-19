@@ -21,6 +21,7 @@ public class LossProtectedWalletSettings implements WalletSettings {
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
+    private UUID exchangeProvider;
 
     public LossProtectedWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -94,5 +95,13 @@ public class LossProtectedWalletSettings implements WalletSettings {
 
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
+    }
+
+    public UUID getExchangeProvider() {
+        return this.exchangeProvider;
+    }
+
+    public void setExchangeProvider(UUID exchangeProvider) {
+        this.exchangeProvider = exchangeProvider;
     }
 }

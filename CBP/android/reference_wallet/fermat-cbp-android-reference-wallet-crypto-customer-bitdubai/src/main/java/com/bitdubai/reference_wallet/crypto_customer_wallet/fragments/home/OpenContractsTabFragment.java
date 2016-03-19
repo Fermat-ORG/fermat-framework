@@ -50,6 +50,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     // Data
     private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
 
+    private View emptyListViewsContainer;
 
     public static OpenContractsTabFragment newInstance() {
         return new OpenContractsTabFragment();
@@ -80,11 +81,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
-
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
         if (openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -216,6 +219,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 if (adapter != null)
                     adapter.changeDataSet(openContractList);
             }
+        }
+        if (openContractList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
