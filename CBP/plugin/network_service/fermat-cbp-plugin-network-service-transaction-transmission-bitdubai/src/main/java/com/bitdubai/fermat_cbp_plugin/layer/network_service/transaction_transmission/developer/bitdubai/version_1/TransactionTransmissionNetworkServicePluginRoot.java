@@ -317,7 +317,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         try {
             BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
             if (businessTransactionMetadata.getContractHash() != null) {
-                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+                //transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
                 switch (businessTransactionMetadata.getType()) {
                     case ACK_CONFIRM_MESSAGE:

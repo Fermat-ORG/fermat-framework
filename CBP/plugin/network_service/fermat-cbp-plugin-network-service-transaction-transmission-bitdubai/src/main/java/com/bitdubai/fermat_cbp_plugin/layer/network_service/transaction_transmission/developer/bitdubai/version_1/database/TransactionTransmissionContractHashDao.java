@@ -144,7 +144,12 @@ public class TransactionTransmissionContractHashDao {
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME, businessTransactionMetadata.getType().getCode());
         record.setLongValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
-        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        if (businessTransactionMetadata.isPendingToRead()){
+            record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.TRUE.toString());
+        }else {
+            record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        }
+
         record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, businessTransactionMetadata.getRemoteBusinessTransaction().getCode());
 
         return record;
@@ -327,6 +332,14 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
+            /*DatabaseTable databaseTable = getDatabaseTable();
+            DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+            databaseTable.addUUIDFilter(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId(), DatabaseFilterType.EQUAL);
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToUpdate(databaseTable,entityRecord);
+            getDataBase().executeTransaction(transaction);*/
+
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
@@ -337,7 +350,7 @@ public class TransactionTransmissionContractHashDao {
 
             /*
              * 2.- Create a new transaction and execute
-             */
+*/
             DatabaseTransaction transaction = getDataBase().newTransaction();
             getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);

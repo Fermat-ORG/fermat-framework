@@ -80,6 +80,7 @@ public class OpenContractMonitorAgent implements
     TransactionTransmissionManager transactionTransmissionManager;
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
 
     public OpenContractMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                     LogManager logManager,
@@ -105,12 +106,12 @@ public class OpenContractMonitorAgent implements
         //Logger LOG = Logger.getGlobal();
         //LOG.info("Open contract monitor agent starting");
         monitorAgent = new MonitorAgent();
-
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
         this.monitorAgent.setErrorManager(this.errorManager);
-
         try {
             this.monitorAgent.Initialize();
+            openContractBusinessTransactionDao = new OpenContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+            this.monitorAgent.setOpenContractBusinessTransactionDao(openContractBusinessTransactionDao);
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         } catch (Exception exception) {
@@ -177,6 +178,10 @@ public class OpenContractMonitorAgent implements
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
+        }
+
+        public void setOpenContractBusinessTransactionDao(OpenContractBusinessTransactionDao openContractBusinessTransactionDao){
+            this.openContractBusinessTransactionDao = openContractBusinessTransactionDao;
         }
 
         @Override
@@ -250,7 +255,7 @@ public class OpenContractMonitorAgent implements
                 CantSendContractNewStatusNotificationException {
 
             try {
-                openContractBusinessTransactionDao = new OpenContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+
 
                 // Check if exist in database new contracts to send
                 List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
@@ -321,8 +326,8 @@ public class OpenContractMonitorAgent implements
                             case SALE:
                                 saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractStatusNotification(
-                                        purchaseContract.getPublicKeyBroker(),
-                                        purchaseContract.getPublicKeyCustomer(),
+                                        saleContract.getPublicKeyBroker(),
+                                        saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         transactionId.toString(),
                                         ContractTransactionStatus.CONTRACT_CONFIRMED,
@@ -394,6 +399,7 @@ public class OpenContractMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
+                        ContractType type = openContractBusinessTransactionDao.getContractType(contractHash);
                         System.out.print("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
                         if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
                             negotiationId = businessTransactionMetadata.getNegotiationId();
@@ -417,6 +423,29 @@ public class OpenContractMonitorAgent implements
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getSenderType(),
                                     businessTransactionMetadata.getReceiverType());
+                            /*switch (type){
+                                case PURCHASE:
+                                    transactionTransmissionManager.confirmNotificationReception(
+                                            businessTransactionMetadata.getReceiverId(),
+                                            businessTransactionMetadata.getSenderId(),
+                                            contractHash,
+                                            transactionId.toString(),
+                                            Plugins.OPEN_CONTRACT,
+                                            businessTransactionMetadata.getReceiverType(),
+                                            businessTransactionMetadata.getSenderType());
+
+                                    break;
+                                case SALE:
+                                    transactionTransmissionManager.confirmNotificationReception(
+                                            businessTransactionMetadata.getSenderId(),
+                                            businessTransactionMetadata.getReceiverId(),
+                                            contractHash,
+                                            transactionId.toString(),
+                                            Plugins.OPEN_CONTRACT,
+                                            businessTransactionMetadata.getSenderType(),
+                                            businessTransactionMetadata.getReceiverType());
+                                    break;
+                            }*/
                         }
                     }
                 }
@@ -433,14 +462,14 @@ public class OpenContractMonitorAgent implements
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            transactionTransmissionManager.ackConfirmNotificationReception(
+                            /*transactionTransmissionManager.ackConfirmNotificationReception(
                                     businessTransactionMetadata.getSenderId(),
                                     businessTransactionMetadata.getReceiverId(),
                                     contractHash,
                                     transactionId.toString(),
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getSenderType(),
-                                    businessTransactionMetadata.getReceiverType());
+                                    businessTransactionMetadata.getReceiverType());*/
                         }
                     }
 
@@ -470,7 +499,7 @@ public class OpenContractMonitorAgent implements
 
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            transactionTransmissionManager.ackConfirmNotificationReception(
+                            /*transactionTransmissionManager.ackConfirmNotificationReception(
                                     businessTransactionMetadata.getSenderId(),
                                     businessTransactionMetadata.getReceiverId(),
                                     contractHash,
@@ -478,7 +507,7 @@ public class OpenContractMonitorAgent implements
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getSenderType(),
                                     businessTransactionMetadata.getReceiverType());
-                            raiseNewContractEvent(contractHash);
+                            raiseNewContractEvent(contractHash);*/
                         }
                     }
 
