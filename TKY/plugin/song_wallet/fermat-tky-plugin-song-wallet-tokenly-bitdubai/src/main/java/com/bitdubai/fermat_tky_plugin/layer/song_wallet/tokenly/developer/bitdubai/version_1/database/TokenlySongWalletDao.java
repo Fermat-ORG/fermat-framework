@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
@@ -16,9 +17,13 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.UnexpectedResultRe
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSongException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CanGetTokensArrayFromSongWalletException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetStoragePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
 import java.sql.Date;
@@ -352,22 +357,7 @@ public class TokenlySongWalletDao {
      */
     public SongStatus getSongStatus(UUID songId) throws CantGetSongStatusException {
         try{
-            openDatabase();
-            WalletSong walletSong;
-            DatabaseTable databaseTable = getDatabaseTable(
-                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
-            databaseTable.addStringFilter(
-                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
-                    songId.toString(),
-                    DatabaseFilterType.EQUAL);
-            databaseTable.loadToMemory();
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
-            if(records.isEmpty()){
-                //I'll return null
-                return null;
-            }
-            walletSong = buildWalletSong(records.get(0));
+            WalletSong walletSong = getWalletSongArgumentBySongId(songId);
             return walletSong.getSongStatus();
         } catch (CantCreateDatabaseException e) {
             throw new CantGetSongStatusException(
@@ -398,6 +388,82 @@ public class TokenlySongWalletDao {
     }
 
     /**
+     * This method returns a Song name by songId.
+     * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
+     * Tonkenly Id.
+     * @param songId
+     * @return
+     * @throws CantGetSongStatusException
+     */
+    public String getSongName(UUID songId) throws CantGetSongNameException {
+        try{
+            WalletSong walletSong = getWalletSongArgumentBySongId(songId);
+            return walletSong.getName();
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetSongNameException(
+                    e,
+                    "Getting Song name from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetSongNameException(
+                    e,
+                    "Getting Song name from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetSongNameException(
+                    e,
+                    "Getting Song name from Database",
+                    "Cannot load database table");
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongNameException(
+                    e,
+                    "Getting Song name from Database",
+                    "Cannot get song from database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantGetSongNameException(
+                    e,
+                    "Getting Song name from Database",
+                    "Cannot get song from database");
+        }
+    }
+
+    /**
+     * This method returns a WalletSong by SongId
+     * @param songId
+     * @return
+     * @throws CantOpenDatabaseException
+     * @throws CantCreateDatabaseException
+     * @throws CantLoadTableToMemoryException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetWalletSongException
+     */
+    private WalletSong getWalletSongArgumentBySongId(UUID songId)
+            throws
+            CantOpenDatabaseException,
+            CantCreateDatabaseException,
+            CantLoadTableToMemoryException,
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetWalletSongException {
+        openDatabase();
+        WalletSong walletSong;
+        DatabaseTable databaseTable = getDatabaseTable(
+                TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+        databaseTable.addStringFilter(
+                TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
+                songId.toString(),
+                DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        List<DatabaseTableRecord> records = databaseTable.getRecords();
+        checkDatabaseRecords(records);
+        if(records.isEmpty()){
+            //I'll return null
+            return null;
+        }
+        walletSong = buildWalletSong(records.get(0));
+        return walletSong;
+    }
+
+    /**
      * This method returns a SongStatus by songId.
      * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
      * Tonkenly Id.
@@ -407,22 +473,7 @@ public class TokenlySongWalletDao {
      */
     public String getSongTokenlyId(UUID songId) throws CantGetSongTokenlyIdException {
         try{
-            openDatabase();
-            WalletSong walletSong;
-            DatabaseTable databaseTable = getDatabaseTable(
-                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
-            databaseTable.addStringFilter(
-                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
-                    songId.toString(),
-                    DatabaseFilterType.EQUAL);
-            databaseTable.loadToMemory();
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
-            if(records.isEmpty()){
-                //I'll return null
-                return null;
-            }
-            walletSong = buildWalletSong(records.get(0));
+            WalletSong walletSong = getWalletSongArgumentBySongId(songId);
             //This Id represents the tokenly Id.
             return walletSong.getId();
         } catch (CantCreateDatabaseException e) {
@@ -449,7 +500,181 @@ public class TokenlySongWalletDao {
             throw new CantGetSongTokenlyIdException(
                     e,
                     "Getting Tokenly Id from Database",
-                    "Cannot get song from database");
+                    "Unexpected results from database");
+        }
+    }
+
+    /**
+     * This method returns a Song Storage path by songId.
+     * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
+     * Tonkenly Id.
+     * @param songId
+     * @return
+     * @throws CantGetSongStatusException
+     */
+    public String getSongStoragePath(UUID songId) throws CantGetStoragePathException {
+        try{
+            openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
+                    songId.toString(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                //I'll return null
+                return null;
+            }
+            DatabaseTableRecord record = records.get(0);
+            String storagePath = record.getStringValue(
+                    TokenlySongWalletDatabaseConstants.SONG_DEVICE_PATH_COLUMN_NAME);
+            return storagePath;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetStoragePathException(
+                    e,
+                    "Getting Storage path from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetStoragePathException(
+                    e,
+                    "GettingStorage path from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetStoragePathException(
+                    e,
+                    "Getting Storage path from Database",
+                    "Cannot load database table");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantGetStoragePathException(
+                    e,
+                    "Getting Storage path from Database",
+                    "Unexpected results from database");
+        }
+    }
+
+    /**
+     * This method updates a record by given arguments and keys.
+     * @param songId
+     * @param columnName
+     * @param value
+     * @throws CantOpenDatabaseException
+     * @throws CantCreateDatabaseException
+     * @throws CantLoadTableToMemoryException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    private void updateStringValue(
+            UUID songId,
+            String columnName,
+            String value) throws
+            CantOpenDatabaseException,
+            CantCreateDatabaseException,
+            CantLoadTableToMemoryException,
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        openDatabase();
+        DatabaseTable databaseTable = getDatabaseTable(
+                TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+        databaseTable.addStringFilter(
+                TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
+                songId.toString(),
+                DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        List<DatabaseTableRecord> records = databaseTable.getRecords();
+        checkDatabaseRecords(records);
+        DatabaseTableRecord record = records.get(0);
+        record.setStringValue(
+                columnName,
+                value);
+        databaseTable.updateRecord(record);
+    }
+
+    /**
+     * This method updates the song record in database with the storage path
+     * @param songId
+     * @param songStoragePath
+     * @throws CantUpdateSongDevicePathException
+     */
+    public void updateSongStoragePath(
+            UUID songId,
+            String songStoragePath)
+            throws CantUpdateSongDevicePathException {
+        try{
+            updateStringValue(
+                    songId,
+                    TokenlySongWalletDatabaseConstants.SONG_DEVICE_PATH_COLUMN_NAME,
+                    songStoragePath);
+        } catch (CantCreateDatabaseException e) {
+            throw new CantUpdateSongDevicePathException(
+                    e,
+                    "Updating storage path in database",
+                    "Cannot create database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantUpdateSongDevicePathException(
+                    e,
+                    "Updating storage path in database",
+                    "Unexpected results from database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateSongDevicePathException(
+                    e,
+                    "Updating storage path in database",
+                    "Cannot load database table");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantUpdateSongDevicePathException(
+                    e,
+                    "Updating storage path in database",
+                    "Cannot open database");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateSongDevicePathException(
+                    e,
+                    "Updating storage path in database",
+                    "Cannot update record");
+        }
+    }
+
+    /**
+     * This method updates the song record in database with the storage path
+     * @param songId
+     * @param songStatus
+     * @throws CantUpdateSongDevicePathException
+     */
+    public void updateSongStatus(
+            UUID songId,
+            SongStatus songStatus)
+            throws CantUpdateSongStatusException {
+        try{
+            updateStringValue(
+                    songId,
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
+                    songStatus.getCode());
+        } catch (CantCreateDatabaseException e) {
+            throw new CantUpdateSongStatusException(
+                    e,
+                    "Updating SongStatus in database",
+                    "Cannot create database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantUpdateSongStatusException(
+                    e,
+                    "Updating SongStatus in database",
+                    "Unexpected results from database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateSongStatusException(
+                    e,
+                    "Updating SongStatus in database",
+                    "Cannot load database table");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantUpdateSongStatusException(
+                    e,
+                    "Updating SongStatus in database",
+                    "Cannot open database");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateSongStatusException(
+                    e,
+                    "Updating SongStatus in database",
+                    "Cannot update record");
         }
     }
 

@@ -184,7 +184,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 250; //2000;
+        public final int SLEEP_TIME = 1000; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE = "13";
         int discoverIteration = 0;
@@ -708,10 +708,12 @@ public class ChatMiddlewareMonitorAgent implements
             String remotePublicKey;
             PlatformComponentType remoteType;
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+            if(chat==null)
+            chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 
             // change to put in the remote device in the correct place of table chat
             if (chat == null) {
-                chat = getChatFromChatMetadata(chatMetadata);
+                    chat = getChatFromChatMetadata(chatMetadata);
             } else {
                 localPublicKey = chatMetadata.getRemoteActorPublicKey();
                 if (!localPublicKey.equals(chat.getRemoteActorPublicKey())) {
@@ -763,8 +765,9 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException("The chat metadata from network service is null");
             }
             try {
-                UUID chatId = chatMetadata.getChatId();
-                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//                UUID chatId = chatMetadata.getChatId();
+                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
+//                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
                 String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
                 Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if (contact == null) {
@@ -776,6 +779,7 @@ public class ChatMiddlewareMonitorAgent implements
                 addContactToChat(chatFromDatabase, contact);
                 UUID contactId = contact.getContactId();
                 Message message = new MessageImpl(
+                        chatFromDatabase.getChatId(),
                         chatMetadata,
                         MessageStatus.CREATED,
                         TypeMessage.INCOMMING,
