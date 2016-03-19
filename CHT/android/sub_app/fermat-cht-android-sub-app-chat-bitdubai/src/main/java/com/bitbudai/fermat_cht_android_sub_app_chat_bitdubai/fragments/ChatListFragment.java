@@ -166,7 +166,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             noreadmsgs=chatManager.getCountMessageByChatId(chatidtemp);
                             contactid = String.valueOf(mess.getContactId());
                             Contact cont = chatManager.getContactByContactId(mess.getContactId());
-                            name = cont.getRemoteName();
+                            name = cont.getAlias();
                             message =mess.getMessage();
                             status = mess.getStatus().toString();
                             from = mess.getType().toString();
@@ -208,19 +208,17 @@ public class ChatListFragment extends AbstractFermatFragment{
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                            } catch (OutOfMemoryError o) {
-                                o.printStackTrace();
-                            }
-                        }
-                    });
+        final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                } catch (OutOfMemoryError o) {
+                    o.printStackTrace();
                 }
+            }
+        });
 
         try {
             chatSession = ((ChatSession) appSession);
