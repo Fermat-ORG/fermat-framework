@@ -412,17 +412,18 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    chatManager.sendMessage(message);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        thread.start();
+                        sendMessageAsync.execute(message);
+//                        Thread thread = new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    chatManager.sendMessage(message);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                        thread.start();
                         //If everything goes OK, we save the chat in the fragment session.
                         chatSession.setData("whocallme", "chatlist");
                         chatSession.setData(
