@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -1453,8 +1454,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public String getMnemonicText() throws CantGetMnemonicTextException {
-        return "mnemonic text";
+    public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        try {
+            return cryptoVaultManager.getMnemonicCode();
+        } catch (CantLoadExistingVaultSeed e) {
+            throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
+        }
     }
 
     private  String convertTime(long time){

@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 
-//import com.bitdubai.fermat.R;
 
 /**
  * Created by mati on 2016.02.20..

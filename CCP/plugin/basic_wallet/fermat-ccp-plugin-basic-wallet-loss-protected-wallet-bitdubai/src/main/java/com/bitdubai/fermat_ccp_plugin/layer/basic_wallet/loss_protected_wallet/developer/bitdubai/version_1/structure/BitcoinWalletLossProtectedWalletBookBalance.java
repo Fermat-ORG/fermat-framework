@@ -2,6 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.
 
 import com.bitdubai.fermat_api.FermatException;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 
@@ -17,6 +22,18 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegi
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+
+import java.util.UUID;
 
 
 /**
@@ -34,12 +51,19 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
     private Broadcaster broadcaster;
 
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+
+    private LossProtectedWalletManager lossProtectedWalletManager;
+
+    private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
     /**
      * Constructor.
      */
-    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster){
+    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final LossProtectedWalletManager lossProtectedWalletManager){
         this.database = database;
         this.broadcaster = broadcaster;
+        this.lossProtectedWalletManager = lossProtectedWalletManager;
     }
 
 
@@ -57,15 +81,23 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
+    /**
+     * Get wallet available balance for actual exchange rate. Evaluates few blocks value have available to spend
+     * @param blockchainNetworkType
+     * @param exchangeRate
+     * @return
+     * @throws CantCalculateBalanceException
+     */
     @Override
-    public long getBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
+    public long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
         try {
 
             //calculate how many btc can spend based on the exchangeRate
+            //Balance Type available
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
 
-            return bitcoinWalletBasicWalletDao.getAvailableBalance(balanceType, blockchainNetworkType, exchangeRate);
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType, exchangeRate);
 
 
         } catch(CantListTransactionsException exception){
@@ -85,8 +117,14 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     @Override
     public void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
         try {
+            double purchasePrice = 0;
+            ExchangeRate rate = getActualExchangeRate();
+
+            if(rate != null)
+                purchasePrice = rate.getPurchasePrice();
+
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterDebitException exception){
@@ -96,11 +134,18 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
+    //get exchange rate
     @Override
     public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
+            double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK);
+            ExchangeRate rate = getActualExchangeRate();
+
+            if(rate != null)
+                purchasePrice = rate.getPurchasePrice();
+
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterCreditException exception){
@@ -115,7 +160,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
         bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
         try {
-            bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction,BalanceType.BOOK);
+            bitcoinWalletBasicWalletDao.revertCredit(cryptoTransaction, BalanceType.BOOK);
         } catch (CantRegisterDebitException e) {
             throw new CantRegisterCreditException("CANT REVERT CREDIT EN BOOK", FermatException.wrapException(e), null, null);
 
@@ -123,4 +168,47 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
 
     }
+
+    private ExchangeRate getActualExchangeRate()
+    {
+        final ExchangeRate[] rate = new ExchangeRate[1];
+        try {
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
+
+
+            //get walelt setting exchange provider manager
+            SettingsManager<LossProtectedWalletSettings> settingsManager = lossProtectedWalletManager.getSettingsManager();
+
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
+
+          final UUID rateProviderManagerId = bitcoinWalletSettings.getExchangeProvider();
+
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+                        CurrencyExchangeRateProviderManager rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
+                        //your exchange rate.
+                        rate[0] = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
+
+                    } catch (CantGetExchangeRateException e) {
+
+                    } catch (UnsupportedCurrencyPairException e) {
+
+                    }catch(Exception e){
+
+                    }
+                }
+            });
+
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
+        return rate[0];
+    }
+
+
 }
