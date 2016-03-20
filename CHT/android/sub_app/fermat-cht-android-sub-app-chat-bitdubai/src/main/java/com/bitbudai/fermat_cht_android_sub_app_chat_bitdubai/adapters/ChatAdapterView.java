@@ -142,7 +142,10 @@ public class ChatAdapterView extends LinearLayout {
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                 contactIcon =bmd.getBitmap();
                 leftName=contact.getAlias();
-                chatId = chatManager.getChatByRemotePublicKey(remotePk).getChatId();
+                Chat cht=chatManager.getChatByRemotePublicKey(remotePk);
+                if(cht!=null)
+                    chatId = cht.getChatId();
+                else chatId=null;
                 appSession.setData(ChatSession.CONTACT_DATA, null);
             }
         }catch (CantGetChatException e) {
@@ -174,8 +177,7 @@ public class ChatAdapterView extends LinearLayout {
         String inorout;
         String estatus;
         ChatMessage msg;
-        Chat chat;
-        int messSize;
+        //Chat chat;
         try {
             setChatHistory(null);
             chatHistory=null;
