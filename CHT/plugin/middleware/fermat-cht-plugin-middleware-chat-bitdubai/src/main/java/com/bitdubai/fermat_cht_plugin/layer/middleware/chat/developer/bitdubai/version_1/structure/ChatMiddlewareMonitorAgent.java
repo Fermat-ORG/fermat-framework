@@ -184,7 +184,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 1000; //2000;
+        public final int SLEEP_TIME = 1500; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE = "13";
         int discoverIteration = 0;
