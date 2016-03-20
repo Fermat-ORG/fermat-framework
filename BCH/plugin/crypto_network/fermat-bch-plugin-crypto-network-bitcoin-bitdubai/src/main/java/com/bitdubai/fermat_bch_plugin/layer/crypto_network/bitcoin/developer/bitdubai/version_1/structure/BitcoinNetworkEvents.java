@@ -105,9 +105,11 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * broadcast the progress bar
          */
-        FermatBundle fermatBundle = new FermatBundle();
-        fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
-        broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+        if (blockchainDownloadProgress.getProgress() < 100){
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+        }
     }
 
 
