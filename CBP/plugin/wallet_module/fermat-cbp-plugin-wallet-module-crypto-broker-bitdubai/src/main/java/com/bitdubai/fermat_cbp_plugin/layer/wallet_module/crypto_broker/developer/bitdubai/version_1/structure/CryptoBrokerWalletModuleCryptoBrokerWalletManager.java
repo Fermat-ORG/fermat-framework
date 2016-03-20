@@ -482,7 +482,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
-        if (Objects.equals(negotiationType.getCode(), NegotiationType.SALE.getCode())) {
+        if (negotiationType.getCode().equalsIgnoreCase(NegotiationType.SALE.getCode()) ) {
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
