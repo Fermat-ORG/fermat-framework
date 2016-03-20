@@ -166,7 +166,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             noreadmsgs=chatManager.getCountMessageByChatId(chatidtemp);
                             contactid = String.valueOf(mess.getContactId());
                             Contact cont = chatManager.getContactByContactId(mess.getContactId());
-                            name = cont.getRemoteName();
+                            name = cont.getAlias();
                             message =mess.getMessage();
                             status = mess.getStatus().toString();
                             from = mess.getType().toString();
@@ -208,19 +208,17 @@ public class ChatListFragment extends AbstractFermatFragment{
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                            } catch (OutOfMemoryError o) {
-                                o.printStackTrace();
-                            }
-                        }
-                    });
+        /*final ColorDrawable drawable = new ColorDrawable(0xFFFFFF);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                } catch (OutOfMemoryError o) {
+                    o.printStackTrace();
                 }
+            }
+        });*/
 
         try {
             chatSession = ((ChatSession) appSession);
@@ -247,7 +245,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             try {
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
         try {
@@ -321,6 +320,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
