@@ -8,7 +8,9 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -177,14 +179,14 @@ public class ChatAdapterView extends LinearLayout {
         try {
             setChatHistory(null);
             chatHistory=null;
-            if(chatId !=null){
-                chat=chatManager.getChatByChatId(chatId);
-            }else{
-                chat=chatSession.getSelectedChat();
-            }
-
-            if(chat!=null)
-                chatId =chat.getChatId();
+//            if(chatId !=null){
+//                chat=chatManager.getChatByChatId(chatId);
+//            }else{
+//                chat=chatSession.getSelectedChat();
+//            }
+//
+//            if(chat!=null)
+//                chatId =chat.getChatId();
             if (chatHistory == null) {
                 chatHistory = new ArrayList<ChatMessage>();
             }
@@ -242,6 +244,30 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
+    public class BackgroundAsyncTask extends
+            AsyncTask<Message, Integer, Message> {
+
+        int myProgress;
+
+        @Override
+        protected void onPostExecute(Message result) {
+            //this.cancel(true);
+            return;
+        }
+
+        @Override
+        protected Message doInBackground(Message... params) {
+            try {
+                for(Message param: params) {
+                    chatManager.sendMessage(param);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -289,6 +315,7 @@ public class ChatAdapterView extends LinearLayout {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
                 String messageText = messageET.getText().toString();
                 if (TextUtils.isEmpty(messageText)) {
                     return;
@@ -322,8 +349,9 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
-
-                        Thread thread = new Thread(new Runnable() {
+                        //sendMessageAsync.cancel(true);
+                        sendMessageAsync.execute(message);
+                        /*Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -333,7 +361,7 @@ public class ChatAdapterView extends LinearLayout {
                                 }
                             }
                         });
-                        thread.start();
+                        thread.start();*/
                     } else {
                         /**
                          * This case is when I got an unregistered contact, I'll set the

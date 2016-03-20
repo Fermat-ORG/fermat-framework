@@ -273,18 +273,14 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     void updatevalues(){
         try{
-            if(!chatManager.getMessages().isEmpty()) {
+            if(!chatManager.getChats().isEmpty()) {
                 chatlistview();
-                //text.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             }else{
-                //Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
-                //text.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
-                //text.setText(" ");
                 //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
-        } catch (CantGetMessageException e) {
+        } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
             if (errorManager != null)
@@ -437,10 +433,10 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpChat(false);
         }
-        if (id == R.id.menu_open_chat) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_open_chat) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
         if (id == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             return true;

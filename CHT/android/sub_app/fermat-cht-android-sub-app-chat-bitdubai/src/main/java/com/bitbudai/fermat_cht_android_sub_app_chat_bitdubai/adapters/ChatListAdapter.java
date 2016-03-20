@@ -112,7 +112,7 @@ public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapte
             TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
             if(noReadMsgs.get(position)>0)
             {
-                tvnumber.setText(noReadMsgs.get(position));
+                tvnumber.setText(noReadMsgs.get(position).toString());
                 tvnumber.setVisibility(View.VISIBLE);
             }else
                 tvnumber.setVisibility(View.GONE);
