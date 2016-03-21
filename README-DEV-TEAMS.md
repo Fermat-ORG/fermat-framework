@@ -310,6 +310,12 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   roy-epps
       Github:  https://github.com/RoyGF
 
+* **Orono Eleazar [New Part-Time Developer]**<br/>
+---
+      Email:   eorono@gmail.com
+      Skype:   eorono
+      Github:  https://github.com/eorono
+
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
 <br>
