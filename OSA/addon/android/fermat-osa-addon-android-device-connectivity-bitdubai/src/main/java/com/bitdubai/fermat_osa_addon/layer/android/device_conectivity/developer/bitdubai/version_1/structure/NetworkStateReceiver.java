@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -88,6 +88,10 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     public void removeListener(NetworkStateReceiverListener l) {
         listeners.remove(l);
+    }
+
+    public void clear() {
+        this.listeners.clear();
     }
 
     public interface NetworkStateReceiverListener {
