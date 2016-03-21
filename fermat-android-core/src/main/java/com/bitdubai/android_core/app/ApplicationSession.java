@@ -2,7 +2,9 @@ package com.bitdubai.android_core.app;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
@@ -66,6 +68,8 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return instance;
     }
 
+    private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
+
     /**
      *  Application session constructor
      */
@@ -75,6 +79,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         instance = this;
         fermatSystem = FermatSystem.getInstance();
         fermatAppsManager = new FermatAppsManager();
+
 
     }
 
@@ -130,6 +135,13 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         ACRA.init(this);
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable e) {
+                handleUncaughtException(thread, e);
+            }
+        });
         super.onCreate();
     }
     protected void attachBaseContext(Context base) {
@@ -137,6 +149,12 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
        // MultiDex.install(this);
     }
 
+
+    private void handleUncaughtException (Thread thread, Throwable e) {
+        Toast.makeText(this,"Sorry, The app is not working",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
+    }
 
 
 }

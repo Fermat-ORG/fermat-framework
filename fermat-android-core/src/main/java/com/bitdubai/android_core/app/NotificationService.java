@@ -49,6 +49,7 @@ public class NotificationService extends Service {
     }
     public NotificationService() {
         this.lstNotifications = new HashMap<>();
+        this.mapNotifications = new HashMap<>();
     }
     @Nullable
     @Override
@@ -153,8 +154,8 @@ public class NotificationService extends Service {
     public int notificateProgress(FermatBundle bundle) {
         try {
             int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
-            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getSerializable(Broadcaster.PUBLISH_ID):0;
-            String progressText = (String) bundle.getSerializable(Broadcaster.PROGRESS_BAR_TEXT);
+            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getInt(Broadcaster.PUBLISH_ID):0;
+            String progressText = (bundle.contains(Broadcaster.PROGRESS_BAR_TEXT)) ? bundle.getString(Broadcaster.PROGRESS_BAR_TEXT):null;
 
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
@@ -166,7 +167,7 @@ public class NotificationService extends Service {
 
                 if(publishId==0){
                     mBuilder = new NotificationCompat.Builder(this);
-                    mBuilder.setContentTitle((progressText!=null || !progressText.equals(""))? progressText:"Downloading something...")
+                    mBuilder.setContentTitle((progressText!=null)? progressText:"Downloading something...")
                             .setContentText("Download in progress")
                             .setSmallIcon(R.drawable.fermat_logo_310_x_310);
                     Random random = new Random();
