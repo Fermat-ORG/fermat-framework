@@ -49,6 +49,7 @@ public class NotificationService extends Service {
     }
     public NotificationService() {
         this.lstNotifications = new HashMap<>();
+        this.mapNotifications = new HashMap<>();
     }
     @Nullable
     @Override
