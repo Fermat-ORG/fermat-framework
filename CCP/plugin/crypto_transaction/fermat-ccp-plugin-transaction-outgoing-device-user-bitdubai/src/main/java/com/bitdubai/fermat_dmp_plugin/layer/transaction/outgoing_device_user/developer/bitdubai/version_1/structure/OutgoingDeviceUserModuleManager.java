@@ -61,6 +61,8 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
         this.dao = dao;
     }
 
+    //TODO: el metodo tiene que atrapar y hacer throw de errores para que quien lo llamo sepa que paso
+    //hay q ver si no puede completar la transaccion de avisar con una notificacion
     @Override
     public void sendToWallet(UUID trxId,
                              String txHash,
@@ -81,7 +83,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
 
 
-
+//TODO: Esto va dentro del switch de tipo de wallet porque los record son proios de cada wallet
         BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord(id,
                 null,
                 null,
@@ -138,7 +140,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                 }
 
                 //Register the new transaction
-
+//TODO: esto es lo primero que tiene que hacer el metodo, registrar la transaccion en su base de datos
                 try {
                     dao.registerNewTransaction(id,
                             txHash,
@@ -165,6 +167,8 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                 }
 
                 if (balanceAfterCredit == cryptoAmount){
+
+                    //TODO: este switch me parece que puede ir afuera, tenes una verificacion de que wallet envia y otra que que wallet manda
 
                     switch (reference_wallet_sending) {
 
