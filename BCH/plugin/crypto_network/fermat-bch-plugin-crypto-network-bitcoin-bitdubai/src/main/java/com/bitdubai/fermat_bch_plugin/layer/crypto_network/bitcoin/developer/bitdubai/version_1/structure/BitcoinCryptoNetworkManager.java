@@ -301,10 +301,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
-            wallet = runningAgents.get(blockchainNetworkType).getWallet();
-
-            // if it is null, then I will load it from disk.
-            if (wallet == null){
+            BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+            if (monitor != null)
+                wallet = monitor.getWallet();
+            else {
                 try {
                     wallet = Wallet.loadFromFile(walletFile);
                 } catch (UnreadableWalletException e) {
