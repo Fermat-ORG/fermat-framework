@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
@@ -23,13 +24,17 @@ public class IncomingIntraUserTransactionHandler {
     private CryptoAddressBookManager cryptoAddressBookManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
     private Broadcaster broadcaster;
+    private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
-    public IncomingIntraUserTransactionHandler(EventManager eventManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,Broadcaster broadcaster) {
+    public IncomingIntraUserTransactionHandler(EventManager eventManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
+                                               Broadcaster broadcaster,
+                                               BitcoinLossProtectedWalletManager lossProtectedWalletManager) {
         this.eventManager             = eventManager;
         this.bitcoinWalletManager     = bitcoinWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
         this.broadcaster = broadcaster;
+        this.lossProtectedWalletManager = lossProtectedWalletManager;
 
     }
 
@@ -40,7 +45,10 @@ public class IncomingIntraUserTransactionHandler {
                 ReferenceWallet         referenceWallet         = cryptoAddressBookRecord.getWalletType();
                 String                  walletPublicKey         = cryptoAddressBookRecord.getWalletPublicKey();
 
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager,this.eventManager,cryptoTransmissionNetworkServiceManager);
+                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager,
+                                                                                                                                                                                                                                                                                                                                                            this.eventManager,
+                                                                                                                                                                                                                                                                                                                                                            cryptoTransmissionNetworkServiceManager,
+                                                                                                                                                                                                                                                                                                                                                              lossProtectedWalletManager);
                 com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor executor        = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);

@@ -129,11 +129,10 @@ import java.util.Vector;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
 
@@ -631,7 +630,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 fermatFragmentFactory,
                 tabStrip,
                 fermatSession,
-                (activityType==ActivityType.ACTIVITY_TYPE_WALLET) ? getWalletResourcesProviderManager() : getSubAppResourcesProviderManager());
+                getAppResources());
         pagertabs.setAdapter(adapter);
         if(tabStrip.isHasIcon()){
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -666,7 +665,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         fermatFragmentFactory,
                         fragment,
                         fermatSession,
-                        (fermatStructure.getFermatAppType()== FermatAppType.WALLET)?getWalletResourcesProviderManager():getSubAppResourcesProviderManager());
+                        getAppResources());
                 pagertabs.setAdapter(adapter);
 
 
@@ -1445,6 +1444,23 @@ public abstract class FermatActivity extends AppCompatActivity implements
         linearLayout.setVisibility(View.GONE);
     }
 
+    public int notificateProgressBroadcast(FermatBundle bundle) {
+        int id = 0;
+        try {
+            if(mNotificationServiceConnected){
+                id = notificationService.notificateProgress(bundle);
+            }else{
+                Intent intent = new Intent(this, NotificationService.class);
+                //acá puedo mandarle el messenger con el handler para el callback
+                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+                startService(intent);
+                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return id;
+    }
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
@@ -1465,7 +1481,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public void notificateBroadcast(String appPublicKey,FermatBundle bundle){
         try {
             if(mNotificationServiceConnected){
-                notificationService.notificate(appPublicKey,bundle);
+                //notificationService.notificate(appPublicKey,bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback
@@ -1825,5 +1841,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
+
 
 }

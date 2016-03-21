@@ -108,83 +108,26 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
-            whattodo();
-            if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
-            {
-                setHasOptionsMenu(true);
-            }else{ setHasOptionsMenu(false); }
+//            if(contactid!=null){
+//                if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
+//                {
+//                    setHasOptionsMenu(true);
+//                }else{ setHasOptionsMenu(false); }
+//            }
+
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-    //
-    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
-        try {
-            if (contact != null){
-                remotepk = contact.getRemoteActorPublicKey();
-                remotepct = contact.getRemoteActorType();
-                contactid=contact.getContactId();
-                for (int i = 0; i < chatManager.getMessages().size(); i++) {
-                    if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
-                        chatid = chatManager.getMessages().get(i).getChatId();
-                    }
-                }
-            }
-        }catch(Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
-    void whattodo(){
-        try {
-            if (appSession.getData("whocallme").equals("chatlist")) {
-                findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
-                chatwascreate = true;
-            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-                //Here it is define if we need to create a new chat or just add the message to chat created previously
-                chatwascreate = chatid != null;
-            }
-        }catch(Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-        //    Toast.makeText(getActivity(),"broadcaster chat", Toast.LENGTH_SHORT).show();
-
         if(code.equals("13")){
             adapter.refreshEvents();
         }
     }
-
-    //
-//    void findMessage(){
-//        String message;
-//        String inorout;
-//        int messsize;
-//
-//        try {
-//            historialmensaje.clear();
-//            if(chatid!=null){
-//                messsize=chatManager.getMessageByChatId(chatid).size();
-//                for (int i = 0; i < messsize; i++) {
-//                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
-//                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-//                    historialmensaje.add(inorout+"@#@#"+message);
-//                }
-//            }else{
-//                Toast.makeText(getActivity(),"waiting for chat message", Toast.LENGTH_SHORT).show();
-//            }//
-//        }catch (CantGetMessageException e) {//
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }catch (Exception e){
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
@@ -194,6 +137,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
             }
         });
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)

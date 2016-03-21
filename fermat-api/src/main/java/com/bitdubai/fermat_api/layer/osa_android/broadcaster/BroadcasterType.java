@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 public enum BroadcasterType implements FermatEnum{
 
     UPDATE_VIEW ("UV"),
-    NOTIFICATION_SERVICE ("NS");
+    NOTIFICATION_SERVICE ("NS"),
+    NOTIFICATION_PROGRESS_SERVICE("NPS");
 
 
 
@@ -23,6 +24,7 @@ public enum BroadcasterType implements FermatEnum{
         switch (code) {
             case "UV": return UPDATE_VIEW;
             case "NS": return NOTIFICATION_SERVICE;
+            case "NPS": return NOTIFICATION_PROGRESS_SERVICE;
             default:      return UPDATE_VIEW;
         }
     }

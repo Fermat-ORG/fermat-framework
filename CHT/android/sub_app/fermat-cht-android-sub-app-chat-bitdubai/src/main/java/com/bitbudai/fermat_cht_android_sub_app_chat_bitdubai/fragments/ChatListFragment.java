@@ -4,6 +4,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -129,10 +130,16 @@ public class ChatListFragment extends AbstractFermatFragment{
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatListFragment";
     SwipeRefreshLayout mSwipeRefreshLayout;
-    ArrayList<String> infochat=new ArrayList<String>();
-    ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
-    ArrayList<Bitmap> imgid=new ArrayList<>();
-    TextView text;
+    ArrayList<String> contactName=new ArrayList<>();
+    ArrayList<String> message=new ArrayList<>();
+    ArrayList<String> dateMessage=new ArrayList<>();
+    ArrayList<UUID> chatId=new ArrayList<>();
+    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> status=new ArrayList<>();
+    ArrayList<String> typeMessage=new ArrayList<>();
+    ArrayList<Integer> noReadMsgs=new ArrayList<>();
+    ArrayList<Bitmap> imgId=new ArrayList<>();
+    //TextView text;
     View layout;
     PresentationDialog presentationDialog;
     Typeface tf;
@@ -145,67 +152,54 @@ public class ChatListFragment extends AbstractFermatFragment{
         return new ChatListFragment();}
 
     public void chatlistview (){
-
         UUID chatidtemp;
-        String contactid;
-        String status;
-        String from;
-        String name="",message="",datemessage="",chatid="";
-        int noreadmsgs=0;
         try {
-
-            //for (int i=0;i<chatManager.getChats().size();i++){
             List<Chat> chats = chatManager.getChats();
             if (chats != null && chats.size() > 0) {
-                infochat.clear();
+                contactName.clear();
+                message.clear();
+                chatId.clear();
+                dateMessage.clear();
+                contactId.clear();
+                status.clear();
+                typeMessage.clear();
+                noReadMsgs.clear();
+                imgId.clear();
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        List<Message> messageChat = chatManager.getMessageByChatId(chatidtemp);//
-                        if (messageChat != null) {
-                            Message mess = messageChat.get(0);
-                            noreadmsgs=0;
-                            if (mess != null) {
-                                List<Message> messl = chatManager.getMessageByChatId(chatidtemp);
-                                if (messl != null && messl.size() > 0) {
-                                    for (Message mss : messl) {
-                                        if(mss.getType().toString().equals(TypeMessage.INCOMMING.toString()) && !(mss.getStatus().toString().equals(MessageStatus.READ.toString()))){
-                                            noreadmsgs++;
-                                        }
-                                    }
-                                }
-                                contactid = String.valueOf(mess.getContactId());
-                                Contact cont = chatManager.getContactByContactId(mess.getContactId());
-                                name = cont.getRemoteName();
-                                message = messl.get(messl.size() - 1).getMessage();
-                                status = messl.get(messl.size() - 1).getStatus().toString();
-                                from = messl.get(messl.size() - 1).getType().toString();
-                                Chat chatl = chatManager.getChatByChatId(chatidtemp);
-                                long timemess = chatl.getLastMessageDate().getTime();
-                                long nanos = (chatl.getLastMessageDate().getNanos() / 1000000);
-                                long milliseconds = timemess + nanos;
-                                Date dated= new java.util.Date(milliseconds);
-                                if (Validate.isDateToday(dated)) {
-                                    datemessage = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                                }else {
-                                    Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
-                                    Date today = new Date();
-                                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                    if (dias == 1) {
-                                        datemessage = "YESTERDAY";
-                                    } else
-                                        datemessage = new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds));//.toString();
-                                }
-                                chatid = chatidtemp.toString();
-                                infochat.add(name + "@#@#" + message + "@#@#" + datemessage + "@#@#" + chatid + "@#@#" + contactid + "@#@#"+ status + "@#@#"+ from + "@#@#"+ noreadmsgs + "@#@#");
-                                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
-                                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                imgid.add(bmd.getBitmap());
+                        Message mess = chatManager.getMessageByChatId(chatidtemp);
+                        if (mess != null) {
+                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                            contactId.add(mess.getContactId());
+                            Contact cont = chatManager.getContactByContactId(mess.getContactId());
+                            contactName.add(cont.getAlias());
+                            message.add(mess.getMessage());
+                            status.add(mess.getStatus().toString());
+                            typeMessage.add(mess.getType().toString());
+                            long timemess = chat.getLastMessageDate().getTime();
+                            long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                            long milliseconds = timemess + nanos;
+                            Date dated= new java.util.Date(milliseconds);
+                            if (Validate.isDateToday(dated)) {
+                                dateMessage.add(new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds)));
+                            }else {
+                                Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                                Date today = new Date();
+                                long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                if (dias == 1) {
+                                    dateMessage.add("YESTERDAY");
+                                } else
+                                    dateMessage.add(new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds)));
                             }
+                            chatId.add(chatidtemp);
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            imgId.add(bmd.getBitmap());
                         }
                     }
                 }
-        }
+            }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (CantGetMessageException e) {
@@ -244,7 +238,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             try {
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
         try {
@@ -278,18 +273,14 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     void updatevalues(){
         try{
-            if(!chatManager.getMessages().isEmpty()) {
+            if(!chatManager.getChats().isEmpty()) {
                 chatlistview();
-                text.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             }else{
-                //Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
-                text.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
-                text.setText(" ");
-                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
+                //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
-        } catch (CantGetMessageException e) {
+        } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
             if (errorManager != null)
@@ -318,10 +309,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
-        text = (TextView) layout.findViewById(R.id.text);
+        //text = (TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
@@ -357,19 +349,16 @@ public class ChatListFragment extends AbstractFermatFragment{
 //            }
 //        }
 
-        adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
+        adapter=new ChatListAdapter(getActivity(), contactName, message, dateMessage, chatId, contactId, status,
+                typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-                String values = infochat.get(position);
-                List<String> converter = new ArrayList<String>();
-                converter.addAll(Arrays.asList(values.split("@#@#")));
                 try{
                     appSession.setData("whocallme", "chatlist");
-                    appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactId.get(position)));//esto no es necesario, haces click a un chat
                     //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (CantGetContactException e) {
@@ -416,7 +405,7 @@ public class ChatListFragment extends AbstractFermatFragment{
    //     Toast.makeText(getActivity(), "Broadcast chatlist", Toast.LENGTH_SHORT).show();
         if(code.equals("13")){
             updatevalues();
-            adapter.refreshEvents(infochat, imgid);
+            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }
 
@@ -444,10 +433,10 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpChat(false);
         }
-        if (id == R.id.menu_open_chat) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_open_chat) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
         if (id == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             return true;

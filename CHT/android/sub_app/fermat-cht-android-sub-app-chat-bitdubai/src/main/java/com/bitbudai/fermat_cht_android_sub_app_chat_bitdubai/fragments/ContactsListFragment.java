@@ -1,8 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.Presentation;
+import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -49,8 +51,10 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.BuildConfig;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
@@ -120,7 +124,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    TextView text;
+    //TextView text;
     ImageView noData;
     View layout;
     Typeface tf;
@@ -232,7 +236,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         super.onCreate(savedInstanceState);
         //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
-        text=(TextView) layout.findViewById(R.id.text);
+        //text=(TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
         //text.setTypeface(tf, Typeface.NORMAL);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
@@ -248,7 +252,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                     contacticon.add(bmd.getBitmap());
                 }
-                text.setVisibility(View.GONE);
+                //text.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             }else{
                 //Comentar, solo para pruebas
@@ -265,10 +269,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 //                cadded.setRemoteName("No hay nadie conectado");
 //                chatManager.saveContact(cadded);
                 //Fin Comentar
-                text.setVisibility(View.VISIBLE);
+                //text.setVisibility(View.VISIBLE);
                 noData.setVisibility(View.VISIBLE);
-                text.setText(" ");
-                text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
+                //text.setText(" ");
+                //text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -396,12 +400,12 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 adaptador.refreshEvents(contactname, contacticon, contactid);
                 list.invalidateViews();
                 list.requestLayout();
-                text.setVisibility(View.GONE);
+                //text.setVisibility(View.GONE);
             }else{
                 //Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
-                text.setVisibility(View.VISIBLE);
-                text.setText(" ");
-                text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
+                //text.setVisibility(View.VISIBLE);
+                //text.setText(" ");
+                //text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
             }
         } catch (CantGetContactException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -426,7 +430,17 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             return true;
         }
         if (id == R.id.menu_add_contact) {
-            cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            final cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
+            dialog_conn.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if(dialog_conn.getAct() == true) {
+                        //text.setVisibility(View.GONE);
+                        //text.setBackgroundColor(Color.WHITE);
+                        noData.setVisibility(View.GONE);
+                    }
+                }
+            });
             dialog_conn.show();
             return true;
         }else if (id == R.id.menu_switch_profile) {

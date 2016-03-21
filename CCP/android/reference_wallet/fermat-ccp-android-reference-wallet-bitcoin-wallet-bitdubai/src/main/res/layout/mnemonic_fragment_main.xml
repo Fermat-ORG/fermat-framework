@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="#605b5b">
 
 
     <ImageView
@@ -15,6 +15,7 @@
         android:layout_marginTop="16dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/label_mnemonic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -31,7 +32,7 @@
         android:layout_marginTop="64dp"
         android:textColor="#fff"
         android:textStyle="bold"
-        tools:text="dui. Etiam rhoncus. Maecenas nenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget "/>
+        tools:text=" "/>
 
 
 </LinearLayout>

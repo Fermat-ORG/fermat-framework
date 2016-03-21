@@ -126,7 +126,8 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     @Override
-    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+        int id = 0;
         try {
             switch (broadcasterType){
                 case UPDATE_VIEW:
@@ -135,11 +136,15 @@ public class BroadcastManager implements BroadcasterInterface {
                 case NOTIFICATION_SERVICE:
                     fermatActivity.get().notificateBroadcast(null,bundle);
                     break;
+                case NOTIFICATION_PROGRESS_SERVICE:
+                    id = fermatActivity.get().notificateProgressBroadcast(bundle);
+                    break;
             }
         }catch (Exception e){
             Log.e(TAG,"Cant broadcast excepcion");
             e.printStackTrace();
         }
+        return id;
     }
 
     private void updateView(FermatBundle bundle) {
