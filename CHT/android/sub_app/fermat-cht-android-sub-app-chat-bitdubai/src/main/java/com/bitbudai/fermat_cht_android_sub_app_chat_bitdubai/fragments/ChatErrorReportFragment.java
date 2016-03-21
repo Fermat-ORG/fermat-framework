@@ -4,6 +4,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,10 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * Settings Fragment
  *
@@ -45,6 +50,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
 
     private Button okBtn;
     private EditText messageEdit;
+    private EditText copyEdit;
     private Button cancelBtn;
     private Toolbar toolbar;
 
@@ -66,11 +72,53 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         }
     }
 
+    private static final String TAG = "CHT log";
+    private static final String processId = Integer.toString(android.os.Process
+            .myPid());
+    public static StringBuilder getLog() {
+
+        int lineNumber = 0;
+        int linesNumber = 0;
+
+        StringBuilder builder = new StringBuilder();
+
+        try {
+            String[] command = new String[] { "logcat", "-v", "threadtime" };
+
+            Process process = Runtime.getRuntime().exec(command);
+
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String line;
+            String line2;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains(processId)) {
+                    lineNumber++;
+                }
+            }
+            linesNumber=lineNumber;
+            while ((line2 = bufferedReader.readLine()) != null) {
+                if (line2.contains(processId)) {
+                    lineNumber++;
+                    if(lineNumber >= linesNumber-500){
+                        builder.append(line2);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Log.e(TAG, "getLog failed", ex);
+        }
+
+        return builder;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View layout = inflater.inflate(R.layout.send_errors_report, container, false);
         messageEdit = (EditText) layout.findViewById(R.id.messageEdit);
+        copyEdit = (EditText) layout.findViewById(R.id.copyEdit);
         okBtn = (Button) layout.findViewById(R.id.okButton);
         cancelBtn = (Button) layout.findViewById(R.id.cancelButton);
 
@@ -80,6 +128,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
                 changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
             }
         });
+        copyEdit.setText(getLog().toString());
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
