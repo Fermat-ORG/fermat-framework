@@ -228,30 +228,30 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     chatMetadataRecord.setFlagReadead(false);
                     System.out.println("----------------------------\n" +
                             "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
+                            +"\n "+chatMetadataRecord.getMessage()
                             + "\n-------------------------------------------------");
 
                     chatMetadataRecord.setFlagReadead(false);
                     getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
 
                     //NOTIFICATION LAUNCH
-                    launchIncomingChatNotification(chatMetadataRecord.getChatId());
-                    sendChatMessageNewStatusNotification(
-                            chatMetadataRecord.getRemoteActorPublicKey(),
-                            chatMetadataRecord.getRemoteActorType(),
-                            chatMetadataRecord.getLocalActorPublicKey(),
-                            chatMetadataRecord.getLocalActorType(),
-                            DistributionStatus.DELIVERED,
-                            chatMetadataRecord.getTransactionId().toString()
-                    );
-
-
 //                    sendChatMessageNewStatusNotification(
 //                            chatMetadataRecord.getRemoteActorPublicKey(),
 //                            chatMetadataRecord.getRemoteActorType(),
 //                            chatMetadataRecord.getLocalActorPublicKey(),
 //                            chatMetadataRecord.getLocalActorType(),
 //                            DistributionStatus.DELIVERED,
-//                            MessageStatus.READ,
+//                            chatMetadataRecord.getTransactionId().toString()
+//                    );
+
+                    launchIncomingChatNotification(chatMetadataRecord.getChatId());
+//                    sendChatMessageNewStatusNotification(
+//                            chatMetadataRecord.getRemoteActorPublicKey(),
+//                            chatMetadataRecord.getRemoteActorType(),
+//                            chatMetadataRecord.getLocalActorPublicKey(),
+//                            chatMetadataRecord.getLocalActorType(),
+//                            DistributionStatus.DELIVERED,
+//                            MessageStatus.RECEIVE,
 //                            chatMetadataRecord.getChatId(),
 //                            chatMetadataRecord.getMessageId());
 
@@ -303,6 +303,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 }
                                 System.out.println("----------------------------\n" +
                                         "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey()
+                                        +"\n "+chatMetadataRecord.getMessageStatus()
                                         + "\n-------------------------------------------------");
                                 launcheIncomingChatStatusNotification(chatID);
 
@@ -743,9 +744,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 if(Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
                     chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
                     final ChatMetadataRecord chatMetadataTosend = chatMetadataRecord;
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
+//                    executorService.submit(new Runnable() {
+//                        @Override
+//                        public void run() {
                             try {
                                 sendNewMessage(
                                         getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
@@ -757,8 +758,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
                                 e.printStackTrace();
                             }
-                        }
-                    });
+//                        }
+//                    });
                 }
 
             }
@@ -826,12 +827,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
                 chatMetadataRecord.setLocalActorType(senderType);
                 chatMetadataRecord.setMsgXML(msjContent);
-                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), MessageStatus.READ)){
-                    chatMetadataRecord.setMessageStatus(MessageStatus.READ);
+                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+                    chatMetadataRecord.setMessageStatus(messageStatus);
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
+//                    executorService.submit(new Runnable() {
+//                        @Override
+//                        public void run() {
                             try {
 
                                 sendNewMessage(
@@ -843,8 +844,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
                                 e.printStackTrace();
                             }
-                        }
-                    });
+//                        }
+//                    });
                 }
 
 
@@ -937,9 +938,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final String remote = chatMetadataRecord.getRemoteActorPublicKey();
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
+            System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
 
                     try {
                         sendNewMessage(
@@ -950,8 +952,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
                     }
-                }
-            });
+//                }
+//            });
 
         }catch(CantSendChatMessageMetadataException e){
             StringBuilder contextBuffer = new StringBuilder();
