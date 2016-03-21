@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <RelativeLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/card_background">
+
+            <RelativeLayout
+                android:id="@+id/cardHeader"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/card_top">
+
+                <RelativeLayout
+                    android:id="@+id/cardActorImageLayout"
+                    android:layout_width="47dp"
+                    android:layout_height="47dp"
+                    android:background="@drawable/bg_circular_home_issuer"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="5dp">
+
+                    <ImageView
+                        android:id="@+id/homeIssuerImage"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/cardActorImageLayout"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/detailAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivered by"
+                        android:textSize="10sp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/card_text_top_secondary"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/cardActorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Frank ISSUER"
+                        android:textSize="14sp"
+                        android:layout_below="@id/detailAction"
+                        android:textColor="@color/card_text_top_primary"/>
+
+                </RelativeLayout>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 minutes ago"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/card_text_top_primary"/>
+
+                <ImageView
+                    android:id="@+id/cardConfirmedImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/detail_check"
+                    android:layout_below="@+id/cardTime"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/cardAssetImage"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_below="@+id/cardHeader"
+                android:src="@drawable/img_asset_without_image"
+                android:background="@color/fab_material_white"
+                android:layout_margin="15dp"
+                android:layout_centerHorizontal="true"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@id/cardAssetImage"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardAssetName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mi Asset 1"
+                    android:textSize="18sp"
+                    android:textColor="@color/card_text"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EXP"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:textColor="@color/card_text_highlight"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardExpDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ene 16, 2016"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_below="@+id/cardExp"
+                    android:textColor="@color/card_text_highlight"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardAssetName"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageButton
+                        android:id="@+id/cardRedeemButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardTransferButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardAppropriateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardSellButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardTransactionsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:background="@null"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

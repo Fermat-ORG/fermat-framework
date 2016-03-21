@@ -9,10 +9,11 @@
     <string name="help">Help</string>
     <string name="dap_user_wallet_search">Search</string>
     <string name="dap_user_wallet_search_hint">Asset name</string>
-    <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
-    <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
-    <string name="dap_user_wallet_action_transfer">Transfer Asset</string>
-    <string name="dap_user_wallet_action_sell">Sell Asset</string>
+    <string name="dap_user_wallet_action_redeem">Redeem</string>
+    <string name="dap_user_wallet_action_appropriate">Appropriate</string>
+    <string name="dap_user_wallet_action_transfer">Transfer</string>
+    <string name="dap_user_wallet_action_sell">Sell</string>
+    <string name="dap_user_wallet_action_redeem_title">Redeem Asset</string>
     <!-- -->
 
     <!-- empty list views -->
@@ -122,4 +123,13 @@
     <string name="dap_user_wallet_sell_select_subTitle">User Selection.</string>
     <string name="dap_user_wallet_sell_select_body">[add something here]</string>
     <!--Dialog Help - End-->
+
+    <!-- v2 -->
+    <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
+    <string name="dap_user_wallet_v2_detail_received">Received by</string>
+    <string name="dap_user_wallet_v2_confirm_title">Do this Redeem Point?</string>
+    <string name="dap_user_wallet_v2_confirm_body">Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ...</string>
+    <string name="dap_user_wallet_v2_confirm_button_agree">AGREE</string>
+    <string name="dap_user_wallet_v2_confirm_button_disagree">DISAGREE</string>
+    <!-- -->
 </resources>
