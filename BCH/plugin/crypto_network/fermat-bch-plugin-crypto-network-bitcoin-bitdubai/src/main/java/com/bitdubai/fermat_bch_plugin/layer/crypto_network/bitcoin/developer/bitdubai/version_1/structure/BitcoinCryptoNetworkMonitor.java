@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -252,7 +254,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName, this.context, this.broadcaster);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName, this.context, this.broadcaster, wallet);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
@@ -379,6 +381,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
+                    broadcastProgress((int) Math.round(progress * 100));
                 }
             });
 
@@ -435,6 +438,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * starts the broadcasting.
              */
             transactionBroadcast.broadcast();
+        }
+
+
+        private void broadcastProgress(int progress) {
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PROGRESS_BAR, progress);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
         }
 
         /**

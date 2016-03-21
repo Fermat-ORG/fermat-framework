@@ -11,10 +11,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
@@ -25,6 +23,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetActorLossProtectedTransactionHistoryException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllIntraUserLossProtectedConnectionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedReceivePaymentRequestException;
@@ -44,7 +44,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedTransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.BlockingDeque;
@@ -313,6 +317,15 @@ public interface LossProtectedWallet extends Serializable {
               BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
+    void sendToWallet (long cryptoAmount,
+                       String walletPublicKey,
+                       String notes,
+                       Actors deliveredToActorType,
+                       ReferenceWallet sendingWallet,
+                       ReferenceWallet receivingWallet,
+                       BlockchainNetworkType blockchainNetworkType)throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+
+
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
      *
@@ -564,5 +577,25 @@ public interface LossProtectedWallet extends Serializable {
     long getActualExchangeRate() throws CantListReceivePaymentRequestException;
 
 
-    String getMnemonicText() throws CantGetMnemonicTextException;
+    /**
+     *Through the method <code>getMnemonicText</code> you can get the wallet Mnemonic Text
+     * @return
+     * @throws CantGetMnemonicTextException
+     */
+    List<String> getMnemonicText() throws CantGetMnemonicTextException;
+
+
+    /**
+     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate
+     * @return
+     * @throws CantGetMnemonicTextException
+     */
+    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException;
+
+    /**
+     * Through the method <code>getExchangeRateProviderManagers</code> you can get the list of exchange rate providers
+     * @return
+     * @throws CantGetCurrencyExchangeProviderException
+     */
+    Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
 }

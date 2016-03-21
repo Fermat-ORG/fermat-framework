@@ -65,6 +65,8 @@ public interface ChatManager {
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
 
+    Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException;
+
     void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
     List<Contact> getContacts() throws CantGetContactException;

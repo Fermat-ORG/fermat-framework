@@ -7,6 +7,8 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSong
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +77,9 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * @param songId
      * @throws CantDeleteSongException
      */
-    void deleteSong(UUID songId) throws CantDeleteSongException;
+    void deleteSong(UUID songId) throws
+            CantDeleteSongException,
+            CantUpdateSongStatusException;
 
     /**
      * This method downloads a song to the wallet and the device storage.
@@ -84,6 +88,9 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * @param songId
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId) throws CantDownloadSongException;
+    void downloadSong(UUID songId) throws
+            CantDownloadSongException,
+            CantUpdateSongDevicePathException,
+            CantUpdateSongStatusException;
 
 }
