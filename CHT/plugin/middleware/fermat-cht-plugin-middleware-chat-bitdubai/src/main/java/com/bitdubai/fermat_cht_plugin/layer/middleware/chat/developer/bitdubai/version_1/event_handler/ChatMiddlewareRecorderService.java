@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -15,9 +14,9 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingCha
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     private ErrorManager errorManager;
+    private ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent;
     /**
      * TransactionService Interface member variables.
      */
@@ -42,8 +42,10 @@ public class ChatMiddlewareRecorderService implements CHTService {
     public ChatMiddlewareRecorderService(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            ErrorManager errorManager,
+            ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent) throws CantStartServiceException {
         try {
+            this.chatMiddlewareMonitorAgent = chatMiddlewareMonitorAgent;
             setDatabaseDao(chatMiddlewareDatabaseDao);
             setEventManager(eventManager);
             this.errorManager=errorManager;
@@ -103,10 +105,11 @@ public class ChatMiddlewareRecorderService implements CHTService {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         try{
-            this.chatMiddlewareDatabaseDao.saveNewEvent(
-                    event.getEventType().getCode(),
-                    event.getSource().getCode(),
-                    event.getChatId());
+//            this.chatMiddlewareDatabaseDao.saveNewEvent(
+//                    event.getEventType().getCode(),
+//                    event.getSource().getCode(),
+//                    event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatId());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -125,10 +128,11 @@ public class ChatMiddlewareRecorderService implements CHTService {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         try{
-            this.chatMiddlewareDatabaseDao.saveNewEvent(
-                    event.getEventType().getCode(),
-                    event.getSource().getCode(),
-                    event.getChatId());
+//            this.chatMiddlewareDatabaseDao.saveNewEvent(
+//                    event.getEventType().getCode(),
+//                    event.getSource().getCode(),
+//                    event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatId());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
