@@ -205,10 +205,23 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
-    public boolean isContractHashSentConfirmation(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+    public boolean isContractToConfirm(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
-            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_RESPONSE.getCode());
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.CONTRACT_CONFIRMED.getCode());
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+    }
+
+    public boolean isPendingConfirm(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION.getCode());
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
@@ -446,7 +459,7 @@ public class OpenContractBusinessTransactionDao {
     public List<String> getPendingToConfirmContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
         try{
             return getStringList(
-                    ContractTransactionStatus.PENDING_CONFIRMATION.getCode(),
+                    ContractTransactionStatus.PENDING_RESPONSE.getCode(),
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception e){
