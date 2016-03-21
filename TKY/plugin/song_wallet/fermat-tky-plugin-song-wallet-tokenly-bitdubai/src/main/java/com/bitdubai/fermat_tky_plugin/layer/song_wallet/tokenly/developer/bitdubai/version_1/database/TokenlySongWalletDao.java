@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSongException;
@@ -24,6 +26,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetStoragePathException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
 import java.sql.Date;
@@ -75,7 +78,9 @@ public class TokenlySongWalletDao {
         this.errorManager         = errorManager;
     }
 
-    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
+    private Database openDatabase() throws
+            CantOpenDatabaseException,
+            CantCreateDatabaseException {
         try {
             database = pluginDatabaseSystem.openDatabase(
                     this.pluginId,
@@ -346,6 +351,106 @@ public class TokenlySongWalletDao {
                     "Cannot get song from database");
         }
     }
+
+    /**
+     * This method returns a songs list by SongStatus enum
+     * @return
+     * @throws CantGetSongListException
+     */
+    public List<String> getSongsTokenlyIdNotDeleted()
+            throws CantGetSongListException {
+        try{
+            openDatabase();
+            List<String> songList = new ArrayList<>();
+            WalletSong walletSong;
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
+                    SongStatus.DELETED.getCode(),
+                    DatabaseFilterType.NOT_EQUALS);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //I'll return an empty list
+                return songList;
+            }
+            SongStatus songStatus;
+            for(DatabaseTableRecord databaseTableRecord : records){
+                walletSong = buildWalletSong(databaseTableRecord);
+                songStatus = walletSong.getSongStatus();
+                //I'll ignore the AVAILABLE songStatus, this song is already in the device.
+                if(songStatus.getCode().equals(SongStatus.AVAILABLE.getCode())){
+                    continue;
+                }
+                songList.add(walletSong.getId());
+            }
+            return songList;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot load database table");
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot get song from database");
+        }
+    }
+
+    public void saveSong(
+            Song song,
+            String songPath) throws
+            CantPersistSongException {
+        try{
+            openDatabase();
+            //Get WalletSong object from given song.
+            WalletSong walletSong = new WalletSongRecord(
+                    song,
+                    SongStatus.AVAILABLE,
+                    UUID.randomUUID());
+            //Build record
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = getDatabaseTablerecordFromWalletSong(
+                    databaseTableRecord,
+                    walletSong);
+            databaseTableRecord.setStringValue(
+                    TokenlySongWalletDatabaseConstants.SONG_DEVICE_PATH_COLUMN_NAME,
+                    songPath);
+            //Insert record in database.
+            databaseTable.insertRecord(databaseTableRecord);
+        } catch (CantCreateDatabaseException e) {
+            throw new CantPersistSongException(
+                    e,
+                    "Persisting song in database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantPersistSongException(
+                    e,
+                    "Persisting song in database",
+                    "Cannot open database");
+        } catch (CantInsertRecordException e) {
+            throw new CantPersistSongException(
+                    e,
+                    "Persisting song in database",
+                    "Cannot insert record database");
+        }
+
+    }
+
 
     /**
      * This method returns a SongStatus by songId.
@@ -688,10 +793,10 @@ public class TokenlySongWalletDao {
             return new Date(1961);
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-        Date dateFromString = new Date(2014);
+        Date dateFromString;
         try {
             java.util.Date utilDate = simpleDateFormat.parse(stringDate);
-            utilDate = new Date(utilDate.getTime());
+            dateFromString = new Date(utilDate.getTime());
         } catch (ParseException e) {
             //Default date
             return new Date(2016);
