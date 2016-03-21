@@ -57,6 +57,25 @@ public class DataManager {
         return issuers;
     }
 
+    public List<Asset> getAssets() throws CantLoadWalletException {
+        List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
+        List<Asset> assets = new ArrayList<>();
+        Asset asset;
+        for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
+            long quantityAvailableBalance = assetUserWalletList.getQuantityAvailableBalance();
+            assets = new ArrayList<>();
+            for(long i = 0; i < quantityAvailableBalance; i++) {
+                assets.add(new Asset(assetUserWalletList, Asset.Status.CONFIRMED));
+            }
+
+            long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
+            for(long i = 0; i < quantityBookBalance; i++) {
+                assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
+            }
+        }
+        return assets;
+    }
+
     public List<RedeemPoint> getConnectedRedeemPoints(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
         List<RedeemPoint> redeemPoints = new ArrayList<>();
         List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getRedeemPointsConnectedForAsset(assetPublicKey);

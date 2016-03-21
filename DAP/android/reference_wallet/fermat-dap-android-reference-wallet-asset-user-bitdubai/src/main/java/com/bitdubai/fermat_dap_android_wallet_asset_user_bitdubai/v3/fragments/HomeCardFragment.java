@@ -14,27 +14,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.MyAssetsAdapter;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.filters.MyAssetsAdapterFilter;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.adapters.HomeCardAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.filters.HomeCardAdapterFilter;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -51,11 +50,11 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/17/16.
  */
-public class HomeCardFragment extends FermatWalletListFragment<Asset>
-        implements FermatListItemListeners<Asset> {
+public class HomeCardFragment extends FermatWalletListFragment<Asset> {
 
     // Data
-    private List<Asset> digitalAssets;
+    private List<Asset> assets;
+    private DataManager dataManager;
 
     //UI
     private View noAssetsView;
@@ -76,6 +75,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+            dataManager = new DataManager(moduleManager);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -95,8 +95,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_wallet_asset_user_home_no_assets);
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
+        assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        showOrHideNoAssetsView(assets.isEmpty());
 
         onRefresh();
     }
@@ -222,7 +222,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(s);
+                    ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(s);
                 }
                 return false;
             }
@@ -250,33 +250,23 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
     }
 
     @Override
-    public void onItemClickListener(Asset data, int position) {
-
-    }
-
-    @Override
-    public void onLongItemClickListener(Asset data, int position) {
-
-    }
-
-    @Override
     protected boolean hasMenu() {
         return false;
     }
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.dap_v3_wallet_asset_user_home;
     }
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.dap_v3_wallet_asset_user_home_swipe_refresh;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return 0;
+        return R.id.dap_v3_wallet_asset_user_home_recycler_view;
     }
 
     @Override
@@ -290,12 +280,12 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                digitalAssets = (ArrayList) result[0];
+                assets = (ArrayList) result[0];
                 if (adapter != null) {
-                    adapter.changeDataSet(digitalAssets);
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
+                    adapter.changeDataSet(assets);
+                    ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
                 }
-                showOrHideNoAssetsView(digitalAssets.isEmpty());
+                showOrHideNoAssetsView(assets.isEmpty());
             }
         }
     }
@@ -312,10 +302,9 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new HomeCardAdapter(getActivity(), digitalAssets, moduleManager);
-            adapter.setFermatListEventListener(this);
+            adapter = new HomeCardAdapter(getActivity(), assets, moduleManager);
         } else {
-            adapter.changeDataSet(digitalAssets);
+            adapter.changeDataSet(assets);
         }
         return adapter;
     }
@@ -330,13 +319,10 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
 
     @Override
     public List<Asset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<Asset> digitalAssets = new ArrayList<>();
+        List<Asset> assets = new ArrayList<>();
         if (moduleManager != null) {
             try {
-//                digitalAssets = Data.getAllDigitalAssets(moduleManager);
-//                digitalAssets.addAll(Data.getAllPendingNegotiations(moduleManager));
-                //TODO get data
-
+                assets = dataManager.getAssets();
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
@@ -351,6 +337,6 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset>
                     Toast.LENGTH_SHORT).
                     show();
         }
-        return digitalAssets;
+        return assets;
     }
 }

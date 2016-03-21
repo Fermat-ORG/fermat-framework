@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fab_material_white">
+    tools:context="com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.HomeCardFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/dap_v3_wallet_asset_user_home_swipe_refresh"
@@ -59,4 +58,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

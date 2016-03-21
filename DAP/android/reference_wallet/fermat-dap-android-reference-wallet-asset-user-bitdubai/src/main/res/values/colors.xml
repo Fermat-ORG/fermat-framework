@@ -51,5 +51,6 @@
     <color name="card_text_highlight">#006064</color>
     <color name="card_text">#353535</color>
     <color name="card_background">#ffffff</color>
+    <color name="card_background_back">#ECECEC</color>
     <!-- -->
 </resources>

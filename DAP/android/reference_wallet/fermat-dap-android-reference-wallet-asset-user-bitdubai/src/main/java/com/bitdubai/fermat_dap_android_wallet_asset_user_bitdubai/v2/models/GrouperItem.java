@@ -58,6 +58,16 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
         return initiallyExpanded;
     }
 
+    @Override
+    public int getChildCount() {
+        return 0;
+    }
+
+    @Override
+    public Object getItem() {
+        return null;
+    }
+
     public void setInitiallyExpanded(boolean initiallyExpanded) {
         this.initiallyExpanded = initiallyExpanded;
     }

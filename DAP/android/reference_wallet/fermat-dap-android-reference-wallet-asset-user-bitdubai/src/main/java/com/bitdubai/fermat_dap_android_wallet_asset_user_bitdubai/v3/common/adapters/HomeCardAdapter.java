@@ -34,7 +34,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.dap_wallet_asset_user_asset_item;
+        return R.layout.prueba;
     }
 
     @Override

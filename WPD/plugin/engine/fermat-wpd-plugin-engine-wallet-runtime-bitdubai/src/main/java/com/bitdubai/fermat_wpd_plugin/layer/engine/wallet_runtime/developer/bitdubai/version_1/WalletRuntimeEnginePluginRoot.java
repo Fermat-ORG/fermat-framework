@@ -1621,13 +1621,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Activity: Home
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_USER_V2_HOME);
-        runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_V2_HOME.getCode());
+        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
+        runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_V3_HOME.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_USER_V2_HOME);
+        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
@@ -1645,9 +1645,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_V2_HOME.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_V2_HOME.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_V2_HOME.getKey());
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey());
 //TODO en Deshuso por ahora
 //        // Activity: History
 //        runtimeActivity = new Activity();
