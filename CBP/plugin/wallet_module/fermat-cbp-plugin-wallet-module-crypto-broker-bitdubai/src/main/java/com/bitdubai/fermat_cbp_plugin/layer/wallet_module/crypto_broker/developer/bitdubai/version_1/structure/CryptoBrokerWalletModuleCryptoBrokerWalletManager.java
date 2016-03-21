@@ -808,10 +808,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
+    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall, Platforms platform) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
         //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
         publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
-        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting();
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting(platform);
     }
 
     @Override
@@ -1063,12 +1063,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException {
-        customerBrokerSaleNegotiationManager.createNewBankAccount(bankAccount);
+        //customerBrokerSaleNegotiationManager.createNewBankAccount(bankAccount);
     }
 
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
-        customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
+        //customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
     }
 
     @Override //TODO BNK

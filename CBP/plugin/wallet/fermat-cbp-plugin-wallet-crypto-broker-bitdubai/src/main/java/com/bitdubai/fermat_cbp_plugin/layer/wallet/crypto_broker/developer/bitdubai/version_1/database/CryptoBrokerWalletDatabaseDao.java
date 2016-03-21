@@ -684,15 +684,14 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException {
         DatabaseTransaction transaction = database.newTransaction();
 
-        //TODO:Solo para Testing y prueba luego eliminar
-        cryptoBrokerWalletAssociatedSetting.setId(UUID.randomUUID());
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
+
         try {
             DatabaseTableRecord Record = getCryptoBrokerWalletAssociatedSettingRecord(cryptoBrokerWalletAssociatedSetting);
 
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(cryptoBrokerWalletAssociatedSetting.getId().toString());
+            filter.setValue(cryptoBrokerWalletAssociatedSetting.getBankAccount());
             filter.setColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
@@ -711,15 +710,21 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         }
     }
 
-    public void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException {
+    public void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
 
         try {
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 
-            for (DatabaseTableRecord record : records)
-                table.deleteRecord(record);
+            for (DatabaseTableRecord record : records) {
+                if(
+                    record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME).equalsIgnoreCase(platform.getCode()) ||
+                    platform == null
+                ){
+                    table.deleteRecord(record);
+                }
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantClearCryptoBrokerWalletSettingException("Cant load table to memory", e, "", "");

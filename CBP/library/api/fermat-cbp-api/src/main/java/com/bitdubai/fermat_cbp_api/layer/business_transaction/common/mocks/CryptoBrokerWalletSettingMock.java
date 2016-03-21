@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
@@ -37,7 +38,7 @@ public class CryptoBrokerWalletSettingMock implements CryptoBrokerWalletSetting 
     }
 
     @Override
-    public void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException {
+    public void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException {
 
     }
 
