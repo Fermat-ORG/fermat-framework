@@ -4,6 +4,7 @@ import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -164,7 +165,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Manager
      */
-    BroadcastManager broadcastManager;
+    private BroadcastManager broadcastManager;
     /**
      * WizardTypes
      */
@@ -216,6 +217,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Listeners
      */
     private RuntimeStructureManager runtimeStructureManager;
+    private NetworkStateReceiver networkStateReceiver;
 
 
     /**
@@ -249,13 +251,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
         runtimeStructureManager = new RuntimeStructureManager(this);
 
 
-//        try {
-//            networkStateReceiver = new NetworkStateReceiver();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//
-//        }
+        try {
+            networkStateReceiver = NetworkStateReceiver.getInstance();
+            networkStateReceiver.addListener(this);
+            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -311,11 +313,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }catch (Exception e){
                 e.printStackTrace();
             }
-//            if(networkStateReceiver!=null) {
-//                unregisterReceiver(networkStateReceiver);
-//                networkStateReceiver.removeListener(this);
-//            }
-       //     networkStateReceiver.removeListener(this);
+            if(networkStateReceiver!=null) {
+                unregisterReceiver(networkStateReceiver);
+                networkStateReceiver.removeListener(this);
+            }
+            networkStateReceiver.removeListener(this);
 
 
             /**
@@ -379,6 +381,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -683,6 +686,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
 
     }
@@ -846,6 +850,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+            handleExceptionAndRestart();
         }
     }
 
@@ -869,13 +874,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            networkStateReceiver = NetworkStateReceiver.getInstance();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
+        try {
+            networkStateReceiver = NetworkStateReceiver.getInstance();
+            networkStateReceiver.addListener(this);
+            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -1292,6 +1297,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
             makeText(getApplicationContext(), "Oooops! recovering from system error", LENGTH_SHORT).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -1332,6 +1338,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             return createOrOpenApp(fermatApp);
         }catch (Exception e){
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
         return null;
     }
@@ -1656,7 +1663,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 // finally change the color
                 try {
                     requestWindowFeature(Window.FEATURE_NO_TITLE);
-                }catch (Exception e){
+                }catch (Exception ignored){
 
                 }
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -1751,7 +1758,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("APP", "requestCode" + String.valueOf(requestCode));
-        Log.i("APP","resultcode"+ String.valueOf(resultCode));
+        Log.i("APP", "resultcode" + String.valueOf(resultCode));
         Log.i("APP", "data" + String.valueOf(data));
         switch(requestCode) {
             case (TASK_MANAGER_STACK) : {
@@ -1766,6 +1773,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 break;
             }
         }
+    }
+
+    protected void handleExceptionAndRestart(){
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
     }
 
 
