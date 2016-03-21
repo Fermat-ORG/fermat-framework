@@ -52,7 +52,7 @@ public class CryptoCustomerIdentityInfoAdapter
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
         RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
-        roundedDrawable.setCornerRadius(imageBitmap.getHeight());
+        roundedDrawable.setCornerRadius(95);
         holder.getImage().setImageDrawable(roundedDrawable);
 
 
