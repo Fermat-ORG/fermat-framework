@@ -1027,7 +1027,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             }
 
 
-
         } catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();
