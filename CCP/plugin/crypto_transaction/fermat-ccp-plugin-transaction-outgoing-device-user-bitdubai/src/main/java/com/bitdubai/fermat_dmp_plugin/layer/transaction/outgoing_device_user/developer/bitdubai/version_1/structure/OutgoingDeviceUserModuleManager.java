@@ -63,7 +63,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
     //hay q ver si no puede completar la transaccion de avisar con una notificacion
     @Override
-    public void sendToWallet(UUID trxId,
+    public void sendToWallet(
                              String txHash,
                              long cryptoAmount,
                              String notes,

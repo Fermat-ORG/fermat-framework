@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 public interface OutgoingDeviceUser extends Serializable {
 
-    void sendToWallet(UUID trxId,
+    void sendToWallet(
               String txHash,
               long cryptoAmount,
               String notes,

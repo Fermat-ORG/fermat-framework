@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -36,12 +37,16 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalc
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingIntraActorCantCancelTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUser;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
@@ -164,6 +169,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
     private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+    private final OutgoingDeviceUser outgoingDeviceUser;
 
 
     public LossProtectedWalletModuleManager(final BitcoinLossProtectedWalletManager bitcoinWalletManager          ,
@@ -178,7 +184,8 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
                                            final WalletContactsManager          walletContactsManager ,
-                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter) {
+                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
+                                            final OutgoingDeviceUser outgoingDeviceUser) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -193,6 +200,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
+        this.outgoingDeviceUser = outgoingDeviceUser;
 
     }
 
@@ -1027,8 +1035,23 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     public void sendToWallet(long cryptoAmount, String walletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
 
-        BitcoinWalletSender bitcoinWalletSender = new BitcoinWalletSender(cryptoAmount,walletPublicKey,sendingWallet,receivingWallet,notes,blockchainNetworkType,deliveredToActorType);
-            bitcoinWalletSender.sendBtcToWallet();
+        try {
+            outgoingDeviceUser.sendToWallet("IS THIS HAS GOING TO BE NULL OR NOT?",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,walletPublicKey,"THIS PUBLIC KEY IS NEEDED AT THIS POINT, VERY IMPORTANT",blockchainNetworkType);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        } catch (CantCalculateBalanceException e) {
+            e.printStackTrace();
+        } catch (CantRegisterDebitException e) {
+            e.printStackTrace();
+        } catch (CantRegisterCreditException e) {
+            e.printStackTrace();
+        } catch (CantFindTransactionException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        } catch (OutgoingIntraActorCantCancelTransactionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
