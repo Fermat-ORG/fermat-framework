@@ -320,6 +320,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             if (businessTransactionMetadata.getContractHash() != null) {
                 transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
+                final Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
                 switch (businessTransactionMetadata.getType()) {
                     case ACK_CONFIRM_MESSAGE:
                         //TODO: verificar si es necesario disparar un evento a las business transactions para hacer ACK de la confirmacion del msj
@@ -327,24 +328,24 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                         break;
                     case CONFIRM_MESSAGE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
-                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                        if (remoteBusinessTransaction == Plugins.OPEN_CONTRACT) {
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
                         } else {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         }
                         break;
                     case CONTRACT_STATUS_UPDATE:
                         System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
-                        if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.OPEN_CONTRACT) {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        if (remoteBusinessTransaction == Plugins.OPEN_CONTRACT) {
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         } else {
-                            launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         }
                         break;
                     case TRANSACTION_HASH:
 
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
-                        launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
+                        launchNotification(remoteBusinessTransaction, EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
                         break;
                 }
             }

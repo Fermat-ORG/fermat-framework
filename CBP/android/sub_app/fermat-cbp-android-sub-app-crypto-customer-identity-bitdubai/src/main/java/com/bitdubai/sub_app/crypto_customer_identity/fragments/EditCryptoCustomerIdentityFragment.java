@@ -10,9 +10,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -102,14 +109,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        TextView botonU = (TextView) layout.findViewById(R.id.update_crypto_customer_button);
-        botonU.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actualizable = false;
-                editIdentityInfoInBackDevice();
-            }
-        });
+
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
@@ -125,7 +125,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             profileImage = identityInfo.getProfileImage();
             ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
             BitmapDrawable bmd = new BitmapDrawable(bytes);
-            mBrokerImage.setImageBitmap(bmd.getBitmap());
+            mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bmd.getBitmap()));
         }
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -160,6 +160,31 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             }
         });
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        configureToolbar();
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cci_action_bar_gradient_colors));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.crypto_customer_identity_new_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_create) {
+            editIdentityInfoInBackDevice();
+        }
+        return true;
     }
 
     @Override
@@ -186,7 +211,11 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment i
             }
 
             if (pictureView != null && cryptoCustomerBitmap != null) {
-                pictureView.setImageBitmap(cryptoCustomerBitmap);
+                //pictureView.setImageBitmap(cryptoCustomerBitmap);
+
+                RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
+                roundedDrawable.setCornerRadius(pictureView.getHeight());
+                pictureView.setImageDrawable(roundedDrawable);
             }
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

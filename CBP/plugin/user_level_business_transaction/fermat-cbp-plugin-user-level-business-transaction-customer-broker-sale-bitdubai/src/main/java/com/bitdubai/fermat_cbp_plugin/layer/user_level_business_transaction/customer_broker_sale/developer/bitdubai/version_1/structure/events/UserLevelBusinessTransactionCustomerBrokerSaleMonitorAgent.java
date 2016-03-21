@@ -101,6 +101,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
     public final int SLEEP_TIME = 5000;
     public final int DELAY_HOURS = 2;
+    public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
+    private long lastNotificationTime = 0;
     private BigDecimal priceReference = null;
     private BigDecimal amount = null;
     private String bankAccount = null;
@@ -317,8 +319,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                             //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
-                            final String brokerWalletPublicKey = "crypto_broker_wallet";
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+
+                            if(new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                                lastNotificationTime = new Date().getTime();
+
+                                final String brokerWalletPublicKey = "crypto_broker_wallet";
+                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            }
                         }
                     }
                 }
@@ -425,8 +432,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                             //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
-                            final String brokerWalletPublicKey = "crypto_broker_wallet";
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,brokerWalletPublicKey ,CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+
+                            if(new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                                lastNotificationTime = new Date().getTime();
+
+                                final String brokerWalletPublicKey = "crypto_broker_wallet";
+                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            }
                         }
                     }
                 }
