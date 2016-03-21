@@ -401,7 +401,7 @@ public class OpenContractMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
                         System.out.println("OPEN_CONTRACT - 2 Hash to COMPARE: " + contractHash);
-                        ContractType type = openContractBusinessTransactionDao.getContractType(contractHash);
+                        //ContractType type = openContractBusinessTransactionDao.getContractType(contractHash);
                         System.out.println("INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation");
                         if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
                             negotiationId = businessTransactionMetadata.getNegotiationId();
