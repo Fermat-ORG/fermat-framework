@@ -436,7 +436,7 @@ public class OpenContractMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
                         System.out.println("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation");
-                        //if (openContractBusinessTransactionDao.isContractHashSentConfirmation(contractHash)) {
+                        if (openContractBusinessTransactionDao.isPendingConfirm(contractHash)) {
                             openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.PENDING_RESPONSE);
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             final UUID transactionId = businessTransactionMetadata.getTransactionId();
@@ -450,7 +450,7 @@ public class OpenContractMonitorAgent implements
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getSenderType(),
                                     businessTransactionMetadata.getReceiverType());*/
-                        //}
+                        }
                     }
 
                 }
