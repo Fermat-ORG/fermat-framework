@@ -95,14 +95,13 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction
         );
         try {
-            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
 
-        } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendBusinessTransactionHashException(e,
-                    "Cannot persists the contract hash in table",
-                    "database corrupted");
+            /*businessTransactionMetadata.confirmRead();
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+            */
+
         } catch (Exception e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",
