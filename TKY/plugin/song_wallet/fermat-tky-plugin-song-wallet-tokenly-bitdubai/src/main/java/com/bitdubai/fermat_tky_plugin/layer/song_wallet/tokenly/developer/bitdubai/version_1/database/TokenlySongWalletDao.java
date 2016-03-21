@@ -27,6 +27,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetStoragePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
 import java.sql.Date;
@@ -228,7 +229,7 @@ public class TokenlySongWalletDao {
 
     }
 
-    private DatabaseTableRecord getDatabaseTablerecordFromWalletSong(
+    private DatabaseTableRecord getDatabaseTableRecordFromWalletSong(
             DatabaseTableRecord databaseTableRecord,
             WalletSong walletSong){
         /**
@@ -424,7 +425,7 @@ public class TokenlySongWalletDao {
             DatabaseTable databaseTable = getDatabaseTable(
                     TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
-            databaseTableRecord = getDatabaseTablerecordFromWalletSong(
+            databaseTableRecord = getDatabaseTableRecordFromWalletSong(
                     databaseTableRecord,
                     walletSong);
             databaseTableRecord.setStringValue(
@@ -737,6 +738,98 @@ public class TokenlySongWalletDao {
                     e,
                     "Updating storage path in database",
                     "Cannot update record");
+        }
+    }
+
+    /**
+     * This method persist the result of a synchronize process.
+     * @param username
+     * @param deviceSongs
+     * @param tokenlySongs
+     * @throws CantPersistSynchronizeDateException
+     */
+    public void registerSynchronizeProcess(
+            String username,
+            int deviceSongs,
+            int tokenlySongs) throws
+            CantPersistSynchronizeDateException {
+        try{
+            openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TOKENLY_USERNAME_COLUMN_NAME,
+                    username,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            //Get the actual timestamp
+            Long timestamp = System.currentTimeMillis();
+            if(records.isEmpty()){
+                //There's no synchronize process registered in database for this username.
+                databaseTableRecord = databaseTable.getEmptyRecord();
+                //Assign Sync Id
+                UUID syncId = UUID.randomUUID();
+                databaseTableRecord.setUUIDValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_SYNC_ID_COLUMN_NAME,
+                        syncId);
+                //Device songs
+                databaseTableRecord.setIntegerValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_DEVICE_SONGS_COLUMN_NAME,
+                        deviceSongs);
+                //Tokenly songs
+                databaseTableRecord.setIntegerValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TOKENLY_SONGS_COLUMN_NAME,
+                        tokenlySongs);
+                //Timestamp
+                databaseTableRecord.setLongValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TIMESTAMP,
+                        timestamp);
+            } else{
+                //First I'll check if there's a wrong result in result set.
+                checkDatabaseRecords(records);
+                databaseTableRecord = records.get(0);
+                //Device songs
+                databaseTableRecord.setIntegerValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_DEVICE_SONGS_COLUMN_NAME,
+                        deviceSongs);
+                //Tokenly songs
+                databaseTableRecord.setIntegerValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TOKENLY_SONGS_COLUMN_NAME,
+                        tokenlySongs);
+                //Timestamp
+                databaseTableRecord.setLongValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TIMESTAMP,
+                        timestamp);
+                //Update table
+                databaseTable.updateRecord(databaseTableRecord);
+            }
+        } catch (CantCreateDatabaseException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Cannot open the database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Cannot open the database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Unexpected result in database result set");
+        } catch (CantUpdateRecordException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Cannot update the database");
         }
     }
 

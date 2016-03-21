@@ -24,11 +24,13 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetStoragePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/03/16.
@@ -55,6 +57,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     ErrorManager errorManager;
 
+    //DEFAULT VALUES
+    /**
+     * This represents the time between synchronize process.
+     * In this version is fixed to 3
+     */
+    private final long TIME_BETWEEN_SYNC = TimeUnit.DAYS.toMillis(3);
+
     /**
      * Constructor with parameters
      * @param tokenlySongWalletDao
@@ -67,6 +76,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
         this.tokenlySongWalletDao = tokenlySongWalletDao;
         this.tokenlyWalletSongVault = tokenlyWalletSongVault;
         this.tokenlyApiManager = tokenlyApiManager;
+        this.errorManager = errorManager;
     }
     //TODO: implement this methods
     /**
@@ -177,6 +187,15 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                             e);
                 }
             }
+            /**
+             * I'll persist the synchronize date, until when the toDownloadSongList is empty,
+             * because to avoid automatic synchronize process when a synchronize request is done in
+             * recent dates.
+             */
+            this.tokenlySongWalletDao.registerSynchronizeProcess(
+                    tokenlyUsername,
+                    databaseSongsId.size(),
+                    toDownloadSongList.size());
         } catch (CantGetAlbumException e) {
             throw new CantSynchronizeWithExternalAPIException(
                     e,
@@ -187,6 +206,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     e,
                     "Synchronizing songs by user request",
                     "Cannot get the song list");
+        } catch (CantPersistSynchronizeDateException e) {
+            throw new CantSynchronizeWithExternalAPIException(
+                    e,
+                    "Synchronizing songs by user request",
+                    "Cannot persist the timestamp in database");
         }
 
     }
