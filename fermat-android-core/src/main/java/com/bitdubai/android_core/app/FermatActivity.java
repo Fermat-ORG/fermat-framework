@@ -1444,10 +1444,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
         linearLayout.setVisibility(View.GONE);
     }
 
-    public void notificateProgressBroadcast(FermatBundle bundle) {
+    public int notificateProgressBroadcast(FermatBundle bundle) {
+        int id = 0;
         try {
             if(mNotificationServiceConnected){
-                notificationService.notificateProgress(bundle);
+                id = notificationService.notificateProgress(bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback
@@ -1458,6 +1459,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }catch (Exception e){
             e.printStackTrace();
         }
+        return id;
     }
 
     public void notificateBroadcast(String appPublicKey,String code){
