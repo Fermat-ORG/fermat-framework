@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
@@ -33,6 +34,8 @@ public class NotificationService extends Service {
     private final IBinder mBinder = new LocalBinder();
     // map from AppPublicKey to notificationId
     private Map<String,Integer> lstNotifications;
+
+    private Map<Integer,NotificationCompat.Builder> mapNotifications;
     private int notificationIdCount;
     //for progress notifications
     private NotificationManager mNotifyManager;
@@ -147,26 +150,44 @@ public class NotificationService extends Service {
     }
 
 
-    public void notificateProgress(FermatBundle bundle) {
+    public int notificateProgress(FermatBundle bundle) {
         try {
             int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
+            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getInt(Broadcaster.PUBLISH_ID):0;
+            String progressText = (bundle.contains(Broadcaster.PROGRESS_BAR_TEXT)) ? bundle.getString(Broadcaster.PROGRESS_BAR_TEXT):null;
+
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
             if(progress==0 || progress==100){
                 mNotifyManager.cancel(87);
             }else {
-                mBuilder = new NotificationCompat.Builder(this);
-                mBuilder.setContentTitle("Downloading blockchain blocks")
-                        .setContentText("Download in progress")
-                        .setSmallIcon(R.drawable.fermat_logo_310_x_310);
 
-                mBuilder.setProgress(100, progress, false);
 // Displays the progress bar for the first time.
-                mNotifyManager.notify(87, mBuilder.build());
+
+                if(publishId==0){
+                    mBuilder = new NotificationCompat.Builder(this);
+                    mBuilder.setContentTitle((progressText!=null)? progressText:"Downloading something...")
+                            .setContentText("Download in progress")
+                            .setSmallIcon(R.drawable.fermat_logo_310_x_310);
+                    Random random = new Random();
+                    publishId = random.nextInt();
+                    mapNotifications.put(publishId,mBuilder);
+                }else {
+                    if(mapNotifications.containsKey(publishId))
+                        mBuilder = mapNotifications.get(publishId);
+                    else
+                        Log.i(LOG_TAG,"Error, Notification id not found");
+                        return 0;
+                }
+                mBuilder.setProgress(100, progress, false);
+
+                mNotifyManager.notify(publishId, mBuilder.build());
+                return publishId;
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     public void notificateProgress(final String code,int progress){
