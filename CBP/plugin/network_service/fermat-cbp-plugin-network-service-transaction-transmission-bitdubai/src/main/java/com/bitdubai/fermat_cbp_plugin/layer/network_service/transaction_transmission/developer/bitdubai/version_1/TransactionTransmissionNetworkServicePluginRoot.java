@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
@@ -317,7 +318,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
         try {
             BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
             if (businessTransactionMetadata.getContractHash() != null) {
-                //transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
                 switch (businessTransactionMetadata.getType()) {
                     case ACK_CONFIRM_MESSAGE:
@@ -341,6 +342,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                         }
                         break;
                     case TRANSACTION_HASH:
+
                         System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
                         launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction(), EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
                         break;
@@ -502,6 +504,15 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(FermatMessage fermatMessage) {
+        Gson gson = new Gson();
+        BusinessTransactionMetadata businessTransactionMetadata =gson.fromJson(fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
+        try{
+            businessTransactionMetadata.confirmRead();
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+        }catch (CantInsertRecordDataBaseException e){
+            //TODO: atajar bien el la excepcion
+        }
+
 
     }
 

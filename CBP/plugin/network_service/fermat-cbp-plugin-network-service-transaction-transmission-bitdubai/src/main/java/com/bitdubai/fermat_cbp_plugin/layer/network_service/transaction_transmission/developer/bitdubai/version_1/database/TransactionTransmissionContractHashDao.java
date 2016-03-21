@@ -332,15 +332,15 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            /*DatabaseTable databaseTable = getDatabaseTable();
+            DatabaseTable databaseTable = getDatabaseTable();
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
             databaseTable.addUUIDFilter(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId(), DatabaseFilterType.EQUAL);
             DatabaseTransaction transaction = getDataBase().newTransaction();
             transaction.addRecordToUpdate(databaseTable,entityRecord);
-            getDataBase().executeTransaction(transaction);*/
+            getDataBase().executeTransaction(transaction);
 
-            DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+            /*DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
             DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
@@ -350,12 +350,12 @@ public class TransactionTransmissionContractHashDao {
 
             /*
              * 2.- Create a new transaction and execute
-*/
+
             DatabaseTransaction transaction = getDataBase().newTransaction();
             getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
-
+*/
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
