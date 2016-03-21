@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -352,7 +353,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantGetCryptoBrokerWalletSettingException
      * @throws CantClearCryptoBrokerWalletSettingException
      */
-    void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall)
+    void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall, Platforms platform)
             throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException;
 
     /**

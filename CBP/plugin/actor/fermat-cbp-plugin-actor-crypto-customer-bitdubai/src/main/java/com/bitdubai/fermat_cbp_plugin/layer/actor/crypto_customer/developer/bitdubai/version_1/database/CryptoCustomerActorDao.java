@@ -91,8 +91,6 @@ public class CryptoCustomerActorDao {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
-
-            //new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
