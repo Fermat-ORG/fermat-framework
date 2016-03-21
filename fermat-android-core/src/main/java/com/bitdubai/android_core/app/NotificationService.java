@@ -153,8 +153,8 @@ public class NotificationService extends Service {
     public int notificateProgress(FermatBundle bundle) {
         try {
             int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
-            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getSerializable(Broadcaster.PUBLISH_ID):0;
-            String progressText = (String) bundle.getSerializable(Broadcaster.PROGRESS_BAR_TEXT);
+            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getInt(Broadcaster.PUBLISH_ID):0;
+            String progressText = (bundle.contains(Broadcaster.PROGRESS_BAR_TEXT)) ? bundle.getString(Broadcaster.PROGRESS_BAR_TEXT):null;
 
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
