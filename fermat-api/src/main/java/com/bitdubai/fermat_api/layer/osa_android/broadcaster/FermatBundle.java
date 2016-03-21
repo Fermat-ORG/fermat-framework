@@ -30,5 +30,9 @@ public class FermatBundle {
         }
     }
 
+    public boolean contains(String key){
+        return extras.containsKey(key);
+    }
+
 
 }
