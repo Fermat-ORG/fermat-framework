@@ -4,7 +4,6 @@ import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -55,7 +54,6 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
-import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
@@ -145,7 +143,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         WizardConfiguration,
         PaintActivityFeatures,
         NavigationView.OnNavigationItemSelectedListener,
-        NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
         FermatActivityManager,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,
@@ -187,10 +184,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private final Handler mDrawerActionHandler = new Handler();
     private final Handler refreshHandler = new Handler();
-    /**
-     * Receivers
-     */
-    //private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -217,7 +210,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Listeners
      */
     private RuntimeStructureManager runtimeStructureManager;
-    private NetworkStateReceiver networkStateReceiver;
 
 
     /**
@@ -249,15 +241,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         runtimeStructureManager = new RuntimeStructureManager(this);
-
-
-        try {
-            networkStateReceiver = NetworkStateReceiver.getInstance();
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        }catch (Exception e){
-
-        }
 
     }
 
@@ -313,12 +296,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }catch (Exception e){
                 e.printStackTrace();
             }
-            if(networkStateReceiver!=null) {
-                unregisterReceiver(networkStateReceiver);
-                networkStateReceiver.removeListener(this);
-            }
-            networkStateReceiver.removeListener(this);
-
 
             /**
              * Service
@@ -872,13 +849,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            networkStateReceiver = NetworkStateReceiver.getInstance();
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -1689,28 +1659,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     //TODO: to remove
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
-
-
-    @Override
-    public void networkAvailable() {
-        Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
-        try {
-            //getCloudClient().setNetworkState(true);
-        }catch (Exception e){
-            //e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void networkUnavailable() {
-        Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
-        try{
-            //getCloudClient().setNetworkState(false);
-        }catch (Exception e){
-          //  e.printStackTrace();
-        }
-    }
-
 
     /**
      * Report error

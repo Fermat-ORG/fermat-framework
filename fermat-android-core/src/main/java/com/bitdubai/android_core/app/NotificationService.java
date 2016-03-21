@@ -166,7 +166,7 @@ public class NotificationService extends Service {
 
                 if(publishId==0){
                     mBuilder = new NotificationCompat.Builder(this);
-                    mBuilder.setContentTitle((progressText!=null || !progressText.equals(""))? progressText:"Downloading something...")
+                    mBuilder.setContentTitle((progressText!=null)? progressText:"Downloading something...")
                             .setContentText("Download in progress")
                             .setSmallIcon(R.drawable.fermat_logo_310_x_310);
                     Random random = new Random();
