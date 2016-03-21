@@ -71,9 +71,10 @@ public interface FanWalletModule extends FermatManager{
      * This method starts the synchronize songs process.
      * In this case, the synchronize process is started by the user.
      * This method doesn't check the last update field.
+     * @param username
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongsByUser() throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongsByUser(String username) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method deletes a song from the wallet and the device storage.
