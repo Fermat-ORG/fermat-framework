@@ -49,7 +49,7 @@ public class BlockchainDownloadProgress {
         this.pendingBlocks = pendingBlocks;
 
         downloadedBlocks = totalBlocks - pendingBlocks;
-        progress = (totalBlocks > 0) ? ((pendingBlocks * 100) / totalBlocks) : 100;
+        progress = (totalBlocks > 0) ? ((downloadedBlocks * 100) / totalBlocks) : 100;
 
     }
 
@@ -63,5 +63,17 @@ public class BlockchainDownloadProgress {
 
     public void setDownloader(String downloader) {
         this.downloader = downloader;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockchainDownloadProgress{" +
+                "blockchainNetworkType=" + blockchainNetworkType +
+                ", pendingBlocks=" + pendingBlocks +
+                ", totalBlocks=" + totalBlocks +
+                ", downloadedBlocks=" + downloadedBlocks +
+                ", progress=" + progress +
+                ", downloader='" + downloader + '\'' +
+                '}';
     }
 }
