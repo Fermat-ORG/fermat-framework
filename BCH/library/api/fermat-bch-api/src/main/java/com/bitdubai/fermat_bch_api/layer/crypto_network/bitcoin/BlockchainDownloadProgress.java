@@ -49,6 +49,10 @@ public class BlockchainDownloadProgress {
         this.pendingBlocks = pendingBlocks;
 
         downloadedBlocks = totalBlocks - pendingBlocks;
+
+        if (downloadedBlocks<0)
+            downloadedBlocks = 0;
+
         progress = (totalBlocks > 0) ? ((downloadedBlocks * 100) / totalBlocks) : 100;
 
     }
