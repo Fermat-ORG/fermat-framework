@@ -184,7 +184,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 1000; //2000;
+        public final int SLEEP_TIME = 1500; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         public final String BROADCAST_CODE = "13";
         int discoverIteration = 0;
@@ -320,10 +320,10 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Check if pending messages to submit
                  */
-                List<Message> createdMessagesList = chatMiddlewareDatabaseDao.getCreatedMessages();
-                for (Message createdMessage : createdMessagesList) {
-                    sendMessage(createdMessage);
-                }
+//                List<Message> createdMessagesList = chatMiddlewareDatabaseDao.getCreatedMessages();
+//                for (Message createdMessage : createdMessagesList) {
+//                    sendMessage(createdMessage);
+//                }
 
                 /**
                  * Check if pending events in database
@@ -373,16 +373,16 @@ public class ChatMiddlewareMonitorAgent implements
                         "Executing Monitor Agent",
                         "Cannot get the Pending event list"
                 );
-            } catch (CantGetMessageException e) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        e);
-                throw new CantSendChatMessageException(
-                        e,
-                        "Executing Monitor Agent",
-                        "Cannot get the message"
-                );
+//            } catch (CantGetMessageException e) {
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.CHAT_MIDDLEWARE,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                        e);
+//                throw new CantSendChatMessageException(
+//                        e,
+//                        "Executing Monitor Agent",
+//                        "Cannot get the message"
+//                );
             } catch (CantGetPendingTransactionException e) {
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_MIDDLEWARE,
