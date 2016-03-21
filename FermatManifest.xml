@@ -4963,6 +4963,103 @@
             </steps>
         </process>
 
+        <process platform="DAP" name="Test Process" description="Describes the process of redeeming an issued asset to a redeem point" previous="Asset Distribution">
+            <steps>
+                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Asset User Wallet" description="Starts by opening the Asset User Wallet with positive balance of an asset" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Asset User Identity" description="Asset User Identity is created and User Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset User">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Redeem Point Selection" description="The Asset User selects the previously connected redeem point to redeeem to" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Asset Redemption" description="We generate a Bitcoin Transaction using the genesis Transaction of this asset" platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Asset Redemption" description="The Digital Asset Metadata information containing asset and asset transaction is sent to the Redeem Point." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Asset Redemption" description="The digital asset metadata is received by the Redeem Point" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Asset Redemption" description="Redeem Points validated metadata by requesting to BCH the Genesis Transaction op_return. Is compared with hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Redeem Point Redemption">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Asset Redemption" description="The contract info is validated and the assets is from an Issuer we redeem from. OK or fail response is sent back to issuer" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Asset Redemption" description="If redeem point is ok, we broadcast the previously generated transaction to the Genesis Address. If not, we cancel the transaction and free the founds." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                        <step id="21" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the debit in the User wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                        <step id="20" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="11" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the credit in the Redeem point wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Redeem Point Wallet">
+                    <next>
+                        <step id="12" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="12" type="activity" title="Asset Redemption" description="Since Issuer shares public Key, Issuer also received the transaction and update stats." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Issuer Redemption">
+                    <next>
+                        <step id="13" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="13" type="activity" title="Asset Redemption" description="Asset is recicled and available again in the Issuer Wallet to restart the process" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
+                    <next>
+                        <step id="19" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="19" type="activity" title="End" description="End of process." platform="DAP" superlayer="" layer="" name="">
+                    <next>
+                    </next>
+                </step>
+                <step id="20" type="activity" title="Process Interrupted" description="Transaction is rollbacked, and Asset is available again in the Issuer Wallet." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="21" type="activity" title="Asset not accepted" description="Due to poor network or invalidate contract, the asset is not accepted and rollbacked." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
+        </process>
+
         <process platform="CBP" name="Crypto Broker Reference Wallet Installation" description="Wallet Store installation procedure for the Crypto Broker Reference Wallet" previous="">
             <steps>
                 <step id="0" title="User selects the Broker Wallet on the Wallet Store" description="The user enters the Wallet Store and selects the Crypto Broker Reference Wallet to install it" type="start" component="" name="Wallet Store" layer="Sub App" platform="WPD" superlayer="">
