@@ -1033,6 +1033,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
+    public CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException {
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId);
+    }
+
+
+    @Override
     public CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException {
         return new CryptoCustomerWalletProviderSettingImpl();
     }

@@ -62,6 +62,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
@@ -223,6 +224,14 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @return a Map of name/provider reference pairs
      */
     Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException;
+
+    /**
+     * Returns a CER provider given its providerId
+     *
+     * @param providerId the provider's ID
+     * @return a CurrencyExchangeRateProviderManager reference
+     */
+    CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException;
 
     CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException;
 
