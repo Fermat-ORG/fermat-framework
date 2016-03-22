@@ -10,9 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -24,21 +23,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
@@ -50,9 +44,9 @@ import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUs
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -62,7 +56,10 @@ import static android.widget.Toast.makeText;
  * A simple {@link Fragment} subclass.
  */
 public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
-    private static final String TAG = "CreateBrokerIdentity";
+
+
+    private static final String TAG = "CreateIdentity";
+    private static int num=1;
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -81,6 +78,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
+    private RelativeLayout relativeLayout;
     private Menu menuHelp;
     private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
@@ -88,6 +86,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     SettingsManager<IntraUserIdentitySettings> settingsManager;
     IntraUserIdentitySettings intraUserIdentitySettings = null;
     private boolean updateProfileImage = false;
+    private boolean contextMenuInUse = false;
+
+    private Handler handler;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -97,6 +98,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        handler = new Handler();
 
         try {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
@@ -167,16 +170,20 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        mBrokerImage = (ImageView) layout.findViewById(R.id.img_photo);
+        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        Log.i("APP-Mati", "fragmentoIdenttity"+TAG+this.hashCode());
+
+
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
+        registerForContextMenu(mBrokerImage);
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
-                registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
             }
         });
@@ -256,8 +263,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            contextMenuInUse = true;
             Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
 
@@ -272,9 +280,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             brokerImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
+                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -283,10 +292,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                     break;
             }
 
-            if (pictureView != null && imageBitmap != null)
-                //pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
-                pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+//            final Bitmap finalImageBitmap = imageBitmap;
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mBrokerImage != null && finalImageBitmap != null) {
+////                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), finalImageBitmap));
+//                        mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), finalImageBitmap));
+//                    }
+//                }
+//            });
+
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -301,13 +319,17 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_CAMERA:
-                dispatchTakePictureIntent();
-                break;
-            case CONTEXT_MENU_GALLERY:
-                loadImageFromGallery();
-                break;
+        if(!contextMenuInUse) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_CAMERA:
+                    dispatchTakePictureIntent();
+                    contextMenuInUse = true;
+                    return true;
+                case CONTEXT_MENU_GALLERY:
+                    loadImageFromGallery();
+                    contextMenuInUse = true;
+                    return true;
+            }
         }
         return super.onContextItemSelected(item);
     }

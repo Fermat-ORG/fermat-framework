@@ -94,7 +94,7 @@ public class CommunicationService extends Service{
         clients.remove(key);
     }
 
-    private String moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, Serializable[] parameters){
+    private String moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable[] parameters){
         Log.i(TAG,"Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
@@ -105,8 +105,16 @@ public class CommunicationService extends Service{
 
                 Method m = null;
                 Object s = null;
+
+                Class[] classes = new Class[parameters.length];
+                for (int pos=0;pos<parameters.length;pos++) {
+                    classes[pos] = parameters[pos].getClass();
+                    Log.i(TAG,"Parametro: "+ parameters[pos].getClass().getCanonicalName());
+                }
                 try {
-                    m = clazz.getMethod(method,null);
+                    if(classes.length>0) m = clazz.getMethod(method,null);
+                    else m = clazz.getMethod(method,classes);
+
                     Log.i(TAG,"Method: "+ m.getName());
                     Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
                     Log.i(TAG,"Method return type: "+ m.getReturnType());
