@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -65,6 +66,9 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
         IssuerRedemptionManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_ROUTER, plugin = Plugins.INCOMING_CRYPTO)
+    IncomingCryptoManager incomingCryptoManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
@@ -118,7 +122,6 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
     }
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    private IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -213,7 +216,7 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
         try {
             IssuerRedemptionDao issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
             IssuerRedemptionRecorderService issuerRedemptionRecorderService = new IssuerRedemptionRecorderService(issuerRedemptionDao, eventManager);
-            IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new IssuerRedemptionMonitorAgent(assetIssuerWalletManager, actorAssetIssuerManager, bitcoinNetworkManager, cryptoAddressBookManager, errorManager, pluginId, pluginDatabaseSystem, AssetVaultManager, issuerAppropriationManager, walletMiddlewareManager, assetTransmissionManager, actorAssetUserManager, actorAssetRedeemPointManager);
+            IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new IssuerRedemptionMonitorAgent(assetIssuerWalletManager, actorAssetIssuerManager, bitcoinNetworkManager, cryptoAddressBookManager, errorManager, pluginId, pluginDatabaseSystem, AssetVaultManager, issuerAppropriationManager, walletMiddlewareManager, assetTransmissionManager, actorAssetUserManager, actorAssetRedeemPointManager, incomingCryptoManager);
             try {
                 issuerRedemptionRecorderService.start();
                 issuerRedemptionMonitorAgent.start();
