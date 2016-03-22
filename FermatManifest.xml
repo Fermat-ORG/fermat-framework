@@ -7678,5 +7678,695 @@
 				</step>
 			</steps>
 		</process>
+		<process 
+		platform="TKY" 
+		name="Automatically sync songs with External System" 
+		description="A Tokenly wallet user enter to the song tab." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Enter the tab songs."
+			 description="The tokenly wallet user enter to the tab Songs"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user."
+			 description="The Fan Wallet Module requests information from the tokens associated with the identity of the user to the external system"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Check the last synchronization date."
+			 description="Check the date of the last synchronization. If this date is not recent (configurable time interval) proceed with synchronization"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user to external platform."
+			 description="Request Tokenly API the tokens associated with the Tokenly identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Request the tokens owned by the user to Tokenly music manager public API."
+			 description="Asks Tokenly public API (external) the information available of the associated tokens with the Tokenly identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Download the missing songs."
+			 description="Proceed to download the songs not present on the device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="Persist songs on device storage."
+			 description="Downloaded songs are persisted in the local storage."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to available."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="8" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="8"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The list of available songs is received and updates the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Sync songs manually with External System" 
+		description="A Tokenly wallet user request a synchronization with a external platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request a sync from tab songs."
+			 description="The user proceeds to request the synchronization list of songs"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user."
+			 description="The Fan Wallet Module requests information from the tokens associated with the identity of the user to the external system"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user to external platform."
+			 description="Request Tokenly API the tokens associated with the Tokenly identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request the tokens owned by the user to Tokenly music manager public API."
+			 description="Asks Tokenly public API (external) the information available of the associated tokens with the Tokenly identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Download the missing songs."
+			 description="Proceed to download the songs not present on the device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Persist songs on device storage."
+			 description="Downloaded songs are persisted in the local storage."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to available."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The list of available songs is received and updates the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Restore deleted song" 
+		description="The user wants to restore a deleted song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request to restore a deleted song."
+			 description="When pressing the list item that represents the song that is not available on the device"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the deleted song."
+			 description="Request to restore the deleted song to the Tokenly Song Wallet"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the song download URL."
+			 description="Request to the Tokenly API the download URL of the requested song"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request the song download URL to the Tokenly public API."
+			 description="Request to the public Tokenly API (external) the download URL"
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Download the requested song."
+			 description="Starts the process of downloading song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Persist songs on device storage."
+			 description="Downloaded songs are persisted in the local storage."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to available."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The view is updated with the new status of the song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Delete song" 
+		description="The user wants to delete a song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request to delete a song."
+			 description="The user makes a deleting request in the view element that represents the song to delete."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request to delete a song."
+			 description="Performs the request to delete the song from the device storage"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Requesto to delete a song from device storage."
+			 description="Check that the song is available and proceeds to request the song to be deleted"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Delete the requested song file."
+			 description="Deletes the file corresponding the song the user wants to delete."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to deleted."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The view is updated with the new status of the song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Synchronize list of connected Artist identities" 
+		description="The user wants to get the connected artists list." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Enter to Following tab."
+			 description="Request the list of connected artists to the user."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the connected artist list."
+			 description="Request the connection information associated with the fan identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Return the Artis connected list."
+			 description="Fan identity provides the list of the artist linked to this identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the view with the connected artist."
+			 description="Gets the list of connected artists and updates the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Browse to the site of the Artist" 
+		description="The user select an artist list element to browse to its web site." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an artist element."
+			 description="The list item representing the artist is pressed."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist website URL."
+			 description="The URL to the artist site is requested"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the URL to the artist site to Tokenly API."
+			 description="Request to the Tokenly external API the URL belonging to the artist in Tokenly Swapbot"
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the view with the connected artist."
+			 description="Gets the URL of the selected artist and updates view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Browse to the artist site."
+			 description="Opens the default browser of the device with the URL of the artist."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Create Artist identity" 
+		description="An artist creates a Artist identity in Tokenly platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user opens the Artist identity sub app."
+			 description="Includes the data to create an identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="The user presses create button."
+			 description="Sends acces data to Tokenly to verify the access data"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request user verification"
+			 description="Sends the necessary data to check a Tokenly user"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request to the Tokenly API the user verification"
+			 description="Checks with the public API if the user data is correct."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Create the identity."
+			 description="With authenticated data, proceeds to create the new identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Create Fan identity" 
+		description="A Fanatic creates a fan identity in Tokenly platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user opens the Fan identity sub app."
+			 description="Includes the data to create an identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="The user presses create button."
+			 description="Sends acces data to Tokenly to verify the access data"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request user verification"
+			 description="Sends the necessary data to check a Tokenly user"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request to the Tokenly API the user verification"
+			 description="Checks with the public API if the user data is correct."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Create the identity."
+			 description="With authenticated data, proceeds to create the new identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
     </processes>
 </fermat>
