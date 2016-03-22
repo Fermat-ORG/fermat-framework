@@ -81,7 +81,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         Timestamp timestamp = new Timestamp(date.getTime());
         BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 transactionHash,
-                ContractTransactionStatus.PENDING_CONFIRMATION,
+                ContractTransactionStatus.PENDING_REMOTE_CONFIRMATION,
                 cryptoBrokerActorSenderPublicKey,
                 receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
@@ -257,7 +257,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                             "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
                             "\nRECEIVER "+ receiverComponent +" :"+cryptoCustomerActorReceiverPublicKey
             );
-            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata, UUID.randomUUID());
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
 
