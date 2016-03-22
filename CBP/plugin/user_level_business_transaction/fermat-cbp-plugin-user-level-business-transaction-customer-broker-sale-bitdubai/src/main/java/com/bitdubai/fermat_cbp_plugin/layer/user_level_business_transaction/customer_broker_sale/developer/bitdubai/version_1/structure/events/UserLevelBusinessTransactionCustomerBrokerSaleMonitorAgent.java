@@ -67,6 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -342,32 +343,32 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             //Recorrer las clausulas del contrato
                             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
                             for (ContractClause contractClause : customerBrokerContractSale.getContractClause()) {
-                                if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CRYPTO_TRANSFER.getCode())) {
+                                if (contractClause.getType() == ContractClauseType.CRYPTO_TRANSFER)
                                     sw = 1;
-                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.BANK_TRANSFER.getCode())) {
+                                else if (contractClause.getType() == ContractClauseType.BANK_TRANSFER)
                                     sw = 2;
-                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_DELIVERY.getCode()) && Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_ON_HAND.getCode())) {
+                                else if (contractClause.getType() == ContractClauseType.CASH_DELIVERY || contractClause.getType() == ContractClauseType.CASH_ON_HAND)
                                     sw = 3;
+                            }
+
+                            final NumberFormat instance = NumberFormat.getInstance();
+                            for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
+                                switch (clause.getType()){
+                                    case EXCHANGE_RATE:
+                                        priceReference = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        break;
+                                    case BROKER_CURRENCY_QUANTITY:
+                                        amount = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        break;
+                                    case BROKER_BANK_ACCOUNT:
+                                        bankAccount = clause.getValue();
+                                        break;
+                                    case BROKER_CURRENCY:
+                                        fiatCurrency = FiatCurrency.valueOf(clause.getValue());
+                                        break;
                                 }
                             }
 
-                            for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.EXCHANGE_RATE.getCode())) {
-                                    priceReference = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
-                                    amount = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
-                                    amount = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
-                                    bankAccount = clause.getValue();
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY.getCode())) {
-                                    fiatCurrency = FiatCurrency.valueOf(clause.getValue());
-                                }
-                            }
                             if (sw == 1) {
                                 cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
                                         CryptoCurrency.BITCOIN,
