@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -57,7 +55,9 @@ import static android.widget.Toast.makeText;
  * A simple {@link Fragment} subclass.
  */
 public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
-    private static final String TAG = "CreateBrokerIdentity";
+
+
+    private static final String TAG = "CreateIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -86,8 +86,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
 
-    private Handler handler;
-
 
     public static CreateIntraUserIdentityFragment newInstance() {
         return new CreateIntraUserIdentityFragment();
@@ -96,8 +94,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        handler = new Handler();
 
         try {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
@@ -170,6 +166,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.img_photo);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+
+
+
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
@@ -279,9 +278,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                             brokerImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
                             Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
-                            mBrokerImage.setBackgroundColor(Color.RED);
-                            relativeLayout.setBackground(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -290,16 +286,16 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                     break;
             }
 
-            final Bitmap finalImageBitmap = imageBitmap;
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mBrokerImage != null && finalImageBitmap != null) {
-//                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), finalImageBitmap));
-                        mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), finalImageBitmap));
-                    }
-                }
-            });
+//            final Bitmap finalImageBitmap = imageBitmap;
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mBrokerImage != null && finalImageBitmap != null) {
+////                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), finalImageBitmap));
+//                        mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), finalImageBitmap));
+//                    }
+//                }
+//            });
 
         }
         super.onActivityResult(requestCode, resultCode, data);

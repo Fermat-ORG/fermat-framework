@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -21,7 +21,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
@@ -67,9 +66,10 @@ public class MnemonicFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.mnemonic_fragment_main,container,false);
+        View view = inflater.inflate(R.layout.mnemonic_fragment_main1,container,false);
 
         FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
+        FermatButton open_dialog_btn= (FermatButton)view.findViewById(R.id.open_dialog_btn);
         //get mnemonic text from Crypto Wallet Module
 
         try {
@@ -80,14 +80,16 @@ public class MnemonicFragment extends AbstractFermatFragment {
             Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        txt_mnemonic.setOnClickListener(new View.OnClickListener() {
+        open_dialog_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //open dialog to enter user mail and key
+                MnemonicSendDialog mnemonic_dialog = new MnemonicSendDialog(getActivity());
+                mnemonic_dialog.show();
             }
         });
 
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 }
