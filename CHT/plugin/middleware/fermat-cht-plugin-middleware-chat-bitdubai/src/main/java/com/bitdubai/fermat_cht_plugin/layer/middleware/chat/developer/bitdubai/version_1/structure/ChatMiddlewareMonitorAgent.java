@@ -428,53 +428,52 @@ public class ChatMiddlewareMonitorAgent implements
      *
      * @throws CantGetPendingTransactionException
      */
-    public void checkIncomingChat(UUID chatId)
+    public void checkIncomingChat(ChatMetadata chatMetadata)
             throws CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            System.out.println("12345 before DatabaseDao chat");
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                     pluginDatabaseSystem,
                     pluginId,
                     database,
                     errorManager,
                     pluginFileSystem);
-            System.out.println("12345 after DatabaseDao chat");
 
             System.out.println("12345 CHECKING INCOMING CHAT");
-            List<Transaction<ChatMetadata>> pendingTransactionList =
-                    chatNetworkServiceManager.getPendingTransactions(
-                            Specialist.UNKNOWN_SPECIALIST);
-            if (pendingTransactionList == null) {
+//            List<Transaction<ChatMetadata>> pendingTransactionList =
+//                    chatNetworkServiceManager.getPendingTransactions(
+//                            Specialist.UNKNOWN_SPECIALIST);
+//            if (pendingTransactionList == null) {
                 /**
                  * In this version, when the NS return a null list, I'll ignore this this issue,
                  * I'll try later.
                  */
                 //throw new CantGetPendingTransactionException("The Network Service returns a null list");
 //                System.out.println("CHAT MIDDLEWARE: The Network Service returns a null list");
-                return;
-            }
-            for (Transaction<ChatMetadata> pendingTransaction : pendingTransactionList) {
-                ChatMetadata incomingChatMetadata = pendingTransaction.getInformation();
-                UUID incomingTransactionChatId = incomingChatMetadata.getChatId();
-                if (chatId.toString().equals(incomingTransactionChatId.toString())) {
-                    saveChat(incomingChatMetadata);
+//                return;
+//            }
+//            for (Transaction<ChatMetadata> pendingTransaction : pendingTransactionList) {
+//                ChatMetadata incomingChatMetadata = pendingTransaction.getInformation();
+//                UUID incomingTransactionChatId = incomingChatMetadata.getChatId();
+//                UUID incomingTransactionMessageId = incomingChatMetadata.getMessageId();
+//                if (chatId.toString().equals(incomingTransactionChatId.toString()) && messageId.toString().equals(incomingTransactionMessageId.toString())) {
+                    saveChat(chatMetadata);
                     //If message exists in database, this message will be update
-                    saveMessage(incomingChatMetadata);
-                    chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                    saveMessage(chatMetadata);
+//                    chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                     //TODO TEST NOTIFICATION TO PIP
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                }
-            }
+//                }
+//            }
 //                eventRecord.setEventStatus(EventStatus.NOTIFIED);
 //                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
 //            chatMiddlewareDatabaseDao.updateEventStatus(eventRecord.getEventId(), EventStatus.NOTIFIED);
-        } catch (CantDeliverPendingTransactionsException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming chat pending transactions",
-                    "Cannot get the pending transaction from Network Service plugin"
-            );
+//        } catch (CantDeliverPendingTransactionsException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming chat pending transactions",
+//                    "Cannot get the pending transaction from Network Service plugin"
+//            );
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -493,12 +492,12 @@ public class ChatMiddlewareMonitorAgent implements
                     "Checking the incoming chat pending transactions",
                     "Cannot get the message from database"
             );
-        } catch (CantConfirmTransactionException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming chat pending transactions",
-                    "Cannot get confirm the reception to local NS"
-            );
+//        } catch (CantConfirmTransactionException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming chat pending transactions",
+//                    "Cannot get confirm the reception to local NS"
+//            );
         } catch (CantGetChatException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -558,44 +557,41 @@ public class ChatMiddlewareMonitorAgent implements
      *
      * @throws CantGetPendingTransactionException
      */
-    public void checkIncomingStatus(UUID chatId) throws
+    public void checkIncomingStatus(ChatMetadata chatMetadata) throws
             CantGetPendingTransactionException,
             UnexpectedResultReturnedFromDatabaseException {
         try {
-            System.out.println("12345 Before Databasedato Status");
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                     pluginDatabaseSystem,
                     pluginId,
                     database,
                     errorManager,
                     pluginFileSystem);
-            System.out.println("12345 After Databasedato Status");
 
-            System.out.println("12345 CHECKING INCOMING STATUS");
-
-            List<Transaction<ChatMetadata>> pendingTransactionList =
-                    chatNetworkServiceManager.getPendingTransactions(
-                            Specialist.UNKNOWN_SPECIALIST);
-            UUID incomingTransactionChatId;
-            ChatMetadata incomingChatMetadata;
-            if (pendingTransactionList == null) {
-                System.out.println("12345 CHECKING INCOMING STATUS NO RESULT QUERY");
-                throw new CantGetPendingTransactionException("The Network Service returns a null list");
-            }
-            for (Transaction<ChatMetadata> pendingTransaction : pendingTransactionList) {
-                System.out.println("12345 CHECKING INCOMING STATUS INSIDE FOR");
-                incomingChatMetadata = pendingTransaction.getInformation();
-                incomingTransactionChatId = incomingChatMetadata.getChatId();
-                if (chatId.toString().equals(incomingTransactionChatId.toString())) {
-                    System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF");
+//            List<Transaction<ChatMetadata>> pendingTransactionList =
+//                    chatNetworkServiceManager.getPendingTransactions(
+//                            Specialist.UNKNOWN_SPECIALIST);
+//            UUID incomingTransactionMessageId;
+//            ChatMetadata incomingChatMetadata;
+//            if (pendingTransactionList == null) {
+//                System.out.println("12345 CHECKING INCOMING STATUS NO RESULT QUERY");
+//                throw new CantGetPendingTransactionException("The Network Service returns a null list");
+//            }
+//            for (Transaction<ChatMetadata> pendingTransaction : pendingTransactionList) {
+//                incomingChatMetadata = pendingTransaction.getInformation();
+//                incomingTransactionMessageId = incomingChatMetadata.getMessageId();
+//
+//                System.out.println("12345 CHECKING INCOMING STATUS INSIDE FOR MESSAGE == "+incomingChatMetadata.getMessage() + " MESSAGE STATUS == "+incomingChatMetadata.getMessageStatus());
+//                if (messageId.toString().equals(incomingTransactionMessageId.toString())) {
+                    System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == "+chatMetadata.getMessage() + " MESSAGE STATUS == "+chatMetadata.getMessageStatus());
                     //Check if metadata exists in database
-                    if (!checkChatMetadata(incomingChatMetadata)) return;
-                    updateMessageStatus(incomingChatMetadata);
-                    chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
+                    if (!checkChatMetadata(chatMetadata)) return;
+                    updateMessageStatus(chatMetadata);
+//                    chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                    break;
-                }
-            }
+//                    break;
+//                }
+//            }
 //                eventRecord.setEventStatus(EventStatus.NOTIFIED);
 //                chatMiddlewareDatabaseDao.updateEventRecord(eventRecord);
 //            chatMiddlewareDatabaseDao.updateEventStatus(eventRecord.getEventId(), EventStatus.NOTIFIED);
@@ -630,14 +626,14 @@ public class ChatMiddlewareMonitorAgent implements
                     "Checking the incoming status pending transactions",
                     "Cannot update message from database"
             );
-        } catch (CantConfirmTransactionException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot get confirm the reception to local NS"
-            );
-        } catch (CantDeliverPendingTransactionsException e) {
-            e.printStackTrace();
+//        } catch (CantConfirmTransactionException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot get confirm the reception to local NS"
+//            );
+//        } catch (CantDeliverPendingTransactionsException e) {
+//            e.printStackTrace();
         }
     }
 
