@@ -45,7 +45,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     private static final String TAG = "settingsMyLocations";
 
     // Data
-    private List<String> locationList;
+    private List<String> locationList = new ArrayList<>();
 
     // UI
     private RecyclerView recyclerView;
@@ -70,20 +70,18 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
-            if (data == null) {
-                locationList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
-            } else {
-                locationList = (List<String>) data;
-                if (locationList.size()==0){
-                    Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
-                    for (NegotiationLocations locationAux: listAux){
-                        locationList.add(locationAux.getLocation());
-                    }
-
-                }
+            //Get saved locations from settings
+            Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+            for (NegotiationLocations locationAux : listAux){
+                locationList.add(locationAux.getLocation());
             }
+
+            //Save locations to appSession data
+            appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+
+
+            //Checking something here
+            //TODO: document/comment this, para que es esto?
             if(locationList.size()>0) {
                 int pos = locationList.size() - 1;
                 if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
@@ -175,6 +173,10 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             return;
         }
 
+        //Save locationList to appData
+        appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+
+        //Save locations to settings
         try {
             for (String location : locationList) {
                 walletManager.createNewLocation(location, appSession.getAppPublicKey());
