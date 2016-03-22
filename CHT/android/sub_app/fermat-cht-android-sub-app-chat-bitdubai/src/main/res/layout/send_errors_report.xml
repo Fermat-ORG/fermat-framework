@@ -76,13 +76,14 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:paddingLeft="@dimen/padding"
             android:paddingRight="@dimen/padding"
             android:paddingTop="@dimen/padding"
             android:orientation="vertical"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:text="...Or copy this text and paste in another place to send it"
+            android:text="...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it"
             android:textSize="18sp"
             android:padding="10dp"
             android:layout_gravity="fill_horizontal"
@@ -92,12 +93,12 @@
             android:id="@+id/copyEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoText="true"
             android:backgroundTint="#acaaaa"
             android:textColor="#000000"
             android:lines="10"
-            android:scrollbars="vertical|horizontal"
-            android:inputType="textMultiLine"
+            android:hint="Hold a tap here"
+            android:scrollbars="vertical"
+            android:inputType="textNoSuggestions|textMultiLine"
             android:layout_below="@+id/copyText"
             />
     </RelativeLayout>
