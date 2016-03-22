@@ -91,19 +91,14 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
                     new InputStreamReader(process.getInputStream()));
 
             String line;
-            String line2;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.contains(processId)) {
+                    builder.append(line);
                     lineNumber++;
+                    //Code here
                 }
-            }
-            linesNumber=lineNumber;
-            while ((line2 = bufferedReader.readLine()) != null) {
-                if (line2.contains(processId)) {
-                    lineNumber++;
-                    if(lineNumber >= linesNumber-500){
-                        builder.append(line2);
-                    }
+                if(lineNumber==1000){
+                    break;
                 }
             }
         } catch (IOException ex) {
