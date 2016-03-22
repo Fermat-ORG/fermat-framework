@@ -1702,26 +1702,26 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      *
      */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("APP", "requestCode" + String.valueOf(requestCode));
-        Log.i("APP", "resultcode" + String.valueOf(resultCode));
-        Log.i("APP", "data" + String.valueOf(data));
-        switch(requestCode) {
-            case (TASK_MANAGER_STACK) : {
-                if (resultCode == android.app.Activity.RESULT_OK) {
-                    // TODO Extract the data returned from the child Activity. and open the app
-                    data.setAction("org.fermat.APP_LAUNCHER");
-                    sendBroadcast(data);
-                    //finish();
-                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
-                    // if i want i could do something here
-                }
-                break;
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.i("APP", "requestCode" + String.valueOf(requestCode));
+//        Log.i("APP", "resultcode" + String.valueOf(resultCode));
+//        Log.i("APP", "data" + String.valueOf(data));
+//        switch(requestCode) {
+//            case (TASK_MANAGER_STACK) : {
+//                if (resultCode == android.app.Activity.RESULT_OK) {
+//                    // TODO Extract the data returned from the child Activity. and open the app
+//                    data.setAction("org.fermat.APP_LAUNCHER");
+//                    sendBroadcast(data);
+//                    //finish();
+//                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
+//                    // if i want i could do something here
+//                }
+//                break;
+//            }
+//        }
+//    }
 
     protected void handleExceptionAndRestart(){
         Intent intent = new Intent(this,StartActivity.class);
