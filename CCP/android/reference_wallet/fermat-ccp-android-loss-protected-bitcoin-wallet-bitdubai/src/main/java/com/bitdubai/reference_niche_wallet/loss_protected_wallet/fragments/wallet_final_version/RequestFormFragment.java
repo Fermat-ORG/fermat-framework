@@ -380,7 +380,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                     VaultType.CRYPTO_CURRENCY_VAULT,
                                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
                             );
                         }
