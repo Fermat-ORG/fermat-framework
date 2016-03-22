@@ -109,7 +109,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getEventType().getCode(),
 //                    event.getSource().getCode(),
 //                    event.getChatId());
-            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatMetadata());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -132,7 +132,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getEventType().getCode(),
 //                    event.getSource().getCode(),
 //                    event.getChatId());
-            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatMetadata());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
