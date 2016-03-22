@@ -73,6 +73,10 @@ public enum ContractTransactionStatus implements FermatEnum {
     SUBMIT_ONLINE_PAYMENT("SNP"),
     NOTIFICATION_CONFIRMED("NCFD"),
     SENDING_HASH("SCHA");
+    //ADD YORDIN
+    PENDING_ACTION_CONFIRMATION("PAC"),
+    CONTRACT_ACK_CONFIRMED("CAC"),
+    NOTIFICATION_ACK_CONFIRMED("NACF");
 
     String code;
     ContractTransactionStatus(String code){
