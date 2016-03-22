@@ -78,7 +78,6 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     public static StringBuilder getLog() {
 
         int lineNumber = 0;
-        int linesNumber = 0;
 
         StringBuilder builder = new StringBuilder();
 
@@ -97,7 +96,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
                     lineNumber++;
                     //Code here
                 }
-                if(lineNumber==1000){
+                if(lineNumber==100){
                     break;
                 }
             }
