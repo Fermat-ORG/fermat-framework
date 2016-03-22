@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,22 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -32,6 +45,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     private FermatEditText zipCodeEditText;
     private FermatEditText addressLineOneEditText;
     private FermatEditText addressLineTwoEditText;
+
+    private CryptoBrokerWalletManager walletManager;
+    private ErrorManager errorManager;
 
 
     public static CreateNewLocationFragment newInstance() {
@@ -61,6 +77,16 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         addressLineTwoEditText = (FermatEditText) layout.findViewById(R.id.cbw_address_line_2_edit_text);
 
         layout.findViewById(R.id.cbw_create_new_location_button).setOnClickListener(this);
+
+
+        CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+        errorManager = appSession.getErrorManager();
+        try {
+            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+        } catch (CantGetCryptoBrokerWalletException e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
 
         return layout;
     }
@@ -98,19 +124,29 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         if (addressLineTwoEditText.getText().toString().length() > 0)
             location.append(addressLineTwoEditText.getText().toString()).append(", ");
 
+
         if (location.length() > 0) {
-            List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
-            int pos = locations.size()-1;
-            if(locations.get(pos).equals("settings")){
-                locations.remove(pos);
-                locations.add(location.toString());
+            try {
+                walletManager.createNewLocation(location.toString(), "");
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+            } catch (CantCreateLocationSaleException e) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             }
-            if(locations.get(pos).equals("wizard")){
-                locations.remove(pos);
-                locations.add(location.toString());
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
-            }
+            /*
+                List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+                int pos = locations.size()-1;
+                if(locations.get(pos).equals("settings")){
+                    locations.remove(pos);
+                    locations.add(location.toString());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                }
+                if(locations.get(pos).equals("wizard")){
+                    locations.remove(pos);
+                    locations.add(location.toString());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+                }
+            */
         } else {
             Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
         }

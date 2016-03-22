@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -90,6 +91,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager) {
+
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -103,8 +105,6 @@ public class CustomerOfflinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("Customer offline payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -130,7 +130,9 @@ public class CustomerOfflinePaymentMonitorAgent implements
         try {
             this.agentThread.interrupt();
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
     }
 
@@ -159,6 +161,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
         this.pluginId = pluginId;
     }
 
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -184,154 +187,103 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
         @Override
         public void run() {
+            final LogLevel logLevel = CustomerOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName());
 
             threadWorking = true;
-            logManager.log(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()),
-                    "Customer Offline Payment Monitor Agent: running...", null, null);
+            logManager.log(logLevel, "Customer Offline Payment Monitor Agent: running...", null, null);
+
             while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
+                iterationNumber++;  // Increase the iteration counter
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
                     return;
                 }
 
-                /**
-                 * now I will check if there are pending transactions to raise the event
-                 */
+                // now I will check if there are pending transactions to raise the event
                 try {
+                    logManager.log(logLevel, "Iteration number " + iterationNumber, null, null);
 
-                    logManager.log(CustomerOfflinePaymentPluginRoot.getLogLevelByClass(
-                                    this.getClass().getName()),
-                            "Iteration number " + iterationNumber,
-                            null,
-                            null);
                     doTheMainTask();
-                } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                            e);
+
+                } catch (FermatException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
-
             }
-
         }
 
         public void Initialize() throws CantInitializeCBPAgent {
             try {
-
-                database = this.pluginDatabaseSystem.openDatabase(pluginId,
-                        CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+                database = pluginDatabaseSystem.openDatabase(pluginId, CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
             } catch (DatabaseNotFoundException databaseNotFoundException) {
-
-                //Logger LOG = Logger.getGlobal();
-                //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory =
-                        new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
-                    database = customerOfflinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId,
-                            CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                            cantCreateDatabaseException);
-                    throw new CantInitializeCBPAgent(cantCreateDatabaseException,
-                            "Initialize Monitor Agent - trying to create the plugin database",
-                            "Please, check the cause");
+                    final CustomerOfflinePaymentBusinessTransactionDatabaseFactory factory = new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+                    database = factory.createDatabase(pluginId, CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+                } catch (CantCreateDatabaseException exception) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                    throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        exception);
-                throw new CantInitializeCBPAgent(exception,
-                        "Initialize Monitor Agent - trying to open the plugin database",
-                        "Please, check the cause");
+                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
             }
         }
 
-        private void doTheMainTask() throws
-                CannotSendContractHashException,
-                CantUpdateRecordException,
-                CantSendContractNewStatusNotificationException {
-
+        private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException {
             try {
-                customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
-                        pluginDatabaseSystem,
-                        pluginId,
-                        database,
-                        errorManager);
-
+                customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
                 String contractHash;
 
-                //TODO: finish this
-
-                /**
-                 * Check contract status to send.
-                 */
-                List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList =
-                        customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
+                // Check contract status to send.
+                List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_BROKER
-                    );
-                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED
-                    );
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
+
+                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
                 }
 
-                /**
-                 * Check pending notifications - Broker side
-                 */
-                List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList =
-                        customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
+                // Check pending notifications - Broker side
+                List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT,
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
-                    );
-                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT
-                    );
+                            ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT,
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+
+                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                 }
 
-                /**
-                 * Check if pending events
-                 */
+                // Check if pending events
                 List<String> pendingEventsIdList = customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
                 for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
-
             } catch (CantGetContractListException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Cannot get the contract list from database");
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot get the contract list from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Unexpected result in database");
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
             }
         }
 
@@ -363,19 +315,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
                         if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.
-                                    getContractTransactionStatus(contractHash);
+                            contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
+
                         } else {
-                            CustomerBrokerContractSale customerBrokerContractSale =
-                                    customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
-                                            contractHash);
+                            CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+
                             //If the contract is null, I cannot handle with this situation
-                            ObjectChecker.checkArgument(customerBrokerContractSale);
-                            customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                            ObjectChecker.checkArgument(saleContract);
+                            customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(saleContract);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
-                            Date date = new Date();
-                            customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                            customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                             raisePaymentConfirmationEvent();
                         }
 
@@ -404,11 +354,11 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                             customerOnlinePaymentRecord = customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(contractHash);
                             contractTransactionStatus = customerOnlinePaymentRecord.getContractTransactionStatus();
-                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())) {
-                                customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
+
+                            if (contractTransactionStatus == ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED) {
+                                customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
-                                Date date = new Date();
-                                customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                 raisePaymentConfirmationEvent();
                             }
                         }

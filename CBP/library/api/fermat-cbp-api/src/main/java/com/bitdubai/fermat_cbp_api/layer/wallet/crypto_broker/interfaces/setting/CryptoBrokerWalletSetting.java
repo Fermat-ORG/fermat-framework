@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
@@ -45,7 +46,7 @@ public interface CryptoBrokerWalletSetting {
      * @return
      * @exception CantSaveCryptoBrokerWalletSettingException
      */
-    void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException;
+    void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException;
 
     /**
      * This method load the list CryptoBrokerWalletProviderSetting

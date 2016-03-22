@@ -577,7 +577,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         try {
 
+
             relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+            System.out.println("VLZ: relationship: "+relationship);
+
+            if( relationship == null ){
+
+                return false;
+            }
 
         } catch (RelationshipNotFoundException relationshipNotFoundException) {
 
