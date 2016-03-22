@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
@@ -118,11 +119,15 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY         , plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.LOSS_PROTECTED_WALLET)
+    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
+
     /**
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
     String walletPublicKey = "reference_wallet";
+    String lossProtectedwalletPublicKey = "loss_protected_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -151,6 +156,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
          */
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
+        boolean existWalletLoss = false;
         try {
             //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
@@ -161,7 +167,10 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
                 if (mapEntry.getValue().toString().equals(walletPublicKey))
                     existWallet = true;
+                if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
+                    existWalletLoss = true;
             }
+
 
             if (!existWallet) {
                 //Create new Bitcoin Wallet
@@ -169,6 +178,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 try {
 
                     bitcoinWalletManager.createWallet(walletPublicKey);
+
 
                     //Save wallet id on file
 
@@ -185,6 +195,29 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 }
             }
 
+            //create loss protected wallet
+
+
+            if (!existWalletLoss) {
+                  try {
+
+
+                    bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
             this.serviceStatus = ServiceStatus.STARTED;
 
 
