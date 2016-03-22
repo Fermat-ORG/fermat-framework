@@ -158,9 +158,9 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         });
 
         if(wantPublishIdentity){
-            sw.setImageResource(R.drawable.visible);
+            sw.setImageResource(R.drawable.switch_visible);
         }else{
-            sw.setImageResource(R.drawable.notvisible);
+            sw.setImageResource(R.drawable.switch_notvisible);
         }
 
         camara.setOnClickListener(new View.OnClickListener() {
@@ -181,10 +181,10 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             @Override
             public void onClick(View view) {
                 if (wantPublishIdentity) {
-                    sw.setImageResource(R.drawable.notvisible);
+                    sw.setImageResource(R.drawable.switch_notvisible);
                     wantPublishIdentity = false;
                 } else {
-                    sw.setImageResource(R.drawable.visible);
+                    sw.setImageResource(R.drawable.switch_visible);
                     wantPublishIdentity = true;
                 }
             }
