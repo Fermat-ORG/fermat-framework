@@ -7,12 +7,10 @@ repositories {
     mavenCentral()
 }
 
-
-
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
+    compile project(':fermat-ccp-api')
+
     testCompile 'junit:junit:4.11'
-    compile project(':fermat-ccp-api')
-    compile project(':fermat-ccp-api')
 }
