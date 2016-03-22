@@ -102,6 +102,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static android.widget.Toast.makeText;
 
@@ -144,6 +145,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatTextView txt_balance_amount_type;
     private int progress1=1;
     private  Map<Long, Long> runningDailyBalance;
+
+    private UUID exchangeProviderId = null;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -221,7 +224,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         });
 
         try {
-            lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
+            lossProtectedWalletSession = appSession;
             moduleManager = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
             errorManager = appSession.getErrorManager();
 
@@ -240,21 +243,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
 
-                if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-
-
-                settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+                settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
 
+            //deault btc network
             if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
+
+            //default Exchange rate Provider
+
+            if(bitcoinWalletSettings.getExchangeProvider()==null){
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+
+                exchangeProviderId = providers.get(0).getProviderId();
+                bitcoinWalletSettings.setExchangeProvider(exchangeProviderId);
+
+            }
+            else
+            {
+                exchangeProviderId =bitcoinWalletSettings.getExchangeProvider();
+            }
+
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+
             final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 
@@ -548,7 +562,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
                     appSession.getAppPublicKey(),
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
@@ -1070,11 +1084,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {
-                List<IndexInfoSummary> data = new ArrayList<>();
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
 
-                ExchangeRate rate =  moduleManager.getCurrencyExchange(providers.get(0).getProviderId());
-
+                ExchangeRate rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
                 return rate;
             }
         };
