@@ -132,4 +132,9 @@
     <string name="dap_user_wallet_v2_confirm_button_agree">AGREE</string>
     <string name="dap_user_wallet_v2_confirm_button_disagree">DISAGREE</string>
     <!-- -->
+
+    <!-- v3 -->
+    <string name="card_confirmed">Confirmed</string>
+    <string name="card_pending">Pending</string>
+    <!-- -->
 </resources>

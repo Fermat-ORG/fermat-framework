@@ -2,10 +2,13 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.hol
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -32,6 +35,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
     private FermatTextView cardActorName;
     private FermatTextView cardTime;
     private ImageView cardConfirmedImage;
+    private FermatTextView cardConfirmedText;
     private ImageView cardAssetImage;
     private FermatTextView cardAssetName;
     private FermatTextView cardExpDate;
@@ -56,6 +60,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
         cardActorName = (FermatTextView) itemView.findViewById(R.id.cardActorName);
         cardTime = (FermatTextView) itemView.findViewById(R.id.cardTime);
         cardConfirmedImage = (ImageView) itemView.findViewById(R.id.cardConfirmedImage);
+        cardConfirmedText = (FermatTextView) itemView.findViewById(R.id.cardConfirmedText);
         cardAssetImage = (ImageView) itemView.findViewById(R.id.cardAssetImage);
         cardAssetName = (FermatTextView) itemView.findViewById(R.id.cardAssetName);
         cardExpDate = (FermatTextView) itemView.findViewById(R.id.cardExpDate);
@@ -67,19 +72,24 @@ public class HomeCardViewHolder extends FermatViewHolder {
     }
 
     public void bind(final Asset asset) {
-
-        byte[] img = (asset.getActorImage() == null) ? new byte[0] : asset.getImage();
-        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(homeIssuerImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);
+        Bitmap bitmap;
+        if (asset.getActorImage() != null && asset.getActorImage().length > 0) {
+            bitmap = BitmapFactory.decodeByteArray(asset.getActorImage(), 0, asset.getActorImage().length);
+        } else {
+            bitmap = BitmapFactory.decodeResource(res, R.drawable.img_detail_without_image);
+        }
+        bitmap = Bitmap.createScaledBitmap(bitmap, 45, 45, true);
+        homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
 
         cardActorName.setText(asset.getActorName());
         cardTime.setText("2 minutes ago"); //TODO setting time
 
         int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
         cardConfirmedImage.setImageResource(image);
+        cardConfirmedText.setText((asset.getStatus().equals(Asset.Status.CONFIRMED)) ? res.getString(R.string.card_confirmed) : res.getString(R.string.card_pending));
 
-        img = (asset.getImage() == null) ? new byte[0] : asset.getImage();
-        bitmapWorkerTask = new BitmapWorkerTask(homeIssuerImage, res, R.drawable.img_asset_without_image, false);
+        byte[] img = (asset.getImage() == null) ? new byte[0] : asset.getImage();
+        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(cardAssetImage, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img);
 
         cardAssetName.setText(asset.getName());
