@@ -57,6 +57,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final NetworkParameters NETWORK_PARAMETERS;
     BlockchainDownloadProgress blockchainDownloadProgress;
     Wallet cryptoNetworkWallet;
+    int broadcasterID;
 
     /**
      * Platform variables
@@ -80,7 +81,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         this.cryptoNetworkWallet = wallet;
 
         //define the blockchain download progress class with zero values
-        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 100);
+        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 0);
+
     }
 
     @Override
@@ -108,7 +110,13 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (blockchainDownloadProgress.getProgress() < 101){
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
-            broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Blockchain download for " + blockchainDownloadProgress.getBlockchainNetworkType().getCode() + " network.");
+
+            if (broadcasterID != 0){
+                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterID);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+            } else
+                broadcasterID = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
         }
     }
 
