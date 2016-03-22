@@ -1,11 +1,8 @@
 package com.bitdubai.reference_wallet.cash_money_wallet.common.holders;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.format.DateUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -14,7 +11,6 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -25,7 +21,7 @@ public class TransactionsViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
 
-    private ProgressBar spinner;
+    private ProgressBar progressBar;
 
     public FermatTextView transactionType;
     public FermatTextView amount;
@@ -36,7 +32,7 @@ public class TransactionsViewHolder extends FermatViewHolder {
         super(itemView);
 
         res = itemView.getResources();
-        spinner = (ProgressBar) itemView.findViewById(R.id.cash_transaction_list_spinner);
+        progressBar = (ProgressBar) itemView.findViewById(R.id.cash_transaction_list_spinner);
 
         transactionType = (FermatTextView) itemView.findViewById(R.id.csh_list_item_transaction_type);
         amount = (FermatTextView) itemView.findViewById(R.id.csh_list_item_amount);
@@ -45,10 +41,15 @@ public class TransactionsViewHolder extends FermatViewHolder {
     }
 
     public void bind(CashMoneyWalletTransaction itemInfo) {
-        if(itemInfo.isPending())
-            spinner.setVisibility(View.VISIBLE);
+        if(itemInfo.isPending()) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.getIndeterminateDrawable().setColorFilter(
+                    getTransactionTypeColorProgressBar(itemInfo.getTransactionType()),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
+
+        }
         else
-            spinner.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
 
         date.setText(getPrettyTime(itemInfo.getTimestamp()));
         memo.setText(itemInfo.getMemo());
@@ -77,6 +78,13 @@ public class TransactionsViewHolder extends FermatViewHolder {
             return res.getColor(R.color.csh_transaction_withdrawal_color);
         else
             return res.getColor(R.color.csh_transaction_deposit_color);
+    }
+
+    private int getTransactionTypeColorProgressBar(TransactionType transactionType) {
+        if (transactionType == TransactionType.DEBIT)
+            return res.getColor(R.color.csh_transaction_withdrawal_color_progress_bar);
+        else
+            return res.getColor(R.color.csh_transaction_deposit_color_progress_bar);
     }
 
 }
