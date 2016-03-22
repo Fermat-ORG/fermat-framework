@@ -387,10 +387,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                     TransactionStatus.RESPONSIBLE.getCode(),
                     DatabaseFilterType.EQUAL
             );
-            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
-                    DatabaseFilterType.EQUAL
-            );
+//            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
+//                    ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
+//                    DatabaseFilterType.EQUAL
+//            );
 
             registryTable.loadToMemory();
 
