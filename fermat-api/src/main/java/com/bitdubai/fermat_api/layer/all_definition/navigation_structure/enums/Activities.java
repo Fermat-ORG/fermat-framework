@@ -321,6 +321,11 @@ public enum Activities implements FermatEnum {
     //ART
     ART_ARTIST_IDENTITY_HOME("AACACP"),
 
+    //TKY
+    TKY_ARTIST_IDENTITY("TAI"),
+    TKY_ARTIST_IDENTITY_CREATE_PROFILE("TAICP"),
+
+
 
     WPD_DESKTOP("WPD"),
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),

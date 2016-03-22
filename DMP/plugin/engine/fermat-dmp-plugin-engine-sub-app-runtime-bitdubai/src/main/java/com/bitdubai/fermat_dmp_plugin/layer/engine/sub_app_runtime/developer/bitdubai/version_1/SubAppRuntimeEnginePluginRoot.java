@@ -801,6 +801,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             */
             createArtArtistIdentitySubAppNavigationStructure();
 
+            /*
+             *TKY ARTIST IDENTITY
+             */
+            createTkyArtistIdentityNavigationStructure();
+
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
             String intraUserIdentityPublicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
@@ -2134,6 +2139,56 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
+    private void createTkyArtistIdentityNavigationStructure(){
+        RuntimeSubApp TkyArtistIdentity;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+
+
+        String IdentityArtistPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+
+        TkyArtistIdentity = new RuntimeSubApp();
+        TkyArtistIdentity.setType(SubApps.TKY_ARTIST_IDENTITY);
+        TkyArtistIdentity.setPublicKey(IdentityArtistPublicKey);
+        TkyArtistIdentity.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY);
+
+        runtimeActivity = new Activity();
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Tokenly Identity");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_HOME.getKey());
+        /*
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        */
+
+/*
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        */
+
+        TkyArtistIdentity.addActivity(runtimeActivity);
+
+        listSubApp.put(TkyArtistIdentity.getPublicKey(), TkyArtistIdentity);
+
+
+    }
 
     private void createArtArtistIdentitySubAppNavigationStructure(){
         RuntimeSubApp artArtistIdentity;
@@ -2571,8 +2626,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.         CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
     }
 

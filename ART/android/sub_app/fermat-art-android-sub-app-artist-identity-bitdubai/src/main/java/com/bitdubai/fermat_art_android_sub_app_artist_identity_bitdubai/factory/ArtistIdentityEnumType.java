@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  */
 public enum ArtistIdentityEnumType implements FermatFragmentsEnumType<ArtistIdentityEnumType> {
 
+    ART_ARTIST_IDENTITY_HOME("AAIH"),
     ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE("AACACP")
 
 
