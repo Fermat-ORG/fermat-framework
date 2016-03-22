@@ -94,7 +94,6 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
         super(new PluginVersionReference(new Version()));
     }
 
-
     @Override
     public void start() throws CantStartPluginException {
         outgoingDeviceUserTransactionDao = new OutgoingDeviceUserTransactionDao(errorManager,pluginDatabaseSystem);
@@ -115,12 +114,6 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-
-
-    @Override
-    public FermatManager getManager() {
-        return null;
-    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
