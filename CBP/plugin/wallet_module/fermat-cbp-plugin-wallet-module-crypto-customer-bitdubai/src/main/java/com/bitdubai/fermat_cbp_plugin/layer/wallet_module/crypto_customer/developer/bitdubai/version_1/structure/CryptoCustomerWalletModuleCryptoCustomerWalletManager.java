@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -959,6 +961,41 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     /**
+     * Returns a list of all associated bank accounts
+     *
+     * @throws CantGetListBankAccountsPurchaseException
+     */
+    @Override
+    public List<BankAccountNumber> getListOfBankAccounts() throws CantGetListBankAccountsPurchaseException {
+        List<BankAccountNumber> bankAccounts = new ArrayList<>();
+
+        for (NegotiationBankAccount ba : customerBrokerPurchaseNegotiationManager.getAllBankAccount()) {
+
+            String bankAccountInfo = ba.getBankAccount();
+            String bank, accountNumber;
+            BankAccountType bankAccountType = null;
+
+            bank = bankAccountInfo.substring(bankAccountInfo.indexOf("Bank: ")+6, bankAccountInfo.indexOf("\n"));
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
+
+            try{
+                String accountType = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ")+14, bankAccountInfo.indexOf("\n"));
+                bankAccountType = BankAccountType.getByCode(accountType);
+            }catch (FermatException e){ }
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
+
+            accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ")+8);
+
+            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "");
+
+            bankAccounts.add(ban);
+
+        }
+        return bankAccounts;
+    }
+
+
+    /**
      * Delete all bank accounts associated with the crypto customer wallet
      *
      * @throws CantDeleteBankAccountPurchaseException
@@ -1039,6 +1076,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         return managerMap;
     }
+
+    @Override
+    public CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException {
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId);
+    }
+
 
     @Override
     public CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException {
