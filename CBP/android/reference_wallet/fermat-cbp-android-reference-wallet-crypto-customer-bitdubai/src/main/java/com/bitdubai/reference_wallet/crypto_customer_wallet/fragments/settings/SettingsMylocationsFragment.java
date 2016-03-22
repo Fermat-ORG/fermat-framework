@@ -70,18 +70,25 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            //Get saved locations from settings
-            Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
-            for (NegotiationLocations locationAux : listAux){
-                locationList.add(locationAux.getLocation());
-            }
 
-            //Save locations to appSession data
-            appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+            //Try to load appSession data
+            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            if(data == null) {
+
+                //Get saved locations from settings
+                Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux){
+                    locationList.add(locationAux.getLocation());
+                }
+
+                //Save locations to appSession data
+                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+            } else {
+                locationList = (List<String>) data;
+            }
 
 
             //Checking something here
-            //TODO: document/comment this, para que es esto?
             if(locationList.size()>0) {
                 int pos = locationList.size() - 1;
                 if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
@@ -172,12 +179,15 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //Save locationList to appData
-        appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
-
-        //Save locations to settings
         try {
+
+            //Save locationList to appSession
+            appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+
+            //Clear previous locations from settings
+            walletManager.clearLocations();
+
+            //Save locations to settings
             for (String location : locationList) {
                 walletManager.createNewLocation(location, appSession.getAppPublicKey());
             }
