@@ -54,7 +54,6 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
-import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
@@ -144,7 +143,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         WizardConfiguration,
         PaintActivityFeatures,
         NavigationView.OnNavigationItemSelectedListener,
-        NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
         FermatActivityManager,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,
@@ -164,7 +162,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Manager
      */
-    BroadcastManager broadcastManager;
+    private BroadcastManager broadcastManager;
     /**
      * WizardTypes
      */
@@ -186,10 +184,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private final Handler mDrawerActionHandler = new Handler();
     private final Handler refreshHandler = new Handler();
-    /**
-     * Receivers
-     */
-    //private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -248,15 +242,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
-
-//        try {
-//            networkStateReceiver = new NetworkStateReceiver();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//
-//        }
-
     }
 
     /**
@@ -311,12 +296,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }catch (Exception e){
                 e.printStackTrace();
             }
-//            if(networkStateReceiver!=null) {
-//                unregisterReceiver(networkStateReceiver);
-//                networkStateReceiver.removeListener(this);
-//            }
-       //     networkStateReceiver.removeListener(this);
-
 
             /**
              * Service
@@ -379,6 +358,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -683,6 +663,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
 
     }
@@ -846,6 +827,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+            handleExceptionAndRestart();
         }
     }
 
@@ -869,13 +851,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            networkStateReceiver = NetworkStateReceiver.getInstance();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
     }
 
 
@@ -1292,6 +1267,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
             makeText(getApplicationContext(), "Oooops! recovering from system error", LENGTH_SHORT).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -1332,6 +1308,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             return createOrOpenApp(fermatApp);
         }catch (Exception e){
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
         return null;
     }
@@ -1656,7 +1633,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 // finally change the color
                 try {
                     requestWindowFeature(Window.FEATURE_NO_TITLE);
-                }catch (Exception e){
+                }catch (Exception ignored){
 
                 }
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -1682,28 +1659,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     //TODO: to remove
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
-
-
-    @Override
-    public void networkAvailable() {
-        Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
-        try {
-            //getCloudClient().setNetworkState(true);
-        }catch (Exception e){
-            //e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void networkUnavailable() {
-        Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
-        try{
-            //getCloudClient().setNetworkState(false);
-        }catch (Exception e){
-          //  e.printStackTrace();
-        }
-    }
-
 
     /**
      * Report error
@@ -1747,25 +1702,30 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      *
      */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("APP", "requestCode" + String.valueOf(requestCode));
-        Log.i("APP","resultcode"+ String.valueOf(resultCode));
-        Log.i("APP", "data" + String.valueOf(data));
-        switch(requestCode) {
-            case (TASK_MANAGER_STACK) : {
-                if (resultCode == android.app.Activity.RESULT_OK) {
-                    // TODO Extract the data returned from the child Activity. and open the app
-                    data.setAction("org.fermat.APP_LAUNCHER");
-                    sendBroadcast(data);
-                    //finish();
-                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
-                    // if i want i could do something here
-                }
-                break;
-            }
-        }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.i("APP", "requestCode" + String.valueOf(requestCode));
+//        Log.i("APP", "resultcode" + String.valueOf(resultCode));
+//        Log.i("APP", "data" + String.valueOf(data));
+//        switch(requestCode) {
+//            case (TASK_MANAGER_STACK) : {
+//                if (resultCode == android.app.Activity.RESULT_OK) {
+//                    // TODO Extract the data returned from the child Activity. and open the app
+//                    data.setAction("org.fermat.APP_LAUNCHER");
+//                    sendBroadcast(data);
+//                    //finish();
+//                } else if(resultCode == android.app.Activity.RESULT_CANCELED){
+//                    // if i want i could do something here
+//                }
+//                break;
+//            }
+//        }
+//    }
+
+    protected void handleExceptionAndRestart(){
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
     }
 
 

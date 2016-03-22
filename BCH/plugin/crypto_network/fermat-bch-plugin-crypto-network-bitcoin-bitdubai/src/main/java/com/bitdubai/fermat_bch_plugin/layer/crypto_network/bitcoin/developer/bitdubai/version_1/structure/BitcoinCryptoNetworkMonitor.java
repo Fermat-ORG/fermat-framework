@@ -73,6 +73,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
 
+
     final NetworkParameters NETWORK_PARAMETERS;
     final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
     final Context context;
@@ -343,6 +344,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             // gets the transaction from the wallet.
             Transaction transaction = wallet.getTransaction(sha256Hash);
 
+
+
             // if I don't have it, it wasn't yet commited, I will load it from file and commit it.
             if (transaction == null){
                 try {
@@ -377,11 +380,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
              transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
+            //the broadcaster id that I will be using to notify the progress
+            final int broadcasterId = broadcastProgress(0, txHash, 0);
+
             transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
-                    broadcastProgress((int) Math.round(progress * 100));
+                    broadcastProgress((int) Math.round(progress * 100), txHash, broadcasterId);
                 }
             });
 
@@ -425,6 +431,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 @Override
                 public void onFailure(Throwable t) {
                     System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
+
+                    //will close the open broadcaster
+                    broadcastProgress(100, txHash, broadcasterId);
+
                     try {
                         getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
@@ -441,10 +451,18 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         }
 
 
-        private void broadcastProgress(int progress) {
+        private int broadcastProgress(int progress, String txHash, int broadcasterId) {
             FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Broadcasting tx " +txHash);
             fermatBundle.put(Broadcaster.PROGRESS_BAR, progress);
-            broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+
+            if (broadcasterId != 0){
+                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterId);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+            } else
+                broadcasterId = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+
+            return broadcasterId;
         }
 
         /**
