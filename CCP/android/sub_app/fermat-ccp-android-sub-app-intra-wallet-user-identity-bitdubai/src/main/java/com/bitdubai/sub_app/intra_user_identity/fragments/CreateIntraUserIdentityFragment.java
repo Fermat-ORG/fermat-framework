@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -59,7 +58,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
 
     private static final String TAG = "CreateIdentity";
-    private static int num=1;
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -88,8 +86,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
 
-    private Handler handler;
-
 
     public static CreateIntraUserIdentityFragment newInstance() {
         return new CreateIntraUserIdentityFragment();
@@ -98,8 +94,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        handler = new Handler();
 
         try {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
@@ -172,7 +166,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.img_photo);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
-        Log.i("APP-Mati", "fragmentoIdenttity"+TAG+this.hashCode());
+
 
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
