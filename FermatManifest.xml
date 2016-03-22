@@ -8236,12 +8236,12 @@
 		<steps>
 		     <step id="0"
 			 type="start"
-			 title="The user opens the Artist identity sub app."
+			 title="The user submit the data to create the Artist identity."
 			 description="Includes the data to create an identity."
 			 platform="TKY"
 			 superlayer=""
 			 layer="Sub app"
-			 name="Artist"
+			 name="Artist Identity"
 			 >
 			 <next>
 			     <step id="1" type="direct call"></step>
@@ -8249,12 +8249,12 @@
 		     </step>
 		     <step id="1"
 			 type="activity"
-			 title="The user presses create button."
+			 title="Send the artist data."
 			 description="Sends acces data to Tokenly to verify the access data"
 			 platform="TKY"
 			 superlayer=""
 			 layer="Sub app module"
-			 name="Artist"
+			 name="Artist Identity"
 			 >
 			 <next>
 			     <step id="2" type="direct call"></step>
@@ -8306,12 +8306,12 @@
 		<steps>
 		     <step id="0"
 			 type="start"
-			 title="The user opens the Fan identity sub app."
+			 title="The user submit the data to create the Fan identity."
 			 description="Includes the data to create an identity."
 			 platform="TKY"
 			 superlayer=""
 			 layer="Sub app"
-			 name="Fan"
+			 name="Fan Identity"
 			 >
 			 <next>
 			     <step id="1" type="direct call"></step>
@@ -8319,12 +8319,12 @@
 		     </step>
 		     <step id="1"
 			 type="activity"
-			 title="The user presses create button."
+			 title="Send the fanatic data."
 			 description="Sends acces data to Tokenly to verify the access data"
 			 platform="TKY"
 			 superlayer=""
 			 layer="Sub app module"
-			 name="Fan"
+			 name="Fan Identity"
 			 >
 			 <next>
 			     <step id="2" type="direct call"></step>
@@ -8364,6 +8364,965 @@
 			 superlayer=""
 			 layer="Identity"
 			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List available songs" 
+		description="A Fanatic wants to list the available songs in the device." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user opens the Music player."
+			 description="Request the list of available songs."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the available songs from external platforms."
+			 description="Request to the External API the list of available songs in the device"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Get the available songs list"
+			 description="Search in the database the available songs"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the Music player view"
+			 description="Organizes the information received and updates the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub App Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Play a song" 
+		description="The user wants to play a available song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user presses a song element."
+			 description="A song in the setlist is pressed."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the available song."
+			 description="Request the necessary data to play the song"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Get the song local storage path"
+			 description="Search the file path corresponding the song in database"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Open the song file"
+			 description="The requested file is opened and its contents is obtained."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			<next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Update the view"
+			 description="Submit the data to pla the song and updates the view"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Play the song"
+			 description="Play the song provided"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Create Artist identity" 
+		description="An artist creates a Artist identity in Artist platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Artist identity."
+			 description="Includes the data to create an identity."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the artist data."
+			 description="Send the necessary data to create the identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Create the identity."
+			 description="The Artist Identity is persisted."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Create Fan identity" 
+		description="An artist creates a Fan identity in Artist platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Fan identity."
+			 description="Includes the data to create an identity."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the Fan data."
+			 description="Send the necessary data to create the identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Create the identity."
+			 description="The Fan Identity is persisted."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Artist accepts all connections" 
+		description="The artist indicates that accepts all connections requested by fans." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user set the acceptance of all fans requested connections."
+			 description="Change the status of accepting all connections."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request to update the Identity."
+			 description="Sends the change to the Artist Identity plugin"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Update identity."
+			 description="Updates the information in the database."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List Fan identities in external systems" 
+		description="The fan list the available external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="List external platforms identities."
+			 description="The user request the list of available external identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the external identities."
+			 description="Request the identity created in the external platform"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Submit external platform identities list."
+			 description="Returns the list of identities created in external platforms registered in the Fan Identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the identities list."
+			 description="The identities list is returned."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the identities list."
+			 description="Shows the external platform identities list."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List Artists identities in external systems" 
+		description="The artist list the available external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="List external platforms identities."
+			 description="The user request the list of available external identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the external identities."
+			 description="Request the identity created in the external platform"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Submit external platform identities list."
+			 description="Returns the list of identities created in external platforms registered in the Fan Identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the identities list."
+			 description="The identities list is returned."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the identities list."
+			 description="Shows the external platform identities list."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Link Artist Identity to an account in an external system" 
+		description="The artist makes a connection with external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an external platforms identity."
+			 description="The user selects an element of external identities list displayed on the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request link with external platform identity."
+			 description="Requests to persist the selected identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="The Artist identity is updated."
+			 description="The Artist identity perists the external platform identity in database."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Link Fan Identity to an account in an external system" 
+		description="The fanatic makes a connection with external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an external platforms identity."
+			 description="The user selects an element of external identities list displayed on the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request link with external platform identity."
+			 description="Requests to persist the selected identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="The Fan identity is updated."
+			 description="The Fan identity perists the external platform identity in database."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="View Artist profile" 
+		description="The Artist community user want to see the artist associated profile." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an artist picture."
+			 description="The user presses the image of the artist to see the associated profile."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist profile."
+			 description="Request the profile of the selected artist identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the selected artist profile."
+			 description="The artist profile is get from database."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the profile data."
+			 description="The identities profile data is returned."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the artist profile."
+			 description="Shows the identities profile."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request list of Artist identities" 
+		description="The user get in the Artist Community screen." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request the artist actors availables."
+			 description="Request the module the list of artist identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist list."
+			 description="Request a list of available artist identities"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the artist list."
+			 description="Provides the list of artist Identities."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Submit the artist list."
+			 description="The artist list is returned to update the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the artist list."
+			 description="The view is updated with the available artists identities."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request list of Fan identities" 
+		description="The user get in the Fan Community screen." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request the fan actors availables."
+			 description="Request the module the list of fan identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist list."
+			 description="Request a list of available fan identities"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the fan list."
+			 description="Provides the list of fan Identities."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Submit the fan list."
+			 description="The fan list is returned to update the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the fan list."
+			 description="The view is updated with the available fan identities."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request connection of a Fan to an Artist" 
+		description="The user request a connection between a fan identity and an artist identity." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request an artist identity connection."
+			 description="The artist to request connection is selected."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the identities connection."
+			 description="Request a connection with an artist identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send request to a remote device."
+			 description="Send the connection request to a remote device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection request to a remote device."
+			 description="Route the connection request to a remote device through the P2P network."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection request."
+			 description="Receive a message with the connection request."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection request."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="An artist accepts a fan connection" 
+		description="The artist sees a connection request and accepts it." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Register the acceptance of a connection."
+			 description="A request connection request is selected to approve it."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Submit request acceptance."
+			 description="Route the acceptance to notify to the connection petitioner"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send acceptance to a remote device."
+			 description="Send the connection acceptance to a remote device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection acceptance to a remote device."
+			 description="Route the connection acceptance to a remote device through the P2P network."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection acceptance."
+			 description="Receive a message with the connection acceptance."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection acceptance."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="The fan to artist connection request  is not accepted" 
+		description="The artist sees a connection request and rejects it." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Register the denial of a connection."
+			 description="A request connection request is selected to reject it."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Submit request rejection."
+			 description="Route the rejection to notify to the connection petitioner"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send rejection to a remote device."
+			 description="Send the connection rejection to a remote device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection rejection to a remote device."
+			 description="Route the connection rejection to a remote device through the P2P network."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection rejection."
+			 description="Receive a message with the connection rejection."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection rejection."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
 			 >
 		     </step>
 		</steps>
