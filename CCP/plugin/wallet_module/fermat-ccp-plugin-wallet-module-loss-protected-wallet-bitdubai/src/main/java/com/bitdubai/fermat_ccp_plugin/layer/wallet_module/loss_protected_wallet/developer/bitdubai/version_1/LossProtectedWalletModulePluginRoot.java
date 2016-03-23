@@ -114,8 +114,8 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION)
-    private OutgoingDeviceUserManager outgoingDeviceUserManager;
+//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION)
+//    private OutgoingDeviceUserManager outgoingDeviceUserManager;
 
     private String appPublicKey;
 

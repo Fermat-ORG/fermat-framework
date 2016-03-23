@@ -36,7 +36,7 @@ public class TransactionLayer extends AbstractLayer {
             registerPlugin(new OutgoingDraftTransactionPluginSubsystem());
             registerPlugin(new HoldCryptoMoneyTransactionPluginSubsystem());
             registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
-            registerPlugin(new OutgoingDeviceUserPluginSubsystem());
+            //registerPlugin(new OutgoingDeviceUserPluginSubsystem());
             //registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
