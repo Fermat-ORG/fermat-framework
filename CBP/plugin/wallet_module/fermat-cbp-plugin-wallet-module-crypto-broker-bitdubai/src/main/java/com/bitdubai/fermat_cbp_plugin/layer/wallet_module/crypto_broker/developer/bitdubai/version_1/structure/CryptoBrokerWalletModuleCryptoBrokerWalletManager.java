@@ -170,7 +170,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -665,8 +664,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             if (merchandise.getCode().equals(currencyCode) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
-                    paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
-                            "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
+                    if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())){
+                        paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
+                                "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
+                    }
+
                 }
             }
 
