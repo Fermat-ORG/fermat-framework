@@ -84,6 +84,14 @@
                 android:textStyle="italic"
                 app:typeface="ROBOTO_REGULAR"
                 />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="1 BTC - 400 USD"
+                android:textSize="13sp"
+                android:id="@+id/txt_exchange_rate"
+                android:textColor="#aeb6c6"
+                android:textStyle="italic"
+                app:typeface="ROBOTO_REGULAR"
+                />
         </LinearLayout>
 
     </FrameLayout>

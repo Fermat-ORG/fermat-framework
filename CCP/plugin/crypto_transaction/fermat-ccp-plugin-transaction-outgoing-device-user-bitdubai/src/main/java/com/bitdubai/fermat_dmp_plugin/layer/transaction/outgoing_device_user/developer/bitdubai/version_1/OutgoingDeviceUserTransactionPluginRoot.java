@@ -36,6 +36,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoinDeviceUserTransactionDatabaseConstants;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUser;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
@@ -49,6 +50,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,7 @@ import java.util.UUID;
  */
 
 public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
-        implements DatabaseManagerForDevelopers {
+        implements OutgoingDeviceUserManager,DatabaseManagerForDevelopers {
 
 
 
@@ -96,15 +98,17 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
 
     @Override
     public void start() throws CantStartPluginException {
+
+        //TODO: inicializar la base de datos esta dando Error
         outgoingDeviceUserTransactionDao = new OutgoingDeviceUserTransactionDao(errorManager,pluginDatabaseSystem);
         try {
             outgoingDeviceUserTransactionDao.initialize(pluginId);
+
+            outgoingDeviceUserModuleManager = new OutgoingDeviceUserModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager,outgoingDeviceUserTransactionDao);
+
         } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
         }
-
-
-        outgoingDeviceUserModuleManager = new OutgoingDeviceUserModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager,outgoingDeviceUserTransactionDao);
 
     }
 
@@ -114,6 +118,19 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    /**
+     * OutgoingDeviceUserManager implementation
+     */
+
+    @Override
+    public OutgoingDeviceUser getOutgoingDeviceUser()
+    {
+        return null;
+    }
+
+    /**
+     * Developer Database Implementation
+     */
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
