@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsersManager;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.database.TransferIntraWalletUsersDatabaseConstants;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsers;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.database.TransferIntraWalletUsersDao;
@@ -39,7 +40,6 @@ import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWall
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.OutgoingDeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ import java.util.List;
  */
 
 public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
-        implements OutgoingDeviceUserManager,DatabaseManagerForDevelopers {
+        implements TransferIntraWalletUsersManager,DatabaseManagerForDevelopers {
 
 
 
