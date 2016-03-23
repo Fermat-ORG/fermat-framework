@@ -280,7 +280,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public List<Fan> getIdentityArtistsFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListFanIdentitiesException {
+    public List<Fan> getIdentityFansFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListFanIdentitiesException {
 
 
         // Setup method.
@@ -321,6 +321,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                 list.add(new TokenlyFanIdentityImp(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
