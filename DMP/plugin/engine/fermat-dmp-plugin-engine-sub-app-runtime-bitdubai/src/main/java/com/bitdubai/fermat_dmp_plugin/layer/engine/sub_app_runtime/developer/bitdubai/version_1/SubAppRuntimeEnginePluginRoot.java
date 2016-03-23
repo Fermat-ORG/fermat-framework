@@ -2157,33 +2157,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TkyArtistIdentity.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY);
 
         runtimeActivity = new Activity();
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Tokenly Identity");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
+        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
         runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_HOME.getKey());
-        /*
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
-        */
-
-/*
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        */
-
         TkyArtistIdentity.addActivity(runtimeActivity);
+        TkyArtistIdentity.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY);
 
         listSubApp.put(TkyArtistIdentity.getPublicKey(), TkyArtistIdentity);
 
