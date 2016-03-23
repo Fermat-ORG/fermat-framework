@@ -10,6 +10,7 @@ public class BlockchainDownloadProgress {
     int pendingBlocks;
     int totalBlocks;
     int downloadedBlocks;
+    long lastblocktime;
     int progress;
     String downloader;
 
@@ -67,6 +68,14 @@ public class BlockchainDownloadProgress {
 
     public void setDownloader(String downloader) {
         this.downloader = downloader;
+    }
+
+    public long getLastblocktime() {
+        return lastblocktime;
+    }
+
+    public void setLastblocktime(long lastblocktime) {
+        this.lastblocktime = lastblocktime;
     }
 
     @Override
