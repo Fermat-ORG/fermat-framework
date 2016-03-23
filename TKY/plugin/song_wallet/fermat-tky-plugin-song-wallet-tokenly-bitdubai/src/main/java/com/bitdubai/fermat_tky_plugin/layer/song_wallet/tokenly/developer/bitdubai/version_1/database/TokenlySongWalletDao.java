@@ -22,6 +22,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSon
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CanGetTokensArrayFromSongWalletException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetLastUpdateDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
@@ -65,6 +66,7 @@ public class TokenlySongWalletDao {
      */
     private final String DEFAULT_BITCOIN_ADDRESS="N/A";
     private final String DEFAULT_OTHERS_FIELD = "N/A";
+    public final long DEFAULT_TIME_STAMP = 0;
 
     /**
      * Constructor
@@ -765,7 +767,7 @@ public class TokenlySongWalletDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
             //Get the actual timestamp
-            Long timestamp = System.currentTimeMillis();
+            long timestamp = System.currentTimeMillis();
             if(records.isEmpty()){
                 //There's no synchronize process registered in database for this username.
                 databaseTableRecord = databaseTable.getEmptyRecord();
@@ -830,6 +832,54 @@ public class TokenlySongWalletDao {
                     e,
                     "Persisting the Synchronize process",
                     "Cannot update the database");
+        }
+    }
+
+    /**
+     * This method returns the last sync update from database from a given tokenly username.
+     * @param username
+     * @return
+     * @throws CantGetLastUpdateDateException
+     */
+    public long getLastUpdateDate(String username) throws CantGetLastUpdateDateException {
+        try{
+            openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TOKENLY_USERNAME_COLUMN_NAME,
+                    username,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                return DEFAULT_TIME_STAMP;
+            }
+            DatabaseTableRecord record = records.get(0);
+            long timestamp = record.getLongValue(
+                    TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TIMESTAMP);
+            return timestamp;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetLastUpdateDateException(
+                    e,
+                    "Getting sync timestamp from database for user "+username,
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetLastUpdateDateException(
+                    e,
+                    "Getting sync timestamp from database for user "+username,
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetLastUpdateDateException(
+                    e,
+                    "Getting sync timestamp from database for user "+username,
+                    "Cannot load table");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantGetLastUpdateDateException(
+                    e,
+                    "Getting sync timestamp from database for user "+username,
+                    "Unexpected result from database");
         }
     }
 

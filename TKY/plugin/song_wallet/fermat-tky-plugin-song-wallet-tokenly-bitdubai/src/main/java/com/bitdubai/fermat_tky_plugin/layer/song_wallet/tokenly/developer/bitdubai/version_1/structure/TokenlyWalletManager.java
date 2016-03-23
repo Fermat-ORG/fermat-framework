@@ -19,6 +19,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetLastUpdateDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
@@ -131,11 +132,28 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      * This checks the time passed between the method execution and the last update, if the actual
      * time - last updated is less than the default update interval, this method not synchronize
      * with external API.
+     * @param tokenlyUsername
      * @throws CantSynchronizeWithExternalAPIException
      */
     @Override
-    public void synchronizeSongs() throws CantSynchronizeWithExternalAPIException {
-
+    public void synchronizeSongs(String tokenlyUsername) throws
+            CantSynchronizeWithExternalAPIException {
+        try{
+            //Get the last sync date
+            long lastSyncUpdate = this.tokenlySongWalletDao.getLastUpdateDate(tokenlyUsername);
+            //Get the actual timestamp
+            long timestamp = System.currentTimeMillis();
+            //Calculate timestamp interval
+            long intervalTimestamp = timestamp - lastSyncUpdate;
+            if(intervalTimestamp > TIME_BETWEEN_SYNC){
+                synchronizeSongsByUser(tokenlyUsername);
+            }
+        } catch (CantGetLastUpdateDateException e) {
+            throw new CantSynchronizeWithExternalAPIException(
+                    e,
+                    "Synchronizing songs automatically",
+                    "Cannot get the last sync date from database");
+        }
     }
 
     /**

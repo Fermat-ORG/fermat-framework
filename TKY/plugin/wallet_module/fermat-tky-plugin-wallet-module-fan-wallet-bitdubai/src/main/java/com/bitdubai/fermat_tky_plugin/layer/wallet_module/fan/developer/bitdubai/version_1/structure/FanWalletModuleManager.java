@@ -60,8 +60,8 @@ public class FanWalletModuleManager implements FanWalletModule {
     }
 
     @Override
-    public void synchronizeSongs() throws CantSynchronizeWithExternalAPIException {
-        songWalletTokenlyManager.synchronizeSongs();
+    public void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException {
+        songWalletTokenlyManager.synchronizeSongs(tokenlyUsername);
     }
 
     @Override
