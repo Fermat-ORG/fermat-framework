@@ -18,6 +18,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.ap
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.app_connection.WalletAssetIssuerFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection.WalletAssetUserFermatAppConnection;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
@@ -150,8 +151,8 @@ public class FermatAppConnectionManager {
             case "sub_app_art_artist_community":
                 //fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
-            case "sub_app_art_artist_identity":
-                //fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
+            case "public_key_tky_artist_identity":
+                fermatAppConnection = new TkyArtistIdentityAppConnection(activity);
                 break;
 
         }
