@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginRe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by natalia on 22/03/16.
