@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -12,20 +11,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.Service;
-
-
-
+import com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class ServiceDao {
+public class SystemDataDao {
 
     /**
      * Represent the dataBase
@@ -37,7 +30,7 @@ public class ServiceDao {
      *
      * @param dataBase
      */
-    public ServiceDao(Database dataBase) {
+    public SystemDataDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -61,43 +54,43 @@ public class ServiceDao {
     }
 
     /**
-     * Method that find an Service by id in the data base.
+     * Method that find an SystemData by id in the data base.
      *
      * @param id Long id.
-     * @return Service found
+     * @return SystemData found
      */
-    public Service findById(String id) throws DatabaseTransactionFailedException {
+    public SystemData findById(String id) throws DatabaseTransactionFailedException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        Service service = null;
+        SystemData systemData = null;
 
         try {
 
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable serviceTable = getDatabaseTable();
-            serviceTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            serviceTable.loadToMemory();
+            DatabaseTable systemDataTable = getDatabaseTable();
+            systemDataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            systemDataTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = serviceTable.getRecords();
+            List<DatabaseTableRecord> records = systemDataTable.getRecords();
 
 
             /*
-             * 3 - Convert into Service objects
+             * 3 - Convert into SystemData objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  Service
+                 * 3.1 - Create and configure a  SystemData
                  */
-                service = constructFrom(record);
+                SystemData = constructFrom(record);
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -110,65 +103,65 @@ public class ServiceDao {
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
         }
 
-        return service;
+        return SystemData;
     }
 
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All Service.
+     * @return All SystemData.
      * @throws DatabaseTransactionFailedException
      */
-    public List<Service> findAll() throws DatabaseTransactionFailedException {
+    public List<SystemData> findAll() throws DatabaseTransactionFailedException {
 
 
-        List<Service> list = null;
+        List<SystemData> list = null;
 
         try {
 
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable serviceTable = getDatabaseTable();
-            serviceTable.loadToMemory();
+            DatabaseTable systemDataTable = getDatabaseTable();
+            systemDataTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = serviceTable.getRecords();
+            List<DatabaseTableRecord> records = systemDataTable.getRecords();
 
             /*
-             * 3 - Create a list of Service objects
+             * 3 - Create a list of SystemData objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into Service objects
+             * 4 - Convert into SystemData objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  Service
+                 * 4.1 - Create and configure a  SystemData
                  */
-                Service service = constructFrom(record);
+                SystemData systemData = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(service);
+                list.add(SystemData);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-           // DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -182,11 +175,11 @@ public class ServiceDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
-     * @return All Service.
+     * @return All SystemData.
      * @throws DatabaseTransactionFailedException
      * @see SystemMonitorNetworkServiceDatabaseConstants
      */
-    public List<Service> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
+    public List<SystemData> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -197,7 +190,7 @@ public class ServiceDao {
         }
 
 
-        List<Service> list = null;
+        List<SystemData> list = null;
 
         try {
 
@@ -214,37 +207,37 @@ public class ServiceDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 3 - Create a list of Service objects
+             * 3 - Create a list of SystemData objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into Service objects
+             * 4 - Convert into SystemData objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  Service
+                 * 4.1 - Create and configure a  SystemData
                  */
-                Service service = constructFrom(record);
+                SystemData systemData = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(service);
+                list.add(SystemData);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            //DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw  new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -259,10 +252,10 @@ public class ServiceDao {
      * the key are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
      * @param filters
-     * @return List<Service>
+     * @return List<SystemData>
      * @throws DatabaseTransactionFailedException
      */
-    public List<Service> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
+    public List<SystemData> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -270,7 +263,7 @@ public class ServiceDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<Service> list = null;
+        List<SystemData> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -304,37 +297,37 @@ public class ServiceDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 4 - Create a list of Service objects
+             * 4 - Create a list of SystemData objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into Service objects
+             * 5 - Convert into SystemData objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  Service
+                 * 5.1 - Create and configure a  SystemData
                  */
-                Service service = constructFrom(record);
+                SystemData systemData = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
                  */
-                list.add(service);
+                list.add(SystemData);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            //DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -346,39 +339,53 @@ public class ServiceDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity Service to create.
+     * @param entity SystemData to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(Service entity) throws CantInsertRecordDataBaseException, DatabaseTransactionFailedException {
+    public void create(SystemData entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
-        if (findById(entity.getTransactionId().toString()) != null) {
-            return;
-        }
+        try {
+
+            if (findById(entity.getTransactionId().toString()) != null) {
+                return;
+            }
             /*
              * 1- Create the record to the entity
              */
-        DatabaseTableRecord entityRecord = constructFrom(entity);
+            DatabaseTableRecord entityRecord = constructFrom(entity);
 
             /*
              * 2.- Create a new transaction and execute
              */
-        DatabaseTransaction transaction = getDataBase().newTransaction();
-        transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-        getDataBase().executeTransaction(transaction);
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+            getDataBase().executeTransaction(transaction);
 
+        } catch (DatabaseTransactionFailedException | DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantInsertRecordDataBaseException;
+
+        }
     }
 
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity Service to update.
+     * @param entity SystemData to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(Service entity) throws CantUpdateRecordDataBaseException {
+    public void update(SystemData entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -395,7 +402,7 @@ public class ServiceDao {
             metadataTable.updateRecord(record);
         } catch (CantUpdateRecordException | CantLoadTableToMemoryException | RecordsNotFoundException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -430,7 +437,7 @@ public class ServiceDao {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -443,44 +450,54 @@ public class ServiceDao {
 
 
     /**
-     * Create a instance of Service from the DatabaseTableRecord
+     * Create a instance of SystemData from the DatabaseTableRecord
      *
      * @param record with values from the table
-     * @return Service setters the values from table
+     * @return SystemData setters the values from table
      */
-    private Service constructFrom(DatabaseTableRecord record) {
+    private SystemData constructFrom(DatabaseTableRecord record) {
 
-        Service service = new Service();
+        SystemData systemData = new SystemData();
 
-        service.id = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
-        service.name = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_NAME_COLUMN_NAME);
-        service.type = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_TYPE_COLUMN_NAME);
-        service.subType = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_SUBTYPE_COLUMN_NAME);
+        try {
+            
+            systemData.systemID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
+            systemData.nodeType = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME);
+            systemData.hardware = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME);
+            systemData.os = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME);
 
-        return service;
+        } catch (InvalidParameterException e) {
+            //this should not happen, but if it happens return null
+            e.printStackTrace();
+            return null;
+        }
+
+        return SystemData;
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a Service pass
+     * Construct a DatabaseTableRecord whit the values of the a SystemData pass
      * by parameter
      *
-     * @param service the contains the values
+     * @param SystemData the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(Service service) {
+    private DatabaseTableRecord constructFrom(SystemData systemData) {
 
         /*
          * Create the record to the entity
          */
         DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
-        setValuesToRecord(entityRecord, service);
+        setValuesToRecord(entityRecord, SystemData);
         return entityRecord;
     }
 
-    private void setValuesToRecord(DatabaseTableRecord entityRecord, Service service) {
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, service.id);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_NAME_COLUMN_NAME, service.name);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_TYPE_COLUMN_NAME, service.type);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_SUBTYPE_COLUMN_NAME, service.subType);
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, SystemData systemData) {
+        
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, systemData.systemID);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME, systemData.nodeType);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME, systemData.hardware);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME, systemData.os);
     }
+
 }

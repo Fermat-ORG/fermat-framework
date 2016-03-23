@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -12,14 +11,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-
+import com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class ConnectionDao {
+public class ServiceDao {
 
     /**
      * Represent the dataBase
@@ -31,7 +30,7 @@ public class ConnectionDao {
      *
      * @param dataBase
      */
-    public ConnectionDao(Database dataBase) {
+    public ServiceDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -55,44 +54,43 @@ public class ConnectionDao {
     }
 
     /**
-     * Method that find an Connection by id in the data base.
+     * Method that find an Service by id in the data base.
      *
      * @param id Long id.
-     * @return Connection found
+     * @return Service found
      */
-    public Connection findById(String id) throws DatabaseTransactionFailedException {
+    public Service findById(String id) throws DatabaseTransactionFailedException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        Connection connection;
-        connection = null;
+        Service service = null;
 
         try {
 
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable connectionTable = getDatabaseTable();
-            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            connectionTable.loadToMemory();
+            DatabaseTable serviceTable = getDatabaseTable();
+            serviceTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            serviceTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = connectionTable.getRecords();
+            List<DatabaseTableRecord> records = serviceTable.getRecords();
 
 
             /*
-             * 3 - Convert into Connection objects
+             * 3 - Convert into Service objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  Connection
+                 * 3.1 - Create and configure a  Service
                  */
-                com.squareup.okhttp.Connection = constructFrom(record);
+                Service = constructFrom(record);
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -105,53 +103,53 @@ public class ConnectionDao {
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
         }
 
-        return connection;
+        return Service;
     }
 
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All Connection.
+     * @return All Service.
      * @throws DatabaseTransactionFailedException
      */
-    public List<Connection> findAll() throws DatabaseTransactionFailedException {
+    public List<Service> findAll() throws DatabaseTransactionFailedException {
 
 
-        List<Connection> list = null;
+        List<Service> list = null;
 
         try {
 
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable connectionTable = getDatabaseTable();
-            connectionTable.loadToMemory();
+            DatabaseTable serviceTable = getDatabaseTable();
+            serviceTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = connectionTable.getRecords();
+            List<DatabaseTableRecord> records = serviceTable.getRecords();
 
             /*
-             * 3 - Create a list of Connection objects
+             * 3 - Create a list of Service objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into Connection objects
+             * 4 - Convert into Service objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  Connection
+                 * 4.1 - Create and configure a  Service
                  */
-                Connection connection = constructFrom(record);
+                Service service = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(connection);
+                list.add(Service);
 
             }
 
@@ -162,8 +160,8 @@ public class ConnectionDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-           // DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -177,11 +175,11 @@ public class ConnectionDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
-     * @return All Connection.
+     * @return All Service.
      * @throws DatabaseTransactionFailedException
      * @see SystemMonitorNetworkServiceDatabaseConstants
      */
-    public List<Connection> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
+    public List<Service> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -192,7 +190,7 @@ public class ConnectionDao {
         }
 
 
-        List<Connection> list = null;
+        List<Service> list = null;
 
         try {
 
@@ -209,25 +207,25 @@ public class ConnectionDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 3 - Create a list of Connection objects
+             * 3 - Create a list of Service objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into Connection objects
+             * 4 - Convert into Service objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  Connection
+                 * 4.1 - Create and configure a  Service
                  */
-                Connection connection = constructFrom(record);
+                Service service = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(connection);
+                list.add(Service);
 
             }
 
@@ -238,8 +236,8 @@ public class ConnectionDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            //DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -254,10 +252,10 @@ public class ConnectionDao {
      * the key are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
      * @param filters
-     * @return List<Connection>
+     * @return List<Service>
      * @throws DatabaseTransactionFailedException
      */
-    public List<Connection> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
+    public List<Service> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -265,7 +263,7 @@ public class ConnectionDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<Connection> list = null;
+        List<Service> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -299,37 +297,37 @@ public class ConnectionDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 4 - Create a list of Connection objects
+             * 4 - Create a list of Service objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into Connection objects
+             * 5 - Convert into Service objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  Connection
+                 * 5.1 - Create and configure a  Service
                  */
-                Connection connection = constructFrom(record);
+                Service service = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
                  */
-                list.add(connection);
+                list.add(Service);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            //DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw DatabaseTransactionFailedException;
         }
 
         /*
@@ -341,39 +339,53 @@ public class ConnectionDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity Connection to create.
+     * @param entity Service to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(Connection entity) throws CantInsertRecordDataBaseException, DatabaseTransactionFailedException {
+    public void create(Service entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
-        if (findById(entity.getTransactionId().toString()) != null) {
-            return;
-        }
+        try {
+
+            if (findById(entity.getTransactionId().toString()) != null) {
+                return;
+            }
             /*
              * 1- Create the record to the entity
              */
-        DatabaseTableRecord entityRecord = constructFrom(entity);
+            DatabaseTableRecord entityRecord = constructFrom(entity);
 
             /*
              * 2.- Create a new transaction and execute
              */
-        DatabaseTransaction transaction = getDataBase().newTransaction();
-        transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-        getDataBase().executeTransaction(transaction);
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+            getDataBase().executeTransaction(transaction);
 
+        } catch (DatabaseTransactionFailedException | DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantInsertRecordDataBaseException;
+
+        }
     }
 
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity Connection to update.
+     * @param entity Service to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(Connection entity) throws CantUpdateRecordDataBaseException {
+    public void update(Service entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -390,7 +402,7 @@ public class ConnectionDao {
             metadataTable.updateRecord(record);
         } catch (CantUpdateRecordException | CantLoadTableToMemoryException | RecordsNotFoundException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -425,7 +437,7 @@ public class ConnectionDao {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -438,22 +450,21 @@ public class ConnectionDao {
 
 
     /**
-     * Create a instance of Connection from the DatabaseTableRecord
+     * Create a instance of Service from the DatabaseTableRecord
      *
      * @param record with values from the table
-     * @return Connection setters the values from table
+     * @return Service setters the values from table
      */
-    private Connection constructFrom(DatabaseTableRecord record) {
+    private Service constructFrom(DatabaseTableRecord record) {
 
-        Connection connection = new Connection();
+        Service service = new Service();
 
         try {
-
-            connection.connID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
-            connection.peerID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEERID_COLUMN_NAME);
-            connection.ipv4 = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV4_COLUMN_NAME);
-            connection.ipv6 = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV6_COLUMN_NAME);
-            connection.ns_name = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NETWORK_SERVICE_NAME_COLUMN_NAME);
+            
+            service.id = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
+            service.name = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NAME_COLUMN_NAME);
+            service.type = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_TYPE_COLUMN_NAME);
+            service.subType = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SUBTYPE_COLUMN_NAME);
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
@@ -461,31 +472,30 @@ public class ConnectionDao {
             return null;
         }
 
-        return Connection;
+        return Service;
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a Connection pass
+     * Construct a DatabaseTableRecord whit the values of the a Service pass
      * by parameter
      *
-     * @param connection the contains the values
+     * @param Service the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(Connection connection) {
+    private DatabaseTableRecord constructFrom(Service service) {
 
         /*
          * Create the record to the entity
          */
         DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
-        setValuesToRecord(entityRecord, connection);
+        setValuesToRecord(entityRecord, Service);
         return entityRecord;
     }
 
-    private void setValuesToRecord(DatabaseTableRecord entityRecord, Connection connection) {
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, connection.connID);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEERID_COLUMN_NAME, connection.peerID);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV4_COLUMN_NAME, connection.ipv4);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV6_COLUMN_NAME, connection.ipv6);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NETWORK_SERVICE_NAME_COLUMN_NAME, connection.ns_name);
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, Service service) {
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, service.id);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NAME_COLUMN_NAME, service.name);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_TYPE_COLUMN_NAME, service.type);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SUBTYPE_COLUMN_NAME, service.subType);
     }
 }

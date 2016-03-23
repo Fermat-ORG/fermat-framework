@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures;
+package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.structures;
 
 //This is a representation of the table in the Database
 public class SystemData {

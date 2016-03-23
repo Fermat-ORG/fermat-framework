@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -11,12 +11,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class SystemDataDao {
+public class ConnectionDao {
 
     /**
      * Represent the dataBase
@@ -28,7 +30,7 @@ public class SystemDataDao {
      *
      * @param dataBase
      */
-    public SystemDataDao(Database dataBase) {
+    public ConnectionDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -52,43 +54,43 @@ public class SystemDataDao {
     }
 
     /**
-     * Method that find an SystemData by id in the data base.
+     * Method that find an Connection by id in the data base.
      *
      * @param id Long id.
-     * @return SystemData found
+     * @return Connection found
      */
-    public SystemData findById(String id) throws DatabaseTransactionFailedException {
+    public Connection findById(String id) throws DatabaseTransactionFailedException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        SystemData systemData = null;
+        Connection connection = null;
 
         try {
 
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable systemDataTable = getDatabaseTable();
-            systemDataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            systemDataTable.loadToMemory();
+            DatabaseTable connectionTable = getDatabaseTable();
+            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            connectionTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = systemDataTable.getRecords();
+            List<DatabaseTableRecord> records = connectionTable.getRecords();
 
 
             /*
-             * 3 - Convert into SystemData objects
+             * 3 - Convert into Connection objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  SystemData
+                 * 3.1 - Create and configure a  Connection
                  */
-                SystemData = constructFrom(record);
+                Connection = constructFrom(record);
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -101,53 +103,53 @@ public class SystemDataDao {
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
         }
 
-        return SystemData;
+        return Connection;
     }
 
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All SystemData.
+     * @return All Connection.
      * @throws DatabaseTransactionFailedException
      */
-    public List<SystemData> findAll() throws DatabaseTransactionFailedException {
+    public List<Connection> findAll() throws DatabaseTransactionFailedException {
 
 
-        List<SystemData> list = null;
+        List<Connection> list = null;
 
         try {
 
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable systemDataTable = getDatabaseTable();
-            systemDataTable.loadToMemory();
+            DatabaseTable connectionTable = getDatabaseTable();
+            connectionTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = systemDataTable.getRecords();
+            List<DatabaseTableRecord> records = connectionTable.getRecords();
 
             /*
-             * 3 - Create a list of SystemData objects
+             * 3 - Create a list of Connection objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into SystemData objects
+             * 4 - Convert into Connection objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  SystemData
+                 * 4.1 - Create and configure a  Connection
                  */
-                SystemData systemData = constructFrom(record);
+                Connection connection = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(SystemData);
+                list.add(Connection);
 
             }
 
@@ -173,11 +175,11 @@ public class SystemDataDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
-     * @return All SystemData.
+     * @return All Connection.
      * @throws DatabaseTransactionFailedException
      * @see SystemMonitorNetworkServiceDatabaseConstants
      */
-    public List<SystemData> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
+    public List<Connection> findAll(String columnName, String columnValue) throws DatabaseTransactionFailedException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -188,7 +190,7 @@ public class SystemDataDao {
         }
 
 
-        List<SystemData> list = null;
+        List<Connection> list = null;
 
         try {
 
@@ -205,25 +207,25 @@ public class SystemDataDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 3 - Create a list of SystemData objects
+             * 3 - Create a list of Connection objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into SystemData objects
+             * 4 - Convert into Connection objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  SystemData
+                 * 4.1 - Create and configure a  Connection
                  */
-                SystemData systemData = constructFrom(record);
+                Connection connection = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(SystemData);
+                list.add(Connection);
 
             }
 
@@ -250,10 +252,10 @@ public class SystemDataDao {
      * the key are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
      *
      * @param filters
-     * @return List<SystemData>
+     * @return List<Connection>
      * @throws DatabaseTransactionFailedException
      */
-    public List<SystemData> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
+    public List<Connection> findAll(Map<String, Object> filters) throws DatabaseTransactionFailedException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -261,7 +263,7 @@ public class SystemDataDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<SystemData> list = null;
+        List<Connection> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -295,25 +297,25 @@ public class SystemDataDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 4 - Create a list of SystemData objects
+             * 4 - Create a list of Connection objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into SystemData objects
+             * 5 - Convert into Connection objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  SystemData
+                 * 5.1 - Create and configure a  Connection
                  */
-                SystemData systemData = constructFrom(record);
+                Connection connection = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
                  */
-                list.add(SystemData);
+                list.add(Connection);
 
             }
 
@@ -337,10 +339,10 @@ public class SystemDataDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity SystemData to create.
+     * @param entity Connection to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(SystemData entity) throws CantInsertRecordDataBaseException {
+    public void create(Connection entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -380,10 +382,10 @@ public class SystemDataDao {
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity SystemData to update.
+     * @param entity Connection to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(SystemData entity) throws CantUpdateRecordDataBaseException {
+    public void update(Connection entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -448,21 +450,22 @@ public class SystemDataDao {
 
 
     /**
-     * Create a instance of SystemData from the DatabaseTableRecord
+     * Create a instance of Connection from the DatabaseTableRecord
      *
      * @param record with values from the table
-     * @return SystemData setters the values from table
+     * @return Connection setters the values from table
      */
-    private SystemData constructFrom(DatabaseTableRecord record) {
+    private Connection constructFrom(DatabaseTableRecord record) {
 
-        SystemData systemData = new SystemData();
+        Connection connection = new Connection();
 
         try {
             
-            systemData.systemID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
-            systemData.nodeType = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME);
-            systemData.hardware = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME);
-            systemData.os = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME);
+            connection.connID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
+            connection.peerID = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEERID_COLUMN_NAME);
+            connection.ipv4 = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV4_COLUMN_NAME);
+            connection.ipv6 = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV6_COLUMN_NAME);
+            connection.ns_name = record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NETWORK_SERVICE_NAME_COLUMN_NAME);
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
@@ -470,32 +473,31 @@ public class SystemDataDao {
             return null;
         }
 
-        return SystemData;
+        return Connection;
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a SystemData pass
+     * Construct a DatabaseTableRecord whit the values of the a Connection pass
      * by parameter
      *
-     * @param SystemData the contains the values
+     * @param Connection the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(SystemData systemData) {
+    private DatabaseTableRecord constructFrom(Connection connection) {
 
         /*
          * Create the record to the entity
          */
         DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
-        setValuesToRecord(entityRecord, SystemData);
+        setValuesToRecord(entityRecord, Connection);
         return entityRecord;
     }
 
-    private void setValuesToRecord(DatabaseTableRecord entityRecord, SystemData systemData) {
-        
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, systemData.systemID);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME, systemData.nodeType);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME, systemData.hardware);
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME, systemData.os);
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, Connection connection) {
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, connection.connID);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEERID_COLUMN_NAME, connection.peerID);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV4_COLUMN_NAME, connection.ipv4);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_PEER_IPV6_COLUMN_NAME, connection.ipv6);
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NETWORK_SERVICE_NAME_COLUMN_NAME, connection.ns_name);
     }
-
 }
