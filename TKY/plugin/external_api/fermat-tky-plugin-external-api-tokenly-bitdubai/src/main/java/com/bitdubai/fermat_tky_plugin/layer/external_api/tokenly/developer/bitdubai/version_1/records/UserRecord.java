@@ -1,12 +1,11 @@
-package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music;
+package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records;
 
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public class MusicUserRecord implements MusicUser {
+public class UserRecord implements User{
 
     String id;
     String username;
@@ -22,7 +21,7 @@ public class MusicUserRecord implements MusicUser {
      * @param apiToken
      * @param apiSecretKey
      */
-    public MusicUserRecord(
+    public UserRecord(
             String id,
             String username,
             String email,
@@ -33,19 +32,6 @@ public class MusicUserRecord implements MusicUser {
         this.email = email;
         this.apiToken = apiToken;
         this.apiSecretKey = apiSecretKey;
-    }
-
-    /**
-     * Constructor with User object parameter.
-     * @param user
-     */
-    public MusicUserRecord(
-            User user){
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.email = user.getEmail();
-        this.apiToken = user.getApiToken();
-        this.apiSecretKey = user.getApiSecretKey();
     }
 
     /**
@@ -95,7 +81,7 @@ public class MusicUserRecord implements MusicUser {
 
     @Override
     public String toString() {
-        return "MusicUserRecord{" +
+        return "UserRecord{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
@@ -103,4 +89,5 @@ public class MusicUserRecord implements MusicUser {
                 ", apiSecretKey='" + apiSecretKey + '\'' +
                 '}';
     }
+
 }
