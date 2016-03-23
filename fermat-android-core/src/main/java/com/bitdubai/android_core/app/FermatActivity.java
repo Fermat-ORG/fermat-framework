@@ -776,6 +776,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         @Override
                         public void onDrawerOpened(View drawerView) {
                             super.onDrawerOpened(drawerView);
+                            if(adapter!=null){
+                                if(!adapter.getLstCurrentFragments().isEmpty()){
+                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
+                                        abstractFermatFragment.onDrawerOpen();
+                                    }
+                                }
+                            }
                             //setTitle(mTitle);
                             //invalidateOptionsMenu();
                         }
@@ -783,6 +790,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         @Override
                         public void onDrawerClosed(View drawerView) {
                             super.onDrawerClosed(drawerView);
+                            if(adapter!=null){
+                                if(!adapter.getLstCurrentFragments().isEmpty()){
+                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
+                                        abstractFermatFragment.onDrawerClose();
+                                    }
+                                }
+                            }
                             //setTitle(mTitle);
                             //invalidateOptionsMenu();
                         }
@@ -1679,6 +1693,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             startService(intent);
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
+
+
     }
 
     @Override

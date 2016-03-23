@@ -217,6 +217,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onBackPressed() {
+        onBackPressedNotificate();
         onControlledActivityBack(null);
     }
 
