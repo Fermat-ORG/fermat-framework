@@ -94,7 +94,7 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
-
+/*
         installedSubApp = new InstalledSubApp(
                 SubApps.TKY_ARTIST_IDENTITY,
                 null,
@@ -110,7 +110,7 @@ public class ProvisoryData {
         item2.setIconResource(R.drawable.bitcoin_icon);
         item2.setPosition(6);
         lstIdentities.add(item2);
-
+*/
 
 
 
