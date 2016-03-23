@@ -21,6 +21,8 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure.TokenlyManager;
 import com.google.gson.JsonElement;
 
+import java.util.HashMap;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
  */
@@ -55,6 +57,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //testManagerByUsername();
             //testGetAlbum();
             //testGetDownloadSong();
+            testCURLRequest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -129,6 +132,26 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             System.out.println("TKY: Test response URL - " + downloadSong.getDownloadURL());
         } catch (Exception e) {
             System.out.println("TKY: Test URL exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testCURLRequest(){
+        try{
+            //Test data
+            String url = "https://music-stage.tokenly.com/api/v1/account/login";
+            HashMap<String, String> parameters = new HashMap<>();
+            parameters.put("curl", "-X");
+            parameters.put("Content-Type", "application/x-www-form-urlencoded");
+            parameters.put("Accept", "application/json");
+            String urlParameters = "username=perezilla&password=milestone";
+            JsonElement response = RemoteJSonProcessor.getJsonElementByPOSTCURLRequest(
+                    url,
+                    parameters,
+                    urlParameters);
+            System.out.println("TKY: Test cURL response - " + response);
+        }catch (Exception e) {
+            System.out.println("TKY: Test cURL exception");
             e.printStackTrace();
         }
     }
