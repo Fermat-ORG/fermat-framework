@@ -91,8 +91,6 @@ public class CryptoCustomerActorDao {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
-
-            //new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
@@ -192,7 +190,7 @@ public class CryptoCustomerActorDao {
                 if (!records.isEmpty())
                     return  constructCryptoCustomerActorRelationshipFromRecord(records.get(0));
                 else
-                    throw new RelationshipNotFoundException("walletPublicKey: "+walletPublicKey, "Relationshio not found for the given wallet public key.");
+                    return null;
 
             } catch (final CantLoadTableToMemoryException e) {
 

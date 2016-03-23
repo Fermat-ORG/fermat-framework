@@ -103,10 +103,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
 
             sendMessage(businessTransactionMetadata);
 
-        } catch (CantInsertRecordDataBaseException e) {
-            throw new CantSendBusinessTransactionHashException(e,
-                    "Cannot persists the contract hash in table",
-                    "database corrupted");
+            /*businessTransactionMetadata.confirmRead();
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
+            */
+
         } catch (Exception e) {
             throw new CantSendBusinessTransactionHashException(e,
                     "Cannot persists the contract hash in table",

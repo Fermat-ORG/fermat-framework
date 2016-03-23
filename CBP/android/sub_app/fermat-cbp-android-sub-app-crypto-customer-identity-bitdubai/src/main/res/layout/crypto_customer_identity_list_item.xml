@@ -2,35 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="225dp"
+    android:layout_height="130dp"
     android:layout_marginBottom="0dp"
     android:layout_marginTop="0dp"
     android:orientation="vertical"
     android:padding="0dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:background="@drawable/barra_contactos">
 
     <ImageView
         android:id="@+id/crypto_customer_identity_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         android:contentDescription="@string/identity_img"
         android:padding="0dp"
-        tools:src="@drawable/person"
-        android:scaleType="centerCrop" />
+        android:layout_marginTop="-5dp"
+        android:layout_marginLeft="18dp"
+        tools:src="@drawable/no_picture_icon"
+        android:scaleType="fitXY" />
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/crypto_customer_identity_alias"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
         android:textColor="#ffffff"
-        android:textSize="20sp"
-        tools:text="Saxofon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#96000000"
+        android:textSize="18sp"
+        tools:text="Crypto Customer"
+        android:layout_marginLeft="110dp"
         android:padding="10dp" />
 
 </RelativeLayout>

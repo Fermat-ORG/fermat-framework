@@ -30,7 +30,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -52,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 
 /**
  * Created by Manuel Perez on 12/12/2015.
@@ -102,6 +102,9 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
     public CustomerOfflinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -113,65 +116,6 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         return returnedClasses;
     }
 
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeDatabaseException
-     */
-    private void initializeDb() throws CantInitializeDatabaseException {
-
-        try {
-            /*
-             * Open new database connection
-             */
-            this.database = this.pluginDatabaseSystem.openDatabase(
-                    pluginId,
-                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
-            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory =
-                    new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.database = customerOfflinePaymentBusinessTransactionDatabaseFactory.createDatabase(
-                        pluginId,
-                        CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        cantOpenDatabaseException);
-                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
-        }
-
-    }
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
@@ -190,9 +134,6 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     exception);
         }
     }
-
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
 
     @Override
     public void start() throws CantStartPluginException {
@@ -331,6 +272,21 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         return this.customerOfflinePaymentTransactionManager;
     }
 
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
     public static LogLevel getLogLevelByClass(String className) {
         try {
             /**
@@ -347,20 +303,64 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         }
     }
 
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeDatabaseException
+     */
+    private void initializeDb() throws CantInitializeDatabaseException {
 
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
-    }
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
-    }
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory =
+                    new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = customerOfflinePaymentBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
     }
 
     private void testPayment(){
