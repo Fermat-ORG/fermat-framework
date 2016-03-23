@@ -19,14 +19,14 @@ public interface BitcoinLossProtectedWalletBalance {
 
     long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException;
 
- /**
-  * Throw the method <code>getTransactionBqyId</code> return wallet available balance for actual exchange rate.
-  * @param blockchainNetworkType
-  * @param exchangeRate
-  * @return
-  * @throws CantCalculateBalanceException
-  */
- long getBalance(BalanceType balanceType,BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException;
+     /**
+      * Throw the method <code>getTransactionBqyId</code> return wallet available balance for actual exchange rate.
+      * @param blockchainNetworkType
+      * @param exchangeRate
+      * @return
+      * @throws CantCalculateBalanceException
+      */
+    long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException;
 
     void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
 

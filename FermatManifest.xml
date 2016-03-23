@@ -4702,72 +4702,68 @@
         </super_layer>
     </super_layers>
     <processes>
-        <process platform="DAP" name="Asset Issuing" description="Describes the process of issuing Assets by the actor Asset Issuer" previous="">
+        <process platform="DAP" name="Asset Transmission" description="Describes the process of transmitting an asset from and to an specific actor. The process involves delivering metadata, crypto transactions and statistics." previous="">
             <steps>
-                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
+                <step id="0" type="start" title="Device A. Process Start" description="User selects Transmission operation to execute. Valids are: Asset Transfer \b Asset Redemption \b Asset Distribution." platform="DAP" superlayer="" layer="Wallet Module" name="Asset User">
                     <next>
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" type="activity" title="Asset Factory" description="Starts by opening the Asset Factory Sub App" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                <step id="1" type="activity" title="Device A. Creation of Transaction" description="New Business Transaction is created in Asset Transmission" platform="DAP" superlayer="" layer="Business Transaction" name="Asset Transmission">
                     <next>
                         <step id="2" type="direct call"></step>
-                        <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
+                <step id="2" type="activity" title="Device A. Contract Creation" description="New Contract is created defining Digital Asset Properties." platform="DAP" superlayer="" layer="Contract" name="Asset Transmission">
                     <next>
                         <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="3" type="activity" title="Asset parameters definition" description="The Asset information is entered, including the value on bitcoins for each asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                <step id="3" type="activity" title="Device A. Transaction Timeout definition" description="Time out agent is subscribed to start monitoring elapsed time and rollback if time limit is reached.." platform="PIP" superlayer="" layer="System Transaction" name="Timeout Notifier">
                     <next>
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
-                <step id="4" type="activity" title="Transaction Asset Issuing" description="We revalidate we have enough founds in the wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                <step id="4" type="activity" title="Device A. Asset blocking" description="The asset is blocked so more operations are permitted for this asset." platform="DAP" superlayer="" layer="Stock Transactions" name="Asset Block">
                     <next>
                         <step id="5" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="5" type="activity" title="Transaction Asset Issuing" description="We validate the contract and properties defined are all valid for each asset." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="5" type="activity" title="Device A. Sends Asset Metadata" description="An Outgoing Asset Metadata is prepared to be send to the corresponding actor." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Outgoing Asset Metadata">
                     <next>
                         <step id="6" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="6" type="activity" title="Transaction Asset Issuing" description="We request the Genesis Address to the Asset Vault and register it in the Address Book." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="6" type="activity" title="Device A. Delivers Metadata on P2P" description="We send the metadata over the network. NS retries are defined in the contract of this transaction." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
                     <next>
                         <step id="7" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="7" type="activity" title="Transaction Asset Issuing" description="We lock the asset and generate the Digital Asset Metadata with its asses hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="7" type="activity" title="Device A. Statistics are stored." description="Initial Asset Transmission statistics are stored with asset and actor information." platform="DAP" superlayer="" layer="Statistics Transaction" name="Asset Transmission">
                     <next>
                         <step id="8" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="8" type="activity" title="Transaction Asset Issuing" description="We generate a Bitcoin transaction using the Outgoing Intra Actor plugin, which includes the op_return, the Genesis Amount and the Genesis Address." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="8" type="activity" title="Device B. Receives metadata from P2P" description="New metadata is received by NS and event trigger to notify upper layers." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
                     <next>
                         <step id="9" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
                     </next>
                 </step>
-                <step id="9" type="activity" title="Transaction Asset Issuing" description="We store the Genesis Transaction in the metadata, and wait for broadcasting of the transaction." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="9" type="activity" title="Device B. Incoming Metadata detected" description="We received the send metadata and is locally stored. New local contract will be stored." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Incoming Asset Metadata">
                     <next>
                         <step id="10" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
                     </next>
                 </step>
-                <step id="10" type="activity" title="Transaction Asset Issuing" description="When transaction is registered to be On Block Chain, we finish the asset Issuing process." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                <step id="10" type="activity" title="Device B. New contract is created." description="The received metadata is stored as a new contract." platform="DAP" superlayer="" layer="Contract" name="Asset Transmission">
                     <next>
                         <step id="11" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
                     </next>
                 </step>
-                <step id="11" type="activity" title="End" description="The asset is received at the Asset Issuer Wallet." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                <step id="11" type="activity" title="Device B. Contract is validated." description="The contract properties are validated to confirm if we are ok to receive the new asset or not.." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
                     <next>
                     </next>
                 </step>
@@ -4778,191 +4774,6 @@
                 </step>
             </steps>
         </process>
-
-        <process platform="DAP" name="Asset Distribution" description="Describes the process of distributing an issued asset to an user" previous="Asset Issuing">
-            <steps>
-                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
-                    <next>
-                        <step id="1" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="1" type="activity" title="Asset Issuer Wallet" description="Starts by opening the Asset Issuer Wallet with positive balance of an asset" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
-                    <next>
-                        <step id="2" type="direct call"></step>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="2" type="activity" title="Asset Issuer Identity" description="Asset Issuer Identity is created and Issuer Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset Issuer">
-                    <next>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="3" type="activity" title="Asset User Selection" description="The Asset Issuer selects the previously connected asset user to distribute" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="4" type="activity" title="Asset Distribution" description="We generate a Bitcoin Transaction using the genesis Transaction of this asset" platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
-                    <next>
-                        <step id="5" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="5" type="activity" title="Asset Distribution" description="The Digital Asset Metadata information containing asset and asset transaction is sent to user." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="6" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="6" type="activity" title="Asset Distribution" description="The digital asset metadata is received by the user" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="7" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="7" type="activity" title="Asset Distribution" description="User validated metadata by requesting to BCH the Genesis Transaction op_return. Is compated with hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Reception">
-                    <next>
-                        <step id="8" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="8" type="activity" title="Asset Distribution" description="The contract info is validated. OK or fail response is sent back to issuer" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="9" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="9" type="activity" title="Asset Distribution" description="If user is ok, we broadcast the previously generated transaction to the Genesis Address. If not, we cancel the transaction and free the founds." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
-                    <next>
-                        <step id="10" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                        <step id="21" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="10" type="activity" title="Asset Distribution" description="Once the transaction is confirmed, we generate the debit in the issuer wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
-                    <next>
-                        <step id="11" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="11" type="activity" title="Asset Distribution" description="Once the transaction is confirmed, we generate the debit in the User wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
-                    <next>
-                        <step id="19" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="19" type="activity" title="End" description="End of proccess." platform="DAP" superlayer="" layer="" name="">
-                    <next>
-                    </next>
-                </step>
-                <step id="20" type="activity" title="Process Interrupted" description="Transaction is rollbacked, and Asset is available again in the Issuer Wallet." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="21" type="activity" title="Asset not accepted" description="Due to poor network or invalidate contract, the asset is not accepted and rollbacked." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Distribution">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-            </steps>
-        </process>
-
-        <process platform="DAP" name="Asset Redemption" description="Describes the process of redeeming an issued asset to a redeem point" previous="Asset Distribution">
-            <steps>
-                <step id="0" type="start" title="Process Start" description="Platform starts" platform="DAP" superlayer="" layer="" name="">
-                    <next>
-                        <step id="1" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="1" type="activity" title="Asset User Wallet" description="Starts by opening the Asset User Wallet with positive balance of an asset" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
-                    <next>
-                        <step id="2" type="direct call"></step>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="2" type="activity" title="Asset User Identity" description="Asset User Identity is created and User Actor is registered in P2P" platform="DAP" superlayer="" layer="Identity" name="Asset User">
-                    <next>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="3" type="activity" title="Redeem Point Selection" description="The Asset User selects the previously connected redeem point to redeeem to" platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="4" type="activity" title="Asset Redemption" description="We generate a Bitcoin Transaction using the genesis Transaction of this asset" platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
-                    <next>
-                        <step id="5" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="5" type="activity" title="Asset Redemption" description="The Digital Asset Metadata information containing asset and asset transaction is sent to the Redeem Point." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="6" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="6" type="activity" title="Asset Redemption" description="The digital asset metadata is received by the Redeem Point" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="7" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="7" type="activity" title="Asset Redemption" description="Redeem Points validated metadata by requesting to BCH the Genesis Transaction op_return. Is compared with hash." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Redeem Point Redemption">
-                    <next>
-                        <step id="8" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="8" type="activity" title="Asset Redemption" description="The contract info is validated and the assets is from an Issuer we redeem from. OK or fail response is sent back to issuer" platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
-                    <next>
-                        <step id="9" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="9" type="activity" title="Asset Redemption" description="If redeem point is ok, we broadcast the previously generated transaction to the Genesis Address. If not, we cancel the transaction and free the founds." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
-                    <next>
-                        <step id="10" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                        <step id="21" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="10" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the debit in the User wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Asset User Wallet">
-                    <next>
-                        <step id="11" type="direct call"></step>
-                        <step id="20" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="11" type="activity" title="Asset Redemption" description="Once the transaction is confirmed, we generate the credit in the Redeem point wallet and update stats." platform="DAP" superlayer="" layer="Wallet" name="Redeem Point Wallet">
-                    <next>
-                        <step id="12" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="12" type="activity" title="Asset Redemption" description="Since Issuer shares public Key, Issuer also received the transaction and update stats." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Issuer Redemption">
-                    <next>
-                        <step id="13" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="13" type="activity" title="Asset Redemption" description="Asset is recicled and available again in the Issuer Wallet to restart the process" platform="DAP" superlayer="" layer="Wallet" name="Asset Issuer Wallet">
-                    <next>
-                        <step id="19" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="19" type="activity" title="End" description="End of process." platform="DAP" superlayer="" layer="" name="">
-                    <next>
-                    </next>
-                </step>
-                <step id="20" type="activity" title="Process Interrupted" description="Transaction is rollbacked, and Asset is available again in the Issuer Wallet." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="21" type="activity" title="Asset not accepted" description="Due to poor network or invalidate contract, the asset is not accepted and rollbacked." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="User Redemption">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-            </steps>
-        </process>
-
         <process platform="CBP" name="Crypto Broker Reference Wallet Installation" description="Wallet Store installation procedure for the Crypto Broker Reference Wallet" previous="">
             <steps>
                 <step id="0" title="User selects the Broker Wallet on the Wallet Store" description="The user enters the Wallet Store and selects the Crypto Broker Reference Wallet to install it" type="start" component="" name="Wallet Store" layer="Sub App" platform="WPD" superlayer="">

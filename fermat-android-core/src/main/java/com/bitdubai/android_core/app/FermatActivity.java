@@ -54,7 +54,6 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
-import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
@@ -129,11 +128,10 @@ import java.util.Vector;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppResourcesProviderManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletResourcesProviderManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
 
@@ -145,7 +143,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         WizardConfiguration,
         PaintActivityFeatures,
         NavigationView.OnNavigationItemSelectedListener,
-        NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
         FermatActivityManager,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,
@@ -165,7 +162,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Manager
      */
-    BroadcastManager broadcastManager;
+    private BroadcastManager broadcastManager;
     /**
      * WizardTypes
      */
@@ -187,10 +184,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private final Handler mDrawerActionHandler = new Handler();
     private final Handler refreshHandler = new Handler();
-    /**
-     * Receivers
-     */
-    //private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -249,15 +242,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
-
-//        try {
-//            networkStateReceiver = new NetworkStateReceiver();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//
-//        }
-
     }
 
     /**
@@ -312,12 +296,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }catch (Exception e){
                 e.printStackTrace();
             }
-//            if(networkStateReceiver!=null) {
-//                unregisterReceiver(networkStateReceiver);
-//                networkStateReceiver.removeListener(this);
-//            }
-       //     networkStateReceiver.removeListener(this);
-
 
             /**
              * Service
@@ -380,6 +358,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -631,7 +610,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 fermatFragmentFactory,
                 tabStrip,
                 fermatSession,
-                (activityType==ActivityType.ACTIVITY_TYPE_WALLET) ? getWalletResourcesProviderManager() : getSubAppResourcesProviderManager());
+                getAppResources());
         pagertabs.setAdapter(adapter);
         if(tabStrip.isHasIcon()){
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -666,7 +645,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         fermatFragmentFactory,
                         fragment,
                         fermatSession,
-                        (fermatStructure.getFermatAppType()== FermatAppType.WALLET)?getWalletResourcesProviderManager():getSubAppResourcesProviderManager());
+                        getAppResources());
                 pagertabs.setAdapter(adapter);
 
 
@@ -684,6 +663,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
 
     }
@@ -847,6 +827,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+            handleExceptionAndRestart();
         }
     }
 
@@ -870,13 +851,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            networkStateReceiver = NetworkStateReceiver.getInstance();
-//            networkStateReceiver.addListener(this);
-//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
     }
 
 
@@ -1293,6 +1267,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
             makeText(getApplicationContext(), "Oooops! recovering from system error", LENGTH_SHORT).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -1333,6 +1308,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             return createOrOpenApp(fermatApp);
         }catch (Exception e){
             e.printStackTrace();
+            handleExceptionAndRestart();
         }
         return null;
     }
@@ -1445,10 +1421,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
         linearLayout.setVisibility(View.GONE);
     }
 
-    public void notificateProgressBroadcast(FermatBundle bundle) {
+    public int notificateProgressBroadcast(FermatBundle bundle) {
+        int id = 0;
         try {
             if(mNotificationServiceConnected){
-                notificationService.notificateProgress(bundle);
+                id = notificationService.notificateProgress(bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
                 //acá puedo mandarle el messenger con el handler para el callback
@@ -1459,6 +1436,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }catch (Exception e){
             e.printStackTrace();
         }
+        return id;
     }
 
     public void notificateBroadcast(String appPublicKey,String code){
@@ -1655,7 +1633,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 // finally change the color
                 try {
                     requestWindowFeature(Window.FEATURE_NO_TITLE);
-                }catch (Exception e){
+                }catch (Exception ignored){
 
                 }
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -1681,28 +1659,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     //TODO: to remove
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
-
-
-    @Override
-    public void networkAvailable() {
-        Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
-        try {
-            //getCloudClient().setNetworkState(true);
-        }catch (Exception e){
-            //e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void networkUnavailable() {
-        Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
-        try{
-            //getCloudClient().setNetworkState(false);
-        }catch (Exception e){
-          //  e.printStackTrace();
-        }
-    }
-
 
     /**
      * Report error
@@ -1750,7 +1706,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("APP", "requestCode" + String.valueOf(requestCode));
-        Log.i("APP","resultcode"+ String.valueOf(resultCode));
+        Log.i("APP", "resultcode" + String.valueOf(resultCode));
         Log.i("APP", "data" + String.valueOf(data));
         switch(requestCode) {
             case (TASK_MANAGER_STACK) : {
@@ -1765,6 +1721,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 break;
             }
         }
+    }
+
+    protected void handleExceptionAndRestart(){
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
     }
 
 

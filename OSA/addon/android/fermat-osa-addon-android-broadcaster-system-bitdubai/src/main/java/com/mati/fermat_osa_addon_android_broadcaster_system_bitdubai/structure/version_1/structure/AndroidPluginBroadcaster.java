@@ -32,8 +32,8 @@ public class AndroidPluginBroadcaster implements Broadcaster{
     }
 
     @Override
-    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,bundle);
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+        return androidCoreBroadcasterUtil.publish(broadcasterType,bundle);
 
     }
 

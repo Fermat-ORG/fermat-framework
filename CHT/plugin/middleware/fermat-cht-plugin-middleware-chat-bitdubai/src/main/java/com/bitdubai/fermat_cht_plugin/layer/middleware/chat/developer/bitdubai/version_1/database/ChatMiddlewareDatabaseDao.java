@@ -629,6 +629,49 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public Chat getChatByRemotePublicKey(String publicKey) throws
+            CantGetChatException,
+            DatabaseOperationException
+    {
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Chat> chats = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(publicKey);
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getChatData(filter)) {
+                final Chat chat = getChatTransaction(record);
+
+                chats.add(chat);
+            }
+
+            database.closeDatabase();
+
+            if(chats.isEmpty()){
+                return null;
+            }
+
+            return chats.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Chat from the database with filter: " + publicKey,
+                    null);
+        }
+    }
+
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
     {
         try{
@@ -1657,6 +1700,7 @@ public class ChatMiddlewareDatabaseDao {
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         table.loadToMemory();
