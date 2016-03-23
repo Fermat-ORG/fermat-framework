@@ -16,8 +16,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyMusicUserProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure.TokenlyManager;
 import com.google.gson.JsonElement;
 
@@ -57,7 +59,8 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //testManagerByUsername();
             //testGetAlbum();
             //testGetDownloadSong();
-            testCURLRequest();
+            //testCURLRequest();
+            //getMusicUserTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -152,6 +155,18 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             System.out.println("TKY: Test cURL response - " + response);
         }catch (Exception e) {
             System.out.println("TKY: Test cURL exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void getMusicUserTest(){
+        try{
+            MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
+                    "perezilla",
+                    "milestone");
+            System.out.println("TKY: Test Music User response - " + musicUser);
+        }catch (Exception e) {
+            System.out.println("TKY: Test Music User exception");
             e.printStackTrace();
         }
     }
