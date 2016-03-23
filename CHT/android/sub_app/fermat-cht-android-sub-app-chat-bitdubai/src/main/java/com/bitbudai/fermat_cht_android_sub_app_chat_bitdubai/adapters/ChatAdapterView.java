@@ -8,7 +8,9 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -35,6 +38,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
@@ -133,18 +137,18 @@ public class ChatAdapterView extends LinearLayout {
             if (contact != null){
                 remotePk = contact.getRemoteActorPublicKey();
                 remotePCT = contact.getRemoteActorType();
-                contactId =contact.getContactId();
+                contactId =contact.getContactId();//9a6049ff-e64c-4a13-b579-d0a96c7cbb77
                 ByteArrayInputStream bytes = new ByteArrayInputStream(contact.getProfileImage());
                 BitmapDrawable bmd = new BitmapDrawable(bytes);
                 contactIcon =bmd.getBitmap();
                 leftName=contact.getAlias();
-                for (int i = 0; i < chatManager.getMessages().size(); i++) {
-                    if (contactId.equals(chatManager.getMessages().get(i).getContactId())) {
-                        chatId = chatManager.getMessages().get(i).getChatId();
-                    }
-                }
+                Chat cht=chatManager.getChatByRemotePublicKey(remotePk);
+                if(cht!=null)
+                    chatId = cht.getChatId();
+                else chatId=null;
+                appSession.setData(ChatSession.CONTACT_DATA, null);
             }
-        }catch (CantGetMessageException e) {
+        }catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -153,12 +157,13 @@ public class ChatAdapterView extends LinearLayout {
 
     public void whatToDo(){
         try {
-            System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
+            //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
+            findValues(chatSession.getSelectedContact());
             if (chatSession.getData("whocallme").equals("chatlist")) {
-                findValues((Contact) chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatId
+                //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                findValues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
+                //if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
                 chatWasCreate = chatId != null;
             }
@@ -172,19 +177,18 @@ public class ChatAdapterView extends LinearLayout {
         String inorout;
         String estatus;
         ChatMessage msg;
-        Chat chat;
-        int messSize;
+        //Chat chat;
         try {
             setChatHistory(null);
             chatHistory=null;
-            if(chatId !=null){
-                chat=chatManager.getChatByChatId(chatId);
-            }else{
-                chat=chatSession.getSelectedChat();
-            }
-
-            if(chat!=null)
-                chatId =chat.getChatId();
+//            if(chatId !=null){
+//                chat=chatManager.getChatByChatId(chatId);
+//            }else{
+//                chat=chatSession.getSelectedChat();
+//            }
+//
+//            if(chat!=null)
+//                chatId =chat.getChatId();
             if (chatHistory == null) {
                 chatHistory = new ArrayList<ChatMessage>();
             }
@@ -242,52 +246,28 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public static Bitmap decodeFile(Context context,int resId) {
-// decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(context.getResources(), resId, o);
-// Find the correct scale value. It should be the power of 2.
-        final int REQUIRED_SIZE = 50;
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true)
-        {
-            if (width_tmp / 2 < REQUIRED_SIZE
-                    || height_tmp / 2 < REQUIRED_SIZE)
-                break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale++;
+    public class BackgroundAsyncTask extends
+            AsyncTask<Message, Integer, Message> {
+
+        int myProgress;
+
+        @Override
+        protected void onPostExecute(Message result) {
+            //this.cancel(true);
+            return;
         }
-// decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeResource(context.getResources(), resId, o2);
-    }
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
-        // TODO Auto-generated method stub
-        int targetWidth = width;
-        int targetHeight = width;
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        Path path = new Path();
-        path.addCircle(((float) targetWidth - 1) / 2,
-                ((float) targetHeight - 1) / 2,
-                (Math.min(((float) targetWidth),
-                        ((float) targetHeight)) / 2),
-                Path.Direction.CCW);
-        canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
-                new Rect(0, 0, targetWidth,
-                        targetHeight), null);
-        return targetBitmap;
+        @Override
+        protected Message doInBackground(Message... params) {
+            try {
+                for(Message param: params) {
+                    chatManager.sendMessage(param);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     public void initControls() {
@@ -314,7 +294,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIconCircular = new BitmapDrawable( getResources(),  getRoundedShape( contactIcon, 80));//in the future, this image should come from chatmanager
+                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape(contactIcon, 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
             }
         }
@@ -337,6 +317,7 @@ public class ChatAdapterView extends LinearLayout {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
                 String messageText = messageET.getText().toString();
                 if (TextUtils.isEmpty(messageText)) {
                     return;
@@ -344,7 +325,7 @@ public class ChatAdapterView extends LinearLayout {
 
                 try {
                     ChatImpl chat = new ChatImpl();
-                    MessageImpl message = new MessageImpl();
+                    final MessageImpl message = new MessageImpl();
                     Long dv = System.currentTimeMillis();
                     String remotePublicKey;
                     if (chatWasCreate) {
@@ -370,6 +351,19 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
+                        //sendMessageAsync.cancel(true);
+                        sendMessageAsync.execute(message);
+                        /*Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    chatManager.sendMessage(message);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        thread.start();*/
                     } else {
                         /**
                          * This case is when I got an unregistered contact, I'll set the
@@ -420,6 +414,18 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
+                        sendMessageAsync.execute(message);
+//                        Thread thread = new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    chatManager.sendMessage(message);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                        thread.start();
                         //If everything goes OK, we save the chat in the fragment session.
                         chatSession.setData("whocallme", "chatlist");
                         chatSession.setData(
