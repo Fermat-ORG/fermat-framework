@@ -35,7 +35,7 @@ public enum SubApps {
 
 
     TKY_ARTIST_IDENTITY("TAI"),
-
+    TKY_FAN_IDENTITY_SUB_APP("TFISP"),
 
 
     CHT_CHAT("CHTCHAT"),
@@ -106,6 +106,8 @@ public enum SubApps {
                 return Scanner;
             case "SET":
                 return SETTINGS;
+            case "TFISP":
+                return TKY_FAN_IDENTITY_SUB_APP;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

@@ -324,7 +324,7 @@ public enum Activities implements FermatEnum {
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
     TKY_ARTIST_IDENTITY_CREATE_PROFILE("TAICP"),
-
+    TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT("TKYSUBAPPFANCREATE"),
 
 
     WPD_DESKTOP("WPD"),
@@ -846,7 +846,8 @@ public enum Activities implements FermatEnum {
 
             case "CCPBLPWMNA":
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY;
-
+            case "TKYSUBAPPFANCREATE":
+                return TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

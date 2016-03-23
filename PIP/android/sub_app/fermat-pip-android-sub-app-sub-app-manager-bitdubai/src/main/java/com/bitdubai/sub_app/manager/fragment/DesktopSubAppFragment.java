@@ -325,6 +325,11 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             item.setIconResource(R.drawable.chat_subapp);
             item.setPosition(4);
             lstItemsWithIcon.add(item);
+            installedSubApp = new InstalledSubApp(SubApps.TKY_FAN_IDENTITY_SUB_APP,null,null,"tky_fan_sub_app","Tokenly Fan","sub_app_tky_fan_create_identity","tky_fan_sub_app",new Version(1,0,0));
+            item = new Item(installedSubApp);
+            item.setIconResource(R.drawable.tokenly_fan);
+            item.setPosition(4);
+            lstItemsWithIcon.add(item);
 
             for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
