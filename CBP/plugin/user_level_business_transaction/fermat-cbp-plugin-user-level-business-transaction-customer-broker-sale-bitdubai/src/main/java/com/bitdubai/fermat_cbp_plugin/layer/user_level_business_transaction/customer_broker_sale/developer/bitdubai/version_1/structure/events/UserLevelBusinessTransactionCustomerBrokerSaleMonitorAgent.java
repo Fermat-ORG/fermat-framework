@@ -364,7 +364,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         bankAccount = clause.getValue();
                                         break;
                                     case BROKER_CURRENCY:
-                                        fiatCurrency = FiatCurrency.valueOf(clause.getValue());
+                                        fiatCurrency = FiatCurrency.getByCode(clause.getValue());
                                         break;
                                 }
                             }
