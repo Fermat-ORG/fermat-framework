@@ -113,7 +113,7 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            fans = getFantIdentityDao().getIdentityArtistsFromCurrentDeviceUser(loggedUser);
+            fans = getFantIdentityDao().getIdentityFansFromCurrentDeviceUser(loggedUser);
 
 
             return fans;
