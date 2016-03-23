@@ -282,5 +282,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
+    /**
+     *  This method will be called when the user open the drawer if exist
+     */
+    public void onDrawerOpen() {
 
+    }
+
+    /**
+     *  This method will be called when the user close the drawer if exist
+     */
+    public void onDrawerClose() {
+
+    }
 }
