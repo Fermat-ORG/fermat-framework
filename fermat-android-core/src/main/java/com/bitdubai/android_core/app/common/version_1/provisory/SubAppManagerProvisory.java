@@ -63,7 +63,13 @@ public class SubAppManagerProvisory implements SubAppManager {
         //TODO - CHT Platform
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", "public_key_cht_chat", "chat_sub_app", new Version(1, 0, 0),Platforms.CHAT_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
+        //TODO - TKY Platform
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY, null, null, "tky_sub_app", "Tonkenly", "public_key_tky_artist_identity", "tky_sub_app", new Version(1, 0, 0),Platforms.TOKENLY);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - Add Others SubApps
+
+
     }
 
     @Override
