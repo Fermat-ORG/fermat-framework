@@ -2,7 +2,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
@@ -10,7 +15,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.dev
 /**
  * Created by loui on 17/02/15.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
+public class DeveloperBitDubai implements AbstractPluginDeveloper, PluginLicensor {
 
     Plugin plugin;
 
@@ -20,14 +25,20 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     }
 
     public DeveloperBitDubai() {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
 
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
 
-        plugin = new OutgoingDeviceUserTransactionPluginRoot();
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
 
+            this.registerVersion(new OutgoingDeviceUserTransactionPluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
 
