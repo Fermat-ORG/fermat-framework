@@ -275,8 +275,9 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 It is possible to execute a local server for testing a Plug-in Network Service; this speeds up the process of debugging the Plug-in source code and the error detection process as well.
 
 1. **GUI**
-If you use Intellij IDEA you can simple start server with right click on `WsCommunicationsServerCloudMainRunner.java` and choose Run main() <br>
+If you use Intellij IDEA you can simple start server with right click on
 `/fermat/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/ws/communications/cloud/server/developer/bitdubai/version_1/WsCommunicationsServerCloudMainRunner.java`
+and choose Run main()
 <br>
  to tell log4j where is the path to log4j.properties in Run/Debug Configuration dialog choose Application: WsCommunicationsServerCloudMainRunner and set <br>
  `VM Options: -Dlog4j.configuration=file:"./P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build/resources/main/log4j.properties"`
