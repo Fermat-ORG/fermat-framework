@@ -94,6 +94,12 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
+        installedSubApp = new InstalledSubApp(SubApps.TKY_FAN_IDENTITY_SUB_APP,null,null,"tky_fan_sub_app","Tokenly Fan","sub_app_tky_fan_create_identity","tky_fan_sub_app",new Version(1,0,0),Platforms.TOKENLY);
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.tokenly_fan);
+        item2.setPosition(6);
+        lstIdentities.add(item2);
+
 /*
         installedSubApp = new InstalledSubApp(
                 SubApps.TKY_ARTIST_IDENTITY,
