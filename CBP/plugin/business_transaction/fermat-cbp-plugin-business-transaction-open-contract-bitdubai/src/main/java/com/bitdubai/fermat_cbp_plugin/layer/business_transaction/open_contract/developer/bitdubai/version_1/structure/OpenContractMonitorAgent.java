@@ -505,6 +505,7 @@ public class OpenContractMonitorAgent implements
                                 case SALE:
                                     customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
+                                    break;
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             raiseNewContractEvent(contractHash);
