@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.hold.HoldCryptoMoneyTransactionPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.incoming_extra_actor.IncomingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.incoming_intra_user.IncomingIntraUserPluginSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_device_user.OutgoingDeviceUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_draft.OutgoingDraftTransactionPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_intra_actor.OutgoingIntraActorPluginSubsystem;
@@ -35,7 +36,6 @@ public class TransactionLayer extends AbstractLayer {
             registerPlugin(new OutgoingDraftTransactionPluginSubsystem());
             registerPlugin(new HoldCryptoMoneyTransactionPluginSubsystem());
             registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
-            registerPlugin(new OutgoingDeviceuserPluginSubsystem());
             registerPlugin(new OutgoingDeviceUserPluginSubsystem());
             //registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
 
