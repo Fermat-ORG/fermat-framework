@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
@@ -64,6 +65,10 @@ import java.util.List;
 public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         AssetIssuingManager,
         DatabaseManagerForDevelopers {
+
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_ROUTER, plugin = Plugins.INCOMING_CRYPTO)
+    IncomingCryptoManager incomingCryptoManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     BitcoinWalletManager bitcoinWalletManager;
@@ -151,7 +156,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (monitorAgent == null) {
-            monitorAgent = new AssetIssuingMonitorAgent(errorManager, bitcoinNetworkManager, outgoingIntraActorManager, actorAssetIssuerManager, assetVaultManager, bitcoinWalletManager, cryptoAddressBookManager, intraWalletUserIdentityManager, assetIssuerWalletManager, dao);
+            monitorAgent = new AssetIssuingMonitorAgent(incomingCryptoManager, errorManager, bitcoinNetworkManager, outgoingIntraActorManager, actorAssetIssuerManager, assetVaultManager, bitcoinWalletManager, cryptoAddressBookManager, intraWalletUserIdentityManager, assetIssuerWalletManager, dao);
         }
         monitorAgent.start();
     }
