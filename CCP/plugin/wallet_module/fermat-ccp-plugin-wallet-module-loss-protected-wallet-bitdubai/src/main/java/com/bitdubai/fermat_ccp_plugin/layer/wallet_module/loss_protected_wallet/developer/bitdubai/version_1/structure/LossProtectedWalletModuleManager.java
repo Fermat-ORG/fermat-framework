@@ -45,8 +45,10 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.inte
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.CantSendTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUser;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
@@ -169,7 +171,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
     private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
-    private final OutgoingDeviceUser outgoingDeviceUser;
+    // private final OutgoingDeviceUserManager outgoingDeviceUserManager;
 
 
     public LossProtectedWalletModuleManager(final BitcoinLossProtectedWalletManager bitcoinWalletManager          ,
@@ -184,8 +186,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
                                            final WalletContactsManager          walletContactsManager ,
-                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
-                                            final OutgoingDeviceUser outgoingDeviceUser) {
+                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -200,7 +201,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
-        this.outgoingDeviceUser = outgoingDeviceUser;
 
     }
 
@@ -1035,23 +1035,12 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     public void sendToWallet(long cryptoAmount, String walletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
 
-        try {
-            outgoingDeviceUser.sendToWallet("IS THIS HAS GOING TO BE NULL OR NOT?",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,walletPublicKey,"THIS PUBLIC KEY IS NEEDED AT THIS POINT, VERY IMPORTANT",blockchainNetworkType);
-        } catch (CantLoadWalletException e) {
-            e.printStackTrace();
-        } catch (CantCalculateBalanceException e) {
-            e.printStackTrace();
-        } catch (CantRegisterDebitException e) {
-            e.printStackTrace();
-        } catch (CantRegisterCreditException e) {
-            e.printStackTrace();
-        } catch (CantFindTransactionException e) {
-            e.printStackTrace();
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        } catch (OutgoingIntraActorCantCancelTransactionException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            outgoingDeviceUserManager.getOutgoingDeviceUser().sendToWallet("IS THIS HAS GOING TO BE NULL OR NOT?",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,walletPublicKey,"THIS PUBLIC KEY IS NEEDED AT THIS POINT, VERY IMPORTANT",blockchainNetworkType);
+//        } catch (CantSendTransactionException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     @Override

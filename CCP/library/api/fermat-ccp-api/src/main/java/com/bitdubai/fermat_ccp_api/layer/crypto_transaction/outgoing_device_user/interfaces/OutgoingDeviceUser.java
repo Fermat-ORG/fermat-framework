@@ -9,6 +9,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.CantSendTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingDeviceUserNotEnoughFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingIntraActorCantCancelTransactionException;
 
 import java.io.Serializable;
@@ -28,7 +30,7 @@ public interface OutgoingDeviceUser extends Serializable {
               ReferenceWallet reference_wallet_receiving,
               String wallet_public_key_sending,
               String wallet_public_key_receiving,
-              BlockchainNetworkType blockchainNetworkType) throws CantLoadWalletException, CantCalculateBalanceException,CantRegisterDebitException,CantRegisterCreditException,CantFindTransactionException,InvalidParameterException,OutgoingIntraActorCantCancelTransactionException;
+              BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, OutgoingDeviceUserNotEnoughFundsException;
 
 
 }

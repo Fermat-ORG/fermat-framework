@@ -7,10 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -19,15 +15,11 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingDeviceUserNotEnoughFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.interfaces.OutgoingDeviceUser;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.enums.TransactionState;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.CantSendTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.utils.BitcoinLossProtectedWalletTransactionWalletRecord;
@@ -72,13 +64,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                              ReferenceWallet reference_wallet_receiving,
                              String wallet_public_key_sending,
                              String wallet_public_key_receiving,
-                             BlockchainNetworkType blockchainNetworkType)
-            throws CantLoadWalletException,
-            CantCalculateBalanceException,
-            CantRegisterDebitException,
-            CantRegisterCreditException,
-            CantFindTransactionException,InvalidParameterException,
-            com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user.exceptions.OutgoingIntraActorCantCancelTransactionException {
+                             BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, OutgoingDeviceUserNotEnoughFundsException {
 
 
         Long balanceBeforeCredit = null;
@@ -100,8 +86,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                     initialBalance =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                 } catch (CantCalculateBalanceException e) {
                     e.printStackTrace();
+                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                 } catch (CantLoadWalletException e) {
                     e.printStackTrace();
+                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                 }
 
 
@@ -131,6 +119,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                         balanceBeforeCredit =   this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     } catch (CantLoadWalletsException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
+                    } catch (CantCalculateBalanceException e) {
+                        e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     }
 
                     //Checks that the current balance for the crediting wallet is not null in order to proceed.
@@ -153,6 +145,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                                     blockchainNetworkType);
                         } catch (OutgoingIntraActorCantInsertRecordException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         }
 
 
@@ -163,8 +156,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                             this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord);
                         } catch (CantRegisterCreditException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         } catch (CantLoadWalletsException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         }
                     }
 
@@ -175,8 +170,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                         amountRecord =   this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinWalletTransactionWalletRecord.getTransactionId()).getAmount();
                     } catch (CantFindTransactionException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     } catch (CantLoadWalletsException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     }
 
                     //check if amount within DB record correspond with the amount sent,
@@ -220,8 +217,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                                     this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.BOOK).debit(bitcoinLossProtectedWalletTransactionWalletRecord);
                                 } catch (CantRegisterDebitException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 } catch (CantLoadWalletException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 }
 
                                 //Changes record state to completed.
@@ -232,10 +231,13 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
                                 } catch (CantLoadTableToMemoryException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 } catch (InvalidParameterException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 } catch (OutgoingIntraActorCantCancelTransactionException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 }
 
                                 break;
@@ -247,7 +249,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
 
 
-                }//end if
+                }else{
+                    //There are not enough funds to perform this transaction
+                    throw new OutgoingDeviceUserNotEnoughFundsException("There are not enough funds to perform this transaction",null,"","NotEnoughFunds");
+                }
 
 
                 break;
@@ -264,6 +269,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                     initialBalance =   this.bitcoinWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                 } catch (CantLoadWalletsException e) {
                     e.printStackTrace();
+                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
+                } catch (CantCalculateBalanceException e) {
+                    e.printStackTrace();
+                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                 }
 
                 //Checks the balance of the debiting wallet in order to decide if to continue or not.
@@ -292,8 +301,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                         balanceBeforeCredit =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     } catch (CantCalculateBalanceException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     } catch (CantLoadWalletException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     }
 
 
@@ -317,6 +328,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                                     blockchainNetworkType);
                         } catch (OutgoingIntraActorCantInsertRecordException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         }
 
                         try {
@@ -324,8 +336,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                             this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord2);
                         } catch (CantLoadWalletException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         } catch (CantRegisterCreditException e) {
                             e.printStackTrace();
+                            throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                         }
                     }
 
@@ -336,8 +350,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                         amountRecord =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinLossProtectedWalletTransactionWalletRecord2.getTransactionId()).getAmount();
                     } catch (CantFindTransactionException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     } catch (CantLoadWalletException e) {
                         e.printStackTrace();
+                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                     }
 
 
@@ -378,10 +394,12 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
                                         this.bitcoinWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord2);
                                     } catch (CantRegisterDebitException e) {
                                         e.printStackTrace();
+                                        throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                     }
 
                                 } catch (CantLoadWalletsException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 }
 
                                 //Change record state to completed.
@@ -392,10 +410,13 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
                                 } catch (CantLoadTableToMemoryException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 } catch (InvalidParameterException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 } catch (OutgoingIntraActorCantCancelTransactionException e) {
                                     e.printStackTrace();
+                                    throw new CantSendTransactionException("I could not send the transaction",e,"OutgoingDeviceUserModuleManager","unknown reason");
                                 }
 
 
@@ -416,7 +437,10 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
 
 
 
-                }//end if
+                }else{
+                    //There are not enough funds to perform this transaction
+                    throw new OutgoingDeviceUserNotEnoughFundsException("There are not enough funds to perform this transaction",null,"","NotEnoughFunds");
+                }
 
 
                 break;
