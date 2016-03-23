@@ -8,7 +8,7 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLin
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public class ArtistActorConnectionSearch extends
+public abstract class ArtistActorConnectionSearch extends
         ActorConnectionSearch<
                 ArtistLinkedActorIdentity,
                 ArtistActorConnection> {
