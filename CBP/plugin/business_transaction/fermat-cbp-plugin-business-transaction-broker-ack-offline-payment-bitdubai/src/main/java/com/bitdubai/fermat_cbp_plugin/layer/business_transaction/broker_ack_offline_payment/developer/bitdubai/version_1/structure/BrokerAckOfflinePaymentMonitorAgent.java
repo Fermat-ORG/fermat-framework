@@ -85,6 +85,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -316,13 +317,15 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     bankTransactionParametersRecord = getBankTransactionParametersRecordFromContractId(contractHash, cryptoWalletPublicKey, pendingToBankCreditRecord.getCustomerAlias());
 
                     bankTransaction = depositManager.makeDeposit(bankTransactionParametersRecord);
-                    externalTransactionId = bankTransaction.getTransactionId();
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Bank Deposit");
 
+                    externalTransactionId = bankTransaction.getTransactionId();
                     pendingToBankCreditRecord.setExternalTransactionId(externalTransactionId);
                     pendingToBankCreditRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
                     pendingToBankCreditRecord.setPaymentType(MoneyType.BANK);
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(pendingToBankCreditRecord);
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION");
                 }
 
                 /**
@@ -336,13 +339,15 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     cryptoWalletPublicKey = pendingToCashCreditRecord.getCBPWalletPublicKey();
 
                     cashTransactionParametersRecord = getCashTransactionParametersRecordFromContractId(contractHash, cryptoWalletPublicKey, pendingToCashCreditRecord.getPaymentType(), pendingToCashCreditRecord.getCustomerAlias());
-
                     cashDepositTransaction = cashDepositTransactionManager.createCashDepositTransaction(cashTransactionParametersRecord);
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Make Cash Deposit");
+
                     externalTransactionId = cashDepositTransaction.getTransactionId();
                     pendingToCashCreditRecord.setExternalTransactionId(externalTransactionId);
                     pendingToCashCreditRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(pendingToCashCreditRecord);
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION");
                 }
 
                 /**
@@ -354,6 +359,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Sending notification: OFFLINE_PAYMENT_ACK");
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
@@ -366,6 +372,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     );
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_ACK);
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: OFFLINE_PAYMENT_ACK");
                 }
 
                 /**
@@ -375,6 +382,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Customer] Sending Confirmation");
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
@@ -385,6 +393,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
+                    System.out.println("ACK_OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: CONFIRM_OFFLINE_ACK_PAYMENT");
                 }
 
                 /**
@@ -427,6 +436,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 //This will happen in customer side
                 if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE");
+
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
@@ -444,6 +456,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
                             brokerAckOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                             raiseAckConfirmationEvent(contractHash);
+
+                            System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - Update Contract Status: PENDING_MERCHANDISE");
+                            System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - New Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT_CONFIRMATION");
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
@@ -452,6 +467,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 //This will happen in broker side
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE");
+
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
@@ -465,6 +483,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
                                 brokerAckOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                 raiseAckConfirmationEvent(contractHash);
+
+                                System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Contract Status: PENDING_MERCHANDISE");
+                                System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Business Transaction Status: CONFIRM_OFFLINE_ACK_PAYMENT");
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -536,7 +557,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 FiatCurrency customerCurrency = FiatCurrency.US_DOLLAR;
                 BigDecimal customerAmount = BigDecimal.ZERO;
                 String customerAmountString;
-                long customerAmountLong;
+                double customerAmountDouble;
 
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
@@ -545,8 +566,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     }
                     if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString = clause.getValue();
-                        customerAmountLong = parseToLong(customerAmountString);
-                        customerAmount = BigDecimal.valueOf(customerAmountLong);
+                        customerAmountDouble = parseToDouble(customerAmountString);
+                        customerAmount = BigDecimal.valueOf(customerAmountDouble);
                     }
                 }
 
@@ -623,7 +644,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 FiatCurrency customerCurrency = FiatCurrency.US_DOLLAR;
                 BigDecimal customerAmount = BigDecimal.ZERO;
                 String customerAmountString;
-                long customerAmountLong;
+                double customerAmountDouble;
                 String account = "bankAccount";
 
                 for (Clause clause : clauses) {
@@ -635,8 +656,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                     if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString = clause.getValue();
-                        customerAmountLong = parseToLong(customerAmountString);
-                        customerAmount = BigDecimal.valueOf(customerAmountLong);
+                        customerAmountDouble = parseToDouble(customerAmountString);
+                        customerAmount = BigDecimal.valueOf(customerAmountDouble);
                     }
 
                     if (clauseType.getCode().equals(ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
@@ -700,12 +721,12 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          *
          * @throws InvalidParameterException
          */
-        public long parseToLong(String stringValue) throws InvalidParameterException {
+        public double parseToDouble(String stringValue) throws InvalidParameterException {
             if (stringValue == null) {
                 throw new InvalidParameterException("Cannot parse a null string value to long");
             } else {
                 try {
-                    return Long.valueOf(stringValue);
+                    return NumberFormat.getInstance().parse(stringValue).doubleValue();
                 } catch (Exception exception) {
                     throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                             "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
