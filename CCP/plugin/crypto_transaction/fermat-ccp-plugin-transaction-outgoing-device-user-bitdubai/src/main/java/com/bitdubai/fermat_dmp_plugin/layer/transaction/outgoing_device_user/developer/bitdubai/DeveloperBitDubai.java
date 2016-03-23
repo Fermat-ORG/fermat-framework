@@ -15,14 +15,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.dev
 /**
  * Created by loui on 17/02/15.
  */
-public class DeveloperBitDubai implements AbstractPluginDeveloper, PluginLicensor {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     Plugin plugin;
 
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
-    }
 
     public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
