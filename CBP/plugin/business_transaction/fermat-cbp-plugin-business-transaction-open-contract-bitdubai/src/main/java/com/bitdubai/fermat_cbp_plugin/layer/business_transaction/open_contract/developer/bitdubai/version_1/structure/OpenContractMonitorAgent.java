@@ -508,7 +508,9 @@ public class OpenContractMonitorAgent implements
                                     break;
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            raiseNewContractEvent(contractHash);
+
+                            if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+                                raiseNewContractEvent(contractHash);
                         }
                     }
                 }
