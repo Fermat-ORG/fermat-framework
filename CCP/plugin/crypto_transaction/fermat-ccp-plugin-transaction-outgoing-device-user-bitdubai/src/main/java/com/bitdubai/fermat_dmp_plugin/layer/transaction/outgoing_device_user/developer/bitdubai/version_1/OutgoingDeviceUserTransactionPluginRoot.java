@@ -38,7 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_device_user
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.database.OutgoingDeviceUserTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.structure.OutgoingDeviceUserModuleManager;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.structure.OutgoingWalletDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -82,7 +82,7 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
     private Broadcaster broadcaster;
 
     private OutgoingDeviceUserTransactionDao outgoingDeviceUserTransactionDao;
-    private OutgoingDeviceUserModuleManager outgoingDeviceUserModuleManager;
+    private OutgoingDeviceUser outgoingWalletDeviceUser;
 
     public OutgoingDeviceUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -96,7 +96,7 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
         try {
             outgoingDeviceUserTransactionDao.initialize(pluginId);
 
-            outgoingDeviceUserModuleManager = new OutgoingDeviceUserModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager,outgoingDeviceUserTransactionDao);
+            outgoingWalletDeviceUser = new OutgoingWalletDeviceUser(bitcoinLossWalletManager,bitcoinWalletManager,errorManager,outgoingDeviceUserTransactionDao);
 
         } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
@@ -117,7 +117,7 @@ public class OutgoingDeviceUserTransactionPluginRoot extends AbstractPlugin
     @Override
     public OutgoingDeviceUser getOutgoingDeviceUser()
     {
-        return outgoingDeviceUserModuleManager;
+        return outgoingWalletDeviceUser;
     }
 
     /**
