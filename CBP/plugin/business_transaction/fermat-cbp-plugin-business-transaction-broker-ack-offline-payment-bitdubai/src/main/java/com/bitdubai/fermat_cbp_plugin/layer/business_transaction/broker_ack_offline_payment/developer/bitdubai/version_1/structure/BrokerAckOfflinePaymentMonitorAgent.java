@@ -495,6 +495,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 //the eventId from this event is the contractId - Broker side
                 if (eventTypeCode.equals(EventType.NEW_CONTRACT_OPENED.getCode())) {
+                    System.out.println("ACK_OFFLINE_PAYMENT - NEW_CONTRACT_OPENED");
+
                     CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(eventId);
                     ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale is null");
                     MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
@@ -506,6 +508,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             customerBrokerContractSale.getPublicKeyBroker(),
                             ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
                             currencyType);
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - NEW_CONTRACT_OPENED - New Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT");
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
