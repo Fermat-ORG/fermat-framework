@@ -159,17 +159,20 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
 
-        if(!invertedCurrencyPairs.contains(currencyPair))
-        {
-            exchangeFrom = currencyPair.getFrom().getCode();
-            exchangeTo = currencyPair.getTo().getCode();
-            invertExchange = false;
-        }
-        else
+
+
+        if(isAnInvertedCurrencyPair(currencyPair))
         {
             exchangeFrom = currencyPair.getTo().getCode();
             exchangeTo = currencyPair.getFrom().getCode();
             invertExchange = true;
+
+        }
+        else
+        {
+            exchangeFrom = currencyPair.getFrom().getCode();
+            exchangeTo = currencyPair.getTo().getCode();
+            invertExchange = false;
         }
 
 
@@ -185,7 +188,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
 
         }catch (JSONException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Bitfinex CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Bitfinex CER Provider","Cant Get exchange rate for " + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
         if(invertExchange){
@@ -252,5 +255,16 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
+    }
+
+
+    /*Internal functions*/
+
+    private boolean isAnInvertedCurrencyPair(CurrencyPair currencyPair) {
+        for(CurrencyPair cp : invertedCurrencyPairs){
+            if(cp.getFrom().equals(currencyPair.getFrom()) && cp.getTo().equals(currencyPair.getTo()))
+                return true;
+        }
+        return false;
     }
 }
