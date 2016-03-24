@@ -450,6 +450,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                         if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                             contractTransactionStatus = brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                            System.out.println("ACK_OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - The Contract Hash is in Database");
                             //TODO: analyze what we need to do here.
 
                         } else {
