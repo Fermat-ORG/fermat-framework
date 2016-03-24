@@ -97,7 +97,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         try {
             System.out.print("\nTEST CONTRACT - sendContractHash" +
                     "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
-                    "\nRECEIVER "+ receiverComponent +" :"+cryptoBrokerActorSenderPublicKey
+                    "\nRECEIVER "+ receiverComponent +" :"+cryptoCustomerActorReceiverPublicKey
             );
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 

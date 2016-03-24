@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -115,6 +116,11 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_FOOTER);
                 footerViewHolder.setListener(footerListener);
+
+                if(negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER){
+                    footerViewHolder.HideButtons();
+                }
+
                 return footerViewHolder;
             default:
                 throw new IllegalArgumentException("Cant recognise the given value");
@@ -203,6 +209,10 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
         clauseViewHolder.setListener(clauseListener);
 
         setViewResources(clause.getType(), position, clauseViewHolder);
+
+        if(negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.SENT_TO_CUSTOMER || negotiationWrapper.getNegotiationInfo().getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER){
+            clauseViewHolder.confirmButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setViewResources(ClauseType type, int position, ClauseViewHolder clauseViewHolder) {
