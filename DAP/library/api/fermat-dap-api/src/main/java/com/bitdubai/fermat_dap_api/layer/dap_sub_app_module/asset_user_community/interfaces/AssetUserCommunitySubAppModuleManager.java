@@ -35,6 +35,7 @@ import java.util.List;
 /**
  * Created by Nerio on 13/10/15.
  */
+
 public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> {
 
     DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
