@@ -243,6 +243,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
+                    System.out.println("OFFLINE_PAYMENT - [Customer] Sending notification: OFFLINE_PAYMENT_SUBMITTED");
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
@@ -254,6 +255,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
+                    System.out.println("OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: OFFLINE_PAYMENT_SUBMITTED");
                 }
 
                 // Check pending notifications - Broker side
@@ -261,17 +263,18 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                    transactionTransmissionManager.sendContractStatusNotification(
+                    System.out.println("OFFLINE_PAYMENT - [Broker] Sending Confirmation");
+                    transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT,
                             Plugins.CUSTOMER_OFFLINE_PAYMENT,
                             PlatformComponentType.ACTOR_CRYPTO_BROKER,
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
+                    System.out.println("OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
                 }
 
                 // Check if pending events
@@ -284,6 +287,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot get the contract list from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
+            } catch (CantConfirmNotificationReception e) {
+                throw new CannotSendContractHashException(e, "Confirm Reception contract", "Error in Transaction Transmission Network Service");
             }
         }
 
@@ -297,10 +302,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
-
-            //TODO: events from customer side, listen contract status confirmation, the record must be in PENDING_ONLINE_PAYMENT_NOTIFICATION, raise an event
             try {
-
                 String eventTypeCode = customerOfflinePaymentBusinessTransactionDao.getEventType(eventId);
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
@@ -375,6 +377,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 //This will happen in broker side
                 if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
 
+                    System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE");
+
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
@@ -392,24 +396,20 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                             customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                             raisePaymentConfirmationEvent();
+
+                            System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - Update Contract Status: PAYMENT_SUBMIT");
+                            System.out.println("OFFLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - New Business Transaction Status: PENDING_OFFLINE_PAYMENT_CONFIRMATION");
                         }
 
-                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
-                        transactionTransmissionManager.confirmNotificationReception(
-                                businessTransactionMetadata.getReceiverId(),
-                                businessTransactionMetadata.getSenderId(),
-                                contractHash,
-                                transactionId.toString(),
-                                Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                                businessTransactionMetadata.getReceiverType(),
-                                businessTransactionMetadata.getSenderType());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
                 //This will happen in customer side
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                    System.out.println("OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE");
 
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
@@ -421,28 +421,20 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             contractTransactionStatus = customerOnlinePaymentRecord.getContractTransactionStatus();
 
                             if (contractTransactionStatus == ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED) {
-                                customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
+                                customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                                 customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                 raisePaymentConfirmationEvent();
+
+                                System.out.println("OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Contract Status: PAYMENT_SUBMIT");
+                                System.out.println("OFFLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
                             }
                         }
 
-                        final UUID transactionId = businessTransactionMetadata.getTransactionId();
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
-                        transactionTransmissionManager.ackConfirmNotificationReception(
-                                businessTransactionMetadata.getReceiverId(),
-                                businessTransactionMetadata.getSenderId(),
-                                contractHash,
-                                transactionId.toString(),
-                                Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                                businessTransactionMetadata.getReceiverType(),
-                                businessTransactionMetadata.getSenderType());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }*/
-
-                //TODO: REVISAR SI ES NECESARIO UN EVENTO PARA EL ACK_CONFIRM_MESSAGE
 
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
@@ -485,7 +477,6 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         "Checking pending events",
                         "The customerBrokerContractSale is null");
             }
-
         }
 
     }
