@@ -481,7 +481,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
-        if (negotiationType.getCode().equalsIgnoreCase(NegotiationType.SALE.getCode()) ) {
+        if (negotiationType.getCode().equalsIgnoreCase(NegotiationType.SALE.getCode())) {
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
@@ -490,29 +490,30 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod) {
         try {
-            switch(contractStatus) {
+            switch (contractStatus) {
                 case PAYMENT_SUBMIT:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return customerOnlinePaymentManager.getCompletionDate(contractHash);
                     else
                         return customerOfflinePaymentManager.getCompletionDate(contractHash);
                 case PENDING_MERCHANDISE:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return brokerAckOnlinePaymentManager.getCompletionDate(contractHash);
                     else
                         return brokerAckOfflinePaymentManager.getCompletionDate(contractHash);
                 case MERCHANDISE_SUBMIT:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return brokerSubmitOnlineMerchandiseManager.getCompletionDate(contractHash);
                     else
                         return brokerSubmitOfflineMerchandiseManager.getCompletionDate(contractHash);
                 case READY_TO_CLOSE:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return customerAckOnlineMerchandiseManager.getCompletionDate(contractHash);
                     else
                         return customerAckOfflineMerchandiseManager.getCompletionDate(contractHash);
             }
-        }catch(CantGetCompletionDateException e) {}
+        } catch (CantGetCompletionDateException e) {
+        }
         return 0;
     }
 
@@ -664,11 +665,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             if (merchandise.getCode().equals(currencyCode) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
-                    if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())){
-                        paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
-                                "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
+                    if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())) {
+                        paymentMethod.add("Bank: " + accountNumber.getBankName() +
+                                "\nAccount Number: " + accountNumber.getAccount() +
+                                "\nAccount Type: " + accountNumber.getAccountType().getFriendlyName());
                     }
-
                 }
             }
 
@@ -1191,7 +1192,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             CustomerBrokerContractSale customerBrokerContractSale;
             //TODO: This is the real implementation
-            customerBrokerContractSale=this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+            customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             //TODO: for testing
             /*CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();
