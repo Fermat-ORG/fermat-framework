@@ -520,8 +520,8 @@ public interface CryptoWallet extends Serializable {
 
     /**
      * Through the method <code>getMnemonicText</code> you can get the Mnemonic Text from Vault
-     * @return
+     * @return List<String>
      * @throws CantGetMnemonicTextException
      */
-    String getMnemonicText() throws CantGetMnemonicTextException;
+    List<String> getMnemonicText() throws CantGetMnemonicTextException;
 }

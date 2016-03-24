@@ -7,6 +7,8 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSong
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,17 +58,19 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * This checks the time passed between the method execution and the last update, if the actual
      * time - last updated is less than the default update interval, this method not synchronize
      * with external API.
+     * @param tokenlyUsername
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongs() throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method starts the synchronize songs process.
      * In this case, the synchronize process is started by the user.
      * This method doesn't check the last update field.
+     * @param tokenlyUsername
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongsByUser() throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongsByUser(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method deletes a song from the wallet and the device storage.
@@ -75,7 +79,9 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * @param songId
      * @throws CantDeleteSongException
      */
-    void deleteSong(UUID songId) throws CantDeleteSongException;
+    void deleteSong(UUID songId) throws
+            CantDeleteSongException,
+            CantUpdateSongStatusException;
 
     /**
      * This method downloads a song to the wallet and the device storage.
@@ -84,6 +90,9 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * @param songId
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId) throws CantDownloadSongException;
+    void downloadSong(UUID songId) throws
+            CantDownloadSongException,
+            CantUpdateSongDevicePathException,
+            CantUpdateSongStatusException;
 
 }

@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 public interface Broadcaster extends FermatManager {
 
     public static final String PROGRESS_BAR = "progressBar";
+    public static final String PROGRESS_BAR_TEXT = "progressBarText";
+    public static final String PUBLISH_ID = "publishId";
 
     /**
      * Let you fire a broadcast to update a fragment in your wallet or sub-app
@@ -45,8 +47,9 @@ public interface Broadcaster extends FermatManager {
      * @param broadcasterType the broadcast type you want to fire. Can be {@link BroadcasterType#UPDATE_VIEW}
      *                        if you want to update a fragment or {@link BroadcasterType#NOTIFICATION_SERVICE} if you want to show a notification
      * @param bundle            the message is going to be send by the broadcaster, this bundle let you deal with the broadcast the way you want
+     * @return int the id of the notification
      */
-    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
+    int publish(BroadcasterType broadcasterType, FermatBundle bundle);
 
 
 

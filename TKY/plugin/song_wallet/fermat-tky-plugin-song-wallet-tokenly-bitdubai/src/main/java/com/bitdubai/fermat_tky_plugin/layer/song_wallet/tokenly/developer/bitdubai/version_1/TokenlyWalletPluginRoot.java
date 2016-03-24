@@ -193,7 +193,10 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
              */
             this.tokenlyWalletManager = new TokenlyWalletManager(
                     tokenlySongWalletDao,
-                    tokenlyWalletSongVault);
+                    tokenlyWalletSongVault,
+                    tokenlyApiManager,
+                    errorManager);
+            //testDownloadFile();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -320,6 +323,17 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     Plugins.TOKENLY_WALLET,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
+        }
+    }
+
+    private void testDownloadFile(){
+        try{
+            String testURL="https://www.dropbox.com/s/l8df6ixyiweq8yt/appSessionFragmenContract?dl=0";
+            String testName="testFileName";
+            this.tokenlyWalletSongVault.downloadFile(testURL, testName);
+        } catch (Exception e){
+            System.out.println("TKY: Test Download exception");
+            e.printStackTrace();
         }
     }
 }
