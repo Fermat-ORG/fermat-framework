@@ -318,7 +318,8 @@ public interface LossProtectedWallet extends Serializable {
 
 
     void sendToWallet (long cryptoAmount,
-                       String walletPublicKey,
+                       String sendWalletPublicKey,
+                       String receivedWalletPublicKey,
                        String notes,
                        Actors deliveredToActorType,
                        ReferenceWallet sendingWallet,

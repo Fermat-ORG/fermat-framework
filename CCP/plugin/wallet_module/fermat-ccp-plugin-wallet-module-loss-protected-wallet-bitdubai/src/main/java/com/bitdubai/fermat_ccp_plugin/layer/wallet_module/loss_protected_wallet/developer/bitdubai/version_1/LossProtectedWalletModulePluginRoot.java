@@ -46,6 +46,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.structure.LossProtectedWalletModuleManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +115,9 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    WalletManagerManager walletManagerManager;
+
 //    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION)
    // private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
@@ -147,7 +151,8 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
                     outgoingExtraUserManager      ,
                     outgoingIntraActorManager     ,
                     walletContactsManager,
-                    exchangeProviderFilterManagerproviderFilter
+                    exchangeProviderFilterManagerproviderFilter,
+                    walletManagerManager
             );
 
             walletModuleLossProtectedWallet.initialize();
