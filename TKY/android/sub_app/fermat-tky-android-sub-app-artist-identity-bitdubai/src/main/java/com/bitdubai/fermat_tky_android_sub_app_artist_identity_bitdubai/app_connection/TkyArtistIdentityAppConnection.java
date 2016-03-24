@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.fragmentFactory.TkyArtistIdentityFragmentFactory;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSession;
 
 /**
@@ -27,29 +28,35 @@ public class TkyArtistIdentityAppConnection extends AppConnections {
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        return null;
+        return new TkyArtistIdentityFragmentFactory();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
+        System.out.println("aaaa");
+
         return null;
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
+        System.out.println("aaaa");
+
         return null;
     }
 
     @Override
     public FooterViewPainter getFooterViewPainter() {
+        System.out.println("aaaa");
+
         return null;
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() { return  new PluginVersionReference(
-            Platforms.CRYPTO_CURRENCY_PLATFORM,
+            Platforms.TOKENLY,
             Layers.SUB_APP_MODULE,
-            Plugins.INTRA_IDENTITY_USER,
+            Plugins.TOKENLY_ARTIST_SUB_APP_MODULE,
             Developers.BITDUBAI,
             new Version()
     );

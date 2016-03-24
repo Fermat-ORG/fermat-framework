@@ -96,11 +96,11 @@ public class ProvisoryData {
 
 /*
         installedSubApp = new InstalledSubApp(
-                SubApps.TKY_ARTIST_IDENTITY,
+                SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
                 null,
                 null,
                 "tky_sub_app",
-                "Tonkenly",
+                "Tokenly",
                 "public_key_tky_artist_identity",
                 "tky_sub_app",
                 new Version(1, 0, 0),
@@ -110,9 +110,9 @@ public class ProvisoryData {
         item2.setIconResource(R.drawable.bitcoin_icon);
         item2.setPosition(6);
         lstIdentities.add(item2);
+
+
 */
-
-
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
