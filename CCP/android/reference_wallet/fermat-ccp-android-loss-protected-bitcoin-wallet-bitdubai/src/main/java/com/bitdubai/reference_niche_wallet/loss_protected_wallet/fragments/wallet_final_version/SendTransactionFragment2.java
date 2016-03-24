@@ -431,7 +431,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-       // txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
+       //txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
 
         // handler for the background updating
         final Handler progressHandler = new Handler() {
@@ -855,7 +855,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         updateBalances();
         setRunningDailyBalance();
         try {
-            if (((LossProtectedWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            if (appSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, lossProtectedWalletSession.getTypeAmount()));
                 txt_type_balance.setText(R.string.book_balance);
