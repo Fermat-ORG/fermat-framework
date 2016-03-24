@@ -356,7 +356,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                  * Check pending notifications - Broker side
                  */
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
-                        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
+                        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
@@ -385,10 +385,10 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check if pending to submit crypto status
                  */
-                List<BusinessTransactionRecord> pendingSubmitContractList=
+                List<BusinessTransactionRecord> pendingSubmitContractCryptoStatusList=
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
                 CryptoStatus cryptoStatus;
-                for(BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractList){
+                for(BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList){
                     cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
                             pendingSubmitContractRecord.getTransactionHash());
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
