@@ -91,7 +91,7 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
         transferIntraWalletUsersDao = new TransferIntraWalletUsersDao(errorManager,pluginDatabaseSystem);
         try {
             transferIntraWalletUsersDao.initialize(pluginId);
-            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager, transferIntraWalletUsersDao);
+            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager, transferIntraWalletUsersDao,this.broadcaster);
    } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
         }

@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -40,16 +42,19 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
     private final BitcoinWalletManager bitcoinWalletManager;
     private final ErrorManager errorManager;
     private final TransferIntraWalletUsersDao dao;
+    private final Broadcaster broadcaster;
 
 
     public TransferIntraWalletUsersModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                                  final BitcoinWalletManager bitcoinWalletManager,
                                                  final ErrorManager errorManager,
-                                                 final TransferIntraWalletUsersDao dao) {
+                                                 final TransferIntraWalletUsersDao dao,
+                                                 final Broadcaster broadcaster) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
         this.dao = dao;
+        this.broadcaster = broadcaster;
     }
 
     //TODO: los try catch tenes que ponerlos englobando toda la funcion, me parece que para que quede mas claro tenes que hacer un
@@ -272,9 +277,11 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
         } catch (CantFindTransactionException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadWalletException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantRegisterCreditException e) {
             //Update transaction to error state
@@ -284,12 +291,15 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 dao.setToError(transferIntraWalletUsersWrapper);
             } catch (CantLoadTableToMemoryException e1) {
                 e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
             } catch (InvalidParameterException e1) {
                 e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
             } catch (TransferIntraWalletUsersCantCancelTransactionException e1) {
                 e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
             }
 
@@ -297,13 +307,21 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             e.printStackTrace();
         } catch (TransferIntraWalletUsersCantInsertRecordException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantCalculateBalanceException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadWalletsException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }catch (Exception e){
+            e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+
         }
 
     }
@@ -391,21 +409,49 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             }
         } catch (CantLoadTableToMemoryException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (InvalidParameterException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantRegisterDebitException e) {
+            //Update transaction to error state
+            try {
+                TransferIntraWalletUsersWrapper transferIntraWalletUsersWrapper = dao.getTransaction(id);
+                //Set transaction to error state
+                dao.setToError(transferIntraWalletUsersWrapper);
+            } catch (CantLoadTableToMemoryException e1) {
+                e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
+                throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+            } catch (InvalidParameterException e1) {
+                e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
+                throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+            } catch (TransferIntraWalletUsersCantCancelTransactionException e1) {
+                e1.printStackTrace();
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
+                throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+            }
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (TransferIntraWalletUsersCantCancelTransactionException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadWalletException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadWalletsException e) {
             e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }catch (Exception e){
+            e.printStackTrace();
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "An Error was found ! " + e.getMessage());
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         }
 
