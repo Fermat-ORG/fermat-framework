@@ -480,7 +480,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
                         if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            businessTransactionRecord = brokerAckOfflinePaymentBusinessTransactionDao.getBusinessTransactionRecordByContractHash(contractHash);
+                            businessTransactionRecord = brokerAckOfflinePaymentBusinessTransactionDao.getBrokerBusinessTransactionRecordByContractHash(contractHash);
                             contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
                             if (contractTransactionStatus == ContractTransactionStatus.OFFLINE_PAYMENT_ACK) {

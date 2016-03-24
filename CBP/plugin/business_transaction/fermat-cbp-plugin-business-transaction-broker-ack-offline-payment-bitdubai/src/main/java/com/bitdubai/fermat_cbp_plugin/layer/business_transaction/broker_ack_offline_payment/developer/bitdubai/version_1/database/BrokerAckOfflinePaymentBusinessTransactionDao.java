@@ -575,12 +575,19 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         return record;
     }
 
-    public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(
-            String contractHash)
-            throws
-            UnexpectedResultReturnedFromDatabaseException {
+    /**
+     * return a {@link BusinessTransactionRecord} with the data persisted in the broker device
+     *
+     * @param contractHash the contract hash that identify the Record
+     *
+     * @return a {@link BusinessTransactionRecord} with the data
+     *
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public BusinessTransactionRecord getBrokerBusinessTransactionRecordByContractHash(String contractHash)
+            throws UnexpectedResultReturnedFromDatabaseException {
         try{
-            return getBusinessTransactionRecord(
+            return getBrokerBusinessTransactionRecord(
                     contractHash,
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -596,12 +603,31 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
     }
 
     /**
+     * return a {@link BusinessTransactionRecord} with the data persisted in the customer device
+     *
+     * @param contractHash the contract hash that identify the Record
+     *
+     * @return a {@link BusinessTransactionRecord} with the data
+     *
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public BusinessTransactionRecord getCustomerBusinessTransactionRecordByContractHash(String contractHash)
+            throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            return getCustomerBusinessTransactionRecord(contractHash, BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
+        }
+    }
+    /**
      * This method returns a BusinessTransactionRecord by the parameters given.
      * @param keyValue
      * @param keyColumn
      * @return
      */
-    private BusinessTransactionRecord getBusinessTransactionRecord(String keyValue, String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
+    private BusinessTransactionRecord getBrokerBusinessTransactionRecord(String keyValue, String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
@@ -623,6 +649,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
             businessTransactionRecord.setContractHash(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                     ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
 
             String contractStatusStringValue = record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
@@ -663,6 +692,48 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             if(customerAlias == null || customerAlias.isEmpty())
                 customerAlias = "Unregistered customer";
             businessTransactionRecord.setCustomerAlias(customerAlias);
+
+            return businessTransactionRecord;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting value from database", "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting value from database", "Invalid parameter in ContractTransactionStatus");
+        }
+    }
+
+    private BusinessTransactionRecord getCustomerBusinessTransactionRecord(String keyValue, String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            BusinessTransactionRecord businessTransactionRecord = new BusinessTransactionRecord();
+            databaseTable.addStringFilter(keyColumn, keyValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+
+            if(records.isEmpty())
+                return null;
+
+            DatabaseTableRecord record = records.get(0);
+
+            businessTransactionRecord.setTransactionId(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            String contractStatusStringValue = record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
+            businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.getByCode(contractStatusStringValue));
 
             return businessTransactionRecord;
 
@@ -1097,9 +1168,18 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public List<BusinessTransactionRecord> getPendingToSubmitConfirmationList() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
         try{
-            return getBusinessTransactionRecordList(ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
+            List<String> pendingContractHash= getStringList(
+                    ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+
+            List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
+            BusinessTransactionRecord businessTransactionRecord;
+            for(String contractHash : pendingContractHash){
+                businessTransactionRecord = getCustomerBusinessTransactionRecordByContractHash(contractHash);
+                businessTransactionRecordList.add(businessTransactionRecord);
+            }
+            return businessTransactionRecordList;
 
         }catch (CantGetContractListException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -1196,7 +1276,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getBusinessTransactionRecordByContractHash(contractHash);
+            businessTransactionRecord = getBrokerBusinessTransactionRecordByContractHash(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
