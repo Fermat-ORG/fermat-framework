@@ -53,7 +53,7 @@ public interface Song {
      * This method returns the song credits
      * @return
      */
-    String credits();
+    String getCredits();
 
     /**
      * This method returns the song copyright.
