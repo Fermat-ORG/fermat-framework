@@ -132,6 +132,11 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
 
+    @Override
+    public long getExchangRate() {
+        return 0;
+    }
+
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;
     }

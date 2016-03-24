@@ -347,7 +347,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
-        getAndShowMarketExchangeRateData(rootView);
+       // getAndShowMarketExchangeRateData(rootView);
         return rootView;
     }
 
@@ -431,7 +431,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-        txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
+       // txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
 
         // handler for the background updating
         final Handler progressHandler = new Handler() {

@@ -46,6 +46,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetM
 
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -599,4 +601,11 @@ public interface LossProtectedWallet extends Serializable {
      * @throws CantGetCurrencyExchangeProviderException
      */
     Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
+
+    /**
+     * Through the method <code>getInstalledWallets</code> you can get the list of wallets installed on platform
+     * @return List of InstalledWallet
+     * @throws CantListWalletsException
+     */
+    List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 }

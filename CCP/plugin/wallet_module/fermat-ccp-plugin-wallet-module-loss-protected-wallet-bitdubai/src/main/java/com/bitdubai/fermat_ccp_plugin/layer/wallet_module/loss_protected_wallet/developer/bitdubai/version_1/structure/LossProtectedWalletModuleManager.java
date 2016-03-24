@@ -47,6 +47,8 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.TransferIntraWalletUsersNotEnoughFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsersManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -164,8 +166,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final WalletContactsManager          walletContactsManager         ;
     private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
     private final WalletManagerManager walletManagerManager;
-
-    // private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
+    private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
 
 
@@ -182,7 +183,8 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
                                            final WalletContactsManager          walletContactsManager,
                                             final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
-                                            final WalletManagerManager walletManagerManager) {
+                                            final WalletManagerManager walletManagerManager,
+                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
 
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
@@ -199,6 +201,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         this.walletContactsManager          = walletContactsManager         ;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
         this.walletManagerManager = walletManagerManager;
+        this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
 
 
     }
@@ -1033,13 +1036,15 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     @Override
     public void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
+       try {
+           transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,sendingWalletPublicKey,receivingWalletPublicKey,blockchainNetworkType);
+       } catch (CantSendTransactionException e) {
+           throw new CantSendLossProtectedCryptoException("CAN'T SEND CRYPTO TO WALLET EXCEPTION", e);
 
+       } catch (TransferIntraWalletUsersNotEnoughFundsException e) {
+           throw new LossProtectedInsufficientFundsException("TRANSFER TO WALLET Insufficient Funds", e,"","");
 
-//        try {
-//            outgoingDeviceUserManager.getOutgoingDeviceUser().sendToWallet("IS THIS HAS GOING TO BE NULL OR NOT?",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,walletPublicKey,"THIS PUBLIC KEY IS NEEDED AT THIS POINT, VERY IMPORTANT",blockchainNetworkType);
-//        } catch (CantSendTransactionException e) {
-//            e.printStackTrace();
-//        }
+       }
 
 
     }
@@ -1549,6 +1554,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         return sdf.format(date);
     }
 
+    @Override
     public List<InstalledWallet> getInstalledWallets() throws CantListWalletsException {
         return walletManagerManager.getInstalledWallets();
     }

@@ -118,8 +118,8 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     WalletManagerManager walletManagerManager;
 
-//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION)
-   // private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
+   @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
+    private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
 
     private String appPublicKey;
@@ -152,7 +152,8 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
                     outgoingIntraActorManager     ,
                     walletContactsManager,
                     exchangeProviderFilterManagerproviderFilter,
-                    walletManagerManager
+                    walletManagerManager,
+                    transferIntraWalletUsersManager
             );
 
             walletModuleLossProtectedWallet.initialize();

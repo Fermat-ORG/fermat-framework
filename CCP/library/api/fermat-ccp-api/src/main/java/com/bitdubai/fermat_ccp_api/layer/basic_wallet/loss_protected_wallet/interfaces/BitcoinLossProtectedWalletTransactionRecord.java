@@ -37,7 +37,7 @@ public interface BitcoinLossProtectedWalletTransactionRecord {
 
     BlockchainNetworkType getBlockchainNetworkType();
 
-
+    long getExchangRate();
 
 
 

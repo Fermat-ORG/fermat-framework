@@ -490,9 +490,9 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                 cryptoWallet.sendToWallet(
                                         operator.longValueExact(),
                                         appSession.getAppPublicKey(),
-                                        appSession.getAppPublicKey(),
+                                        appSession.getAppPublicKey(),//RECIVE WALLET KEY
                                         notes,
-                                        Actors.INTRA_USER,
+                                        Actors.DEVICE_USER,
                                         ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                         blockchainNetworkType
@@ -511,7 +511,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                             e.printStackTrace();
                         } catch (CantSendLossProtectedCryptoException e) {
                             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Error Send not Complete", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                             Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();

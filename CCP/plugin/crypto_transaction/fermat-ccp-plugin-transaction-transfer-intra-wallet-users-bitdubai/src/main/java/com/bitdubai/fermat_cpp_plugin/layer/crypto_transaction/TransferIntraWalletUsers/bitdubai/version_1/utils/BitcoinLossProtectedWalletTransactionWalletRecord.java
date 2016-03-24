@@ -40,6 +40,8 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
 
     BlockchainNetworkType BlockchainNetworkType;
 
+    long exchangeRate;
+
 
     public BitcoinLossProtectedWalletTransactionWalletRecord(UUID transactionId,
                                                              CryptoAddress addressFrom,
@@ -53,7 +55,8 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
                                                              String actorToPublicKey,
                                                              Actors actorToType,
                                                              Actors actorFromType,
-                                                             com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
+                                                             com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
+                                                             long exchangeRate) {
         TransactionId = transactionId;
         AddressFrom = addressFrom;
         RequestId = requestId;
@@ -67,6 +70,7 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
         ActorToType = actorToType;
         ActorFromType = actorFromType;
         BlockchainNetworkType = blockchainNetworkType;
+        exchangeRate = exchangeRate;
     }
 
     @Override
@@ -132,5 +136,10 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {
         return BlockchainNetworkType;
+    }
+
+    @Override
+    public long getExchangRate() {
+        return exchangeRate;
     }
 }
