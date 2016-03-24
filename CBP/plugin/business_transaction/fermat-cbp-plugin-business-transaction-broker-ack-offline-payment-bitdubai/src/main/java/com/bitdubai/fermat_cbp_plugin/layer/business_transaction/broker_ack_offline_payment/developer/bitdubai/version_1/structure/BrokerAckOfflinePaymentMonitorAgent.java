@@ -538,7 +538,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         }
 
         /**
-         * This method returns a BankTransactionParametersRecord from a given ContractHash/Id
+         * This method returns a CashTransactionParametersRecord from a given ContractHash/Id
          *
          * @param contractHash
          *
@@ -665,7 +665,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     }
 
                     if (clauseType.getCode().equals(ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
-                        account = clause.getValue();
+                        account = getAccountNumberFromClause(clause);
                     }
                 }
 
@@ -736,6 +736,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
                 }
             }
+        }
+
+        private String getAccountNumberFromClause(Clause clause) {
+        /* The account Account data that come from the clause have this format*/
+            String clauseValue = clause.getValue();
+            String[] split = clauseValue.split("\\D+:\\s*");
+            return split.length == 1 ? split[0] : split[1];
         }
 
         /**
