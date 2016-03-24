@@ -208,7 +208,7 @@ public class OpenContractBusinessTransactionDao {
     public boolean isContractHashSentConfirmation(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
-            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.CHECKING_HASH.getCode());
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION.getCode());
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
@@ -447,6 +447,21 @@ public class OpenContractBusinessTransactionDao {
         try{
             return getStringList(
                     ContractTransactionStatus.PENDING_CONFIRMATION.getCode(),
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.OPEN_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+    }
+
+    public List<String> getPendingToAskConfirmContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
+        try{
+            return getStringList(
+                    ContractTransactionStatus.PENDING_RESPONSE.getCode(),
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception e){
