@@ -299,14 +299,21 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        try {
-            wallet = Wallet.loadFromFile(walletFile);
-        } catch (UnreadableWalletException e) {
-            /**
-             * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
-             * I'm creating it by importing the keys sent by the vault.
-             */
-            //wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+        // if the wallet file exists, I will get it from the Network Monitor
+        if (walletFile.exists()){
+            BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+            if (monitor != null)
+                wallet = monitor.getWallet();
+            else {
+                try {
+                    wallet = Wallet.loadFromFile(walletFile);
+                } catch (UnreadableWalletException e) {
+                    e.printStackTrace();
+                }
+            }
+            return wallet;
+        } else {
+            // I will create a new one.
             NetworkParameters newWalletNetworkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Context context = new Context(newWalletNetworkParameters);
 
@@ -322,9 +329,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             } catch (IOException e1) {
                 e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
             }
-
+            return wallet;
         }
-        return wallet;
     }
 
     /**

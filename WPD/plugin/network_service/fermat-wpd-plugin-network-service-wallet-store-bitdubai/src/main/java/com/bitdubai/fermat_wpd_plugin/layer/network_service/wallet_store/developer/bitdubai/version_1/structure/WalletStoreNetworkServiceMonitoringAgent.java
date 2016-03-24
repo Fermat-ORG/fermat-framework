@@ -154,17 +154,18 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private void doTheMainTask() throws InvalidParameterException, CantExecuteDatabaseOperationException {
-            if (areMissingIds(CatalogItems.LANGUAGE)){
-                insertValidLanguagesFromPeer();
-                raiseEvent();
-            }
-
-
-            if (areMissingIds(CatalogItems.SKIN))
-                raiseEvent();
-
-            if (areMissingIds(CatalogItems.WALLET))
-                raiseEvent();
+            //TODO: comentado porqué está molestando
+//            if (areMissingIds(CatalogItems.LANGUAGE)){
+//                insertValidLanguagesFromPeer();
+//                raiseEvent();
+//            }
+//
+//
+//            if (areMissingIds(CatalogItems.SKIN))
+//                raiseEvent();
+//
+//            if (areMissingIds(CatalogItems.WALLET))
+//                raiseEvent();
         }
 
         private void insertValidLanguagesFromPeer() throws InvalidParameterException, CantExecuteDatabaseOperationException {

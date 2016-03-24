@@ -81,7 +81,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         Timestamp timestamp = new Timestamp(date.getTime());
         BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 transactionHash,
-                ContractTransactionStatus.PENDING_CONFIRMATION,
+                ContractTransactionStatus.PENDING_REMOTE_CONFIRMATION,
                 cryptoBrokerActorSenderPublicKey,
                 receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
@@ -95,6 +95,11 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction
         );
         try {
+            System.out.print("\nTEST CONTRACT - sendContractHash" +
+                    "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
+                    "\nRECEIVER "+ receiverComponent +" :"+cryptoBrokerActorSenderPublicKey
+            );
+            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
 
@@ -193,6 +198,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
 
         try {
+            System.out.print("\nTEST CONTRACT - confirmNotificationReception" +
+                            "\nSENDER "+ senderComponent +" :"+senderPublicKey+
+                            "\nRECEIVER "+ receiverComponent +" :"+receiverPublicKey
+            );
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -204,7 +213,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "Cannot persists the contract hash in table",
                     "database corrupted");
         } catch (Exception e) {
-            throw new CantConfirmNotificationReception(
+                throw new CantConfirmNotificationReception(
                     CantConfirmNotificationReception.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
@@ -229,7 +238,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         //TODO: verificar los parametros del businessTransactionMetadata
         BusinessTransactionMetadata businessTransactionMetadata = new BusinessTransactionMetadataRecord(
                 contractHash,
-                ContractTransactionStatus.NOTIFICATION_CONFIRMED,
+                ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED,
                 cryptoBrokerActorSenderPublicKey,
                 receiverComponent,
                 cryptoCustomerActorReceiverPublicKey,
@@ -244,6 +253,10 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
 
         try {
+            System.out.print("\nTEST CONTRACT - ackConfirmNotificationReception" +
+                            "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
+                            "\nRECEIVER "+ receiverComponent +" :"+cryptoCustomerActorReceiverPublicKey
+            );
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -266,6 +279,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
+            System.out.print("\n1)transactionId: "+ transactionID+"\n");
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
 
         } catch (CantUpdateRecordDataBaseException e) {

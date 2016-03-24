@@ -146,5 +146,9 @@
             </intent-filter>
         </service>
 
+        <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
+            android:theme="@style/AppThemeDesktop"
+            ></activity>
+
     </application>
 </manifest>
