@@ -8,10 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum TransactionState {
 
 
-
+    NEW("NEW"),
     SENT_TO_WALLET("STW"),
     COMPLETED("COM"),
-    CANCELED("CLD");
+    CANCELED("CLD"),
+    ERROR("ERR");
 
 
     private final String code;
@@ -24,9 +25,11 @@ public enum TransactionState {
 
     public static TransactionState getByCode(String code) throws InvalidParameterException {
         switch (code){
+            case "NEW": return TransactionState.NEW;
             case "STW": return TransactionState.SENT_TO_WALLET;
             case "COM":   return TransactionState.COMPLETED;
             case "CLD":  return TransactionState.CANCELED;
+            case "ERR": return TransactionState.ERROR;
             default:
                 /**
                  * If we try to cpmvert am invalid string.
