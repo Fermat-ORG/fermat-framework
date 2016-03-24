@@ -13,4 +13,11 @@ dependencies {
 
     //Song wallet
     compile project(':fermat-tky-plugin-song-wallet-tokenly-bitdubai')
+
+    //Sub App Module
+    compile project(':fermat-tky-plugin-sub-app-module-artist-identity-bitdubai')
+    compile project(':fermat-tky-plugin-sub-app-module-fan-identity-bitdubai')
+
+    //Fan Wallet Module
+    compile project(':fermat-tky-plugin-wallet-module-fan-wallet-bitdubai')
 }

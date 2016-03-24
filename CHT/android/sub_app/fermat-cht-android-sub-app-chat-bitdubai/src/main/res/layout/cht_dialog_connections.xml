@@ -144,14 +144,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_add"
                     android:background="@drawable/cht_ok_buttom"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
-                    />
+                    /> -->
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

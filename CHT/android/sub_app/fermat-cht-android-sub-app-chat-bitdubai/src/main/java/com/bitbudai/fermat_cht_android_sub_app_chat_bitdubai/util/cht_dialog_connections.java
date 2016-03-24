@@ -118,7 +118,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
         }
         text=(TextView) findViewById(R.id.text);
         list = (ListView) findViewById(R.id.list);
-        btn_add = (Button) findViewById(R.id.btn_add);
+
         setUpListeners();
 
         try {
@@ -244,7 +244,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                                     // When user changed the Text
                                     cht_dialog_connections.this.adapter.getFilter().filter(cs);
-                                    adapter.notifyDataSetChanged();
+
                                 }
 
                                 @Override
@@ -295,14 +295,14 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     }
 
     private void setUpListeners() {
-        btn_add.setOnClickListener(this);
+      //  btn_add.setOnClickListener(this);
         }
 
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_add) {
+        /*if (id == R.id.btn_add) {
             dismiss();
-        }
+        }*/
     }
     @Override
     protected int setWindowFeature() {
