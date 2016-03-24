@@ -744,9 +744,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 if(Objects.equals(chatMetadataRecord.getProcessed(), ChatMetadataRecord.PROCESSED)){
                     chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
                     final ChatMetadataRecord chatMetadataTosend = chatMetadataRecord;
-//                    executorService.submit(new Runnable() {
-//                        @Override
-//                        public void run() {
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
                             try {
                                 sendNewMessage(
                                         getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
@@ -758,8 +758,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
                                 e.printStackTrace();
                             }
-//                        }
-//                    });
+                        }
+                    });
                 }
 
             }
@@ -830,9 +830,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
                     chatMetadataRecord.setMessageStatus(messageStatus);
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
-//                    executorService.submit(new Runnable() {
-//                        @Override
-//                        public void run() {
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
                             try {
 
                                 sendNewMessage(
@@ -844,8 +844,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             } catch (CantSendMessageException | CantUpdateRecordDataBaseException e) {
                                 e.printStackTrace();
                             }
-//                        }
-//                    });
+                        }
+                    });
                 }
 
 
@@ -939,9 +939,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
             System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
-//            executorService.submit(new Runnable() {
-//                @Override
-//                public void run() {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
 
                     try {
                         sendNewMessage(
@@ -952,8 +952,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     } catch (CantSendMessageException e) {
                         e.printStackTrace();
                     }
-//                }
-//            });
+                }
+            });
 
         }catch(CantSendChatMessageMetadataException e){
             StringBuilder contextBuffer = new StringBuilder();

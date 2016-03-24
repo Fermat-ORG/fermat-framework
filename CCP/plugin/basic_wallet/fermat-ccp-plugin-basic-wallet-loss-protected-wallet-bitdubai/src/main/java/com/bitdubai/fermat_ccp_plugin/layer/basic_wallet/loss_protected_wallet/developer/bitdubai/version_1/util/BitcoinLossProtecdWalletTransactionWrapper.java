@@ -33,6 +33,7 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
     private final String memo;
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
+    private final long exchangeRate;
     
     public BitcoinLossProtecdWalletTransactionWrapper(final UUID transactionId,
                                            final String transactionHash,
@@ -49,7 +50,8 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
                                            final long runningAvailableBalance,
                                            final long timeStamp,
                                            final String memo,
-                                           BlockchainNetworkType blockchainNetworkType,final TransactionState transactionState) {
+                                           BlockchainNetworkType blockchainNetworkType,final TransactionState transactionState,
+                                                      final long exchangeRate) {
         this.transactionId = transactionId;
         this.transactionHash = transactionHash;
         this.transactionType = transactionType;
@@ -67,6 +69,7 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
         this.memo = memo;
         this.blockchainNetworkType = blockchainNetworkType;
         this.transactionState = transactionState;
+        this.exchangeRate = exchangeRate;
     }
 
     @Override
@@ -149,4 +152,9 @@ public class BitcoinLossProtecdWalletTransactionWrapper implements BitcoinLossPr
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType; }
+
+    @Override
+    public long getExchangeRate() {
+        return this.exchangeRate;
+    }
 }

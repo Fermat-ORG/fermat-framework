@@ -30,5 +30,26 @@ public class FermatBundle {
         }
     }
 
+    public String getString(String key) throws IllegalAccessException {
+        Object o = extras.get(key);
+        if(o instanceof String){
+            return (String) o;
+        }else{
+            throw new IllegalAccessException("Need String, found"+o.getClass());
+        }
+    }
 
+    public boolean contains(String key){
+        return extras.containsKey(key);
+    }
+
+
+    public int getInt(String key) throws IllegalAccessException {
+        Object o = extras.get(key);
+        if(o instanceof Integer){
+            return (int) o;
+        }else{
+            throw new IllegalAccessException("Need int, found"+o.getClass());
+        }
+    }
 }

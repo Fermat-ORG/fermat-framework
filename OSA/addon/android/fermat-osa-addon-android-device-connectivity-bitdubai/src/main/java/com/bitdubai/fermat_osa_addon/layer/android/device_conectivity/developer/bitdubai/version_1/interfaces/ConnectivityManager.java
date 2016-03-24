@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
+import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.NetworkStateReceiver;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ import java.util.List;
     boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException;
 
     void setContext(Object context);
+
+    void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver);
 }

@@ -67,6 +67,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -122,7 +123,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                                                       CashMoneyRestockManager cashMoneyRestockManager,
                                                                       CryptoMoneyRestockManager cryptoMoneyRestockManager,
                                                                       NotificationManagerMiddleware notificationManagerMiddleware,
-                                                                      UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager,Broadcaster broadcaster) {
+                                                                      UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager, Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
@@ -136,7 +137,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         this.cryptoMoneyRestockManager = cryptoMoneyRestockManager;
         this.notificationManagerMiddleware = notificationManagerMiddleware;
         this.userLevelBusinessTransactionCustomerBrokerSaleManager = userLevelBusinessTransactionCustomerBrokerSaleManager;
-        this.broadcaster=broadcaster;
+        this.broadcaster = broadcaster;
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
         try {
             //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
@@ -320,7 +321,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                             //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
 
-                            if(new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                            if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
 
                                 final String brokerWalletPublicKey = "crypto_broker_wallet";
@@ -342,32 +343,32 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             //Recorrer las clausulas del contrato
                             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
                             for (ContractClause contractClause : customerBrokerContractSale.getContractClause()) {
-                                if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CRYPTO_TRANSFER.getCode())) {
+                                if (contractClause.getType() == ContractClauseType.CRYPTO_TRANSFER)
                                     sw = 1;
-                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.BANK_TRANSFER.getCode())) {
+                                else if (contractClause.getType() == ContractClauseType.BANK_TRANSFER)
                                     sw = 2;
-                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_DELIVERY.getCode()) && Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_ON_HAND.getCode())) {
+                                else if (contractClause.getType() == ContractClauseType.CASH_DELIVERY || contractClause.getType() == ContractClauseType.CASH_ON_HAND)
                                     sw = 3;
+                            }
+
+                            final NumberFormat instance = NumberFormat.getInstance();
+                            for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
+                                switch (clause.getType()) {
+                                    case EXCHANGE_RATE:
+                                        priceReference = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        break;
+                                    case BROKER_CURRENCY_QUANTITY:
+                                        amount = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        break;
+                                    case BROKER_BANK_ACCOUNT:
+                                        bankAccount = getAccountNumberFromClause(clause);
+                                        break;
+                                    case BROKER_CURRENCY:
+                                        fiatCurrency = FiatCurrency.getByCode(clause.getValue());
+                                        break;
                                 }
                             }
 
-                            for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.EXCHANGE_RATE.getCode())) {
-                                    priceReference = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
-                                    amount = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
-                                    amount = new BigDecimal(clause.getValue());
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
-                                    bankAccount = clause.getValue();
-                                }
-                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY.getCode())) {
-                                    fiatCurrency = FiatCurrency.valueOf(clause.getValue());
-                                }
-                            }
                             if (sw == 1) {
                                 cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
                                         CryptoCurrency.BITCOIN,
@@ -433,7 +434,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
                             //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
 
-                            if(new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                            if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
 
                                 final String brokerWalletPublicKey = "crypto_broker_wallet";
@@ -504,6 +505,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
     }
 
+    private String getAccountNumberFromClause(Clause clause) {
+        /* The account Account data that come from the clause have this format*/
+        String clauseValue = clause.getValue();
+        String[] split = clauseValue.split("\\D+:\\s*");
+        return split.length == 1 ? split[0] : split[1];
+    }
+
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
         // I define the filter to search for the public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -568,7 +576,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             throw new CantGetExchangeRateException();
 
 
-        CurrencyPair currencyPair =  new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
+        CurrencyPair currencyPair = new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
 
 
         //Get saved CER providers in broker wallet
