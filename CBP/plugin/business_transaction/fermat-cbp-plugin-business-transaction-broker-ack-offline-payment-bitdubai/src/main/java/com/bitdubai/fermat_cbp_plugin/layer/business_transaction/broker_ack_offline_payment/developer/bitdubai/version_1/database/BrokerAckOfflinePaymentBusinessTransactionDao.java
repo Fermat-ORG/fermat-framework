@@ -458,65 +458,47 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale,
             MoneyType paymentType,
             String actorPublicKey,
-            String customerAlias) throws
-            ObjectNotSetException,
-            InvalidParameterException {
+            String customerAlias) throws ObjectNotSetException, InvalidParameterException {
 
-        ObjectChecker.checkArgument(
-                customerBrokerContractSale,
-                "The customerBrokerContractSale in buildDatabaseTableRecord method is null");
+        ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale in buildDatabaseTableRecord method is null");
+
         UUID transactionId=UUID.randomUUID();
-        record.setUUIDValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+        record.setUUIDValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
+
         //For the business transaction this value represents the contract hash.
-        record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractSale.getContractId());
-        record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyCustomer());
-        record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyBroker());
-        record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME,
+
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME,
                 actorPublicKey);
+
         switch (paymentType){
             case BANK:
-                record.setStringValue(
-                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                         ContractTransactionStatus.PENDING_CREDIT_BANK_WALLET.getCode());
                 break;
             case CASH_DELIVERY:
-                record.setStringValue(
-                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                         ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode());
                 break;
             case CASH_ON_HAND:
-                record.setStringValue(
-                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                         ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode());
                 break;
             default:
-                throw new InvalidParameterException(
-                        paymentType+" value from MoneyType is not valid in this plugin");
+                throw new InvalidParameterException(paymentType + " value from MoneyType is not valid in this plugin");
         }
-        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                        ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME,
-                paymentType.getCode());
+
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, paymentType.getCode());
         //Sets the customerAlias
-        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME,
-                customerAlias);
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME, customerAlias);
         return record;
     }
 
