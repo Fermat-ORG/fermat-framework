@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
@@ -293,6 +294,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      *  This method will be called when the user close the drawer if exist
      */
     public void onDrawerClose() {
+
+    }
+
+    public void onDrawerSlide(View drawerView, float offset)
+    {
 
     }
 }

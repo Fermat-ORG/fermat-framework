@@ -40,7 +40,7 @@ import java.util.UUID;
 /**
  * Created by Joaquin Carrasquero on 18/03/16.
  */
-public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
+public class OutgoingWalletDeviceUser implements OutgoingDeviceUser{
 
 
 
@@ -51,7 +51,7 @@ public class OutgoingDeviceUserModuleManager implements OutgoingDeviceUser{
     private final OutgoingDeviceUserTransactionDao dao;
 
 
-    public OutgoingDeviceUserModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
+    public OutgoingWalletDeviceUser(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                            final BitcoinWalletManager bitcoinWalletManager,
                                            final ErrorManager errorManager,
                                            final OutgoingDeviceUserTransactionDao dao) {

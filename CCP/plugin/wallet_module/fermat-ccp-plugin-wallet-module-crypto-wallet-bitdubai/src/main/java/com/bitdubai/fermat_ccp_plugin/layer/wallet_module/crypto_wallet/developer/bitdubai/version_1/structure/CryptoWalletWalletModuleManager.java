@@ -1345,7 +1345,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         }catch (CantGetActorException exe){
                             contactId = null;
                         }catch (Exception ex){
-                            walletContactRecord = null;
+                            contactId = null;
                         }
 
                     }

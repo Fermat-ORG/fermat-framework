@@ -811,6 +811,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                             super.onDrawerSlide(drawerView, slideOffset);
                             float moveFactor = (navigationView.getWidth() * slideOffset);
                             //findViewById(R.id.content).setTranslationX(moveFactor);
+                            /*if(adapter!=null){
+                                if(!adapter.getLstCurrentFragments().isEmpty()){
+                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
+                                        abstractFermatFragment.onDrawerSlide(drawerView, slideOffset);
+                                    }
+                                }
+                            }*/
                         }
                     };
 
