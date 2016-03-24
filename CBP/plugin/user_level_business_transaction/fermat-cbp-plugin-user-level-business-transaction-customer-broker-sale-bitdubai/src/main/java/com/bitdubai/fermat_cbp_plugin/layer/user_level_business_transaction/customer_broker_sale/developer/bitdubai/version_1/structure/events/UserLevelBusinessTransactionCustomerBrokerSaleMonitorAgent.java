@@ -508,7 +508,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     private String getAccountNumberFromClause(Clause clause) {
         /* The account Account data that come from the clause have this format*/
         String clauseValue = clause.getValue();
-        String[] split = clauseValue.split("\\s*\\w+\\s*\\w+:\\s*");
+        String[] split = clauseValue.split("\\D+:\\s*");
         return split.length == 1 ? split[0] : split[1];
     }
 
