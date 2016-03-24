@@ -12,5 +12,5 @@ public interface AndroidCoreUtils {
 
     void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
 
-    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
+    int publish(BroadcasterType broadcasterType, FermatBundle bundle);
 }

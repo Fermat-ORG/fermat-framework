@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -27,13 +27,14 @@ import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwith
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by mati on 2016.02.09..
  */
-public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtectedWalletSession,WalletResourcesProviderManager> {
+public class LossProtectedSettingsFragment extends FermatPreferenceFragment<LossProtectedWalletSession,WalletResourcesProviderManager> {
 
 
 
@@ -42,8 +43,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtec
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     private LossProtectedWalletSettings bitcoinWalletSettings = null;
 
-    public static ReferenceWalletSettings newInstance() {
-        return new ReferenceWalletSettings();
+    public static LossProtectedSettingsFragment newInstance() {
+        return new LossProtectedSettingsFragment();
     }
 
     @Override
@@ -68,8 +69,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtec
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
         BlockchainNetworkType blockchainNetworkType= null;
+        UUID exchangeProviderIdSettings = null;
         List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
+
 
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
@@ -85,6 +88,25 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtec
         strings.add(new PreferenceSettingsTextPlusRadioItem(8,"RegTest",(blockchainNetworkType.equals(BlockchainNetworkType.REG_TEST)) ? true : false));
 
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
+
+            //Exchange Rate Provider
+
+            if (bitcoinWalletSettings.getExchangeProvider()!=null)
+                exchangeProviderIdSettings =  bitcoinWalletSettings.getExchangeProvider();
+
+            List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
+
+            //get providers list
+            List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
+
+            int position = 11;
+            for (CurrencyExchangeRateProviderManager provider :  providers)
+            {
+                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderIdSettings)) ? true : false));
+                position++;
+            }
+
+            list.add(new PreferenceSettingsOpenDialogText(10,"Exchange Rate Providers",stringsProviders));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -118,11 +140,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtec
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
 
-            if (preferenceSettingsItem.getId() == 1){
-                //enable notifications settings
-                bitcoinWalletSettings.setNotificationEnabled(((PreferenceSettingsSwithItem)preferenceSettingsItem).getSwitchChecked());
-            }
-            else {
+            if (preferenceSettingsItem.getId() == 5){
+                //blockchainNetworkType settings
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
                 BlockchainNetworkType blockchainNetworkType = null;
 
@@ -160,8 +179,22 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<LossProtec
                     }
                 }
 
-                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);   }
+            else {
+                //Exchange Rate provider settings
+                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
 
+
+                //get providers list
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
+
+                bitcoinWalletSettings.setExchangeProvider(providers.get(0).getProviderId());
+
+                for (CurrencyExchangeRateProviderManager provider :  providers)
+                {
+                    if(provider.getProviderName().equals(preferenceSettingsTextPlusRadioItem.getText()))
+                        bitcoinWalletSettings.setExchangeProvider(provider.getProviderId());
+                }
             }
 
             try {
