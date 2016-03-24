@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyHelper;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
@@ -137,8 +138,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_open_negotiation_details_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
-
         final CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInfo();
+
         final ActorIdentity customer = negotiationInfo.getCustomer();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
@@ -156,8 +157,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
         adapter.setMarketRateList(appSession.getActualExchangeRates());
-        adapter.setFooterListener(this);
-        adapter.setClauseListener(this);
+
+        if(negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
+            adapter.setFooterListener(this);
+            adapter.setClauseListener(this);
+        }
         setSuggestedExchangeRateInAdapter(adapter);
 
         recyclerView.setAdapter(adapter);
