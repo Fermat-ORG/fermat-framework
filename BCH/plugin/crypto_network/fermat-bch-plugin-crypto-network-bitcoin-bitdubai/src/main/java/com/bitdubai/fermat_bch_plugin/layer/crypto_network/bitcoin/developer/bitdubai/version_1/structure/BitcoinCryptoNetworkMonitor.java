@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -70,6 +72,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private Wallet wallet;
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
+
 
     final NetworkParameters NETWORK_PARAMETERS;
     final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
@@ -341,6 +344,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             // gets the transaction from the wallet.
             Transaction transaction = wallet.getTransaction(sha256Hash);
 
+
+
             // if I don't have it, it wasn't yet commited, I will load it from file and commit it.
             if (transaction == null){
                 try {
@@ -375,10 +380,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
              transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
+            //the broadcaster id that I will be using to notify the progress
+            final int broadcasterId = broadcastProgress(0, txHash, 0);
+
             transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
+                    broadcastProgress((int) Math.round(progress * 100), txHash, broadcasterId);
                 }
             });
 
@@ -422,6 +431,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 @Override
                 public void onFailure(Throwable t) {
                     System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
+
+                    //will close the open broadcaster
+                    broadcastProgress(100, txHash, broadcasterId);
+
                     try {
                         getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
@@ -435,6 +448,21 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * starts the broadcasting.
              */
             transactionBroadcast.broadcast();
+        }
+
+
+        private int broadcastProgress(int progress, String txHash, int broadcasterId) {
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Broadcasting tx " +txHash);
+            fermatBundle.put(Broadcaster.PROGRESS_BAR, progress);
+
+            if (broadcasterId != 0){
+                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterId);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+            } else
+                broadcasterId = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+
+            return broadcasterId;
         }
 
         /**

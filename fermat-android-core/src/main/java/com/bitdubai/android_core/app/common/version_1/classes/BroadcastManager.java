@@ -137,7 +137,7 @@ public class BroadcastManager implements BroadcasterInterface {
                     fermatActivity.get().notificateBroadcast(null,bundle);
                     break;
                 case NOTIFICATION_PROGRESS_SERVICE:
-                    id = fermatActivity.get().notificateProgressBroadcast(bundle);
+                    id = (fermatActivity.get()!=null)?fermatActivity.get().notificateProgressBroadcast(bundle):0;
                     break;
             }
         }catch (Exception e){

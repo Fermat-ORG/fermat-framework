@@ -61,17 +61,18 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         try {
             loadUI(createOrOpenApplication());
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     /**
@@ -216,6 +217,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onBackPressed() {
+        onBackPressedNotificate();
         onControlledActivityBack(null);
     }
 
@@ -225,26 +227,32 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
      */
     protected void loadUI(FermatSession fermatSession) {
         try {
-            FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
-            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-            Activity activity = appStructure.getLastActivity();
-            loadBasicUI(activity,fermatAppConnection);
-            hideBottonIcons();
-            paintScreen(activity);
-            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
-                initialisePaging();
-            }
-            if (activity.getTabStrip() != null) {
-                setPagerTabs(activity.getTabStrip(), fermatSession,fermatFragmentFactory);
-            }
-            if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen(fermatFragmentFactory,fermatSession,appStructure);
+            if(fermatSession!=null) {
+                FermatStructure appStructure = getFermatAppManager().getAppStructure(fermatSession.getAppPublicKey());
+                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+                FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
+                Activity activity = appStructure.getLastActivity();
+                loadBasicUI(activity, fermatAppConnection);
+                hideBottonIcons();
+                paintScreen(activity);
+                if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
+                    initialisePaging();
+                }
+                if (activity.getTabStrip() != null) {
+                    setPagerTabs(activity.getTabStrip(), fermatSession, fermatFragmentFactory);
+                }
+                if (activity.getFragments().size() == 1) {
+                    setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
+                handleExceptionAndRestart();
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 

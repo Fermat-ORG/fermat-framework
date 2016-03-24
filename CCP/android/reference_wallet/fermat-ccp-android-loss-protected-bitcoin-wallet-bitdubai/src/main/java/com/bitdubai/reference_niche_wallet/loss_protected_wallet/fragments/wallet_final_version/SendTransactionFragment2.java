@@ -111,6 +111,7 @@ import static android.widget.Toast.makeText;
  * Fragment the show the list of open negotiations waiting for the broker and the customer un the Home activity
  *
  * @author MAtias Furszyfer
+ * Modified by Natalia Cortez
  */
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager>
         implements FermatListItemListeners<LossProtectedWalletTransaction>{
@@ -133,6 +134,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private List<GrouperItem> openNegotiationList;
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
+    private TextView txt_exchange_rate;
     private long balanceAvailable;
     private View rootView;
     private List<LossProtectedWalletTransaction> lstCryptoWalletTransactionsAvailable;
@@ -414,9 +416,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         final View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
 
-//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams()
-//        balance_header.setLayoutParams();
-
         container_header_balance.setVisibility(View.VISIBLE);
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
@@ -432,9 +431,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-        //txt_type_balance.setTypeface(tf);
+        txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
 
-        //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
         // handler for the background updating
         final Handler progressHandler = new Handler() {
             public void handleMessage(Message msg) {
@@ -485,7 +483,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
 
 
-//                    System.out.println(System.currentTimeMillis());
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     pressed = false;
@@ -520,22 +517,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         txt_balance_amount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+
                 changeAmountType();
             }
         });
         txt_amount_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+
                 changeAmountType();
             }
         });
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-        //txt_balance_amount.setTypeface(tf);
 
             long balance = moduleManager.getBalance(BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()), lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType);
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
@@ -772,11 +766,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
                 available_offset = lstCryptoWalletTransactionsAvailable.size();
-
-                //lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
-
-                //book_offset = lstCryptoWalletTransactionsBook.size();
-
 
                 for (LossProtectedWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
 //                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
@@ -1095,28 +1084,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
 
+                    ExchangeRate rate = (ExchangeRate)result[0];
+                    // progressBar.setVisibility(View.GONE);
+                    txt_exchange_rate.setText("1 BTC - " + String.valueOf(rate.getPurchasePrice()) +" USD" );
 
-                   int len = result.length;
-                   // progressBar.setVisibility(View.GONE);
-
-                 /*   if (summaries.isEmpty()) {
-                        FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
-                        noMarketRateTextView.setVisibility(View.VISIBLE);
-
-                    } else {
-                        View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
-                        marketRateViewPagerContainer.setVisibility(View.VISIBLE);
-
-                        final Activity activity = (Activity) CryptoBrokerWalletHeaderPainter.this.activity.get();
-                        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity, session, summaries);
-
-                        ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
-                        viewPager.setOffscreenPageLimit(3);
-                        viewPager.setAdapter(pageAdapter);
-
-                        LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.cbw_exchange_rate_view_pager_indicator);
-                        indicator.setViewPager(viewPager);
-                    }*/
                 }
             }
 
@@ -1124,8 +1095,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             public void onErrorOccurred(Exception ex) {
               //  progressBar.setVisibility(View.GONE);
 
-                //FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
-               // noMarketRateTextView.setVisibility(View.VISIBLE);
+                txt_exchange_rate.setVisibility(View.GONE);
 
                 ErrorManager errorManager = lossProtectedWalletSession.getErrorManager();
                 if (errorManager != null)
