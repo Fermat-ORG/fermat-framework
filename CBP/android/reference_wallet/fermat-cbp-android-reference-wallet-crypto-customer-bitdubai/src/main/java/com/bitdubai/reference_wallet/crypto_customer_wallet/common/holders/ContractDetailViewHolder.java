@@ -43,6 +43,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Data
     protected ContractDetail contractDetail;
     protected int itemPosition;
+    private ContractDetailActivityFragment fragment;
 
     //UI
     private Resources res;
@@ -58,14 +59,14 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     public FermatButton confirmButton;
 
 
-    public ContractDetailViewHolder(View itemView) {
+    public ContractDetailViewHolder(View itemView, ContractDetailActivityFragment fragment) {
         super(itemView);
 
         this.itemView = itemView;
         res = itemView.getResources();
 
 
-
+        this.fragment = fragment;
         stepNumber = (ImageView) itemView.findViewById(R.id.ccw_contract_detail_step);
         stepTitle = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_card_view_title);
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
@@ -105,6 +106,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You sent:");
                     Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+                    fragment.goToWalletHome();
                     break;
 
                 case 4:
@@ -114,6 +116,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     confirmButton.setVisibility(View.INVISIBLE);
                     textDescription.setText("You received:");
                     Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
+                    fragment.goToWalletHome();
                     break;
             }
         } catch (Exception ex) {
