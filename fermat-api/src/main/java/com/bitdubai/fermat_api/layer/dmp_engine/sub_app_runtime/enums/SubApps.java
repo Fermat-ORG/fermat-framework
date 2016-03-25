@@ -28,6 +28,16 @@ public enum SubApps {
     DAP_ASSETS_IDENTITY_ISSUER("DAPAII"),
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
     DAP_ASSETS_REDEEM_POINT_IDENTITY("DAPRPI"),
+
+
+    ART_ASSETS_COMMUNITY_ARTIST("AACA"),
+    ART_ASSETS_IDENTITY_ARTIST("AAIA"),
+
+
+    TKY_ARTIST_IDENTITY_SUB_APP("TAISA"),
+
+
+
     CHT_CHAT("CHTCHAT"),
     Scanner("S"),
     SETTINGS("SET");
@@ -42,6 +52,12 @@ public enum SubApps {
     public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
+            case "TAISA":
+                return SubApps.TKY_ARTIST_IDENTITY_SUB_APP;
+            case "AAIA":
+                return SubApps.ART_ASSETS_IDENTITY_ARTIST;
+            case "AACA":
+                return SubApps.ART_ASSETS_COMMUNITY_ARTIST;
             case "CBPCBC":
                 return SubApps.CBP_CRYPTO_BROKER_COMMUNITY;
             case "CBPCBI":

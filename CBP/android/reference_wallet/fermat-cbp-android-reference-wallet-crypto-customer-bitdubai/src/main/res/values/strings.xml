@@ -84,7 +84,9 @@
     <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
     <string name="ccw_selling_details">Selling %1$s %2$s</string>
     <string name="ccw_selling_merchandise">Selling %1$s</string>
-    <string name="ccw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
+    <string name="ccw_same_currencies_providers_warning_msg">Currencies need to be different</string>
+    <string name="ccw_no_providers_for_chosen_currencies_msg">There are no providers available for the selected currencies</string>
+    <string name="ccw_select_providers_warning_msg">You need to select at least ONE Provider</string>
     <string name="ccw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
     <string name="ccw_select_stock_merchandise">Select a Stock Merchandise</string>
     <string name="ccw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>

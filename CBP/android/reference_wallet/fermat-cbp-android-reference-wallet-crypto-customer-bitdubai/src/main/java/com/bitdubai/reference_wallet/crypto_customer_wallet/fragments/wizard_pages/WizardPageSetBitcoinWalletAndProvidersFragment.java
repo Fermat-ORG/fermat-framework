@@ -284,6 +284,11 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     private void showProvidersDialog() {
 
+        if (currencyFrom == currencyTo) {
+            Toast.makeText(getActivity(), R.string.ccw_same_currencies_providers_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
         try {
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
@@ -294,6 +299,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
             }
 
+            if(providers.size() == 0){
+                Toast.makeText(getActivity(), R.string.ccw_no_providers_for_chosen_currencies_msg, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Provider", providers);
