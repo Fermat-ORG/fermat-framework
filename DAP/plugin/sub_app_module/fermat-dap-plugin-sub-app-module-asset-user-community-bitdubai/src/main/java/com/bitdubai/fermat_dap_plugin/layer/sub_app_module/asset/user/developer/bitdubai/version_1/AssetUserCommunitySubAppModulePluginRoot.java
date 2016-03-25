@@ -419,36 +419,47 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException {
+    public void acceptActorAssetUser(String actorAssetUserInPublicKey, ActorAssetUser actorAssetToAdd) throws CantAcceptActorAssetUserException {
         try {
 
-            this.actorAssetUserManager.acceptActorAssetUser(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey);
-
-            this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey);
+            if (actorAssetToAdd.getType().getCode().equals(Actors.DAP_ASSET_ISSUER.getCode())) {
+                this.actorAssetIssuerManager.acceptActorAssetIssuer(actorAssetUserInPublicKey, actorAssetToAdd.getActorPublicKey());
+            } else {
+                if (actorAssetToAdd.getType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                    this.actorAssetUserManager.acceptActorAssetUser(actorAssetUserInPublicKey, actorAssetToAdd.getActorPublicKey());
+                }
+            }
+            this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetUserInPublicKey, actorAssetToAdd.getActorPublicKey());
 
         } catch (CantAcceptActorAssetUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetUserToAddPublicKey, e, "", "");
+            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetToAdd.getActorPublicKey(), e, "", "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetUserToAddPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION - KEY " + actorAssetToAdd.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
     @Override
-    public void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException {
+    public void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, ActorAssetUser actorAssetToReject) throws CantDenyConnectionActorAssetException {
         try {
 
-            this.actorAssetUserManager.denyConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey);
+            if (actorAssetToReject.getType().getCode().equals(Actors.DAP_ASSET_ISSUER.getCode())) {
+                this.actorAssetIssuerManager.denyConnectionActorAssetIssuer(actorAssetUserLoggedInPublicKey, actorAssetToReject.getActorPublicKey());
+            } else {
+                if (actorAssetToReject.getType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                    this.actorAssetUserManager.denyConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, actorAssetToReject.getActorPublicKey());
+                }
+            }
 
-            this.assetUserActorNetworkServiceManager.denyConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey);
+            this.assetUserActorNetworkServiceManager.denyConnectionActorAsset(actorAssetUserLoggedInPublicKey, actorAssetToReject.getActorPublicKey());
 
         } catch (CantDenyConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToRejectPublicKey, e, "", "");
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetToReject.getActorPublicKey(), e, "", "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetUserToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION - KEY:" + actorAssetToReject.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -493,7 +504,33 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public List<ActorAssetUser> getWaitingYourConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
         try {
-            return this.actorAssetUserManager.getWaitingYourConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
+            List<DAPActor> dapActor;
+            List<ActorAssetUser> actorAssetUsers = new ArrayList<>();
+
+            dapActor = this.actorAssetIssuerManager.getWaitingYourConnectionActorAssetIssuer(actorAssetUserLoggedInPublicKey, max, offset);
+
+            if (dapActor.size() <= 0)
+                dapActor = this.actorAssetUserManager.getWaitingYourConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
+
+            //TODO Mejorar Implementacion para tener informacion mas completa
+            for (DAPActor record : dapActor) {
+                actorAssetUsers.add((new AssetUserActorRecord (
+                        record.getActorPublicKey(),
+                        record.getName(),
+                        null,
+                        null,
+                        null,
+                        (double) 0,
+                        (double) 0,
+                        null,
+                        (long)  0,
+                        (long)  0,
+                        null,
+                        record.getType(),
+                        record.getProfileImage())));
+            }
+
+            return  actorAssetUsers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING YOUR ACCEPTANCE", e, "", "");
@@ -506,7 +543,33 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public List<ActorAssetUser> getWaitingTheirConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
         try {
-            return this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
+            List<DAPActor> dapActor;
+            List<ActorAssetUser> actorAssetUsers = new ArrayList<>();
+
+            dapActor = this.actorAssetIssuerManager.getWaitingTheirConnectionActorAssetIssuer(actorAssetUserLoggedInPublicKey, max, offset);
+
+            if (dapActor.size() <= 0)
+                dapActor =  this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
+
+            //TODO Mejorar Implementacion para tener informacion mas completa
+            for (DAPActor record : dapActor) {
+                actorAssetUsers.add((new AssetUserActorRecord (
+                        record.getActorPublicKey(),
+                        record.getName(),
+                        null,
+                        null,
+                        null,
+                        (double) 0,
+                        (double) 0,
+                        null,
+                        (long)  0,
+                        (long)  0,
+                        null,
+                        record.getType(),
+                        record.getProfileImage())));
+            }
+
+            return  actorAssetUsers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR ASSET USER MANAGER");
@@ -530,9 +593,16 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     public int getWaitingYourConnectionActorAssetUserCount() {
         //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
         try {
+            int countActor;
 
             if (getActiveAssetUserIdentity() != null) {
-                return getWaitingYourConnectionActorAssetUser(getActiveAssetUserIdentity().getPublicKey(), 100, 0).size();
+                countActor = actorAssetIssuerManager.getWaitingYourConnectionActorAssetIssuer(getActiveAssetUserIdentity().getPublicKey(), 100, 0).size();
+
+                if (countActor <= 0) {
+                    countActor = getWaitingYourConnectionActorAssetUser(getActiveAssetUserIdentity().getPublicKey(), 100, 0).size();
+                }
+                return countActor;
+
             }
 
         } catch (CantGetActorAssetWaitingException e) {
@@ -580,10 +650,15 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     public int[] getMenuNotifications() {
         int[] notifications = new int[5];
         try {
-            if (getSelectedActorIdentity() != null)
-                notifications[2] = actorAssetUserManager.getWaitingYourConnectionActorAssetUser(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
-            else
+            if (getSelectedActorIdentity() != null) {
+                notifications[2] = actorAssetIssuerManager.getWaitingYourConnectionActorAssetIssuer(getSelectedActorIdentity().getPublicKey(), 100, 0).size();
+
+                if (notifications[2] <= 0) {
+                    notifications[2] = actorAssetUserManager.getWaitingYourConnectionActorAssetUser(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
+                }
+            } else {
                 notifications[2] = 0;
+            }
         } catch (CantGetActorAssetWaitingException | CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
