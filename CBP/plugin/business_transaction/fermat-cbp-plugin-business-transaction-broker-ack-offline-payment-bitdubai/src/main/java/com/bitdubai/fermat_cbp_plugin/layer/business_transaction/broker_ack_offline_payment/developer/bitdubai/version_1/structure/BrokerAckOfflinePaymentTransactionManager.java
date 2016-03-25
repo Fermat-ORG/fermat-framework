@@ -299,24 +299,23 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * @return
      * @throws CantGetListSaleNegotiationsException
      */
-    public FiatCurrency getCurrencyTypeFromContract(
-            CustomerBrokerContractSale customerBrokerContractSale) throws
-            CantGetListSaleNegotiationsException {
+    public FiatCurrency getCurrencyTypeFromContract(CustomerBrokerContractSale customerBrokerContractSale) throws CantGetListSaleNegotiationsException {
         try {
-            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
-                    customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
-                            UUID.fromString(negotiationId));
-            ObjectChecker.checkArgument(customerBrokerSaleNegotiation,
-                    "The customerBrokerSaleNegotiation is null");
+            final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+            final CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.
+                    getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation is null");
+
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
-            ClauseType clauseType;
             for (Clause clause : clauses) {
-                clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                ClauseType clauseType = clause.getType();
+                if (clauseType == ClauseType.CUSTOMER_CURRENCY) {
                     return FiatCurrency.getByCode(clause.getValue());
                 }
             }
+
             throw new CantGetListSaleNegotiationsException(
                     "Cannot find the proper clause");
         } catch (InvalidParameterException e) {
