@@ -58,6 +58,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
     List<BankAccountNumber> accounts;
     List<BankAccountNumber> viewAccounts;
+    List<String> accountsStrings;
 
 
     public static SettingsBankAccountsFragment newInstance() {
@@ -70,6 +71,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
         accounts = new ArrayList<>();
         viewAccounts = new ArrayList<>();
+        accountsStrings = new ArrayList<>();
         //bankWallets = new ArrayList<>();
 
         try {
@@ -84,6 +86,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 for (BankAccountNumber bankAccountNumber: bankAccountNumbers){
                     if (aux.getPlatform()==Platforms.BANKING_PLATFORM){
                         if (aux.getBankAccount().equals(bankAccountNumber.getAccount())){
+                            accountsStrings.add(bankAccountNumber.getAccount());
                             accounts.add(bankAccountNumber);
                         }
                     }
@@ -155,8 +158,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //accounts.remove(position);
+                accounts.remove(i);
+                accountsStrings.remove(i);
                 adapter.changeDataSet(accounts);
+                saveSetting();
                 showOrHideRecyclerView();
             }
         });
@@ -182,8 +187,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             }
             String walletPublicKey = "";
 
+            walletManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), Platforms.BANKING_PLATFORM);
 
             for (BankAccountNumber accountNumber : accounts) {
+
                 for (InstalledWallet wallet : filteredList) {
                     for (BankAccountNumber auxAccountNumber1 : walletManager.getAccounts(wallet.getWalletPublicKey())) {
                         if (accountNumber.getAccount().equals(auxAccountNumber1.getAccount())) {
@@ -192,6 +199,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                         }
                     }
                 }
+
                 Platforms platform = Platforms.BANKING_PLATFORM;
                 CryptoBrokerWalletAssociatedSetting associatedSetting = walletManager.newEmptyCryptoBrokerWalletAssociatedSetting();
                 associatedSetting.setBrokerPublicKey(appSession.getAppPublicKey());
@@ -201,7 +209,9 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 associatedSetting.setMoneyType(MoneyType.BANK);
                 associatedSetting.setBankAccount(accountNumber.getAccount());
                 associatedSetting.setMerchandise(accountNumber.getCurrencyType());
+
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
+
             }
         } catch (FermatException ex) {
             Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
@@ -267,9 +277,14 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
-                    accounts.add(selectedAccount);
-                    adapter.changeDataSet(accounts);
-                    showOrHideRecyclerView();
+                    if( !accountsStrings.contains(selectedAccount.getAccount()) ){
+                        accountsStrings.add(selectedAccount.getAccount());
+                        accounts.add(selectedAccount);
+                        adapter.changeDataSet(accounts);
+                        showOrHideRecyclerView();
+                    }else{
+                        Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Account already exists", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
