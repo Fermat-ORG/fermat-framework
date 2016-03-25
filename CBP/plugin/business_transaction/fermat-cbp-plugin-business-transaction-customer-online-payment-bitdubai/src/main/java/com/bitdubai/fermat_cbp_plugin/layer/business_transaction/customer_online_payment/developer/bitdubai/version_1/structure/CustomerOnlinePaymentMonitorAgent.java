@@ -359,20 +359,24 @@ public class CustomerOnlinePaymentMonitorAgent implements
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotification(
+                    //TODO: descomentar la confirmacion de la notificacion
+                    /*transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT,
                             Plugins.CUSTOMER_ONLINE_PAYMENT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
-                    );
+                    );*/
                     customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
                             ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
                     );
                 }
 
+
+
+                // from here on, all this code checks the crypto status of a transaction and updates that crypto status into the contract.
                 /**
                  * Check pending transactions
                  */
@@ -419,10 +423,12 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             onBlockchainContractRecord.getTransactionHash());
                     onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
                     onBlockchainContractRecord.setContractTransactionStatus(
-                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED);
+                            ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION);
                     customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
                             onBlockchainContractRecord);
                 }
+                //END of the checking process for the crypto status
+
 
                 /**
                  * Check if pending events
@@ -557,6 +563,10 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             customerOnlinePaymentBusinessTransactionDao.
                                     setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent();
+
+                            BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
+                            record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
+                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
