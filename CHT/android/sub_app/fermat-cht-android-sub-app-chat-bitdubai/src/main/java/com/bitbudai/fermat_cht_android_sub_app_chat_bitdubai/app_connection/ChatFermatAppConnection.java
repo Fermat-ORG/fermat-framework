@@ -29,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 public class ChatFermatAppConnection extends AppConnections {
     private ErrorManager errorManager;
 
+
     public ChatFermatAppConnection(Context activity) {
         super(activity);
     }

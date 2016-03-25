@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -116,6 +117,11 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
+
+                if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER){
+                    footerViewHolder.HideButtons();
+                }
+
                 return footerViewHolder;
 
             default:
@@ -205,6 +211,10 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
+
+        if(negotiationInformation.getStatus() == NegotiationStatus.SENT_TO_BROKER || negotiationInformation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER){
+            clauseViewHolder.getConfirmButton().setVisibility(View.INVISIBLE);
+        }
 
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);

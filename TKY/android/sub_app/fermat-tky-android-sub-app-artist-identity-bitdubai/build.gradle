@@ -57,8 +57,8 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-
-
+    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
+    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
 }
 
 

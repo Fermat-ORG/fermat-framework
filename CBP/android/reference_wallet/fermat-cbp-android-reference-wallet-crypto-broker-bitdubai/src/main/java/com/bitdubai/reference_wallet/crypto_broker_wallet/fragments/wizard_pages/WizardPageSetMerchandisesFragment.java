@@ -108,7 +108,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 //Delete potential previous configurations made by this wizard page
                 //So that they can be reconfigured cleanly
                 walletManager.clearAssociatedIdentities(appSession.getAppPublicKey());
-                walletManager.clearAssociatedWalletSettings(appSession.getAppPublicKey());
+                walletManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), null);
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet

@@ -4,12 +4,12 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/action_add"
-        android:icon="@drawable/add_identity_icon"
+        android:icon="@drawable/new_identity_button"
         android:title="Add"
         app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_help"
-        android:icon="@drawable/help_icon_identity_broker"
+        android:icon="@drawable/help_button"
         android:title="Add"
         app:showAsAction="ifRoom" />
 </menu>
