@@ -9,13 +9,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestActorNo
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 
 /**
- * Created by Nerio on 26/11/15.
+ * Created by Nerio on 23/03/16.
  */
-public class NewReceiveExtendedNotificationEventHandler implements FermatEventHandler {
+public class NewRequestActorNotificationRedeemEventHandler implements FermatEventHandler {
 
     private RedeemPointActorPluginRoot redeemPointActorPluginRoot;
 
-    public NewReceiveExtendedNotificationEventHandler(RedeemPointActorPluginRoot redeemPointActorPluginRoot) {
+    public NewRequestActorNotificationRedeemEventHandler(RedeemPointActorPluginRoot redeemPointActorPluginRoot) {
         this.redeemPointActorPluginRoot = redeemPointActorPluginRoot;
     }
 
@@ -24,26 +24,15 @@ public class NewReceiveExtendedNotificationEventHandler implements FermatEventHa
 
         if (this.redeemPointActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent.getSource().equals(EventSource.ACTOR_ASSET_ISSUER)) {
-                System.out.println("ACTOR ASSET REDEEM POINT RECEIVE EXTENDED KEY - handleEvent = " + fermatEvent);
+            if (fermatEvent.getSource().equals(EventSource.ACTOR_ASSET_REDEEM_POINT)) {
+                System.out.println("ACTOR ASSET REDEEM RECEIVE CONNECTION - handleEvent = " + fermatEvent);
                 NewRequestActorNotificationEvent newRequestActorNotificationEvent = (NewRequestActorNotificationEvent) fermatEvent;
              /*
               *  Actor Asset Issuer make the job
               */
-                this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(
+                this.redeemPointActorPluginRoot.handleNewReceiveRequestActorRedeemNotificationEvent(
                         newRequestActorNotificationEvent.getActorNotification());
             }
-
-//            if (fermatEvent.getSource().equals(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER)) {
-//                System.out.println("ACTOR ASSET REDEEM POINT RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
-//                NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
-//                DAPMessage message = newReceiveMessageActorNotificationEvent.getMessage();
-//
-//                if(message.getActorSender() instanceof ActorAssetRedeemPoint) {
-//                    System.out.println("SAVING REDEEM POINT ON REGISTERED TABLE");
-//                    this.redeemPointActorPluginRoot.saveRegisteredActorRedeemPoint((ActorAssetRedeemPoint) message.getActorSender());
-//                }
-//            }
         }
     }
 }
