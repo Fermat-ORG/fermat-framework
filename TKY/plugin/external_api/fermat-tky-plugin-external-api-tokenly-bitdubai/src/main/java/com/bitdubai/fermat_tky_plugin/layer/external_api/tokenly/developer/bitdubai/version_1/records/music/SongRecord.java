@@ -124,7 +124,7 @@ public class SongRecord implements Song {
      * @return
      */
     @Override
-    public String credits() {
+    public String getCredits() {
         return this.credits;
     }
 
