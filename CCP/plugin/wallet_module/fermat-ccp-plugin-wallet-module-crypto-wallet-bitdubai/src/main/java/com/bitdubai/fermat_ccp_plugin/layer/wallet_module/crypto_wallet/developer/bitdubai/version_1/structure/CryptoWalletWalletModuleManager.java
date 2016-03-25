@@ -112,6 +112,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import org.apache.commons.collections.CollectionUtils;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -132,7 +133,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleManager {
+public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleManager,Serializable {
 
     private final BitcoinWalletManager           bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
@@ -1261,7 +1262,52 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
 
         try{
 
-            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            List<IntraWalletUserIdentity> lst = new ArrayList<>();
+
+            for (final IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
+                IntraWalletUserIdentity activeIdentity = new IntraWalletUserIdentity() {
+                    @Override
+                    public String getAlias() {
+                        return intraWalletUserIdentity.getAlias();
+                    }
+
+                    @Override
+                    public byte[] getImage() {
+                        return intraWalletUserIdentity.getImage();
+                    }
+
+                    @Override
+                    public String getPublicKey() {
+                        return intraWalletUserIdentity.getPublicKey();
+                    }
+
+                    @Override
+                    public Actors getActorType() {
+                        return intraWalletUserIdentity.getActorType();
+                    }
+
+                    @Override
+                    public String getPhrase() {
+                        return intraWalletUserIdentity.getPhrase();
+                    }
+
+                    @Override
+                    public void setNewProfileImage(byte[] newProfileImage) {
+
+                    }
+
+                    @Override
+                    public String createMessageSignature(String message) {
+                        return null;
+                    }
+                };
+                lst.add(activeIdentity);
+            }
+
+
+
+            //return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            return lst;
 
         } catch (Exception e) {
             e.printStackTrace();
