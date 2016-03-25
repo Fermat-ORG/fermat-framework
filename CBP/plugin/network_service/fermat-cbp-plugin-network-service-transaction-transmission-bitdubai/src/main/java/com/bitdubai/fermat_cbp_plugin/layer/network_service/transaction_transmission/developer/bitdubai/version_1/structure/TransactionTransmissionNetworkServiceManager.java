@@ -95,10 +95,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction
         );
         try {
-            System.out.print("\nTEST CONTRACT - sendContractHash" +
-                    "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
-                    "\nRECEIVER "+ receiverComponent +" :"+cryptoCustomerActorReceiverPublicKey
-            );
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractHash()\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -146,6 +143,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -198,10 +196,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
 
         try {
-            System.out.print("\nTEST CONTRACT - confirmNotificationReception" +
-                            "\nSENDER "+ senderComponent +" :"+senderPublicKey+
-                            "\nRECEIVER "+ receiverComponent +" :"+receiverPublicKey
-            );
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - confirmNotificationReception()\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -253,10 +248,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         );
 
         try {
-            System.out.print("\nTEST CONTRACT - ackConfirmNotificationReception" +
-                            "\nSENDER "+ senderComponent +" :"+cryptoBrokerActorSenderPublicKey+
-                            "\nRECEIVER "+ receiverComponent +" :"+cryptoCustomerActorReceiverPublicKey
-            );
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - ackConfirmNotificationReception()\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);

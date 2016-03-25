@@ -309,6 +309,71 @@ public class CustomerOfflinePaymentMonitorAgent implements
                 ContractTransactionStatus contractTransactionStatus;
                 CustomerOfflinePaymentRecord customerOnlinePaymentRecord;
 
+                List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+
+                    businessTransactionMetadata = record.getInformation();
+                    contractHash = businessTransactionMetadata.getContractHash();
+
+                    if(businessTransactionMetadata.getRemoteBusinessTransaction().equals(Plugins.CUSTOMER_OFFLINE_PAYMENT)) {
+
+                        //EVENT FOR CONTRACT STATUS UPDATE
+                        if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+
+                            if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+
+                                contractTransactionStatus = customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
+
+                            } else {
+
+                                CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                                //If the contract is null, I cannot handle with this situation
+                                ObjectChecker.checkArgument(customerBrokerContractSale);
+                                customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
+                                Date date = new Date();
+                                customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                //TODO YORDIN: que hace est0?
+//                            raisePaymentConfirmationEvent();
+
+                            }
+
+                        }
+
+                        //EVENT FOR CONFIRM CONTRACT STATUS UPDATE
+                        if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                            if (customerOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+
+                                customerOnlinePaymentRecord = customerOfflinePaymentBusinessTransactionDao.getCustomerOfflinePaymentRecord(contractHash);
+                                contractTransactionStatus = customerOnlinePaymentRecord.getContractTransactionStatus();
+
+                                if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())) {
+
+                                    customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
+                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
+                                    Date date = new Date();
+                                    customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                    //TODO YORDIN: que hace est0?
+//                                raisePaymentConfirmationEvent();
+
+                                }
+
+                            }
+
+                        }
+
+                        //CONFIRM RECEPTION OF TRANSMISSION
+                        transactionTransmissionManager.confirmReception(record.getTransactionID());
+                    }
+
+                    //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                    customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
+                }
+
+
+                /*
                 //This will happen in broker side
                 if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
 
@@ -369,7 +434,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     customerOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-                }
+                }*/
 
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
