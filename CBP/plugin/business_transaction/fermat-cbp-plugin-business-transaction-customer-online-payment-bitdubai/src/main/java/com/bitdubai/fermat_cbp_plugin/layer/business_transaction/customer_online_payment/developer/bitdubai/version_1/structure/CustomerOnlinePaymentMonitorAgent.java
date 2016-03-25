@@ -562,6 +562,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             Date date=new Date();
                             customerOnlinePaymentBusinessTransactionDao.
                                     setCompletionDateByContractHash(contractHash, date.getTime());
+                            customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
                             raisePaymentConfirmationEvent();
 
                             BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
@@ -585,7 +586,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                                     customerOnlinePaymentBusinessTransactionDao.
                                             getCustomerOnlinePaymentRecord(contractHash);
                             contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())){
+                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())){
                                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                         contractHash,
