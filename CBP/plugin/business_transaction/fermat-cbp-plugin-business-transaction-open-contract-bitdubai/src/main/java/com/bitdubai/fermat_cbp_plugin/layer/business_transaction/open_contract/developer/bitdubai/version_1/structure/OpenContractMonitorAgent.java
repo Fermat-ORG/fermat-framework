@@ -263,7 +263,7 @@ public class OpenContractMonitorAgent implements
                 List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
                 if (!contractPendingToSubmitList.isEmpty()) {
                     for (String hashToSubmit : contractPendingToSubmitList) {
-                        System.out.println("OPEN CONTRACT - Hash to submit:\n" + hashToSubmit);
+                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash()\n");
                         contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                         contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
 
@@ -494,6 +494,7 @@ public class OpenContractMonitorAgent implements
 
                                         //CONFIRM RECEPTION OF TRANSMISSION
                                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+
                                         //CONFIRM RECEPTION OF NOTIFICATION EVENT
                                         openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
@@ -538,6 +539,7 @@ public class OpenContractMonitorAgent implements
 
                                     //CONFIRM RECEPTION OF TRANSMISSION
                                     transactionTransmissionManager.confirmReception(record.getTransactionID());
+
                                     //CONFIRM RECEPTION OF NOTIFICATION EVENT
                                     openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
@@ -573,8 +575,13 @@ public class OpenContractMonitorAgent implements
 
                                     //CONFIRM RECEPTION OF TRANSMISSION
                                     transactionTransmissionManager.confirmReception(record.getTransactionID());
+
                                     //CONFIRM RECEPTION OF NOTIFICATION EVENT
                                     openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
+                                    //RAISE EVENT NEW_CONTRACT_OPENED
+                                    if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+                                        raiseNewContractEvent(contractHash);
 
 //                              }
                             }
