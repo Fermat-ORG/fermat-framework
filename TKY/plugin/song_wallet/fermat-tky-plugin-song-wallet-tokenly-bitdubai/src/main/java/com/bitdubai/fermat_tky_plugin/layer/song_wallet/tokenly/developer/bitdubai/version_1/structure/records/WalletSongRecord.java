@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdu
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CanGetTokensArrayFromSongWalletException;
 
@@ -143,6 +144,37 @@ public class WalletSongRecord implements WalletSong {
         this.other = other;
     }
 
+    /**
+     * Constructor with parameters
+     * @param song
+     * @param songStatus
+     * @param songId
+     */
+    public WalletSongRecord(
+            Song song,
+            SongStatus songStatus,
+            UUID songId){
+        //Set the WalletSong fields
+        this.songStatus = songStatus;
+        this.songId = songId;
+        //Set the song fields
+        this.id = song.getId();
+        this.name = song.getName();
+        this.tokens = song.getTokens();
+        this.performers = song.getPerformers();
+        this.composers = song.getComposers();
+        this.releaseDate = song.getReleaseDate();
+        this.lyrics = song.getLyrics();
+        this.credits = song.getCredits();
+        this.copyright = song.getCopyright();
+        this.ownership = song.getOwnership();
+        this.usageRights = song.getUsageRights();
+        this.usageProhibitions = song.getUsageProhibitions();
+        this.bitcoinAddress = song.getBitcoinAddress();
+        this.other = song.getOther();
+
+    }
+
     //WALLET SONG IMPLEMENTATIONS
     /**
      * This method returns the Song status.
@@ -268,7 +300,7 @@ public class WalletSongRecord implements WalletSong {
      * @return
      */
     @Override
-    public String credits() {
+    public String getCredits() {
         return this.credits;
     }
 
