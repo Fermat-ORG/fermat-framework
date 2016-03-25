@@ -10,7 +10,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +29,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -32,7 +37,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditT
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -47,6 +55,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.BitcoinsSpinnerAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.UserSelectorAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.filters.UserSelectorAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.SellInfo;
@@ -74,16 +83,17 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends AbstractFermatFragment {
+public class UserSellAssetFragment extends FermatWalletListFragment<User>
+        implements FermatListItemListeners<User> {
+
 
     private static final String TAG = "AssetSellUsersFragment";
 
     private Activity activity;
 
-    private AssetUserSession assetUserSession;
-    private AssetUserWalletSubAppModuleManager moduleManager;
-    private UserSelectorAdapter adapter;
 
+    private AssetUserWalletSubAppModuleManager moduleManager;
+    //private UserSelectorAdapter adapter;
 
 
     private View rootView;
@@ -98,10 +108,15 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
     private FermatEditText assetPrice;
     private FermatTextView assetPriceView;
     private Spinner assetCurrencySpinner;
-    private AutoCompleteTextView userToSelectText;
+    //private AutoCompleteTextView userToSelectText;
+    private FermatEditText userToSelectText;
     private View sellButton;
-    //private ListView usersList;
+    private View eraseButton;
 
+    //private ListView usersListView;
+
+    private View noUsersView;
+    private User userSelected;
 
     public UserSellAssetFragment() {
 
@@ -114,51 +129,83 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
 
-        assetUserSession = (AssetUserSession) appSession;
-        moduleManager = assetUserSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-
-        activity = getActivity();
-
-        users = getUsers();
-
-        adapter = new UserSelectorAdapter(activity,R.layout.dap_v3_wallet_asset_user_sell,R.id.userName,R.id.imageView_user_sell_avatar,users);
-        configureToolbar();
-    }
-    private List<User> getUsers(){
-        List<User> users = new ArrayList<>();
         try {
-            users = Data.getConnectedUsers(moduleManager);
-        } catch (CantGetAssetUserActorsException e) {
+
+            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
+
+            settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            activity = getActivity();
+
+            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        }catch(Exception ex){
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
+
+    }
+//    private List<User> getUsers(){
+//        List<User> users = new ArrayList<>();
+//        try {
+//            users = Data.getConnectedUsers(moduleManager);
+//        } catch (CantGetAssetUserActorsException e) {
+//            e.printStackTrace();
+//        }
+//        return users;
+//    }
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        configureToolbar();
+
+        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
             e.printStackTrace();
         }
-        return users;
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_v3_wallet_asset_user_sell, container, false);
-        res = rootView.getResources();
+
+        noUsersView = layout.findViewById(R.id.asset_sell_no_users_view);
+        assetPrice = (FermatEditText) layout.findViewById(R.id.assetSellbitcoins);
+        assetPriceView = (FermatTextView) layout.findViewById(R.id.assetSellbitcoinsText);
+        assetCurrencySpinner = (Spinner) layout.findViewById(R.id.assetCurrencySpinner);
+        sellButton = layout.findViewById(R.id.sellButton);
+        eraseButton = layout.findViewById(R.id.eraseButton);
 
 
-        setupUI();
-        setupUIData();
 
-        return rootView;
-    }
+        userToSelectText = (FermatEditText) layout.findViewById(R.id.userToSelectText);
 
+        TextWatcher filterTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    private void setupUI() {
-        assetPrice = (FermatEditText) rootView.findViewById(R.id.assetSellbitcoins);
-        assetPriceView = (FermatTextView) rootView.findViewById(R.id.assetSellbitcoinsText);
-        assetCurrencySpinner = (Spinner) rootView.findViewById(R.id.assetCurrencySpinner);
-        userToSelectText = (AutoCompleteTextView) rootView.findViewById(R.id.userToSelectText);
-        sellButton = rootView.findViewById(R.id.sellButton);
-        //usersList = (ListView) rootView.findViewById(R.id.userToSelectText);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (((UserSelectorAdapter) getAdapter()).getFilter()).filter(s);
+                if(s.length() > 0){
+                    eraseButton.setVisibility(View.VISIBLE);
+                } else {
+                    eraseButton.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+
+        userToSelectText.addTextChangedListener(filterTextWatcher);
 
         assetPrice.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -167,41 +214,202 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
                 return false;
             }
         });
+
+        showOrHideNoUsersView(users.isEmpty());
+
+        assetPriceView.setText(String.format("%.6f BTC", 0.0));
+        final BitcoinConverter.Currency[] currenciesSpinner = BitcoinConverter.Currency.values();
+        final ArrayAdapter<BitcoinConverter.Currency> bitcoinsSpinnerAdapter = new BitcoinsSpinnerAdapter(
+                getActivity(), android.R.layout.simple_spinner_item,
+                currenciesSpinner);
+        assetCurrencySpinner.setAdapter(bitcoinsSpinnerAdapter);
+        assetCurrencySpinner.setSelection(3);
+        assetCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                ((TextView) assetCurrencySpinner.getSelectedView()).setTextColor(getResources().getColor(R.color.color_black_light));
+                updateBitcoins();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        sellButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (isValidSell()) {
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+
+                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+                                    doSell(digitalAsset.getAssetPublicKey(), userSelected, sellPrice, sellPrice, 1);
+                                }
+                            }).build().show();
+                }
+            }
+        });
+
+        eraseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userToSelectText.setText("");
+            }
+        });
+
     }
-    private void setupUIData() {
-        userToSelectText.setThreshold(1);
-//        usersList.setTextFilterEnabled(true);
-//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-        String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
-        try {
-            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-        } catch (CantLoadWalletException e) {
-            e.printStackTrace();
-        }
 
+    private void doSell(final String assetPublicKey, final User user, final long amountPerUnity, final long amountTotal, final int quantityToSell) {
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, assetPublicKey);
+                return true;
+            }
+        };
 
-        /*byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
-        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetSellImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img);*/
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+//                    refreshUIData();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+                }
+            }
 
-        //assetSellNameText.setText(digitalAsset.getName());
-
-
-        Object x = appSession.getData("user_selected");
-        if (x != null) {
-            user = (User) x;
-            //txtSearch.setText(user.getName());
-        }
-
-        if (appSession.getData("sell_info") != null) {
-            SellInfo sellInfo = (SellInfo) appSession.getData("sell_info");
-            setSellInfo(sellInfo);
-        } else {
-
-            assetPrice.setText(digitalAsset.getAmount());
-        }
-        updateBitcoins();
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
     }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.dap_v3_wallet_asset_user_sell;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.asset_sell_swipe_refresh;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.dap_wallet_asset_user_asset_sell_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                users = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(users);
+
+                showOrHideNoUsersView(users.isEmpty());
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new UserSelectorAdapter(getActivity(), users, moduleManager);
+            adapter.setFermatListEventListener(this);
+        }else {
+            adapter.changeDataSet(users);
+        }
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
+    }
+    @Override
+    public void onItemClickListener(User data, int position) {
+        appSession.setData("user_selected", data);
+
+        for(User user :users){
+            if(!data.equals(user)){
+                user.setSelected(false);
+            } else {
+                data.setSelected(!data.isSelected());
+                if(data.isSelected()){
+                    userSelected = data;
+                    userToSelectText.setText(data.getName());
+                }else{
+                    userSelected = null;
+                    userToSelectText.setText("");
+
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onLongItemClickListener(User data, int position) {
+
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+//        try {
+//            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//        } catch (Exception e) {
+//            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+//        }
+    }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -332,41 +540,7 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
         asyncTask.execute();
     }
 
-    private void doSell(final String assetPublicKey, final User user, final long amountPerUnity, final long amountTotal, final int quantityToSell) {
-        final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
-        dialog.setCancelable(false);
-        dialog.show();
-        FermatWorker task = new FermatWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, digitalAsset.getAssetPublicKey());
-                return true;
-            }
-        };
 
-        task.setContext(activity);
-        task.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                dialog.dismiss();
-                if (activity != null) {
-//                    refreshUIData();
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                dialog.dismiss();
-                if (activity != null)
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
-                            Toast.LENGTH_SHORT).show();
-            }
-        });
-        task.execute();
-    }
 
     private void refreshUIData() {
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
@@ -384,7 +558,30 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
         }*/
     }
 
-
+    @Override
+    public List<User> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<User> users = new ArrayList<>();
+        if (moduleManager != null) {
+            try {
+                DigitalAsset digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                users = Data.getConnectedUsers(moduleManager);
+                appSession.setData("users", users);
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.DAP_ASSET_USER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+            }
+        } else {
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.dap_user_wallet_system_error),
+                    Toast.LENGTH_SHORT).
+                    show();
+        }
+        return users;
+    }
 
     private void configureToolbar() {
         toolbar = getToolbar();
@@ -398,5 +595,16 @@ public class UserSellAssetFragment extends AbstractFermatFragment {
             }
         }
     }
+    private void showOrHideNoUsersView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            noUsersView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noUsersView.setVisibility(View.GONE);
+        }
+    }
+
+
 
 }
