@@ -402,11 +402,6 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Error in Transaction Transmission Network Service");
-//            } catch (CantConfirmNotificationReception e) {
-//                throw new CannotSendContractHashException(
-//                        e,
-//                        "Sending Confirm contract",
-//                        "Error in Transaction Transmission Network Service");
 
             } catch (CantConfirmTransactionException e) {
                 throw new CannotSendContractHashException(
@@ -427,11 +422,8 @@ public class OpenContractMonitorAgent implements
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
             try {
                 String contractHash;
-                String negotiationId;
-                String negotiationIdFromDatabase;
                 ContractType contractType;
                 BusinessTransactionMetadata businessTransactionMetadata;
-                ContractTransactionStatus contractTransactionStatus;
                 ContractTransactionStatus contractTransactionStatusRemote;
 
                 String eventTypeCode = openContractBusinessTransactionDao.getEventType(eventId);
@@ -442,11 +434,10 @@ public class OpenContractMonitorAgent implements
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
-//                    contractTransactionStatus = openContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
                     contractTransactionStatusRemote = businessTransactionMetadata.getContractTransactionStatus();
                     UUID transmissionId = UUID.randomUUID();
 
-                    if(businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
+                    if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
 
                         System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: " + eventTypeCode + "\n");
 
@@ -455,73 +446,16 @@ public class OpenContractMonitorAgent implements
 
                             if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.PENDING_REMOTE_CONFIRMATION.getCode())) {
 
-//                                if(!(contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_SUBMIT))) {
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH\n");
 
-                                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH\n");
+                                if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
 
-                                    if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
+                                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
 
-                                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
-
-                                        //TODO YORDIN: mismo contenido, nunca entrara al HASH_REJECTED.
-//                                        negotiationId = businessTransactionMetadata.getNegotiationId();
-//                                        negotiationIdFromDatabase = businessTransactionMetadata.getNegotiationId();
-
-//                                        if (negotiationId.equals(negotiationIdFromDatabase))
-//                                            contractTransactionStatus = ContractTransactionStatus.PENDING_CONFIRMATION;
-//                                        else
-//                                            contractTransactionStatus = ContractTransactionStatus.HASH_REJECTED;
-//
-//                                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - VAL - STATUS: " + contractTransactionStatus.getCode() + "\n");
-//                                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, contractTransactionStatus);
-
-                                        //SEND CONFIRM RECEPTION HASH
-                                        transactionTransmissionManager.confirmNotificationReception(
-                                            businessTransactionMetadata.getReceiverId(),
-                                            businessTransactionMetadata.getSenderId(),
-                                            contractHash,
-                                            transmissionId.toString(),
-                                            Plugins.OPEN_CONTRACT,
-                                            businessTransactionMetadata.getReceiverType(),
-                                            businessTransactionMetadata.getSenderType()
-                                        );
-
-                                        //CHANGE STATUS TRANSACTION
-                                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
-
-                                        //CONFIRM TRANSMISSION OF SEND
-                                        transactionTransmissionManager.confirmReception(transmissionId);
-
-                                        //CONFIRM RECEPTION OF TRANSMISSION
-                                        transactionTransmissionManager.confirmReception(record.getTransactionID());
-
-                                        //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-
-                                    }
-//                                }
-                            }
-
-                        }
-
-                        //EVENT FOR CONFIRM CONTRACT HASH
-                        if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
-
-                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION\n");
-
-                            //if (openContractBusinessTransactionDao.isContractHashSentConfirmation(contractHash)) {
-                            if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_CONFIRMED.getCode())) {
-
-                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION - VAL\n");
-//                                if( !(contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_SUBMIT)) &&
-//                                    !(contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION))
-//                                ) {
-
-//                                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - CONFIRMATION VAL\n");
-//                                    openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.PENDING_RESPONSE);
+                                    //TODO YORDIN: mismo contenido, nunca entrara al HASH_REJECTED.
 
                                     //SEND CONFIRM RECEPTION HASH
-                                    transactionTransmissionManager.ackConfirmNotificationReception(
+                                    transactionTransmissionManager.confirmNotificationReception(
                                             businessTransactionMetadata.getReceiverId(),
                                             businessTransactionMetadata.getSenderId(),
                                             contractHash,
@@ -532,9 +466,9 @@ public class OpenContractMonitorAgent implements
                                     );
 
                                     //CHANGE STATUS TRANSACTION
-                                    openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                                    openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
 
-                                    //CONFIRM SEND OF TRANSMISSION
+                                    //CONFIRM TRANSMISSION OF SEND
                                     transactionTransmissionManager.confirmReception(transmissionId);
 
                                     //CONFIRM RECEPTION OF TRANSMISSION
@@ -543,8 +477,41 @@ public class OpenContractMonitorAgent implements
                                     //CONFIRM RECEPTION OF NOTIFICATION EVENT
                                     openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
-//                                }
+                                }
+                            }
+                        }
 
+                        //EVENT FOR CONFIRM CONTRACT HASH
+                        if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION\n");
+
+                            if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_CONFIRMED.getCode())) {
+
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION - VAL\n");
+
+                                //SEND CONFIRM RECEPTION HASH
+                                transactionTransmissionManager.ackConfirmNotificationReception(
+                                        businessTransactionMetadata.getReceiverId(),
+                                        businessTransactionMetadata.getSenderId(),
+                                        contractHash,
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        businessTransactionMetadata.getReceiverType(),
+                                        businessTransactionMetadata.getSenderType()
+                                );
+
+                                //CHANGE STATUS TRANSACTION
+                                openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+
+                                //CONFIRM SEND OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(transmissionId);
+
+                                //CONFIRM RECEPTION OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                                //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             }
 
                         }
@@ -554,138 +521,36 @@ public class OpenContractMonitorAgent implements
 
                             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION\n");
 
-                            //if (openContractBusinessTransactionDao.isContractHashPendingResponse(contractHash)) {
                             if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED.getCode())) {
 
-//                                if( !(contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION)) &&
-//                                    !(contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_RESPONSE))) {
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL\n");
+                                openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
+                                contractType = openContractBusinessTransactionDao.getContractType(contractHash);
+                                switch (contractType) {
+                                    case PURCHASE:
+                                        customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
+                                                ContractStatus.PENDING_PAYMENT);
+                                        break;
+                                    case SALE:
+                                        customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
+                                                ContractStatus.PENDING_PAYMENT);
+                                }
 
-                                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL\n");
-                                    openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
-                                    contractType = openContractBusinessTransactionDao.getContractType(contractHash);
-                                    switch (contractType) {
-                                        case PURCHASE:
-                                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
-                                                    ContractStatus.PENDING_PAYMENT);
-                                            break;
-                                        case SALE:
-                                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
-                                                    ContractStatus.PENDING_PAYMENT);
-                                    }
+                                //CONFIRM RECEPTION OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(record.getTransactionID());
 
-                                    //CONFIRM RECEPTION OF TRANSMISSION
-                                    transactionTransmissionManager.confirmReception(record.getTransactionID());
+                                //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
-                                    //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                                    openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-
-                                    //RAISE EVENT NEW_CONTRACT_OPENED
-                                    if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
-                                        raiseNewContractEvent(contractHash);
-
-//                              }
+                                //RAISE EVENT NEW_CONTRACT_OPENED
+                                if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+                                    raiseNewContractEvent(contractHash);
                             }
 
                         }
                     }
-
-
-                }
-                /*
-
-                if (eventTypeCode.equals(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH.getCode())) {
-                    //Check if contract is created:
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-
-                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
-                        businessTransactionMetadata = record.getInformation();
-                        contractHash = businessTransactionMetadata.getContractHash();
-                        System.out.print("\nINCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - Sending confirmation\n");
-                        if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
-                            //TODO YORDIN: mismo contenido, nunca entrara al HASH_REJECTED.
-                            negotiationId = businessTransactionMetadata.getNegotiationId();
-                            negotiationIdFromDatabase = businessTransactionMetadata.getNegotiationId();
-
-                            if (negotiationId.equals(negotiationIdFromDatabase))
-                                contractTransactionStatus = ContractTransactionStatus.PENDING_CONFIRMATION;
-                            else
-                                contractTransactionStatus = ContractTransactionStatus.HASH_REJECTED;
-
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, contractTransactionStatus);
-                            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-
-                            final UUID transactionId = businessTransactionMetadata.getTransactionId();
-                            System.out.print("\nHASH transactionId: "+ transactionId + " record.getTransactionID()" + record.getTransactionID());
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            //TODO YORDIN: se debe cambiar el estatus para que el agente persista el envio de la confirmacion en el metodo doTheMainTask() y no llamar al metodo confirmNotificationReception() aca
-//                            transactionTransmissionManager.confirmNotificationReception(
-//                                    businessTransactionMetadata.getSenderId(),
-//                                    businessTransactionMetadata.getReceiverId(),
-//                                    contractHash,
-//                                    transactionId.toString(),
-//                                    Plugins.OPEN_CONTRACT,
-//                                    businessTransactionMetadata.getSenderType(),
-//                                    businessTransactionMetadata.getReceiverType());
-                        }
-                    }
                 }
 
-                //TODO YORDIN: cambia el tipo de evento para mantener el estandar en las transacciones
-//                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT.getCode())) {
-                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
-                    //Check if contract hash was sent.
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
-                        businessTransactionMetadata = record.getInformation();
-                        contractHash = businessTransactionMetadata.getContractHash();
-                        System.out.print("\nINCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - Sending confirmation\n");
-                        if (openContractBusinessTransactionDao.isContractHashSentConfirmation(contractHash)) {
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.PENDING_RESPONSE);
-                            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-                            final UUID transactionId = businessTransactionMetadata.getTransactionId();
-                            System.out.print("\nHASH CONFIRM transactionId: "+ transactionId + " record.getTransactionID()" + record.getTransactionID());
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            //TODO YORDIN: se debe cambiar el estatus para que el agente persista el envio de la confirmacion en el metodo doTheMainTask() y no llamar al metodo ackConfirmNotificationReception() aca
-//                            transactionTransmissionManager.ackConfirmNotificationReception(
-//                                    businessTransactionMetadata.getSenderId(),
-//                                    businessTransactionMetadata.getReceiverId(),
-//                                    contractHash,
-//                                    transactionId.toString(),
-//                                    Plugins.OPEN_CONTRACT,
-//                                    businessTransactionMetadata.getSenderType(),
-//                                    businessTransactionMetadata.getReceiverType());
-                        }
-                    }
-=======
-                        System.out.println("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION" +
-                                "\nCOD MES: " + businessTransactionMetadata.getContractTransactionStatus().getCode() +
-                                "\nCOD REQ: " + ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED.getCode());
->>>>>>> af6e408ef39f512f516449c7371a1144de718e55
-
-                        if (businessTransactionMetadata.getContractTransactionStatus() == ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED) {
-                            System.out.println("INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION VAL");
-
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
-                            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-                            contractType = openContractBusinessTransactionDao.getContractType(contractHash);
-                            switch (contractType) {
-                                case PURCHASE:
-                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
-                                            ContractStatus.PENDING_PAYMENT);
-                                    break;
-                                case SALE:
-                                    customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
-                                            ContractStatus.PENDING_PAYMENT);
-                                    break;
-                            }
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
-
-                            if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
-                                raiseNewContractEvent(contractHash);
-                        }
-                    }
-                }
-*/
                 //TODO: look a better way to deal with this exceptions
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
