@@ -473,6 +473,24 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
+//    public boolean getContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
+//        try{
+//            List<String> list=new ArrayList<>();
+//            list = getStringList(
+//                    ContractTransactionStatus.PENDING_RESPONSE.getCode(),
+//                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+//                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+//
+//
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.OPEN_CONTRACT,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                    e);
+//            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+//        }
+//    }
+
     /**
      * This method returns a List with the parameter in the arguments.
      * @param key
