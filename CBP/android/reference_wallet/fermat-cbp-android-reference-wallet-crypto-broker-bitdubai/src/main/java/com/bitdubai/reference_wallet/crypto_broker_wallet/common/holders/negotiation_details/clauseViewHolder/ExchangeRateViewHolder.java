@@ -180,7 +180,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 final String toCurrency = exchangeRateData.getToCurrency().getCode();
                 final String fromCurrency = exchangeRateData.getFromCurrency().getCode();
 
-                if (toCurrency.equals(currencyAlfa) && fromCurrency.equals(currencyBeta))
+                if (fromCurrency.equals(currencyAlfa) && toCurrency.equals(currencyBeta))
                     return exchangeRateData;
             }
 
