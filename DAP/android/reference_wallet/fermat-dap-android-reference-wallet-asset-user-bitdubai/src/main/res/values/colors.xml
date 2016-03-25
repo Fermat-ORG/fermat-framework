@@ -27,5 +27,8 @@
     <color name="dap_user_wallet_principal">#381a5e</color>
     <color name="dap_user_wallet_blue_text">#00aeef</color>
     <color name="dap_user_wallet_black_text">#37474f</color>
+    <color name="dap_user_wallet_new">#009688</color>
+
+
     <!-- -->
 </resources>

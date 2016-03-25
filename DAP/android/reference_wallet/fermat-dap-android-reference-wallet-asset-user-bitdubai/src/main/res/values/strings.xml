@@ -25,6 +25,8 @@
     <string name="no_redeempoints">No Redeem Points</string>
     <string name="no_transactions">No Transactions</string>
     <string name="no_users">No Users</string>
+    <string name="select_user_to_transfer">Select an User</string>
+    <string name="select_redeem_to_redeem">Select a Redeem Point</string>
     <!-- -->
 
     <!-- error messages -->
@@ -40,6 +42,7 @@
     <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_no_users">No users selected</string>
+    <string name="dap_user_wallet_validate_no_user">No user selected</string>
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
     <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
