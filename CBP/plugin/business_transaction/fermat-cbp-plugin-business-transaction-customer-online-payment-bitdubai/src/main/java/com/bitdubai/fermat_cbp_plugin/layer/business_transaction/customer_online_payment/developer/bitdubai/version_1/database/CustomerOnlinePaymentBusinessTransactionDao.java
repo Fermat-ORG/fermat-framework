@@ -1002,7 +1002,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try {
-            updateRecordStatus(contractHash, CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+            updateRecordStatus(contractHash, CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
 
         } catch (CantUpdateRecordException exception) {

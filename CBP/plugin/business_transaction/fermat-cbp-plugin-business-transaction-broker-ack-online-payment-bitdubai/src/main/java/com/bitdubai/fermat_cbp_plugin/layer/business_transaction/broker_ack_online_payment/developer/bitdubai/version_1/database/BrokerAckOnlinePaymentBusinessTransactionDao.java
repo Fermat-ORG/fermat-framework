@@ -1136,7 +1136,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             updateRecordStatus(contractHash,
-                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
 
         }catch (CantUpdateRecordException exception) {
