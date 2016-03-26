@@ -6,20 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import com.bitdubai.android_core.app.FermatActivity;
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCallback;
+import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
+import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
+import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSliderProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
-import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 
 import java.lang.ref.WeakReference;
 
@@ -30,7 +28,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by mati on 2016.03.02..
  */
-public class BottomMenuReveal {
+public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 
     /**
      * Listeners
@@ -44,6 +42,7 @@ public class BottomMenuReveal {
     private ViewGroup mRevealView;
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
+    private SettingsSlider settingsSlider;
 
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
@@ -131,58 +130,49 @@ public class BottomMenuReveal {
             }
         };
         fermatActivity.get().findViewById(R.id.btn_settings_bottom_menu).setOnClickListener(onClickListener);
-        //view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
 
 
         backgroundShadow.setOnClickListener(onClickListener);
 
-
-        ImageButton btn_fermat_apps_status = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_apps_status);
-        final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
-
-        if(appStatusListener==null){
-            appStatusListener = new AppStatusListener(fermatActivity.get(),btn_fermat_apps_status);
-        }
-
-        try {
-            AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
-            switch (androidCoreSettings.getAppsStatus()){
-                case RELEASE:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-                    break;
-                case BETA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.beta_icon);
-                    break;
-                case ALPHA:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.alfa_icon);
-                    break;
-                case DEV:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.developer_icon);
-                    break;
-                default:
-                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-                    break;
-            }
-        } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-            // e.printStackTrace();
-        }
-        btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AppStatusDialog(fermatActivity.get(), androidCoreModule, appStatusListener).show();
-            }
-        });
+        initRecyclerview();
 
 
-        ImageButton btn_fermat_network = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_network);
-        btn_fermat_network.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
-            }
-        });
+//        final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
 
+//        if(appStatusListener==null){
+//            appStatusListener = new AppStatusListener(fermatActivity.get(),btn_fermat_apps_status);
+//        }
+
+//        try {
+//            AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
+//            switch (androidCoreSettings.getAppsStatus()){
+//                case RELEASE:
+//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
+//                    break;
+//                case BETA:
+//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.beta_icon);
+//                    break;
+//                case ALPHA:
+//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.alfa_icon);
+//                    break;
+//                case DEV:
+//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.developer_icon);
+//                    break;
+//                default:
+//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
+//                    break;
+//            }
+//        } catch (CantGetSettingsException | SettingsNotFoundException e) {
+//            btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
+//            // e.printStackTrace();
+//        }
+
+
+    }
+
+    private void initRecyclerview(){
+        settingsSlider = new SettingsSlider(fermatActivity.get(), SettingsSliderProvisoryData.getSettings());
+        settingsSlider.setClickCallback(this);
     }
 
     public View.OnClickListener getOnClickListener() {
@@ -198,4 +188,21 @@ public class BottomMenuReveal {
     }
 
 
+    @Override
+    public void onItemClickListener(SettingsItem item, int position) {
+        switch (item.getSettingsType()){
+            case APP_STATUS:
+                new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), appStatusListener).show();
+                break;
+            case FERMAT_NETWORK:
+                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
+                break;
+            case BITCOIN_NETWORK:
+                break;
+            case PRIVATE_NETWORK:
+                break;
+            case RECENTS:
+                break;
+        }
+    }
 }
