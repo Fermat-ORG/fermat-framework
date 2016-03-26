@@ -10,20 +10,7 @@
     android:windowSoftInputMode="stateVisible|adjustPan"
     android:background="@color/background_activity"
     >
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/padding"
-        android:paddingTop="@dimen/padding"
-        android:orientation="vertical"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:text="Please, write an email to send us the error report to help fix the problem."
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:layout_gravity="fill_horizontal" />
+
     <RelativeLayout
         android:id="@+id/inputContainer"
         android:layout_width="match_parent"
@@ -32,47 +19,87 @@
         android:layout_centerHorizontal="true"
         android:background="@color/color_white"
         android:padding="10dp"
-        android:layout_gravity="center|fill_horizontal"
         >
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding"
+            android:paddingRight="@dimen/padding"
+            android:paddingTop="@dimen/padding"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text="Please, write an email to send us the error report to help fix the problem."
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:id="@+id/message1"
+            android:layout_gravity="fill_horizontal"
+            />
         <EditText
             android:id="@+id/messageEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="true"
+            android:layout_below="@+id/message1"
             android:textColorHint="#bdbdbd"
+            android:layout_marginTop="10dp"
             android:inputType="textEmailAddress"
             android:hint="Type email of support personal"
             android:backgroundTint="#acaaaa"
             android:textColor="#000000"
-            android:layout_alignParentStart="true"
             />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/buttonContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/color_white"
-        android:layout_gravity="center_horizontal|bottom"
-        android:padding="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
-
-        <Button
-            android:id="@+id/okButton"
+        <RelativeLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/cht_ok_buttom"
-            android:layout_width="wrap_content"
-            android:layout_alignParentStart="true"/>
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@color/color_white"
+            android:layout_gravity="center_horizontal|bottom"
+            android:padding="20dp"
+            android:layout_below="@+id/messageEdit"
+            >
+            <Button
+                android:id="@+id/okButton"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cht_ok_buttom"
+                android:layout_width="wrap_content"
+                android:layout_alignParentStart="true"/>
 
-        <Button
-            android:id="@+id/cancelButton"
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cht_cancel_buttom"
+                android:layout_width="wrap_content"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/cht_cancel_buttom"
-            android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
 
+            android:paddingLeft="@dimen/padding"
+            android:paddingRight="@dimen/padding"
+            android:paddingTop="@dimen/padding"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text="...Or hold a tap in the empty   box below to load the log and then copy and paste in another place to send it"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_below="@+id/buttonContainer"
+            android:id="@+id/copyText" />
+        <EditText
+            android:id="@+id/copyEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#acaaaa"
+            android:textColor="#000000"
+            android:lines="10"
+            android:hint="Hold a tap here"
+            android:scrollbars="vertical"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:layout_below="@+id/copyText"
+            />
+    </RelativeLayout>
 </FrameLayout>

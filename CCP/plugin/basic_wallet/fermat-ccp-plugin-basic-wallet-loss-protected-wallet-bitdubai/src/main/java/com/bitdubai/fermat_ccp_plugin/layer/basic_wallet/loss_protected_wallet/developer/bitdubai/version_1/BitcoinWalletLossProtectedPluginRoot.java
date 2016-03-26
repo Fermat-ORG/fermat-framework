@@ -77,11 +77,6 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-   // @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_LOSS_PROTECTED_WALLET)
-    //private LossProtectedWalletManager lossProtectedWalletManager;
-
-
-
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIds = new HashMap<>();

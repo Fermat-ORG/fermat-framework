@@ -78,7 +78,10 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
 
-        if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
+            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getNotificationEnabled()));
+
+
+            if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
             blockchainNetworkType =  bitcoinWalletSettings.getBlockchainNetworkType();
 
         List<PreferenceSettingsTextPlusRadioItem> strings = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
@@ -226,7 +229,10 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 bitcoinWalletSettings.setNotificationEnabled(isChecked);
             }
 
-
+            if (preferenceSettingsItem.getId() == 2){
+                //enable Loss Protected
+                bitcoinWalletSettings.setLossProtectedEnabled(isChecked);
+            }
 
             try {
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);

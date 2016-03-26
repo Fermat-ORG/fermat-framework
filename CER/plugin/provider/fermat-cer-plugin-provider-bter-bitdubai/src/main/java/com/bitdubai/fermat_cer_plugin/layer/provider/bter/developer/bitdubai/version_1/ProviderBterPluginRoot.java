@@ -163,17 +163,17 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
         String exchangeFrom, exchangeTo;
         boolean invertExchange;
 
-        if(!invertedCurrencyPairs.contains(currencyPair))
-        {
-            exchangeFrom = currencyPair.getFrom().getCode();
-            exchangeTo = currencyPair.getTo().getCode();
-            invertExchange = false;
-        }
-        else
+        if(isAnInvertedCurrencyPair(currencyPair))
         {
             exchangeFrom = currencyPair.getTo().getCode();
             exchangeTo = currencyPair.getFrom().getCode();
             invertExchange = true;
+        }
+        else
+        {
+            exchangeFrom = currencyPair.getFrom().getCode();
+            exchangeTo = currencyPair.getTo().getCode();
+            invertExchange = false;
         }
 
 
@@ -256,5 +256,15 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BTER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
+    }
+
+
+    /*Internal functions*/
+    private boolean isAnInvertedCurrencyPair(CurrencyPair currencyPair) {
+        for(CurrencyPair cp : invertedCurrencyPairs){
+            if(cp.getFrom().equals(currencyPair.getFrom()) && cp.getTo().equals(currencyPair.getTo()))
+                return true;
+        }
+        return false;
     }
 }
