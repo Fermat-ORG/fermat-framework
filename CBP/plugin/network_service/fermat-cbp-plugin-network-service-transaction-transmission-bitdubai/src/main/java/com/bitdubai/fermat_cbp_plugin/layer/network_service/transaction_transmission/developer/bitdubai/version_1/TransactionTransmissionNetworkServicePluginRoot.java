@@ -321,21 +321,19 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                 final Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
                 switch (businessTransactionMetadata.getType()) {
                     case ACK_CONFIRM_MESSAGE:
-                        //TODO YORDIN: aca se reconfirma el open contract
-                        System.out.println("******** TRANSACTION_TRANSMISSION --- ACK_CONFIRM_MESSAGE **********");
+                        System.out.println("\n******** TRANSACTION_TRANSMISSION --- ACK_CONFIRM_MESSAGE **********\n");
                         launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
                         break;
                     case CONFIRM_MESSAGE:
-                        System.out.println("******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********");
-                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        System.out.println("\n******** TRANSACTION_TRANSMISSION --- CONFIRM_MESSAGE **********\n");
+                        launchNotification(remoteBusinessTransaction, EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         break;
                     case CONTRACT_STATUS_UPDATE:
-                        //TODO YORDIN: el open contract no deberia entrar aca.
-                        System.out.println("******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********");
-                            launchNotification(remoteBusinessTransaction, EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
+                        System.out.println("\n******** TRANSACTION_TRANSMISSION --- CONTRACT_STATUS_UPDATE **********\n");
+                        launchNotification(remoteBusinessTransaction, EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
                         break;
                     case TRANSACTION_HASH:
-                        System.out.println("******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********");
+                        System.out.println("\n******** TRANSACTION_TRANSMISSION --- TRANSACTION_HASH **********\n");
                         launchNotification(remoteBusinessTransaction, EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH);
                         break;
                 }
