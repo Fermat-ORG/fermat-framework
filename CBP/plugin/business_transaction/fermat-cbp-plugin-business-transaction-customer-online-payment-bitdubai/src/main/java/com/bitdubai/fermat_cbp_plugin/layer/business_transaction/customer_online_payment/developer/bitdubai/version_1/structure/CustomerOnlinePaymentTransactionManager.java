@@ -130,7 +130,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
                 if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
-                    cryptoAmount=parseToLong(clause.getValue());
+                    cryptoAmount= parseToCryptoAmountFormat(clause.getValue());
                     return cryptoAmount;
                 }
             }
@@ -155,12 +155,13 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * @return
      * @throws InvalidParameterException
      */
-    public long parseToLong(String stringValue) throws InvalidParameterException {
+    public long parseToCryptoAmountFormat(String stringValue) throws InvalidParameterException {
         if(stringValue==null){
             throw new InvalidParameterException("Cannot parse a null string value to long");
         }else{
             try{
-                return Long.valueOf(stringValue);
+                double aux = Float.valueOf(stringValue)*100000000;
+                return (long) aux;
             }catch (Exception exception){
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CUSTOMER_ONLINE_PAYMENT,

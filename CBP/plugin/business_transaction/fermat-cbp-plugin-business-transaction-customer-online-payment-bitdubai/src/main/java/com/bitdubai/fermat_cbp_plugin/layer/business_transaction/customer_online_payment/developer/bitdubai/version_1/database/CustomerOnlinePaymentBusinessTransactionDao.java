@@ -1010,7 +1010,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try {
             updateRecordStatus(contractHash,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (CantUpdateRecordException exception) {
             errorManager.reportUnexpectedPluginException(

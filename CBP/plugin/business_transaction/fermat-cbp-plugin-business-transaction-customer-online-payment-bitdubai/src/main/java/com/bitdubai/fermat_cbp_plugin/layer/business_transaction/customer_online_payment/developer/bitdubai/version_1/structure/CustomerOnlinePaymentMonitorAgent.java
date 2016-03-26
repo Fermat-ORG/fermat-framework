@@ -314,7 +314,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
-                            businessTransactionRecord.getCryptoAmount()*100000000,
+                            businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
                             businessTransactionRecord.getCustomerPublicKey(),
                             businessTransactionRecord.getBrokerPublicKey(),
@@ -392,8 +392,10 @@ public class CustomerOnlinePaymentMonitorAgent implements
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
                 CryptoStatus cryptoStatus;
                 for(BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList){
-                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
-                            pendingSubmitContractRecord.getTransactionHash());
+                    //intraActorCryptoTransactionManager.getSendCryptoTransactionHash(pendingSubmitContractRecord.getTransactionId());
+                    //intraActorCryptoTransactionManager.set
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(pendingSubmitContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
                     customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
                             pendingSubmitContractRecord);
@@ -405,8 +407,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList=
                         customerOnlinePaymentBusinessTransactionDao.getOnCryptoNetworkCryptoStatusList();
                 for(BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList){
-                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
-                            onCryptoNetworkContractRecord.getTransactionHash());
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(onCryptoNetworkContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
                     customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
                             onCryptoNetworkContractRecord);
@@ -418,9 +420,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingOnBlockchainContractList=
                         customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
                 for(BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList){
-                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
-                            onBlockchainContractRecord.getTransactionHash());
-                    onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(onBlockchainContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
+                    onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
                     onBlockchainContractRecord.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION);
                     customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -480,6 +482,11 @@ public class CustomerOnlinePaymentMonitorAgent implements
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         e);
             } catch (CantConfirmNotificationReception e){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
+            } catch (OutgoingIntraActorCantGetSendCryptoTransactionHashException e){
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CUSTOMER_ONLINE_PAYMENT,
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
