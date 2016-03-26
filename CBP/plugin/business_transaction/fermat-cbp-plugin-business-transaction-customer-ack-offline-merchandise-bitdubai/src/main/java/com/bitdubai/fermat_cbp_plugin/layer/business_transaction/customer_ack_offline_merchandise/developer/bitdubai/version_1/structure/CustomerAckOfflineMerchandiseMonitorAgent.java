@@ -43,7 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -347,7 +347,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            } catch (CantConfirmNotificationReception e) {
+            } catch (CantConfirmNotificationReceptionException e) {
                 throw new CannotSendContractHashException(
                         e,
                         "Sending confirm contract hash",

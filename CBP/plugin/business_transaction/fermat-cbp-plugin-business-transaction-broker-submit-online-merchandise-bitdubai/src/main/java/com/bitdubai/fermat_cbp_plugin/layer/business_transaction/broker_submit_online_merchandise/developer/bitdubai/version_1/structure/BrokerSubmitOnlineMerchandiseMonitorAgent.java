@@ -46,7 +46,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -297,7 +297,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             }
         }
 
-        private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException, CantCreateCryptoMoneyDestockException, CantConfirmNotificationReception {
+        private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException, CantCreateCryptoMoneyDestockException, CantConfirmNotificationReceptionException {
 
             try {
                 brokerSubmitOnlineMerchandiseBusinessTransactionDao = new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
@@ -471,8 +471,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 throw new CantUpdateRecordException(OutgoingIntraActorCantGetCryptoStatusException.DEFAULT_MESSAGE,
                         e, "Getting the Contract", "Cannot get the contract list");
 
-            } catch (CantConfirmNotificationReception e) {
-                throw new CantConfirmNotificationReception(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+            } catch (CantConfirmNotificationReceptionException e) {
+                throw new CantConfirmNotificationReceptionException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                         e, "Sending Confirmation Notification to the Broker", "Error Sending Notification Confirmation Message");
             }
         }
