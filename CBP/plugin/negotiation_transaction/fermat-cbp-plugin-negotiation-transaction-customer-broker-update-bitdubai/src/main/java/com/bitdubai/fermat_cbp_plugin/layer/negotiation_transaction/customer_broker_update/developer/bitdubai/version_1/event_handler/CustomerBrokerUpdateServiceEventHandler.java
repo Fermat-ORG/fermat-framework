@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -12,6 +13,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -23,8 +26,16 @@ import java.util.logging.Logger;
  */
 public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
 
-    private EventManager eventManager;
+    /*Represent the Event Manager*/
+    private EventManager                                        eventManager;
 
+    /*Represent the Error Manager*/
+    private ErrorManager                                        errorManager;
+
+    /*Represent the Plugins Version*/
+    private PluginVersionReference                              pluginVersionReference;
+
+    /*Represent the Dao*/
     private CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao;
 
     private ServiceStatus serviceStatus   = ServiceStatus.CREATED;
@@ -32,11 +43,15 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
     private List<FermatEventListener> listenersAdded  = new ArrayList<>();
 
     public CustomerBrokerUpdateServiceEventHandler(
-        CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao,
-        EventManager eventManager
+        CustomerBrokerUpdateNegotiationTransactionDatabaseDao   customerBrokerUpdateNegotiationTransactionDatabaseDao,
+        EventManager                                            eventManager,
+        ErrorManager                                            errorManager,
+        PluginVersionReference                                  pluginVersionReference
     ){
-        this.customerBrokerUpdateNegotiationTransactionDatabaseDao = customerBrokerUpdateNegotiationTransactionDatabaseDao;
-        this.eventManager = eventManager;
+        this.customerBrokerUpdateNegotiationTransactionDatabaseDao  = customerBrokerUpdateNegotiationTransactionDatabaseDao;
+        this.eventManager                                           = eventManager;
+        this.errorManager                                           = errorManager;
+        this.pluginVersionReference                                 = pluginVersionReference;
     }
 
     /*SERVICE*/
@@ -63,8 +78,9 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the CustomerBrokerUpdateServiceEventHandler", "The CustomerBrokerUpdateServiceEventHandler is probably null");
+        } catch (CantSetObjectException e){
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantStartServiceException(e,"Starting the CustomerBrokerUpdateServiceEventHandler", "The CustomerBrokerUpdateServiceEventHandler is probably null");
         }
 
     }
@@ -87,24 +103,21 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
     }
 
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
-//        Logger LOG = Logger.getGlobal();
-//        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+
         System.out.print("\n**** 16) MOCK CUSTOMER BROKER UPDATE - EVENT HANDLER - SAVE UPDATE EVENT  " +
                 "\n - EventType = "+event.getEventType().getCode()+
                 "\n - Source = "+event.getSource().getCode()+
                 "****\n");
 
         this.customerBrokerUpdateNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-//        LOG.info("CHECK THE DATABASE");
+
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerUpdateNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
 
+        this.customerBrokerUpdateNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+
+    }
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/

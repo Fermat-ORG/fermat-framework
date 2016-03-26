@@ -1,22 +1,16 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,27 +19,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
-import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
+import com.squareup.picasso.Picasso;
 
-import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.EXCEPTION_THROWN;
-import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.INVALID_ENTRY_DATA;
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
 /**
@@ -62,13 +50,8 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     private Bitmap cryptoCustomerBitmap;
 
-    private ErrorManager errorManager;
-
     private EditText mCustomerName;
     private ImageView mCustomerImage;
-
-    private ImageView camara;
-    private ImageView galeria;
 
     private boolean actualizable;
 
@@ -77,16 +60,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         return new CreateCryptoCustomerIdentityFragment();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        try {
-            errorManager = appSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,17 +77,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void initViews(View layout) {
         actualizable = true;
-
-        /*TextView botonG = (TextView) layout.findViewById(R.id.create_crypto_customer_button);
-
-        botonG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actualizable = false;
-                createNewIdentityInBackDevice("OnClick");
-            }
-        });
-        */
 
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
 
@@ -144,14 +106,14 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        camara = (ImageView) layout.findViewById(R.id.camara);
+        ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        galeria = (ImageView) layout.findViewById(R.id.galeria);
+        ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,10 +151,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            ImageView pictureView = mCustomerImage;
-
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -204,21 +163,18 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, mCustomerImage.getWidth(), mCustomerImage.getHeight(), true);
+                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mCustomerImage);
                         }
-                    } catch (Exception ex) {
-                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
-                        Toast.makeText(getActivity(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
-
-            if (pictureView != null && cryptoCustomerBitmap != null) {
-                RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
-                roundedDrawable.setCornerRadius(pictureView.getHeight());
-                pictureView.setImageDrawable(roundedDrawable);
-            }
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

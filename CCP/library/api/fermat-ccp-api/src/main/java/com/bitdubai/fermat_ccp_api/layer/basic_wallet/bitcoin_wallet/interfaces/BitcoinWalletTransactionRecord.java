@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import java.util.UUID;
 
 /**
- * Created by eze on 2015.06.17..
+ * Joaquin Carrasquero on 17/03/16.
  */
 public interface BitcoinWalletTransactionRecord {
 

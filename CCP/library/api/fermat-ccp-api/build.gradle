@@ -26,6 +26,8 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:1.2.4'
     compile project(':fermat-wpd-api')
     compile project(':fermat-bch-api')
+    compile project(':fermat-cer-api')
+
 }
 
 pmd {
