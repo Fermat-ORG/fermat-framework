@@ -66,6 +66,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //testCURLRequest();
             //getMusicUserTest();
             //signatureAuthenticateTest();
+            //signatureAndGETTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -188,13 +189,47 @@ public class TokenlyPluginRoot extends AbstractPlugin {
                     "x@x.com",
                     "TWKTkwIQDTvirh6D",
                     "Kun2M2UladalYAeUvXyiKWhFuwrsmSreM841K45O");
+            //X-Tokenly-Auth-Nonce
+            long nonce = System.currentTimeMillis();
             String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
                     user,
                     "https://www.example.com/api/v1/mystuff",
+                    nonce,
                     TokenlyRequestMethod.GET);
             System.out.println("TKY: Test signature authenticate"+signature);
         }catch (Exception e) {
             System.out.println("TKY: Test signature authenticate exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void signatureAndGETTest(){
+        try{
+            //Test data
+            MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
+                    "perezilla",
+                    "milestone");
+            //X-Tokenly-Auth-Nonce
+            long nonce = System.currentTimeMillis();
+            String url = "https://music-stage.tokenly.com/api/v1/music/song/download/d588a0b6-99a6-4b8b-8f08-bef9372818fa";
+            String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
+                    musicUser,
+                    url,
+                    nonce,
+                    TokenlyRequestMethod.GET);
+            HashMap<String, String> parameters = new HashMap<>();
+            parameters.put("curl", "-X");
+            parameters.put("Accept", "application/json");
+            parameters.put("X-Tokenly-Auth-Api-Token", musicUser.getApiToken());
+            parameters.put("X-Tokenly-Auth-Nonce", ""+nonce);
+            parameters.put("X-Tokenly-Auth-Signature", signature);
+            JsonElement response = RemoteJSonProcessor.getJsonElementByGETCURLRequest(
+                    url,
+                    parameters,
+                    "");
+            System.out.println("TKY: Test cURL response - " + response);
+        }catch (Exception e) {
+            System.out.println("TKY: Test signature authenticate and GET Test exception");
             e.printStackTrace();
         }
     }

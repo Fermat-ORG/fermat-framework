@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors;
 
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
@@ -45,6 +46,13 @@ public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyP
                     e,
                     "Getting album from given Id",
                     "Cannot get JSon from tokenly API using URL "+url);
+        } catch (HTTPErrorResponseException e) {
+            throw new CantGetUserException(
+                    e,
+                    "Getting album from given Id",
+                    "Get an error response - " +
+                            "Code:"+e.getErrorCode()+" - " +
+                            "Message:"+e.getErrorMessage());
         }
     }
 
