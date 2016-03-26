@@ -1676,9 +1676,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             startService(intent);
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
-        if(!mCommunicationServiceConnected){
-            doBindService();
-        }
+//        if(!mCommunicationServiceConnected){
+//            doBindService();
+//        }
 
 
     }
@@ -1689,9 +1689,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         if(broadcastManager!=null)broadcastManager.stop();
 //        networkStateReceiver.removeListener(this);
 
-        if(mCommunicationServiceConnected){
-            doUnbindService();
-        }
+//        if(mCommunicationServiceConnected){
+//            doUnbindService();
+//        }
     }
 
 
