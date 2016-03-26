@@ -311,7 +311,8 @@ public enum Plugins implements FermatPluginsEnum {
 
     ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
     ARTIST_IDENTITY                    ("ARTIDNTY"),
-
+    ART_ARTIST_SUB_APP_MODULE          ("AASAM"),
+    ART_FAN_SUB_APP_MODULE             ("AFSAM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -466,6 +467,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
             case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "AASAM":       return ART_ARTIST_SUB_APP_MODULE                ;
+            case "AFSAM":       return ART_FAN_SUB_APP_MODULE                   ;
             case "TOKAP":       return TOKENLY_API;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
@@ -481,7 +484,6 @@ public enum Plugins implements FermatPluginsEnum {
                 );
         }
     }
-
     @Override
     public String getCode() {
         return this.code;

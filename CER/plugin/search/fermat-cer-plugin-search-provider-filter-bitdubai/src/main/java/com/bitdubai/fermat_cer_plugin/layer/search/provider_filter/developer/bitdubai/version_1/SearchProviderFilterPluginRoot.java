@@ -102,7 +102,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         try {
             providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
             providerMap.put(bitfinexProvider.getProviderId(), bitfinexProvider);
-            providerMap.put(bterProvider.getProviderId(), bterProvider);
+            //providerMap.put(bterProvider.getProviderId(), bterProvider);
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
             providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
             providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);
