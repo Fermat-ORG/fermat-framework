@@ -246,6 +246,7 @@ public enum Plugins implements FermatPluginsEnum {
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     SUB_APP_RESOURCES           ("SAR"),
+    SUB_APP_FERMAT_MONITOR      ("FERM"),
     SUB_APP_RUNTIME             ("SPR"),
     USER_REDEMPTION             ("UR"),
     WALLET_COMMUNITY            ("WCOM"),
@@ -392,6 +393,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
             case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
             case "SAR"  :   return SUB_APP_RESOURCES        ;
+            case "FERM"  :   return SUB_APP_FERMAT_MONITOR   ;
             case "SPR"  :   return SUB_APP_RUNTIME          ;
             case "UR"   :   return USER_REDEMPTION          ;
             case "WCOM" :   return WALLET_COMMUNITY         ;
