@@ -677,7 +677,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 if(activityType != ActivityType.ACTIVITY_TYPE_DESKTOP){
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.GONE);
                     findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
-                    findViewById(R.id.btn_recents).setVisibility(View.GONE);
                 }
             }
 

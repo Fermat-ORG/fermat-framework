@@ -206,6 +206,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
             case PRIVATE_NETWORK:
                 break;
             case RECENTS:
+                fermatActivity.get().openRecentsScreen();
                 break;
         }
     }
