@@ -32,6 +32,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
@@ -408,8 +409,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         validateStatusClauseTest(clauses);
 
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationInfo);
-        adapter.setClauseListener(this);
-        adapter.setFooterListener(this);
+
+
+        if(negotiationInfo.getStatus() != NegotiationStatus.SENT_TO_BROKER && negotiationInfo.getStatus() != NegotiationStatus.WAITING_FOR_BROKER) {
+            adapter.setFooterListener(this);
+            adapter.setClauseListener(this);
+        }
+
         adapter.setMarketRateList(appSession.getActualExchangeRates());
 
         recyclerView.setAdapter(adapter);

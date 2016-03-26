@@ -44,6 +44,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Data
     protected ContractDetail contractDetail;
     protected int itemPosition;
+    private ContractDetailActivityFragment fragment;
 
     //UI
     private Resources res;
@@ -58,7 +59,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     public FermatButton confirmButton;
 
 
-    public ContractDetailViewHolder(View itemView) {
+    public ContractDetailViewHolder(View itemView, ContractDetailActivityFragment fragment) {
         super(itemView);
 
         this.itemView = itemView;
@@ -75,6 +76,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         confirmButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_confirm_button);
         confirmButton.setOnClickListener(this);
         confirmButton.setVisibility(View.INVISIBLE);
+        this.fragment = fragment;
         /*customerImage = (ImageView) itemView.findViewById(R.id.cbw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.cbw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
@@ -102,19 +104,16 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     walletManager.ackPayment(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
-                    //Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
-
-
-                    //updateBackground(contractDetail.getContractId().toString(), ContractDetailType.CUSTOMER_DETAIL);
+                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+                    fragment.goToWalletHome();
                     break;
                 case 3:
                     //Confirm the reception of the broker's merchandise
                     walletManager.submitMerchandise(contractDetail.getContractId());
                     itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                     confirmButton.setVisibility(View.INVISIBLE);
-                    //Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
-
-                    //updateBackground(this.contractId.toString(), ContractDetailType.BROKER_DETAIL);
+                    Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
+                    fragment.goToWalletHome();
                     break;
             }
         } catch (Exception ex) {
@@ -129,27 +128,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             }
         }
 
-    }
-
-    private void updateBackground(String contractHash, ContractDetailType contractDetailType){
-        try{
-            ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);
-            ContractStatus backgroundContractStatus=getContractStatusByContractDetailType(
-                    contractStatus,
-                    contractDetailType);
-            itemView.setBackgroundColor(getStatusBackgroundColor(backgroundContractStatus));
-            textButton.setText(contractStatus.getFriendlyName());
-        } catch (CantGetListCustomerBrokerContractSaleException ex) {
-            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
-            }
-        }
     }
 
     public void setErrorManager(ErrorManager errorManager){
@@ -277,19 +255,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 break;
 
         }
-        //TODO: here we can see the contract status
-        //textButton.setText(visualContractStatus.getFriendlyName());
-        /*customerName.setText(itemInfo.getCryptoCustomerAlias());
-        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
-
-        String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
-        soldQuantityAndCurrency.setText(soldQuantityAndCurrencyText);
-
-        String exchangeRateAmountAndCurrencyText = getExchangeRateAmountAndCurrencyText(itemInfo);
-        exchangeRateAmountAndCurrency.setText(exchangeRateAmountAndCurrencyText);
-
-        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
-        lastUpdateDate.setText(date);*/
     }
 
 

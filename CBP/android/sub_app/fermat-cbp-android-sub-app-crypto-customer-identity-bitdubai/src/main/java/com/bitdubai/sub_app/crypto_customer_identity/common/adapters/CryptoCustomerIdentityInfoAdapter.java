@@ -1,6 +1,10 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.Filterable;
@@ -43,7 +47,15 @@ public class CryptoCustomerIdentityInfoAdapter
                 filter.getConstraint());
 
         holder.setText(spannedText);
-        holder.setImage(data.getProfileImage());
+
+        byte[] profileImage = data.getProfileImage();
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+
+        RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
+        roundedDrawable.setCornerRadius(95);
+        holder.getImage().setImageDrawable(roundedDrawable);
+
+
     }
 
     @Override
