@@ -26,13 +26,12 @@ public class TokenlyAuthenticationComponentGenerator {
     public static String generateTokenlyAuthSignature(
             User user,
             String requestUrl,
+            long nonce,
             TokenlyRequestMethod tokenlyRequestMethod) throws
             CantGenerateTokenlyAuthSignatureException {
         try{
             //X-Tokenly-Auth-Api-Token
             String apiToken = user.getApiToken();
-            //X-Tokenly-Auth-Nonce
-            long nonce = System.currentTimeMillis();
             //long nonce=1457530047;
             //API secret key
             String apiSecretKey = user.getApiSecretKey();
