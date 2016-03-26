@@ -1000,28 +1000,18 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
-    public void updateContractTransactionStatus(String contractHash,
-                                                ContractTransactionStatus contractTransactionStatus)
-            throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantUpdateRecordException {
+    public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try {
-            updateRecordStatus(contractHash,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+            updateRecordStatus(contractHash, CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
+
         } catch (CantUpdateRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,
-                    exception,"Cant Update Record",
-                    "Check the cause");
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, exception, "Cant Update Record", "Check the cause");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
     }
