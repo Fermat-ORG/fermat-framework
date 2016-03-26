@@ -1222,7 +1222,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
                 //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
-                String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "reference_wallet"; //TODO: this is a hardcoded public key
                 customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash);
 
             } else {  // Case: sending offline payment.
