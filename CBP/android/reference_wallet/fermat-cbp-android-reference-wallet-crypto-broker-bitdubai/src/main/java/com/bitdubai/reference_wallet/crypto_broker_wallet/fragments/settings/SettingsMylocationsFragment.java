@@ -18,6 +18,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -28,7 +32,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Single
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by memo on 06/01/16.
@@ -40,6 +46,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
 
     // Data
     private List<String> locationList;
+    private List<NegotiationLocations> locationListIds;
 
     // UI
     private RecyclerView recyclerView;
@@ -64,19 +71,32 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            Object data = appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+
+            //Object data = appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+            /*
             if (data == null) {
                 locationList = new ArrayList<>();
                 appSession.setData(CryptoBrokerWalletSession.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
-            if(locationList.size()>0) {
-                int pos = locationList.size() - 1;
-                if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
-                    locationList.remove(pos);
+            */
+
+            Collection<NegotiationLocations> locations = walletManager.getAllLocations(NegotiationType.SALE);
+            locationList = new ArrayList<>();
+            locationListIds = new ArrayList<>();
+
+            if( locations != null ){
+                if(!locations.isEmpty()) {
+                    for(NegotiationLocations l : locations){
+                        if (!l.getLocation().equals("settings") && !l.getLocation().equals("wizard")) {
+                            locationList.add(l.getLocation());
+                            locationListIds.add(l);
+                        }
+                    }
                 }
             }
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -104,7 +124,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                locationList.add("settings");
+                //locationList.add("settings");
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
             }
         });
@@ -142,9 +162,19 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+                try {
+                    walletManager.deleteLocation(locationListIds.get(position));
+                } catch (CantDeleteLocationSaleException e) {
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+                }
+
                 locationList.remove(position);
+                locationListIds.remove(position);
                 adapter.changeDataSet(locationList);
                 showOrHideRecyclerView();
+
             }
         });
         builder.setNegativeButton(R.string.cbw_cancel_caps, new DialogInterface.OnClickListener() {

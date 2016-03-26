@@ -176,6 +176,8 @@ public enum Plugins implements FermatPluginsEnum {
     //Init CER Plugins
     BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
     BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
+    BITDUBAI_CER_PROVIDER_BITFINEX              ("BCERPBF"  ),
+    BITDUBAI_CER_PROVIDER_BTER                  ("BCERPBT"  ),
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
     BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
     BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
@@ -238,6 +240,7 @@ public enum Plugins implements FermatPluginsEnum {
     ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
+    TRANSFER_INTRA_WALLET        ("TIW"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
@@ -383,6 +386,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
+            case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
             case "PBL"  :   return PUBLISHER                ;
             case "RP"   :   return REDEEM_POINT             ;
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
@@ -429,6 +433,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
             case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
+            case "BCERPBF": return BITDUBAI_CER_PROVIDER_BITFINEX;
+            case "BCERPBT": return BITDUBAI_CER_PROVIDER_BTER;
             case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
             case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;

@@ -103,7 +103,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             cancelBtn.setTextColor(getTransactionTitleColor());
 
             dialogTitle.setText(getTransactionTitleText());
-            applyBtn.setText(getTransactionTitleText());
+            applyBtn.setText(getTransactionButtonText());
 
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
@@ -127,6 +127,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     {
         if (transactionType == TransactionType.DEBIT)
             return resources.getString(R.string.csh_withdrawal_transaction_text_caps);
+        else
+            return resources.getString(R.string.csh_deposit_transaction_text_caps);
+    }
+
+    private String getTransactionButtonText()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getString(R.string.csh_withdrawal_transaction_text_btn_caps);
         else
             return resources.getString(R.string.csh_deposit_transaction_text_caps);
     }
