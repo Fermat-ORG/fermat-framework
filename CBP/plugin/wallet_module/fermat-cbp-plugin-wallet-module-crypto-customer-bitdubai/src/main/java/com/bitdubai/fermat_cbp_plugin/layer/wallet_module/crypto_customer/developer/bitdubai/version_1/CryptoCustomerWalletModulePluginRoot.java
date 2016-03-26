@@ -13,6 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -33,6 +35,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_onlin
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -273,12 +277,15 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
     private void preConfigureWallet() {
         final String customerWalletPublicKey = "crypto_customer_wallet";
-        boolean walletConfigured;
+
         try {
             walletManager = getCryptoCustomerWallet(customerWalletPublicKey);
-            walletConfigured = walletManager.isWalletConfigured(customerWalletPublicKey);
-            if (!walletConfigured) {
-                // IDENTITY
+            //walletManager.isWalletConfigured(customerWalletPublicKey);
+
+            List<CryptoCustomerIdentity> identities = walletManager.getListOfIdentities();
+
+            if( identities.isEmpty() ) {
+
                 createIdentity("Crypto Customer", "", new byte[0]);
                 final CryptoCustomerIdentity cryptoCustomerIdentity = walletManager.getListOfIdentities().get(0);
                 walletManager.associateIdentity(cryptoCustomerIdentity, customerWalletPublicKey);
@@ -286,6 +293,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                 // ASSOCIATION BTC Wallet - Customer Wallet
                 InstalledWallet installedWallet = getInstalledWallet(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 assert installedWallet != null;
+
+                System.out.println("VLZ: getWalletPublicKey: "+installedWallet.getWalletPublicKey());
 
                 CryptoCustomerWalletAssociatedSettingImpl associatedWalletSetting = new CryptoCustomerWalletAssociatedSettingImpl();
                 associatedWalletSetting.setCustomerPublicKey(customerWalletPublicKey);
@@ -302,13 +311,25 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
                 // BANK ACCOUNTS
                 walletManager.createNewBankAccount(new CryptoCustomerWalletModuleNegotiationBankAccount(FiatCurrency.US_DOLLAR,
-                        "Bank: Banesco\nAccount Number: 1324-548-123456789\nType:Current"));
+                        "Bank: Banesco\nAccount Number: 1324-548-123456789\nType: Current"));
 
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            cryptoCustomerIdentityManager.publishIdentity(cryptoCustomerIdentity.getPublicKey());
+                        } catch (IdentityNotFoundException e) {
+                        } catch (CantPublishIdentityException e) {
+                        }
+                    }
+                }.start();
             }
+
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+
     }
 
     private InstalledWallet getInstalledWallet(Platforms platform) throws CantListWalletsException {

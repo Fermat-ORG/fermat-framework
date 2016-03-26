@@ -130,44 +130,4 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
     public Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsSaleException {
         return null;
     }
-
-    @Override
-    public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException {
-
-    }
-
-    @Override
-    public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountSaleException {
-
-    }
-
-    @Override
-    public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
-
-    }
-
-    @Override
-    public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException {
-        return null;
-    }
-
-    @Override
-    public void createNewPaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantCreatePaymentCurrencySaleException {
-
-    }
-
-    @Override
-    public void deletePaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantDeletePaymentCurrencySaleException {
-
-    }
-
-    @Override
-    public Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException {
-        return null;
-    }
-
-    @Override
-    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException{
-        return null;
-    }
 }

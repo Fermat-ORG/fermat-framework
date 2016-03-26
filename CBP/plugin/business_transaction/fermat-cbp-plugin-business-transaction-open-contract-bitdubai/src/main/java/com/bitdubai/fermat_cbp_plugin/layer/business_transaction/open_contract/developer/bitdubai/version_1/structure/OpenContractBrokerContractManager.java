@@ -100,6 +100,8 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
                     customerBrokerSaleNegotiation,
                     referencePrice
                     );
+            /*TODO: INICIAR COMO pausado el estado del contrato (la open contract business transaction es la responsable de iniciar el contrato en
+              TODO: PENDING_PAYMENT una vez se haya validado el hash y los datos del contrato*/
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
             this.openContractBusinessTransactionDao.persistContractRecord(
                     contractRecord,

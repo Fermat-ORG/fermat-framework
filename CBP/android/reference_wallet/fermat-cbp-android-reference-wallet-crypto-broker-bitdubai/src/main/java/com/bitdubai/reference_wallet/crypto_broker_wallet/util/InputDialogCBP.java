@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -180,7 +181,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             CustomInfo();
               try {
                     accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
-                    String bankWalletPublicKey = "banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
+                    String bankWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
                     WalletManager.addNewAccount(accountnumber, bankWalletPublicKey);
                     dismiss();
                 }catch(Exception e){
@@ -189,7 +190,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             }
             if (id == R.id.btn_action_cash) {
                 try {
-                    String cashWalletPublicKey = "cash_wallet";
+                    String cashWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();//"cash_wallet";
                     WalletManager.createCashMoneyWallet(cashWalletPublicKey,CurrencyCash);
                     dismiss();
                 } catch (Exception e) {

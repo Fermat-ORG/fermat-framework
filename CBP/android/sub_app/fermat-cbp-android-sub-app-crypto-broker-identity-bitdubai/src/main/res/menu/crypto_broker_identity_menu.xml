@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/action_add"
-        android:icon="@drawable/add_identity_icon"
+        android:icon="@drawable/add_identity"
         android:title="Add"
         app:showAsAction="ifRoom" />
 

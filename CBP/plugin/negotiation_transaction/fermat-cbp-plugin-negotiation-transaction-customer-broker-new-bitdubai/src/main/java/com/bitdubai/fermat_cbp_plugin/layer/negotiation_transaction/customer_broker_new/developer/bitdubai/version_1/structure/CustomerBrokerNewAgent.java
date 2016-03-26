@@ -456,10 +456,10 @@ public class CustomerBrokerNewAgent implements
                                     }
 
                                     //NOTIFIED EVENT
-                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                                    System.out.print("\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
+//                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+//                                    System.out.print("\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
                                     //CONFIRM TRANSMISSION
-                                    negotiationTransmissionManager.confirmReception(transmissionId);
+//                                    negotiationTransmissionManager.confirmReception(transmissionId);
 
                                 }else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
@@ -476,11 +476,17 @@ public class CustomerBrokerNewAgent implements
                                     //CONFIRM TRANSACTION
                                     customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                                     //NOTIFIED EVENT
-                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+//                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
                                     //CONFIRM TRANSMISSION
-                                    negotiationTransmissionManager.confirmReception(transmissionId);
+//                                    negotiationTransmissionManager.confirmReception(transmissionId);
 
                                 }
+
+                                //NOTIFIED EVENT
+                                customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                                //CONFIRM TRANSMISSION
+                                negotiationTransmissionManager.confirmReception(transmissionId);
+
                             }
                         }
                     }
