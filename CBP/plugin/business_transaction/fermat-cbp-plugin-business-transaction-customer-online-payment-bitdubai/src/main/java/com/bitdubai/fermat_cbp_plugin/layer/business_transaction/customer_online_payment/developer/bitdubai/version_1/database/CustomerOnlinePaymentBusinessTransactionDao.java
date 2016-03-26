@@ -627,15 +627,17 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+
             databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractPurchase,
                     brokerCryptoAddress,
                     walletPublicKey,
                     cryptoAmount,
-                    blockchainNetworkType
-            );
+                    blockchainNetworkType);
+
             databaseTable.insertRecord(databaseTableRecord);
+
         } catch (CantInsertRecordException exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
@@ -918,37 +920,32 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             BlockchainNetworkType blockchainNetworkType) {
 
         UUID transactionId = UUID.randomUUID();
-        record.setUUIDValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
-                transactionId);
+        record.setUUIDValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
+
         //For the business transaction this value represents the contract hash.
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractPurchase.getContractId());
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractPurchase.getPublicKeyCustomer());
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractPurchase.getPublicKeyBroker());
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_PAYMENT.getCode());
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
-                brokerCryptoAddress);
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                walletPublicKey);
-        record.setLongValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
-                cryptoAmount);
-        if(blockchainNetworkType==null){
-            blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        }
-        record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
+
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME, brokerCryptoAddress);
+
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey);
+
+        record.setLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
+
+        if(blockchainNetworkType == null)
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
                 blockchainNetworkType.getCode());
+
         return record;
     }
 
