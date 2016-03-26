@@ -25,6 +25,7 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
     private final long          timestamp         ;
     private final String        memo              ;
     private final BlockchainNetworkType blockchainNetworkType;
+    private long exchangeRate;
 
     public IncomingIntraUserLossProtectedTransactionWrapper(final UUID        transactionId     ,
                                                final UUID          requestId     ,
@@ -118,6 +119,11 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
+    }
+
+    @Override
+    public long getExchangRate() {
+        return 0;
     }
 
 

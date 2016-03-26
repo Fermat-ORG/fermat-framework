@@ -146,6 +146,7 @@ public final class FermatSystem {
 
 
 
+
         } catch(CantRegisterPlatformException e) {
 
             throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");

@@ -9,7 +9,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -107,7 +112,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import org.apache.commons.collections.CollectionUtils;
 
-import java.text.Format;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,7 +121,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.BlockingDeque;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
@@ -129,7 +133,7 @@ import java.util.concurrent.BlockingDeque;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet {
+public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleManager,Serializable {
 
     private final BitcoinWalletManager           bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
@@ -1258,7 +1262,52 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
         try{
 
-            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            List<IntraWalletUserIdentity> lst = new ArrayList<>();
+
+            for (final IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
+                IntraWalletUserIdentity activeIdentity = new IntraWalletUserIdentity() {
+                    @Override
+                    public String getAlias() {
+                        return intraWalletUserIdentity.getAlias();
+                    }
+
+                    @Override
+                    public byte[] getImage() {
+                        return intraWalletUserIdentity.getImage();
+                    }
+
+                    @Override
+                    public String getPublicKey() {
+                        return intraWalletUserIdentity.getPublicKey();
+                    }
+
+                    @Override
+                    public Actors getActorType() {
+                        return intraWalletUserIdentity.getActorType();
+                    }
+
+                    @Override
+                    public String getPhrase() {
+                        return intraWalletUserIdentity.getPhrase();
+                    }
+
+                    @Override
+                    public void setNewProfileImage(byte[] newProfileImage) {
+
+                    }
+
+                    @Override
+                    public String createMessageSignature(String message) {
+                        return null;
+                    }
+                };
+                lst.add(activeIdentity);
+            }
+
+
+
+            //return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            return lst;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1345,7 +1394,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         }catch (CantGetActorException exe){
                             contactId = null;
                         }catch (Exception ex){
-                            walletContactRecord = null;
+                            contactId = null;
                         }
 
                     }
@@ -1467,5 +1516,30 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
 
         return sdf.format(date);
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        return null;
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

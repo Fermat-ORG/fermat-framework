@@ -70,15 +70,24 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+
+
+
+            //Try to load appSession data
             Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
-            if (data == null) {
-                bankAccountList = new ArrayList<>();
+            if(data == null) {
+
+                //Get saved locations from settings
+                bankAccountList = walletManager.getListOfBankAccounts();
+
+                //Save locations to appSession data
                 appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
-            } else
+            } else {
                 bankAccountList = (List<BankAccountNumber>) data;
-                if(bankAccountList.size()==0){
-                    //TODO: obtener las cuentas desde el module que no existe el metodo actualmente
-                }
+            }
+
+
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -173,6 +182,12 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
     private void saveSettingAndGoNextStep() {
 
         try {
+
+            //Save bank accounts to appSession data
+            appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
+
+
+
             for (BankAccountNumber bankAccount : bankAccountList) {
                 BankAccountData bankAccountData = (BankAccountData) bankAccount;
                 NegotiationBankAccount negotiationBankAccount = walletManager.newEmptyNegotiationBankAccount(

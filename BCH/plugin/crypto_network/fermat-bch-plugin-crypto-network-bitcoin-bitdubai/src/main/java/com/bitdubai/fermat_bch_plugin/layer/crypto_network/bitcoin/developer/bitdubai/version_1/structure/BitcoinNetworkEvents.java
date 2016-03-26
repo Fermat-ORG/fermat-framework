@@ -56,6 +56,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final Context context;
     final NetworkParameters NETWORK_PARAMETERS;
     BlockchainDownloadProgress blockchainDownloadProgress;
+    Wallet cryptoNetworkWallet;
+    int broadcasterID;
 
     /**
      * Platform variables
@@ -68,7 +70,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context, Broadcaster broadcaster) {
+    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context, Broadcaster broadcaster, Wallet wallet) {
         this.NETWORK_TYPE = blockchainNetworkType;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
@@ -76,9 +78,11 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         this.context = context;
         this.NETWORK_PARAMETERS = context.getParams();
         this.broadcaster = broadcaster;
+        this.cryptoNetworkWallet = wallet;
 
         //define the blockchain download progress class with zero values
-        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 100);
+        blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 0);
+
     }
 
     @Override
@@ -103,9 +107,17 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * broadcast the progress bar
          */
-        FermatBundle fermatBundle = new FermatBundle();
-        fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
-        broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+        if (blockchainDownloadProgress.getProgress() < 101){
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
+            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Blockchain download for " + blockchainDownloadProgress.getBlockchainNetworkType().getCode() + " network.");
+
+            if (broadcasterID != 0){
+                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterID);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+            } else
+                broadcasterID = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+        }
     }
 
 
@@ -151,7 +163,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * I will save the wallet after a change.
          */
         try {
-            wallet.saveToFile(walletFilename);
+            cryptoNetworkWallet.saveToFile(walletFilename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -159,15 +171,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     /**
      * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
      */
-      for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
+      for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, cryptoNetworkWallet, tx)){
           saveCryptoTransaction(cryptoTransaction);
       }
-
-
-//        /**
-//         * Register the new incoming transaction into the database
-//         */
-//          saveIncomingTransaction(wallet, tx);
     }
 
     /**
@@ -205,22 +211,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, wallet, tx)){
+        for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
-
-//        /**
-//         * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
-//         */
-//        CryptoStatus cryptoStatus = CryptoTransaction.getTransactionCryptoStatus(tx);
-//        try {
-//            if (isIncomingTransaction(tx.getHashAsString()))
-//                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.INCOMING);
-//            else
-//                addMissingTransactions(wallet, tx, cryptoStatus, TransactionTypes.OUTGOING);
-//        } catch (CantExecuteDatabaseOperationException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
