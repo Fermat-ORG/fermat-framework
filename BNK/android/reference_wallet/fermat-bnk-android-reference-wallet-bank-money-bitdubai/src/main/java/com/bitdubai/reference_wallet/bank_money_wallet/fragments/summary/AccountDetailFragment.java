@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
@@ -48,7 +49,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<BankMoneyTransactionRecord> transactionList;
-    private String walletPublicKey = "banking_wallet";
+    private String walletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
     private BankAccountNumber bankAccountNumber;
 
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;

@@ -446,12 +446,12 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, takePicture.getWidth(), takePicture.getHeight(), true);
                             if(imageBitmap != null){
                                 hasResource = true;
-                                Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(takePicture);
+//                                Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(takePicture);
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error Loading Image", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

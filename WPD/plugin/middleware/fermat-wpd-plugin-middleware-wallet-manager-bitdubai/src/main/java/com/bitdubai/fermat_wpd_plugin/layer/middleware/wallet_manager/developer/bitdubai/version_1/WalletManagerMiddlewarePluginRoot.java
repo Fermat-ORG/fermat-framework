@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -280,7 +281,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Bitcoin Wallet", // WALLET NAME
-                "reference_wallet", // PUBLIC KEY
+                WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(), // PUBLIC KEY
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -302,7 +303,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "loss_protected_wallet_icon", // ICOIN
                 "Loss Protected Wallet", // WALLET NAME
-                "loss_protected_wallet", // PUBLIC KEY
+                WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
                 ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -322,7 +323,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Banking wallet", // WALLET NAME
-                "banking_wallet", // PUBLIC KEY
+                WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), // PUBLIC KEY
                 "BWBWB", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -343,7 +344,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Cash wallet", // WALLET NAME
-                "cash_wallet", // PUBLIC KEY
+                WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), // PUBLIC KEY
                 "BWBWBW", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -364,7 +365,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "crypto_broker", // ICOIN
                 "Crypto Broker Wallet", // WALLET NAME
-                "crypto_broker_wallet", // PUBLIC KEY
+                WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), // PUBLIC KEY
                 "CBPCBW", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -385,7 +386,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "crypto_broker", // ICOIN
                 "Crypto Customer Wallet", // WALLET NAME
-                "crypto_customer_wallet", // PUBLIC KEY
+                WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), // PUBLIC KEY
                 "CBPCCW", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE

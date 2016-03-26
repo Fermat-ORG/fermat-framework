@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -15,31 +13,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreatePaymentCurrencySaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeletePaymentCurrencySaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListBankAccountsSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListPaymentCurrencySaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -48,8 +33,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClaus
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleClause;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiationInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.NegotiationBankAccountSale;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.NegotiationPaymentCurrencySale;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.NegotiationSaleLocations;
 
 import java.util.ArrayList;
@@ -93,8 +76,6 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
-
-            //new NegotiationSaleTestData(this);
         }
 
         public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
@@ -614,7 +595,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             try {
                 DatabaseTable SaleLocationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
                 DatabaseTableRecord recordToDelete   = SaleLocationTable.getEmptyRecord();
-                SaleLocationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
+                recordToDelete.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, location.getLocationId());
                 SaleLocationTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
                 throw new CantDeleteLocationSaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
@@ -647,178 +628,4 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             return new NegotiationSaleLocations(locationId, location, uri);
         }
 
-
-
-
-
-        public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException {
-            try {
-                DatabaseTable SaleBankTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToInsert = SaleBankTable.getEmptyRecord();
-                recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
-                SaleBankTable.insertRecord(recordToInsert);
-            } catch (CantInsertRecordException e) {
-                throw new CantCreateBankAccountSaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountSaleException {
-            try {
-                DatabaseTable SaleBankTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToUpdate = SaleBankTable.getEmptyRecord();
-                SaleBankTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME, bankAccount.getBankAccount());
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
-                SaleBankTable.updateRecord(recordToUpdate);
-            } catch (CantUpdateRecordException e) {
-                throw new CantUpdateBankAccountSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
-            try {
-                DatabaseTable SaleBankTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToDelete = SaleBankTable.getEmptyRecord();
-                SaleBankTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
-                SaleBankTable.deleteRecord(recordToDelete);
-            } catch (CantDeleteRecordException e) {
-                throw new CantDeleteBankAccountSaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException {
-            try {
-                DatabaseTable SaleBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
-
-                SaleBanksTable.addStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, currency.getCode(), DatabaseFilterType.EQUAL);
-
-                SaleBanksTable.loadToMemory();
-                List<DatabaseTableRecord> records = SaleBanksTable.getRecords();
-                SaleBanksTable.clearAllFilters();
-
-                Collection<NegotiationBankAccount> resultados = new ArrayList<>();
-                for (DatabaseTableRecord record : records) {
-                    resultados.add(constructBankSaleFromRecord(record));
-                }
-                return resultados;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public Collection<NegotiationBankAccount> getAllBankAccount() throws CantGetListBankAccountsSaleException {
-            try {
-                DatabaseTable SaleBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
-
-                SaleBanksTable.loadToMemory();
-                List<DatabaseTableRecord> records = SaleBanksTable.getRecords();
-                SaleBanksTable.clearAllFilters();
-
-                Collection<NegotiationBankAccount> resultados = new ArrayList<>();
-                for (DatabaseTableRecord record : records) {
-                    resultados.add(constructBankSaleFromRecord(record));
-                }
-                return resultados;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
-
-            DatabaseTable SaleBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
-
-            String Query = "SELECT DISTINCT " +
-                    CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME +
-                    " FROM " +
-                    CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME;
-
-            Collection<DatabaseTableRecord> records = null;
-            try {
-                records = SaleBanksTable.customQuery(Query, true);
-                Collection<FiatCurrency> resultados = new ArrayList<>();
-                for (DatabaseTableRecord record : records) {
-                    resultados.add(FiatCurrency.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME)));
-                }
-                return resultados;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        private NegotiationBankAccount constructBankSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
-
-            UUID            bankId  = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME);
-            String          bank    = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME);
-            FiatCurrency    type    = FiatCurrency.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME));
-
-            return new NegotiationBankAccountSale(bankId, bank, type);
-        }
-
-        public void createNewPaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantCreatePaymentCurrencySaleException {
-            try {
-                DatabaseTable SalePaymentTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToInsert = SalePaymentTable.getEmptyRecord();
-
-                recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME, paymentCurrency.getPaymentCurrencyId());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_TYPE_COLUMN_NAME, paymentCurrency.getPaymentCurrency().getCode());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME, paymentCurrency.getPaymentType().getCode());
-
-                SalePaymentTable.insertRecord(recordToInsert);
-            } catch (CantInsertRecordException e) {
-                throw new CantCreatePaymentCurrencySaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public void deletePaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantDeletePaymentCurrencySaleException {
-            try {
-                DatabaseTable SaleBankTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToDelete = SaleBankTable.getEmptyRecord();
-                SaleBankTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME, paymentCurrency.getPaymentCurrencyId(), DatabaseFilterType.EQUAL);
-                SaleBankTable.deleteRecord(recordToDelete);
-            } catch (CantDeleteRecordException e) {
-                throw new CantDeletePaymentCurrencySaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        public Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException {
-            try {
-                DatabaseTable SaleLocationsTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME);
-                SaleLocationsTable.loadToMemory();
-                List<DatabaseTableRecord> records = SaleLocationsTable.getRecords();
-                SaleLocationsTable.clearAllFilters();
-
-                Collection<NegotiationPaymentCurrency> resultados = new ArrayList<>();
-                for (DatabaseTableRecord record : records) {
-                    resultados.add(constructPaymentCurrencySaleFromRecord(record));
-                }
-                return resultados;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPaymentCurrencySaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListPaymentCurrencySaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
-            }
-        }
-
-        private NegotiationPaymentCurrency constructPaymentCurrencySaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
-
-            UUID           paymentId   = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME);
-            PaymentType    paymentType = PaymentType.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_TYPE_COLUMN_NAME));
-            Currency paymentCurrency = null;
-
-            if( paymentType == PaymentType.CRYPTO_MONEY ){
-                paymentCurrency = CryptoCurrency.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME));
-            }else{
-                paymentCurrency = FiatCurrency.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME));
-            }
-            return new NegotiationPaymentCurrencySale(paymentId, paymentCurrency, paymentType);
-        }
 }

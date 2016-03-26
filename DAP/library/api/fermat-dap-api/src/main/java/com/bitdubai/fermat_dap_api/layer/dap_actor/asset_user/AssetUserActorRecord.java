@@ -93,8 +93,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
             this.age                =       age                     ;
         if (genders != null)
             this.genders            =       genders                 ;
-
-        this.dapConnectionState     =       dapConnectionState      ;
+        if (dapConnectionState != null)
+            this.dapConnectionState     =       dapConnectionState      ;
 
         if (locationLatitude != -1)
             this.locationLatitude       = locationLatitude          ;

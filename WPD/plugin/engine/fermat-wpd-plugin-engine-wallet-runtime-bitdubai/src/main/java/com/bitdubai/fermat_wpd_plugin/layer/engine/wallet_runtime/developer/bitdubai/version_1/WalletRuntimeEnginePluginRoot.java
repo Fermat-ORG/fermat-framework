@@ -4659,12 +4659,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         Tab runtimeTab;
 
-        String publicKey;
+        String publicKey = WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode();
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey = "loss_protected_wallet";
+//        publicKey = "loss_protected_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
         lastWalletPublicKey = publicKey;

@@ -12,7 +12,8 @@
     <string name="gallery_option_context_menu">Gallery</string>
     <string name="title_photo_context_menu">Choose mode</string>
     <string name="description_search">Search</string>
-    <string name="empty_identity_list_msg">The List is empty</string>
+    <string name="not_identities">NOT IDENTITIES</string>
+    <string name="create_a_new_one">CREATE A NEW ONE</string>
     <string name="no_matches">No Matches</string>
 
     <string name="cbp_customer_identity_welcome_subTitle">Welcome to the Customer Identity.</string>
