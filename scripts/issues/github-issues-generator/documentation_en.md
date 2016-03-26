@@ -27,16 +27,22 @@ To run this script in the ubuntu shell, please, run this command:
 
 Please, configure your script to generate all the issues following the next steps:
 
-	1) Set the platform var: this represents the plug-in platform.
-	2) Set the layer var: this represents the plug-in layer.
-	3) Set the pluginName var: this represents the plug-in name, please use capital characters in the first character on every word.
-	4) Set the githubLogin var: this represents your login user in github.
-	5) Set the githubPassword var: this represents your login password in github.
-	6) Set the repository var: this represents the target repository.
-	7) Set the teamLeaderGithubUser var: this represent the responsible or team leader that approves your pull-requests.
-	8) Adjust the public interfaces list: you can add any element according the plug-in structure.
-	9) Adjust the internal clases list: you can add any element according the plug-in structure.
-	10) Adjust the event handlers list: you can add any element according the plug-in structure.
+	1. Set the platform var: this represents the plug-in platform.
+	2. Set the layer var: this represents the plug-in layer.
+	3. Set the pluginName var: this represents the plug-in name, please use capital characters in the first character on every word.
+	4. Set the githubLogin var: this represents your login user in github.
+	5. Set the githubPassword var: this represents your login password in github.
+	6. Set the repository var: this represents the target repository.
+	7. Set the teamLeaderGithubUser var: this represent the responsible or team leader that approves your pull-requests.
+	8. Adjust the public interfaces list: you can add any element according the plug-in structure.
+	9. Adjust the internal clases list: you can add any element according the plug-in structure.
+	10. Adjust the event handlers list: you can add any element according the plug-in structure.
+	11. Adjust the event list: you can add any element according the plug-in structure.
+	12. Adjust the agent list: you can add any element according the plug-in structure.
+	13. Adjust the nsMessage list: you can add any element according the plug-in structure.
+	14. Adjust the nsMessage list: you can add any element according the plug-in structure.
+	15. Set the isNetworkService var: if this plug-in is a network service you need to set this var in True
+	16. Set the isModule var: if this plug-in is a module you need to set this var in True
 
 ### CHANGELOG
 * 1.0.2: 	
@@ -55,3 +61,5 @@ Please, configure your script to generate all the issues following the next step
   	* Fix a bug in Agent and events issues generation.
 * 1.2.8:
 	* Fix a bug described in https://github.com/bitDubai/fermat/issues/4285
+* 1.2.16:
+	* Included the variable isModule to avoid generate database issues
