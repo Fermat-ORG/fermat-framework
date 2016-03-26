@@ -32,7 +32,7 @@ public class SettingsSlider {
 
 
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new SettingsAdapter(activity, lstItems, null);
+            adapter = new SettingsAdapter(activity, lstItems, null);;
             recyclerView.setAdapter(adapter);
             recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(4,20));
         }
@@ -51,5 +51,16 @@ public class SettingsSlider {
         recyclerView = null;
         layoutManager = null;
         lstItems = null;
+    }
+
+    public void changeIcon(SettingsType settingsType, int res) {
+        for (int i=0;i<adapter.getItemCount();i++){
+            if(adapter.getItem(i).getSettingsType() == settingsType){
+                adapter.getItem(i).setImageRes(res);
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
+
     }
 }

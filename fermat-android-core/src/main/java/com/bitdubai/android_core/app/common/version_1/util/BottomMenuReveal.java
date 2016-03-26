@@ -12,11 +12,15 @@ import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCa
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSliderProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsType;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
@@ -28,7 +32,7 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by mati on 2016.03.02..
  */
-public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
+public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatusCallbackChanges {
 
     /**
      * Listeners
@@ -192,7 +196,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
     public void onItemClickListener(SettingsItem item, int position) {
         switch (item.getSettingsType()){
             case APP_STATUS:
-                new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), appStatusListener).show();
+                new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), this).show();
                 break;
             case FERMAT_NETWORK:
                 fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
@@ -204,5 +208,37 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
             case RECENTS:
                 break;
         }
+    }
+
+    @Override
+    public void appSoftwareStatusChanges(AppsStatus appsStatus) {
+        for (AbstractFermatFragment fragment : fermatActivity.get().getScreenAdapter().getLstCurrentFragments()) {
+            //TODO: ver que pasa acá
+            try {
+                fragment.onUpdateViewUIThred(appsStatus.getCode());
+            }catch (Exception e){
+
+            }
+        }
+        int res = 0;
+        switch (appsStatus){
+            case RELEASE:
+                res = R.drawable.relese_icon;
+                break;
+            case BETA:
+                res = R.drawable.beta_icon;
+                break;
+            case ALPHA:
+                res = R.drawable.alfa_icon;
+                break;
+            case DEV:
+                res = R.drawable.developer_icon;
+                break;
+            default:
+                res = R.drawable.relese_icon;
+                break;
+        }
+        settingsSlider.changeIcon(SettingsType.APP_STATUS,res);
+
     }
 }
