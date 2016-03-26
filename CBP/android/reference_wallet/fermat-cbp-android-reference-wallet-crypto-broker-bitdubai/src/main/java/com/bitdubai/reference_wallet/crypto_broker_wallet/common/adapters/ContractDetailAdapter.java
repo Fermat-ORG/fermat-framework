@@ -30,19 +30,24 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     private List<ContractDetail> dataSet;
     private FermatSession session;
     private CryptoBrokerWalletManager walletManager;
+    private ContractDetailActivityFragment fragment;
 
-    public ContractDetailAdapter(
+
+
+        public ContractDetailAdapter(
             Context context,
             List<ContractDetail> dataSet,
             FermatSession session,
-            CryptoBrokerWalletManager walletManager) {
+            CryptoBrokerWalletManager walletManager,
+            ContractDetailActivityFragment fragment) {
         this.context=context;
         this.dataSet=dataSet;
         this.session=session;
         this.walletManager=walletManager;
+        this.fragment=fragment;
     }
     protected ContractDetailViewHolder createHolder(View itemView, int type) {
-        return new ContractDetailViewHolder(itemView);
+        return new ContractDetailViewHolder(itemView, fragment);
     }
 
     protected int getCardViewResource() {
