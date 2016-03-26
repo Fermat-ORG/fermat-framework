@@ -350,6 +350,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
     public void goToWalletHome() {
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
     }
 }

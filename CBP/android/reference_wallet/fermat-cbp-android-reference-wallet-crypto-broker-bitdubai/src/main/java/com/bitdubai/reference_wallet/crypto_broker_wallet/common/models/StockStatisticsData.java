@@ -14,6 +14,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +26,9 @@ public class StockStatisticsData {
     public StockStatisticsData(CryptoBrokerWalletAssociatedSetting associatedWallet, CryptoBrokerWalletSession session) {
 
         Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR, 0);
+
         ErrorManager errorManager = session.getErrorManager();
         try {
             final String walletPublicKey = session.getAppPublicKey();
@@ -34,7 +38,7 @@ public class StockStatisticsData {
 
             balance = walletManager.getAvailableBalance(currency, walletPublicKey);
 
-            final int offset = 30;
+            final int offset = 31;
             stockTransactions = walletManager.getStockHistory(
                     associatedWallet.getMerchandise(),
                     associatedWallet.getMoneyType(),
@@ -46,8 +50,7 @@ public class StockStatisticsData {
             if (errorManager == null)
                 Log.e("StockStatisticsData", e.getMessage(), e);
             else
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
