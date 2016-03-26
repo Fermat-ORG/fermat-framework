@@ -201,15 +201,13 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
-    public List<String> getPendingIncomingMoneyEvents() throws
-            CantGetContractListException {
+    public List<String> getPendingIncomingMoneyEvents() throws CantGetContractListException {
         try{
             DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
-            return getPendingGenericsEvents(
-                    databaseTable,
+
+            return getPendingGenericsEvents(databaseTable,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
-                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME
-            );
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME);
 
         }catch(Exception exception){
             errorManager.reportUnexpectedPluginException(
@@ -226,33 +224,26 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * This method returns pending generic events by given parameters
      * @return
      */
-    private List<String> getPendingGenericsEvents(
-            DatabaseTable databaseTable,
-            String statusColumn,
-            String idColumn) throws
-            CantGetContractListException {
+    private List<String> getPendingGenericsEvents(DatabaseTable databaseTable, String statusColumn, String idColumn) throws CantGetContractListException {
         try{
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            databaseTable.addStringFilter(
-                    statusColumn,
-                    EventStatus.PENDING.getCode(),
-                    DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(statusColumn, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
-                //There is no records in database, I'll return an empty list.
-                return eventTypeList;
-            }
+
+            if(records.isEmpty())
+                return eventTypeList; //There is no records in database, I'll return an empty list.
+
             for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(
-                        idColumn);
+                eventId=databaseTableRecord.getStringValue(idColumn);
                 eventTypeList.add(eventId);
             }
+
             return eventTypeList;
+
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e,
-                    "Getting events in EventStatus.PENDING in table "+databaseTable.getTableName(),
+            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table "+ databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
@@ -627,11 +618,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
-                    databaseTableRecord,
-                    customerBrokerContractPurchase
-            );
+            databaseTableRecord= buildDatabaseTableRecord(databaseTableRecord, customerBrokerContractPurchase);
+
             databaseTable.insertRecord(databaseTableRecord);
+
         }catch(CantInsertRecordException exception){
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_ACK_ONLINE_PAYMENT,
@@ -847,15 +837,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public BusinessTransactionRecord getBusinessTransactionRecordByCustomerPublicKey(
             String customerPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
         try{
-            return getBusinessTransactionRecord(
-                    customerPublicKey,
-                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+            return getBusinessTransactionRecord(customerPublicKey, BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
         }
     }
@@ -998,7 +983,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
+                ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION.getCode());
 
         return record;
     }
@@ -1354,29 +1339,18 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         try {
             DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
-                    event);
-            eventRecord=buildDatabaseTableRecord(eventRecord, incomingMoneyEventWrapper);
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper = new IncomingMoneyEventWrapper(event);
+            eventRecord = buildDatabaseTableRecord(eventRecord, incomingMoneyEventWrapper);
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(
-                    exception,
-                    "Saving new event.",
-                    "Cannot insert a record in Ack Online Payment database");
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Ack Online Payment database");
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(
-                    FermatException.wrapException(exception),
-                    "Saving new event.",
-                    "Unexpected exception");
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
     }
 
