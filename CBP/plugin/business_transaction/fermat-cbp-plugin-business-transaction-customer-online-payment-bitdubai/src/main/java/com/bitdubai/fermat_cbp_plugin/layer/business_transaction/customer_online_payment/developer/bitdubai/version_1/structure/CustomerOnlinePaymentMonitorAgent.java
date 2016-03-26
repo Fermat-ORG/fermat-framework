@@ -314,7 +314,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
-                            businessTransactionRecord.getCryptoAmount(),
+                            businessTransactionRecord.getCryptoAmount()*100000000,
                             "Payment from Crypto Customer contract " + pendingContractHash,
                             businessTransactionRecord.getCustomerPublicKey(),
                             businessTransactionRecord.getBrokerPublicKey(),
