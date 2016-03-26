@@ -2,12 +2,15 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ccw_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="invisible">
 
-    <LinearLayout
+
+<LinearLayout
         android:id="@+id/ccw_wizard_title_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
