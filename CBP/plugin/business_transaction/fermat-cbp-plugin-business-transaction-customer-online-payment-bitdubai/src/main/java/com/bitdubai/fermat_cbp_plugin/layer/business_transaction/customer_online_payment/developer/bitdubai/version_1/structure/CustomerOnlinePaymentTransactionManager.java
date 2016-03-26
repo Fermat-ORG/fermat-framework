@@ -95,27 +95,17 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * @return
      * @throws CantGetCryptoAddressException
      */
-    private String getBrokerCryptoAddressString(
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)
-            throws CantGetCryptoAddressException {
+    private String getBrokerCryptoAddressString(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantGetCryptoAddressException {
         try{
-
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
-
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS)){
+                if(clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS))
                     return clause.getValue();
-                }
             }
-            throw new CantGetCryptoAddressException(
-                    "The Negotiation clauses doesn't include the broker crypto address");
+            throw new CantGetCryptoAddressException("The Negotiation clauses doesn't include the broker crypto address");
         } catch (CantGetListClauseException e) {
-            throw new CantGetCryptoAddressException(
-                    e,
-                    "Getting the broker crypto address",
-                    "Cannot get the clauses list");
+            throw new CantGetCryptoAddressException(e, "Getting the broker crypto address", "Cannot get the clauses list");
         }
-
     }
 
     /**
@@ -191,33 +181,28 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     }
 
     @Override
-    public void sendPayment(
-            String walletPublicKey,
-            String contractHash,
-            BlockchainNetworkType blockchainNetworkType) throws
-            CantSendPaymentException {
+    public void sendPayment(String walletPublicKey, String contractHash, BlockchainNetworkType blockchainNetworkType) throws CantSendPaymentException {
 
         try{
             //Checking the arguments
             Object[] arguments={walletPublicKey, contractHash};
             ObjectChecker.checkArguments(arguments);
+
             //Get contract
-            CustomerBrokerContractPurchase customerBrokerContractPurchase=
-                    customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
-                            contractHash);
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation=
-                    getCustomerBrokerPurchaseNegotiation(
-                            customerBrokerContractPurchase.getNegotiatiotId());
-            String brokerCryptoAddress=getBrokerCryptoAddressString(
-                    customerBrokerPurchaseNegotiation
-            );
-            long cryptoAmount=getCryptoAmount(customerBrokerPurchaseNegotiation);
+            CustomerBrokerContractPurchase contractPurchase= customerBrokerContractPurchaseManager.
+                    getCustomerBrokerContractPurchaseForContractId(contractHash);
+
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = getCustomerBrokerPurchaseNegotiation(contractPurchase.getNegotiatiotId());
+            String brokerCryptoAddress = getBrokerCryptoAddressString(customerBrokerPurchaseNegotiation);
+            long cryptoAmount = getCryptoAmount(customerBrokerPurchaseNegotiation);
+
             this.customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
-                    customerBrokerContractPurchase,
+                    contractPurchase,
                     brokerCryptoAddress,
                     walletPublicKey,
                     cryptoAmount,
                     blockchainNetworkType);
+
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
