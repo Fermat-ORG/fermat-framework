@@ -72,7 +72,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             markerRateReference.setText("Can't get Market Exchange Rate");
 
         if (suggestedRate != null)
-            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
+            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$.3f %3$s",
                     suggestedRate.getMerchandise().getCode(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency().getCode()));
         else if (suggestedRateLoaded)
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
@@ -180,7 +180,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 final String toCurrency = exchangeRateData.getToCurrency().getCode();
                 final String fromCurrency = exchangeRateData.getFromCurrency().getCode();
 
-                if (toCurrency.equals(currencyAlfa) && fromCurrency.equals(currencyBeta))
+                if (fromCurrency.equals(currencyAlfa) && toCurrency.equals(currencyBeta))
                     return exchangeRateData;
             }
 

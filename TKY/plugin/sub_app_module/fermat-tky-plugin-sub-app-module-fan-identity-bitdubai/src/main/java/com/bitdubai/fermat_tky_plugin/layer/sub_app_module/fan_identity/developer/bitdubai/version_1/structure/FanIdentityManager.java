@@ -5,12 +5,14 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,6 +25,11 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
     public FanIdentityManager(ErrorManager errorManager,TokenlyFanIdentityManager tokenlyFanIdentityManager) {
         this.errorManager = errorManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
+    }
+
+    @Override
+    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
