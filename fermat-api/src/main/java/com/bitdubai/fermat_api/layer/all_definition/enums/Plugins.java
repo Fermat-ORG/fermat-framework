@@ -307,11 +307,12 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
-
-    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
-    ARTIST_IDENTITY                    ("ARTIDNTY"),
-    ART_ARTIST_SUB_APP_MODULE          ("AASAM"),
-    ART_FAN_SUB_APP_MODULE             ("AFSAM"),
+    ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
+    FAN_ACTOR_CONNECTION                ("ARTFAC"),
+    ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
+    ARTIST_IDENTITY                     ("ARTIDNTY"),
+    ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
+    ART_FAN_SUB_APP_MODULE              ("AFSAM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -474,6 +475,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
             case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
             case "TWALLET":     return TOKENLY_WALLET                           ;
+            case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
+            case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
 
             default:
                 throw new InvalidParameterException(
