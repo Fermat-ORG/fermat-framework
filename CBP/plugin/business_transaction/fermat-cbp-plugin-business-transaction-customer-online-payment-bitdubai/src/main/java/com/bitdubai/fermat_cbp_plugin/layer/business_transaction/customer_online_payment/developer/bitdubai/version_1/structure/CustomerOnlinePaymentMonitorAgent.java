@@ -3,8 +3,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -69,7 +71,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
@@ -109,21 +110,21 @@ public class CustomerOnlinePaymentMonitorAgent implements
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.logManager = logManager;
-        this.transactionTransmissionManager = transactionTransmissionManager;
-        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.logManager=logManager;
+        this.transactionTransmissionManager=transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
+        this.outgoingIntraActorManager=outgoingIntraActorManager;
+        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
     }
 
     private void setIntraActorCryptoTransactionManager(
             OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
-        if (outgoingIntraActorManager == null) {
+        if(outgoingIntraActorManager==null){
             throw new CantSetObjectException("outgoingIntraActorManager is null");
         }
         try {
-            this.intraActorCryptoTransactionManager = outgoingIntraActorManager.getTransactionManager();
+            this.intraActorCryptoTransactionManager=outgoingIntraActorManager.getTransactionManager();
         } catch (CantGetOutgoingIntraActorTransactionManagerException e) {
             throw new CantSetObjectException(
                     e,
@@ -147,21 +148,21 @@ public class CustomerOnlinePaymentMonitorAgent implements
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        } catch (Exception exception) {
+        }catch (Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
 
     @Override
     public void stop() {
-        try {
+        try{
             this.agentThread.interrupt();
-        } catch (Exception exception) {
+        }catch(Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
@@ -170,34 +171,34 @@ public class CustomerOnlinePaymentMonitorAgent implements
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
+        this.errorManager=errorManager;
     }
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
+        this.eventManager=eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
+        this.logManager=logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
     }
 
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
+        this.pluginId=pluginId;
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -213,20 +214,19 @@ public class CustomerOnlinePaymentMonitorAgent implements
 
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-            try {
+            try{
                 this.pluginDatabaseSystem = pluginDatabaseSystem;
-            } catch (Exception exception) {
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            }catch(Exception exception){
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
             }
         }
-
         @Override
         public void run() {
 
-            threadWorking = true;
+            threadWorking=true;
             logManager.log(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Customer Online Payment Monitor Agent: running...", null, null);
-            while (threadWorking) {
+            while(threadWorking){
                 /**
                  * Increase the iteration counter
                  */
@@ -254,17 +254,17 @@ public class CustomerOnlinePaymentMonitorAgent implements
             }
 
         }
-
         public void Initialize() throws CantInitializeCBPAgent {
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId,
                         CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-            } catch (DatabaseNotFoundException databaseNotFoundException) {
+            }
+            catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerOnlinePaymentBusinessTransactionDatabaseFactory CustomerOnlinePaymentBusinessTransactionDatabaseFactory =
+                CustomerOnlinePaymentBusinessTransactionDatabaseFactory CustomerOnlinePaymentBusinessTransactionDatabaseFactory=
                         new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = CustomerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId,
@@ -294,158 +294,153 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 CantUpdateRecordException,
                 CantSendContractNewStatusNotificationException {
 
-            try {
-                customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+            try{
+                customerOnlinePaymentBusinessTransactionDao =new CustomerOnlinePaymentBusinessTransactionDao(
+                        pluginDatabaseSystem,
+                        pluginId,
+                        database,
+                        errorManager);
 
                 UUID outgoingCryptoTransactionId;
                 BusinessTransactionRecord businessTransactionRecord;
                 String contractHash;
-                CryptoStatus cryptoStatus;
-
                 /**
                  * Check if there is some crypto to send
                  */
-                List<String> pendingToSubmitCrypto = customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoList();
-                for (String pendingContractHash : pendingToSubmitCrypto) {
-                    System.out.println("ONLINE_PAYMENT - [Customer] Enter Pending To Submit Crypto");
-
-                    businessTransactionRecord = customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(pendingContractHash);
-
-                    outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
+                List<String> pendingToSubmitCrypto=customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoList();
+                for(String pendingContractHash : pendingToSubmitCrypto){
+                    businessTransactionRecord =customerOnlinePaymentBusinessTransactionDao.
+                            getCustomerOnlinePaymentRecord(pendingContractHash);
+                    outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
-                            businessTransactionRecord.getCryptoAmount() * 100000000,
+                            businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
                             businessTransactionRecord.getCustomerPublicKey(),
                             businessTransactionRecord.getBrokerPublicKey(),
                             Actors.CBP_CRYPTO_CUSTOMER,
                             Actors.CBP_CRYPTO_BROKER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            businessTransactionRecord.getBlockchainNetworkType());
-
-                    System.out.println("ONLINE_PAYMENT - [Customer] Sent Crypto");
-
-                    customerOnlinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
-                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(pendingContractHash, ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED);
-
-                    System.out.println("ONLINE_PAYMENT - [Customer] Added Crypto Transaction ID and its Status: PENDING_SUBMIT");
-                    System.out.println("ONLINE_PAYMENT - [Customer] Updated Business Transaction Status: ONLINE_PAYMENT_SUBMITTED");
+                            businessTransactionRecord.getBlockchainNetworkType()
+                    );
+                    customerOnlinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID(
+                            pendingContractHash,
+                            outgoingCryptoTransactionId);
+                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
+                            pendingContractHash,
+                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED);
                 }
+                //TODO: finish this
 
                 /**
                  * Check contract status to send.
                  */
-                List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                    System.out.println("ONLINE_PAYMENT - [Customer] Enter Pending to Submit Notification");
-
-                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
-
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
+                        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
+                for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED,
-                            Plugins.CUSTOMER_ONLINE_PAYMENT,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
-                    System.out.println("ONLINE_PAYMENT - [Customer] Sent Notification");
-
-                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,
-                            ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED);
-
-                    System.out.println("ONLINE_PAYMENT - [Customer] Updated Business Transaction Status: CRYPTO_PAYMENT_SUBMITTED");
+                            Plugins.CUSTOMER_ONLINE_PAYMENT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER
+                    );
+                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
+                            contractHash,
+                            ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED
+                    );
                 }
 
                 /**
                  * Check pending notifications - Broker side
                  */
-                List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
-                for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                    System.out.println("ONLINE_PAYMENT - [Broker] Enter Pending to Submit Confirmation");
-
-                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
-
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
+                        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
+                for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            Plugins.CUSTOMER_ONLINE_PAYMENT,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
-                    System.out.println("ONLINE_PAYMENT - [Broker] Sent Confirmation");
-
-                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,
-                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-
-                    System.out.println("ONLINE_PAYMENT - [Broker] Updated Business Transaction Status: CONFIRM_ONLINE_PAYMENT");
+                            Plugins.CUSTOMER_ONLINE_PAYMENT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
+                    );
+                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
+                            contractHash,
+                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
+                    );
                 }
+
 
 
                 // from here on, all this code checks the crypto status of a transaction and updates that crypto status into the contract.
                 /**
                  * Check pending transactions
                  */
-                List<BusinessTransactionRecord> pendingTransactions = customerOnlinePaymentBusinessTransactionDao.getPendingCryptoTransactionList();
-                for (BusinessTransactionRecord onlinePaymentRecord : pendingTransactions) {
-                    System.out.println("ONLINE_PAYMENT - Checking CRYPTO_PAYMENT_SUBMITTED Business Transactions");
+                List<BusinessTransactionRecord> pendingTransactions=
+                        customerOnlinePaymentBusinessTransactionDao.getPendingCryptoTransactionList();
+                for(BusinessTransactionRecord onlinePaymentRecord: pendingTransactions){
                     checkPendingTransaction(onlinePaymentRecord);
                 }
 
                 /**
                  * Check if pending to submit crypto status
                  */
-                List<BusinessTransactionRecord> pendingSubmitContractCryptoStatusList = customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
-                for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList) {
-                    System.out.println("ONLINE_PAYMENT - [Customer] Checking PENDING_SUBMIT Crypto Transactions");
-
-                    cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
+                List<BusinessTransactionRecord> pendingSubmitContractCryptoStatusList=
+                        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
+                CryptoStatus cryptoStatus;
+                for(BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList){
+                    //intraActorCryptoTransactionManager.getSendCryptoTransactionHash(pendingSubmitContractRecord.getTransactionId());
+                    //intraActorCryptoTransactionManager.set
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(pendingSubmitContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
-
-                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
-                    System.out.println("ONLINE_PAYMENT - [Customer] Update Crypto Status: " + cryptoStatus);
+                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                            pendingSubmitContractRecord);
                 }
 
                 /**
                  * Check if on crypto network crypto status
                  */
-                List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = customerOnlinePaymentBusinessTransactionDao.getOnCryptoNetworkCryptoStatusList();
-                for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                    System.out.println("ONLINE_PAYMENT - [Customer] Checking ON_CRYPTO_NETWORK Crypto Transactions");
-
-                    cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
+                List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList=
+                        customerOnlinePaymentBusinessTransactionDao.getOnCryptoNetworkCryptoStatusList();
+                for(BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList){
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(onCryptoNetworkContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
-
-                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
-                    System.out.println("ONLINE_PAYMENT - [Customer] Update Crypto Status: " + cryptoStatus);
+                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                            onCryptoNetworkContractRecord);
                 }
 
                 /**
                  * Check if on blockchain crypto status
                  */
-                List<BusinessTransactionRecord> pendingOnBlockchainContractList = customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
-                for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
-                    System.out.println("ONLINE_PAYMENT - [Customer] Checking ON_BLOCKCHAIN Crypto Transactions");
-
-                    cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onBlockchainContractRecord.getTransactionHash());
-                    onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
-                    onBlockchainContractRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION);
-
-                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(onBlockchainContractRecord);
-                    System.out.println("ONLINE_PAYMENT - [Customer] Update Crypto Status: " + cryptoStatus);
-                    System.out.println("ONLINE_PAYMENT - [Customer] Update Crypto Status: PENDING_ONLINE_PAYMENT_NOTIFICATION");
+                List<BusinessTransactionRecord> pendingOnBlockchainContractList=
+                        customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
+                for(BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList){
+                    String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(onBlockchainContractRecord.getTransactionId()));
+                    cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
+                    //TODO: revisar estos cambios con alguien que se sepa los estados de las transacciones en la blockchain
+                    //onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
+                    onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
+                    onBlockchainContractRecord.setContractTransactionStatus(
+                            ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION);
+                    customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                            onBlockchainContractRecord);
                 }
                 //END of the checking process for the crypto status
+
 
                 /**
                  * Check if pending events
                  */
-                List<String> pendingEventsIdList = customerOnlinePaymentBusinessTransactionDao.getPendingEvents();
-                for (String eventId : pendingEventsIdList) {
+                List<String> pendingEventsIdList= customerOnlinePaymentBusinessTransactionDao.getPendingEvents();
+                for(String eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
+
 
             } catch (CantGetContractListException e) {
                 throw new CannotSendContractHashException(
@@ -457,24 +452,53 @@ public class CustomerOnlinePaymentMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            } catch (OutgoingIntraActorInsufficientFundsException e) {
-                //TODO: I want to get a better handler for this exception
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (OutgoingIntraActorCantSendFundsExceptions e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (OutgoingIntraActorCantGetCryptoStatusException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantConfirmNotificationReceptionException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }  /*catch (CantSendBusinessTransactionHashException e) {
+                throw new CannotSendContractHashException(
+                        e,
+                        "Sending contract hash",
+                        "Error in Transaction Transmission Network Service");
             }
+            catch (CantSendContractNewStatusNotificationException e) {
+                throw new CantSendContractNewStatusNotificationException(
+                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+                        e,
+                        "Sending contract hash",
+                        "Error in Transaction Transmission Network Service");
+            }*/ catch (OutgoingIntraActorInsufficientFundsException e) {
+                //TODO: I want to get a better handler for this exception
+                e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
+            } catch (OutgoingIntraActorCantSendFundsExceptions outgoingIntraActorCantSendFundsExceptions) {
+                outgoingIntraActorCantSendFundsExceptions.printStackTrace();
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        outgoingIntraActorCantSendFundsExceptions);
+            } catch (OutgoingIntraActorCantGetCryptoStatusException e) {
+                e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
+            } catch (CantConfirmNotificationReceptionException e){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
+            } catch (OutgoingIntraActorCantGetSendCryptoTransactionHashException e){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        e);
+            }
+
         }
 
 
-        private void raisePaymentConfirmationEvent() {
+        private void raisePaymentConfirmationEvent(){
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED);
             CustomerOnlinePaymentConfirmed customerOnlinePaymentConfirmed = (CustomerOnlinePaymentConfirmed) fermatEvent;
             customerOnlinePaymentConfirmed.setSource(EventSource.CUSTOMER_ONLINE_PAYMENT);
@@ -483,22 +507,23 @@ public class CustomerOnlinePaymentMonitorAgent implements
 
         //TODO: raise an event only in broker side, notifying the incoming online payment. Create the event.
         //TODO: raise an event only in customer side, notifying the reception of an online payment. Create the event.
-        private void checkPendingTransaction(BusinessTransactionRecord businessTransactionRecord) throws CantUpdateRecordException {
-
-            UUID transactionUUID = UUID.fromString(businessTransactionRecord.getTransactionId());
+        private void checkPendingTransaction(
+                BusinessTransactionRecord businessTransactionRecord)throws CantUpdateRecordException
+        {
+            UUID transactionUUID=UUID.fromString(businessTransactionRecord.getTransactionId());
             //Get transaction hash from IntraActorCryptoTransactionManager
             try {
-                String transactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(transactionUUID);
-                if (transactionHash == null)
-                    return; //If transactionHash is null the crypto amount is not sent yet, I'll check for this later.
-
-                CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(transactionHash);
+                String transactionHash =
+                        intraActorCryptoTransactionManager.getSendCryptoTransactionHash(
+                                transactionUUID);
+                if(transactionHash==null){
+                    //If transactionHash is null the crypto amount is not sent yet, I'll check for this later.
+                    return;
+                }
+                CryptoStatus cryptoStatus=outgoingIntraActorManager.getTransactionStatus(transactionHash);
                 businessTransactionRecord.setTransactionHash(transactionHash);
                 businessTransactionRecord.setCryptoStatus(cryptoStatus);
                 customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
-
-                System.out.println("ONLINE_PAYMENT - Update Crypto Status: " + cryptoStatus);
-
             } catch (OutgoingIntraActorCantGetSendCryptoTransactionHashException e) {
                 //I want to know a better way to handle with this exception, for now I going to print the exception and return this method.
                 e.printStackTrace();
@@ -514,70 +539,74 @@ public class CustomerOnlinePaymentMonitorAgent implements
             }
         }
 
-        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(String eventId) throws  UnexpectedResultReturnedFromDatabaseException {
 
             //TODO: events from customer side, listen contract status confirmation, the record must be in PENDING_ONLINE_PAYMENT_NOTIFICATION, raise an event
-            try {
+            try{
 
-                String eventTypeCode = customerOnlinePaymentBusinessTransactionDao.getEventType(eventId);
+                String eventTypeCode=customerOnlinePaymentBusinessTransactionDao.getEventType(eventId);
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
                 BusinessTransactionRecord businessTransactionRecord;
-
-                if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
-                    System.out.println("ONLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE");
-
+                if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
                     //This will happen in broker side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
-                        businessTransactionMetadata = record.getInformation();
-                        contractHash = businessTransactionMetadata.getContractHash();
-
-                        if (customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            contractTransactionStatus = customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                            transactionTransmissionManager.getPendingTransactions(
+                                    Specialist.UNKNOWN_SPECIALIST);
+                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                        businessTransactionMetadata=record.getInformation();
+                        contractHash=businessTransactionMetadata.getContractHash();
+                        if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                            contractTransactionStatus=customerOnlinePaymentBusinessTransactionDao.
+                                    getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
-
-                        } else {
-                            CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.
-                                    getCustomerBrokerContractSaleForContractId(contractHash);
-
+                        }else{
+                            CustomerBrokerContractSale customerBrokerContractSale=
+                                    customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
+                                    contractHash);
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractSale);
-                            customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
-                            customerOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, new Date().getTime());
-
-                            System.out.println("ONLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - New Business Transaction Status: PENDING_ONLINE_PAYMENT_CONFIRMATION");
-                            System.out.println("ONLINE_PAYMENT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - Update Contract Status: PAYMENT_SUBMIT");
-
+                            customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                                    customerBrokerContractSale);
+                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+                                    contractHash,
+                                    ContractStatus.PAYMENT_SUBMIT);
+                            Date date=new Date();
+                            customerOnlinePaymentBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
+                            customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
                             raisePaymentConfirmationEvent();
+
+                            BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
+                            record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
+                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     customerOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
-
-                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
-                    System.out.println("ONLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE");
-
+                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
                     //This will happen in customer side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
-                        businessTransactionMetadata = record.getInformation();
-                        contractHash = businessTransactionMetadata.getContractHash();
-
-                        if (customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            businessTransactionRecord = customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
-                            contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
-
-                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())) {
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
-                                customerOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                            transactionTransmissionManager.getPendingTransactions(
+                                    Specialist.UNKNOWN_SPECIALIST);
+                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                        businessTransactionMetadata=record.getInformation();
+                        contractHash=businessTransactionMetadata.getContractHash();
+                        if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                            businessTransactionRecord =
+                                    customerOnlinePaymentBusinessTransactionDao.
+                                            getCustomerOnlinePaymentRecord(contractHash);
+                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
+                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())){
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                                        contractHash,
+                                        ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                customerOnlinePaymentBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-
-                                System.out.println("ONLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Contract Status: PAYMENT_SUBMIT");
-                                System.out.println("ONLINE_PAYMENT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Update Business Transaction Status: CONFIRM_ONLINE_PAYMENT");
                                 raisePaymentConfirmationEvent();
                             }
                         }
