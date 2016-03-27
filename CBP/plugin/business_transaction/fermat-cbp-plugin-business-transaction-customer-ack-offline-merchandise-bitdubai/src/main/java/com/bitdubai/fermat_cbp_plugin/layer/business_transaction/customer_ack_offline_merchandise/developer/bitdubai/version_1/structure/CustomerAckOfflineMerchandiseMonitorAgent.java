@@ -279,35 +279,31 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  * The status to verify is PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION, it represents that the merchandise is
                  * acknowledge by the customer.
                  */
-                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
-                        customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
 
-                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
 
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
+
                     transactionTransmissionManager.sendContractStatusNotification(
-                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK,
                             Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
 
-                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK
-                    );
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK);
                 }
 
                 /**
                  * Check pending notifications - Broker side
                  */
-                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
-                        customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
 
                     System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
@@ -318,14 +314,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
                             PlatformComponentType.ACTOR_CRYPTO_BROKER,
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE
-                    );
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                 }
 
                 /**
@@ -429,7 +422,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 //EVENT FOR TRANSACTION RESPONSE
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
 
-                    System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+                    System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
 
                     //This will happen in customer side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList =
@@ -448,12 +441,13 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
                             if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK.getCode())) {
 
-                                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE - VAL\n");
+                                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - VAL\n");
 
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+//                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
                                 Date date = new Date();
                                 customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                                 raiseAckConfirmationEvent(contractHash);
 
                             }

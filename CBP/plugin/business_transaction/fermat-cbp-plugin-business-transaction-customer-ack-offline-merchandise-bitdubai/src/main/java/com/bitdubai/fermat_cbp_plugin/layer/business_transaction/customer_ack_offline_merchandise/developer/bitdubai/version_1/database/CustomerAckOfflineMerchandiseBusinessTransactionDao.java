@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOfflineMerchandiseBusinessTransactionDatabaseException;
@@ -404,7 +405,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
-    public void updateContractTransactionStatus(String contractHash,
+    /*public void updateContractTransactionStatus(String contractHash,
                                                 ContractTransactionStatus contractTransactionStatus)
             throws
             UnexpectedResultReturnedFromDatabaseException,
@@ -426,6 +427,60 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
+    }*/
+
+    /**
+     * This method updates the ContractTransactionStatus by a contractHash
+     * @param contractHash
+     * @param contractTransactionStatus
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus)
+            throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+
+            ObjectChecker.checkArgument(contractHash);
+
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+
+            databaseTable.addStringFilter(
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+
+            record.setStringValue(
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+
+            databaseTable.updateRecord(record);
+
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating databaseTableRecord from a BusinessTransactionRecord",
+                    "Unexpected results in database");
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Getting value from database",
+                    "Unexpected results in database");
+        }
+
     }
 
     /**
@@ -470,7 +525,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             CantGetContractListException {
         try{
             return getBusinessTransactionRecordList(
-                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                    ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch (CantGetContractListException exception) {
@@ -640,43 +695,42 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                 return null;
             }
             DatabaseTableRecord record = records.get(0);
-            businessTransactionRecord.setBrokerPublicKey(
-                    record.getStringValue(
-                            CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setContractHash(record.getStringValue(
-                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
-            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
-                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+
+            businessTransactionRecord.setTransactionId(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
-            businessTransactionRecord.setCustomerPublicKey(
-                    record.getStringValue(
-                            CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(
-                    record.getStringValue(
-                            CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
-                    ));
-            businessTransactionRecord.setTransactionId(
-                    record.getStringValue(
-                            CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
-            paymentAmount=record.getLongValue(
-                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_MERCHANDISE_MERCHANDISE_AMOUNT_COLUMN_NAME);
+
+            businessTransactionRecord.setTransactionHash(keyValue);
+            /*
+            businessTransactionRecord.setTransactionHash(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            paymentAmount=record.getLongValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                ACK_OFFLINE_MERCHANDISE_MERCHANDISE_AMOUNT_COLUMN_NAME);
             businessTransactionRecord.setPaymentAmount(paymentAmount);
-            paymentType= MoneyType.getByCode(record.getStringValue(
-                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME));
+
+            paymentType= MoneyType.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME));
             businessTransactionRecord.setPaymentType(paymentType);
-            currencyType= FiatCurrency.getByCode(record.getStringValue(
-                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME));
+
+            currencyType= FiatCurrency.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME));
             businessTransactionRecord.setCurrencyType(currencyType);
+            */
             return businessTransactionRecord;
+
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
@@ -773,7 +827,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
+//            checkDatabaseRecords(records);
             String value=records
                     .get(0)
                     .getStringValue(
