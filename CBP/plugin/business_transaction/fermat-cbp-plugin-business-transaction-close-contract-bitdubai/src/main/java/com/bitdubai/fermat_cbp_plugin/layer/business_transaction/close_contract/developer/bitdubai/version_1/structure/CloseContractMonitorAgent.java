@@ -346,32 +346,14 @@ public class CloseContractMonitorAgent implements
                 }
 
             } catch (CantGetContractListException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Cannot get the contract list from database");
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot get the contract list from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Unexpected result in database");
-            }  /*catch (CantSendBusinessTransactionHashException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }*/ catch (CantSendContractNewStatusNotificationException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Cannot send notification");
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
+            }   catch (CantSendContractNewStatusNotificationException e) {
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot send notification");
             } catch (CantConfirmNotificationReceptionException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Cannot send confirmation");
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot send confirmation");
             }
-
         }
 
         private void raiseNewContractClosedEvent() {
