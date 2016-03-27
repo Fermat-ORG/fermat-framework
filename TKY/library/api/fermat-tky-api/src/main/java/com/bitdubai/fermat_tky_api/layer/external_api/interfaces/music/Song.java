@@ -91,4 +91,10 @@ public interface Song {
      */
     String getOther();
 
+    /**
+     * Represents the song download URL.
+     * @return
+     */
+    String getDownloadUrl();
+
 }
