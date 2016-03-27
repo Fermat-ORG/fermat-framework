@@ -63,45 +63,28 @@ public class CloseContractTransactionManager implements CloseContractManager {
 
     @Override
     public void closeSaleContract(String contractHash) throws CantCloseContractException {
-        /*CloseContractBrokerContractManager closeContractBrokerContractManager=
-                new CloseContractBrokerContractManager(
-                        this.customerBrokerContractSaleManager,
-                        this.transactionTransmissionManager,
-                        this.closeContractBusinessTransactionDao);*/
+
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
-            CustomerBrokerContractSale customerBrokerContractSale =
-                    this.customerBrokerContractSaleManager.
-                            getCustomerBrokerContractSaleForContractId(contractHash);
-            this.closeContractBusinessTransactionDao.persistContractRecord(
-                    customerBrokerContractSale,
-                    ContractType.SALE);
+            CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.
+                    getCustomerBrokerContractSaleForContractId(contractHash);
+
+            this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractSale, ContractType.SALE);
+
         } catch (CantGetListCustomerBrokerContractSaleException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Sale Contract", "Cannot get the Sale contract");
 
-
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Sale Contract",
-                    "Cannot get the Sale contract");
         } catch (CantInsertRecordException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Sale Contract",
-                    "Cannot insert the contract record in database");
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Sale Contract", "Cannot insert the contract record in database");
+
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Sale Contract",
-                    "The contract hash/Id is null");
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Sale Contract", "The contract hash/Id is null");
         }
     }
 
@@ -109,11 +92,14 @@ public class CloseContractTransactionManager implements CloseContractManager {
     public void closePurchaseContract(String contractHash) throws CantCloseContractException {
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
-            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.
+                    getCustomerBrokerContractPurchaseForContractId(contractHash);
+
             ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
-            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode())) {
+
+            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
                 this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
-            } else {
+            else {
                 throw new CantCloseContractException("The contract with the hash\n" + contractHash +
                         "\n cannot be closed, because the ContractStatus is " + contractStatus);
             }
