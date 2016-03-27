@@ -207,11 +207,12 @@ public class TokenlyPluginRoot extends AbstractPlugin {
         try{
             //Test data
             MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
-                    "perezilla",
-                    "milestone");
+                    "username",
+                    "password");
             //X-Tokenly-Auth-Nonce
-            long nonce = System.currentTimeMillis();
-            String url = "https://music-stage.tokenly.com/api/v1/music/song/download/d588a0b6-99a6-4b8b-8f08-bef9372818fa";
+            long nonce = TokenlyAuthenticationComponentGenerator.convertTimestamp(
+                    System.currentTimeMillis());
+            String url = "https://music-stage.tokenly.com/api/v1/music/mysongs";
             String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
                     musicUser,
                     url,
