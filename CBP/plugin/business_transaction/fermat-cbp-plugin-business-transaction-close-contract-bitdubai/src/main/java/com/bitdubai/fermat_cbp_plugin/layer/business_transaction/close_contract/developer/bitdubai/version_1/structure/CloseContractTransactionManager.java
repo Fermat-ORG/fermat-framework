@@ -107,84 +107,61 @@ public class CloseContractTransactionManager implements CloseContractManager {
 
     @Override
     public void closePurchaseContract(String contractHash) throws CantCloseContractException {
-        /*CloseContractCustomerContractManager closeContractCustomerContractManager=
-                new CloseContractCustomerContractManager(
-                        this.customerBrokerContractPurchaseManager,
-                        this.transactionTransmissionManager,
-                        this.closeContractBusinessTransactionDao);*/
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
-            CustomerBrokerContractPurchase customerBrokerContractPurchase =
-                    this.customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(contractHash);
+            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
             ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
             if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode())) {
-                this.closeContractBusinessTransactionDao.persistContractRecord(
-                        customerBrokerContractPurchase,
-                        ContractType.PURCHASE);
+                this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
             } else {
-                throw new CantCloseContractException("The contract with the hash\n" +
-                        contractHash + "\n cannot be closed, because the ContractStatus is " +
-                        contractStatus);
+                throw new CantCloseContractException("The contract with the hash\n" + contractHash +
+                        "\n cannot be closed, because the ContractStatus is " + contractStatus);
             }
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Purchase Contract", "Cannot get the Purchase contract");
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Purchase Contract",
-                    "Cannot get the Purchase contract");
         } catch (CantInsertRecordException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Purchase Contract",
-                    "Cannot insert the contract record in database");
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantCloseContractException(e,
-                    "Closing Purchase Contract",
-                    "The contract hash/Id is null");
-        }
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Purchase Contract", "Cannot insert the contract record in database");
 
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCloseContractException(e, "Closing Purchase Contract", "The contract hash/Id is null");
+        }
     }
 
     @Override
-    public ContractTransactionStatus getCloseContractStatus(
-            String contractHash) throws
-            UnexpectedResultReturnedFromDatabaseException {
+    public ContractTransactionStatus getCloseContractStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
             return this.closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
         } catch (ObjectNotSetException e) {
-
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new UnexpectedResultReturnedFromDatabaseException(e,
-                    "Getting the contract transaction status",
-                    "The contract hash/Id is null");
+            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the contract transaction status", "The contract hash/Id is null");
         }
     }
-    /**
-     * This method returns the transaction completion date.
-     * If returns 0 the transaction is processing.
-     * @param contractHash
-     * @return
-     * @throws CantGetCompletionDateException
-     */
+
     @Override
     public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
-        //TODO to implement
-        return 0;
+        try {
+            ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
+            return this.closeContractBusinessTransactionDao.getCompletionDateByContractHash(contractHash);
+
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCompletionDateException(e, "Getting completion date", "Unexpected exception from database");
+
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCompletionDateException(e, "Getting completion date", "The contract hash argument is null");
+        }
     }
 }
