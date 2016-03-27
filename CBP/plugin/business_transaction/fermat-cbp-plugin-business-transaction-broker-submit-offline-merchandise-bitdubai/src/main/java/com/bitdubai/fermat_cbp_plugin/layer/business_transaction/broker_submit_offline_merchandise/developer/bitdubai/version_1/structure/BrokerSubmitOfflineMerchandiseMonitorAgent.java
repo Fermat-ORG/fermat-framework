@@ -44,6 +44,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -293,22 +294,27 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                  * Check if there is some transaction to crypto de stock
                  * The de stock condition is reading the ContractTransactionStatus in PENDING_ONLINE_DE_STOCK
                  */
-                List<BusinessTransactionRecord> pendingToDeStockTransactionList=
-                        brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
+                List<BusinessTransactionRecord> pendingToDeStockTransactionList= brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
                 MoneyType moneyType;
                 for(BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList){
+
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList()\n");
+
                     moneyType =pendingToDeStockTransaction.getPaymentType();
                     switch (moneyType){
                         case BANK:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - BANK\n");
                             executeBankDeStock(pendingToDeStockTransaction);
                             break;
                         case CRYPTO:
                             throw new CantSubmitMerchandiseException(
                                     "The currency type is CRYPTO, can't send crypto money from this plugin");
                         case CASH_DELIVERY:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH DELIVERY\n");
                             executeCashDeStock(pendingToDeStockTransaction);
                             break;
                         case CASH_ON_HAND:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH ON HAND\n");
                             executeCashDeStock(pendingToDeStockTransaction);
                             break;
                     }
@@ -316,45 +322,49 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 /**
                  * Check contract status to send. Broker Side
                  */
-                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
-                        brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
+
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
+                            ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED,
                             Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE , PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
                     //Updating the business transaction record
-                    pendingToSubmitNotificationRecord.setContractTransactionStatus(
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
-                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
-                            pendingToSubmitNotificationRecord);
+                    pendingToSubmitNotificationRecord.setContractTransactionStatus(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED);
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
                 }
 
                 /**
                  * Check pending notifications - Customer side
                  */
-                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
-                        brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotification(
+
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): "+contractHash+"\n");
+
+                    transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT,
-                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE ,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER
-                    );
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
                     //Updating the business transaction record
-                    pendingToSubmitConfirmationRecord.setContractTransactionStatus(
-                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
-                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
-                            pendingToSubmitConfirmationRecord);
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
+                        contractHash,
+                        ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT
+                    );
+//                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
                 }
                 /**
                  * Check if pending events
@@ -382,6 +392,12 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         e,
                         "Getting the Contract",
                         "Cannot get the contract list");
+            } catch (CantConfirmNotificationReception e) {
+                throw new CantSendContractNewStatusNotificationException(
+                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+                        e,
+                        "Sending confirm contract hash",
+                        "Error in Transaction Transmission Network Service");
             }
 
         }
@@ -452,68 +468,81 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
                 BusinessTransactionRecord businessTransactionRecord;
+
                 if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
+
+                    System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+
                     //This will happen in customer side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
-                            transactionTransmissionManager.getPendingTransactions(
-                                    Specialist.UNKNOWN_SPECIALIST);
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+
                         businessTransactionMetadata=record.getInformation();
                         contractHash=businessTransactionMetadata.getContractHash();
+
                         if(brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            contractTransactionStatus= brokerSubmitOfflineMerchandiseBusinessTransactionDao.
-                                    getContractTransactionStatus(contractHash);
+
+                            contractTransactionStatus= brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
+
                         }else{
-                            CustomerBrokerContractPurchase customerBrokerContractPurchase=
-                                    customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
-                                            contractHash);
+
+                            System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE - VAL\n");
+
+                            CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractPurchase);
-                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
-                                    customerBrokerContractPurchase);
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
-                                    contractHash,
-                                    ContractStatus.MERCHANDISE_SUBMIT);
+                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
                             Date date=new Date();
-                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.
-                                    setCompletionDateByContractHash(contractHash, date.getTime());
+                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                             //TODO: I'm going to set BANK, I need to look a better way to set this
                             raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
+
                         }
+
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
-                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId,
-                            EventStatus.NOTIFIED);
-                }
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
-                    //This will happen in broker side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
-                            transactionTransmissionManager.getPendingTransactions(
-                                    Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            businessTransactionRecord =
-                                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.
-                                            getBusinessTransactionRecord(contractHash);
-                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED.getCode())){
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
-                                        contractHash,
-                                        ContractStatus.PAYMENT_SUBMIT);
-                                Date date=new Date();
-                                brokerSubmitOfflineMerchandiseBusinessTransactionDao.
-                                        setCompletionDateByContractHash(contractHash, date.getTime());
-                                raisePaymentConfirmationEvent(contractHash, businessTransactionRecord.getPaymentType());
-                            }
-                        }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
-                    }
+
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
+
+
+                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
+
+                    System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
+
+                    //This will happen in broker side
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+
+                        businessTransactionMetadata=record.getInformation();
+                        contractHash=businessTransactionMetadata.getContractHash();
+
+                        if(brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+
+                            System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
+
+                            businessTransactionRecord = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getBusinessTransactionRecord(contractHash);
+                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
+
+                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED.getCode())){
+                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                Date date=new Date();
+                                brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                raisePaymentConfirmationEvent(contractHash, businessTransactionRecord.getPaymentType());
+                            }
+
+                        }
+
+                        transactionTransmissionManager.confirmReception(record.getTransactionID());
+                    }
+
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
+                }
+
                 //TODO: look a better way to deal with this exceptions
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(

@@ -308,9 +308,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                                 "The Broker merchandise is crypto.");
                     }
 
-                        return MoneyType.getByCode(clauseValue);
-                    }
+                    return MoneyType.getByCode(clauseValue);
                 }
+            }
             throw new CantGetBrokerMerchandiseException(
                     "The Negotiation clauses doesn't include the broker payment method");
             } catch (InvalidParameterException e) {
