@@ -422,6 +422,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 for(BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList){
                     String cryptoTransactionHash=intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(onBlockchainContractRecord.getTransactionId()));
                     cryptoStatus=outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
+                    //TODO: revisar estos cambios con alguien que se sepa los estados de las transacciones en la blockchain
+                    //onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
                     onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
                     onBlockchainContractRecord.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION);
