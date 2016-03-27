@@ -69,8 +69,14 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         endIndicator = (TextView) layout.findViewById(R.id.end_indicator_text);
 
         final BarChart barChart = (BarChart) layout.findViewById(R.id.bar_chart);
+
+        BarData BD = getChartData();
+
+        if( BD != null){
+            barChart.setData(BD);
+        }
+
         barChart.setDescription("");
-        barChart.setData(getChartData());
         barChart.setDragEnabled(true);
         barChart.setDrawGridBackground(false);
         barChart.setPinchZoom(false);
@@ -89,11 +95,9 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
         if(lastItemPosition > 3) {
             barChart.moveViewToX(lastItemPosition - 3);
-        }else{
-            barChart.moveViewToX(lastItemPosition);
+            barChart.highlightValue(lastItemPosition, 0);
         }
 
-        barChart.highlightValue(lastItemPosition, 0);
 
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -129,67 +133,73 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
     private BarData getChartData() {
 
-        List<BarEntry> entries = new ArrayList<>();
-        List<String> xVals = new ArrayList<>();
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-
-        int d = calendar.getMaximum(Calendar.DAY_OF_MONTH);
-
-        // creando los dias del mes
-        for (int i = 0; i <= d; i++) {
-            if( i==0){
-                BarEntry entry = new BarEntry(0, 0);
-                entries.add(entry);
-                xVals.add("");
-                colors.add(Color.parseColor("#2A2F44"));
-            }else{
-                BarEntry entry = new BarEntry(0, i);
-                entries.add(entry);
-                xVals.add(String.valueOf(i));
-                colors.add(Color.parseColor("#2A2F44"));
-            }
-        }
-
-        BarEntry entry = new BarEntry(0, (d+1));
-        entries.add(entry);
-        xVals.add("");
-
-        // poniendo los valores en los dias adecuados
         if (stockTransactions != null) {
 
-            for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+            if ( !stockTransactions.isEmpty() ) {
 
-                calendar.setTimeInMillis(transaction.getTimestamp());
+                List<BarEntry> entries = new ArrayList<>();
+                List<String> xVals = new ArrayList<>();
+                ArrayList<Integer> colors = new ArrayList<>();
 
-                lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
-                int index = lastItemPosition;
+                Calendar calendar = Calendar.getInstance();
 
-                float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
+                int d = calendar.getMaximum(Calendar.DAY_OF_MONTH);
 
-                entries.get(index).setVal(runningAvailableBalance);
+                // creando los dias del mes
+                for (int i = 0; i <= d; i++) {
+                    if (i == 0) {
+                        BarEntry entry = new BarEntry(0, 0);
+                        entries.add(entry);
+                        xVals.add("");
+                        colors.add(Color.parseColor("#2A2F44"));
+                    } else {
+                        BarEntry entry = new BarEntry(0, i);
+                        entries.add(entry);
+                        xVals.add(String.valueOf(i));
+                        colors.add(Color.parseColor("#2A2F44"));
+                    }
+                }
 
-                map.put(lastItemPosition, transaction);
+                BarEntry entry = new BarEntry(0, (d + 1));
+                entries.add(entry);
+                xVals.add("");
 
-                if (runningAvailableBalance > limitVal)
-                    colors.set(index, Color.parseColor("#FF3E4664"));
+                // poniendo los valores en los dias adecuados
+
+                for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+
+                    calendar.setTimeInMillis(transaction.getTimestamp());
+
+                    lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
+                    int index = lastItemPosition;
+
+                    float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
+
+                    entries.get(index).setVal(runningAvailableBalance);
+
+                    map.put(lastItemPosition, transaction);
+
+                    if (runningAvailableBalance > limitVal)
+                        colors.set(index, Color.parseColor("#FF3E4664"));
+                }
+
+                putDataInIndicators(lastItemPosition);
+
+                // configurando el DataSet
+                BarDataSet dataSet = new BarDataSet(entries, "stock");
+                dataSet.setDrawValues(false);
+                dataSet.setColors(colors);
+                dataSet.setHighLightColor(Color.WHITE);
+                dataSet.setHighLightAlpha(200);
+                dataSet.setBarSpacePercent(50);
+
+                BarData barData = new BarData(xVals, dataSet);
+                barData.setHighlightEnabled(true);
+                return barData;
             }
         }
 
-        putDataInIndicators(lastItemPosition);
-
-        // configurando el DataSet
-        BarDataSet dataSet = new BarDataSet(entries, "stock");
-        dataSet.setDrawValues(false);
-        dataSet.setColors(colors);
-        dataSet.setHighLightColor(Color.WHITE);
-        dataSet.setHighLightAlpha(200);
-        dataSet.setBarSpacePercent(50);
-
-        BarData barData = new BarData(xVals, dataSet);
-        barData.setHighlightEnabled(true);
-        return barData;
+        return null;
     }
 
     private LimitLine getLimitLine() {
@@ -208,26 +218,33 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
     private void putDataInIndicators(int xIndex) {
 
-        CryptoBrokerStockTransaction transaction = map.get(xIndex);
+        if( !map.isEmpty()) {
+            CryptoBrokerStockTransaction transaction = map.get(xIndex);
 
-        if (transaction != null) {
-            endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
-        }else{
-            endIndicator.setText(numberFormat.format(""));
-        }
+            if (transaction != null) {
+                endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
+            } else {
+                endIndicator.setText(numberFormat.format(""));
+            }
 
-        CryptoBrokerStockTransaction transaction2 = null;
+            CryptoBrokerStockTransaction transaction2 = null;
 
-        if( xIndex > 0 ){
-            transaction2 = map.get(xIndex-1);
-        }else{
-            transaction2 = transaction;
-        }
+            if (xIndex > 0) {
+                transaction2 = map.get(xIndex - 1);
+            } else {
+                transaction2 = transaction;
+            }
 
-        if (transaction2 != null) {
-            startIndicator.setText(numberFormat.format(transaction2.getRunningAvailableBalance()));
+            if (transaction2 != null) {
+                startIndicator.setText(numberFormat.format(transaction2.getRunningAvailableBalance()));
+            } else {
+                startIndicator.setText(numberFormat.format(""));
+            }
         }else{
             startIndicator.setText(numberFormat.format(""));
+            endIndicator.setText(numberFormat.format(""));
+
         }
+
     }
 }
