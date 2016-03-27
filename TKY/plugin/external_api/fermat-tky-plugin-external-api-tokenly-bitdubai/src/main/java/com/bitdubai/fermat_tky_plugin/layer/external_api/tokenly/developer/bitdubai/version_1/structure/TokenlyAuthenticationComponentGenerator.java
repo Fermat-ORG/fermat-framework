@@ -5,7 +5,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.exceptions.CantGenerateTokenlyAuthSignatureException;
 
 
-import org.bouncycastle.util.encoders.Base64;
+import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -23,10 +23,29 @@ public class TokenlyAuthenticationComponentGenerator {
     private static final String ENCODE_KEY_CHARSET_NAME = "UTF-8";
     private static final String TEXT_CHARSET_NAME = "ASCII";
 
+    /**
+     * This method returns a String that represents a Auth-Signature for Tokenly protected API as is
+     * described in:
+     * <html>
+     *     <a href='https://github.com/tokenly/hmac-auth/blob/master/README.md'>
+     *         https://github.com/tokenly/hmac-auth/blob/master/README.md
+     *     </a>
+     * </html>
+     * Please check this document to understand the signature generation.
+     * Note: you must to use a converted nonce according the encryption method according the
+     * document present in this comment. Please, use convertTimestamp(long timestamp) method
+     * to generate the convertedNonce.
+     * @param user
+     * @param requestUrl
+     * @param convertedNonce
+     * @param tokenlyRequestMethod
+     * @return
+     * @throws CantGenerateTokenlyAuthSignatureException
+     */
     public static String generateTokenlyAuthSignature(
             User user,
             String requestUrl,
-            long nonce,
+            long convertedNonce,
             TokenlyRequestMethod tokenlyRequestMethod) throws
             CantGenerateTokenlyAuthSignatureException {
         try{
@@ -36,14 +55,13 @@ public class TokenlyAuthenticationComponentGenerator {
             //API secret key
             String apiSecretKey = user.getApiSecretKey();
             //Request message (in this version I don't use parameters)
-            String requestMessage = "{"+tokenlyRequestMethod.getCode()+"}\n{"+requestUrl+"}\n{}\n{"+apiToken+"}\n{"+nonce+"}";
+            String requestMessage = tokenlyRequestMethod.getCode()+"\n"+requestUrl+"\n{}\n"+apiToken+"\n"+convertedNonce;
             //Calculate Sha-256 HMAC
-            String shaEncodedMessage = calculateSha256HMAC(
+            byte[] shaEncodedMessage = calculateSha256HMAC(
                     requestMessage,
                     apiSecretKey);
             //Base64 encode
-            byte[] bytes = shaEncodedMessage.getBytes();
-            String authSignature = Base64.toBase64String(bytes);
+            String authSignature = Base64.encodeToString(shaEncodedMessage, Base64.DEFAULT);
             return authSignature;
         } catch (NoSuchAlgorithmException e) {
             throw new CantGenerateTokenlyAuthSignatureException(
@@ -72,7 +90,7 @@ public class TokenlyAuthenticationComponentGenerator {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    private static String calculateSha256HMAC(
+    private static byte[] calculateSha256HMAC(
             String text,
             String encodeKey) throws
             UnsupportedEncodingException,
@@ -87,17 +105,25 @@ public class TokenlyAuthenticationComponentGenerator {
         mac.init(secretKeySpec);
         //Encode text
         byte[] bytes = mac.doFinal(text.getBytes(TEXT_CHARSET_NAME));
-        StringBuffer hash = new StringBuffer();
-        String hex;
-        for (byte element : bytes) {
-            hex = Integer.toHexString(0xFF & element);
-            if (hex.length() == 1) {
-                hash.append('0');
-            }
-            hash.append(hex);
-        }
-        String encoded = hash.toString();
-        return encoded;
+        return bytes;
+    }
+
+    /**
+     * This method convert the timestamp according the encryption method described in:
+     * <html>
+     *     <a href='https://github.com/tokenly/hmac-auth/blob/master/README.md'>
+     *         https://github.com/tokenly/hmac-auth/blob/master/README.md
+     *     </a>
+     * </html>
+     * @param timestamp
+     * @return
+     */
+    public static long convertTimestamp(long timestamp){
+        /**
+         * I decided to implement the nonce conversion in a separated method because this can be
+         * change in the future.
+         */
+        return timestamp/1000L;
     }
 
 }
