@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -68,9 +69,12 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -479,6 +483,64 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return transactions;
     }
 
+    public void dataTestStockHistory(Currency money, MoneyType type, int initRandom){
+
+        BigDecimal amount;
+        BigDecimal availableBalance;
+        BigDecimal bookBalance;
+        BigDecimal priceReference;
+
+        DatabaseTable table = getStockWalletTransactionTable();
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, money.getCode(), DatabaseFilterType.EQUAL);
+        try {
+            table.loadToMemory();
+            if(table.getRecords().isEmpty()){
+
+                Calendar calendar = Calendar.getInstance();
+
+                int actualDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                Random random = new Random();
+                for (int i = 1; i <= actualDayOfMonth; i++) {
+                    random.setSeed(i * initRandom);
+
+                    calendar.set(Calendar.DAY_OF_MONTH, i);
+                    calendar.set(Calendar.HOUR, 5);
+
+                    // System.out.println("VLZ: Fecha dia [" + i + "]: " + calendar.getTime() + " = " + calendar.getTimeInMillis());
+
+                    DatabaseTableRecord record2   = table.getEmptyRecord();
+
+                    amount = new BigDecimal(random.nextDouble() * 100);
+                    availableBalance = new BigDecimal(random.nextDouble() * 100);
+                    bookBalance = new BigDecimal(random.nextDouble() * 100);
+                    priceReference = new BigDecimal(random.nextDouble() * 100);
+
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME, amount.toString());
+                    record2.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableBalance.floatValue());
+                    record2.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME, bookBalance.floatValue());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME, priceReference.toString());
+
+                    record2.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, UUID.randomUUID());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, money.getCode());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME, type.getCode());
+                    record2.setLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, calendar.getTimeInMillis());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME, "Memo "+i);
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, TransactionType.CREDIT.getCode());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, OriginTransaction.SALE.getCode());
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, "OriginTransactionId "+i);
+                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, String.valueOf(true));
+
+                    try {
+                        table.insertRecord(record2);
+                    } catch (CantInsertRecordException e) {}
+                }
+            }
+        } catch (CantLoadTableToMemoryException e) {}
+
+    }
+
 
     public  List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
         DatabaseTable databaseTable = getStockWalletTransactionTable();
@@ -486,7 +548,11 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         CryptoCurrency cryptoCurrency = null;
         Currency fermatEnum = null;
 
-        long dateend = (offset*1000*60*60*24)+timeStamp;
+        long dateend = (1000 * 60 * 60 * 24);
+
+        dateend *= offset;
+
+        dateend += Math.abs(timeStamp);
 
         if (MoneyType.CRYPTO != moneyType) {
             try {
@@ -507,10 +573,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, fermatEnum.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
 
-        databaseTable.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-
-        // Log.i("VLZ", "Query: "+query);
+        databaseTable.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         List<CryptoBrokerStockTransaction> transactions = new ArrayList<>();
 
@@ -519,7 +582,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             Collection<DatabaseTableRecord> records = databaseTable.getRecords();
             for (DatabaseTableRecord record : records) {
                 Long date = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
-                if( date >= timeStamp && date <= dateend){
+
+                if( timeStamp <= date && date <= dateend ){
 
                     if (MoneyType.CRYPTO != MoneyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME))) {
                         fiatCurrency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
@@ -554,6 +618,11 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
                     transactions.add(cryptoBrokerStockTransaction);
 
+                }else{
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(date);
+                    System.out.println("VLZ: Fuera de rango, timeStamp: [" + timeStamp + "], date: [" + date + "], dateend: [" + dateend + "]");
+                    System.out.println("VLZ:\t date: [" + c.getTime() + "]");
                 }
 
             }
