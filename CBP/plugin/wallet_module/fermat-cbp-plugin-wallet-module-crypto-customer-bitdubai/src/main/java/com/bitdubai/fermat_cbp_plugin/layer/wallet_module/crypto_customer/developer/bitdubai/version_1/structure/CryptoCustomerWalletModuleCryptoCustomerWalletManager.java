@@ -346,15 +346,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 }
             }
 
-
-            //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-
             return filteredList;
 
         } catch (Exception ex) {
@@ -396,12 +387,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO:Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, false, null, "");
-            waitingForBroker.add(contract);
-
             return waitingForBroker;
 
         } catch (Exception ex) {
@@ -443,11 +428,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO: Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, false, null, "");
-            waitingForBroker.add(contract);
 
             return waitingForBroker;
 

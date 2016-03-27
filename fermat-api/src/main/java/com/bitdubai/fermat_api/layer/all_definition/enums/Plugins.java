@@ -240,6 +240,7 @@ public enum Plugins implements FermatPluginsEnum {
     ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
+    TRANSFER_INTRA_WALLET        ("TIW"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
@@ -384,6 +385,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
+            case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
             case "PBL"  :   return PUBLISHER                ;
             case "RP"   :   return REDEEM_POINT             ;
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
