@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -68,9 +69,12 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -479,14 +483,17 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return transactions;
     }
 
-
     public  List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
         DatabaseTable databaseTable = getStockWalletTransactionTable();
         FiatCurrency fiatCurrency = null;
         CryptoCurrency cryptoCurrency = null;
         Currency fermatEnum = null;
 
-        long dateend = (offset*1000*60*60*24)+timeStamp;
+        long dateend = (1000 * 60 * 60 * 24);
+
+        dateend *= offset;
+
+        dateend += Math.abs(timeStamp);
 
         if (MoneyType.CRYPTO != moneyType) {
             try {
@@ -507,10 +514,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, fermatEnum.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
 
-        databaseTable.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-
-        // Log.i("VLZ", "Query: "+query);
+        databaseTable.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         List<CryptoBrokerStockTransaction> transactions = new ArrayList<>();
 
@@ -519,7 +523,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             Collection<DatabaseTableRecord> records = databaseTable.getRecords();
             for (DatabaseTableRecord record : records) {
                 Long date = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
-                if( date >= timeStamp && date <= dateend){
+
+                if( timeStamp <= date && date <= dateend ){
 
                     if (MoneyType.CRYPTO != MoneyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME))) {
                         fiatCurrency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
