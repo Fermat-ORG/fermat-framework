@@ -9,6 +9,10 @@ public class CantAddNewTimeOutAgentException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error adding a new Time Out Agent to the pool.";
 
+    public CantAddNewTimeOutAgentException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantAddNewTimeOutAgentException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
