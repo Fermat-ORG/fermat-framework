@@ -73,6 +73,5 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
 
-//project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
