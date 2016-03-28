@@ -54,7 +54,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -408,7 +408,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         e,
                         "Getting the Contract",
                         "Cannot get the contract list");
-            } catch (CantConfirmNotificationReception e) {
+            } catch (CantConfirmNotificationReceptionException e){
                 throw new CantSendContractNewStatusNotificationException(
                         CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                         e,
@@ -427,7 +427,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
             BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): \n" +
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock(): \n" +
                     " - bankMoneyDeStockRecord.getPublicKeyActor(): "+bankMoneyDeStockRecord.getPublicKeyActor()+",\n" +
                     " - bankMoneyDeStockRecord.getFiatCurrency(): "+bankMoneyDeStockRecord.getFiatCurrency()+",\n" +
                     " - bankMoneyDeStockRecord.getCbpWalletPublicKey(): "+bankMoneyDeStockRecord.getCbpWalletPublicKey()+",\n" +
