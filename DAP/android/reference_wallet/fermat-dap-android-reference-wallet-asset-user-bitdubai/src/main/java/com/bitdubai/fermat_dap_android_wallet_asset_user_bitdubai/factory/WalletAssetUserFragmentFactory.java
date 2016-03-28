@@ -65,8 +65,8 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     currentFragment = new SettingsNotificationsFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT:
-                    currentFragment = new AssetSellFragment();
-                    //currentFragment = new UserSellAssetFragment();
+//                    currentFragment = new AssetSellFragment();
+                    currentFragment = new UserSellAssetFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_FRAGMENT:
                     currentFragment = new AssetSellSelectUserFragment();
