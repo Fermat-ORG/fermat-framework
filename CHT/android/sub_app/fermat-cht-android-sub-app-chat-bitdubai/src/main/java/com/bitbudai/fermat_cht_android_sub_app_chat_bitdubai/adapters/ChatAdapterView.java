@@ -146,7 +146,7 @@ public class ChatAdapterView extends LinearLayout {
                 if(cht!=null)
                     chatId = cht.getChatId();
                 else chatId=null;
-                appSession.setData(ChatSession.CONTACT_DATA, null);
+                //appSession.setData(ChatSession.CONTACT_DATA, null);
             }
         }catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -218,8 +218,6 @@ public class ChatAdapterView extends LinearLayout {
                     long nanos = (mess.getMessageDate().getNanos() / 1000000);
                     long milliseconds = timemess + nanos;
                     Date dated= new java.util.Date(milliseconds);
-                    //String datef= DateFormat.getDateTimeInstance().format(dated);
-                    //Date to =new Date(datef);
                     if (Validate.isDateToday(dated)) {
                         String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
                         msg.setDate(S);
@@ -234,9 +232,9 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-            }else{
-                Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
-            }
+            }//else{
+             //   Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
+            //}
         //}catch (CantSaveMessageException e) {
            // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (CantGetMessageException e) {
@@ -276,6 +274,8 @@ public class ChatAdapterView extends LinearLayout {
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+        //messagesContainer.setAdapter(adapter);
         //messageET.setText("Type message");
         //TextView meLabel = (TextView) findViewById(R.id.meLbl);
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
@@ -351,19 +351,7 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
-                        //sendMessageAsync.cancel(true);
                         sendMessageAsync.execute(message);
-                        /*Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    chatManager.sendMessage(message);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        thread.start();*/
                     } else {
                         /**
                          * This case is when I got an unregistered contact, I'll set the
@@ -374,9 +362,6 @@ public class ChatAdapterView extends LinearLayout {
                                 contactId);
                         PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
-                        //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        //chat.setRemoteActorPublicKey(remotePk);
-                        //chat.setRemoteActorType(remotePCT);
                         chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
@@ -392,7 +377,6 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
-                        Calendar c = Calendar.getInstance(Locale.getDefault());
                         /**
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
@@ -414,18 +398,7 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactId);
                         chatManager.saveMessage(message);
-                        sendMessageAsync.execute(message);
-//                        Thread thread = new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
-//                                    chatManager.sendMessage(message);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                        thread.start();
+                        sendMessageAsync.execute(message);//
                         //If everything goes OK, we save the chat in the fragment session.
                         chatSession.setData("whocallme", "chatlist");
                         chatSession.setData(
@@ -444,7 +417,6 @@ public class ChatAdapterView extends LinearLayout {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setId(UUID.randomUUID());//dummy
                     chatMessage.setMessage(messageText);
-                    //chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                     String S = new SimpleDateFormat("HH:mm").format(new Date());
                     chatMessage.setDate(S);
                     chatMessage.setMe(true);
@@ -453,8 +425,6 @@ public class ChatAdapterView extends LinearLayout {
                     messagesContainer.setAdapter(adapter);
                     displayMessage(chatMessage);
                     System.out.println("*** 12345 case 1:send msg in android layer" + new Timestamp(System.currentTimeMillis()));
-
-
                 } catch (CantSaveMessageException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TransactionsFragment</string>
+
+    <string name="to_label">To:</string>
+    <string name="from_label">From:</string>
+    <string name="status_description_label">Status</string>
+
+    <string name="transaction_to">Amazon</string>
+    <string name="transaction_from">My Account</string>
+    <string name="transaction_date">June, 21, 2016</string>
+    <string name="transaction_state">Pending</string>
+    <string name="transaction_note">Pending Payment</string>
+    <string name="transaction_amount">120.000</string>
+    <string name="transaction_unit">$</string>
+    <string name="transaction_sign">-</string>
+</resources>

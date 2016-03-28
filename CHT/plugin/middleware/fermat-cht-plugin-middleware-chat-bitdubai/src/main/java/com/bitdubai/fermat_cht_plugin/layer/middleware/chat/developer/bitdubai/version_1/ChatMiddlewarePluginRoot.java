@@ -363,15 +363,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             );
 
             /**
-             * Init event recorder service.
-             */
-            ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
-                    chatMiddlewareDatabaseDao,
-                    eventManager,
-                    errorManager);
-            chatMiddlewareRecorderService.start();
-
-            /**
              * Init monitor Agent
              */
             ChatMiddlewareMonitorAgent openContractMonitorAgent=new ChatMiddlewareMonitorAgent(
@@ -385,6 +376,18 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     broadcaster,
                     pluginFileSystem);
             openContractMonitorAgent.start();
+
+            /**
+             * Init event recorder service.
+             */
+            ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
+                    chatMiddlewareDatabaseDao,
+                    eventManager,
+                    errorManager,
+                    openContractMonitorAgent);
+            chatMiddlewareRecorderService.start();
+
+
 
 
 

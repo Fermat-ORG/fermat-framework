@@ -217,6 +217,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onBackPressed() {
+        onBackPressedNotificate();
         onControlledActivityBack(null);
     }
 
@@ -231,6 +232,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
                 Activity activity = appStructure.getLastActivity();
+                fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
                 loadBasicUI(activity, fermatAppConnection);
                 hideBottonIcons();
                 paintScreen(activity);

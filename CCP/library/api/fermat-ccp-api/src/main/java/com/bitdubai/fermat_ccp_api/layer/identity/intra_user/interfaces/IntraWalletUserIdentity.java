@@ -3,11 +3,13 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
+import java.io.Serializable;
+
 /**
  * The interface <code>IntraWalletUser</code>
  * defines the methods related to the extraction of the information of an intra user
  */
-public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation {
+public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,Serializable {
 
     /**
      * The method <code>getPhrase</code> returns the phrase created by the intra user

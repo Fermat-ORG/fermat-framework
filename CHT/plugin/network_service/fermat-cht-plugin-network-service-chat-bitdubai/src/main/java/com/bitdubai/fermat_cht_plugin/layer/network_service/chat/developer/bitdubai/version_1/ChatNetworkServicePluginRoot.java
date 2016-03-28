@@ -244,7 +244,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 //                            chatMetadataRecord.getTransactionId().toString()
 //                    );
 
-                    launchIncomingChatNotification(chatMetadataRecord.getChatId());
+
+                    launchIncomingChatNotification(chatMetadataRecord);
 //                    sendChatMessageNewStatusNotification(
 //                            chatMetadataRecord.getRemoteActorPublicKey(),
 //                            chatMetadataRecord.getRemoteActorType(),
@@ -258,27 +259,24 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + chatMetadataRecord.getLocalActorPublicKey());
                     break;
                 case TRANSACTION_STATUS_UPDATE:
-                    System.out.println("12345 UPDATE RECIBIDO");
                     DistributionStatus distributionStatus = (messageData.has(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class) : null;
                     MessageStatus messageStatus = (messageData.has(ChatTransmissionJsonAttNames.MESSAGE_STATUS)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MESSAGE_STATUS).getAsString(), MessageStatus.class) : null;
                     ChatProtocolState chatProtocolState = (messageData.has(ChatTransmissionJsonAttNames.PROTOCOL_STATE)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.PROTOCOL_STATE).getAsString(), ChatProtocolState.class) : null;
-                    UUID chatID = (messageData.has(ChatTransmissionJsonAttNames.ID_CHAT)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class) : null;
-                    UUID transacionID = (messageData.has(ChatTransmissionJsonAttNames.TRANSACTION_ID)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.TRANSACTION_ID).getAsString(), UUID.class) : null;
+//                    UUID chatID = (messageData.has(ChatTransmissionJsonAttNames.ID_CHAT)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.ID_CHAT).getAsString(), UUID.class) : null;
+//                    UUID transacionID = (messageData.has(ChatTransmissionJsonAttNames.TRANSACTION_ID)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.TRANSACTION_ID).getAsString(), UUID.class) : null;
                     UUID responseTo = (messageData.has(ChatTransmissionJsonAttNames.RESPONSE_TO)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.RESPONSE_TO).getAsString(), UUID.class) : null;
                     /*
                      * Get the ChatMetadataRecord
                      */
 
                     if(responseTo != null) {
-                        System.out.println("12345 UPDATE RECIBIDO 1");
                         chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responseTo);
 
                         if (chatMetadataRecord != null) {
-                            System.out.println("12345 UPDATE RECIBIDO 2");
+                            System.out.println("12345 UPDATE RECIBIDO MENSAJE == "+chatMetadataRecord.getMessage() + " MESSAGE STATUS == "+messageStatus);
                             chatMetadataRecord.setChatId(chatMetadataRecord.getChatId());
 
                             if (chatProtocolState == ChatProtocolState.DONE) {
-                                System.out.println("12345 UPDATE RECIBIDO 3");
                                 System.out.println("----------------------------\n" +
                                         "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DONE" + chatMetadataRecord.getLocalActorPublicKey()
                                         + "\n-------------------------------------------------");
@@ -303,9 +301,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 }
                                 System.out.println("----------------------------\n" +
                                         "MENSAJE ACCEPTED LLEGÓ BIEN: CASE OTHER" + chatMetadataRecord.getLocalActorPublicKey()
-                                        +"\n "+chatMetadataRecord.getMessageStatus()
                                         + "\n-------------------------------------------------");
-                                launcheIncomingChatStatusNotification(chatID);
+                                launcheIncomingChatStatusNotification(chatMetadataRecord);
 
                             }
 
@@ -454,9 +451,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     }
 
 
-    private void launchIncomingChatNotification(UUID chatID){
+    private void launchIncomingChatNotification(ChatMetadata chatMetadata){
         IncomingChat event = (IncomingChat) getEventManager().getNewEvent(EventType.INCOMING_CHAT);
-        event.setChatId(chatID);
+        event.setChatMetadata(chatMetadata);
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
     }
@@ -466,9 +463,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
     }
-    private void launcheIncomingChatStatusNotification(UUID chatID){
+    private void launcheIncomingChatStatusNotification(ChatMetadata chatMetadata){
         IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_STATUS);
-        event.setChatId(chatID);
+        event.setChatMetadata(chatMetadata);
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
     }
@@ -1025,7 +1022,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             if (chatId == null) {
                 throw new IllegalArgumentException("Argument chatId can not be null");
             }
-
 
 
         } catch (Exception e) {
