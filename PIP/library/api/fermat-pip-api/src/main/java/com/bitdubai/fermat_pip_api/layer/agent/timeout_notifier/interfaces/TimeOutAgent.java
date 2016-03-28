@@ -62,6 +62,12 @@ public interface TimeOutAgent {
     long getTimeOutDuration();
 
     /**
+     * Gets the amount of milliseconds pass since the start and the moment this method is requested.
+     * @return the amount of elapsed time for this agent in milliseconds.
+     */
+    long getElapsedTime();
+
+    /**
      * the agent given name for identification.
      * @return the Agent given name
      */

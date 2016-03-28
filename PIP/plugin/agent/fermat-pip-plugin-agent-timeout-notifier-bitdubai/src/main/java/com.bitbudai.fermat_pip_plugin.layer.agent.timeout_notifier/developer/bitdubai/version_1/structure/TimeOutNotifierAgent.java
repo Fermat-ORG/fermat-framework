@@ -15,6 +15,22 @@ import java.util.UUID;
  */
 public class TimeOutNotifierAgent implements TimeOutAgent {
 
+    private UUID uuid;
+    private String name;
+    private String description;
+    private FermatActor owner;
+    private long startTime;
+    private long timeOutDuration;
+    private long elapsedTime;
+    private AgentStatus status;
+    private ProtocolStatus protocolStatus;
+
+    /**
+     * default constructor
+     */
+    public TimeOutNotifierAgent() {
+    }
+
     @Override
     public boolean isRunning() {
         return false;
@@ -35,48 +51,98 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
 
     }
 
-    @Override
-    public UUID getUUID() {
-        return null;
-    }
+    /**
+     * Getters
+
+     */
 
     @Override
-    public long getEpochTime() {
-        return 0;
+    public UUID getUUID() {
+        return uuid;
     }
 
     @Override
     public long getTimeOutDuration() {
-        return 0;
+        return timeOutDuration;
     }
 
     @Override
     public String getAgentName() {
-        return null;
+        return name;
     }
 
     @Override
     public String getAgentDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public FermatActor getOwner() {
-        return null;
+        return owner;
     }
 
     @Override
     public AgentStatus getAgentStatus() {
-        return null;
+        return status;
     }
 
     @Override
     public ProtocolStatus getNotificationProtocolStatus() {
-        return null;
+        return protocolStatus;
     }
 
     @Override
     public void markEventNotificationAsRead() {
 
+    }
+
+    @Override
+    public long getEpochStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+
+    /**
+     * Setters
+     */
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOwner(FermatActor owner) {
+        this.owner = owner;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setTimeOutDuration(long timeOutDuration) {
+        this.timeOutDuration = timeOutDuration;
+    }
+
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    public void setStatus(AgentStatus status) {
+        this.status = status;
+    }
+
+    public void setProtocolStatus(ProtocolStatus protocolStatus) {
+        this.protocolStatus = protocolStatus;
     }
 }

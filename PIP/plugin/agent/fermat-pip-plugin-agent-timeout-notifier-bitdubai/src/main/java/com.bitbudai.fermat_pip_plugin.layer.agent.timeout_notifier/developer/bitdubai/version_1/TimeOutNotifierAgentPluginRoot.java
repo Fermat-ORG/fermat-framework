@@ -60,7 +60,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("***New Timeout Notifier started...***");
+
     }
 
 
