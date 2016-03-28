@@ -35,6 +35,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -111,6 +112,9 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     referencePrice,
                     fiatCurrencyType,
                     merchandiseType);
+
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - MANAGER - submitMerchandise() AMOUNT: "+amount+")\n");
+
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
@@ -301,16 +305,17 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
+//                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())){
                     clauseValue=clause.getValue();
                     if(clauseValue.equals(MoneyType.CRYPTO)){
                         throw new CantGetBrokerMerchandiseException(
                                 "The Broker merchandise is crypto.");
                     }
 
-                        return MoneyType.getByCode(clauseValue);
-                    }
+                    return MoneyType.getByCode(clauseValue);
                 }
+            }
             throw new CantGetBrokerMerchandiseException(
                     "The Negotiation clauses doesn't include the broker payment method");
             } catch (InvalidParameterException e) {
@@ -338,7 +343,8 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())){
+//                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())){
                     clauseValue=clause.getValue();
                     return FiatCurrency.getByCode(clauseValue);
                 }
@@ -365,28 +371,31 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     private long getCryptoAmount(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
             CantGetAmountException {
-        try{
-            long cryptoAmount;
-            Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
+//        try{
+            long cryptoAmount = 0;
+            /*Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
+//                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY_QUANTITY.getCode())){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())){
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - MANAGER - getCryptoAmount() AMOUNT: "+clause.getValue()+")\n");
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
-            }
-            throw new CantGetAmountException(
-                    "The Negotiation clauses doesn't include the broker crypto amount");
-        } catch (CantGetListClauseException e) {
-            throw new CantGetAmountException(
-                    e,
-                    "Getting the broker amount",
-                    "Cannot get the clauses list");
-        } catch (InvalidParameterException e) {
-            throw new CantGetAmountException(
-                    e,
-                    "Getting the broker amount",
-                    "There is an error parsing a String to long.");
-        }
+            }*/
+            return cryptoAmount;
+//            throw new CantGetAmountException(
+//                    "The Negotiation clauses doesn't include the broker crypto amount");
+//        } catch (CantGetListClauseException e) {
+//            throw new CantGetAmountException(
+//                    e,
+//                    "Getting the broker amount",
+//                    "Cannot get the clauses list");
+//        } catch (InvalidParameterException e) {
+//            throw new CantGetAmountException(
+//                    e,
+//                    "Getting the broker amount",
+//                    "There is an error parsing a String to long.");
+//        }
     }
 
     /**
@@ -478,6 +487,28 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     e,
                     "Getting completion date",
                     "The contract hash argument is null");
+        }
+    }
+
+    /**
+     * This method parse a String object to a long object
+     *
+     * @param stringValue
+     *
+     * @return
+     *
+     * @throws InvalidParameterException
+     */
+    public double parseToDouble(String stringValue) throws InvalidParameterException {
+        if (stringValue == null) {
+            throw new InvalidParameterException("Cannot parse a null string value to long");
+        } else {
+            try {
+                return NumberFormat.getInstance().parse(stringValue).doubleValue();
+            } catch (Exception exception) {
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
+                        "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
+            }
         }
     }
 }
