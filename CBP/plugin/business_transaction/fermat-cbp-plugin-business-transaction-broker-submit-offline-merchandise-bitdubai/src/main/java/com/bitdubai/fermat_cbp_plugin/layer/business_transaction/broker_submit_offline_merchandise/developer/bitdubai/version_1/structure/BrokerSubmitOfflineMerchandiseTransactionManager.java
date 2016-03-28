@@ -305,8 +305,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-//                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
-                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())){
+                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
                     clauseValue=clause.getValue();
                     if(clauseValue.equals(MoneyType.CRYPTO)){
                         throw new CantGetBrokerMerchandiseException(
@@ -343,7 +342,6 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-//                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())){
                 if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())){
                     clauseValue=clause.getValue();
                     return FiatCurrency.getByCode(clauseValue);
