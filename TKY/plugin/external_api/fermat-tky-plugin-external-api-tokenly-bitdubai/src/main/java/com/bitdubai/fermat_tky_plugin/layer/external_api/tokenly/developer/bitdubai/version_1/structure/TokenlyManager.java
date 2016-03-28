@@ -1,17 +1,22 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyAlbumProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyDownloadSongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyMusicUserProcessor;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlySongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlySwapBotProcessor;
 
 /**
@@ -70,5 +75,28 @@ public class TokenlyManager implements TokenlyApiManager {
     public User validateTokenlyUser(String username, String userKey) throws CantGetUserException {
         User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username,userKey);
         return user;
+    }
+
+    /**
+     * This method returns a song array. This songs are provided by the Tokenly protected API, only
+     * authenticated users can get the songs.
+     * @param musicUser
+     * @return
+     */
+    @Override
+    public Song[] getSongsByAuthenticatedUser(MusicUser musicUser) throws CantGetAlbumException{
+        try{
+            //Validate if all the important musicUser fields are not null.
+            ObjectChecker.checkArguments(
+                    new String[]{
+                            musicUser.getUsername(),
+                            musicUser.getApiToken(),
+                            musicUser.getApiSecretKey()});
+            //Get songs from Tokenly protected API
+            Song[] songs = TokenlySongProcessor.getSongsAuthenticatedUser(musicUser);
+            return songs;
+        } catch (ObjectNotSetException e) {
+            throw new CantGetAlbumException("Any MusicUser argument is null");
+        }
     }
 }

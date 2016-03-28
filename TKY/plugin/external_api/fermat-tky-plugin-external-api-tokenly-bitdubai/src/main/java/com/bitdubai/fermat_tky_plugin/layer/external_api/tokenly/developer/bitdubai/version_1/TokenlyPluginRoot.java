@@ -244,7 +244,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
                     "username",
                     "password");
-            Song[] songs = TokenlySongProcessor.getSongsyAuthenticatedUser(musicUser);
+            Song[] songs = TokenlySongProcessor.getSongsAuthenticatedUser(musicUser);
             int n=0;
             for(Song song : songs){
                 System.out.println("TKY - Song "+n+": "+song);

@@ -68,7 +68,7 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
      * @param musicUser
      * @return
      */
-    public static Song[] getSongsyAuthenticatedUser(MusicUser musicUser)
+    public static Song[] getSongsAuthenticatedUser(MusicUser musicUser)
             throws CantGetAlbumException {
         try{
             HashMap<String, String> parameters = TokenlyConfiguration.getMusicAuthenticationParameters();
