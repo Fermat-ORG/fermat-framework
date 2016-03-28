@@ -7,6 +7,7 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantA
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class TimeOutNotifierAgentPool {
      * Loads and starts all the agents that are supposed to be running.
      */
     public void initialize(){
-
+        runningAgents = new ArrayList<>();
     }
 
     private TimeOutNotifierAgentDatabaseDao getDao(){

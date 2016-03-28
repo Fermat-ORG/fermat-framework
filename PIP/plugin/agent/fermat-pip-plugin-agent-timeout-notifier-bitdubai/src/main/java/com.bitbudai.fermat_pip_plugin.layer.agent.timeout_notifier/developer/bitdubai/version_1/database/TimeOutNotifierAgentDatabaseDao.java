@@ -202,7 +202,7 @@ public class TimeOutNotifierAgentDatabaseDao {
      * @throws IncosistentResultObtainedInDatabaseQueryException
      */
     public void addTimeOutNotifierAgent(TimeOutNotifierAgent timeOutNotifierAgent) throws CantExecuteQueryException, IncosistentResultObtainedInDatabaseQueryException {
-        if (isNewTimeOutNotifierAgent(timeOutNotifierAgent)){
+        if (!isNewTimeOutNotifierAgent(timeOutNotifierAgent)){
             throw new IncosistentResultObtainedInDatabaseQueryException(null, "The TimeOutNotifierAgent already exists in database.", "duplicated data");
         }
 

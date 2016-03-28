@@ -39,6 +39,6 @@ public class TimeOutNotifierAgentDatabaseConstants {
     public static final String AGENT_OWNER_NAME_COLUMN_NAME = "name";
     public static final String AGENT_OWNER_TYPE_COLUMN_NAME = "type";
 
-    public static final String AGENT_OWNER_FIRST_KEY_COLUMN = "agent_owner";
+    public static final String AGENT_OWNER_FIRST_KEY_COLUMN = "owner_publickey";
 
 }

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -57,26 +58,36 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     }
 
 
+    private void initializeDatabase(){
+        timeOutNotifierAgentDeveloperDatabaseFactory = new TimeOutNotifierAgentDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        try {
+            timeOutNotifierAgentDeveloperDatabaseFactory.initializeDatabase();
+        } catch (CantInitializeTimeOutNotifierAgentDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        if (timeOutNotifierAgentDeveloperDatabaseFactory == null){
-            timeOutNotifierAgentDeveloperDatabaseFactory = new TimeOutNotifierAgentDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            try {
-                timeOutNotifierAgentDeveloperDatabaseFactory.initializeDatabase();
-            } catch (CantInitializeTimeOutNotifierAgentDatabaseException e) {
-                e.printStackTrace();
-            }
-        }
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
         return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
         return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
         return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
@@ -102,7 +113,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba", new FermatActor() {
                 @Override
                 public String getPublicKey() {
-                    return "Test";
+                    return UUID.randomUUID().toString();
                 }
 
                 @Override
