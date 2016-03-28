@@ -90,16 +90,6 @@
 
                 </RadioGroup>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:src="@drawable/icon_recent_app"
-                    android:id="@+id/btn_recents"
-                    android:visibility="visible"
-                    android:layout_marginRight="9dp"
-                    android:layout_marginTop="9dp"/>
-
 
                 <SlidingDrawer
                     android:layout_width="match_parent"
