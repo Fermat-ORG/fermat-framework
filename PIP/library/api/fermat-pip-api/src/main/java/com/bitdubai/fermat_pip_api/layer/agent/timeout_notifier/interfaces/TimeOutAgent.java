@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
@@ -76,7 +77,7 @@ public interface TimeOutAgent {
      * The actor type that created this agent
      * @return null if not provided.
      */
-    Actors getOwnerType();
+    FermatActor getOwner();
 
     /**
      * The current agent status.

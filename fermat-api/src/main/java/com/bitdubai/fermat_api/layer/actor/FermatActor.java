@@ -3,7 +3,8 @@ package com.bitdubai.fermat_api.layer.actor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 /**
- * Created by rodrigo on 3/28/16.
+ * Mandatory methods that all Fermat Actors must include.
+ * Useful for low level components that may interact with any type of existing Actor.
  */
 public interface FermatActor {
     /**
@@ -16,11 +17,11 @@ public interface FermatActor {
      * Gets the name of the Actor
      * @return a String representing the given name for this actor.
      */
-    String getActorName();
+    String getName();
 
     /**
      * The Actor type this actor represents.
      * @return An existing fermat actor type
      */
-    Actors getActorType();
+    Actors getType();
 }

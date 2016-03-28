@@ -1,6 +1,6 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
@@ -61,7 +61,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     }
 
     @Override
-    public Actors getOwnerType() {
+    public FermatActor getOwner() {
         return null;
     }
 
