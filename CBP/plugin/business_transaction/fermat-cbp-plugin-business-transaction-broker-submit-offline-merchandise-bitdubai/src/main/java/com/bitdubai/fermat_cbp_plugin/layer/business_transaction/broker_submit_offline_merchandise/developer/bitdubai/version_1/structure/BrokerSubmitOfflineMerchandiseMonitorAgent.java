@@ -407,7 +407,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         e,
                         "Getting the Contract",
                         "Cannot get the contract list");
-            } catch (CantConfirmNotificationReceptionException e) {
+            } catch (CantConfirmNotificationReceptionException e){
                 throw new CantSendContractNewStatusNotificationException(
                         CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                         e,
@@ -426,7 +426,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
             BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): \n" +
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock(): \n" +
                     " - bankMoneyDeStockRecord.getPublicKeyActor(): "+bankMoneyDeStockRecord.getPublicKeyActor()+",\n" +
                     " - bankMoneyDeStockRecord.getFiatCurrency(): "+bankMoneyDeStockRecord.getFiatCurrency()+",\n" +
                     " - bankMoneyDeStockRecord.getCbpWalletPublicKey(): "+bankMoneyDeStockRecord.getCbpWalletPublicKey()+",\n" +
