@@ -342,7 +342,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             String clauseValue;
             for(Clause clause : negotiationClauses){
-                if(clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())){
                     clauseValue=clause.getValue();
                     return FiatCurrency.getByCode(clauseValue);
                 }
