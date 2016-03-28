@@ -4,6 +4,7 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -18,7 +19,7 @@ public class TimeOutNotifierAgentPool {
     /**
      * class variables
      */
-    private List<TimeOutNotifierAgent> runningAgents;
+    private List<TimeOutAgent> runningAgents;
     private TimeOutNotifierAgentDatabaseDao timeOutNotifierAgentDatabaseDao;
 
     /**
@@ -84,7 +85,7 @@ public class TimeOutNotifierAgentPool {
      * Gets the running agents of the pool
      * @return
      */
-    public List<TimeOutNotifierAgent> getRunningAgents() {
+    public List<TimeOutAgent> getRunningAgents() {
         return runningAgents;
     }
 

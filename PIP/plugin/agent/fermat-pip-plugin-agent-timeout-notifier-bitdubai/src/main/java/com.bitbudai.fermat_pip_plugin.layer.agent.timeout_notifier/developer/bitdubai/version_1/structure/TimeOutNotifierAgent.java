@@ -145,4 +145,19 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     public void setProtocolStatus(ProtocolStatus protocolStatus) {
         this.protocolStatus = protocolStatus;
     }
+
+    @Override
+    public String toString() {
+        return "TimeOutNotifierAgent{" +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", owner=" + owner +
+                ", startTime=" + startTime +
+                ", timeOutDuration=" + timeOutDuration +
+                ", elapsedTime=" + elapsedTime +
+                ", status=" + status +
+                ", protocolStatus=" + protocolStatus +
+                '}';
+    }
 }

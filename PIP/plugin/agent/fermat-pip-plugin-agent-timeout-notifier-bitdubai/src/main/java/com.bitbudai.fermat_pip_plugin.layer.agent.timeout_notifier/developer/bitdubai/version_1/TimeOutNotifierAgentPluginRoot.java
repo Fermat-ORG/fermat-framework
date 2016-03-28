@@ -110,7 +110,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
 
     private void testAddNewAgent(){
         try{
-            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba", new FermatActor() {
+            FermatActor owner = new FermatActor() {
                 @Override
                 public String getPublicKey() {
                     return UUID.randomUUID().toString();
@@ -125,7 +125,12 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
                 public Actors getType() {
                     return Actors.CCP_INTRA_WALLET_USER;
                 }
-            });
+            };
+
+            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba", owner);
+
+            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
+            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

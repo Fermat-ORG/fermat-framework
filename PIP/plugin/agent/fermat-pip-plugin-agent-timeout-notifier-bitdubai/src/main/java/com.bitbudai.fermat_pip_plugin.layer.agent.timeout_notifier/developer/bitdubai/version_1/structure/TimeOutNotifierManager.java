@@ -10,6 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeO
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,16 +69,26 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     @Override
     public List<TimeOutAgent> getTimeOutAgents() {
-        return null;
+        return timeOutNotifierAgentPool.getRunningAgents();
     }
 
     @Override
     public List<TimeOutAgent> getTimeOutAgents(FermatActor owner) {
-        return null;
+        List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+            if (timeOutAgent.getOwner() == owner)
+                timeOutAgentList.add(timeOutAgent);
+        }
+        return timeOutAgentList;
     }
 
     @Override
     public List<TimeOutAgent> getTimeOutAgents(AgentStatus status) {
-        return null;
+        List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+            if (timeOutAgent.getAgentStatus() == status)
+                timeOutAgentList.add(timeOutAgent);
+        }
+        return timeOutAgentList;
     }
 }

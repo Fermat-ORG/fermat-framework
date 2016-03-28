@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
  * Mandatory methods that all Fermat Actors must include.
  * Useful for low level components that may interact with any type of existing Actor.
  */
-public interface FermatActor {
+public interface FermatActor{
     /**
      * Get the actor public Key
      * @return a String representing the public Key of the Actor.
@@ -24,4 +24,5 @@ public interface FermatActor {
      * @return An existing fermat actor type
      */
     Actors getType();
+
 }

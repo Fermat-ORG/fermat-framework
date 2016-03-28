@@ -40,4 +40,9 @@ public class FermatActorImpl implements FermatActor {
     public void setType(Actors type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return name + " of type " + type.getCode();
+    }
 }

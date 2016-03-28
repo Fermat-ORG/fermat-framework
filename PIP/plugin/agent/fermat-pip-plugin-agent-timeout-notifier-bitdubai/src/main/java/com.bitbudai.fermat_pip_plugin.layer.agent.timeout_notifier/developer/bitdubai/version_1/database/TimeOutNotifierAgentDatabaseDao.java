@@ -182,8 +182,8 @@ public class TimeOutNotifierAgentDatabaseDao {
 
 
     private boolean isNewOwner(FermatActor owner) throws CantExecuteQueryException{
-        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
-        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME, owner.getPublicKey(), DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
+        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME, owner.getPublicKey(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -224,9 +224,10 @@ public class TimeOutNotifierAgentDatabaseDao {
         FermatActor owner = timeOutNotifierAgent.getOwner();
 
         if (isNewOwner(owner)){
+            DatabaseTable ownerTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
             DatabaseTableRecord ownerRecord = getOwnerRecordFromTimeOutNotifierAgent(owner);
             try {
-                databaseTable.insertRecord(ownerRecord);
+                ownerTable.insertRecord(ownerRecord);
             } catch (CantInsertRecordException e) {
                 throw new CantExecuteQueryException(e, "Cant insert owner: " + owner.toString(), "database issue");
             }
