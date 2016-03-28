@@ -56,4 +56,10 @@ public interface Identity {
      */
     ExternalPlatform getExternalPlatform();
 
+    /**
+     * This method returns the Tokenly account data in an Fermat object.
+     * @return
+     */
+    User getUser();
+
 }

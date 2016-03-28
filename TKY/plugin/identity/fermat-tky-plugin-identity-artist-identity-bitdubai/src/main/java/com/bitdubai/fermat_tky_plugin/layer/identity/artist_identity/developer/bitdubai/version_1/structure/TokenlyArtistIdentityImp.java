@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.TokenlyArtistIdentityPluginRoot;
 
@@ -218,6 +219,12 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     @Override
     public ExternalPlatform getExternalPlatform() {
         return externalPlatform;
+    }
+
+    @Override
+    public User getUser() {
+        //TODO: Gabriel implement this. I put this only for compilation
+        return null;
     }
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
