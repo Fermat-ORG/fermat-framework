@@ -346,15 +346,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 }
             }
 
-
-            //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-
             return filteredList;
 
         } catch (Exception ex) {
@@ -396,12 +387,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO:Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, false, null, "");
-            waitingForBroker.add(contract);
-
             return waitingForBroker;
 
         } catch (Exception ex) {
@@ -443,11 +428,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO: Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, false, null, "");
-            waitingForBroker.add(contract);
 
             return waitingForBroker;
 
@@ -1222,7 +1202,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
                 //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
-                String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "reference_wallet"; //TODO: this is a hardcoded public key
                 customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash);
 
             } else {  // Case: sending offline payment.
