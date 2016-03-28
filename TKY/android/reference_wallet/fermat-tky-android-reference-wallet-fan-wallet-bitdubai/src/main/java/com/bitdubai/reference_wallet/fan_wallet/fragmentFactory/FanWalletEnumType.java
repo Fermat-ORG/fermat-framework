@@ -5,21 +5,21 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
-public enum FanWalletEnumtype implements FermatFragmentsEnumType <FanWalletEnumtype> {
+public enum FanWalletEnumType implements FermatFragmentsEnumType <FanWalletEnumType> {
 
-
-    TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYWSTF"),
-    TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT("TKYWFTF");
+    TKY_FAN_WALLET_MAIN_ACTIVITY("TKYFWMA"),
+    TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYFWSTF"),
+    TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT("TKYFWFTF");
 
 
     private String key;
 
-    FanWalletEnumtype(String key){
+    FanWalletEnumType(String key){
         this.key=key;
     }
 
-    public static FanWalletEnumtype getValues(String name){
-        for(FanWalletEnumtype fragments: FanWalletEnumtype.values()){
+    public static FanWalletEnumType getValues(String name){
+        for(FanWalletEnumType fragments: FanWalletEnumType.values()){
             if(fragments.getKey().equals(name)){
                 return fragments;
             }

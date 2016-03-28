@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Fan Wallet</string>
+    <string name="play">PLAY</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+
+</resources>
