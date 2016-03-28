@@ -240,11 +240,14 @@ public enum Plugins implements FermatPluginsEnum {
     ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
+    TRANSFER_INTRA_WALLET        ("TIW"),
+    TIMEOUT_NOTIFIER            ("TON"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     SUB_APP_RESOURCES           ("SAR"),
+    SUB_APP_FERMAT_MONITOR      ("FERM"),
     SUB_APP_RUNTIME             ("SPR"),
     USER_REDEMPTION             ("UR"),
     WALLET_COMMUNITY            ("WCOM"),
@@ -306,10 +309,12 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
-
-    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
-    ARTIST_IDENTITY                    ("ARTIDNTY"),
-
+    ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
+    FAN_ACTOR_CONNECTION                ("ARTFAC"),
+    ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
+    ARTIST_IDENTITY                     ("ARTIDNTY"),
+    ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
+    ART_FAN_SUB_APP_MODULE              ("AFSAM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -384,11 +389,13 @@ public enum Plugins implements FermatPluginsEnum {
             case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
+            case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
             case "PBL"  :   return PUBLISHER                ;
             case "RP"   :   return REDEEM_POINT             ;
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
             case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
             case "SAR"  :   return SUB_APP_RESOURCES        ;
+            case "FERM"  :   return SUB_APP_FERMAT_MONITOR   ;
             case "SPR"  :   return SUB_APP_RUNTIME          ;
             case "UR"   :   return USER_REDEMPTION          ;
             case "WCOM" :   return WALLET_COMMUNITY         ;
@@ -462,6 +469,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
             case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "AASAM":       return ART_ARTIST_SUB_APP_MODULE                ;
+            case "AFSAM":       return ART_FAN_SUB_APP_MODULE                   ;
             case "TOKAP":       return TOKENLY_API;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
@@ -469,6 +478,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
             case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
             case "TWALLET":     return TOKENLY_WALLET                           ;
+            case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
+            case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
 
             default:
                 throw new InvalidParameterException(
@@ -477,7 +488,6 @@ public enum Plugins implements FermatPluginsEnum {
                 );
         }
     }
-
     @Override
     public String getCode() {
         return this.code;

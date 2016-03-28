@@ -28,27 +28,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserIdentityDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletUserIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserIdentityException;
-
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,11 +110,11 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantListIntraWalletUsersException
      */
     @Override
-    public List<IntraWalletUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException {
+    public ArrayList<com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException {
 
         try {
 
-            List<IntraWalletUserIdentity> intraWalletUserList1 = new ArrayList<IntraWalletUserIdentity>();
+            ArrayList<com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity> intraWalletUserList1 = new ArrayList<IntraWalletUserIdentity>();
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -166,7 +162,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
 
-            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage);
 
             //registerIdentities();
             //registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
@@ -182,7 +178,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -192,7 +188,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage);
 
-            com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage);
 
             registerIdentities();
 

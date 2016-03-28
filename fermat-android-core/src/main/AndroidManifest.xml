@@ -137,7 +137,8 @@
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.CommunicationService"
             android:label="CommService"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -148,7 +149,8 @@
 
         <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
             android:theme="@style/AppThemeDesktop"
-            ></activity>
+            />
+
 
     </application>
 </manifest>

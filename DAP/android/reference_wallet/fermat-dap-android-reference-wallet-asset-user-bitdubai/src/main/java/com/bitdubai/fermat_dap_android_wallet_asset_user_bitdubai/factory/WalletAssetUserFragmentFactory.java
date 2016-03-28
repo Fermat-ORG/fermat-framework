@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.Sett
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsNotificationsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserHistoryActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserSellAssetFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -65,6 +66,7 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT:
                     currentFragment = new AssetSellFragment();
+                    //currentFragment = new UserSellAssetFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_FRAGMENT:
                     currentFragment = new AssetSellSelectUserFragment();

@@ -3,12 +3,16 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -17,7 +21,6 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -54,9 +57,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet>, DialogInterface.OnDismissListener {
 
     // Constants
-
     private static final String TAG = "WizardPageSetMerchand";
 
+    //Data
+    private boolean walletConfigured;
     private List<InstalledWallet> stockWallets;
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
@@ -66,10 +70,12 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     private CryptoBrokerWalletManager walletManager;
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+
+    //UI
     private WalletsAdapter adapter;
     private RecyclerView recyclerView;
+    private LinearLayout fragmentContainer;
     private FermatTextView emptyView;
-    String walletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
 
 
     public static WizardPageSetMerchandisesFragment newInstance() {
@@ -90,7 +96,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             errorManager = appSession.getErrorManager();
 
             // Verify if wallet has been configured, if true show this fragment, else show the home fragment (the second start fragment)
-            boolean walletConfigured;
             try {
                 walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
             } catch (Exception ex) {
@@ -99,10 +104,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
 
             if (walletConfigured) {
-                getRuntimeManager().changeStartActivity(1);
-
-                //TODO: No deberia ser necesario esta linea una vez que el changeStartActivity() funcione...
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                //getRuntimeManager().changeStartActivity(1);
                 return;
             } else {
                 //Delete potential previous configurations made by this wizard page
@@ -152,6 +154,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         recyclerView.setAdapter(adapter);
 
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+        fragmentContainer = (LinearLayout) layout.findViewById(R.id.cbw_fragment_container);
 
 
         final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
@@ -178,7 +181,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
         });
 
-
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,7 +189,21 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
         });
 
-        showHelpDialog();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //If wallet already configured, go directly to wallet
+                if (walletConfigured) {
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                }
+                else {  //otherwise, show wizard page
+                    fragmentContainer.setVisibility(View.VISIBLE);
+                    showHelpDialog();
+                }
+            }
+        }, 250);
+
 
         return layout;
     }
@@ -309,7 +325,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
+            List<BankAccountNumber> accounts = walletManager.getAccounts("banking_wallet");
             if (!accounts.isEmpty()) {
 
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();

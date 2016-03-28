@@ -84,8 +84,17 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         barChart.getXAxis().setTextSize(16f);
         barChart.getXAxis().setTextColor(Color.parseColor("#2a2f44"));
         barChart.getXAxis().setSpaceBetweenLabels(0);
-        barChart.moveViewToX(lastItemPosition - 4);
+
+        Calendar calendar = Calendar.getInstance();
+
+        if(lastItemPosition > 3) {
+            barChart.moveViewToX(lastItemPosition - 3);
+        }else{
+            barChart.moveViewToX(lastItemPosition);
+        }
+
         barChart.highlightValue(lastItemPosition, 0);
+
         barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry entry, int dataSetIndex, Highlight highlight) {
@@ -98,6 +107,16 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
             }
         });
+
+        String[] meses = {"JAN", "FEB", "MAR", "MAY", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+
+        TextView month = (TextView) layout.findViewById(R.id.month);
+        TextView year = (TextView) layout.findViewById(R.id.year);
+
+        String idyear = ""+calendar.get(Calendar.YEAR);
+
+        month.setText(meses[calendar.get(Calendar.MONTH)]);
+        year.setText(idyear);
 
         return layout;
     }
@@ -116,22 +135,38 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
         Calendar calendar = Calendar.getInstance();
 
+        int d = calendar.getMaximum(Calendar.DAY_OF_MONTH);
+
         // creando los dias del mes
-        for (int i = 1; i <= 30; i++) {
-            BarEntry entry = new BarEntry(0, i);
-            entries.add(entry);
-            xVals.add(String.valueOf(i));
-            colors.add(Color.parseColor("#2A2F44"));
+        for (int i = 0; i <= d; i++) {
+            if( i==0){
+                BarEntry entry = new BarEntry(0, 0);
+                entries.add(entry);
+                xVals.add("");
+                colors.add(Color.parseColor("#2A2F44"));
+            }else{
+                BarEntry entry = new BarEntry(0, i);
+                entries.add(entry);
+                xVals.add(String.valueOf(i));
+                colors.add(Color.parseColor("#2A2F44"));
+            }
         }
+
+        BarEntry entry = new BarEntry(0, (d+1));
+        entries.add(entry);
+        xVals.add("");
 
         // poniendo los valores en los dias adecuados
         if (stockTransactions != null) {
+
             for (CryptoBrokerStockTransaction transaction : stockTransactions) {
+
                 calendar.setTimeInMillis(transaction.getTimestamp());
 
                 lastItemPosition = calendar.get(Calendar.DAY_OF_MONTH);
+                int index = lastItemPosition;
+
                 float runningAvailableBalance = transaction.getRunningAvailableBalance().floatValue();
-                int index = lastItemPosition - 1;
 
                 entries.get(index).setVal(runningAvailableBalance);
 
@@ -172,11 +207,27 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
 
 
     private void putDataInIndicators(int xIndex) {
+
         CryptoBrokerStockTransaction transaction = map.get(xIndex);
 
         if (transaction != null) {
-            startIndicator.setText(numberFormat.format(transaction.getPreviousAvailableBalance()));
             endIndicator.setText(numberFormat.format(transaction.getRunningAvailableBalance()));
+        }else{
+            endIndicator.setText(numberFormat.format(""));
+        }
+
+        CryptoBrokerStockTransaction transaction2 = null;
+
+        if( xIndex > 0 ){
+            transaction2 = map.get(xIndex-1);
+        }else{
+            transaction2 = transaction;
+        }
+
+        if (transaction2 != null) {
+            startIndicator.setText(numberFormat.format(transaction2.getRunningAvailableBalance()));
+        }else{
+            startIndicator.setText(numberFormat.format(""));
         }
     }
 }
