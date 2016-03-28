@@ -70,10 +70,13 @@
     <string name="dap_user_wallet_sell_select_user">Select user</string>
     <string name="dap_user_wallet_sell_assets_to_sell">Assets to Sell</string>
     <string name="dap_user_wallet_sell_asset_value">Asset Value</string>
+    <string name="dap_user_wallet_sell_asset_price">Asset Price</string>
     <string name="dap_user_wallet_sell_total_value">Total Value</string>
-    <string name="dap_user_wallet_sell_to">Sell to</string>
-    <string name="dap_user_wallet_sell_button">Sell Assets</string>
+    <string name="dap_user_wallet_sell_to">User to sell</string>
+    <string name="dap_user_wallet_sell_button">Sell</string>
     <string name="dap_user_wallet_buy_no_available">No Available</string>
+    <string name="dap_user_wallet_to">To</string>
+    <string name="dap_user_wallet_x_button">X</string>
     <!-- -->
 
     <!-- app strings -->
