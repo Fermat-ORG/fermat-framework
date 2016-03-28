@@ -86,13 +86,16 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
         this.actorPublicKey     = actorPublicKey;
         this.name               = name;
-        this.dapConnectionState = dapConnectionState;
+        if (dapConnectionState != null)
+            this.dapConnectionState = dapConnectionState;
         this.locationLatitude   = locationLatitude;
         this.locationLongitude  = locationLongitude;
         this.registrationDate   = registrationDate;
         this.lastConnectionDate = lastConnectionDate;
-        this.description        = description;
-        this.extendedPublicKey  = extendedPublicKey;
+        if (description != null)
+            this.description        = description;
+        if (extendedPublicKey != null)
+            this.extendedPublicKey  = extendedPublicKey;
         this.actorsType         = actorsType;
 
         this.setProfileImage(profileImage);

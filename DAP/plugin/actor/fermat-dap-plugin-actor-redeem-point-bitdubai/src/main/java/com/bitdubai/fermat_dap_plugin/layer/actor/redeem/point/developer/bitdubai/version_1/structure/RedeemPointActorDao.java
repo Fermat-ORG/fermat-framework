@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateRedeemPointCryptoAddressNetworkException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
@@ -1153,7 +1154,8 @@ public class RedeemPointActorDao implements Serializable {
                                                     String actorAssetRedeemPublicKey,
                                                     String actorAssetRedeemName,
                                                     byte[] profileImage,
-                                                    DAPConnectionState  dapConnectionState) throws CantAddPendingActorAssetException {
+                                                    DAPConnectionState  dapConnectionState,
+                                                    Actors actorsType) throws CantAddPendingActorAssetException {
         try {
             /**
              * if Asset User exist on table
@@ -1176,7 +1178,7 @@ public class RedeemPointActorDao implements Serializable {
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_USER.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, actorsType.getCode());
 
                 table.insertRecord(record);
                 /**
@@ -1251,13 +1253,15 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetRedeemPoint> getAllWaitingActorAssetUser(final String actorRedeemSelectedPublicKey,
-                                                                   final DAPConnectionState dapConnectionState,
-                                                                   final int max,
-                                                                   final int offset) throws CantGetAssetRedeemPointActorsException {
+    public List<DAPActor> getAllWaitingActorAssetRedeem(final String actorRedeemSelectedPublicKey,
+                                                                     final DAPConnectionState dapConnectionState,
+                                                                     final int max,
+                                                                     final int offset) throws CantGetAssetRedeemPointActorsException {
 
         // Setup method.
         List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Actor Redeem.
+        List<DAPActor> dapActors = new ArrayList<>(); // Actor User.
+
         DatabaseTable table;
 
         try {
@@ -1277,12 +1281,28 @@ public class RedeemPointActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
 
+            for (ActorAssetRedeemPoint record : list) {
+                dapActors.add((new RedeemPointActorRecord (
+                        record.getActorPublicKey(),
+                        record.getName(),
+                        record.getDapConnectionState(),
+                        record.getLocationLatitude(),
+                        record.getLocationLongitude(),
+                        record.getCryptoAddress(),
+                        record.getRegistrationDate(),
+                        record.getLastConnectionDate(),
+                        record.getType(),
+                        record.getBlockchainNetworkType(),
+                        record.getProfileImage())));
+            }
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant get ACTOR ASSET USER list, unknown failure.");
         }
-        return list;
+
+        return dapActors;
     }
 
     public ActorAssetRedeemPoint getLastNotification(String  actorRedeemConnectedPublicKey ) throws CantGetAssetRedeemPointActorsException {
