@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractPlugin implements Plugin, Service {
+public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
     private final ConcurrentHashMap<AddonVersionReference , Field> addonNeededReferences         ;
     private final ConcurrentHashMap<PluginVersionReference, Field> pluginNeededReferences        ;

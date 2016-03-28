@@ -241,6 +241,7 @@ public enum Plugins implements FermatPluginsEnum {
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
     TRANSFER_INTRA_WALLET        ("TIW"),
+    TIMEOUT_NOTIFIER            ("TON"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
