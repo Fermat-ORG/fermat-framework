@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 3/27/16.
  */
-public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements TimeOutManager {
+public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin {
 
     /**
      * constructor
@@ -34,25 +34,5 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Ti
     @Override
     public void stop() {
 
-    }
-
-    @Override
-    public TimeOutAgent addNew(long epochTime, long timeout, String name) throws CantAddNewTimeOutAgentException {
-        return null;
-    }
-
-    @Override
-    public void remove(TimeOutAgent timeOutAgent) throws CantRemoveExistingTimeOutAgentException {
-
-    }
-
-    @Override
-    public TimeOutAgent getTimeOutAgent(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public List<TimeOutAgent> getTimeOutAgents() {
-        return null;
     }
 }

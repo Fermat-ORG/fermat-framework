@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
 
@@ -18,10 +19,11 @@ public interface TimeOutManager {
      * @param epochTime the Start time configured for this Agent.
      * @param timeout the elapsed time to monitor for a timeout
      * @param name the Name of the agent to be added.
+     * @param owner a FermatActor that is the owner of the agent.
      * @return the newly created TimeOut Agent
      * @throws CantAddNewTimeOutAgentException
      */
-    TimeOutAgent addNew(long epochTime, long timeout, String name) throws CantAddNewTimeOutAgentException;
+    TimeOutAgent addNew(long epochTime, long timeout, String name, FermatActor owner) throws CantAddNewTimeOutAgentException;
 
     /**
      * Removes a configured Agent from the Manager. It is stopped if running.
