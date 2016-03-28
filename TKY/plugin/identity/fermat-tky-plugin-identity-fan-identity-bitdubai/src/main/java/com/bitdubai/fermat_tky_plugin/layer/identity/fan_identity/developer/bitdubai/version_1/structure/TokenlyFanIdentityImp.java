@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
@@ -202,6 +203,22 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     @Override
     public ExternalPlatform getExternalPlatform() {
         return externalPlatform;
+    }
+
+    @Override
+    public User getUser() {
+        /**
+         * TODO: harcoded User. I'll use this for testing, please, Gabriel, remove this when this
+         * method is full implemented.
+         */
+        //TODO: Hardoced User
+        User hardocedUser = new TokenlyUserImp(
+                "18873727-da0f-4b50-a213-cc40c6b4562d",
+                "pereznator",
+                "darkpriestrelative@gmail.com",
+                "Tvn1yFjTsisMHnlI",
+                "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y");
+        return hardocedUser;
     }
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
