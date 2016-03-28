@@ -309,11 +309,20 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             actortype,
                             blockchainNetworkType);
 
-                    BitcoinWalletWallet bitcoinWalletWallet =  this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
 
-                    bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
-                    bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
+                    try {
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
 
+                    }catch (CantRegisterCreditException e){
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
+                    try {
+                        bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
+                    }catch (CantRegisterCreditException e){
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord2);
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
                     break;
                 case BASIC_WALLET_DISCOUNT_WALLET:
                     break;
@@ -336,10 +345,18 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             actortype,
                             blockchainNetworkType);
 
-//TODO: si da error en el credit del book tendria que hacer un debit en el available
-                    bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
-                    bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
-
+                 try {
+                     bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                  
+                 }catch (CantRegisterCreditException e){
+                     throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                 }
+                    try {
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                    }catch (CantRegisterCreditException e){
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
                     break;
 
 
