@@ -5,10 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveExtendedNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestActorNotificationEvent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 
 /**
@@ -29,15 +26,12 @@ public class NewReceiveExtendedNotificationEventHandler implements FermatEventHa
 
             if (fermatEvent.getSource().equals(EventSource.ACTOR_ASSET_ISSUER)) {
                 System.out.println("ACTOR ASSET REDEEM POINT RECEIVE EXTENDED KEY - handleEvent = " + fermatEvent);
-                NewReceiveExtendedNotificationEvent newReceiveExtendedNotificationEvent = (NewReceiveExtendedNotificationEvent) fermatEvent;
+                NewRequestActorNotificationEvent newRequestActorNotificationEvent = (NewRequestActorNotificationEvent) fermatEvent;
              /*
               *  Actor Asset Issuer make the job
               */
                 this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(
-                        newReceiveExtendedNotificationEvent.getActorNotification());
-//                        newReceiveExtendedNotificationEvent.getAlias(),
-//                        newReceiveExtendedNotificationEvent.getDestinationKey(),
-//                        newReceiveExtendedNotificationEvent.getExtendedPublicKey());
+                        newRequestActorNotificationEvent.getActorNotification());
             }
 
 //            if (fermatEvent.getSource().equals(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER)) {

@@ -21,7 +21,7 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
  * Created by natalia on 29/02/16.
  */
 public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
-//TODO: navigation   drawer tool implementation
+
 
     private Activity activity;
     public BitcoinWalletNavigationView(Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {

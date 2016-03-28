@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/sw"
-                android:src="@drawable/notvisible"
+                android:src="@drawable/switch_notvisible"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp" />
 

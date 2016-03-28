@@ -44,7 +44,7 @@ public class OutgoingDeviceUserTransactionDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     public OutgoingDeviceUserTransactionDao(ErrorManager errorManager,
-                                            PluginDatabaseSystem pluginDatabaseSystemr) {
+                                            PluginDatabaseSystem pluginDatabaseSystem) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }

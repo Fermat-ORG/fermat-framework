@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_identity.common.holders;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,9 +30,15 @@ public class CryptoCustomerIdentityInfoViewHolder extends FermatViewHolder {
     }
 
     public void setImage(byte[] imageInBytes) {
+        /*
         ByteArrayInputStream bytes = new ByteArrayInputStream(imageInBytes);
         BitmapDrawable bmd = new BitmapDrawable(bytes);
         identityImage.setImageBitmap(bmd.getBitmap());
+        */
+    }
+
+    public ImageView getImage(){
+        return identityImage;
     }
 
     public void setText(String text) {
@@ -41,4 +48,6 @@ public class CryptoCustomerIdentityInfoViewHolder extends FermatViewHolder {
     public void setText(SpannableString text) {
         identityName.setText(text);
     }
+
+
 }

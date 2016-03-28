@@ -92,7 +92,7 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
 //
                     getSession().getModuleManager().acceptActorAssetRedeem(
                             identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
-                            actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
+                            actor // ACTOR OUTSIDE/EXTERNAL
                     );
                     getSession().setData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(), actor.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
@@ -111,7 +111,7 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
                 if (actor != null) {  //&& identity != null)
                     getSession().getModuleManager().denyConnectionActorAssetRedeem(
                             identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
-                            actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
+                            actor // ACTOR OUTSIDE/EXTERNAL
                     );
 //                    getSession().setData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_DENIED, Boolean.FALSE);
                     Toast.makeText(getContext(), actor.getName() + " Deny connection request", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
@@ -18,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
  */
-public interface TokenlyArtistIdentityManagerModule extends FermatManager {
+public interface TokenlyArtistIdentityManagerModule extends ModuleManager<TokenlyArtistPreferenceSettings,ActiveActorIdentityInformation> {
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
      * identities linked to the current logged device user.

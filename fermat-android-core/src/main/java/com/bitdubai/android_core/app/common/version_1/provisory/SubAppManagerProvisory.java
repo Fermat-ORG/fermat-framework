@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.provisory;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -32,40 +33,40 @@ public class SubAppManagerProvisory implements SubAppManager {
 
     private void loadMap(Map<String, InstalledSubApp> lstInstalledSubApps) {
         //TODO - CCP Platform
-        InstalledSubApp installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY, null, null, "intra_user_community_sub_app", "Wallet Users", "public_key_intra_user_commmunity", "intra_user_community_sub_app", new Version(1, 0, 0), Platforms.CRYPTO_CURRENCY_PLATFORM);
+        InstalledSubApp installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY, null, null, "intra_user_community_sub_app", "Wallet Users", SubAppsPublicKeys.CCP_COMMUNITY.getCode(), "intra_user_community_sub_app", new Version(1, 0, 0), Platforms.CRYPTO_CURRENCY_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Wallet Users", "public_key_ccp_intra_user_identity", "intra_user_identity_sub_app", new Version(1, 0, 0), Platforms.CRYPTO_CURRENCY_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY, null, null, "intra_user_identity_sub_app", "Wallet Users", SubAppsPublicKeys.CCP_IDENTITY.getCode(), "intra_user_identity_sub_app", new Version(1, 0, 0), Platforms.CRYPTO_CURRENCY_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - DAP Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", "public_key_dap_issuer_community", "sub-app-asset-community-issuer", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "sub-app-asset-community-issuer", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", "public_key_dap_user_community", "sub-app-asset-community-user", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(), "sub-app-asset-community-user", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "public_key_dap_redeem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point",SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(), "sub-app-asset-community-redeem-point", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", SubAppsPublicKeys.DAP_FACTORY.getCode(), "sub-app-asset-factory", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Identity Issuer", "public_key_dap_asset_issuer_identity", "sub-app-asset-identity-issuer", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_ISSUER, null, null, "sub-app-asset-identity-issuer", "Asset Identity Issuer",SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode(), "sub-app-asset-identity-issuer", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User", "public_key_dap_asset_user_identity", "sub-app-asset-identity-user", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER, null, null, "sub-app-asset-identity-user", "Asset Identity User",SubAppsPublicKeys.DAP_IDENTITY_USER.getCode(), "sub-app-asset-identity-user", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "public_key_dap_redeem_point_identity", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY, null, null, "sub-app-asset-identity-redeem-point", "Asset Redeem Point Identity", "SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode()", "sub-app-asset-identity-redeem-point", new Version(1, 0, 0),Platforms.DIGITAL_ASSET_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - CBP Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_BROKER_IDENTITY, null, null, "sub_app_crypto_broker_identity", "Brokers", "sub_app_crypto_broker_identity", "sub_app_crypto_broker_identity", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_BROKER_IDENTITY, null, null, "sub_app_crypto_broker_identity", "Brokers",SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), "sub_app_crypto_broker_identity", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, null, null, "sub_app_crypto_customer_identity", "Customers", "sub_app_crypto_customer_identity", "sub_app_crypto_customer_identity", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, null, null, "sub_app_crypto_customer_identity", "Customers",SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode(), "sub_app_crypto_customer_identity", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_BROKER_COMMUNITY, null, null, "sub_app_crypto_broker_community", "Brokers", "public_key_crypto_broker_community", "sub_app_crypto_broker_community", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_BROKER_COMMUNITY, null, null, "sub_app_crypto_broker_community", "Brokers", SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(), "sub_app_crypto_broker_community", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY, null, null, "sub_app_crypto_customer_community", "Customers", "public_key_crypto_customer_community", "sub_app_crypto_customer_community", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY, null, null, "sub_app_crypto_customer_community", "Customers", SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), "sub_app_crypto_customer_community", new Version(1, 0, 0),Platforms.CRYPTO_BROKER_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - CHT Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", "public_key_cht_chat", "chat_sub_app", new Version(1, 0, 0),Platforms.CHAT_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0),Platforms.CHAT_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
 
         //TODO - TKY Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY, null, null, "tky_sub_app", "Tonkenly", "public_key_tky_artist_identity", "tky_sub_app", new Version(1, 0, 0),Platforms.TOKENLY);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY_SUB_APP, null, null, "tky_sub_app", "Tonkenly", "public_key_tky_artist_identity", "tky_sub_app", new Version(1, 0, 0),Platforms.TOKENLY);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - Add Others SubApps
 

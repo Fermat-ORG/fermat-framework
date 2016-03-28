@@ -34,7 +34,7 @@ public enum SubApps {
     ART_ASSETS_IDENTITY_ARTIST("AAIA"),
 
 
-    TKY_ARTIST_IDENTITY("TAI"),
+    TKY_ARTIST_IDENTITY_SUB_APP("TAISA"),
 
 
 
@@ -52,8 +52,8 @@ public enum SubApps {
     public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "TAI":
-                return SubApps.TKY_ARTIST_IDENTITY;
+            case "TAISA":
+                return SubApps.TKY_ARTIST_IDENTITY_SUB_APP;
             case "AAIA":
                 return SubApps.ART_ASSETS_IDENTITY_ARTIST;
             case "AACA":

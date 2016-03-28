@@ -8,26 +8,26 @@ public class TokenlyMusicUserJSonAttNames {
     /**
      * Represents the Tokenly Id.
      */
-    public final String ID = "id";
+    public static final String ID = "id";
 
     /**
      * Represents the tokenly username
      */
-    public final String USERNAME = "username";
+    public static final String USERNAME = "username";
 
     /**
      * Represents the registered email in tokenly account.
      */
-    public final String EMAIL = "email";
+    public static final String EMAIL = "email";
 
     /**
      * Represents the api token tokenly account.
      */
-    public final String API_TOKEN = "apiToken";
+    public static final String API_TOKEN = "apiToken";
 
     /**
      * Represents the api secret key from tokenly public api.
      */
-    public final String API_SECRET_KEY = "apiSecretKey";
+    public static final String API_SECRET_KEY = "apiSecretKey";
 
 }
