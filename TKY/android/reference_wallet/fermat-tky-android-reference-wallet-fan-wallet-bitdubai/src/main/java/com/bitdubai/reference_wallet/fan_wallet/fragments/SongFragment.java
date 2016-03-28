@@ -12,7 +12,6 @@ import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +25,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 import com.bitdubai.reference_wallet.fan_wallet.preference_settings.FanWalletSettings;
@@ -34,8 +34,6 @@ import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import sub_app.R;
 
 /**
  * Created by Miguel Payarez on 16/03/16.

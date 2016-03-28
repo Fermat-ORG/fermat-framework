@@ -24,8 +24,6 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.LockableViewPager;
 
 
-
-
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
@@ -85,9 +83,9 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        view= inflater.inflate(tky_fan_wallet_following_fragment,container,false);
+        view= inflater.inflate(R.layout.tky_fan_wallet_activity,container,false);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
@@ -108,6 +106,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         // This method ensures that tab selection events update the ViewPager and page changes update the selected tab.
         tabLayout.setupWithViewPager(viewPager);
 
+        return view;
 
     }
 
