@@ -293,7 +293,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             super.onStop();
             try{
-                //AndroidCoreUtils.getInstance().clear();
+                AndroidCoreUtils.getInstance().clear();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -1675,9 +1675,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             startService(intent);
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
-//        if(!mCommunicationServiceConnected){
-//            doBindService();
-//        }
+        if(!mCommunicationServiceConnected){
+            doBindService();
+        }
 
 
     }
@@ -1688,9 +1688,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         if(broadcastManager!=null)broadcastManager.stop();
 //        networkStateReceiver.removeListener(this);
 
-//        if(mCommunicationServiceConnected){
-//            doUnbindService();
-//        }
+        if(mCommunicationServiceConnected){
+            doUnbindService();
+        }
     }
 
 
