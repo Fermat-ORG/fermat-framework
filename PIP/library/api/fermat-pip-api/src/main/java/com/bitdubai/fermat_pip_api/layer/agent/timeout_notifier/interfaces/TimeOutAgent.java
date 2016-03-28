@@ -52,7 +52,7 @@ public interface TimeOutAgent {
      * the start time of the Agent as an epoch time in milliseconds.
      * @return the start time of the agent.
      */
-    long getEpochTime();
+    long getEpochStartTime();
 
     /**
      * The duration that the Agent will be monitoring for. When this duration is reached since the start time
