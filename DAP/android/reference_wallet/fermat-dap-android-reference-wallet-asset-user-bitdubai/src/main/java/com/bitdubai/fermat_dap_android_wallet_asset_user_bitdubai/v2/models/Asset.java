@@ -26,6 +26,9 @@ public class Asset {
     private Status status;
     private String actorName;
     private byte[] actorImage;
+    private boolean redeemable;
+    private boolean transferable;
+    private boolean saleable;
 
     public enum Status {
         PENDING("PENDING"),
@@ -57,6 +60,9 @@ public class Asset {
         setStatus(status);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
         setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
+        setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
+        setTransferable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE).getValue());
+        setSaleable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.SALEABLE).getValue());
     }
 
     public byte[] getImage() {
@@ -133,5 +139,29 @@ public class Asset {
 
     public void setActorImage(byte[] actorImage) {
         this.actorImage = actorImage;
+    }
+
+    public boolean isRedeemable() {
+        return redeemable;
+    }
+
+    public void setRedeemable(boolean redeemable) {
+        this.redeemable = redeemable;
+    }
+
+    public boolean isTransferable() {
+        return transferable;
+    }
+
+    public void setTransferable(boolean transferable) {
+        this.transferable = transferable;
+    }
+
+    public boolean isSaleable() {
+        return saleable;
+    }
+
+    public void setSaleable(boolean saleable) {
+        this.saleable = saleable;
     }
 }
