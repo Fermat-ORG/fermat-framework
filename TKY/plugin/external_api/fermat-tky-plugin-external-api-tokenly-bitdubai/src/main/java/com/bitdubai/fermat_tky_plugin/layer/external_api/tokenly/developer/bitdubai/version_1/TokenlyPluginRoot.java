@@ -19,9 +19,11 @@ import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyMusicUserProcessor;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlySongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.UserRecord;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure.TokenlyAuthenticationComponentGenerator;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure.TokenlyManager;
@@ -67,6 +69,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //getMusicUserTest();
             //signatureAuthenticateTest();
             //signatureAndGETTest();
+            //getSongsTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -207,11 +210,12 @@ public class TokenlyPluginRoot extends AbstractPlugin {
         try{
             //Test data
             MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
-                    "perezilla",
-                    "milestone");
+                    "username",
+                    "password");
             //X-Tokenly-Auth-Nonce
-            long nonce = System.currentTimeMillis();
-            String url = "https://music-stage.tokenly.com/api/v1/music/song/download/d588a0b6-99a6-4b8b-8f08-bef9372818fa";
+            long nonce = TokenlyAuthenticationComponentGenerator.convertTimestamp(
+                    System.currentTimeMillis());
+            String url = "https://music-stage.tokenly.com/api/v1/music/mysongs";
             String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
                     musicUser,
                     url,
@@ -230,6 +234,24 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             System.out.println("TKY: Test cURL response - " + response);
         }catch (Exception e) {
             System.out.println("TKY: Test signature authenticate and GET Test exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void getSongsTest(){
+        try{
+            //Test data
+            MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
+                    "username",
+                    "password");
+            Song[] songs = TokenlySongProcessor.getSongsyAuthenticatedUser(musicUser);
+            int n=0;
+            for(Song song : songs){
+                System.out.println("TKY - Song "+n+": "+song);
+                n++;
+            }
+        }catch (Exception e) {
+            System.out.println("TKY: Test get songs from Tokenly exception");
             e.printStackTrace();
         }
     }
