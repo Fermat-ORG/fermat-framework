@@ -237,7 +237,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader]**<br/>
+* **Manuel Perez [Full Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -267,6 +267,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   alex_jimenez76@hotmail.com
     Skype:   alex_jimenez76
     Github:  https://github.com/alexanderejm
+
+* **Alexander Jimenez [New Part-Time Developer]**<br/>
+---
+    Email:   edicsonjosue18@gmail.com
+    Skype:   live:ejil_18
+    Github:  https://github.com/EdicsonInfante
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
@@ -309,6 +315,12 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Email:   roygufo@gmail.com
       Skype:   roy-epps
       Github:  https://github.com/RoyGF
+
+* **Orono Eleazar [New Part-Time Developer]**<br/>
+---
+      Email:   eorono@gmail.com
+      Skype:   eorono
+      Github:  https://github.com/eorono
 
 We are also amateur philosophers, passionate about esoteric topics and video games.
 

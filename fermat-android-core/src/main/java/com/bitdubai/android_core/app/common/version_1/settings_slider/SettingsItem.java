@@ -32,4 +32,8 @@ public class SettingsItem {
     public SettingsType getSettingsType() {
         return settingsType;
     }
+
+    public void setImageRes(int imageRes) {
+        this.imgRes = imageRes;
+    }
 }

@@ -40,18 +40,18 @@ public class SettingsAdapter extends FermatAdapterImproved<SettingsItem, Setting
 
 
         @Override
-        protected void bindHolder(SettingsHolder holder, SettingsItem data, final int position) {
+        protected void bindHolder(SettingsHolder holder, final SettingsItem data, final int position) {
 
             holder.getText().setText(data.getText());
             holder.getSubText().setText(data.getSubText());
             holder.getImg().setBackgroundResource(data.getImgRes());
 
-//            holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                }
-//            });
+            holder.getImg().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    settingsCallback.onItemClickListener(data, position);
+                }
+            });
 
         }
 
