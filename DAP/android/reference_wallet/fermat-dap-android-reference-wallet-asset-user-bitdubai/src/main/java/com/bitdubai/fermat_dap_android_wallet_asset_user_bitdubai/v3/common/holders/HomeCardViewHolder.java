@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.holders;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
@@ -71,7 +74,9 @@ public class HomeCardViewHolder extends FermatViewHolder {
         cardTransactionsButton = (ImageButton) itemView.findViewById(R.id.cardTransactionsButton);
     }
 
-    public void bind(final Asset asset) {
+    public void bind(final Asset asset, View.OnClickListener onClickListenerRedeem,
+                     View.OnClickListener onClickListenerTransfer, View.OnClickListener onClickListenerAppropriate,
+                     View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions) {
         Bitmap bitmap;
         if (asset.getActorImage() != null && asset.getActorImage().length > 0) {
             bitmap = BitmapFactory.decodeByteArray(asset.getActorImage(), 0, asset.getActorImage().length);
@@ -95,43 +100,40 @@ public class HomeCardViewHolder extends FermatViewHolder {
         cardAssetName.setText(asset.getName());
         cardExpDate.setText(asset.getFormattedExpDate());
 
-        initActions();
+        initActions(asset, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
+                onClickListenerSell, onClickListenerTransactions);
     }
 
-    private void initActions() {
-        cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,
+                             View.OnClickListener onClickListenerTransfer, View.OnClickListener onClickListenerAppropriate,
+                             View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions) {
+        if (asset.isRedeemable()) {
+            cardRedeemButton.setVisibility(View.VISIBLE);
+            cardRedeemButton.setOnClickListener(onClickListenerRedeem);
+        } else {
+            cardRedeemButton.setVisibility(View.INVISIBLE);
+        }
 
-            }
-        });
+        if (asset.isTransferable()) {
+            cardTransferButton.setVisibility(View.VISIBLE);
+            cardTransferButton.setOnClickListener(onClickListenerTransfer);
+        } else {
+            cardTransferButton.setVisibility(View.INVISIBLE);
+        }
 
-        cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (asset.isSaleable()) {
+            cardSellButton.setVisibility(View.VISIBLE);
+            cardSellButton.setOnClickListener(onClickListenerSell);
+        } else {
+            cardSellButton.setVisibility(View.INVISIBLE);
+        }
 
-            }
-        });
+        cardAppropriateButton.setOnClickListener(onClickListenerAppropriate);
 
-        cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cardTransactionsButton.setOnClickListener(onClickListenerTransactions);
+    }
 
-            }
-        });
-
-        cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+    public ImageButton getCardRedeemButton() {
+        return cardRedeemButton;
     }
 }
