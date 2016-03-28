@@ -194,7 +194,7 @@
 
             android:layout_below="@+id/unitPriceLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="3dp">
+            android:layout_marginRight="20dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/sellToTextFake"

@@ -63,6 +63,5 @@ public class AssetTransferUserAdapter extends FermatAdapter<User, AssetTransferU
             bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
             holder.imageViewTransfer.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
         }
-
     }
 }
