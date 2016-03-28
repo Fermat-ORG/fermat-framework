@@ -110,7 +110,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
      */
     private View rootView;
     private EditText editTextAmount;
-    private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
@@ -138,8 +137,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     BlockchainNetworkType blockchainNetworkType;
     String walletName = "";
 
-    public static SendFormFragment newInstance() {
-        return new SendFormFragment();
+    public static SendFormWalletFragment newInstance() {
+        return new SendFormWalletFragment();
     }
 
     @Override
@@ -191,21 +190,18 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                     case CONNECTED:
                         setUpUI();
                         setUpActions();
-                        setUpUIData();
                         setUpContactAddapter();
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
                         setUpUI();
                         setUpActions();
-                        setUpUIData();
                         setUpContactAddapter();
                         break;
                 }
             } else {
                 setUpUI();
                 setUpActions();
-                setUpUIData();
                 setUpContactAddapter();
             }
 
@@ -251,7 +247,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
-        imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner_name = (Spinner) rootView.findViewById(R.id.spinner_name);
@@ -399,7 +394,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         /**
          * Listeners
          */
-        imageView_contact.setOnClickListener(this);
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
@@ -433,23 +427,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
     }
 
-    private void setUpUIData() {
-        if (cryptoWalletWalletContact == null) {
-            cryptoWalletWalletContact = appSession.getLastContactSelected();
-        }
-        if (cryptoWalletWalletContact != null) {
-            try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
-                bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
-            } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            }
-
-        } else {
-            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-        }
-
-    }
 
     private void setUpContactAddapter() {
         contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
@@ -474,8 +451,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 sendCrypto();
             } else
                 Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.imageView_contact) {
-            // if user press the profile image
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
