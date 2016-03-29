@@ -365,7 +365,7 @@ public class TokenlySongWalletDao {
      * @return
      * @throws CantGetSongListException
      */
-    public List<String> getSongsTokenlyIdNotDeleted()
+    public List<String> getSongsTokenlyIdDeleted()
             throws CantGetSongListException {
         try{
             openDatabase();
@@ -376,21 +376,66 @@ public class TokenlySongWalletDao {
             databaseTable.addStringFilter(
                     TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
                     SongStatus.DELETED.getCode(),
-                    DatabaseFilterType.NOT_EQUALS);
+                    DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if(records.isEmpty()){
                 //I'll return an empty list
                 return songList;
             }
-            SongStatus songStatus;
             for(DatabaseTableRecord databaseTableRecord : records){
                 walletSong = buildWalletSong(databaseTableRecord);
-                songStatus = walletSong.getSongStatus();
-                //I'll ignore the AVAILABLE songStatus, this song is already in the device.
-                if(songStatus.getCode().equals(SongStatus.AVAILABLE.getCode())){
-                    continue;
-                }
+                songList.add(walletSong.getId());
+            }
+            return songList;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot load database table");
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot get song from database");
+        }
+    }
+
+    /**
+     * This method returns a AVAILABLE song list
+     * @return
+     * @throws CantGetSongListException
+     */
+    public List<String> getAvailableSongsTokenlyId()
+            throws CantGetSongListException {
+        try{
+            openDatabase();
+            List<String> songList = new ArrayList<>();
+            WalletSong walletSong;
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
+                    SongStatus.AVAILABLE.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //I'll return an empty list
+                return songList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                walletSong = buildWalletSong(databaseTableRecord);
                 songList.add(walletSong.getId());
             }
             return songList;

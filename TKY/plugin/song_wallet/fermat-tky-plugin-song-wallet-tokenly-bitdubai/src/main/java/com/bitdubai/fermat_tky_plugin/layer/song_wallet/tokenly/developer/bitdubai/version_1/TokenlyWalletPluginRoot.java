@@ -91,6 +91,11 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
      */
     TokenlySongWalletDeveloperDatabaseFactory tokenlySongWalletDeveloperDatabaseFactory;
 
+    /**
+     * Represents the plugin database DAO.
+     */
+    TokenlySongWalletDao tokenlySongWalletDao;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
@@ -179,7 +184,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             /**
              * Init Database DAO.
              */
-            TokenlySongWalletDao tokenlySongWalletDao = new TokenlySongWalletDao(
+            tokenlySongWalletDao = new TokenlySongWalletDao(
                     pluginDatabaseSystem,
                     pluginId,
                     database,
@@ -202,6 +207,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     errorManager);
             //testDownloadFile();
             //testSynchronizeSongs();
+            //testAutomaticSyncSongs();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -344,83 +350,99 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
 
     private void testSynchronizeSongs(){
         try{
-            Fan fanIdentity = new Fan() {
-                @Override
-                public String getAlias() {
-                    return null;
-                }
-
-                @Override
-                public UUID getId() {
-                    return null;
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return null;
-                }
-
-                @Override
-                public byte[] getProfileImage() {
-                    return new byte[0];
-                }
-
-                @Override
-                public void setNewProfileImage(byte[] imageBytes) {
-
-                }
-
-                @Override
-                public String getExternalUsername() {
-                    return null;
-                }
-
-                @Override
-                public String getExternalAccesToken() {
-                    return null;
-                }
-
-                @Override
-                public ExternalPlatform getExternalPlatform() {
-                    return null;
-                }
-
-                @Override
-                public MusicUser getMusicUser() {
-                    MusicUser hardocedUser = new MusicUser() {
-                        @Override
-                        public String getId() {
-                            return "18873727-da0f-4b50-a213-cc40c6b4562d";
-                        }
-
-                        @Override
-                        public String getUsername() {
-                            return "pereznator";
-                        }
-
-                        @Override
-                        public String getEmail() {
-                            return "darkpriestrelative@gmail.com";
-                        }
-
-                        @Override
-                        public String getApiToken() {
-                            return "Tvn1yFjTsisMHnlI";
-                        }
-
-                        @Override
-                        public String getApiSecretKey() {
-                            return "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y";
-                        }
-                    };
-                    return hardocedUser;
-                }
-            };
+            Fan fanIdentity = getTestFanIdentity();
             this.tokenlyWalletManager.synchronizeSongsByUser(fanIdentity);
         } catch (Exception e){
             System.out.println("TKY: Test Download song exception");
             e.printStackTrace();
         }
+    }
+
+    private void testAutomaticSyncSongs(){
+        try{
+            //Please, make this test with any songs in database
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.synchronizeSongs(fanIdentity);
+        } catch (Exception e){
+            System.out.println("TKY: Test Automatic Download song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private Fan getTestFanIdentity(){
+        Fan fanIdentity = new Fan() {
+            @Override
+            public String getAlias() {
+                return null;
+            }
+
+            @Override
+            public UUID getId() {
+                return null;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public byte[] getProfileImage() {
+                return new byte[0];
+            }
+
+            @Override
+            public void setNewProfileImage(byte[] imageBytes) {
+
+            }
+
+            @Override
+            public String getExternalUsername() {
+                return null;
+            }
+
+            @Override
+            public String getExternalAccesToken() {
+                return null;
+            }
+
+            @Override
+            public ExternalPlatform getExternalPlatform() {
+                return null;
+            }
+
+            @Override
+            public MusicUser getMusicUser() {
+                MusicUser hardocedUser = new MusicUser() {
+                    @Override
+                    public String getId() {
+                        return "18873727-da0f-4b50-a213-cc40c6b4562d";
+                    }
+
+                    @Override
+                    public String getUsername() {
+                        return "pereznator";
+                    }
+
+                    @Override
+                    public String getEmail() {
+                        return "darkpriestrelative@gmail.com";
+                    }
+
+                    @Override
+                    public String getApiToken() {
+                        return "Tvn1yFjTsisMHnlI";
+                    }
+
+                    @Override
+                    public String getApiSecretKey() {
+                        return "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y";
+                    }
+                };
+                return hardocedUser;
+            }
+        };
+        return fanIdentity;
     }
 
 }

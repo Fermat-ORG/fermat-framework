@@ -5,11 +5,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
-import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
@@ -27,12 +25,10 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
-import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetStoragePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -151,8 +147,14 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             //Get the actual timestamp
             long timestamp = System.currentTimeMillis();
             //Calculate timestamp interval
+            //TODO: only for testing
+            System.out.println("TKY - TIME_BETWEEN_SYNC "+TIME_BETWEEN_SYNC);
+            System.out.println("TKY - lastSyncUpdate changed to 0");
+            lastSyncUpdate=0;
+            //End of testing
             long intervalTimestamp = timestamp - lastSyncUpdate;
             if(intervalTimestamp > TIME_BETWEEN_SYNC){
+                System.out.println("TKY - intervalTimestamp is very long :"+intervalTimestamp);
                 synchronizeSongsByUser(fanIdentity);
             }
         } catch (CantGetLastUpdateDateException e) {
@@ -179,7 +181,12 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             //Get the albums from Tokenly music manager account
             Song[] songs = tokenlyApiManager.getSongsByAuthenticatedUser(user);
             //Get the non DELETED songs id in database
-            List<String> databaseSongsId = this.tokenlySongWalletDao.getSongsTokenlyIdNotDeleted();
+            List<String> databaseDeletedSongsId = this.tokenlySongWalletDao.getSongsTokenlyIdDeleted();
+            //Get the available songs in database.
+            List<String> databaseAvailableSongsId = this.tokenlySongWalletDao.getAvailableSongsTokenlyId();
+            //Concentrate all the id in one list
+            List<String> databaseSongsId = new ArrayList<>(databaseDeletedSongsId);
+            databaseSongsId.addAll(databaseAvailableSongsId);
             List<Song> toDownloadSongList = new ArrayList<>();
             String tokenlySongId;
             System.out.println("TKY "+songs.length);
@@ -202,6 +209,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     break;
                 }
             }
+            System.out.println("TKY - Songs to download "+toDownloadSongList.size());
             //Now, I'll download the songs registered in toDownloadSongList
             for(Song song : toDownloadSongList){
                 //Request download song
