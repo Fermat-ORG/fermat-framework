@@ -315,6 +315,9 @@ public enum Plugins implements FermatPluginsEnum {
     ARTIST_IDENTITY                     ("ARTIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
     ART_FAN_SUB_APP_MODULE              ("AFSAM"),
+    MUSIC_PLAYER_SUB_APP_MODULE         ("ARTMPM"),
+    ARTIST_COMMUNITY_SUB_APP_MODULE     ("ARTACM"),
+    FAN_COMMUNITY_SUB_APP_MODULE        ("ARTFCM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -480,6 +483,9 @@ public enum Plugins implements FermatPluginsEnum {
             case "TWALLET":     return TOKENLY_WALLET                           ;
             case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
             case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
+            case "ARTMPM":      return MUSIC_PLAYER_SUB_APP_MODULE              ;
+            case "ARTACM":      return ARTIST_COMMUNITY_SUB_APP_MODULE          ;
+            case "ARTMCM":      return FAN_COMMUNITY_SUB_APP_MODULE             ;
 
             default:
                 throw new InvalidParameterException(
