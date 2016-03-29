@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
@@ -51,7 +52,7 @@ public interface TimeOutAgent {
      * the start time of the Agent as an epoch time in milliseconds.
      * @return the start time of the agent.
      */
-    long getEpochTime();
+    long getEpochStartTime();
 
     /**
      * The duration that the Agent will be monitoring for. When this duration is reached since the start time
@@ -59,6 +60,12 @@ public interface TimeOutAgent {
      * @return the duration of the time out
      */
     long getTimeOutDuration();
+
+    /**
+     * Gets the amount of milliseconds pass since the start and the moment this method is requested.
+     * @return the amount of elapsed time for this agent in milliseconds.
+     */
+    long getElapsedTime();
 
     /**
      * the agent given name for identification.
@@ -76,7 +83,7 @@ public interface TimeOutAgent {
      * The actor type that created this agent
      * @return null if not provided.
      */
-    Actors getOwnerType();
+    FermatActor getOwner();
 
     /**
      * The current agent status.

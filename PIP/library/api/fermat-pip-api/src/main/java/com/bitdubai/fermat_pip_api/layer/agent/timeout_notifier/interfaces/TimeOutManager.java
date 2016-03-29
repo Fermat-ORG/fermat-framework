@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
 
@@ -14,14 +16,16 @@ import java.util.UUID;
 public interface TimeOutManager {
 
     /**
-     * Adds a new Time Out Manager to start monitoring timeouts.
-     * @param epochTime the Start time configured for this Agent.
-     * @param timeout the elapsed time to monitor for a timeout
-     * @param name the Name of the agent to be added.
+     * Adds a new Time Out Manager to the agent pools. Once added, further customization is possible.
+     * The Agent can later be started, stopped or reset at will.
+     * @param epochStartTime the Start time configured for this Agent.
+     * @param timeout the elapsed time to monitor for a timeout in milliseconds
+     * @param agentName the Name of the agent to be added.
+     * @param owner a FermatActor that is the owner of the agent.
      * @return the newly created TimeOut Agent
      * @throws CantAddNewTimeOutAgentException
      */
-    TimeOutAgent addNew(long epochTime, long timeout, String name) throws CantAddNewTimeOutAgentException;
+    TimeOutAgent addNew(long epochStartTime, long timeout, String agentName, FermatActor owner) throws CantAddNewTimeOutAgentException;
 
     /**
      * Removes a configured Agent from the Manager. It is stopped if running.
@@ -39,8 +43,22 @@ public interface TimeOutManager {
 
     /**
      * The List of all configured TimeOut Agents
-     * @return
+     * @return all configured timeout agents or an empty list if no agents have been configured.
      */
     List<TimeOutAgent> getTimeOutAgents();
+
+    /**
+     * The list of all configured TimeOut Agents for the specified owner.
+     * @param owner a Fermat actor that owns the agent
+     * @return the list of configured TimeOutAgents owned for the specified owner. Empty list if none matched the criteria.
+     */
+    List<TimeOutAgent> getTimeOutAgents(FermatActor owner);
+
+    /**
+     * The list of all configured timeout agents by status.
+     * @param status any possible status for the agents.
+     * @return the agents matching the passed status. Empty list if none matched the criteria.
+     */
+    List<TimeOutAgent> getTimeOutAgents(AgentStatus status);
 
 }
