@@ -52,15 +52,11 @@ dependencies {
     compile project(':fermat-osa-addon-android-logger-bitdubai')
     compile project(':fermat-osa-addon-android-broadcaster-system-bitdubai')
 
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:support-v13:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    testCompile 'org.robolectric:robolectric:3.0+'
-    testCompile 'junit:junit:4.11+'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'junit:junit:4.11'
 
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    compile 'com.android.support:design:23.1.1'
 }
 
 // Configuracion de PMD
