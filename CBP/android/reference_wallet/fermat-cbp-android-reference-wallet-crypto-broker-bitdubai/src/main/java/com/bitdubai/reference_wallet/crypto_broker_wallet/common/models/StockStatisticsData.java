@@ -29,6 +29,8 @@ public class StockStatisticsData {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR, 0);
 
+        stockTransactions = null;
+
         ErrorManager errorManager = session.getErrorManager();
         try {
             final String walletPublicKey = session.getAppPublicKey();
