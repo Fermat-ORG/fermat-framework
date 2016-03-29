@@ -26,7 +26,27 @@ include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
 
-//include ':fermat_linux_core'
+/**
+ * network node implementation start
+ */
+
+include ':fermat_linux_core'
+
+include ':fermat-osa-linux-core'
+project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
+
+include ':fermat-osa-addon-linux-file-system-bitdubai'
+project(':fermat-osa-addon-linux-file-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-file-system-bitdubai')
+
+include ':fermat-osa-addon-linux-database-system-bitdubai'
+project(':fermat-osa-addon-linux-database-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-database-system-bitdubai')
+
+include ':fermat-p2p-plugin-communication-network-node-bitdubai'
+project(':fermat-p2p-plugin-communication-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-node-bitdubai')
+
+/**
+ * network node implementation end
+ */
 //include ':manifest_generator'
 
 //BNP Projects
