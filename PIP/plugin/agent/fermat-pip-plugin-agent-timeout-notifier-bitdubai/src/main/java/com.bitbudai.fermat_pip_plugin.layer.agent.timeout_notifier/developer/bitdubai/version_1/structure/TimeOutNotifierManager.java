@@ -64,6 +64,11 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     @Override
     public TimeOutAgent getTimeOutAgent(UUID uuid) {
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+            if (timeOutAgent.getUUID() == uuid)
+                return timeOutAgent;
+        }
+        //if no match
         return null;
     }
 
