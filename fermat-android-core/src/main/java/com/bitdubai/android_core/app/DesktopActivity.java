@@ -42,6 +42,8 @@ import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
@@ -58,6 +60,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     private BottomMenuReveal bottomMenuReveal;
+    private ExecutorService executorService;
 
     /**
      *  Called when the activity is first created
@@ -185,10 +188,24 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             if(activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK){
                 try {
+
                     String[] ipPort = ((FermatNetworkSettings) getAdapter().getLstCurrentFragments().get(0)).getIpPort();
-                    String ip = ipPort[0];
-                    String port = ipPort[1];
-                    getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                    final String ip = ipPort[0];
+                    final String port = ipPort[1];
+
+                    Thread threadChangeIP = new Thread() {
+                        @Override
+                        public void run(){
+                            getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                        }
+                    };
+
+                    if(executorService != null)
+                        executorService.shutdown();
+
+                    executorService = Executors.newSingleThreadExecutor();
+                    executorService.submit(threadChangeIP);
+
                 }catch (Exception e){
 
                 }

@@ -202,7 +202,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             public boolean onConnectFailure(Exception exception) {
                 try {
 
-                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnect Failure :"+exception.getMessage());
+                    System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                     // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
                     Thread.sleep(5000);
 
