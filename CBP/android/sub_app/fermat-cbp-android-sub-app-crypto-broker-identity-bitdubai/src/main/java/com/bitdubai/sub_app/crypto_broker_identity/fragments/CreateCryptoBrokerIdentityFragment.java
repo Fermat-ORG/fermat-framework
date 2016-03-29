@@ -1,20 +1,15 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -22,23 +17,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
+import com.squareup.picasso.Picasso;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.MISSING_IMAGE;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
@@ -46,38 +33,19 @@ import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdent
  */
 public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
-    private static final String TAG = "CreateBrokerIdentity";
-
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
-    private static final int CONTEXT_MENU_CAMERA = 1;
-    private static final int CONTEXT_MENU_GALLERY = 2;
-
     private Bitmap cryptoBrokerBitmap;
 
-    private ErrorManager errorManager;
 
     private EditText mBrokerName;
     private ImageView mBrokerImage;
-
-    private ImageView camara;
-    private ImageView galeria;
 
     private boolean actualizable;
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            errorManager = appSession.getErrorManager();
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
     }
 
     @Override
@@ -130,14 +98,14 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 }
             }
         });
-        camara = (ImageView) layout.findViewById(R.id.camara);
+        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        galeria = (ImageView) layout.findViewById(R.id.galeria);
+        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,9 +118,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            ImageView pictureView = mBrokerImage;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -164,18 +130,18 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+                            Picasso.with(getActivity()).load(selectedImage).into(mBrokerImage);
                         }
-                    } catch (Exception ex) {
-                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
-                        Toast.makeText(getActivity(), "Cannot load image.", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
-            if (pictureView != null && cryptoBrokerBitmap != null) {
-                pictureView.setImageBitmap(cryptoBrokerBitmap);
-            }
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void createNewIdentityInBackDevice(String donde){

@@ -63,6 +63,8 @@ import java.util.concurrent.Future;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/03/16.
  */
+
+//TODO: Victor no podes hacer esto, este agente está todo el tiempo corriendo sin hacer nada y pidiendo los actores del identity de ccp por lo que veo
 public class AssetIssuingMonitorAgent extends FermatAgent {
 
     //VARIABLE DECLARATION

@@ -53,7 +53,8 @@
                 android:gravity="center"
                 android:text="JAN"
                 android:textColor="#FFF"
-                android:textSize="26sp"/>
+                android:textSize="26sp"
+                android:id="@+id/month" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -61,7 +62,8 @@
                 android:gravity="center"
                 android:text="2015"
                 android:textColor="#FFF"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:id="@+id/year" />
         </LinearLayout>
 
         <LinearLayout

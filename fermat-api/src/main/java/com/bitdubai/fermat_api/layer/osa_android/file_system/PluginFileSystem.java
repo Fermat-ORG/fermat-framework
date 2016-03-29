@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
@@ -18,7 +19,7 @@ import java.util.UUID;
  *  @since   22/01/15.
  * */
 
- public interface PluginFileSystem extends FermatManager {
+ public interface PluginFileSystem extends FermatManager,Serializable {
 
     PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException;
 

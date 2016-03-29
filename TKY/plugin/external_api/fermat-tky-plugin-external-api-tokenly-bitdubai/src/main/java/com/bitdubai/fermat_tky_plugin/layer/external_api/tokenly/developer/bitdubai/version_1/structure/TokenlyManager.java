@@ -1,14 +1,17 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyAlbumProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyDownloadSongProcessor;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyMusicUserProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlySwapBotProcessor;
 
 /**
@@ -58,14 +61,14 @@ public class TokenlyManager implements TokenlyApiManager {
     }
 
     /**
-     * This method returns if a username and key pair si valid (temporal method)
+     * This method returns a User object by a username and key pair.
      * @param username
      * @param userKey
      * @return
      */
     @Override
-    public boolean isTokenlyAccessVaild(String username, String userKey) {
-        //TODO: to implement
-        return true;
+    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException {
+        User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username,userKey);
+        return user;
     }
 }

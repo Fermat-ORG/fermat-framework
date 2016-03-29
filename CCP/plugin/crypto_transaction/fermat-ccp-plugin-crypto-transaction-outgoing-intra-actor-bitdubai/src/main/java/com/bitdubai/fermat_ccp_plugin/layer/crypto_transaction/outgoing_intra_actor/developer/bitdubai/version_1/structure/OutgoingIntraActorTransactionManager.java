@@ -12,6 +12,9 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
@@ -34,24 +37,39 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
     private ErrorManager         errorManager;
     private BitcoinWalletManager bitcoinWalletManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
+    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
     public OutgoingIntraActorTransactionManager(UUID pluginId,
                                                 ErrorManager errorManager,
                                                 BitcoinWalletManager bitcoinWalletManager,
-                                                PluginDatabaseSystem pluginDatabaseSystem) {
+                                                PluginDatabaseSystem pluginDatabaseSystem,
+                                                BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager) {
 
         this.pluginId             = pluginId;
         this.errorManager         = errorManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.bitcoinLossProtectedWalletManager = bitcoinLossProtectedWalletManager;
     }
 
     @Override
     public void payCryptoRequest(UUID requestId, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+            long funds = 0;
+
+            switch (referenceWallet) {
+                case BASIC_WALLET_BITCOIN_WALLET:
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
+                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+                //TODO: el disponible es en base al exchange rate del momento
+                case BASIC_WALLET_LOSS_PROTECTED_WALLET:
+                    BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
+                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+            }
+
 
             if (cryptoAmount > funds)
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
@@ -99,9 +117,19 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            ReferenceWallet referenceWallet,
                            BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
+            long funds = 0;
+            switch (referenceWallet) {
+                case BASIC_WALLET_BITCOIN_WALLET:
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
+                     funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                break;
+                //TODO: el disponible es en base al exchange rate del momento
+                case BASIC_WALLET_LOSS_PROTECTED_WALLET:
+                    BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
+                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+            }
             if (cryptoAmount > funds)
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
 
@@ -137,13 +165,25 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         BitcoinWalletWallet bitcoinWalletWallet = null;
         try {
-            bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
+            long funds =0;
+            switch (referenceWallet) {
+                case BASIC_WALLET_BITCOIN_WALLET:
+                    bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
+                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+                //TODO: el disponible es en base al exchange rate del momento
+                case BASIC_WALLET_LOSS_PROTECTED_WALLET:
+                    BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
+                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+            }
             if (cryptoAmount > funds) {
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balance");
             }
         } catch (CantLoadWalletsException | CantCalculateBalanceException  e) {
+            e.printStackTrace();
+        } catch (CantLoadWalletException e) {
             e.printStackTrace();
         }
 

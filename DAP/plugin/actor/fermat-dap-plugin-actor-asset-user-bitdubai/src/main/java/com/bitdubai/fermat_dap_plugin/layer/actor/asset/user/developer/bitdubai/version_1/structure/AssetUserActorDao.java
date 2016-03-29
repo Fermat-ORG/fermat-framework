@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
@@ -322,7 +323,8 @@ public class AssetUserActorDao implements Serializable {
                                                   String actorAssetUserPublicKey,
                                                   String actorAssetUserName,
                                                   byte[] profileImage,
-                                                  DAPConnectionState  dapConnectionState) throws CantAddPendingActorAssetException {
+                                                  DAPConnectionState  dapConnectionState,
+                                                  Actors actorsType) throws CantAddPendingActorAssetException {
         try {
             /**
              * if Asset User exist on table
@@ -340,27 +342,12 @@ public class AssetUserActorDao implements Serializable {
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetUserPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME, actorAssetUserName);
 
-//                if (actorAssetUserRecord.getAge() != null)
-//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME, actorAssetUserRecord.getAge());
-
-//                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME, actorAssetUserRecord.getGenders().getCode());
-
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
-
-//                if (actorAssetUserRecord.getLocationLatitude() != null)
-//                    record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLatitude());
-//                if (actorAssetUserRecord.getLocationLongitude() != null)
-//                    record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLongitude());
-
-//                if (cryptoAddress != null) {
-//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
-//                }
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
-                //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_ISSUER.getCode());
+
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME, actorsType.getCode());
 
                 table.insertRecord(record);
                 /**
@@ -1777,13 +1764,14 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getAllWaitingActorAssetUser(final String intraActorSelectedPublicKey,
+    public List<DAPActor> getAllWaitingActorAssetUser(final String intraActorSelectedPublicKey,
                                                             final DAPConnectionState dapConnectionState,
                                                             final int max,
                                                             final int offset) throws CantGetAssetUserActorsException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<>(); // Actor User.
+        List<DAPActor> dapActors = new ArrayList<>(); // Actor User.
         DatabaseTable table;
 
         try {
@@ -1803,12 +1791,30 @@ public class AssetUserActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
 
+            for (ActorAssetUser record : list) {
+                dapActors.add((new AssetUserActorRecord (
+                        record.getActorPublicKey(),
+                        record.getName(),
+                        record.getAge(),
+                        record.getGenders(),
+                        record.getDapConnectionState(),
+                        record.getLocationLatitude(),
+                        record.getLocationLongitude(),
+                        record.getCryptoAddress(),
+                        record.getRegistrationDate(),
+                        record.getLastConnectionDate(),
+                        record.getBlockchainNetworkType(),
+                        record.getType(),
+                        record.getProfileImage())));
+            }
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), e, "ACTOR ASSET USER", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET USER", "Cant get ACTOR ASSET USER list, unknown failure.");
         }
-        return list;
+
+        return dapActors;
     }
 
     public ActorAssetUser getLastNotification(String  intraUserConnectedPublicKey ) throws CantGetAssetUserActorsException {

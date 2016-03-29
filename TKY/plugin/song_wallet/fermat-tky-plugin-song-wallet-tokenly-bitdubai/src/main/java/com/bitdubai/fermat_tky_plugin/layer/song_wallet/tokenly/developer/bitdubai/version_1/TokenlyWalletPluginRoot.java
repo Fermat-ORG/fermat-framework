@@ -193,7 +193,9 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
              */
             this.tokenlyWalletManager = new TokenlyWalletManager(
                     tokenlySongWalletDao,
-                    tokenlyWalletSongVault);
+                    tokenlyWalletSongVault,
+                    tokenlyApiManager,
+                    errorManager);
             //testDownloadFile();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(

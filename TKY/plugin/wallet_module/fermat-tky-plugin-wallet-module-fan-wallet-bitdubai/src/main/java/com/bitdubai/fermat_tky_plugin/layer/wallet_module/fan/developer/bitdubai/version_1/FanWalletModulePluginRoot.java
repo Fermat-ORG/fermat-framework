@@ -3,6 +3,7 @@ package com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitduba
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -13,6 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure.FanWalletModuleManager;
 
 /**
@@ -21,8 +25,15 @@ import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai
 public class FanWalletModulePluginRoot extends AbstractPlugin {
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.SONG_WALLET,plugin = Plugins.TOKENLY_WALLET)
+    private SongWalletTokenlyManager songWalletTokenlyManager;
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.IDENTITY,plugin = Plugins.TOKENLY_FAN)
+    private TokenlyFanIdentityManager tokenlyFanIdentityManager;
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
+    private TokenlyApiManager tokenlyApiManager;
 
-    FanWalletModuleManager fanWalletModuleManager;
+
+    private FanWalletModuleManager fanWalletModuleManager;
     /**
      * Default constructor
      */
@@ -39,7 +50,11 @@ public class FanWalletModulePluginRoot extends AbstractPlugin {
     }
 
     private void initPluginManager(){
-        this.fanWalletModuleManager = new FanWalletModuleManager();
+        this.fanWalletModuleManager = new FanWalletModuleManager(
+                errorManager,
+                songWalletTokenlyManager,
+                tokenlyFanIdentityManager,
+                tokenlyApiManager);
     }
 
     public void start() throws CantStartPluginException {

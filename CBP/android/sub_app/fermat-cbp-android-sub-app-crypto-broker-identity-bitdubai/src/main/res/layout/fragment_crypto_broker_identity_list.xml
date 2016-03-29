@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
+        android:layout_marginBottom="25dp"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/bi_icon"
             android:id="@+id/imageView"
@@ -34,7 +35,7 @@
             android:id="@+id/view"
             android:gravity="center"
             android:layout_centerInParent="true"
-            android:paddingTop="220dp" />
+            android:paddingTop="325dp" />
 
     </RelativeLayout>
 

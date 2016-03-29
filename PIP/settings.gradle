@@ -29,6 +29,12 @@ include ':fermat-pip-addon-user-device-user-bitdubai'
 project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
 
 // plugins
+
+// Timeout Notifier
+include ':fermat-pip-plugin-agent-timeout-notifier-bitdubai'
+project(':fermat-pip-plugin-agent-timeout-notifier-bitdubai').projectDir = new File('PIP/plugin/agent/fermat-pip-plugin-agent-timeout-notifier-bitdubai')
+
+
 include ':fermat-pip-plugin-engine-desktop-runtime-bitdubai'
 project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('PIP/plugin/engine/fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
@@ -40,6 +46,9 @@ project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File
 
 include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+
+include ':fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai'
+project(':fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai')
 
 // Android
 

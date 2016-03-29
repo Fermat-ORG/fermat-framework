@@ -26,6 +26,8 @@
     <string name="no_redeempoints">No Redeem Points</string>
     <string name="no_transactions">No Transactions</string>
     <string name="no_users">No Users</string>
+    <string name="select_user_to_transfer">Select an User</string>
+    <string name="select_redeem_to_redeem">Select a Redeem Point</string>
     <!-- -->
 
     <!-- error messages -->
@@ -41,6 +43,7 @@
     <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_no_users">No users selected</string>
+    <string name="dap_user_wallet_validate_no_user">No user selected</string>
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
     <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
@@ -71,10 +74,13 @@
     <string name="dap_user_wallet_sell_select_user">Select user</string>
     <string name="dap_user_wallet_sell_assets_to_sell">Assets to Sell</string>
     <string name="dap_user_wallet_sell_asset_value">Asset Value</string>
+    <string name="dap_user_wallet_sell_asset_price">Asset Price</string>
     <string name="dap_user_wallet_sell_total_value">Total Value</string>
-    <string name="dap_user_wallet_sell_to">Sell to</string>
-    <string name="dap_user_wallet_sell_button">Sell Assets</string>
+    <string name="dap_user_wallet_sell_to">User to sell</string>
+    <string name="dap_user_wallet_sell_button">Sell</string>
     <string name="dap_user_wallet_buy_no_available">No Available</string>
+    <string name="dap_user_wallet_to">To</string>
+    <string name="dap_user_wallet_x_button">X</string>
     <!-- -->
 
     <!-- app strings -->
