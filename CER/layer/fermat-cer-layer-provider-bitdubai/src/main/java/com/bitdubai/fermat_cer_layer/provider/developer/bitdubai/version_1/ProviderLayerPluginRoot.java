@@ -46,22 +46,22 @@ public class ProviderLayerPluginRoot extends AbstractPlugin implements CurrencyE
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITCOINVENEZUELA)
     private CurrencyExchangeRateProviderManager bitcoinVenezuelaProvider;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.DOLARTODAY)
     private CurrencyExchangeRateProviderManager dolarTodayProvider;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.ELCRONISTA)
     private CurrencyExchangeRateProviderManager elCronistaProvider;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.EUROPEAN_CENTRAL_BANK)
     private CurrencyExchangeRateProviderManager europeanCentralBankProvider;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_LANACION)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.LANACION)
     private CurrencyExchangeRateProviderManager laNacionProvider;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_YAHOO)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.YAHOO)
     private CurrencyExchangeRateProviderManager yahooProvider;
 
     Map<UUID, CurrencyExchangeRateProviderManager> providerMap;

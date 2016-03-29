@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class EuropeanCentralBankSubsystem extends AbstractPluginSubsystem {
 
     public EuropeanCentralBankSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK));
+        super(new PluginReference(Plugins.EUROPEAN_CENTRAL_BANK));
     }
 
     @Override

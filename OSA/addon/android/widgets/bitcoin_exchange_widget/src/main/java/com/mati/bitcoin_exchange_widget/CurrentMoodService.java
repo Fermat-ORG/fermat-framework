@@ -81,7 +81,7 @@ public class CurrentMoodService extends Service {
 					providerFilter = (CurrencyExchangeProviderFilterManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(
 							 Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM,
 							 Layers.SEARCH,
-							 Plugins.BITDUBAI_CER_PROVIDER_FILTER,
+							 Plugins.FILTER,
 							 Developers.BITDUBAI,
 							 new Version()));
 				} catch (VersionNotFoundException e) {
