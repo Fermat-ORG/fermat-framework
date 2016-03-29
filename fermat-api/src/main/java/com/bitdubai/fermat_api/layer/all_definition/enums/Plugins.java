@@ -270,8 +270,8 @@ public enum Plugins implements FermatPluginsEnum {
     //CBP
     BANK_MONEY_RESTOCK                  ("BMRE"),
     BANK_MONEY_DESTOCK                  ("BMDE"),
-    CASH_MONEY_RESTOCK                  ("CMDE"),
-    CASH_MONEY_DESTOCK                  ("CMRE"),
+    CASH_MONEY_RESTOCK                  ("CMRE"),
+    CASH_MONEY_DESTOCK                  ("CMDE"),
     CONTRACT_PURCHASE                   ("CONTP"),
     CONTRACT_SALE                       ("CONTS"),
     CRYPTO_BROKER_WALLET                ("CBWA"),
