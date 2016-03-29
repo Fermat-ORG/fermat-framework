@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -236,6 +237,19 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
         );
 
         return this.settingsManager;
+    }
+
+
+
+    @Override
+    public UUID getExchangeProvider() {
+        return null;
+    }
+
+    @Override
+    public void setExchangeProvider(UUID idProvider)
+    {
+
     }
 
     @Override
