@@ -149,6 +149,63 @@ public class WalletSongRecord implements WalletSong {
     }
 
     /**
+     * Constructor that uses String to define String[] tokens
+     * @param songStatus
+     * @param songId
+     * @param id
+     * @param name
+     * @param tokensXML
+     * @param performers
+     * @param composers
+     * @param releaseDate
+     * @param lyrics
+     * @param credits
+     * @param copyright
+     * @param ownership
+     * @param usageRights
+     * @param usageProhibitions
+     * @param bitcoinAddress
+     * @param other
+     */
+    public WalletSongRecord(
+            SongStatus songStatus,
+            UUID songId,
+            String id,
+            String name,
+            String tokensXML,
+            String performers,
+            String composers,
+            Date releaseDate,
+            String lyrics,
+            String credits,
+            String copyright,
+            String ownership,
+            String usageRights,
+            String usageProhibitions,
+            String bitcoinAddress,
+            String other) throws
+            CanGetTokensArrayFromSongWalletException {
+        this.songStatus = songStatus;
+        this.songId = songId;
+        this.id = id;
+        this.name = name;
+        //Set the Array tokens from a String XML
+        setTokens(tokensXML);
+        this.performers = performers;
+        this.composers = composers;
+        this.releaseDate = releaseDate;
+        this.lyrics = lyrics;
+        this.credits = credits;
+        this.copyright = copyright;
+        this.ownership = ownership;
+        this.usageRights = usageRights;
+        this.usageProhibitions = usageProhibitions;
+        this.bitcoinAddress = bitcoinAddress;
+        this.other = other;
+        this.downloadUrl = "";
+    }
+
+    /**
      * Constructor with parameters
      * @param song
      * @param songStatus

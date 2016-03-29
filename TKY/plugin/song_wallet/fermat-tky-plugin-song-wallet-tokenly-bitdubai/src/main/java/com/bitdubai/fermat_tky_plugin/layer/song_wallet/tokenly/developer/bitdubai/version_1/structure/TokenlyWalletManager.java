@@ -308,6 +308,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             ObjectChecker.checkArgument(tokenlyId, "The tokenly Id is null");
             //Get the wallet song from database
             WalletSong walletSong = this.tokenlySongWalletDao.getWalletSongArgumentBySongId(songId);
+            //TODO: Get the song download URL from Tokenly Protected API
             //Request download song.
             String songPath = this.tokenlyWalletSongVault.downloadSong(walletSong);
             this.tokenlySongWalletDao.updateSongStoragePath(songId, songPath);
