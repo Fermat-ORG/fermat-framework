@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 
@@ -63,7 +63,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String contractHash,
             String transactionId,
             Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
-            CantConfirmNotificationReception;
+            CantConfirmNotificationReceptionException;
 
     /**
      * Acknowleges that a confirmation has been received.
@@ -75,7 +75,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param remoteBusinessTransaction
      * @param senderComponent
      * @param receiverComponent
-     * @throws CantConfirmNotificationReception
+     * @throws CantConfirmNotificationReceptionException
      */
     void ackConfirmNotificationReception(
             String cryptoBrokerActorSenderPublicKey,
@@ -83,6 +83,6 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String contractHash,
             String transactionId,
             Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
-            CantConfirmNotificationReception;
+            CantConfirmNotificationReceptionException;
 
 }

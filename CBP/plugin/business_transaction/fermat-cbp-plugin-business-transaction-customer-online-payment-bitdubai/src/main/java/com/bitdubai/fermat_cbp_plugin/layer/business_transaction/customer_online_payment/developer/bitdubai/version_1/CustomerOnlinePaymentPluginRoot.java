@@ -231,8 +231,8 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
              * Init the plugin manager
              */
         //TODO: the following two lines are only for testing, please, comment them when the testing is finished
-            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
-            customerBrokerPurchaseNegotiationManager=new PurchaseNegotiationManagerMock();
+            //customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            //customerBrokerPurchaseNegotiationManager=new PurchaseNegotiationManagerMock();
             this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
                     customerOnlinePaymentBusinessTransactionDao,
