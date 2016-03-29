@@ -7,16 +7,19 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetDetailTransactionsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetNegotiationDetailFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetRedeemFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetRedeemRedeemFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetRedeemSelectRedeemPointsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetSellFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetSellSelectUserFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetTransferFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetTransferSelectUserFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetTransferUserFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsMainNetworkFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsNotificationsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserHistoryActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserSellAssetFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -49,7 +52,8 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     currentFragment = new AssetDetailTransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_REDEEM:
-                    currentFragment = new AssetRedeemFragment();
+//                    currentFragment = new AssetRedeemFragment();
+                    currentFragment = new AssetRedeemRedeemFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS:
                     currentFragment = new AssetRedeemSelectRedeemPointsFragment();
@@ -64,13 +68,15 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     currentFragment = new SettingsNotificationsFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT:
-                    currentFragment = new AssetSellFragment();
+//                    currentFragment = new AssetSellFragment();
+                    currentFragment = new UserSellAssetFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_FRAGMENT:
                     currentFragment = new AssetSellSelectUserFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_TRANSFER_FRAGMENT:
-                    currentFragment = new AssetTransferFragment();
+//                    currentFragment = new AssetTransferFragment();
+                    currentFragment = new AssetTransferUserFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_FRAGMENT:
                     currentFragment = new AssetTransferSelectUserFragment();
